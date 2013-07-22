@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx;
+package org.infuse.ddrx.predicate;
 
-public interface Node {
+import java.math.BigInteger;
+
+public interface Expression {
     
-    public boolean parse();
+    public BigInteger eval();
     
 }

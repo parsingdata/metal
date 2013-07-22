@@ -14,21 +14,27 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx;
+package org.infuse.ddrx.node;
 
+import org.infuse.ddrx.predicate.Expression;
+import org.infuse.ddrx.predicate.Predicate;
 
-public abstract class Operator implements Node {
+public class Match implements Node {
     
-    protected final int _size; // TODO: Make size an expression.
-    protected final String _name;
-    protected final Value _value;
-    protected final Expression _exp;
+    private final String _name;
+    private final Expression _size;
+    private final Predicate _pred;
     
-    public Operator(String name, int size, Value value, Expression exp) {
+    public Match(String name, Expression size, Predicate pred) {
         _name = name;
         _size = size;
-        _value = value;
-        _exp = exp;
+        _pred = pred;
+    }
+
+    @Override
+    public boolean eval() {
+        // TODO Auto-generated method stub
+        return false;
     }
     
 }

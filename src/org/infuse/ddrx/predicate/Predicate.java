@@ -14,12 +14,20 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx;
+package org.infuse.ddrx.predicate;
 
 import java.math.BigInteger;
 
-public interface Value {
+public class Predicate {
     
-    public BigInteger eval();
+    private final Expression _exp;
     
+    public Predicate(Expression exp) {
+        _exp = exp;
+    }
+    
+    public boolean check(BigInteger input) {
+        return input.compareTo(_exp.eval()) == 0;
+    }
+
 }

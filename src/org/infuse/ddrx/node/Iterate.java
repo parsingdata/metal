@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx;
+package org.infuse.ddrx.node;
 
-import java.math.BigInteger;
 
-public class Con extends Expression {
+public class Iterate implements Node {
     
-    private final BigInteger _value;
+    private final Node _node;
     
-    public Con(BigInteger value) {
-        _value = value;
+    public Iterate(Node node) {
+        _node = node;
     }
-
-    @Override
-    public BigInteger eval() {
-        return _value;
+    
+    public boolean eval() {
+        while (_node.eval());
+        return true;
     }
     
 }

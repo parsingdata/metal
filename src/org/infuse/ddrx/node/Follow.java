@@ -14,9 +14,21 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx;
+package org.infuse.ddrx.node;
 
-
-public abstract class Expression implements Value {
+public class Follow implements Node {
+    
+    private final Node _l;
+    private final Node _r;
+    
+    public Follow(Node l, Node r) {
+        _l = l;
+        _r = r;
+    }
+    
+    @Override
+    public boolean eval() {
+        return _l.eval() && _r.eval();
+    }
     
 }

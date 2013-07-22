@@ -14,17 +14,10 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx;
+package org.infuse.ddrx.node;
 
-public class Equals extends Operator {
+public interface Node {
     
-    public Equals(String name, int size, Value value, Expression exp) {
-        super(name, size, value, exp);
-    }
-
-    @Override
-    public boolean parse() {
-        return _value.eval().compareTo(_exp.eval()) == 0;
-    }
+    public boolean eval();
     
 }

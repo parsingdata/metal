@@ -14,8 +14,21 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx;
+package org.infuse.ddrx.node;
 
-public abstract class Token implements Node {
+public class Choose implements Node {
     
+    private final Node _l;
+    private final Node _r;
+    
+    public Choose(Node l, Node r) {
+        _l = l;
+        _r = r;
+    }
+
+    @Override
+    public boolean eval() {
+        return _l.eval() || _r.eval();
+    }
+
 }

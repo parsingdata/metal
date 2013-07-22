@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx;
+package org.infuse.ddrx.predicate;
 
+import java.math.BigInteger;
 
-public class ZeroOrMore extends Token {
+public class Add implements Expression {
     
-    private final Node _node;
+    private final Expression _l;
+    private final Expression _r;
     
-    public ZeroOrMore(Node node) {
-        _node = node;
+    public Add(Expression l, Expression r) {
+        _l = l;
+        _r = r;
     }
     
-    public boolean parse() {
-        while (_node.parse());
-        return true;
+    public BigInteger eval() {
+        return _l.eval().add(_r.eval());
     }
     
 }

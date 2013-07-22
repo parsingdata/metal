@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx;
+package org.infuse.ddrx.predicate;
 
 import java.math.BigInteger;
 
-public class Add extends Expression {
+public class Con implements Expression {
     
-    private final Expression _l;
-    private final Expression _r;
+    private final BigInteger _value;
     
-    public Add(Expression l, Expression r) {
-        _l = l;
-        _r = r;
+    public Con(BigInteger value) {
+        _value = value;
     }
-    
-    @Override
+
     public BigInteger eval() {
-        return _l.eval().add(_r.eval());
+        return _value;
     }
     
 }
