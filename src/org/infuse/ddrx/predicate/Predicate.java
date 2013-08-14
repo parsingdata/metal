@@ -21,13 +21,30 @@ import java.math.BigInteger;
 public class Predicate {
     
     private final Expression _exp;
+    private final Operator _op;
     
-    public Predicate(Expression exp) {
+    public Predicate(Expression exp, Operator op) {
         _exp = exp;
+        _op = op;
     }
     
     public boolean check(BigInteger input) {
-        return input.compareTo(_exp.eval()) == 0;
+        int res = input.compareTo(_exp.eval());
+        switch (_op) {
+        case Equals:
+            return res == 0;
+        case NotEquals:
+            return res != 0;
+        case GreaterThan:
+            return res > 0;
+        case LessThan:
+            return res < 0;
+        case GreaterThanOrEquals:
+            return res >= 0;
+        case LessThanOrEquals:
+            return res <= 0;
+        }
+        throw new RuntimeException("Unknown operator: " + _op);
     }
 
 }

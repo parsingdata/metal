@@ -19,13 +19,13 @@ package org.infuse.ddrx.node;
 import org.infuse.ddrx.predicate.Expression;
 import org.infuse.ddrx.predicate.Predicate;
 
-public class Match implements Node {
+public class Field implements Node {
     
     private final String _name;
     private final Expression _size;
     private final Predicate _pred;
     
-    public Match(String name, Expression size, Predicate pred) {
+    public Field(String name, Expression size, Predicate pred) {
         _name = name;
         _size = size;
         _pred = pred;
