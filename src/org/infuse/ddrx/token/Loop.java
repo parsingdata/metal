@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.node;
+package org.infuse.ddrx.token;
 
-public class Choose implements Node {
+
+public class Loop implements Token {
     
-    private final Node _l;
-    private final Node _r;
+    private final Token _node;
     
-    public Choose(Node l, Node r) {
-        _l = l;
-        _r = r;
+    public Loop(Token node) {
+        _node = node;
     }
-
-    @Override
+    
     public boolean eval() {
-        return _l.eval() || _r.eval();
+        while (_node.eval());
+        return true;
     }
-
+    
 }

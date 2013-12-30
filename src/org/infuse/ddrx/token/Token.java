@@ -14,27 +14,10 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.node;
+package org.infuse.ddrx.token;
 
-import org.infuse.ddrx.predicate.Expression;
-import org.infuse.ddrx.predicate.Predicate;
-
-public class Field implements Node {
+public interface Token {
     
-    private final String _name;
-    private final Expression _size;
-    private final Predicate _pred;
-    
-    public Field(String name, Expression size, Predicate pred) {
-        _name = name;
-        _size = size;
-        _pred = pred;
-    }
-
-    @Override
-    public boolean eval() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+    public boolean eval();
     
 }

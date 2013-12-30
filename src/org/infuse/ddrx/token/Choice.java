@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.node;
+package org.infuse.ddrx.token;
 
-public class Follow implements Node {
+public class Choice implements Token {
     
-    private final Node _l;
-    private final Node _r;
+    private final Token _l;
+    private final Token _r;
     
-    public Follow(Node l, Node r) {
+    public Choice(Token l, Token r) {
         _l = l;
         _r = r;
     }
-    
+
     @Override
     public boolean eval() {
-        return _l.eval() && _r.eval();
+        return _l.eval() || _r.eval();
     }
-    
+
 }

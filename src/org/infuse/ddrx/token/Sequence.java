@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.node;
+package org.infuse.ddrx.token;
 
-
-public class Iterate implements Node {
+public class Sequence implements Token {
     
-    private final Node _node;
+    private final Token _l;
+    private final Token _r;
     
-    public Iterate(Node node) {
-        _node = node;
+    public Sequence(Token l, Token r) {
+        _l = l;
+        _r = r;
     }
     
+    @Override
     public boolean eval() {
-        while (_node.eval());
-        return true;
+        return _l.eval() && _r.eval();
     }
     
 }
