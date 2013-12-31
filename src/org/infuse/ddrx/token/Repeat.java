@@ -17,11 +17,11 @@
 package org.infuse.ddrx.token;
 
 
-public class Loop implements Token {
+public class Repeat implements Token {
     
     private final Token _node;
     
-    public Loop(Token node) {
+    public Repeat(Token node) {
         _node = node;
     }
     
