@@ -14,20 +14,12 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.predicate;
+package org.infuse.ddrx.expression;
 
 import java.math.BigInteger;
 
-public class Con implements Expression {
+public interface Expression {
     
-    private final BigInteger _value;
-    
-    public Con(BigInteger value) {
-        _value = value;
-    }
-
-    public BigInteger eval() {
-        return _value;
-    }
+    BigInteger eval();
     
 }

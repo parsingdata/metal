@@ -17,11 +17,12 @@
 package org.infuse.ddrx.io;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Stack;
 
-public class ByteStream {
+public class ByteStream extends InputStream {
     
     private byte[] _data;
     private int _offset;
@@ -33,12 +34,24 @@ public class ByteStream {
         _marked = new Stack<Integer>();
     }
     
-    public void mark() {
+    @Override
+    public boolean markSupported() {
+        return true;
+    }
+    
+    @Override
+    public synchronized void mark(int readlimit) {
         _marked.add(_offset);
     }
     
+    @Override
     public void reset() {
         _offset = pop();
+    }
+    
+    @Override
+    public int available() throws IOException {
+        return atEnd() ? 0 : _data.length - _offset;
     }
     
     public void clear() {
@@ -53,12 +66,7 @@ public class ByteStream {
     }
     
     public int read() {
-        if (atEnd()) {
-            throw new RuntimeException("End of stream reached.");
-        }
-        int ret = _data[_offset];
-        _offset++;
-        return ret;
+        return atEnd() ? -1 : _data[_offset++];
     }
     
     public boolean atEnd() {

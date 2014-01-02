@@ -14,8 +14,20 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.predicate;
+package org.infuse.ddrx.expression;
 
-public enum Operator {
-    Equals, NotEquals, GreaterThan, LessThan, GreaterThanOrEquals, LessThanOrEquals;
+import java.math.BigInteger;
+
+public class Con implements Expression {
+    
+    private final BigInteger _value;
+    
+    public Con(BigInteger value) {
+        _value = value;
+    }
+
+    public BigInteger eval() {
+        return _value;
+    }
+    
 }

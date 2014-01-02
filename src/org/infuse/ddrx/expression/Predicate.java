@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.predicate;
+package org.infuse.ddrx.expression;
 
 import java.math.BigInteger;
 

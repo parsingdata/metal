@@ -16,8 +16,8 @@
 
 package org.infuse.ddrx.token;
 
-import org.infuse.ddrx.predicate.Expression;
-import org.infuse.ddrx.predicate.Predicate;
+import org.infuse.ddrx.expression.Expression;
+import org.infuse.ddrx.expression.Predicate;
 
 public class Value implements Token {
     
