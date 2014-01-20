@@ -16,7 +16,6 @@
 
 package org.infuse.ddrx.expression.value;
 
-
 public abstract class BinaryValueExpression implements ValueExpression {
     
     protected final ValueExpression _lop;

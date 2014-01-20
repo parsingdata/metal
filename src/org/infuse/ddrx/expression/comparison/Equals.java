@@ -17,17 +17,16 @@
 package org.infuse.ddrx.expression.comparison;
 
 import org.infuse.ddrx.expression.value.ValueExpression;
-import org.infuse.ddrx.token.Value;
 
 public class Equals extends ComparisonExpression {
     
-    public Equals(Value value, ValueExpression predicate) {
+    public Equals(ValueExpression value, ValueExpression predicate) {
         super(value, predicate);
     }
 
     @Override
     public boolean eval() {
-        return _value.equals(_predicate.eval());
+        return _value.eval().equals(_predicate.eval());
     }
 
 }

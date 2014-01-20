@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.expression.comparison;
+package org.infuse.ddrx.data;
 
-import org.infuse.ddrx.expression.Expression;
-import org.infuse.ddrx.expression.value.ValueExpression;
+import java.math.BigInteger;
+import java.util.HashMap;
 
-public abstract class ComparisonExpression implements Expression {
-    
-    protected final ValueExpression _value;
-    protected final ValueExpression _predicate;
-    
-    public ComparisonExpression(ValueExpression value, ValueExpression predicate) {
-        _value = value;
-        _predicate = predicate;
-    }
-    
+@SuppressWarnings("serial")
+public class ValueStore extends HashMap<String,BigInteger> {
+  
+  private static final ValueStore _instance = new ValueStore();
+  
+  private ValueStore() {}
+  
+  public static ValueStore getInstance() {
+    return _instance;
+  }
+  
 }
