@@ -18,8 +18,14 @@ package org.infuse.ddrx.exp;
 
 import java.math.BigInteger;
 
-public interface ComparisonExpression extends Expression {
+public abstract class ComparisonExpression implements Expression {
     
-    boolean eval(BigInteger value, ValueExpression predicate);
+    protected final BigInteger _value;
+    protected final ValueExpression _predicate;
+    
+    public ComparisonExpression(BigInteger value, ValueExpression predicate) {
+        _value = value;
+        _predicate = predicate;
+    }
     
 }

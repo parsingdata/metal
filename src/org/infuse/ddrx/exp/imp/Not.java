@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.exp;
+package org.infuse.ddrx.exp.imp;
 
-public interface Expression {
+import org.infuse.ddrx.exp.Expression;
+import org.infuse.ddrx.exp.UnaryLogicalExpression;
+
+public class Not extends UnaryLogicalExpression {
     
-    boolean eval();
+    public Not(Expression op) {
+        super(op);
+    }
+
+    @Override
+    public boolean eval() {
+        return !_op.eval();
+    }
 
 }

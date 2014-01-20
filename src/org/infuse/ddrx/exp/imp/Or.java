@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.exp;
+package org.infuse.ddrx.exp.imp;
 
-public interface Expression {
+import org.infuse.ddrx.exp.BinaryLogicalExpression;
+import org.infuse.ddrx.exp.Expression;
+
+public class Or extends BinaryLogicalExpression {
     
-    boolean eval();
+    public Or(Expression lop, Expression rop) {
+        super(lop, rop);
+    }
+
+    @Override
+    public boolean eval() {
+        return _lop.eval() || _rop.eval();
+    }
 
 }

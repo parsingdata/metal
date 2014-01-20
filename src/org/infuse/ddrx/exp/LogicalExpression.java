@@ -16,8 +16,6 @@
 
 package org.infuse.ddrx.exp;
 
-public interface LogicalExpression {
+public interface LogicalExpression extends Expression {
     
-    boolean eval();
-
 }
