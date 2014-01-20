@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.exp;
+package org.infuse.ddrx.expression.value;
 
-public abstract class UnaryLogicalExpression implements LogicalExpression {
+import java.math.BigInteger;
+
+public class Con implements ValueExpression {
     
-    protected final Expression _op;
+    private final BigInteger _val;
     
-    public UnaryLogicalExpression(Expression op) {
-        _op = op;
+    public Con(BigInteger val) {
+        _val = val;
     }
-    
+
+    @Override
+    public BigInteger eval() {
+        return _val;
+    }
+
 }

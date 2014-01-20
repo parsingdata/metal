@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.exp;
+package org.infuse.ddrx.expression.value;
 
 import java.math.BigInteger;
 
-public abstract class ComparisonExpression implements Expression {
+public class Sub extends BinaryValueExpression {
     
-    protected final BigInteger _value;
-    protected final ValueExpression _predicate;
-    
-    public ComparisonExpression(BigInteger value, ValueExpression predicate) {
-        _value = value;
-        _predicate = predicate;
+    public Sub(ValueExpression lop, ValueExpression rop) {
+        super(lop, rop);
     }
-    
+
+    @Override
+    public BigInteger eval() {
+        return _lop.eval().subtract(_rop.eval());
+    }
+
 }

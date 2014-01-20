@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.expression;
+package org.infuse.ddrx.expression.logical;
 
-import java.math.BigInteger;
+import org.infuse.ddrx.expression.Expression;
 
-public class Add implements Expression {
+public class Not extends UnaryLogicalExpression {
     
-    private final Expression _l;
-    private final Expression _r;
-    
-    public Add(Expression l, Expression r) {
-        _l = l;
-        _r = r;
+    public Not(Expression op) {
+        super(op);
     }
-    
-    public BigInteger eval() {
-        return _l.eval().add(_r.eval());
+
+    @Override
+    public boolean eval() {
+        return !_op.eval();
     }
-    
+
 }

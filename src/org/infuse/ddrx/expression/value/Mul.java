@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.exp.imp;
+package org.infuse.ddrx.expression.value;
 
-import org.infuse.ddrx.exp.BinaryLogicalExpression;
-import org.infuse.ddrx.exp.Expression;
+import java.math.BigInteger;
 
-public class And extends BinaryLogicalExpression {
+public class Mul extends BinaryValueExpression {
     
-    public And(Expression lop, Expression rop) {
+    public Mul(ValueExpression lop, ValueExpression rop) {
         super(lop, rop);
     }
 
     @Override
-    public boolean eval() {
-        return _lop.eval() && _rop.eval();
+    public BigInteger eval() {
+        return _lop.eval().multiply(_rop.eval());
     }
 
 }

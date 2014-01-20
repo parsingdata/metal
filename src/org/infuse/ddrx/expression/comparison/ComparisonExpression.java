@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.expression;
+package org.infuse.ddrx.expression.comparison;
 
 import java.math.BigInteger;
 
-public class Con implements Expression {
-    
-    private final BigInteger _value;
-    
-    public Con(BigInteger value) {
-        _value = value;
-    }
+import org.infuse.ddrx.expression.Expression;
+import org.infuse.ddrx.expression.value.ValueExpression;
 
-    public BigInteger eval() {
-        return _value;
+public abstract class ComparisonExpression implements Expression {
+    
+    protected final BigInteger _value;
+    protected final ValueExpression _predicate;
+    
+    public ComparisonExpression(BigInteger value, ValueExpression predicate) {
+        _value = value;
+        _predicate = predicate;
     }
     
 }

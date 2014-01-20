@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.exp.imp;
+package org.infuse.ddrx.expression.value;
 
-import org.infuse.ddrx.exp.BinaryLogicalExpression;
-import org.infuse.ddrx.exp.Expression;
+import java.math.BigInteger;
 
-public class Or extends BinaryLogicalExpression {
+public class Neg extends UnaryValueExpression {
     
-    public Or(Expression lop, Expression rop) {
-        super(lop, rop);
+    public Neg(ValueExpression op) {
+        super(op);
     }
 
     @Override
-    public boolean eval() {
-        return _lop.eval() || _rop.eval();
+    public BigInteger eval() {
+        return _op.eval().negate();
     }
 
 }

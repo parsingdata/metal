@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.expression;
+package org.infuse.ddrx.expression.logical;
 
-public enum Operator {
-    Equals, NotEquals, GreaterThan, LessThan, GreaterThanOrEquals, LessThanOrEquals;
+import org.infuse.ddrx.expression.Expression;
+
+public interface LogicalExpression extends Expression {
+    
 }

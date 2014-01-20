@@ -16,10 +16,8 @@
 
 package org.infuse.ddrx.expression;
 
-import java.math.BigInteger;
-
 public interface Expression {
     
-    BigInteger eval();
-    
+    boolean eval();
+
 }

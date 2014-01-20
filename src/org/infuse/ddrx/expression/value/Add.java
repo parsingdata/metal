@@ -14,8 +14,19 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.expression;
+package org.infuse.ddrx.expression.value;
 
-public class Type {
+import java.math.BigInteger;
+
+public class Add extends BinaryValueExpression {
+    
+    public Add(ValueExpression lop, ValueExpression rop) {
+        super(lop, rop);
+    }
+
+    @Override
+    public BigInteger eval() {
+        return _lop.eval().add(_rop.eval());
+    }
 
 }

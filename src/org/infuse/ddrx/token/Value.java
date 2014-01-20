@@ -17,19 +17,16 @@
 package org.infuse.ddrx.token;
 
 import org.infuse.ddrx.expression.Expression;
-import org.infuse.ddrx.expression.Predicate;
-import org.infuse.ddrx.expression.Type;
+import org.infuse.ddrx.expression.value.ValueExpression;
 
 public class Value implements Token {
     
     private final String _name;
-    private final Type _type;
-    private final Expression _size;
-    private final Predicate _pred;
+    private final ValueExpression _size;
+    private final Expression _pred;
     
-    public Value(String name, Type type, Expression size, Predicate pred) {
+    public Value(String name, ValueExpression size, Expression pred) {
         _name = name;
-        _type = type;
         _size = size;
         _pred = pred;
     }

@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.exp.imp;
+package org.infuse.ddrx.expression.value;
 
-import java.math.BigInteger;
 
-import org.infuse.ddrx.exp.BinaryValueExpression;
-import org.infuse.ddrx.exp.ValueExpression;
-
-public class Add extends BinaryValueExpression {
+public abstract class UnaryValueExpression implements ValueExpression {
     
-    public Add(ValueExpression lop, ValueExpression rop) {
-        super(lop, rop);
+    protected final ValueExpression _op;
+    
+    public UnaryValueExpression(ValueExpression op) {
+        _op = op;
     }
-
-    @Override
-    public BigInteger eval() {
-        return _lop.eval().add(_rop.eval());
-    }
-
+    
 }

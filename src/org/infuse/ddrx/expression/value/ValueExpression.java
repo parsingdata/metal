@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.exp;
+package org.infuse.ddrx.expression.value;
 
-public abstract class BinaryLogicalExpression implements LogicalExpression {
+import java.math.BigInteger;
+
+public interface ValueExpression {
     
-    protected final Expression _lop;
-    protected final Expression _rop;
-    
-    public BinaryLogicalExpression(Expression lop, Expression rop) {
-        _lop = lop;
-        _rop = rop;
-    }
+    BigInteger eval();
     
 }

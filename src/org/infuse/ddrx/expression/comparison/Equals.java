@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.exp;
+package org.infuse.ddrx.expression.comparison;
 
-public abstract class UnaryValueExpression implements ValueExpression {
+import java.math.BigInteger;
+
+import org.infuse.ddrx.expression.value.ValueExpression;
+
+public class Equals extends ComparisonExpression {
     
-    protected final ValueExpression _op;
-    
-    public UnaryValueExpression(ValueExpression op) {
-        _op = op;
+    public Equals(BigInteger value, ValueExpression predicate) {
+        super(value, predicate);
     }
-    
+
+    @Override
+    public boolean eval() {
+        return _value.equals(_predicate.eval());
+    }
+
 }

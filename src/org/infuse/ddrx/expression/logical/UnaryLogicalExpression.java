@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.exp;
+package org.infuse.ddrx.expression.logical;
 
-public interface Expression {
+import org.infuse.ddrx.expression.Expression;
+
+public abstract class UnaryLogicalExpression implements LogicalExpression {
     
-    boolean eval();
-
+    protected final Expression _op;
+    
+    public UnaryLogicalExpression(Expression op) {
+        _op = op;
+    }
+    
 }

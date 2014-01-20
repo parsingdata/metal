@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.exp;
+package org.infuse.ddrx.expression.value;
 
 import java.math.BigInteger;
 
-public interface ValueExpression {
+public class Div extends BinaryValueExpression {
     
-    BigInteger eval();
-    
+    public Div(ValueExpression lop, ValueExpression rop) {
+        super(lop, rop);
+    }
+
+    @Override
+    public BigInteger eval() {
+        return _lop.eval().divide(_rop.eval());
+    }
+
 }

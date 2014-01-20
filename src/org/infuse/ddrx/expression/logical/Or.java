@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package org.infuse.ddrx.exp;
+package org.infuse.ddrx.expression.logical;
 
-public abstract class BinaryValueExpression implements ValueExpression {
+import org.infuse.ddrx.expression.Expression;
+
+public class Or extends BinaryLogicalExpression {
     
-    protected final ValueExpression _lop;
-    protected final ValueExpression _rop;
-    
-    public BinaryValueExpression(ValueExpression lop, ValueExpression rop) {
-        _lop = lop;
-        _rop = rop;
+    public Or(Expression lop, Expression rop) {
+        super(lop, rop);
     }
-    
+
+    @Override
+    public boolean eval() {
+        return _lop.eval() || _rop.eval();
+    }
+
 }
