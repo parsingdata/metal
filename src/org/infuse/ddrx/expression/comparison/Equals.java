@@ -16,13 +16,12 @@
 
 package org.infuse.ddrx.expression.comparison;
 
-import java.math.BigInteger;
-
 import org.infuse.ddrx.expression.value.ValueExpression;
+import org.infuse.ddrx.token.Value;
 
 public class Equals extends ComparisonExpression {
     
-    public Equals(BigInteger value, ValueExpression predicate) {
+    public Equals(Value value, ValueExpression predicate) {
         super(value, predicate);
     }
 

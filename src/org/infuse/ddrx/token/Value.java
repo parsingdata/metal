@@ -16,6 +16,8 @@
 
 package org.infuse.ddrx.token;
 
+import java.math.BigInteger;
+
 import org.infuse.ddrx.expression.Expression;
 import org.infuse.ddrx.expression.value.ValueExpression;
 
@@ -34,6 +36,7 @@ public class Value implements Token {
     @Override
     public boolean eval() {
         // Evaluate size.
+      BigInteger size = _size.eval();
         // Read size from stream.
         // Validate type.
         // Determine if stored predicates can be evaluated.

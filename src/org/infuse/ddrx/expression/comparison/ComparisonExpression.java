@@ -16,17 +16,16 @@
 
 package org.infuse.ddrx.expression.comparison;
 
-import java.math.BigInteger;
-
 import org.infuse.ddrx.expression.Expression;
 import org.infuse.ddrx.expression.value.ValueExpression;
+import org.infuse.ddrx.token.Value;
 
 public abstract class ComparisonExpression implements Expression {
     
-    protected final BigInteger _value;
+    protected final Value _value;
     protected final ValueExpression _predicate;
     
-    public ComparisonExpression(BigInteger value, ValueExpression predicate) {
+    public ComparisonExpression(Value value, ValueExpression predicate) {
         _value = value;
         _predicate = predicate;
     }
