@@ -34,58 +34,42 @@ public class RegressionTests {
     
     private final byte[] _input = new byte[] { 1, 2, 3, 4 };
     
+    private Value buildSimpleToken(String name, int size, String refName, int predicateSize, byte[] inputData) {
+        return new Value(name,
+                            new Con(BigInteger.valueOf(size)),
+                            new Equals(
+                                       new Ref(refName),
+                                       new Con(BigInteger.valueOf(predicateSize))),
+                            new ByteStream(inputData));
+    }
+    
     @Test
     public void simple1Correct() {
-        Token t = new Value("r1", 
-                            new Con(BigInteger.valueOf(1)), 
-                            new Equals(
-                                       new Ref("r1"), 
-                                       new Con(BigInteger.valueOf(1))), 
-                            new ByteStream(_input));
+        Token t = buildSimpleToken("r1", 1, "r1", 1, _input);
         org.junit.Assert.assertTrue(t.eval());
+    }
+
+    @Test
+    public void simple1SizeError() {
+        Token t = buildSimpleToken("r1", 2, "r1", 1, _input);
+        org.junit.Assert.assertFalse(t.eval());
     }
     
     @Test(expected=NullPointerException.class)
     public void simple1RefError() {
-        Token t = new Value("r1", 
-                            new Con(BigInteger.valueOf(1)), 
-                            new Equals(
-                                       new Ref("r2"), 
-                                       new Con(BigInteger.valueOf(1))), 
-                            new ByteStream(_input));
+        Token t = buildSimpleToken("r1", 1, "r2", 1, _input);
         t.eval();
     }
     
     @Test
-    public void simple1SizeError() {
-        Token t = new Value("r1", 
-                            new Con(BigInteger.valueOf(2)), 
-                            new Equals(
-                                       new Ref("r1"), 
-                                       new Con(BigInteger.valueOf(1))), 
-                            new ByteStream(_input));
-        org.junit.Assert.assertFalse(t.eval());
-    }
-    
-    @Test
     public void simple1PredicateError() {
-        Token t = new Value("r1", 
-                            new Con(BigInteger.valueOf(1)), 
-                            new Equals(
-                                       new Ref("r1"), 
-                                       new Con(BigInteger.valueOf(2))), 
-                            new ByteStream(_input));
+        Token t = buildSimpleToken("r1", 1, "r1", 2, _input);
         org.junit.Assert.assertFalse(t.eval());
     }
     
     @Test
     public void simple1SourceError() {
-        Token t = new Value("r1", 
-                            new Con(BigInteger.valueOf(1)), 
-                            new Equals(
-                                       new Ref("r1"), 
-                                       new Con(BigInteger.valueOf(1))), 
-                            new ByteStream(new byte[] { 2, 2, 2, 2 }));
+        Token t = buildSimpleToken("r1", 1, "r1", 1, new byte[] { 2, 2, 2, 2 });
         org.junit.Assert.assertFalse(t.eval());
     }
     
