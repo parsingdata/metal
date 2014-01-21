@@ -29,7 +29,11 @@ public class ByteStream extends InputStream {
     private Stack<Integer> _marked;
     
     public ByteStream(String path) throws IOException {
-        _data = Files.readAllBytes(Paths.get(path));
+        this(Files.readAllBytes(Paths.get(path)));
+    }
+    
+    public ByteStream(byte[] data) {
+        _data = data;
         _offset = 0;
         _marked = new Stack<Integer>();
     }
