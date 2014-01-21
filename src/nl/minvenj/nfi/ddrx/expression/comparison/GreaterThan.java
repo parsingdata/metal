@@ -18,15 +18,15 @@ package nl.minvenj.nfi.ddrx.expression.comparison;
 
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class Equals extends ComparisonExpression {
+public class GreaterThan extends ComparisonExpression {
     
-    public Equals(ValueExpression value, ValueExpression predicate) {
+    public GreaterThan(ValueExpression value, ValueExpression predicate) {
         super(value, predicate);
     }
 
     @Override
     public boolean eval() {
-    	return _value.eval().compareTo(_predicate.eval()) == 0;
+    	return _value.eval().compareTo(_predicate.eval()) == 1;
     }
 
 }
