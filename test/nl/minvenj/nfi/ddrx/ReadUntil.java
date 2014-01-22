@@ -36,7 +36,8 @@ import nl.minvenj.nfi.ddrx.token.Value;
 @RunWith(JUnit4.class)
 public class ReadUntil {
     
-    private Token buildReadUntil(ByteStream input) {
+    private Token buildReadUntil(byte[] data) {
+        ByteStream input = new ByteStream(data);
         return new Sequence(
                             new Repeat(new Value("any", new Con(BigInteger.valueOf(1)), new Not(new Equals(new Ref("any"), new Con(BigInteger.valueOf(42)))), input)),
                             new Value("terminator", new Con(BigInteger.valueOf(1)), new Equals(new Ref("terminator"), new Con(BigInteger.valueOf(42))), input));
@@ -44,15 +45,19 @@ public class ReadUntil {
     
     @Test
     public void ReadUntilConstant() {
-        ByteStream input = new ByteStream(new byte[] { 1, 2, 3, 4, 42 });
-        Token t = buildReadUntil(input);
+        Token t = buildReadUntil(new byte[] { 1, 2, 3, 4, 42 });
+        Assert.assertTrue(t.eval());
+    }
+    
+    @Test
+    public void ReadUntilNoSkipping() {
+        Token t = buildReadUntil(new byte[] { 42 });
         Assert.assertTrue(t.eval());
     }
     
     @Test
     public void ReadUntilErrorNoTerminator() {
-        ByteStream input = new ByteStream(new byte[] { 1, 2, 3, 4 });
-        Token t = buildReadUntil(input);
+        Token t = buildReadUntil(new byte[] { 1, 2, 3, 4 });
         Assert.assertFalse(t.eval());
     }
     
