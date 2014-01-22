@@ -18,6 +18,7 @@ package nl.minvenj.nfi.ddrx;
 
 import java.math.BigInteger;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -30,7 +31,7 @@ import nl.minvenj.nfi.ddrx.token.Token;
 import nl.minvenj.nfi.ddrx.token.Value;
 
 @RunWith(JUnit4.class)
-public class RegressionTests {
+public class Simple {
     
     private final byte[] _input = new byte[] { 1, 2, 3, 4 };
     
@@ -46,13 +47,13 @@ public class RegressionTests {
     @Test
     public void simple1Correct() {
         Token t = buildSimpleToken("r1", 1, "r1", 1, _input);
-        org.junit.Assert.assertTrue(t.eval());
+        Assert.assertTrue(t.eval());
     }
 
     @Test
     public void simple1SizeError() {
         Token t = buildSimpleToken("r1", 2, "r1", 1, _input);
-        org.junit.Assert.assertFalse(t.eval());
+        Assert.assertFalse(t.eval());
     }
     
     @Test(expected=NullPointerException.class)
@@ -64,13 +65,13 @@ public class RegressionTests {
     @Test
     public void simple1PredicateError() {
         Token t = buildSimpleToken("r1", 1, "r1", 2, _input);
-        org.junit.Assert.assertFalse(t.eval());
+        Assert.assertFalse(t.eval());
     }
     
     @Test
     public void simple1SourceError() {
         Token t = buildSimpleToken("r1", 1, "r1", 1, new byte[] { 2, 2, 2, 2 });
-        org.junit.Assert.assertFalse(t.eval());
+        Assert.assertFalse(t.eval());
     }
     
 }

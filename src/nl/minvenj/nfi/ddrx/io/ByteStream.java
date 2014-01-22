@@ -48,6 +48,10 @@ public class ByteStream extends InputStream {
         _marked.add(_offset);
     }
     
+    public void mark() {
+        mark(0);
+    }
+    
     @Override
     public void reset() {
         _offset = pop();

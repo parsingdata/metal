@@ -19,15 +19,39 @@ package nl.minvenj.nfi.ddrx.data;
 import java.math.BigInteger;
 import java.util.HashMap;
 
-@SuppressWarnings("serial")
-public class ValueStore extends HashMap<String,BigInteger> {
+public class ValueStore {
   
   private static final ValueStore _instance = new ValueStore();
+  private final HashMap<String,BigInteger> _perm;
+  private final HashMap<String,BigInteger> _temp;
   
-  private ValueStore() {}
+  private ValueStore() {
+      _perm = new HashMap<String,BigInteger>();
+      _temp = new HashMap<String,BigInteger>();
+  }
   
   public static ValueStore getInstance() {
     return _instance;
+  }
+  
+  public void put(String name, BigInteger value) {
+      _temp.put(name, value);
+  }
+  
+  public BigInteger get(String name) {
+      if (_temp.containsKey(name)) {
+          return _temp.get(name);
+      }
+      return _perm.get(name);
+  }
+  
+  public void revoke(String name) {
+      _temp.remove(name);
+  }
+  
+  public void finalize(String name) {
+      _perm.put(name, _temp.get(name));
+      _temp.remove(name);
   }
   
 }

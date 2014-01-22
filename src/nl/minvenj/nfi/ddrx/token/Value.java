@@ -25,12 +25,12 @@ import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 import nl.minvenj.nfi.ddrx.io.ByteStream;
 
 public class Value implements Token {
-    
+
     private final String _name;
     private final ValueExpression _size;
     private final Expression _pred;
     private final ByteStream _input;
-    
+
     public Value(String name, ValueExpression size, Expression pred, ByteStream input) {
         _name = name;
         _size = size;
@@ -40,27 +40,37 @@ public class Value implements Token {
 
     @Override
     public boolean eval() {
-      // Evaluate size.
-      BigInteger size = _size.eval();
-      // Read size from stream.
-      byte[] data = new byte[size.intValue()];
-      try {
-        if (_input.read(data) != size.intValue()) {
-          return false;
+        // Evaluate size.
+        BigInteger size = _size.eval();
+        // Read size from stream.
+        byte[] data = new byte[size.intValue()];
+        _input.mark();
+        try {
+            if (_input.read(data) != size.intValue()) {
+                _input.reset();
+                return false;
+            }
         }
-      } catch (IOException e) {
-        e.printStackTrace();
-        return false;
-      }
-      BigInteger value = new BigInteger(data);
-      // TODO: Validate type.
-      // TODO: Determine if stored predicates can be evaluated.
-      // TODO: If so, evaluate stored predicates and return false if one fails.
-      // TODO: Determine if predicate can be evaluated.
-      // If so, evaluate and return result.
-      ValueStore.getInstance().put(_name, value);
-      return _pred.eval();
-      // TODO: If not, store predicate.
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        BigInteger value = new BigInteger(data);
+        // TODO: Validate type.
+        // TODO: Determine if stored predicates can be evaluated.
+        // TODO: If so, evaluate stored predicates and return false if one fails.
+        // TODO: Determine if predicate can be evaluated.
+        // If so, evaluate and return result.
+        ValueStore.getInstance().put(_name, value);
+        if (_pred.eval()) {
+            ValueStore.getInstance().finalize(_name);
+            return true;
+        } else {
+            ValueStore.getInstance().revoke(_name);
+            _input.reset();
+            return false;
+        }
+        // TODO: If not, store predicate.
     }
-    
+
 }
