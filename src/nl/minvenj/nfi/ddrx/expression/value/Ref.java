@@ -32,5 +32,10 @@ public class Ref implements ValueExpression {
     public BigInteger eval() {
       return ValueStore.getInstance().get(_name);
     }
-
+    
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(\"" + _name + "\")";
+    }
+    
 }

@@ -29,4 +29,9 @@ public abstract class ComparisonExpression implements Expression {
         _predicate = predicate;
     }
     
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _value + "," + _predicate + ")";
+    }
+    
 }

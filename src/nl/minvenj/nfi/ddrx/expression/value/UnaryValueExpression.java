@@ -25,4 +25,9 @@ public abstract class UnaryValueExpression implements ValueExpression {
         _op = op;
     }
     
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _op + ")";
+    }
+    
 }

@@ -30,5 +30,10 @@ public class Con implements ValueExpression {
     public BigInteger eval() {
         return _val;
     }
-
+    
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _val.toString() + ")";
+    }
+    
 }

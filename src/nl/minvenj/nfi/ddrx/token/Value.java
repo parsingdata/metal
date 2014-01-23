@@ -72,5 +72,10 @@ public class Value implements Token {
         }
         // TODO: If not, store predicate.
     }
-
+    
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(\"" + _name + "\"," + _size + "," + _pred + "," + _input + ")";
+    }
+    
 }

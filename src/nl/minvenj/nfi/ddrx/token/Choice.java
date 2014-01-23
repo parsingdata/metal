@@ -30,5 +30,10 @@ public class Choice implements Token {
     public boolean eval() {
         return _l.eval() || _r.eval();
     }
-
+    
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _l + "," + _r + ")";
+    }
+    
 }

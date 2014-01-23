@@ -26,4 +26,9 @@ public abstract class BinaryValueExpression implements ValueExpression {
         _rop = rop;
     }
     
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _lop + "," + _rop + ")";
+    }
+    
 }

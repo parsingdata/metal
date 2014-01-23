@@ -81,4 +81,9 @@ public class ByteStream extends InputStream {
         return _offset >= _data.length;
     }
     
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _data.length + ")";
+    }
+    
 }

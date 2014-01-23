@@ -26,4 +26,9 @@ public abstract class UnaryLogicalExpression implements LogicalExpression {
         _op = op;
     }
     
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _op + ")";
+    }
+    
 }

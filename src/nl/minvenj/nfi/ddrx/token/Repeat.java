@@ -30,4 +30,9 @@ public class Repeat implements Token {
         return true;
     }
     
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _node + ")";
+    }
+    
 }

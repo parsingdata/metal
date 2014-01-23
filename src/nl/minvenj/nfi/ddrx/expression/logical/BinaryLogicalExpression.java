@@ -28,4 +28,9 @@ public abstract class BinaryLogicalExpression implements LogicalExpression {
         _rop = rop;
     }
     
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _lop + "," + _rop + ")";
+    }
+    
 }

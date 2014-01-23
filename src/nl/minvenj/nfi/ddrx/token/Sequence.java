@@ -31,4 +31,9 @@ public class Sequence implements Token {
         return _l.eval() && _r.eval();
     }
     
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _l + "," + _r + ")";
+    }
+    
 }

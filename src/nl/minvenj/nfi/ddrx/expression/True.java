@@ -22,5 +22,10 @@ public class True implements Expression {
     public boolean eval() {
         return true;
     }
-
+    
+    @Override
+    public String toString() {
+        return "True";
+    }
+    
 }
