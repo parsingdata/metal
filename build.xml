@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<project name="ddrx" default="test">
+
+    <presetdef name="javac">
+        <javac includeantruntime="false"/>
+    </presetdef>
+
+    <path id="junit.class.path">
+        <pathelement location="lib/junit-4.11.jar"/>
+        <pathelement location="lib/hamcrest-core-1.3.jar"/>
+        <pathelement location="bin"/>
+    </path>
+    
+    <target name="clean">
+        <delete dir="bin"/>
+        <delete dir="testreport"/>
+    </target>
+    
+    <target name="makedirs" depends="clean">
+        <mkdir dir="bin"/>
+        <mkdir dir="bin/test"/>
+        <mkdir dir="testreport"/>
+    </target>
+    
+    <target name="compile" depends="makedirs">
+        <javac srcdir="src" destdir="bin">
+            <classpath refid="junit.class.path"/>
+        </javac>
+        <javac srcdir="test" destdir="bin/test">
+            <classpath refid="junit.class.path"/>
+        </javac>
+    </target>
+    
+    <target name="test" depends="compile">
+        <junit printsummary="on" fork="true" haltonfailure="yes">
+            <classpath refid="junit.class.path"/>
+            <classpath>
+                <pathelement location="bin/test"/>
+            </classpath>
+            <formatter type="xml" />
+            <batchtest todir="testreport">
+                <fileset dir="test">
+                    <include name="**/*.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+</project>
