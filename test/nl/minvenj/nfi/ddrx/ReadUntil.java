@@ -44,19 +44,19 @@ public class ReadUntil {
     }
     
     @Test
-    public void ReadUntilConstant() {
+    public void readUntilConstant() {
         Token t = buildReadUntil(new byte[] { 1, 2, 3, 4, 42 });
         Assert.assertTrue(t.eval());
     }
     
     @Test
-    public void ReadUntilNoSkipping() {
+    public void readUntilNoSkipping() {
         Token t = buildReadUntil(new byte[] { 42 });
         Assert.assertTrue(t.eval());
     }
     
     @Test
-    public void ReadUntilErrorNoTerminator() {
+    public void readUntilErrorNoTerminator() {
         Token t = buildReadUntil(new byte[] { 1, 2, 3, 4 });
         Assert.assertFalse(t.eval());
     }

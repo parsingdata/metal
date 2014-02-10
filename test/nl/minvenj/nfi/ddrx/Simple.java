@@ -45,31 +45,31 @@ public class Simple {
     }
     
     @Test
-    public void simple1Correct() {
+    public void correct() {
         Token t = buildSimpleToken("r1", 1, "r1", 1, _input);
         Assert.assertTrue(t.eval());
     }
 
     @Test
-    public void simple1SizeError() {
+    public void sizeError() {
         Token t = buildSimpleToken("r1", 2, "r1", 1, _input);
         Assert.assertFalse(t.eval());
     }
     
     @Test(expected=NullPointerException.class)
-    public void simple1RefError() {
+    public void refError() {
         Token t = buildSimpleToken("r1", 1, "r2", 1, _input);
         t.eval();
     }
     
     @Test
-    public void simple1PredicateError() {
+    public void predicateError() {
         Token t = buildSimpleToken("r1", 1, "r1", 2, _input);
         Assert.assertFalse(t.eval());
     }
     
     @Test
-    public void simple1SourceError() {
+    public void sourceError() {
         Token t = buildSimpleToken("r1", 1, "r1", 1, new byte[] { 2, 2, 2, 2 });
         Assert.assertFalse(t.eval());
     }
