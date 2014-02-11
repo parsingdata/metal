@@ -62,6 +62,7 @@ public class Value implements Token {
         ValueStore.getInstance().put(_name, value);
         if (_pred.eval()) {
             ValueStore.getInstance().finalize(_name);
+            input.clear();
             return true;
         } else {
             ValueStore.getInstance().revoke(_name);

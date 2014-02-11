@@ -30,7 +30,21 @@ public class Choice implements Token {
 
     @Override
     public boolean eval(ByteStream input) {
-        return _l.eval(input) || _r.eval(input);
+    	input.mark();
+    	if (_l.eval(input)) {
+    		input.clear();
+    		return true;
+    	} else {
+    		input.reset();
+    		input.mark();
+    		if (_r.eval(input)) {
+    			input.clear();
+    			return true;
+    		} else {
+    			input.reset();
+    			return false;
+    		}
+    	}
     }
     
     @Override

@@ -29,8 +29,13 @@ public class Repeat implements Token {
     
     @Override
     public boolean eval(ByteStream input) {
-        while (_node.eval(input));
-        return true;
+    	input.mark();
+    	while (_node.eval(input)) {
+    		input.clear();
+    		input.mark();
+    	}
+    	input.reset();
+    	return true;
     }
     
     @Override
