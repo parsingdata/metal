@@ -29,25 +29,23 @@ public class Value implements Token {
     private final String _name;
     private final ValueExpression _size;
     private final Expression _pred;
-    private final ByteStream _input;
 
-    public Value(String name, ValueExpression size, Expression pred, ByteStream input) {
+    public Value(String name, ValueExpression size, Expression pred) {
         _name = name;
         _size = size;
         _pred = pred;
-        _input = input;
     }
 
     @Override
-    public boolean eval() {
+    public boolean eval(ByteStream input) {
         // Evaluate size.
         BigInteger size = _size.eval();
         // Read size from stream.
         byte[] data = new byte[size.intValue()];
-        _input.mark();
+        input.mark();
         try {
-            if (_input.read(data) != size.intValue()) {
-                _input.reset();
+            if (input.read(data) != size.intValue()) {
+                input.reset();
                 return false;
             }
         }
@@ -67,7 +65,7 @@ public class Value implements Token {
             return true;
         } else {
             ValueStore.getInstance().revoke(_name);
-            _input.reset();
+            input.reset();
             return false;
         }
         // TODO: If not, store predicate.
@@ -75,7 +73,7 @@ public class Value implements Token {
     
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(\"" + _name + "\"," + _size + "," + _pred + "," + _input + ")";
+        return getClass().getSimpleName() + "(\"" + _name + "\"," + _size + "," + _pred + ",)";
     }
     
 }

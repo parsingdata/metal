@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.token;
 
+import nl.minvenj.nfi.ddrx.io.ByteStream;
+
 
 public class Repeat implements Token {
     
@@ -25,8 +27,9 @@ public class Repeat implements Token {
         _node = node;
     }
     
-    public boolean eval() {
-        while (_node.eval());
+    @Override
+    public boolean eval(ByteStream input) {
+        while (_node.eval(input));
         return true;
     }
     

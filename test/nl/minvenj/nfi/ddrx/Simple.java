@@ -30,48 +30,46 @@ import nl.minvenj.nfi.ddrx.io.ByteStream;
 import nl.minvenj.nfi.ddrx.token.Token;
 import nl.minvenj.nfi.ddrx.token.Value;
 
+@SuppressWarnings("resource")
 @RunWith(JUnit4.class)
 public class Simple {
     
-    private final byte[] _input = new byte[] { 1, 2, 3, 4 };
-    
-    private Value buildSimpleToken(String name, int size, String refName, int predicateSize, byte[] inputData) {
+    private Value buildSimpleToken(String name, int size, String refName, int predicateSize) {
         return new Value(name,
                             new Con(BigInteger.valueOf(size)),
                             new Equals(
                                        new Ref(refName),
-                                       new Con(BigInteger.valueOf(predicateSize))),
-                            new ByteStream(inputData));
+                                       new Con(BigInteger.valueOf(predicateSize))));
     }
     
     @Test
     public void correct() {
-        Token t = buildSimpleToken("r1", 1, "r1", 1, _input);
-        Assert.assertTrue(t.eval());
+        Token t = buildSimpleToken("r1", 1, "r1", 1);
+        Assert.assertTrue(t.eval(new ByteStream(new byte[] { 1, 2, 3, 4 })));
     }
 
     @Test
     public void sizeError() {
-        Token t = buildSimpleToken("r1", 2, "r1", 1, _input);
-        Assert.assertFalse(t.eval());
+        Token t = buildSimpleToken("r1", 2, "r1", 1);
+        Assert.assertFalse(t.eval(new ByteStream(new byte[] { 1, 2, 3, 4 })));
     }
     
     @Test(expected=NullPointerException.class)
     public void refError() {
-        Token t = buildSimpleToken("r1", 1, "r2", 1, _input);
-        t.eval();
+        Token t = buildSimpleToken("r1", 1, "r2", 1);
+        t.eval(new ByteStream(new byte[] { 1, 2, 3, 4 }));
     }
     
     @Test
     public void predicateError() {
-        Token t = buildSimpleToken("r1", 1, "r1", 2, _input);
-        Assert.assertFalse(t.eval());
+        Token t = buildSimpleToken("r1", 1, "r1", 2);
+        Assert.assertFalse(t.eval(new ByteStream(new byte[] { 1, 2, 3, 4 })));
     }
     
     @Test
     public void sourceError() {
-        Token t = buildSimpleToken("r1", 1, "r1", 1, new byte[] { 2, 2, 2, 2 });
-        Assert.assertFalse(t.eval());
+        Token t = buildSimpleToken("r1", 1, "r1", 1);
+        Assert.assertFalse(t.eval(new ByteStream(new byte[] { 2, 2, 2, 2 })));
     }
     
 }

@@ -33,32 +33,27 @@ import nl.minvenj.nfi.ddrx.token.Sequence;
 import nl.minvenj.nfi.ddrx.token.Token;
 import nl.minvenj.nfi.ddrx.token.Value;
 
+@SuppressWarnings("resource")
 @RunWith(JUnit4.class)
 public class ReadUntil {
     
-    private Token buildReadUntil(byte[] data) {
-        ByteStream input = new ByteStream(data);
-        return new Sequence(
-                            new Repeat(new Value("any", new Con(BigInteger.valueOf(1)), new Not(new Equals(new Ref("any"), new Con(BigInteger.valueOf(42)))), input)),
-                            new Value("terminator", new Con(BigInteger.valueOf(1)), new Equals(new Ref("terminator"), new Con(BigInteger.valueOf(42))), input));
-    }
+    private Token _readUntil = new Sequence(
+                                            new Repeat(new Value("any", new Con(BigInteger.valueOf(1)), new Not(new Equals(new Ref("any"), new Con(BigInteger.valueOf(42)))))),
+                                            new Value("terminator", new Con(BigInteger.valueOf(1)), new Equals(new Ref("terminator"), new Con(BigInteger.valueOf(42)))));
     
     @Test
     public void readUntilConstant() {
-        Token t = buildReadUntil(new byte[] { 1, 2, 3, 4, 42 });
-        Assert.assertTrue(t.eval());
+        Assert.assertTrue(_readUntil.eval(new ByteStream(new byte[] { 1, 2, 3, 4, 42 })));
     }
     
     @Test
     public void readUntilNoSkipping() {
-        Token t = buildReadUntil(new byte[] { 42 });
-        Assert.assertTrue(t.eval());
+        Assert.assertTrue(_readUntil.eval(new ByteStream(new byte[] { 42 })));
     }
     
     @Test
     public void readUntilErrorNoTerminator() {
-        Token t = buildReadUntil(new byte[] { 1, 2, 3, 4 });
-        Assert.assertFalse(t.eval());
+        Assert.assertFalse(_readUntil.eval(new ByteStream(new byte[] { 1, 2, 3, 4 })));
     }
     
 }

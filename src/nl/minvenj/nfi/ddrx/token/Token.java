@@ -16,8 +16,10 @@
 
 package nl.minvenj.nfi.ddrx.token;
 
+import nl.minvenj.nfi.ddrx.io.ByteStream;
+
 public interface Token {
     
-    public boolean eval();
+    public boolean eval(ByteStream input);
     
 }
