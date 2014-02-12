@@ -41,6 +41,11 @@ public class BackTrackOffset {
                                                   new Repeat(new Sequence(fixed("a", 1), fixed("b", 2))),
                                                   new Sequence(fixed("c", 1), fixed("d", 3)));
     
+    private Token _backTrackDeepFragment = new Repeat(new Sequence(any("a"),new Sequence(any("b"), new Choice(fixed("c", 21), fixed("d", 42)))));
+    private Token _backTrackDeep = new Choice(
+    		                                  new Sequence(_backTrackDeepFragment, fixed("e", 63)),
+    		                                  new Sequence(_backTrackDeepFragment, fixed("f", 84)));
+    
     @Test
     public void choiceLeft() {
         Assert.assertTrue(_backTrackChoice.eval(stream(1, 2)));
@@ -75,5 +80,10 @@ public class BackTrackOffset {
     public void repeatNone() {
         Assert.assertFalse(_backTrackRepeat.eval(stream(1, 4)));
     }
-
+    
+    @Test
+    public void deepMatch() {
+    	Assert.assertTrue(_backTrackDeep.eval(stream(1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 84)));
+    }
+    
 }
