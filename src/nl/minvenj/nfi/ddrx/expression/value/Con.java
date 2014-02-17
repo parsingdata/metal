@@ -18,6 +18,8 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 import java.math.BigInteger;
 
+import nl.minvenj.nfi.ddrx.data.Environment;
+
 public class Con implements ValueExpression {
     
     private final BigInteger _val;
@@ -27,7 +29,7 @@ public class Con implements ValueExpression {
     }
 
     @Override
-    public BigInteger eval() {
+    public BigInteger eval(Environment env) {
         return _val;
     }
     

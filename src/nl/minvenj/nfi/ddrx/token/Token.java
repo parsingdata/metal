@@ -16,10 +16,11 @@
 
 package nl.minvenj.nfi.ddrx.token;
 
+import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.io.ByteStream;
 
 public interface Token {
     
-    public boolean eval(ByteStream input);
+    public boolean eval(ByteStream input, Environment env);
     
 }

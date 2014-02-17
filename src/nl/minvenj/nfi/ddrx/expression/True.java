@@ -16,10 +16,12 @@
 
 package nl.minvenj.nfi.ddrx.expression;
 
+import nl.minvenj.nfi.ddrx.data.Environment;
+
 public class True implements Expression {
 
     @Override
-    public boolean eval() {
+    public boolean eval(Environment env) {
         return true;
     }
     

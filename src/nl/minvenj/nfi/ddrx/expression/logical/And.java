@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.expression.logical;
 
+import nl.minvenj.nfi.ddrx.data.Environment;
+
 import nl.minvenj.nfi.ddrx.expression.Expression;
 
 public class And extends BinaryLogicalExpression {
@@ -25,8 +27,8 @@ public class And extends BinaryLogicalExpression {
     }
 
     @Override
-    public boolean eval() {
-        return _lop.eval() && _rop.eval();
+    public boolean eval(Environment env) {
+        return _lop.eval(env) && _rop.eval(env);
     }
 
 }

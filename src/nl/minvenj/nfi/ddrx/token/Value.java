@@ -19,7 +19,7 @@ package nl.minvenj.nfi.ddrx.token;
 import java.io.IOException;
 import java.math.BigInteger;
 
-import nl.minvenj.nfi.ddrx.data.ValueStore;
+import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 import nl.minvenj.nfi.ddrx.io.ByteStream;
@@ -37,9 +37,9 @@ public class Value implements Token {
     }
 
     @Override
-    public boolean eval(ByteStream input) {
+    public boolean eval(ByteStream input, Environment env) {
         // Evaluate size.
-        BigInteger size = _size.eval();
+        BigInteger size = _size.eval(env);
         // Read size from stream.
         byte[] data = new byte[size.intValue()];
         input.mark();
@@ -59,13 +59,13 @@ public class Value implements Token {
         // TODO: If so, evaluate stored predicates and return false if one fails.
         // TODO: Determine if predicate can be evaluated.
         // If so, evaluate and return result.
-        ValueStore.getInstance().put(_name, value);
-        if (_pred.eval()) {
-            ValueStore.getInstance().finalize(_name);
+        env.put(_name, value);
+        if (_pred.eval(env)) {
+            env.finalize(_name);
             input.clear();
             return true;
         } else {
-            ValueStore.getInstance().revoke(_name);
+            env.revoke(_name);
             input.reset();
             return false;
         }

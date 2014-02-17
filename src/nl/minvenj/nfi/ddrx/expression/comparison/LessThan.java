@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.expression.comparison;
 
+import nl.minvenj.nfi.ddrx.data.Environment;
+
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
 public class LessThan extends ComparisonExpression {
@@ -25,8 +27,8 @@ public class LessThan extends ComparisonExpression {
     }
 
     @Override
-    public boolean eval() {
-    	return _value.eval().compareTo(_predicate.eval()) == -1;
+    public boolean eval(Environment env) {
+    	return _value.eval(env).compareTo(_predicate.eval(env)) == -1;
     }
 
 }

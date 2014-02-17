@@ -19,19 +19,14 @@ package nl.minvenj.nfi.ddrx.data;
 import java.math.BigInteger;
 import java.util.HashMap;
 
-public class ValueStore {
+public class Environment {
   
-  private static final ValueStore _instance = new ValueStore();
   private final HashMap<String,BigInteger> _perm;
   private final HashMap<String,BigInteger> _temp;
   
-  private ValueStore() {
+  public Environment() {
       _perm = new HashMap<String,BigInteger>();
       _temp = new HashMap<String,BigInteger>();
-  }
-  
-  public static ValueStore getInstance() {
-    return _instance;
   }
   
   public void put(String name, BigInteger value) {

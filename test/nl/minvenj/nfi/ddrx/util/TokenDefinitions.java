@@ -20,6 +20,7 @@ import java.math.BigInteger;
 
 import org.junit.Ignore;
 
+import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.expression.True;
 import nl.minvenj.nfi.ddrx.expression.comparison.Equals;
 import nl.minvenj.nfi.ddrx.expression.logical.Not;
@@ -57,5 +58,9 @@ public class TokenDefinitions {
         }
         return new ByteStream(out);
     }
-
+    
+    public static Environment env() {
+        return new Environment();
+    }
+    
 }

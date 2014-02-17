@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.token;
 
+import nl.minvenj.nfi.ddrx.data.Environment;
+
 import nl.minvenj.nfi.ddrx.io.ByteStream;
 
 public class Sequence implements Token {
@@ -29,10 +31,10 @@ public class Sequence implements Token {
     }
     
     @Override
-    public boolean eval(ByteStream input) {
+    public boolean eval(ByteStream input, Environment env) {
     	input.mark();
-    	if (_l.eval(input)) {
-    		if (_r.eval(input)) {
+    	if (_l.eval(input, env)) {
+    		if (_r.eval(input, env)) {
     			input.clear();
     			return true;
     		} else {

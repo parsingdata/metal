@@ -18,6 +18,8 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 import java.math.BigInteger;
 
+import nl.minvenj.nfi.ddrx.data.Environment;
+
 public class Sub extends BinaryValueExpression {
     
     public Sub(ValueExpression lop, ValueExpression rop) {
@@ -25,8 +27,8 @@ public class Sub extends BinaryValueExpression {
     }
 
     @Override
-    public BigInteger eval() {
-        return _lop.eval().subtract(_rop.eval());
+    public BigInteger eval(Environment env) {
+        return _lop.eval(env).subtract(_rop.eval(env));
     }
-
+    
 }

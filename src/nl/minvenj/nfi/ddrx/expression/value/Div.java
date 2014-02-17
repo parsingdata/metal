@@ -18,6 +18,8 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 import java.math.BigInteger;
 
+import nl.minvenj.nfi.ddrx.data.Environment;
+
 public class Div extends BinaryValueExpression {
     
     public Div(ValueExpression lop, ValueExpression rop) {
@@ -25,8 +27,8 @@ public class Div extends BinaryValueExpression {
     }
 
     @Override
-    public BigInteger eval() {
-        return _lop.eval().divide(_rop.eval());
+    public BigInteger eval(Environment env) {
+        return _lop.eval(env).divide(_rop.eval(env));
     }
 
 }

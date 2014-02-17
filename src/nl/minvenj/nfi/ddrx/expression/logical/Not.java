@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.expression.logical;
 
+import nl.minvenj.nfi.ddrx.data.Environment;
+
 import nl.minvenj.nfi.ddrx.expression.Expression;
 
 public class Not extends UnaryLogicalExpression {
@@ -25,8 +27,8 @@ public class Not extends UnaryLogicalExpression {
     }
 
     @Override
-    public boolean eval() {
-        return !_op.eval();
+    public boolean eval(Environment env) {
+        return !_op.eval(env);
     }
 
 }

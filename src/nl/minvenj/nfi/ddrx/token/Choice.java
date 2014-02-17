@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.token;
 
+import nl.minvenj.nfi.ddrx.data.Environment;
+
 import nl.minvenj.nfi.ddrx.io.ByteStream;
 
 public class Choice implements Token {
@@ -29,15 +31,15 @@ public class Choice implements Token {
     }
 
     @Override
-    public boolean eval(ByteStream input) {
+    public boolean eval(ByteStream input, Environment env) {
     	input.mark();
-    	if (_l.eval(input)) {
+    	if (_l.eval(input, env)) {
     		input.clear();
     		return true;
     	} else {
     		input.reset();
     		input.mark();
-    		if (_r.eval(input)) {
+    		if (_r.eval(input, env)) {
     			input.clear();
     			return true;
     		} else {

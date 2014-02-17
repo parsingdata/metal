@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx;
 
+import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.env;
+
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.equalsRef;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.stream;
@@ -43,38 +45,38 @@ public class NameBind {
 
     @Test
     public void sequenceMatch2() {
-        Assert.assertTrue(sequenceMatch2.eval(stream(42, 42)));
+        Assert.assertTrue(sequenceMatch2.eval(stream(42, 42), env()));
     }
     
     @Test
     public void sequenceNoMatch2() {
-        Assert.assertFalse(sequenceMatch2.eval(stream(42, 21)));
+        Assert.assertFalse(sequenceMatch2.eval(stream(42, 21), env()));
     }
     
     @Test
     public void sequenceMatch3() {
-        Assert.assertTrue(sequenceMatch3.eval(stream(42, 42, 42)));
+        Assert.assertTrue(sequenceMatch3.eval(stream(42, 42, 42), env()));
     }
     
     @Test
     public void sequenceNoMatch3() {
-        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(42, 42, 21)));
-        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(42, 21, 42)));
-        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(21, 42, 42)));
-        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(21, 42, 63)));
+        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(42, 42, 21), env()));
+        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(42, 21, 42), env()));
+        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(21, 42, 42), env()));
+        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(21, 42, 63), env()));
     }
     
     @Test
     public void sequenceMatchTransitive3() {
-        Assert.assertTrue(sequenceMatchTransitive3.eval(stream(42, 42, 42)));
+        Assert.assertTrue(sequenceMatchTransitive3.eval(stream(42, 42, 42), env()));
     }
     
     @Test
     public void sequenceNoMatchTransitive3() {
-        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(42, 42, 21)));
-        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(42, 21, 42)));
-        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(21, 42, 42)));
-        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(21, 42, 63)));
+        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(42, 42, 21), env()));
+        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(42, 21, 42), env()));
+        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(21, 42, 42), env()));
+        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(21, 42, 63), env()));
     }
     
 }

@@ -18,6 +18,8 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 import java.math.BigInteger;
 
+import nl.minvenj.nfi.ddrx.data.Environment;
+
 public class Mul extends BinaryValueExpression {
     
     public Mul(ValueExpression lop, ValueExpression rop) {
@@ -25,8 +27,8 @@ public class Mul extends BinaryValueExpression {
     }
 
     @Override
-    public BigInteger eval() {
-        return _lop.eval().multiply(_rop.eval());
+    public BigInteger eval(Environment env) {
+        return _lop.eval(env).multiply(_rop.eval(env));
     }
 
 }

@@ -18,7 +18,7 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 import java.math.BigInteger;
 
-import nl.minvenj.nfi.ddrx.data.ValueStore;
+import nl.minvenj.nfi.ddrx.data.Environment;
 
 public class Ref implements ValueExpression {
     
@@ -29,8 +29,8 @@ public class Ref implements ValueExpression {
     }
 
     @Override
-    public BigInteger eval() {
-      return ValueStore.getInstance().get(_name);
+    public BigInteger eval(Environment env) {
+      return env.get(_name);
     }
     
     @Override

@@ -16,8 +16,10 @@
 
 package nl.minvenj.nfi.ddrx.expression;
 
+import nl.minvenj.nfi.ddrx.data.Environment;
+
 public interface Expression {
     
-    boolean eval();
-
+    boolean eval(Environment env);
+    
 }
