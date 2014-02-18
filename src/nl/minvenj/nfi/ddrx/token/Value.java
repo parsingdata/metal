@@ -59,13 +59,14 @@ public class Value implements Token {
         // TODO: If so, evaluate stored predicates and return false if one fails.
         // TODO: Determine if predicate can be evaluated.
         // If so, evaluate and return result.
+        env.mark();
         env.put(_name, value);
         if (_pred.eval(env)) {
-            env.finalize(_name);
+            env.clear();
             input.clear();
             return true;
         } else {
-            env.revoke(_name);
+            env.reset();
             input.reset();
             return false;
         }

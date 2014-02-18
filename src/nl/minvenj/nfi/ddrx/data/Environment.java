@@ -18,35 +18,55 @@ package nl.minvenj.nfi.ddrx.data;
 
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.Stack;
 
 public class Environment {
-  
-  private final HashMap<String,BigInteger> _perm;
-  private final HashMap<String,BigInteger> _temp;
-  
-  public Environment() {
-      _perm = new HashMap<String,BigInteger>();
-      _temp = new HashMap<String,BigInteger>();
-  }
-  
-  public void put(String name, BigInteger value) {
-      _temp.put(name, value);
-  }
-  
-  public BigInteger get(String name) {
-      if (_temp.containsKey(name)) {
-          return _temp.get(name);
-      }
-      return _perm.get(name);
-  }
-  
-  public void revoke(String name) {
-      _temp.remove(name);
-  }
-  
-  public void finalize(String name) {
-      _perm.put(name, _temp.get(name));
-      _temp.remove(name);
-  }
-  
+
+    private final HashMap<String, Stack<BigInteger>> _vals;
+    private final Stack<String> _order;
+    private final Stack<Integer> _marked;
+
+    public Environment() {
+        _vals = new HashMap<String, Stack<BigInteger>>();
+        _order = new Stack<String>();
+        _marked = new Stack<Integer>();
+    }
+
+    public void put(String name, BigInteger value) {
+        if (!_vals.containsKey(name)) {
+            _vals.put(name, new Stack<BigInteger>());
+        }
+        _vals.get(name).push(value);
+        _order.push(name);
+    }
+    
+    public BigInteger get(String name) {
+        return _vals.get(name).peek();
+    }
+    
+    private void removeLast() {
+        if (_order.size() > 0) {
+            String name = _order.pop();
+            _vals.get(name).pop();
+            if (_vals.get(name).size() == 0) {
+                _vals.remove(name);
+            }
+        }
+    }
+    
+    public void mark() {
+        _marked.add(_order.size());
+    }
+    
+    public void clear() {
+        _marked.pop();
+    }
+    
+    public void reset() {
+        int reset = _order.size() - _marked.pop();
+        for (int i = 0; i < reset; i++) {
+            removeLast();
+        }
+    }
+    
 }

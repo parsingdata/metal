@@ -51,6 +51,10 @@ public class TokenDefinitions {
         return new Value(name, new Con(BigInteger.valueOf(1)), new Equals(new Ref(name), new Ref(ref)));
     }
     
+    public static Token notEqualsRef(String name, String ref) {
+        return new Value(name, new Con(BigInteger.valueOf(1)), new Not(new Equals(new Ref(name), new Ref(ref))));
+    }
+    
     public static ByteStream stream(int... bytes) {
         byte[] out = new byte[bytes.length];
         for (int i = 0; i < bytes.length; i++) {

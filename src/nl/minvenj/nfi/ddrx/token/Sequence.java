@@ -33,16 +33,20 @@ public class Sequence implements Token {
     @Override
     public boolean eval(ByteStream input, Environment env) {
     	input.mark();
+    	env.mark();
     	if (_l.eval(input, env)) {
     		if (_r.eval(input, env)) {
     			input.clear();
+    			env.clear();
     			return true;
     		} else {
     			input.reset();
+    			env.reset();
     			return false;
     		}
     	} else {
     		input.reset();
+    		env.reset();
     		return false;
     	}
     }

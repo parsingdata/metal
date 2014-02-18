@@ -33,17 +33,23 @@ public class Choice implements Token {
     @Override
     public boolean eval(ByteStream input, Environment env) {
     	input.mark();
+    	env.mark();
     	if (_l.eval(input, env)) {
     		input.clear();
+    		env.clear();
     		return true;
     	} else {
     		input.reset();
+    		env.reset();
     		input.mark();
+    		env.mark();
     		if (_r.eval(input, env)) {
     			input.clear();
+    			env.clear();
     			return true;
     		} else {
     			input.reset();
+    			env.reset();
     			return false;
     		}
     	}

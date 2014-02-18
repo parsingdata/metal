@@ -32,11 +32,15 @@ public class Repeat implements Token {
     @Override
     public boolean eval(ByteStream input, Environment env) {
     	input.mark();
+    	env.mark();
     	while (_node.eval(input, env)) {
     		input.clear();
+    		env.clear();
     		input.mark();
+    		env.mark();
     	}
     	input.reset();
+    	env.reset();
     	return true;
     }
     
