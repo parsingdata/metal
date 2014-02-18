@@ -17,7 +17,6 @@
 package nl.minvenj.nfi.ddrx;
 
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.any;
-import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.env;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.equalsRef;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.notEqualsRef;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.stream;
@@ -42,7 +41,7 @@ public class BackTrackNameBind {
     
     @Test
     public void choiceRef() {
-        Assert.assertTrue(_choiceRef.eval(stream(1, 2, 3), env()));
+        Assert.assertTrue(_choiceRef.eval(stream(1, 2, 3)));
     }
     
 }

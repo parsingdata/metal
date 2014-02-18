@@ -55,16 +55,12 @@ public class TokenDefinitions {
         return new Value(name, new Con(BigInteger.valueOf(1)), new Not(new Equals(new Ref(name), new Ref(ref))));
     }
     
-    public static ByteStream stream(int... bytes) {
+    public static Environment stream(int... bytes) {
         byte[] out = new byte[bytes.length];
         for (int i = 0; i < bytes.length; i++) {
             out[i] = (byte)bytes[i];
         }
-        return new ByteStream(out);
-    }
-    
-    public static Environment env() {
-        return new Environment();
+        return new Environment(new ByteStream(out));
     }
     
 }

@@ -16,8 +16,6 @@
 
 package nl.minvenj.nfi.ddrx;
 
-import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.env;
-
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.fixed;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.not;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.stream;
@@ -40,17 +38,17 @@ public class ReadUntil {
     
     @Test
     public void readUntilConstant() {
-        Assert.assertTrue(_readUntil.eval(stream(1, 2, 3, 4, 42), env()));
+        Assert.assertTrue(_readUntil.eval(stream(1, 2, 3, 4, 42)));
     }
     
     @Test
     public void readUntilNoSkipping() {
-        Assert.assertTrue(_readUntil.eval(stream(42), env()));
+        Assert.assertTrue(_readUntil.eval(stream(42)));
     }
     
     @Test
     public void readUntilErrorNoTerminator() {
-        Assert.assertFalse(_readUntil.eval(stream(1, 2, 3, 4), env()));
+        Assert.assertFalse(_readUntil.eval(stream(1, 2, 3, 4)));
     }
     
 }

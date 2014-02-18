@@ -16,20 +16,25 @@
 
 package nl.minvenj.nfi.ddrx.data;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Stack;
+
+import nl.minvenj.nfi.ddrx.io.ByteStream;
 
 public class Environment {
 
     private final HashMap<String, Stack<BigInteger>> _vals;
     private final Stack<String> _order;
     private final Stack<Integer> _marked;
+    private final ByteStream _input;
 
-    public Environment() {
+    public Environment(ByteStream input) {
         _vals = new HashMap<String, Stack<BigInteger>>();
         _order = new Stack<String>();
         _marked = new Stack<Integer>();
+        _input = input;
     }
 
     public void put(String name, BigInteger value) {
@@ -55,18 +60,25 @@ public class Environment {
     }
     
     public void mark() {
+        _input.mark();
         _marked.add(_order.size());
     }
     
     public void clear() {
+        _input.clear();
         _marked.pop();
     }
     
     public void reset() {
+        _input.reset();
         int reset = _order.size() - _marked.pop();
         for (int i = 0; i < reset; i++) {
             removeLast();
         }
+    }
+    
+    public int read(byte[] data) throws IOException {
+        return _input.read(data);
     }
     
 }
