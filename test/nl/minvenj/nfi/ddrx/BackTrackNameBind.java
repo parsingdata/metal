@@ -18,6 +18,7 @@ package nl.minvenj.nfi.ddrx;
 
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.equalsRef;
+import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.fixed;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.notEqualsRef;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.stream;
 
@@ -27,6 +28,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import nl.minvenj.nfi.ddrx.token.Choice;
+import nl.minvenj.nfi.ddrx.token.Repeat;
 import nl.minvenj.nfi.ddrx.token.Sequence;
 import nl.minvenj.nfi.ddrx.token.Token;
 
@@ -39,9 +41,28 @@ public class BackTrackNameBind {
                                                        new Sequence(any("a"), equalsRef("b", "a")),
                                                        new Sequence(notEqualsRef("b", "a"), any("c"))));
     
+    private Token _repeatRef = new Sequence(
+                                            new Repeat(fixed("a", 42)),
+                                            new Repeat(notEqualsRef("b", "a")));
+    
     @Test
-    public void choiceRef() {
+    public void choiceRefLeft() {
+        Assert.assertTrue(_choiceRef.eval(stream(1, 2, 2)));
+    }
+    
+    @Test
+    public void choiceRefRight() {
         Assert.assertTrue(_choiceRef.eval(stream(1, 2, 3)));
+    }
+    
+    @Test
+    public void choiceRefNone() {
+        Assert.assertFalse(_choiceRef.eval(stream(1, 1, 2)));
+    }
+    
+    @Test
+    public void repeatRef() {
+        Assert.assertTrue(_repeatRef.eval(stream(42, 42, 42, 21, 21, 21))); 
     }
     
 }
