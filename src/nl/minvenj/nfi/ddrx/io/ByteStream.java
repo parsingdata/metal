@@ -74,7 +74,7 @@ public class ByteStream extends InputStream {
     }
     
     public int read() {
-        return atEnd() ? -1 : _data[_offset++];
+        return atEnd() ? -1 : _data[_offset++] & 0xFF;
     }
     
     public boolean atEnd() {
