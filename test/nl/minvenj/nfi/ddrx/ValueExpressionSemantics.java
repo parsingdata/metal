@@ -16,20 +16,21 @@
 
 package nl.minvenj.nfi.ddrx;
 
+import static nl.minvenj.nfi.ddrx.util.Shorthand.con;
+import static nl.minvenj.nfi.ddrx.util.Shorthand.eq;
+import static nl.minvenj.nfi.ddrx.util.Shorthand.ref;
+import static nl.minvenj.nfi.ddrx.util.Shorthand.seq;
+import static nl.minvenj.nfi.ddrx.util.Shorthand.val;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.stream;
-
-import java.math.BigInteger;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import nl.minvenj.nfi.ddrx.expression.comparison.Equals;
 import nl.minvenj.nfi.ddrx.expression.value.Add;
 import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
-import nl.minvenj.nfi.ddrx.expression.value.Con;
 import nl.minvenj.nfi.ddrx.expression.value.Div;
 import nl.minvenj.nfi.ddrx.expression.value.Mul;
 import nl.minvenj.nfi.ddrx.expression.value.Neg;
@@ -37,23 +38,19 @@ import nl.minvenj.nfi.ddrx.expression.value.Ref;
 import nl.minvenj.nfi.ddrx.expression.value.Sub;
 import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
-import nl.minvenj.nfi.ddrx.token.Sequence;
 import nl.minvenj.nfi.ddrx.token.Token;
-import nl.minvenj.nfi.ddrx.token.Value;
 
 @RunWith(JUnit4.class)
 public class ValueExpressionSemantics {
 
     private Token singleToken(String firstName, String secondName, ValueExpression ve) {
-        return new Sequence(
-                            any(firstName),
-                            new Value(secondName, new Con(BigInteger.valueOf(1)), new Equals(new Ref(secondName), ve)));
+        return seq(any(firstName),
+                   val(secondName, con(1), eq(ref(secondName), ve)));
     }
 
     private Token binaryValueExpressionToken(BinaryValueExpression bve) {
-        return new Sequence(
-                            any("a"),
-                            singleToken("b", "c", bve));
+        return seq(any("a"),
+                   singleToken("b", "c", bve));
     }
 
     private Token unaryValueExpressionToken(UnaryValueExpression uve) {
@@ -103,7 +100,7 @@ public class ValueExpressionSemantics {
         Assert.assertTrue(sub.eval(stream(-42, -10, -32)));
         Assert.assertFalse(sub.eval(stream(-42, 42, 0)));
     }
-    
+
     @Test
     public void Neg() {
         Token neg = unaryValueExpressionToken(new Neg(new Ref("a")));
@@ -114,5 +111,5 @@ public class ValueExpressionSemantics {
         Assert.assertFalse(neg.eval(stream(4, 4)));
         Assert.assertFalse(neg.eval(stream(-5, -5)));
     }
-    
+
 }

@@ -16,32 +16,29 @@
 
 package nl.minvenj.nfi.ddrx;
 
+import static nl.minvenj.nfi.ddrx.util.Shorthand.con;
+import static nl.minvenj.nfi.ddrx.util.Shorthand.eq;
+import static nl.minvenj.nfi.ddrx.util.Shorthand.ref;
+import static nl.minvenj.nfi.ddrx.util.Shorthand.val;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.stream;
-
-import java.math.BigInteger;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import nl.minvenj.nfi.ddrx.expression.comparison.Equals;
-import nl.minvenj.nfi.ddrx.expression.value.Con;
-import nl.minvenj.nfi.ddrx.expression.value.Ref;
 import nl.minvenj.nfi.ddrx.token.Token;
-import nl.minvenj.nfi.ddrx.token.Value;
 
 @RunWith(JUnit4.class)
 public class Simple {
-    
-    private Value buildSimpleToken(String name, int size, String refName, int predicateSize) {
-        return new Value(name,
-                            new Con(BigInteger.valueOf(size)),
-                            new Equals(
-                                       new Ref(refName),
-                                       new Con(BigInteger.valueOf(predicateSize))));
+
+    private Token buildSimpleToken(String name, int size, String refName, int predicateSize) {
+        return val(name,
+                   con(size),
+                   eq(ref(refName),
+                      con(predicateSize)));
     }
-    
+
     @Test
     public void correct() {
         Token t = buildSimpleToken("r1", 1, "r1", 1);
@@ -53,23 +50,23 @@ public class Simple {
         Token t = buildSimpleToken("r1", 2, "r1", 1);
         Assert.assertFalse(t.eval(stream(1, 2, 3, 4)));
     }
-    
-    @Test(expected=NullPointerException.class)
+
+    @Test(expected = NullPointerException.class)
     public void refError() {
         Token t = buildSimpleToken("r1", 1, "r2", 1);
         t.eval(stream(1, 2, 3, 4));
     }
-    
+
     @Test
     public void predicateError() {
         Token t = buildSimpleToken("r1", 1, "r1", 2);
         Assert.assertFalse(t.eval(stream(1, 2, 3, 4)));
     }
-    
+
     @Test
     public void sourceError() {
         Token t = buildSimpleToken("r1", 1, "r1", 1);
         Assert.assertFalse(t.eval(stream(2, 2, 2, 2)));
     }
-    
+
 }

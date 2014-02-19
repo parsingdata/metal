@@ -16,6 +16,9 @@
 
 package nl.minvenj.nfi.ddrx;
 
+import static nl.minvenj.nfi.ddrx.util.Shorthand.cho;
+import static nl.minvenj.nfi.ddrx.util.Shorthand.rep;
+import static nl.minvenj.nfi.ddrx.util.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.equalsRef;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.fixed;
@@ -27,42 +30,36 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import nl.minvenj.nfi.ddrx.token.Choice;
-import nl.minvenj.nfi.ddrx.token.Repeat;
-import nl.minvenj.nfi.ddrx.token.Sequence;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 @RunWith(JUnit4.class)
 public class BackTrackNameBind {
-    
-    private Token _choiceRef = new Sequence(
-                                            any("a"),
-                                            new Choice(
-                                                       new Sequence(any("a"), equalsRef("b", "a")),
-                                                       new Sequence(notEqualsRef("b", "a"), any("c"))));
-    
-    private Token _repeatRef = new Sequence(
-                                            new Repeat(fixed("a", 42)),
-                                            new Repeat(notEqualsRef("b", "a")));
-    
+
+    private Token _choiceRef = seq(any("a"),
+                                   cho(seq(any("a"), equalsRef("b", "a")),
+                                       seq(notEqualsRef("b", "a"), any("c"))));
+
+    private Token _repeatRef = seq(rep(fixed("a", 42)),
+                                   rep(notEqualsRef("b", "a")));
+
     @Test
     public void choiceRefLeft() {
         Assert.assertTrue(_choiceRef.eval(stream(1, 2, 2)));
     }
-    
+
     @Test
     public void choiceRefRight() {
         Assert.assertTrue(_choiceRef.eval(stream(1, 2, 3)));
     }
-    
+
     @Test
     public void choiceRefNone() {
         Assert.assertFalse(_choiceRef.eval(stream(1, 1, 2)));
     }
-    
+
     @Test
     public void repeatRef() {
-        Assert.assertTrue(_repeatRef.eval(stream(42, 42, 42, 21, 21, 21))); 
+        Assert.assertTrue(_repeatRef.eval(stream(42, 42, 42, 21, 21, 21)));
     }
-    
+
 }

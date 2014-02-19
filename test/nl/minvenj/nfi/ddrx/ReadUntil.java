@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx;
 
+import static nl.minvenj.nfi.ddrx.util.Shorthand.rep;
+import static nl.minvenj.nfi.ddrx.util.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.fixed;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.not;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.stream;
@@ -25,16 +27,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import nl.minvenj.nfi.ddrx.token.Repeat;
-import nl.minvenj.nfi.ddrx.token.Sequence;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 @RunWith(JUnit4.class)
 public class ReadUntil {
     
-    private Token _readUntil = new Sequence(
-                                            new Repeat(not("other", 42)),
-                                            fixed("terminator", 42));
+    private Token _readUntil = seq(rep(not("other", 42)),
+                                   fixed("terminator", 42));
     
     @Test
     public void readUntilConstant() {
