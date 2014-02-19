@@ -23,13 +23,13 @@ import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class Value implements Token {
+public class Val implements Token {
 
     private final String _name;
     private final ValueExpression _size;
     private final Expression _pred;
 
-    public Value(String name, ValueExpression size, Expression pred) {
+    public Val(String name, ValueExpression size, Expression pred) {
         _name = name;
         _size = size;
         _pred = pred;

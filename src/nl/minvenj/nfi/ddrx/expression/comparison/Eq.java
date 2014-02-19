@@ -20,15 +20,15 @@ import nl.minvenj.nfi.ddrx.data.Environment;
 
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class LessThan extends ComparisonExpression {
+public class Eq extends ComparisonExpression {
     
-    public LessThan(ValueExpression value, ValueExpression predicate) {
+    public Eq(ValueExpression value, ValueExpression predicate) {
         super(value, predicate);
     }
 
     @Override
     public boolean eval(Environment env) {
-    	return _value.eval(env).compareTo(_predicate.eval(env)) == -1;
+    	return _value.eval(env).compareTo(_predicate.eval(env)) == 0;
     }
 
 }

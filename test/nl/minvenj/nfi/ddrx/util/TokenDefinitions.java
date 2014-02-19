@@ -22,13 +22,13 @@ import org.junit.Ignore;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.expression.True;
-import nl.minvenj.nfi.ddrx.expression.comparison.Equals;
+import nl.minvenj.nfi.ddrx.expression.comparison.Eq;
 import nl.minvenj.nfi.ddrx.expression.logical.Not;
 import nl.minvenj.nfi.ddrx.expression.value.Con;
 import nl.minvenj.nfi.ddrx.expression.value.Ref;
 import nl.minvenj.nfi.ddrx.io.ByteStream;
 import nl.minvenj.nfi.ddrx.token.Token;
-import nl.minvenj.nfi.ddrx.token.Value;
+import nl.minvenj.nfi.ddrx.token.Val;
 
 @Ignore
 public class TokenDefinitions {
@@ -36,23 +36,23 @@ public class TokenDefinitions {
     private TokenDefinitions() {}
 
     public static Token any(String name) {
-        return new Value(name, new Con(BigInteger.valueOf(1)), new True());
+        return new Val(name, new Con(BigInteger.valueOf(1)), new True());
     }
 
     public static Token fixed(String name, int value) {
-        return new Value(name, new Con(BigInteger.valueOf(1)), new Equals(new Ref(name), new Con(BigInteger.valueOf(value))));
+        return new Val(name, new Con(BigInteger.valueOf(1)), new Eq(new Ref(name), new Con(BigInteger.valueOf(value))));
     }
     
     public static Token not(String name, int value) {
-        return new Value(name, new Con(BigInteger.valueOf(1)), new Not(new Equals(new Ref(name), new Con(BigInteger.valueOf(value)))));
+        return new Val(name, new Con(BigInteger.valueOf(1)), new Not(new Eq(new Ref(name), new Con(BigInteger.valueOf(value)))));
     }
     
-    public static Token equalsRef(String name, String ref) {
-        return new Value(name, new Con(BigInteger.valueOf(1)), new Equals(new Ref(name), new Ref(ref)));
+    public static Token eqRef(String name, String ref) {
+        return new Val(name, new Con(BigInteger.valueOf(1)), new Eq(new Ref(name), new Ref(ref)));
     }
     
-    public static Token notEqualsRef(String name, String ref) {
-        return new Value(name, new Con(BigInteger.valueOf(1)), new Not(new Equals(new Ref(name), new Ref(ref))));
+    public static Token notEqRef(String name, String ref) {
+        return new Val(name, new Con(BigInteger.valueOf(1)), new Not(new Eq(new Ref(name), new Ref(ref))));
     }
     
     public static Environment stream(int... bytes) {

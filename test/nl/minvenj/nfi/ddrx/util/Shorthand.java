@@ -21,9 +21,9 @@ import java.math.BigInteger;
 import org.junit.Ignore;
 
 import nl.minvenj.nfi.ddrx.expression.Expression;
-import nl.minvenj.nfi.ddrx.expression.comparison.Equals;
-import nl.minvenj.nfi.ddrx.expression.comparison.GreaterThan;
-import nl.minvenj.nfi.ddrx.expression.comparison.LessThan;
+import nl.minvenj.nfi.ddrx.expression.comparison.Eq;
+import nl.minvenj.nfi.ddrx.expression.comparison.Gt;
+import nl.minvenj.nfi.ddrx.expression.comparison.Lt;
 import nl.minvenj.nfi.ddrx.expression.logical.And;
 import nl.minvenj.nfi.ddrx.expression.logical.Not;
 import nl.minvenj.nfi.ddrx.expression.logical.Or;
@@ -35,19 +35,19 @@ import nl.minvenj.nfi.ddrx.expression.value.Neg;
 import nl.minvenj.nfi.ddrx.expression.value.Ref;
 import nl.minvenj.nfi.ddrx.expression.value.Sub;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
-import nl.minvenj.nfi.ddrx.token.Choice;
-import nl.minvenj.nfi.ddrx.token.Repeat;
-import nl.minvenj.nfi.ddrx.token.Sequence;
+import nl.minvenj.nfi.ddrx.token.Cho;
+import nl.minvenj.nfi.ddrx.token.Rep;
+import nl.minvenj.nfi.ddrx.token.Seq;
 import nl.minvenj.nfi.ddrx.token.Token;
-import nl.minvenj.nfi.ddrx.token.Value;
+import nl.minvenj.nfi.ddrx.token.Val;
 
 @Ignore
 public class Shorthand {
     
-    public static Token val(String name, ValueExpression size, Expression pred) { return new Value(name, size, pred); }
-    public static Token cho(Token l, Token r) { return new Choice(l, r); }
-    public static Token rep(Token t) { return new Repeat(t); }
-    public static Token seq(Token l, Token r) { return new Sequence(l, r); }
+    public static Token val(String name, ValueExpression size, Expression pred) { return new Val(name, size, pred); }
+    public static Token cho(Token l, Token r) { return new Cho(l, r); }
+    public static Token rep(Token t) { return new Rep(t); }
+    public static Token seq(Token l, Token r) { return new Seq(l, r); }
     
     public static ValueExpression add(ValueExpression l, ValueExpression r) { return new Add(l, r); }
     public static ValueExpression div(ValueExpression l, ValueExpression r) { return new Div(l, r); }
@@ -61,8 +61,8 @@ public class Shorthand {
     public static Expression or(Expression l, Expression r) { return new Or(l, r); }
     public static Expression not(Expression e) { return new Not(e); }
     
-    public static Expression eq(ValueExpression l, ValueExpression r) { return new Equals(l, r); }
-    public static Expression gt(ValueExpression l, ValueExpression r) { return new GreaterThan(l, r); }
-    public static Expression lt(ValueExpression l, ValueExpression r) { return new LessThan(l, r); }
+    public static Expression eq(ValueExpression l, ValueExpression r) { return new Eq(l, r); }
+    public static Expression gt(ValueExpression l, ValueExpression r) { return new Gt(l, r); }
+    public static Expression lt(ValueExpression l, ValueExpression r) { return new Lt(l, r); }
     
 }

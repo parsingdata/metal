@@ -18,12 +18,12 @@ package nl.minvenj.nfi.ddrx.token;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 
-public class Sequence implements Token {
+public class Seq implements Token {
     
     private final Token _l;
     private final Token _r;
     
-    public Sequence(Token l, Token r) {
+    public Seq(Token l, Token r) {
         _l = l;
         _r = r;
     }

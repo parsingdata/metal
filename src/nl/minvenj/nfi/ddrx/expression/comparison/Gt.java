@@ -20,9 +20,9 @@ import nl.minvenj.nfi.ddrx.data.Environment;
 
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class GreaterThan extends ComparisonExpression {
+public class Gt extends ComparisonExpression {
     
-    public GreaterThan(ValueExpression value, ValueExpression predicate) {
+    public Gt(ValueExpression value, ValueExpression predicate) {
         super(value, predicate);
     }
 

@@ -18,38 +18,29 @@ package nl.minvenj.nfi.ddrx.token;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 
-public class Choice implements Token {
-    
-    private final Token _l;
-    private final Token _r;
-    
-    public Choice(Token l, Token r) {
-        _l = l;
-        _r = r;
-    }
 
+public class Rep implements Token {
+    
+    private final Token _node;
+    
+    public Rep(Token node) {
+        _node = node;
+    }
+    
     @Override
     public boolean eval(Environment env) {
     	env.mark();
-    	if (_l.eval(env)) {
+    	while (_node.eval(env)) {
     		env.clear();
-    		return true;
-    	} else {
-    		env.reset();
     		env.mark();
-    		if (_r.eval(env)) {
-    			env.clear();
-    			return true;
-    		} else {
-    			env.reset();
-    			return false;
-    		}
     	}
+    	env.reset();
+    	return true;
     }
     
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _l + "," + _r + ")";
+        return getClass().getSimpleName() + "(" + _node + ")";
     }
     
 }

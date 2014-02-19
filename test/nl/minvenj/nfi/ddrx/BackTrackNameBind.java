@@ -20,9 +20,9 @@ import static nl.minvenj.nfi.ddrx.util.Shorthand.cho;
 import static nl.minvenj.nfi.ddrx.util.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.util.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.any;
-import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.equalsRef;
+import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.eqRef;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.fixed;
-import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.notEqualsRef;
+import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.notEqRef;
 import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.stream;
 
 import org.junit.Assert;
@@ -36,11 +36,11 @@ import nl.minvenj.nfi.ddrx.token.Token;
 public class BackTrackNameBind {
 
     private Token _choiceRef = seq(any("a"),
-                                   cho(seq(any("a"), equalsRef("b", "a")),
-                                       seq(notEqualsRef("b", "a"), any("c"))));
+                                   cho(seq(any("a"), eqRef("b", "a")),
+                                       seq(notEqRef("b", "a"), any("c"))));
 
     private Token _repeatRef = seq(rep(fixed("a", 42)),
-                                   rep(notEqualsRef("b", "a")));
+                                   rep(notEqRef("b", "a")));
 
     @Test
     public void choiceRefLeft() {

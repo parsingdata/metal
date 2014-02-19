@@ -14,21 +14,42 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.comparison;
+package nl.minvenj.nfi.ddrx.token;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 
-import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
-
-public class Equals extends ComparisonExpression {
+public class Cho implements Token {
     
-    public Equals(ValueExpression value, ValueExpression predicate) {
-        super(value, predicate);
+    private final Token _l;
+    private final Token _r;
+    
+    public Cho(Token l, Token r) {
+        _l = l;
+        _r = r;
     }
 
     @Override
     public boolean eval(Environment env) {
-    	return _value.eval(env).compareTo(_predicate.eval(env)) == 0;
+    	env.mark();
+    	if (_l.eval(env)) {
+    		env.clear();
+    		return true;
+    	} else {
+    		env.reset();
+    		env.mark();
+    		if (_r.eval(env)) {
+    			env.clear();
+    			return true;
+    		} else {
+    			env.reset();
+    			return false;
+    		}
+    	}
     }
-
+    
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _l + "," + _r + ")";
+    }
+    
 }

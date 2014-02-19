@@ -14,33 +14,21 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.token;
+package nl.minvenj.nfi.ddrx.expression.comparison;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 
+import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class Repeat implements Token {
+public class Lt extends ComparisonExpression {
     
-    private final Token _node;
-    
-    public Repeat(Token node) {
-        _node = node;
+    public Lt(ValueExpression value, ValueExpression predicate) {
+        super(value, predicate);
     }
-    
+
     @Override
     public boolean eval(Environment env) {
-    	env.mark();
-    	while (_node.eval(env)) {
-    		env.clear();
-    		env.mark();
-    	}
-    	env.reset();
-    	return true;
+    	return _value.eval(env).compareTo(_predicate.eval(env)) == -1;
     }
-    
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" + _node + ")";
-    }
-    
+
 }
