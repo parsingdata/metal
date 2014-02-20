@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.util;
+package nl.minvenj.nfi.ddrx;
 
 import java.math.BigInteger;
 
-import org.junit.Ignore;
-
 import nl.minvenj.nfi.ddrx.expression.Expression;
+import nl.minvenj.nfi.ddrx.expression.True;
 import nl.minvenj.nfi.ddrx.expression.comparison.Eq;
 import nl.minvenj.nfi.ddrx.expression.comparison.Gt;
 import nl.minvenj.nfi.ddrx.expression.comparison.Lt;
@@ -41,7 +40,6 @@ import nl.minvenj.nfi.ddrx.token.Seq;
 import nl.minvenj.nfi.ddrx.token.Token;
 import nl.minvenj.nfi.ddrx.token.Val;
 
-@Ignore
 public class Shorthand {
     
     public static Token val(String name, ValueExpression size, Expression pred) { return new Val(name, size, pred); }
@@ -60,6 +58,7 @@ public class Shorthand {
     public static Expression and(Expression l, Expression r) { return new And(l, r); }
     public static Expression or(Expression l, Expression r) { return new Or(l, r); }
     public static Expression not(Expression e) { return new Not(e); }
+    public static Expression expTrue() { return new True(); }
     
     public static Expression eq(ValueExpression l, ValueExpression r) { return new Eq(l, r); }
     public static Expression gt(ValueExpression l, ValueExpression r) { return new Gt(l, r); }

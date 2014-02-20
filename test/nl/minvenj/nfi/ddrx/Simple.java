@@ -16,11 +16,12 @@
 
 package nl.minvenj.nfi.ddrx;
 
-import static nl.minvenj.nfi.ddrx.util.Shorthand.con;
-import static nl.minvenj.nfi.ddrx.util.Shorthand.eq;
-import static nl.minvenj.nfi.ddrx.util.Shorthand.ref;
-import static nl.minvenj.nfi.ddrx.util.Shorthand.val;
-import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.stream;
+import static nl.minvenj.nfi.ddrx.Shorthand.con;
+import static nl.minvenj.nfi.ddrx.Shorthand.eq;
+import static nl.minvenj.nfi.ddrx.Shorthand.ref;
+import static nl.minvenj.nfi.ddrx.Shorthand.val;
+
+import static nl.minvenj.nfi.ddrx.data.Environment.stream;
 
 import org.junit.Assert;
 import org.junit.Test;

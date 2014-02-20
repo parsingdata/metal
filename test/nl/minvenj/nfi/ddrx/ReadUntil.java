@@ -16,11 +16,12 @@
 
 package nl.minvenj.nfi.ddrx;
 
-import static nl.minvenj.nfi.ddrx.util.Shorthand.rep;
-import static nl.minvenj.nfi.ddrx.util.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.fixed;
-import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.not;
-import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.stream;
+import static nl.minvenj.nfi.ddrx.Shorthand.rep;
+import static nl.minvenj.nfi.ddrx.Shorthand.seq;
+import static nl.minvenj.nfi.ddrx.TokenDefinitions.eqVal;
+import static nl.minvenj.nfi.ddrx.TokenDefinitions.notEqVal;
+
+import static nl.minvenj.nfi.ddrx.data.Environment.stream;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -32,8 +33,8 @@ import nl.minvenj.nfi.ddrx.token.Token;
 @RunWith(JUnit4.class)
 public class ReadUntil {
     
-    private Token _readUntil = seq(rep(not("other", 42)),
-                                   fixed("terminator", 42));
+    private Token _readUntil = seq(rep(notEqVal("other", 42)),
+                                   eqVal("terminator", 42));
     
     @Test
     public void readUntilConstant() {

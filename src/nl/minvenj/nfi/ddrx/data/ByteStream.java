@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.io;
+package nl.minvenj.nfi.ddrx.data;
 
 import java.io.IOException;
 import java.io.InputStream;

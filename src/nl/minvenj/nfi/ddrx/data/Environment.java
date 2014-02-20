@@ -21,8 +21,6 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Stack;
 
-import nl.minvenj.nfi.ddrx.io.ByteStream;
-
 public class Environment {
 
     private final HashMap<String, Stack<BigInteger>> _vals;
@@ -79,6 +77,14 @@ public class Environment {
     
     public int read(byte[] data) throws IOException {
         return _input.read(data);
+    }
+
+    public static Environment stream(int... bytes) {
+        byte[] out = new byte[bytes.length];
+        for (int i = 0; i < bytes.length; i++) {
+            out[i] = (byte)bytes[i];
+        }
+        return new Environment(new ByteStream(out));
     }
     
 }

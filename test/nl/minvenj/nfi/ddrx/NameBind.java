@@ -16,16 +16,16 @@
 
 package nl.minvenj.nfi.ddrx;
 
-import static nl.minvenj.nfi.ddrx.util.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.any;
-import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.eqRef;
-import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.stream;
+import static nl.minvenj.nfi.ddrx.Shorthand.seq;
+import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
+import static nl.minvenj.nfi.ddrx.TokenDefinitions.eqRef;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import static nl.minvenj.nfi.ddrx.data.Environment.stream;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 @RunWith(JUnit4.class)

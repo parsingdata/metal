@@ -16,19 +16,19 @@
 
 package nl.minvenj.nfi.ddrx;
 
-import static nl.minvenj.nfi.ddrx.util.Shorthand.con;
-import static nl.minvenj.nfi.ddrx.util.Shorthand.eq;
-import static nl.minvenj.nfi.ddrx.util.Shorthand.ref;
-import static nl.minvenj.nfi.ddrx.util.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.util.Shorthand.val;
-import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.any;
-import static nl.minvenj.nfi.ddrx.util.TokenDefinitions.stream;
+import static nl.minvenj.nfi.ddrx.Shorthand.con;
+import static nl.minvenj.nfi.ddrx.Shorthand.eq;
+import static nl.minvenj.nfi.ddrx.Shorthand.ref;
+import static nl.minvenj.nfi.ddrx.Shorthand.seq;
+import static nl.minvenj.nfi.ddrx.Shorthand.val;
+import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import static nl.minvenj.nfi.ddrx.data.Environment.stream;
 import nl.minvenj.nfi.ddrx.expression.value.Add;
 import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
 import nl.minvenj.nfi.ddrx.expression.value.Div;
