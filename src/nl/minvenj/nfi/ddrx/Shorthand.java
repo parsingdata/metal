@@ -20,19 +20,24 @@ import java.math.BigInteger;
 
 import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.expression.True;
+import nl.minvenj.nfi.ddrx.expression.comparison.ComparisonExpression;
 import nl.minvenj.nfi.ddrx.expression.comparison.Eq;
 import nl.minvenj.nfi.ddrx.expression.comparison.Gt;
 import nl.minvenj.nfi.ddrx.expression.comparison.Lt;
 import nl.minvenj.nfi.ddrx.expression.logical.And;
+import nl.minvenj.nfi.ddrx.expression.logical.BinaryLogicalExpression;
 import nl.minvenj.nfi.ddrx.expression.logical.Not;
 import nl.minvenj.nfi.ddrx.expression.logical.Or;
+import nl.minvenj.nfi.ddrx.expression.logical.UnaryLogicalExpression;
 import nl.minvenj.nfi.ddrx.expression.value.Add;
+import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
 import nl.minvenj.nfi.ddrx.expression.value.Con;
 import nl.minvenj.nfi.ddrx.expression.value.Div;
 import nl.minvenj.nfi.ddrx.expression.value.Mul;
 import nl.minvenj.nfi.ddrx.expression.value.Neg;
 import nl.minvenj.nfi.ddrx.expression.value.Ref;
 import nl.minvenj.nfi.ddrx.expression.value.Sub;
+import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 import nl.minvenj.nfi.ddrx.token.Cho;
 import nl.minvenj.nfi.ddrx.token.Rep;
@@ -47,21 +52,21 @@ public class Shorthand {
     public static Token rep(Token t) { return new Rep(t); }
     public static Token seq(Token l, Token r) { return new Seq(l, r); }
     
-    public static ValueExpression add(ValueExpression l, ValueExpression r) { return new Add(l, r); }
-    public static ValueExpression div(ValueExpression l, ValueExpression r) { return new Div(l, r); }
-    public static ValueExpression mul(ValueExpression l, ValueExpression r) { return new Mul(l, r); }
-    public static ValueExpression sub(ValueExpression l, ValueExpression r) { return new Sub(l, r); }
-    public static ValueExpression neg(ValueExpression v) { return new Neg(v); }
+    public static BinaryValueExpression add(ValueExpression l, ValueExpression r) { return new Add(l, r); }
+    public static BinaryValueExpression div(ValueExpression l, ValueExpression r) { return new Div(l, r); }
+    public static BinaryValueExpression mul(ValueExpression l, ValueExpression r) { return new Mul(l, r); }
+    public static BinaryValueExpression sub(ValueExpression l, ValueExpression r) { return new Sub(l, r); }
+    public static UnaryValueExpression neg(ValueExpression v) { return new Neg(v); }
     public static ValueExpression con(long v) { return new Con(BigInteger.valueOf(v)); }
     public static ValueExpression ref(String n) { return new Ref(n); }
     
-    public static Expression and(Expression l, Expression r) { return new And(l, r); }
-    public static Expression or(Expression l, Expression r) { return new Or(l, r); }
-    public static Expression not(Expression e) { return new Not(e); }
+    public static BinaryLogicalExpression and(Expression l, Expression r) { return new And(l, r); }
+    public static BinaryLogicalExpression or(Expression l, Expression r) { return new Or(l, r); }
+    public static UnaryLogicalExpression not(Expression e) { return new Not(e); }
     public static Expression expTrue() { return new True(); }
     
-    public static Expression eq(ValueExpression l, ValueExpression r) { return new Eq(l, r); }
-    public static Expression gt(ValueExpression l, ValueExpression r) { return new Gt(l, r); }
-    public static Expression lt(ValueExpression l, ValueExpression r) { return new Lt(l, r); }
+    public static ComparisonExpression eq(ValueExpression l, ValueExpression r) { return new Eq(l, r); }
+    public static ComparisonExpression gt(ValueExpression l, ValueExpression r) { return new Gt(l, r); }
+    public static ComparisonExpression lt(ValueExpression l, ValueExpression r) { return new Lt(l, r); }
     
 }

@@ -16,29 +16,27 @@
 
 package nl.minvenj.nfi.ddrx;
 
+import static nl.minvenj.nfi.ddrx.Shorthand.add;
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
+import static nl.minvenj.nfi.ddrx.Shorthand.div;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
+import static nl.minvenj.nfi.ddrx.Shorthand.mul;
+import static nl.minvenj.nfi.ddrx.Shorthand.neg;
 import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
+import static nl.minvenj.nfi.ddrx.Shorthand.sub;
 import static nl.minvenj.nfi.ddrx.Shorthand.val;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
+import static nl.minvenj.nfi.ddrx.data.Environment.stream;
+import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
+import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
+import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
+import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import static nl.minvenj.nfi.ddrx.data.Environment.stream;
-import nl.minvenj.nfi.ddrx.expression.value.Add;
-import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
-import nl.minvenj.nfi.ddrx.expression.value.Div;
-import nl.minvenj.nfi.ddrx.expression.value.Mul;
-import nl.minvenj.nfi.ddrx.expression.value.Neg;
-import nl.minvenj.nfi.ddrx.expression.value.Ref;
-import nl.minvenj.nfi.ddrx.expression.value.Sub;
-import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
-import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
-import nl.minvenj.nfi.ddrx.token.Token;
 
 @RunWith(JUnit4.class)
 public class ValueExpressionSemantics {
@@ -59,7 +57,7 @@ public class ValueExpressionSemantics {
 
     @Test
     public void Add() {
-        Token add = binaryValueExpressionToken(new Add(new Ref("a"), new Ref("b")));
+        Token add = binaryValueExpressionToken(add(ref("a"), ref("b")));
         Assert.assertTrue(add.eval(stream(1, 2, 3)));
         Assert.assertTrue(add.eval(stream(-10, 3, -7)));
         Assert.assertTrue(add.eval(stream(-10, -8, -18)));
@@ -70,7 +68,7 @@ public class ValueExpressionSemantics {
 
     @Test
     public void Div() {
-        Token div = binaryValueExpressionToken(new Div(new Ref("a"), new Ref("b")));
+        Token div = binaryValueExpressionToken(div(ref("a"), ref("b")));
         Assert.assertTrue(div.eval(stream(8, 2, 4)));
         Assert.assertTrue(div.eval(stream(1, 2, 0)));
         Assert.assertTrue(div.eval(stream(7, 8, 0)));
@@ -81,7 +79,7 @@ public class ValueExpressionSemantics {
 
     @Test
     public void Mul() {
-        Token mul = binaryValueExpressionToken(new Mul(new Ref("a"), new Ref("b")));
+        Token mul = binaryValueExpressionToken(mul(ref("a"), ref("b")));
         Assert.assertTrue(mul.eval(stream(2, 2, 4)));
         Assert.assertTrue(mul.eval(stream(0, 42, 0)));
         Assert.assertTrue(mul.eval(stream(42, 0, 0)));
@@ -92,7 +90,7 @@ public class ValueExpressionSemantics {
 
     @Test
     public void Sub() {
-        Token sub = binaryValueExpressionToken(new Sub(new Ref("a"), new Ref("b")));
+        Token sub = binaryValueExpressionToken(sub(ref("a"), ref("b")));
         Assert.assertTrue(sub.eval(stream(8, 2, 6)));
         Assert.assertTrue(sub.eval(stream(3, 10, -7)));
         Assert.assertTrue(sub.eval(stream(0, 42, -42)));
@@ -103,7 +101,7 @@ public class ValueExpressionSemantics {
 
     @Test
     public void Neg() {
-        Token neg = unaryValueExpressionToken(new Neg(new Ref("a")));
+        Token neg = unaryValueExpressionToken(neg(ref("a")));
         Assert.assertTrue(neg.eval(stream(1, -1)));
         Assert.assertTrue(neg.eval(stream(2, -2)));
         Assert.assertTrue(neg.eval(stream(-3, 3)));
