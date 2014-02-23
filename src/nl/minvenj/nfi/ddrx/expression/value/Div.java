@@ -16,8 +16,6 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
-import java.math.BigInteger;
-
 import nl.minvenj.nfi.ddrx.data.Environment;
 
 public class Div extends BinaryValueExpression {
@@ -27,8 +25,8 @@ public class Div extends BinaryValueExpression {
     }
 
     @Override
-    public BigInteger eval(Environment env) {
-        return _lop.eval(env).divide(_rop.eval(env));
+    public Value eval(Environment env) {
+        return new Value(_lop.eval(env).getNumber().divide(_rop.eval(env).getNumber()));
     }
 
 }

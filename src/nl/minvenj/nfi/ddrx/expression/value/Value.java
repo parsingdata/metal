@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.comparison;
+package nl.minvenj.nfi.ddrx.expression.value;
 
-import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
+import java.math.BigInteger;
 
-public class Lt extends ComparisonExpression {
+public class Value {
     
-    public Lt(ValueExpression value, ValueExpression predicate) {
-        super(value, predicate);
+    private final byte[] _data;
+    
+    public Value(byte[] data) {
+        _data = data;
     }
-
-    @Override
-    public boolean eval(Environment env) {
-    	return _value.eval(env).getNumber().compareTo(_predicate.eval(env).getNumber()) == -1;
+    
+    public Value(BigInteger value) {
+        _data = value.toByteArray();
     }
-
+    
+    public BigInteger getNumber() {
+        return new BigInteger(_data);
+    }
+    
 }

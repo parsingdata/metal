@@ -16,12 +16,10 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
-import java.math.BigInteger;
-
 import nl.minvenj.nfi.ddrx.data.Environment;
 
 public interface ValueExpression {
     
-    BigInteger eval(Environment env);
+    Value eval(Environment env);
     
 }

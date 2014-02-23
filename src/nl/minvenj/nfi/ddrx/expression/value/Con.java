@@ -16,20 +16,18 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
-import java.math.BigInteger;
-
 import nl.minvenj.nfi.ddrx.data.Environment;
 
 public class Con implements ValueExpression {
     
-    private final BigInteger _val;
+    private final Value _val;
     
-    public Con(BigInteger val) {
+    public Con(Value val) {
         _val = val;
     }
 
     @Override
-    public BigInteger eval(Environment env) {
+    public Value eval(Environment env) {
         return _val;
     }
     

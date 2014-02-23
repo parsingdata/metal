@@ -17,33 +17,34 @@
 package nl.minvenj.nfi.ddrx.data;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Stack;
 
+import nl.minvenj.nfi.ddrx.expression.value.Value;
+
 public class Environment {
 
-    private final HashMap<String, Stack<BigInteger>> _vals;
+    private final HashMap<String, Stack<Value>> _vals;
     private final Stack<String> _order;
     private final Stack<Integer> _marked;
     private final ByteStream _input;
 
     public Environment(ByteStream input) {
-        _vals = new HashMap<String, Stack<BigInteger>>();
+        _vals = new HashMap<String, Stack<Value>>();
         _order = new Stack<String>();
         _marked = new Stack<Integer>();
         _input = input;
     }
 
-    public void put(String name, BigInteger value) {
+    public void put(String name, Value value) {
         if (!_vals.containsKey(name)) {
-            _vals.put(name, new Stack<BigInteger>());
+            _vals.put(name, new Stack<Value>());
         }
         _vals.get(name).push(value);
         _order.push(name);
     }
     
-    public BigInteger get(String name) {
+    public Value get(String name) {
         return _vals.get(name).peek();
     }
     

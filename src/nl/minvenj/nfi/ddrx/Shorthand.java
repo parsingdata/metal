@@ -38,6 +38,7 @@ import nl.minvenj.nfi.ddrx.expression.value.Neg;
 import nl.minvenj.nfi.ddrx.expression.value.Ref;
 import nl.minvenj.nfi.ddrx.expression.value.Sub;
 import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
+import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 import nl.minvenj.nfi.ddrx.token.Cho;
 import nl.minvenj.nfi.ddrx.token.Rep;
@@ -57,7 +58,7 @@ public class Shorthand {
     public static BinaryValueExpression mul(ValueExpression l, ValueExpression r) { return new Mul(l, r); }
     public static BinaryValueExpression sub(ValueExpression l, ValueExpression r) { return new Sub(l, r); }
     public static UnaryValueExpression neg(ValueExpression v) { return new Neg(v); }
-    public static ValueExpression con(long v) { return new Con(BigInteger.valueOf(v)); }
+    public static ValueExpression con(long v) { return new Con(new Value(BigInteger.valueOf(v).toByteArray())); }
     public static ValueExpression ref(String n) { return new Ref(n); }
     
     public static BinaryLogicalExpression and(Expression l, Expression r) { return new And(l, r); }

@@ -21,6 +21,7 @@ import java.math.BigInteger;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.expression.Expression;
+import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
 public class Val implements Token {
@@ -38,7 +39,7 @@ public class Val implements Token {
     @Override
     public boolean eval(Environment env) {
         // Evaluate size.
-        BigInteger size = _size.eval(env);
+        BigInteger size = _size.eval(env).getNumber();
         // Read size from stream.
         byte[] data = new byte[size.intValue()];
         env.mark();
@@ -52,7 +53,7 @@ public class Val implements Token {
             e.printStackTrace();
             return false;
         }
-        BigInteger value = new BigInteger(data);
+        Value value = new Value(data);
         // TODO: Validate type.
         // TODO: Determine if stored predicates can be evaluated.
         // TODO: If so, evaluate stored predicates and return false if one fails.

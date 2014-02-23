@@ -17,7 +17,6 @@
 package nl.minvenj.nfi.ddrx.expression.comparison;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
-
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
 public class Gt extends ComparisonExpression {
@@ -28,7 +27,7 @@ public class Gt extends ComparisonExpression {
 
     @Override
     public boolean eval(Environment env) {
-    	return _value.eval(env).compareTo(_predicate.eval(env)) == 1;
+    	return _value.eval(env).getNumber().compareTo(_predicate.eval(env).getNumber()) == 1;
     }
 
 }
