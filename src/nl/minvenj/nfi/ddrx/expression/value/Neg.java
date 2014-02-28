@@ -16,17 +16,26 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
+import java.math.BigInteger;
+
 import nl.minvenj.nfi.ddrx.data.Environment;
 
-public class Neg extends UnaryValueExpression {
+public class Neg extends UnaryValueExpression<NumericValue> {
     
-    public Neg(ValueExpression op) {
+    public Neg(ValueExpression<NumericValue> op) {
         super(op);
     }
 
     @Override
-    public Value eval(Environment env) {
-        return new Value(_op.eval(env).getNumber().negate());
+    public NumericValue eval(Environment env) {
+        return _op.eval(env).operation(new NumericValueOperation() {
+
+            @Override
+            public NumericValue execute(BigInteger value) {
+                return new NumericValue(value.negate());
+            }
+            
+        });
     }
 
 }

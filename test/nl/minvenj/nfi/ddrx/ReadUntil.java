@@ -38,17 +38,17 @@ public class ReadUntil {
     
     @Test
     public void readUntilConstant() {
-        Assert.assertTrue(_readUntil.eval(stream(1, 2, 3, 4, 42)));
+        Assert.assertTrue(_readUntil.parse(stream(1, 2, 3, 4, 42)));
     }
     
     @Test
     public void readUntilNoSkipping() {
-        Assert.assertTrue(_readUntil.eval(stream(42)));
+        Assert.assertTrue(_readUntil.parse(stream(42)));
     }
     
     @Test
     public void readUntilErrorNoTerminator() {
-        Assert.assertFalse(_readUntil.eval(stream(1, 2, 3, 4)));
+        Assert.assertFalse(_readUntil.parse(stream(1, 2, 3, 4)));
     }
     
 }

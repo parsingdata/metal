@@ -28,9 +28,9 @@ public class Rep implements Token {
     }
     
     @Override
-    public boolean eval(Environment env) {
+    public boolean parse(Environment env) {
     	env.mark();
-    	while (_node.eval(env)) {
+    	while (_node.parse(env)) {
     		env.clear();
     		env.mark();
     	}

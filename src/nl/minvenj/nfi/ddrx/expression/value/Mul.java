@@ -16,17 +16,31 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
+import java.math.BigInteger;
+
 import nl.minvenj.nfi.ddrx.data.Environment;
 
-public class Mul extends BinaryValueExpression {
+public class Mul extends BinaryValueExpression<NumericValue> {
     
-    public Mul(ValueExpression lop, ValueExpression rop) {
+    public Mul(ValueExpression<NumericValue> lop, ValueExpression<NumericValue> rop) {
         super(lop, rop);
     }
 
     @Override
-    public Value eval(Environment env) {
-        return new Value(_lop.eval(env).getNumber().multiply(_rop.eval(env).getNumber()));
+    public NumericValue eval(final Environment env) {
+        return _lop.eval(env).operation(new NumericValueOperation() {
+            
+            @Override
+            public NumericValue execute(final BigInteger lv) {
+                return _rop.eval(env).operation(new NumericValueOperation() {
+                    
+                    @Override
+                    public NumericValue execute(final BigInteger rv) {
+                        return new NumericValue(lv.multiply(rv));
+                    }
+                });
+            }
+        });
     }
 
 }

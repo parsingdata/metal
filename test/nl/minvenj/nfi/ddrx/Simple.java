@@ -43,31 +43,31 @@ public class Simple {
     @Test
     public void correct() {
         Token t = buildSimpleToken("r1", 1, "r1", 1);
-        Assert.assertTrue(t.eval(stream(1, 2, 3, 4)));
+        Assert.assertTrue(t.parse(stream(1, 2, 3, 4)));
     }
 
     @Test
     public void sizeError() {
         Token t = buildSimpleToken("r1", 2, "r1", 1);
-        Assert.assertFalse(t.eval(stream(1, 2, 3, 4)));
+        Assert.assertFalse(t.parse(stream(1, 2, 3, 4)));
     }
 
     @Test(expected = NullPointerException.class)
     public void refError() {
         Token t = buildSimpleToken("r1", 1, "r2", 1);
-        t.eval(stream(1, 2, 3, 4));
+        t.parse(stream(1, 2, 3, 4));
     }
 
     @Test
     public void predicateError() {
         Token t = buildSimpleToken("r1", 1, "r1", 2);
-        Assert.assertFalse(t.eval(stream(1, 2, 3, 4)));
+        Assert.assertFalse(t.parse(stream(1, 2, 3, 4)));
     }
 
     @Test
     public void sourceError() {
         Token t = buildSimpleToken("r1", 1, "r1", 1);
-        Assert.assertFalse(t.eval(stream(2, 2, 2, 2)));
+        Assert.assertFalse(t.parse(stream(2, 2, 2, 2)));
     }
 
 }

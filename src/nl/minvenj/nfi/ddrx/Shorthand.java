@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.ddrx;
 
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 
 import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.expression.True;
@@ -35,10 +36,9 @@ import nl.minvenj.nfi.ddrx.expression.value.Con;
 import nl.minvenj.nfi.ddrx.expression.value.Div;
 import nl.minvenj.nfi.ddrx.expression.value.Mul;
 import nl.minvenj.nfi.ddrx.expression.value.Neg;
-import nl.minvenj.nfi.ddrx.expression.value.Ref;
+import nl.minvenj.nfi.ddrx.expression.value.NumericValue;
 import nl.minvenj.nfi.ddrx.expression.value.Sub;
 import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
-import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 import nl.minvenj.nfi.ddrx.token.Cho;
 import nl.minvenj.nfi.ddrx.token.Rep;
@@ -48,26 +48,26 @@ import nl.minvenj.nfi.ddrx.token.Val;
 
 public class Shorthand {
     
-    public static Token val(String name, ValueExpression size, Expression pred) { return new Val(name, size, pred); }
+    public static NumericValue num(String name, ValueExpression<NumericValue> size, Expression pred) { return new NumericValue(name, size, pred); }
     public static Token cho(Token l, Token r) { return new Cho(l, r); }
     public static Token rep(Token t) { return new Rep(t); }
     public static Token seq(Token l, Token r) { return new Seq(l, r); }
     
-    public static BinaryValueExpression add(ValueExpression l, ValueExpression r) { return new Add(l, r); }
-    public static BinaryValueExpression div(ValueExpression l, ValueExpression r) { return new Div(l, r); }
-    public static BinaryValueExpression mul(ValueExpression l, ValueExpression r) { return new Mul(l, r); }
-    public static BinaryValueExpression sub(ValueExpression l, ValueExpression r) { return new Sub(l, r); }
-    public static UnaryValueExpression neg(ValueExpression v) { return new Neg(v); }
-    public static ValueExpression con(long v) { return new Con(new Value(BigInteger.valueOf(v).toByteArray())); }
-    public static ValueExpression ref(String n) { return new Ref(n); }
+    public static BinaryValueExpression<NumericValue> add(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Add(l, r); }
+    public static BinaryValueExpression<NumericValue> div(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Div(l, r); }
+    public static BinaryValueExpression<NumericValue> mul(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Mul(l, r); }
+    public static BinaryValueExpression<NumericValue> sub(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Sub(l, r); }
+    public static UnaryValueExpression<NumericValue> neg(ValueExpression<NumericValue> v) { return new Neg(v); }
+    public static ValueExpression<NumericValue> con(long v) { return new Con<NumericValue>(new NumericValue(BigInteger.valueOf(v))); }
+    public static ValueExpression<Val> con(String s) { return new Con<Val>(new Val(s.getBytes(Charset.forName("ISO646-US")))); }
     
     public static BinaryLogicalExpression and(Expression l, Expression r) { return new And(l, r); }
     public static BinaryLogicalExpression or(Expression l, Expression r) { return new Or(l, r); }
     public static UnaryLogicalExpression not(Expression e) { return new Not(e); }
     public static Expression expTrue() { return new True(); }
     
-    public static ComparisonExpression eq(ValueExpression l, ValueExpression r) { return new Eq(l, r); }
-    public static ComparisonExpression gt(ValueExpression l, ValueExpression r) { return new Gt(l, r); }
-    public static ComparisonExpression lt(ValueExpression l, ValueExpression r) { return new Lt(l, r); }
+    public static ComparisonExpression eq(ValueExpression<Val> l, ValueExpression<Val> r) { return new Eq(l, r); }
+    public static ComparisonExpression gt(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Gt(l, r); }
+    public static ComparisonExpression lt(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Lt(l, r); }
     
 }

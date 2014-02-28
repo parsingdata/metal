@@ -16,12 +16,14 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
-public abstract class BinaryValueExpression implements ValueExpression {
+import nl.minvenj.nfi.ddrx.token.Val;
+
+public abstract class BinaryValueExpression<T extends Val> implements ValueExpression<T> {
     
-    protected final ValueExpression _lop;
-    protected final ValueExpression _rop;
+    protected final ValueExpression<T> _lop;
+    protected final ValueExpression<T> _rop;
     
-    public BinaryValueExpression(ValueExpression lop, ValueExpression rop) {
+    public BinaryValueExpression(ValueExpression<T> lop, ValueExpression<T> rop) {
         _lop = lop;
         _rop = rop;
     }

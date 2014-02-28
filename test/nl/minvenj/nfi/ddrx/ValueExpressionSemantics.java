@@ -28,86 +28,89 @@ import static nl.minvenj.nfi.ddrx.Shorthand.sub;
 import static nl.minvenj.nfi.ddrx.Shorthand.val;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.data.Environment.stream;
-import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
-import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
-import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
-import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
+import nl.minvenj.nfi.ddrx.expression.value.NumericValue;
+import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
+import nl.minvenj.nfi.ddrx.expression.value.Value;
+import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
+import nl.minvenj.nfi.ddrx.token.Token;
+
 @RunWith(JUnit4.class)
 public class ValueExpressionSemantics {
 
-    private Token singleToken(String firstName, String secondName, ValueExpression ve) {
+    private Token singleToken(String firstName, String secondName, ValueExpression<NumericValue> ve) {
         return seq(any(firstName),
                    val(secondName, con(1), eq(ref(secondName), ve)));
     }
 
-    private Token binaryValueExpressionToken(BinaryValueExpression bve) {
+    private Token binaryValueExpressionToken(BinaryValueExpression<NumericValue> bve) {
         return seq(any("a"),
                    singleToken("b", "c", bve));
     }
 
-    private Token unaryValueExpressionToken(UnaryValueExpression uve) {
+    private Token unaryValueExpressionToken(UnaryValueExpression<NumericValue> uve) {
         return singleToken("a", "b", uve);
     }
 
     @Test
     public void Add() {
         Token add = binaryValueExpressionToken(add(ref("a"), ref("b")));
-        Assert.assertTrue(add.eval(stream(1, 2, 3)));
-        Assert.assertTrue(add.eval(stream(-10, 3, -7)));
-        Assert.assertTrue(add.eval(stream(-10, -8, -18)));
-        Assert.assertTrue(add.eval(stream(10, -7, 3)));
-        Assert.assertTrue(add.eval(stream(10, -25, -15)));
-        Assert.assertFalse(add.eval(stream(1, 2, 4)));
+        Assert.assertTrue(add.parse(stream(1, 2, 3)));
+        Assert.assertTrue(add.parse(stream(-10, 3, -7)));
+        Assert.assertTrue(add.parse(stream(-10, -8, -18)));
+        Assert.assertTrue(add.parse(stream(10, -7, 3)));
+        Assert.assertTrue(add.parse(stream(10, -25, -15)));
+        Assert.assertFalse(add.parse(stream(1, 2, 4)));
     }
 
     @Test
     public void Div() {
         Token div = binaryValueExpressionToken(div(ref("a"), ref("b")));
-        Assert.assertTrue(div.eval(stream(8, 2, 4)));
-        Assert.assertTrue(div.eval(stream(1, 2, 0)));
-        Assert.assertTrue(div.eval(stream(7, 8, 0)));
-        Assert.assertTrue(div.eval(stream(3, 2, 1)));
-        Assert.assertTrue(div.eval(stream(1, 1, 1)));
-        Assert.assertFalse(div.eval(stream(4, 2, 1)));
+        Assert.assertTrue(div.parse(stream(8, 2, 4)));
+        Assert.assertTrue(div.parse(stream(1, 2, 0)));
+        Assert.assertTrue(div.parse(stream(7, 8, 0)));
+        Assert.assertTrue(div.parse(stream(3, 2, 1)));
+        Assert.assertTrue(div.parse(stream(1, 1, 1)));
+        Assert.assertFalse(div.parse(stream(4, 2, 1)));
     }
 
     @Test
     public void Mul() {
         Token mul = binaryValueExpressionToken(mul(ref("a"), ref("b")));
-        Assert.assertTrue(mul.eval(stream(2, 2, 4)));
-        Assert.assertTrue(mul.eval(stream(0, 42, 0)));
-        Assert.assertTrue(mul.eval(stream(42, 0, 0)));
-        Assert.assertTrue(mul.eval(stream(1, 1, 1)));
-        Assert.assertTrue(mul.eval(stream(0, 0, 0)));
-        Assert.assertFalse(mul.eval(stream(2, 3, 8)));
+        Assert.assertTrue(mul.parse(stream(2, 2, 4)));
+        Assert.assertTrue(mul.parse(stream(0, 42, 0)));
+        Assert.assertTrue(mul.parse(stream(42, 0, 0)));
+        Assert.assertTrue(mul.parse(stream(1, 1, 1)));
+        Assert.assertTrue(mul.parse(stream(0, 0, 0)));
+        Assert.assertFalse(mul.parse(stream(2, 3, 8)));
     }
 
     @Test
     public void Sub() {
         Token sub = binaryValueExpressionToken(sub(ref("a"), ref("b")));
-        Assert.assertTrue(sub.eval(stream(8, 2, 6)));
-        Assert.assertTrue(sub.eval(stream(3, 10, -7)));
-        Assert.assertTrue(sub.eval(stream(0, 42, -42)));
-        Assert.assertTrue(sub.eval(stream(-42, 10, -52)));
-        Assert.assertTrue(sub.eval(stream(-42, -10, -32)));
-        Assert.assertFalse(sub.eval(stream(-42, 42, 0)));
+        Assert.assertTrue(sub.parse(stream(8, 2, 6)));
+        Assert.assertTrue(sub.parse(stream(3, 10, -7)));
+        Assert.assertTrue(sub.parse(stream(0, 42, -42)));
+        Assert.assertTrue(sub.parse(stream(-42, 10, -52)));
+        Assert.assertTrue(sub.parse(stream(-42, -10, -32)));
+        Assert.assertFalse(sub.parse(stream(-42, 42, 0)));
     }
 
     @Test
     public void Neg() {
         Token neg = unaryValueExpressionToken(neg(ref("a")));
-        Assert.assertTrue(neg.eval(stream(1, -1)));
-        Assert.assertTrue(neg.eval(stream(2, -2)));
-        Assert.assertTrue(neg.eval(stream(-3, 3)));
-        Assert.assertTrue(neg.eval(stream(0, 0)));
-        Assert.assertFalse(neg.eval(stream(4, 4)));
-        Assert.assertFalse(neg.eval(stream(-5, -5)));
+        Assert.assertTrue(neg.parse(stream(1, -1)));
+        Assert.assertTrue(neg.parse(stream(2, -2)));
+        Assert.assertTrue(neg.parse(stream(-3, 3)));
+        Assert.assertTrue(neg.parse(stream(0, 0)));
+        Assert.assertFalse(neg.parse(stream(4, 4)));
+        Assert.assertFalse(neg.parse(stream(-5, -5)));
     }
 
 }

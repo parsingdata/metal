@@ -16,25 +16,27 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
-import nl.minvenj.nfi.ddrx.data.Environment;
+import java.math.BigInteger;
+
+import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.token.Val;
 
-public class Con<T extends Val> implements ValueExpression<T> {
+public class NumericValue extends Val {
     
-    private final T _val;
-    
-    public Con(T val) {
-        _val = val;
-    }
-
-    @Override
-    public T eval(Environment env) {
-        return _val;
+    public NumericValue(String name, ValueExpression<NumericValue> size, Expression pred) {
+        super(name, size, pred);
     }
     
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" + _val.toString() + ")";
+    public NumericValue(BigInteger value) {
+        super(value.toByteArray());
+    }
+    
+    public NumericValue operation(NumericValueOperation op) {
+        return op.execute(new BigInteger(_data));
+    }
+    
+    public BigInteger toBigInteger() {
+        return new BigInteger(_data);
     }
     
 }

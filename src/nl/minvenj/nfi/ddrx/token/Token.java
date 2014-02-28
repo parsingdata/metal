@@ -20,6 +20,6 @@ import nl.minvenj.nfi.ddrx.data.Environment;
 
 public interface Token {
     
-    public boolean eval(Environment env);
+    public boolean parse(Environment env);
     
 }

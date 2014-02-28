@@ -29,10 +29,10 @@ public class Seq implements Token {
     }
     
     @Override
-    public boolean eval(Environment env) {
+    public boolean parse(Environment env) {
     	env.mark();
-    	if (_l.eval(env)) {
-    		if (_r.eval(env)) {
+    	if (_l.parse(env)) {
+    		if (_r.parse(env)) {
     			env.clear();
     			return true;
     		} else {

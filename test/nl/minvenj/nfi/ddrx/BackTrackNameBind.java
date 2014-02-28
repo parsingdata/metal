@@ -44,22 +44,22 @@ public class BackTrackNameBind {
 
     @Test
     public void choiceRefLeft() {
-        Assert.assertTrue(_choiceRef.eval(stream(1, 2, 2)));
+        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 2)));
     }
 
     @Test
     public void choiceRefRight() {
-        Assert.assertTrue(_choiceRef.eval(stream(1, 2, 3)));
+        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 3)));
     }
 
     @Test
     public void choiceRefNone() {
-        Assert.assertFalse(_choiceRef.eval(stream(1, 1, 2)));
+        Assert.assertFalse(_choiceRef.parse(stream(1, 1, 2)));
     }
 
     @Test
     public void repeatRef() {
-        Assert.assertTrue(_repeatRef.eval(stream(42, 42, 42, 21, 21, 21)));
+        Assert.assertTrue(_repeatRef.parse(stream(42, 42, 42, 21, 21, 21)));
     }
 
 }

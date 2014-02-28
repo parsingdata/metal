@@ -16,22 +16,22 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
-import java.math.BigInteger;
-
 public class Value {
     
-    private final byte[] _data;
+    protected final String _name;
+    protected final byte[] _data;
     
-    public Value(byte[] data) {
+    public Value(String name, byte[] data) {
+        _name = name;
         _data = data;
     }
     
-    public Value(BigInteger value) {
-        _data = value.toByteArray();
+    public Value(byte[] data) {
+        this("", data);
     }
     
-    public BigInteger getNumber() {
-        return new BigInteger(_data);
+    public String getName() {
+        return _name;
     }
     
 }

@@ -16,12 +16,14 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
+import nl.minvenj.nfi.ddrx.token.Val;
 
-public abstract class UnaryValueExpression implements ValueExpression {
+
+public abstract class UnaryValueExpression<T extends Val> implements ValueExpression<T> {
     
-    protected final ValueExpression _op;
+    protected final ValueExpression<T> _op;
     
-    public UnaryValueExpression(ValueExpression op) {
+    public UnaryValueExpression(ValueExpression<T> op) {
         _op = op;
     }
     

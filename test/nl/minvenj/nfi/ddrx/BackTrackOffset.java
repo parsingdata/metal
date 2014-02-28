@@ -46,42 +46,42 @@ public class BackTrackOffset {
 
     @Test
     public void choiceLeft() {
-        Assert.assertTrue(_backTrackChoice.eval(stream(1, 2)));
+        Assert.assertTrue(_backTrackChoice.parse(stream(1, 2)));
     }
 
     @Test
     public void choiceRight() {
-        Assert.assertTrue(_backTrackChoice.eval(stream(1, 3)));
+        Assert.assertTrue(_backTrackChoice.parse(stream(1, 3)));
     }
 
     @Test
     public void choiceNone() {
-        Assert.assertFalse(_backTrackChoice.eval(stream(1, 4)));
+        Assert.assertFalse(_backTrackChoice.parse(stream(1, 4)));
     }
 
     @Test
     public void repeatZero() {
-        Assert.assertTrue(_backTrackRepeat.eval(stream(1, 3)));
+        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 3)));
     }
 
     @Test
     public void repeatOnce() {
-        Assert.assertTrue(_backTrackRepeat.eval(stream(1, 2, 1, 3)));
+        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 3)));
     }
 
     @Test
     public void repeatTwice() {
-        Assert.assertTrue(_backTrackRepeat.eval(stream(1, 2, 1, 2, 1, 3)));
+        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 2, 1, 3)));
     }
 
     @Test
     public void repeatNone() {
-        Assert.assertFalse(_backTrackRepeat.eval(stream(1, 4)));
+        Assert.assertFalse(_backTrackRepeat.parse(stream(1, 4)));
     }
 
     @Test
     public void deepMatch() {
-        Assert.assertTrue(_backTrackDeep.eval(stream(1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 84)));
+        Assert.assertTrue(_backTrackDeep.parse(stream(1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 84)));
     }
 
 }

@@ -16,50 +16,43 @@
 
 package nl.minvenj.nfi.ddrx.token;
 
-import java.io.IOException;
-import java.math.BigInteger;
-
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.expression.Expression;
-import nl.minvenj.nfi.ddrx.expression.value.Value;
+import nl.minvenj.nfi.ddrx.expression.value.NumericValue;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class Val implements Token {
+public class Val implements Token, ValueExpression<Val> {
 
-    private final String _name;
-    private final ValueExpression _size;
-    private final Expression _pred;
-
-    public Val(String name, ValueExpression size, Expression pred) {
+    private String _name;
+    private ValueExpression<NumericValue> _size;
+    private Expression _pred;
+    protected byte[] _data;
+    
+    public Val(String name, ValueExpression<NumericValue> size, Expression pred) {
         _name = name;
         _size = size;
         _pred = pred;
     }
+    
+    public Val(byte[] data) {
+        _data = data;
+    }
 
     @Override
-    public boolean eval(Environment env) {
-        // Evaluate size.
-        BigInteger size = _size.eval(env).getNumber();
-        // Read size from stream.
-        byte[] data = new byte[size.intValue()];
+    public boolean parse(Environment env) {
+        int size = _size.eval(env).toBigInteger().intValue();
+        _data = new byte[size];
         env.mark();
         try {
-            if (env.read(data) != size.intValue()) {
+            if (env.read(_data) != size) {
                 env.reset();
                 return false;
             }
+            env.put(this);
+        } catch (Throwable t) {
+            t.printStackTrace();
+            throw new RuntimeException(t);
         }
-        catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        Value value = new Value(data);
-        // TODO: Validate type.
-        // TODO: Determine if stored predicates can be evaluated.
-        // TODO: If so, evaluate stored predicates and return false if one fails.
-        // TODO: Determine if predicate can be evaluated.
-        // If so, evaluate and return result.
-        env.put(_name, value);
         if (_pred.eval(env)) {
             env.clear();
             return true;
@@ -67,12 +60,20 @@ public class Val implements Token {
             env.reset();
             return false;
         }
-        // TODO: If not, store predicate.
+    }
+    
+    public String getName() {
+        return _name;
     }
     
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(\"" + _name + "\"," + _size + "," + _pred + ",)";
+    }
+
+    @Override
+    public Val eval(Environment env) {
+        return this;
     }
     
 }

@@ -20,32 +20,45 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Stack;
 
-import nl.minvenj.nfi.ddrx.expression.value.Value;
+import nl.minvenj.nfi.ddrx.token.Val;
 
 public class Environment {
 
-    private final HashMap<String, Stack<Value>> _vals;
+    private final HashMap<String, ValueStack<?>> _vals;
     private final Stack<String> _order;
     private final Stack<Integer> _marked;
     private final ByteStream _input;
 
     public Environment(ByteStream input) {
-        _vals = new HashMap<String, Stack<Value>>();
+        _vals = new HashMap<String, ValueStack<?>>();
         _order = new Stack<String>();
         _marked = new Stack<Integer>();
         _input = input;
     }
-
-    public void put(String name, Value value) {
+    
+    @SuppressWarnings("unchecked")
+    private <T extends Val>ValueStack<T> getStack(Class<T> valueClass, String name) {
         if (!_vals.containsKey(name)) {
-            _vals.put(name, new Stack<Value>());
+            _vals.put(name, new ValueStack<T>(valueClass));
         }
-        _vals.get(name).push(value);
-        _order.push(name);
+        return (ValueStack<T>) _vals.get(name);
     }
     
-    public Value get(String name) {
-        return _vals.get(name).peek();
+    @SuppressWarnings("unchecked")
+    private <T extends Val>Class<T> classOf(T value) {
+        return (Class<T>) value.getClass();
+    }
+
+    public <T extends Val> void put(T value) {
+        getStack(classOf(value), value.getName()).push(value);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T extends Val>T get(String name) {
+        if (!_vals.containsKey(name)) {
+            return null;
+        }
+        return (T) _vals.get(name).peek();
     }
     
     private void removeLast() {

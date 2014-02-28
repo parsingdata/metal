@@ -14,26 +14,34 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.value;
+package nl.minvenj.nfi.ddrx.data;
 
-import nl.minvenj.nfi.ddrx.data.Environment;
+import java.util.Stack;
 
-public class Ref implements ValueExpression {
+import nl.minvenj.nfi.ddrx.token.Val;
+
+public class ValueStack<T extends Val> {
+    private final Class<T> _valueClass;
+    private final Stack<T> _stack;
     
-    private final String _name;
-    
-    public Ref(String name) {
-      _name = name;
-    }
-
-    @Override
-    public Value eval(Environment env) {
-      return env.get(_name);
+    public ValueStack(Class<T> valueClass) {
+        _valueClass = valueClass;
+        _stack = new Stack<T>();
     }
     
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(\"" + _name + "\")";
+    public void push(T value) {
+        _stack.push(_valueClass.cast(value));
     }
     
+    public T peek() {
+        return _stack.peek();
+    }
+    
+    public T pop() {
+        return _stack.pop();
+    }
+    
+    public int size() {
+        return _stack.size();
+    }
 }

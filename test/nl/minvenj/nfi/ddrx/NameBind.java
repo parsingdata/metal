@@ -40,38 +40,38 @@ public class NameBind {
 
     @Test
     public void sequenceMatch2() {
-        Assert.assertTrue(sequenceMatch2.eval(stream(42, 42)));
+        Assert.assertTrue(sequenceMatch2.parse(stream(42, 42)));
     }
     
     @Test
     public void sequenceNoMatch2() {
-        Assert.assertFalse(sequenceMatch2.eval(stream(42, 21)));
+        Assert.assertFalse(sequenceMatch2.parse(stream(42, 21)));
     }
     
     @Test
     public void sequenceMatch3() {
-        Assert.assertTrue(sequenceMatch3.eval(stream(42, 42, 42)));
+        Assert.assertTrue(sequenceMatch3.parse(stream(42, 42, 42)));
     }
     
     @Test
     public void sequenceNoMatch3() {
-        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(42, 42, 21)));
-        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(42, 21, 42)));
-        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(21, 42, 42)));
-        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(21, 42, 63)));
+        Assert.assertFalse(sequenceMatchTransitive3.parse(stream(42, 42, 21)));
+        Assert.assertFalse(sequenceMatchTransitive3.parse(stream(42, 21, 42)));
+        Assert.assertFalse(sequenceMatchTransitive3.parse(stream(21, 42, 42)));
+        Assert.assertFalse(sequenceMatchTransitive3.parse(stream(21, 42, 63)));
     }
     
     @Test
     public void sequenceMatchTransitive3() {
-        Assert.assertTrue(sequenceMatchTransitive3.eval(stream(42, 42, 42)));
+        Assert.assertTrue(sequenceMatchTransitive3.parse(stream(42, 42, 42)));
     }
     
     @Test
     public void sequenceNoMatchTransitive3() {
-        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(42, 42, 21)));
-        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(42, 21, 42)));
-        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(21, 42, 42)));
-        Assert.assertFalse(sequenceMatchTransitive3.eval(stream(21, 42, 63)));
+        Assert.assertFalse(sequenceMatchTransitive3.parse(stream(42, 42, 21)));
+        Assert.assertFalse(sequenceMatchTransitive3.parse(stream(42, 21, 42)));
+        Assert.assertFalse(sequenceMatchTransitive3.parse(stream(21, 42, 42)));
+        Assert.assertFalse(sequenceMatchTransitive3.parse(stream(21, 42, 63)));
     }
     
 }
