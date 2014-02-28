@@ -48,6 +48,7 @@ import nl.minvenj.nfi.ddrx.token.Val;
 
 public class Shorthand {
     
+    public static NumericValue num(String name) { return new NumericValue(name); }
     public static NumericValue num(String name, ValueExpression<NumericValue> size, Expression pred) { return new NumericValue(name, size, pred); }
     public static Token cho(Token l, Token r) { return new Cho(l, r); }
     public static Token rep(Token t) { return new Rep(t); }
@@ -66,7 +67,7 @@ public class Shorthand {
     public static UnaryLogicalExpression not(Expression e) { return new Not(e); }
     public static Expression expTrue() { return new True(); }
     
-    public static ComparisonExpression eq(ValueExpression<Val> l, ValueExpression<Val> r) { return new Eq(l, r); }
+    public static <T extends Val>ComparisonExpression<T> eq(ValueExpression<T> l, ValueExpression<T> r) { return new Eq<T>(l, r); }
     public static ComparisonExpression gt(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Gt(l, r); }
     public static ComparisonExpression lt(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Lt(l, r); }
     

@@ -18,13 +18,14 @@ package nl.minvenj.nfi.ddrx.expression.comparison;
 
 import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
+import nl.minvenj.nfi.ddrx.token.Val;
 
-public abstract class ComparisonExpression implements Expression {
+public abstract class ComparisonExpression<T extends Val> implements Expression {
     
-    protected final ValueExpression _value;
-    protected final ValueExpression _predicate;
+    protected final ValueExpression<T> _value;
+    protected final ValueExpression<T> _predicate;
     
-    public ComparisonExpression(ValueExpression value, ValueExpression predicate) {
+    public ComparisonExpression(ValueExpression<T> value, ValueExpression<T> predicate) {
         _value = value;
         _predicate = predicate;
     }

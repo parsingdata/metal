@@ -28,16 +28,23 @@ public class Val implements Token, ValueExpression<Val> {
     private Expression _pred;
     protected byte[] _data;
     
-    public Val(String name, ValueExpression<NumericValue> size, Expression pred) {
-        _name = name;
-        _size = size;
-        _pred = pred;
+    public Val() {
+    }
+    
+    public Val(String name) {
+        setName(name);
     }
     
     public Val(byte[] data) {
-        _data = data;
+        setData(data);
     }
-
+    
+    public Val(String name, ValueExpression<NumericValue> size, Expression pred) {
+        setName(name);
+        setSize(size);
+        setPredicate(pred);
+    }
+    
     @Override
     public boolean parse(Environment env) {
         int size = _size.eval(env).toBigInteger().intValue();
@@ -62,8 +69,33 @@ public class Val implements Token, ValueExpression<Val> {
         }
     }
     
+    @Override
+    public Val eval(Environment env) {
+        return this;
+    }
+    
+    public void setName(String name) {
+        _name = name;
+    }
+    
     public String getName() {
         return _name;
+    }
+    
+    public void setSize(ValueExpression<NumericValue> size) {
+        _size = size;
+    }
+    
+    public void setPredicate(Expression pred) {
+        _pred = pred;
+    }
+    
+    public void setData(byte[] data) {
+        _data = data;
+    }
+    
+    public byte[] getData() {
+        return _data;
     }
     
     @Override
@@ -71,9 +103,4 @@ public class Val implements Token, ValueExpression<Val> {
         return getClass().getSimpleName() + "(\"" + _name + "\"," + _size + "," + _pred + ",)";
     }
 
-    @Override
-    public Val eval(Environment env) {
-        return this;
-    }
-    
 }
