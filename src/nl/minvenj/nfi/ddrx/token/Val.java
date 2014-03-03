@@ -19,43 +19,35 @@ package nl.minvenj.nfi.ddrx.token;
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.expression.value.NumericValue;
+import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class Val implements Token, ValueExpression<Val> {
+public class Val<T extends Value> implements Token {
 
-    private String _name;
-    private ValueExpression<NumericValue> _size;
-    private Expression _pred;
-    protected byte[] _data;
+    private final String _name;
+    private final ValueExpression<NumericValue> _size;
+    private final Expression _pred;
+    private final Class<T> _type;
     
-    public Val() {
-    }
-    
-    public Val(String name) {
-        setName(name);
-    }
-    
-    public Val(byte[] data) {
-        setData(data);
-    }
-    
-    public Val(String name, ValueExpression<NumericValue> size, Expression pred) {
-        setName(name);
-        setSize(size);
-        setPredicate(pred);
+    public Val(String name, ValueExpression<NumericValue> size, Expression pred, Class<T> type) {
+        _name = name;
+        _size = size;
+        _pred = pred;
+        _type = type;
     }
     
     @Override
     public boolean parse(Environment env) {
         int size = _size.eval(env).toBigInteger().intValue();
-        _data = new byte[size];
+        byte[] data = new byte[size];
         env.mark();
         try {
-            if (env.read(_data) != size) {
+            if (env.read(data) != size) {
                 env.reset();
                 return false;
             }
-            env.put(this);
+            T value = _type.getConstructor(new Class<?>[] { String.class, byte[].class }).newInstance(new Object[] {_name, data });
+            env.put(value);
         } catch (Throwable t) {
             t.printStackTrace();
             throw new RuntimeException(t);
@@ -67,35 +59,6 @@ public class Val implements Token, ValueExpression<Val> {
             env.reset();
             return false;
         }
-    }
-    
-    @Override
-    public Val eval(Environment env) {
-        return this;
-    }
-    
-    public void setName(String name) {
-        _name = name;
-    }
-    
-    public String getName() {
-        return _name;
-    }
-    
-    public void setSize(ValueExpression<NumericValue> size) {
-        _size = size;
-    }
-    
-    public void setPredicate(Expression pred) {
-        _pred = pred;
-    }
-    
-    public void setData(byte[] data) {
-        _data = data;
-    }
-    
-    public byte[] getData() {
-        return _data;
     }
     
     @Override

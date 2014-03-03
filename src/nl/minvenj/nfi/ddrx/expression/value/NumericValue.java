@@ -18,21 +18,10 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 import java.math.BigInteger;
 
-import nl.minvenj.nfi.ddrx.expression.Expression;
-import nl.minvenj.nfi.ddrx.token.Val;
-
-public class NumericValue extends Val {
-    
-    public NumericValue(String name) {
-        super(name);
-    }
+public class NumericValue extends Value {
     
     public NumericValue(BigInteger value) {
         super(value.toByteArray());
-    }
-    
-    public NumericValue(String name, ValueExpression<NumericValue> size, Expression pred) {
-        super(name, size, pred);
     }
     
     public NumericValue operation(NumericValueOperation op) {

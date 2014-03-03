@@ -17,9 +17,8 @@
 package nl.minvenj.nfi.ddrx.expression.value;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.token.Val;
 
-public class Con<T extends Val> implements ValueExpression<T> {
+public class Con<T extends Value> implements ValueExpression<T> {
     
     private final T _val;
     

@@ -16,9 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
-import nl.minvenj.nfi.ddrx.token.Val;
 
-public abstract class BinaryValueExpression<T extends Val> implements ValueExpression<T> {
+public abstract class BinaryValueExpression<T extends Value> implements ValueExpression<T> {
     
     protected final ValueExpression<T> _lop;
     protected final ValueExpression<T> _rop;

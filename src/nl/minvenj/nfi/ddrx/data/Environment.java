@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Stack;
 
-import nl.minvenj.nfi.ddrx.token.Val;
+import nl.minvenj.nfi.ddrx.expression.value.Value;
 
 public class Environment {
 
@@ -37,7 +37,7 @@ public class Environment {
     }
     
     @SuppressWarnings("unchecked")
-    private <T extends Val>ValueStack<T> getStack(Class<T> valueClass, String name) {
+    private <T extends Value>ValueStack<T> getStack(Class<T> valueClass, String name) {
         if (!_vals.containsKey(name)) {
             _vals.put(name, new ValueStack<T>(valueClass));
         }
@@ -45,16 +45,16 @@ public class Environment {
     }
     
     @SuppressWarnings("unchecked")
-    private <T extends Val>Class<T> classOf(T value) {
+    private <T extends Value>Class<T> classOf(T value) {
         return (Class<T>) value.getClass();
     }
 
-    public <T extends Val> void put(T value) {
+    public <T extends Value> void put(T value) {
         getStack(classOf(value), value.getName()).push(value);
     }
     
     @SuppressWarnings("unchecked")
-    public <T extends Val>T get(String name) {
+    public <T extends Value>T get(String name) {
         if (!_vals.containsKey(name)) {
             return null;
         }
