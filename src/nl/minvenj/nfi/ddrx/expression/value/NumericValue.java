@@ -20,6 +20,10 @@ import java.math.BigInteger;
 
 public class NumericValue extends Value {
     
+    public NumericValue(String name, byte[] data) {
+        super(name, data);
+    }
+    
     public NumericValue(BigInteger value) {
         super(value.toByteArray());
     }

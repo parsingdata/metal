@@ -50,8 +50,8 @@ import nl.minvenj.nfi.ddrx.token.Val;
 
 public class Shorthand {
     
-    public static Token num(String name, ValueExpression<NumericValue> size, Expression pred) { return new Val<NumericValue>(name, size, pred, NumericValue.class); }
-    public static Token val(String name, ValueExpression<NumericValue> size, Expression pred) { return new Val<Value>(name, size, pred, Value.class); }
+    public static Token defNum(String name, ValueExpression<NumericValue> size, Expression pred) { return new Val<NumericValue>(name, size, pred, NumericValue.class); }
+    public static Token defVal(String name, ValueExpression<NumericValue> size, Expression pred) { return new Val<Value>(name, size, pred, Value.class); }
     public static Token cho(Token l, Token r) { return new Cho(l, r); }
     public static Token rep(Token t) { return new Rep(t); }
     public static Token seq(Token l, Token r) { return new Seq(l, r); }
@@ -66,6 +66,8 @@ public class Shorthand {
     //public static ValueExpression<Value> refVal(String s) { return new Ref<Value>(s); }
     //public static ValueExpression<NumericValue> refNum(String s) { return new Ref<NumericValue>(s); }
     public static <T extends Value>ValueExpression<T> ref(String s) { return new Ref<T>(s); }
+    public static ValueExpression<Value> refVal(String s) { return Shorthand.<Value>ref(s); }
+    public static ValueExpression<NumericValue> refNum(String s) { return Shorthand.<NumericValue>ref(s); }
     
     public static BinaryLogicalExpression and(Expression l, Expression r) { return new And(l, r); }
     public static BinaryLogicalExpression or(Expression l, Expression r) { return new Or(l, r); }
