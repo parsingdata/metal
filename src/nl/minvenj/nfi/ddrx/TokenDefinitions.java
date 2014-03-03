@@ -21,7 +21,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.eq;
 import static nl.minvenj.nfi.ddrx.Shorthand.expTrue;
 import static nl.minvenj.nfi.ddrx.Shorthand.not;
 import static nl.minvenj.nfi.ddrx.Shorthand.num;
-import nl.minvenj.nfi.ddrx.expression.comparison.Eq;
+
 import nl.minvenj.nfi.ddrx.expression.value.NumericValue;
 import nl.minvenj.nfi.ddrx.token.Token;
 
@@ -34,22 +34,19 @@ public class TokenDefinitions {
     }
 
     public static Token eqVal(String name, int value) {
-        NumericValue num = num(name);
-        num.setSize(con(1));
-        num.setPredicate(eq(num, con(value)));
-        return num;
+        return num(name, con(1), eq(Shorthand.<NumericValue>ref(name), con(value)));
     }
     
     public static Token notEqVal(String name, int value) {
-        return val(name, con(1), not(eq(ref(name), con(value))));
+        return num(name, con(1), not(eq(Shorthand.<NumericValue>ref(name), con(value))));
     }
     
     public static Token eqRef(String name, String ref) {
-        return num(name, con(1), eq(ref(name), ref(ref)));
+        return num(name, con(1), eq(Shorthand.<NumericValue>ref(name), Shorthand.<NumericValue>ref(ref)));
     }
     
     public static Token notEqRef(String name, String ref) {
-        return num(name, con(1), not(eq(ref(name), ref(ref))));
+        return num(name, con(1), not(eq(Shorthand.<NumericValue>ref(name), Shorthand.<NumericValue>ref(ref))));
     }
     
 }

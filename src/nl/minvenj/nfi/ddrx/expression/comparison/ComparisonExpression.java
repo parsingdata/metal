@@ -17,10 +17,10 @@
 package nl.minvenj.nfi.ddrx.expression.comparison;
 
 import nl.minvenj.nfi.ddrx.expression.Expression;
+import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
-import nl.minvenj.nfi.ddrx.token.Val;
 
-public abstract class ComparisonExpression<T extends Val> implements Expression {
+public abstract class ComparisonExpression<T extends Value> implements Expression {
     
     protected final ValueExpression<T> _value;
     protected final ValueExpression<T> _predicate;

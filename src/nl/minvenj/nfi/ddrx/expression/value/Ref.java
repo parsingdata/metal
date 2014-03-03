@@ -16,24 +16,19 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
-import java.math.BigInteger;
+import nl.minvenj.nfi.ddrx.data.Environment;
 
-public class NumericValue extends Value {
+public class Ref<T extends Value> implements ValueExpression<T> {
     
-    public NumericValue(BigInteger value) {
-        super(value.toByteArray());
+    private final String _name;
+    
+    public Ref(String name) {
+        _name = name;
     }
-    
-    public NumericValue operation(NumericValueOperation op) {
-        return op.execute(toBigInteger());
+
+    @Override
+    public T eval(Environment env) {
+        return env.get(_name);
     }
-    
-    public int compareTo(NumericValue other) {
-        return toBigInteger().compareTo(other.toBigInteger());
-    }
-    
-    public BigInteger toBigInteger() {
-        return new BigInteger(_data);
-    }
-    
+
 }

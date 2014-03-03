@@ -37,8 +37,10 @@ import nl.minvenj.nfi.ddrx.expression.value.Div;
 import nl.minvenj.nfi.ddrx.expression.value.Mul;
 import nl.minvenj.nfi.ddrx.expression.value.Neg;
 import nl.minvenj.nfi.ddrx.expression.value.NumericValue;
+import nl.minvenj.nfi.ddrx.expression.value.Ref;
 import nl.minvenj.nfi.ddrx.expression.value.Sub;
 import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
+import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 import nl.minvenj.nfi.ddrx.token.Cho;
 import nl.minvenj.nfi.ddrx.token.Rep;
@@ -48,8 +50,8 @@ import nl.minvenj.nfi.ddrx.token.Val;
 
 public class Shorthand {
     
-    public static NumericValue num(String name) { return new NumericValue(name); }
-    public static NumericValue num(String name, ValueExpression<NumericValue> size, Expression pred) { return new NumericValue(name, size, pred); }
+    public static Token num(String name, ValueExpression<NumericValue> size, Expression pred) { return new Val<NumericValue>(name, size, pred, NumericValue.class); }
+    public static Token val(String name, ValueExpression<NumericValue> size, Expression pred) { return new Val<Value>(name, size, pred, Value.class); }
     public static Token cho(Token l, Token r) { return new Cho(l, r); }
     public static Token rep(Token t) { return new Rep(t); }
     public static Token seq(Token l, Token r) { return new Seq(l, r); }
@@ -60,15 +62,18 @@ public class Shorthand {
     public static BinaryValueExpression<NumericValue> sub(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Sub(l, r); }
     public static UnaryValueExpression<NumericValue> neg(ValueExpression<NumericValue> v) { return new Neg(v); }
     public static ValueExpression<NumericValue> con(long v) { return new Con<NumericValue>(new NumericValue(BigInteger.valueOf(v))); }
-    public static ValueExpression<Val> con(String s) { return new Con<Val>(new Val(s.getBytes(Charset.forName("ISO646-US")))); }
+    public static ValueExpression<Value> con(String s) { return new Con<Value>(new Value(s.getBytes(Charset.forName("ISO646-US")))); }
+    //public static ValueExpression<Value> refVal(String s) { return new Ref<Value>(s); }
+    //public static ValueExpression<NumericValue> refNum(String s) { return new Ref<NumericValue>(s); }
+    public static <T extends Value>ValueExpression<T> ref(String s) { return new Ref<T>(s); }
     
     public static BinaryLogicalExpression and(Expression l, Expression r) { return new And(l, r); }
     public static BinaryLogicalExpression or(Expression l, Expression r) { return new Or(l, r); }
     public static UnaryLogicalExpression not(Expression e) { return new Not(e); }
     public static Expression expTrue() { return new True(); }
     
-    public static <T extends Val>ComparisonExpression<T> eq(ValueExpression<T> l, ValueExpression<T> r) { return new Eq<T>(l, r); }
-    public static ComparisonExpression gt(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Gt(l, r); }
-    public static ComparisonExpression lt(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Lt(l, r); }
+    public static <T extends Value>ComparisonExpression<T> eq(ValueExpression<T> l, ValueExpression<T> r) { return new Eq<T>(l, r); }
+    public static ComparisonExpression<NumericValue> gt(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Gt(l, r); }
+    public static ComparisonExpression<NumericValue> lt(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Lt(l, r); }
     
 }

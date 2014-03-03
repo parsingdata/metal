@@ -17,17 +17,18 @@
 package nl.minvenj.nfi.ddrx.expression.comparison;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.expression.value.NumericValue;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class Lt extends ComparisonExpression {
+public class Lt extends ComparisonExpression<NumericValue> {
     
-    public Lt(ValueExpression value, ValueExpression predicate) {
+    public Lt(ValueExpression<NumericValue> value, ValueExpression<NumericValue> predicate) {
         super(value, predicate);
     }
 
     @Override
     public boolean eval(Environment env) {
-    	return _value.eval(env).getNumber().compareTo(_predicate.eval(env).getNumber()) == -1;
+        return _value.eval(env).compareTo(_predicate.eval(env)) == -1;
     }
 
 }

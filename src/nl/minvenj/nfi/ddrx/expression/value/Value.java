@@ -34,4 +34,20 @@ public class Value {
         return _name;
     }
     
+    public byte[] getData() {
+        return _data;
+    }
+    
+    public int compareTo(Value other) {
+        if (_data.length != other.getData().length) {
+            return -1;
+        }
+        for (int i = 0; i < _data.length; i++) {
+            if (_data[i] != other.getData()[i]) {
+                return -1;
+            }
+        }
+        return 0;
+    }
+    
 }
