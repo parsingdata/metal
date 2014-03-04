@@ -63,11 +63,8 @@ public class Shorthand {
     public static UnaryValueExpression<NumericValue> neg(ValueExpression<NumericValue> v) { return new Neg(v); }
     public static ValueExpression<NumericValue> con(long v) { return new Con<NumericValue>(new NumericValue(BigInteger.valueOf(v))); }
     public static ValueExpression<Value> con(String s) { return new Con<Value>(new Value(s.getBytes(Charset.forName("ISO646-US")))); }
-    //public static ValueExpression<Value> refVal(String s) { return new Ref<Value>(s); }
-    //public static ValueExpression<NumericValue> refNum(String s) { return new Ref<NumericValue>(s); }
-    public static <T extends Value>ValueExpression<T> ref(String s) { return new Ref<T>(s); }
-    public static ValueExpression<Value> refVal(String s) { return Shorthand.<Value>ref(s); }
-    public static ValueExpression<NumericValue> refNum(String s) { return Shorthand.<NumericValue>ref(s); }
+    public static ValueExpression<Value> refVal(String s) { return new Ref<Value>(s); }
+    public static ValueExpression<NumericValue> refNum(String s) { return new Ref<NumericValue>(s); }
     
     public static BinaryLogicalExpression and(Expression l, Expression r) { return new And(l, r); }
     public static BinaryLogicalExpression or(Expression l, Expression r) { return new Or(l, r); }

@@ -18,7 +18,7 @@ package nl.minvenj.nfi.ddrx;
 
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
-import static nl.minvenj.nfi.ddrx.TokenDefinitions.eqRef;
+import static nl.minvenj.nfi.ddrx.TokenDefinitions.eqRefNum;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -32,11 +32,11 @@ import nl.minvenj.nfi.ddrx.token.Token;
 public class NameBind {
     
     private Token sequenceMatch2 = seq(any("a"),
-                                       eqRef("b", "a"));
+                                       eqRefNum("b", "a"));
     private Token sequenceMatch3 = seq(sequenceMatch2,
-                                       eqRef("c", "a"));
+                                       eqRefNum("c", "a"));
     private Token sequenceMatchTransitive3 = seq(sequenceMatch2,
-                                                 eqRef("c", "b"));
+                                                 eqRefNum("c", "b"));
 
     @Test
     public void sequenceMatch2() {
