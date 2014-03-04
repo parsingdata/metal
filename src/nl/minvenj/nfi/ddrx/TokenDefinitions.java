@@ -17,12 +17,12 @@
 package nl.minvenj.nfi.ddrx;
 
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
+import static nl.minvenj.nfi.ddrx.Shorthand.defNum;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
 import static nl.minvenj.nfi.ddrx.Shorthand.expTrue;
 import static nl.minvenj.nfi.ddrx.Shorthand.not;
-import static nl.minvenj.nfi.ddrx.Shorthand.defNum;
+import static nl.minvenj.nfi.ddrx.Shorthand.refNum;
 
-import nl.minvenj.nfi.ddrx.expression.value.NumericValue;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 public class TokenDefinitions {
@@ -34,19 +34,19 @@ public class TokenDefinitions {
     }
 
     public static Token eqVal(String name, int value) {
-        return defNum(name, con(1), eq(Shorthand.<NumericValue>ref(name), con(value)));
+        return defNum(name, con(1), eq(refNum(name), con(value)));
     }
     
     public static Token notEqVal(String name, int value) {
-        return defNum(name, con(1), not(eq(Shorthand.<NumericValue>ref(name), con(value))));
+        return defNum(name, con(1), not(eq(refNum(name), con(value))));
     }
     
     public static Token eqRef(String name, String ref) {
-        return defNum(name, con(1), eq(Shorthand.<NumericValue>ref(name), Shorthand.<NumericValue>ref(ref)));
+        return defNum(name, con(1), eq(refNum(name), refNum(ref)));
     }
     
     public static Token notEqRef(String name, String ref) {
-        return defNum(name, con(1), not(eq(Shorthand.<NumericValue>ref(name), Shorthand.<NumericValue>ref(ref))));
+        return defNum(name, con(1), not(eq(refNum(name), refNum(ref))));
     }
     
 }

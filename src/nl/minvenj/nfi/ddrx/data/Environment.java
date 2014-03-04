@@ -51,6 +51,7 @@ public class Environment {
 
     public <T extends Value> void put(T value) {
         getStack(classOf(value), value.getName()).push(value);
+        _order.push(value.getName());
     }
     
     @SuppressWarnings("unchecked")
