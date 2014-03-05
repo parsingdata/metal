@@ -32,6 +32,7 @@ import nl.minvenj.nfi.ddrx.expression.logical.Or;
 import nl.minvenj.nfi.ddrx.expression.logical.UnaryLogicalExpression;
 import nl.minvenj.nfi.ddrx.expression.value.Add;
 import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
+import nl.minvenj.nfi.ddrx.expression.value.Cat;
 import nl.minvenj.nfi.ddrx.expression.value.Con;
 import nl.minvenj.nfi.ddrx.expression.value.Div;
 import nl.minvenj.nfi.ddrx.expression.value.Mul;
@@ -65,6 +66,7 @@ public class Shorthand {
     public static ValueExpression<Value> con(String s) { return new Con<Value>(new Value(s.getBytes(Charset.forName("ISO646-US")))); }
     public static ValueExpression<Value> refVal(String s) { return new Ref<Value>(s); }
     public static ValueExpression<NumericValue> refNum(String s) { return new Ref<NumericValue>(s); }
+    public static ValueExpression<Value> cat(ValueExpression<Value> l, ValueExpression<Value> r) { return new Cat(l, r); }
     
     public static BinaryLogicalExpression and(Expression l, Expression r) { return new And(l, r); }
     public static BinaryLogicalExpression or(Expression l, Expression r) { return new Or(l, r); }

@@ -50,4 +50,8 @@ public class Value {
         return 0;
     }
     
+    public Value operation(ValueOperation op) {
+        return op.execute(_data);
+    }
+    
 }
