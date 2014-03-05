@@ -71,8 +71,8 @@ public class Shorthand {
     public static UnaryLogicalExpression not(Expression e) { return new Not(e); }
     public static Expression expTrue() { return new True(); }
     
-    public static <T extends Value>ComparisonExpression<T> eq(ValueExpression<T> l, ValueExpression<T> r) { return new Eq<T>(l, r); }
-    public static ComparisonExpression<NumericValue> gt(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Gt(l, r); }
-    public static ComparisonExpression<NumericValue> lt(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Lt(l, r); }
+    public static <T extends Value>ComparisonExpression<T> eq(ValueExpression<T> p) { return new Eq<T>(p); }
+    public static ComparisonExpression<NumericValue> gt(ValueExpression<NumericValue> p) { return new Gt(p); }
+    public static ComparisonExpression<NumericValue> lt(ValueExpression<NumericValue> p) { return new Lt(p); }
     
 }

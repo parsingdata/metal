@@ -62,6 +62,13 @@ public class Environment {
         return (T) _vals.get(name).peek();
     }
     
+    public <T extends Value>T current() {
+        if (_order.isEmpty()) {
+            return null;
+        }
+        return get(_order.peek());
+    }
+    
     private void removeLast() {
         if (_order.size() > 0) {
             String name = _order.pop();

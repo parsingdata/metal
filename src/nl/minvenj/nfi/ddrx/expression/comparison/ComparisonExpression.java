@@ -22,17 +22,15 @@ import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
 public abstract class ComparisonExpression<T extends Value> implements Expression {
     
-    protected final ValueExpression<T> _value;
     protected final ValueExpression<T> _predicate;
     
-    public ComparisonExpression(ValueExpression<T> value, ValueExpression<T> predicate) {
-        _value = value;
+    public ComparisonExpression(ValueExpression<T> predicate) {
         _predicate = predicate;
     }
     
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _value + "," + _predicate + ")";
+        return getClass().getSimpleName() + "(" + _predicate + ")";
     }
     
 }

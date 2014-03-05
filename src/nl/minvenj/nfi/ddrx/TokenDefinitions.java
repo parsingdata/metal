@@ -34,19 +34,19 @@ public class TokenDefinitions {
     }
 
     public static Token eqNum(String name, int value) {
-        return defNum(name, con(1), eq(refNum(name), con(value)));
+        return defNum(name, con(1), eq(con(value)));
     }
     
     public static Token notEqNum(String name, int value) {
-        return defNum(name, con(1), not(eq(refNum(name), con(value))));
+        return defNum(name, con(1), not(eq(con(value))));
     }
     
     public static Token eqRefNum(String name, String ref) {
-        return defNum(name, con(1), eq(refNum(name), refNum(ref)));
+        return defNum(name, con(1), eq(refNum(ref)));
     }
     
     public static Token notEqRefNum(String name, String ref) {
-        return defNum(name, con(1), not(eq(refNum(name), refNum(ref))));
+        return defNum(name, con(1), not(eq(refNum(ref))));
     }
     
 }

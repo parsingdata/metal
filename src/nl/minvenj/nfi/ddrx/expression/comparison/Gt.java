@@ -22,13 +22,13 @@ import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
 public class Gt extends ComparisonExpression<NumericValue> {
     
-    public Gt(ValueExpression<NumericValue> value, ValueExpression<NumericValue> predicate) {
-        super(value, predicate);
+    public Gt(ValueExpression<NumericValue> predicate) {
+        super(predicate);
     }
 
     @Override
     public boolean eval(Environment env) {
-        return _value.eval(env).compareTo(_predicate.eval(env)) == 1;
+        return env.current().compareTo(_predicate.eval(env)) == 1;
     }
 
 }

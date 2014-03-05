@@ -19,52 +19,45 @@ package nl.minvenj.nfi.ddrx;
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import static nl.minvenj.nfi.ddrx.Shorthand.defVal;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
-import static nl.minvenj.nfi.ddrx.Shorthand.*;
 import static nl.minvenj.nfi.ddrx.data.Environment.stream;
-import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import nl.minvenj.nfi.ddrx.token.Token;
+
 @RunWith(JUnit4.class)
 public class Simple {
 
-    private Token buildSimpleToken(String name, int size, String refName, int predicateSize) {
+    private Token buildSimpleToken(String name, int size, int predicateSize) {
         return defVal(name,
                    con(size),
-                   eq(refNum(refName),
-                      con(predicateSize)));
+                   eq(con(predicateSize)));
     }
 
     @Test
     public void correct() {
-        Token t = buildSimpleToken("r1", 1, "r1", 1);
+        Token t = buildSimpleToken("r1", 1, 1);
         Assert.assertTrue(t.parse(stream(1, 2, 3, 4)));
     }
 
     @Test
     public void sizeError() {
-        Token t = buildSimpleToken("r1", 2, "r1", 1);
+        Token t = buildSimpleToken("r1", 2, 1);
         Assert.assertFalse(t.parse(stream(1, 2, 3, 4)));
     }
-
-    @Test(expected = NullPointerException.class)
-    public void refError() {
-        Token t = buildSimpleToken("r1", 1, "r2", 1);
-        t.parse(stream(1, 2, 3, 4));
-    }
-
+    
     @Test
     public void predicateError() {
-        Token t = buildSimpleToken("r1", 1, "r1", 2);
+        Token t = buildSimpleToken("r1", 1, 2);
         Assert.assertFalse(t.parse(stream(1, 2, 3, 4)));
     }
 
     @Test
     public void sourceError() {
-        Token t = buildSimpleToken("r1", 1, "r1", 1);
+        Token t = buildSimpleToken("r1", 1, 1);
         Assert.assertFalse(t.parse(stream(2, 2, 2, 2)));
     }
 
