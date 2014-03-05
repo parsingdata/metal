@@ -31,10 +31,10 @@ import nl.minvenj.nfi.ddrx.token.Token;
 @RunWith(JUnit4.class)
 public class Simple {
 
-    private Token buildSimpleToken(String name, int size, int predicateSize) {
+    private Token buildSimpleToken(String name, int size, int predicate) {
         return defVal(name,
-                   con(size),
-                   eq(con(predicateSize)));
+                      con(size),
+                      eq(con(predicate)));
     }
 
     @Test

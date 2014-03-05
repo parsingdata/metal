@@ -44,7 +44,9 @@ public class ValueExpressionSemantics {
 
     private Token singleToken(String firstName, String secondName, ValueExpression<NumericValue> ve) {
         return seq(any(firstName),
-                   defVal(secondName, con(1), eq(ve)));
+                   defVal(secondName,
+                          con(1),
+                          eq(ve)));
     }
 
     private Token binaryValueExpressionToken(BinaryValueExpression<NumericValue> bve) {
