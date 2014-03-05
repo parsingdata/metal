@@ -32,8 +32,11 @@ public class NumericValue extends Value {
         return op.execute(toBigInteger());
     }
     
-    public int compareTo(NumericValue other) {
-        return toBigInteger().compareTo(other.toBigInteger());
+    public int compareTo(Value other) {
+        if (other instanceof NumericValue) {
+            return toBigInteger().compareTo(((NumericValue)other).toBigInteger());
+        }
+        return super.compareTo(other);
     }
     
     public BigInteger toBigInteger() {

@@ -28,7 +28,7 @@ public class Lt extends ComparisonExpression<NumericValue> {
 
     @Override
     public boolean eval(Environment env) {
-        return env.current().compareTo(_predicate.eval(env)) == -1;
+        return _predicate.eval(env).compareTo((NumericValue)env.current()) == 1;
     }
 
 }
