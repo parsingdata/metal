@@ -17,6 +17,8 @@
 package nl.minvenj.nfi.ddrx.data;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -107,6 +109,10 @@ public class Environment {
             out[i] = (byte)bytes[i];
         }
         return new Environment(new ByteStream(out));
+    }
+    
+    public static Environment stream(String path) throws IOException {
+        return new Environment(new ByteStream(Files.readAllBytes(Paths.get(path))));
     }
     
 }

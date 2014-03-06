@@ -25,7 +25,7 @@ public class NumericValue extends Value {
     }
     
     public NumericValue(BigInteger value) {
-        super(value.toByteArray());
+        super(compact(value.toByteArray()));
     }
     
     public NumericValue operation(NumericValueOperation op) {
@@ -41,6 +41,17 @@ public class NumericValue extends Value {
     
     public BigInteger toBigInteger() {
         return new BigInteger(_data);
+    }
+    
+    private static byte[] compact(byte[] in) {
+        if (in.length < 2) {
+            return in;
+        }
+        int i = 0;
+        for (; i < in.length && in[i] == 0; i++);
+        byte[] out = new byte[in.length-i];
+        System.arraycopy(in, i, out, 0, out.length);
+        return out;
     }
     
 }
