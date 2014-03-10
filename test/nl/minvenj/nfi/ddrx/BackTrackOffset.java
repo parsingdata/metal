@@ -19,7 +19,7 @@ package nl.minvenj.nfi.ddrx;
 import static nl.minvenj.nfi.ddrx.Shorthand.cho;
 import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
+import static nl.minvenj.nfi.ddrx.TokenDefinitions.anyNum;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.eqNum;
 
 import static nl.minvenj.nfi.ddrx.data.Environment.stream;
@@ -34,13 +34,13 @@ import nl.minvenj.nfi.ddrx.token.Token;
 @RunWith(JUnit4.class)
 public class BackTrackOffset {
 
-    private Token _backTrackChoice = cho(seq(any("a"), eqNum("b", 2)),
-                                         seq(any("c"), eqNum("d", 3)));
+    private Token _backTrackChoice = cho(seq(anyNum("a"), eqNum("b", 2)),
+                                         seq(anyNum("c"), eqNum("d", 3)));
 
     private Token _backTrackRepeat = seq(rep(seq(eqNum("a", 1), eqNum("b", 2))),
                                          seq(eqNum("c", 1), eqNum("d", 3)));
 
-    private Token _backTrackDeepFragment = rep(seq(any("a"), seq(any("b"), cho(eqNum("c", 21), eqNum("d", 42)))));
+    private Token _backTrackDeepFragment = rep(seq(anyNum("a"), seq(anyNum("b"), cho(eqNum("c", 21), eqNum("d", 42)))));
     private Token _backTrackDeep = cho(seq(_backTrackDeepFragment, eqNum("e", 63)),
                                        seq(_backTrackDeepFragment, eqNum("f", 84)));
 

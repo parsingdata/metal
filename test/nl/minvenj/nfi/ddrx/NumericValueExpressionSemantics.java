@@ -26,7 +26,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.neg;
 import static nl.minvenj.nfi.ddrx.Shorthand.refNum;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.Shorthand.sub;
-import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
+import static nl.minvenj.nfi.ddrx.TokenDefinitions.anyNum;
 import static nl.minvenj.nfi.ddrx.data.Environment.stream;
 
 import org.junit.Assert;
@@ -44,14 +44,14 @@ import nl.minvenj.nfi.ddrx.token.Token;
 public class NumericValueExpressionSemantics {
 
     private Token singleToken(String firstName, String secondName, ValueExpression<NumericValue> ve) {
-        return seq(any(firstName),
+        return seq(anyNum(firstName),
                    defNum(secondName,
                           con(1),
                           eq(ve)));
     }
 
     private Token binaryValueExpressionToken(BinaryValueExpression<NumericValue> bve) {
-        return seq(any("a"),
+        return seq(anyNum("a"),
                    singleToken("b", "c", bve));
     }
 

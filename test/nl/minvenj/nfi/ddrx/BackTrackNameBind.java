@@ -19,7 +19,7 @@ package nl.minvenj.nfi.ddrx;
 import static nl.minvenj.nfi.ddrx.Shorthand.cho;
 import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
+import static nl.minvenj.nfi.ddrx.TokenDefinitions.anyNum;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.eqRefNum;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.eqNum;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.notEqRefNum;
@@ -35,9 +35,9 @@ import nl.minvenj.nfi.ddrx.token.Token;
 @RunWith(JUnit4.class)
 public class BackTrackNameBind {
 
-    private Token _choiceRef = seq(any("a"),
-                                   cho(seq(any("a"), eqRefNum("b", "a")),
-                                       seq(notEqRefNum("b", "a"), any("c"))));
+    private Token _choiceRef = seq(anyNum("a"),
+                                   cho(seq(anyNum("a"), eqRefNum("b", "a")),
+                                       seq(notEqRefNum("b", "a"), anyNum("c"))));
 
     private Token _repeatRef = seq(rep(eqNum("a", 42)),
                                    rep(notEqRefNum("b", "a")));

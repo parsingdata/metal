@@ -32,6 +32,8 @@ import static nl.minvenj.nfi.ddrx.data.Environment.stream;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.zip.CRC32;
 
 import org.junit.Assert;
@@ -49,7 +51,7 @@ import nl.minvenj.nfi.ddrx.token.Token;
 @RunWith(JUnit4.class)
 public class PNG {
     
-    private static final String FILE = "testdata/test.png";
+    private static final Path FILE = Paths.get("testdata/test.png");
     
     private static final Token PNG_HEADER = seq(defVal("highbit", con(1), eq(con(0x89))),
                                                 seq(defStr("PNG", con(3), eq(con("PNG"))),
