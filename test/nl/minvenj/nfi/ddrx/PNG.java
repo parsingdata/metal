@@ -19,6 +19,7 @@ package nl.minvenj.nfi.ddrx;
 import static nl.minvenj.nfi.ddrx.Shorthand.cat;
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import static nl.minvenj.nfi.ddrx.Shorthand.defNum;
+import static nl.minvenj.nfi.ddrx.Shorthand.defStr;
 import static nl.minvenj.nfi.ddrx.Shorthand.defVal;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
 import static nl.minvenj.nfi.ddrx.Shorthand.expTrue;
@@ -51,13 +52,13 @@ public class PNG {
     private static final String FILE = "testdata/test.png";
     
     private static final Token PNG_HEADER = seq(defVal("highbit", con(1), eq(con(0x89))),
-                                                seq(defVal("PNG", con(3), eq(con("PNG"))),
+                                                seq(defStr("PNG", con(3), eq(con("PNG"))),
                                                     defVal("controlchars", con(4), eq(con(0x0d0a1a0a)))));
     private static final Token PNG_FOOTER = seq(defNum("footerlength", con(4), eq(con(0))),
-                                                seq(defVal("footertype", con(4), eq(con("IEND"))),
+                                                seq(defStr("footertype", con(4), eq(con("IEND"))),
                                                     defVal("footercrc32", con(4), eq(con(0xae426082)))));
     private static final Token PNG_STRUCT = seq(defNum("length", con(4), expTrue()),
-                                                seq(defVal("chunktype", con(4), not(eq(con("IEND")))),
+                                                seq(defStr("chunktype", con(4), not(eq(con("IEND")))),
                                                     seq(defVal("chunkdata", refNum("length"), expTrue()),
                                                         defVal("crc32", con(4), eq(new UnaryValueExpression<Value>(cat(refVal("chunktype"), refVal("chunkdata"))) {
                                                             @Override
