@@ -41,30 +41,30 @@ import nl.minvenj.nfi.ddrx.token.Token;
 
 public class PNG {
 
-    private static final Token PNG_HEADER = seq(defVal("highbit", con(1), eq(con(0x89))),
-                                                seq(defStr("PNG", con(3), eq(con("PNG"))),
-                                                    defVal("controlchars", con(4), eq(con(0x0d0a1a0a)))));
-    private static final Token PNG_FOOTER = seq(defNum("footerlength", con(4), eq(con(0))),
-                                                seq(defStr("footertype", con(4), eq(con("IEND"))),
-                                                    defVal("footercrc32", con(4), eq(con(0xae426082)))));
-    private static final Token PNG_STRUCT = seq(defNum("length", con(4), expTrue()),
-                                                seq(defStr("chunktype", con(4), not(eq(con("IEND")))),
-                                                    seq(defVal("chunkdata", refNum("length"), expTrue()),
-                                                        defVal("crc32", con(4), eq(new UnaryValueExpression<Value>(cat(refVal("chunktype"), refVal("chunkdata"))) {
-                                                            @Override
-                                                            public Value eval(Environment env) {
-                                                                return _op.eval(env).operation(new ValueOperation() {
-                                                                    @Override
-                                                                    public Value execute(byte[] value) {
-                                                                        CRC32 crc = new CRC32();
-                                                                        crc.update(value);
-                                                                        return new NumericValue(BigInteger.valueOf(crc.getValue()));
-                                                                    }
-                                                                });
-                                                            }
-                                                        })))));
-    public static final Token FORMAT = seq(PNG_HEADER,
-                                           seq(rep(PNG_STRUCT),
-                                               PNG_FOOTER));
+    private static final Token HEADER = seq(defVal("highbit", con(1), eq(con(0x89))),
+                                            seq(defStr("PNG", con(3), eq(con("PNG"))),
+                                                defVal("controlchars", con(4), eq(con(0x0d0a1a0a)))));
+    private static final Token FOOTER = seq(defNum("footerlength", con(4), eq(con(0))),
+                                            seq(defStr("footertype", con(4), eq(con("IEND"))),
+                                                defVal("footercrc32", con(4), eq(con(0xae426082)))));
+    private static final Token STRUCT = seq(defNum("length", con(4), expTrue()),
+                                            seq(defStr("chunktype", con(4), not(eq(con("IEND")))),
+                                                seq(defVal("chunkdata", refNum("length"), expTrue()),
+                                                    defVal("crc32", con(4), eq(new UnaryValueExpression<Value>(cat(refVal("chunktype"), refVal("chunkdata"))) {
+                                                        @Override
+                                                        public Value eval(Environment env) {
+                                                            return _op.eval(env).operation(new ValueOperation() {
+                                                                @Override
+                                                                public Value execute(byte[] value) {
+                                                                    CRC32 crc = new CRC32();
+                                                                    crc.update(value);
+                                                                    return new NumericValue(BigInteger.valueOf(crc.getValue()));
+                                                                }
+                                                            });
+                                                        }
+                                                    })))));
+    public static final Token FORMAT = seq(HEADER,
+                                           seq(rep(STRUCT),
+                                               FOOTER));
 
 }
