@@ -104,11 +104,7 @@ public class Environment {
     }
 
     public static Environment stream(int... bytes) {
-        byte[] out = new byte[bytes.length];
-        for (int i = 0; i < bytes.length; i++) {
-            out[i] = (byte)bytes[i];
-        }
-        return new Environment(new ByteStream(out));
+        return new Environment(new ByteStream(toByteArray(bytes)));
     }
     
     public static Environment stream(Path path) throws IOException {
@@ -117,6 +113,14 @@ public class Environment {
     
     public static Environment stream(String value) {
         return new Environment(new ByteStream(value.getBytes()));
+    }
+    
+    public static byte[] toByteArray(int... bytes) {
+        byte[] out = new byte[bytes.length];
+        for (int i = 0; i < bytes.length; i++) {
+            out[i] = (byte)bytes[i];
+        }
+        return out;
     }
     
 }

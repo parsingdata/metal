@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx;
+package nl.minvenj.nfi.ddrx.format;
 
 import static nl.minvenj.nfi.ddrx.Shorthand.cat;
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
@@ -28,18 +28,9 @@ import static nl.minvenj.nfi.ddrx.Shorthand.refNum;
 import static nl.minvenj.nfi.ddrx.Shorthand.refVal;
 import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.data.Environment.stream;
 
-import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.zip.CRC32;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.expression.value.NumericValue;
@@ -48,11 +39,8 @@ import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueOperation;
 import nl.minvenj.nfi.ddrx.token.Token;
 
-@RunWith(JUnit4.class)
 public class PNG {
-    
-    private static final Path FILE = Paths.get("testdata/test.png");
-    
+
     private static final Token PNG_HEADER = seq(defVal("highbit", con(1), eq(con(0x89))),
                                                 seq(defStr("PNG", con(3), eq(con("PNG"))),
                                                     defVal("controlchars", con(4), eq(con(0x0d0a1a0a)))));
@@ -71,15 +59,12 @@ public class PNG {
                                                                         CRC32 crc = new CRC32();
                                                                         crc.update(value);
                                                                         return new NumericValue(BigInteger.valueOf(crc.getValue()));
-                                                                    }});
-                                                            }})))));
-    private static final Token PNG = seq(PNG_HEADER,
-                                         seq(rep(PNG_STRUCT),
-                                             PNG_FOOTER));
-    
-    @Test
-    public void parsePNG() throws IOException {
-        Assert.assertTrue(PNG.parse(stream(FILE)));
-    }
-    
+                                                                    }
+                                                                });
+                                                            }
+                                                        })))));
+    public static final Token FORMAT = seq(PNG_HEADER,
+                                           seq(rep(PNG_STRUCT),
+                                               PNG_FOOTER));
+
 }

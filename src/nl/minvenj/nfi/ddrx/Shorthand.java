@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx;
 
+import static nl.minvenj.nfi.ddrx.data.Environment.toByteArray;
+
 import java.math.BigInteger;
 
 import nl.minvenj.nfi.ddrx.expression.Expression;
@@ -51,8 +53,8 @@ import nl.minvenj.nfi.ddrx.token.Val;
 
 public class Shorthand {
     
-    public static Token defNum(String name, ValueExpression<NumericValue> size, Expression pred) { return new Val<NumericValue>(name, size, pred, NumericValue.class); }
     public static Token defVal(String name, ValueExpression<NumericValue> size, Expression pred) { return new Val<Value>(name, size, pred, Value.class); }
+    public static Token defNum(String name, ValueExpression<NumericValue> size, Expression pred) { return new Val<NumericValue>(name, size, pred, NumericValue.class); }
     public static Token defStr(String name, ValueExpression<NumericValue> size, Expression pred) { return new Val<StringValue>(name, size, pred, StringValue.class); }
     public static Token cho(Token l, Token r) { return new Cho(l, r); }
     public static Token rep(Token t) { return new Rep(t); }
@@ -63,6 +65,7 @@ public class Shorthand {
     public static BinaryValueExpression<NumericValue> mul(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Mul(l, r); }
     public static BinaryValueExpression<NumericValue> sub(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Sub(l, r); }
     public static UnaryValueExpression<NumericValue> neg(ValueExpression<NumericValue> v) { return new Neg(v); }
+    public static ValueExpression<Value> con(int... bytes) { return new Con<Value>(new Value(toByteArray(bytes))); }
     public static ValueExpression<NumericValue> con(long v) { return new Con<NumericValue>(new NumericValue(BigInteger.valueOf(v))); }
     public static ValueExpression<StringValue> con(String s) { return new Con<StringValue>(new StringValue(s)); }
     public static ValueExpression<Value> refVal(String s) { return new Ref<Value>(s); }
