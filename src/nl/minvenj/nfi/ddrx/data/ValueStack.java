@@ -21,6 +21,7 @@ import java.util.Stack;
 import nl.minvenj.nfi.ddrx.expression.value.Value;
 
 public class ValueStack<T extends Value> {
+    
     private final Class<T> _valueClass;
     private final Stack<T> _stack;
     

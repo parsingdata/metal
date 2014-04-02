@@ -38,16 +38,14 @@ public class Val<T extends Value> implements Token {
     
     @Override
     public boolean parse(Environment env) {
-        int size = _size.eval(env).toBigInteger().intValue();
-        byte[] data = new byte[size];
+        final byte[] data = new byte[_size.eval(env).toBigInteger().intValue()];
         env.mark();
         try {
-            if (env.read(data) != size) {
+            if (env.read(data) != data.length) {
                 env.reset();
                 return false;
             }
-            T value = _type.getConstructor(new Class<?>[] { String.class, byte[].class }).newInstance(new Object[] {_name, data });
-            env.put(value);
+            env.put(_type.getConstructor(new Class<?>[] { String.class, byte[].class }).newInstance(new Object[] {_name, data }));
         } catch (Throwable t) {
             t.printStackTrace();
             throw new RuntimeException(t);

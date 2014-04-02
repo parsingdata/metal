@@ -58,22 +58,17 @@ public class Environment {
     
     @SuppressWarnings("unchecked")
     public <T extends Value>T get(String name) {
-        if (!_vals.containsKey(name)) {
-            return null;
-        }
-        return (T) _vals.get(name).peek();
+        return _vals.containsKey(name) ? (T) _vals.get(name).peek() : null;
     }
     
+    @SuppressWarnings("unchecked")
     public <T extends Value>T current() {
-        if (_order.isEmpty()) {
-            return null;
-        }
-        return get(_order.peek());
+        return _order.isEmpty() ? null : (T) get(_order.peek());
     }
     
     private void removeLast() {
         if (_order.size() > 0) {
-            String name = _order.pop();
+            final String name = _order.pop();
             _vals.get(name).pop();
             if (_vals.get(name).size() == 0) {
                 _vals.remove(name);
@@ -93,7 +88,7 @@ public class Environment {
     
     public void reset() {
         _input.reset();
-        int reset = _order.size() - _marked.pop();
+        final int reset = _order.size() - _marked.pop();
         for (int i = 0; i < reset; i++) {
             removeLast();
         }
@@ -116,7 +111,7 @@ public class Environment {
     }
     
     public static byte[] toByteArray(int... bytes) {
-        byte[] out = new byte[bytes.length];
+        final byte[] out = new byte[bytes.length];
         for (int i = 0; i < bytes.length; i++) {
             out[i] = (byte)bytes[i];
         }

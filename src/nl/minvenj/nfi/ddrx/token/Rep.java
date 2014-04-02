@@ -18,7 +18,6 @@ package nl.minvenj.nfi.ddrx.token;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 
-
 public class Rep implements Token {
     
     private final Token _node;

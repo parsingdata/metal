@@ -24,9 +24,9 @@ import java.util.Stack;
 
 public class ByteStream extends InputStream {
     
-    private byte[] _data;
+    private final byte[] _data;
+    private final Stack<Integer> _marked;
     private int _offset;
-    private Stack<Integer> _marked;
     
     public ByteStream(String path) throws IOException {
         this(Files.readAllBytes(Paths.get(path)));
@@ -34,8 +34,8 @@ public class ByteStream extends InputStream {
     
     public ByteStream(byte[] data) {
         _data = data;
-        _offset = 0;
         _marked = new Stack<Integer>();
+        _offset = 0;
     }
     
     @Override
