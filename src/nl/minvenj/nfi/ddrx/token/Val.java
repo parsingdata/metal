@@ -38,7 +38,7 @@ public class Val<T extends Value> implements Token {
     
     @Override
     public boolean parse(Environment env) {
-        final byte[] data = new byte[_size.eval(env).toBigInteger().intValue()];
+        final byte[] data = new byte[_size.eval(env).getNumericValue().intValue()];
         env.mark();
         try {
             if (env.read(data) != data.length) {

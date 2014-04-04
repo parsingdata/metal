@@ -20,30 +20,33 @@ import java.nio.charset.Charset;
 
 public class StringValue extends Value {
     
-    final static private Charset charset = Charset.forName("ISO646-US");
+    private final static Charset charset = Charset.forName("ISO646-US");
+    
+    private final String _stringValue;
     
     public StringValue(String name, byte[] value) {
         super(name, value);
+        _stringValue = new String(_data, charset);
     }
     
     public StringValue(String value) {
         super("", value.getBytes(charset));
+        _stringValue = value;
     }
     
     public StringValue operation(StringValueOperation op) {
-        return op.execute(toString());
+        return op.execute(getStringValue());
     }
     
     public int compareTo(Value other) {
         if (other instanceof StringValue) {
-            return toString().compareTo(((StringValue)other).toString());
+            return getStringValue().compareTo(((StringValue)other).getStringValue());
         }
         return super.compareTo(other);
     }
     
-    @Override
-    public String toString() {
-        return new String(_data, charset);
+    public String getStringValue() {
+        return _stringValue;
     }
     
 }

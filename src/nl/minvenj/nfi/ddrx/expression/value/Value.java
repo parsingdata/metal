@@ -18,6 +18,8 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 public class Value {
     
+    public static final String DEFAULT_NAME = "CONSTANT_VALUE";
+    
     protected final String _name;
     protected final byte[] _data;
     
@@ -27,23 +29,23 @@ public class Value {
     }
     
     public Value(byte[] data) {
-        this("", data);
+        this(DEFAULT_NAME, data);
     }
     
     public String getName() {
         return _name;
     }
     
-    public byte[] getData() {
+    public byte[] getValue() {
         return _data;
     }
     
     public int compareTo(Value other) {
-        if (_data.length != other.getData().length) {
+        if (_data.length != other.getValue().length) {
             return -1;
         }
         for (int i = 0; i < _data.length; i++) {
-            if (_data[i] != other.getData()[i]) {
+            if (_data[i] != other.getValue()[i]) {
                 return -1;
             }
         }

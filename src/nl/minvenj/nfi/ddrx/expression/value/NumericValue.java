@@ -20,27 +20,31 @@ import java.math.BigInteger;
 
 public class NumericValue extends Value {
     
+    private final BigInteger _numericValue;
+    
     public NumericValue(String name, byte[] data) {
         super(name, data);
+        _numericValue = new BigInteger(data);
     }
     
     public NumericValue(BigInteger value) {
         super(compact(value.toByteArray()));
+        _numericValue = value;
     }
     
     public NumericValue operation(NumericValueOperation op) {
-        return op.execute(toBigInteger());
+        return op.execute(getNumericValue());
     }
     
     public int compareTo(Value other) {
         if (other instanceof NumericValue) {
-            return toBigInteger().compareTo(((NumericValue)other).toBigInteger());
+            return getNumericValue().compareTo(((NumericValue)other).getNumericValue());
         }
         return super.compareTo(other);
     }
     
-    public BigInteger toBigInteger() {
-        return new BigInteger(_data);
+    public BigInteger getNumericValue() {
+        return _numericValue;
     }
     
     private static byte[] compact(byte[] in) {
