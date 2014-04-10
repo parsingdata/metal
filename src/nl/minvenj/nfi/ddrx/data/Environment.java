@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Stack;
 
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.value.Value;
 
 public class Environment {
@@ -30,24 +31,34 @@ public class Environment {
     private final Stack<String> _order;
     private final Stack<Integer> _marked;
     private final ByteStream _input;
+    private final Encoding _encoding;
 
     public Environment(ByteStream input) {
+        this(input, new Encoding());
+    }
+
+    public Environment(ByteStream input, Encoding encoding) {
         _vals = new HashMap<String, ValueStack<?>>();
         _order = new Stack<String>();
         _marked = new Stack<Integer>();
         _input = input;
+        _encoding = encoding;
     }
-    
+
+    public Encoding getEncoding() {
+        return _encoding;
+    }
+
     @SuppressWarnings("unchecked")
-    private <T extends Value>ValueStack<T> getStack(Class<T> valueClass, String name) {
+    private <T extends Value> ValueStack<T> getStack(Class<T> valueClass, String name) {
         if (!_vals.containsKey(name)) {
             _vals.put(name, new ValueStack<T>(valueClass));
         }
         return (ValueStack<T>) _vals.get(name);
     }
-    
+
     @SuppressWarnings("unchecked")
-    private <T extends Value>Class<T> classOf(T value) {
+    private <T extends Value> Class<T> classOf(T value) {
         return (Class<T>) value.getClass();
     }
 
@@ -55,17 +66,17 @@ public class Environment {
         getStack(classOf(value), value.getName()).push(value);
         _order.push(value.getName());
     }
-    
+
     @SuppressWarnings("unchecked")
-    public <T extends Value>T get(String name) {
+    public <T extends Value> T get(String name) {
         return _vals.containsKey(name) ? (T) _vals.get(name).peek() : null;
     }
-    
+
     @SuppressWarnings("unchecked")
-    public <T extends Value>T current() {
+    public <T extends Value> T current() {
         return _order.isEmpty() ? null : (T) get(_order.peek());
     }
-    
+
     private void removeLast() {
         if (_order.size() > 0) {
             final String name = _order.pop();
@@ -75,17 +86,17 @@ public class Environment {
             }
         }
     }
-    
+
     public void mark() {
         _input.mark();
         _marked.add(_order.size());
     }
-    
+
     public void clear() {
         _input.clear();
         _marked.pop();
     }
-    
+
     public void reset() {
         _input.reset();
         final int reset = _order.size() - _marked.pop();
@@ -93,7 +104,7 @@ public class Environment {
             removeLast();
         }
     }
-    
+
     public int read(byte[] data) throws IOException {
         return _input.read(data);
     }
@@ -101,21 +112,21 @@ public class Environment {
     public static Environment stream(int... bytes) {
         return new Environment(new ByteStream(toByteArray(bytes)));
     }
-    
+
     public static Environment stream(Path path) throws IOException {
         return new Environment(new ByteStream(Files.readAllBytes(path)));
     }
-    
+
     public static Environment stream(String value) {
         return new Environment(new ByteStream(value.getBytes()));
     }
-    
+
     public static byte[] toByteArray(int... bytes) {
         final byte[] out = new byte[bytes.length];
         for (int i = 0; i < bytes.length; i++) {
-            out[i] = (byte)bytes[i];
+            out[i] = (byte) bytes[i];
         }
         return out;
     }
-    
+
 }

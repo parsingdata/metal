@@ -19,34 +19,35 @@ package nl.minvenj.nfi.ddrx.expression.value;
 import java.nio.charset.Charset;
 
 public class StringValue extends Value {
-    
+
     private final static Charset charset = Charset.forName("ISO646-US");
-    
+
     private final String _stringValue;
-    
+
     public StringValue(String name, byte[] value) {
         super(name, value);
         _stringValue = new String(_data, charset);
     }
-    
+
     public StringValue(String value) {
         super("", value.getBytes(charset));
         _stringValue = value;
     }
-    
+
     public StringValue operation(StringValueOperation op) {
         return op.execute(getStringValue());
     }
-    
+
+    @Override
     public int compareTo(Value other) {
         if (other instanceof StringValue) {
-            return getStringValue().compareTo(((StringValue)other).getStringValue());
+            return getStringValue().compareTo(((StringValue) other).getStringValue());
         }
         return super.compareTo(other);
     }
-    
+
     public String getStringValue() {
         return _stringValue;
     }
-    
+
 }

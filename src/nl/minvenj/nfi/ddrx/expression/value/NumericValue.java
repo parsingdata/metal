@@ -19,43 +19,44 @@ package nl.minvenj.nfi.ddrx.expression.value;
 import java.math.BigInteger;
 
 public class NumericValue extends Value {
-    
+
     private final BigInteger _numericValue;
-    
+
     public NumericValue(String name, byte[] data) {
         super(name, data);
         _numericValue = new BigInteger(data);
     }
-    
+
     public NumericValue(BigInteger value) {
         super(compact(value.toByteArray()));
         _numericValue = value;
     }
-    
+
     public NumericValue operation(NumericValueOperation op) {
         return op.execute(getNumericValue());
     }
-    
+
+    @Override
     public int compareTo(Value other) {
         if (other instanceof NumericValue) {
-            return getNumericValue().compareTo(((NumericValue)other).getNumericValue());
+            return getNumericValue().compareTo(((NumericValue) other).getNumericValue());
         }
         return super.compareTo(other);
     }
-    
+
     public BigInteger getNumericValue() {
         return _numericValue;
     }
-    
+
     private static byte[] compact(byte[] in) {
         if (in.length < 2) {
             return in;
         }
         int i = 0;
         for (; i < in.length && in[i] == 0; i++);
-        byte[] out = new byte[in.length-i];
+        byte[] out = new byte[in.length - i];
         System.arraycopy(in, i, out, 0, out.length);
         return out;
     }
-    
+
 }
