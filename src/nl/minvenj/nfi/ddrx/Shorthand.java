@@ -17,9 +17,6 @@
 package nl.minvenj.nfi.ddrx;
 
 import static nl.minvenj.nfi.ddrx.data.Environment.toByteArray;
-
-import java.math.BigInteger;
-
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.expression.True;
@@ -68,7 +65,7 @@ public class Shorthand {
     public static UnaryValueExpression<NumericValue> neg(ValueExpression<NumericValue> v) { return new Neg(v); }
     public static ValueExpression<Value> con(int... bytes) { return new Con<Value>(new Value(toByteArray(bytes), new Encoding())); }
     public static ValueExpression<NumericValue> con(long v) { return con(v, new Encoding()); }
-    public static ValueExpression<NumericValue> con(long v, Encoding encoding) { return new Con<NumericValue>(new NumericValue(BigInteger.valueOf(v), encoding)); }
+    public static ValueExpression<NumericValue> con(long v, Encoding encoding) { return new Con<NumericValue>(new NumericValue(v, encoding)); }
     public static ValueExpression<StringValue> con(String s) { return con(s, new Encoding()); }
     public static ValueExpression<StringValue> con(String s, Encoding encoding) { return new Con<StringValue>(new StringValue(s, encoding)); }
     public static ValueExpression<Value> refVal(String s) { return new Ref<Value>(s); }

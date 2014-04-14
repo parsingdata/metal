@@ -29,11 +29,9 @@ import static nl.minvenj.nfi.ddrx.Shorthand.refVal;
 import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 
-import java.math.BigInteger;
 import java.util.zip.CRC32;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.expression.value.NumericValue;
 import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
 import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueOperation;
@@ -46,7 +44,7 @@ public class PNG {
                                                 defVal("controlchars", con(4), eq(con(0x0d0a1a0a)))));
     private static final Token FOOTER = seq(defNum("footerlength", con(4), eq(con(0))),
                                             seq(defStr("footertype", con(4), eq(con("IEND"))),
-                                                defVal("footercrc32", con(4), eq(con(0xae426082)))));
+                                                defVal("footercrc32", con(4), eq(con(0xae426082l)))));
     private static final Token STRUCT = seq(defNum("length", con(4), expTrue()),
                                             seq(defStr("chunktype", con(4), not(eq(con("IEND")))),
                                                 seq(defVal("chunkdata", refNum("length"), expTrue()),
@@ -58,7 +56,8 @@ public class PNG {
                                                                 public Value execute(byte[] value) {
                                                                     CRC32 crc = new CRC32();
                                                                     crc.update(value);
-                                                                    return new NumericValue(BigInteger.valueOf(crc.getValue()), env.getEncoding());
+                                                                    final long crcValue = crc.getValue();
+                                                                    return new Value(new byte[] { (byte)((crcValue & 0xff000000) >> 24), (byte)((crcValue & 0xff0000) >> 16), (byte)((crcValue & 0xff00) >> 8), (byte)(crcValue & 0xff) }, env.getEncoding());
                                                                 }
                                                             });
                                                         }

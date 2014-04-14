@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.ddrx.expression.value;
 
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
@@ -32,6 +33,11 @@ public class NumericValue extends Value {
     public NumericValue(BigInteger value, Encoding encoding) {
         super(compact(value.toByteArray()), encoding);
         _numericValue = value;
+    }
+
+    public NumericValue(long value, Encoding encoding) {
+        super(compact(value), encoding);
+        _numericValue = encoding.isSigned() ? BigInteger.valueOf(value) : new BigInteger(1, ByteBuffer.allocate(8).putLong(value).array());
     }
 
     public NumericValue operation(NumericValueOperation op) {
@@ -59,6 +65,10 @@ public class NumericValue extends Value {
         byte[] out = new byte[in.length - i];
         System.arraycopy(in, i, out, 0, out.length);
         return out;
+    }
+
+    private static byte[] compact(long v) {
+        return compact(ByteBuffer.allocate(8).putLong(v).array());
     }
 
 }
