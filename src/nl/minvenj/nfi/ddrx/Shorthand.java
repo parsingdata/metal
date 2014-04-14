@@ -20,6 +20,7 @@ import static nl.minvenj.nfi.ddrx.data.Environment.toByteArray;
 
 import java.math.BigInteger;
 
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.expression.True;
 import nl.minvenj.nfi.ddrx.expression.comparison.ComparisonExpression;
@@ -52,34 +53,34 @@ import nl.minvenj.nfi.ddrx.token.Token;
 import nl.minvenj.nfi.ddrx.token.Val;
 
 public class Shorthand {
-    
+
     public static Token defVal(String name, ValueExpression<NumericValue> size, Expression pred) { return new Val<Value>(name, size, pred, Value.class); }
     public static Token defNum(String name, ValueExpression<NumericValue> size, Expression pred) { return new Val<NumericValue>(name, size, pred, NumericValue.class); }
     public static Token defStr(String name, ValueExpression<NumericValue> size, Expression pred) { return new Val<StringValue>(name, size, pred, StringValue.class); }
     public static Token cho(Token l, Token r) { return new Cho(l, r); }
     public static Token rep(Token t) { return new Rep(t); }
     public static Token seq(Token l, Token r) { return new Seq(l, r); }
-    
+
     public static BinaryValueExpression<NumericValue> add(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Add(l, r); }
     public static BinaryValueExpression<NumericValue> div(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Div(l, r); }
     public static BinaryValueExpression<NumericValue> mul(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Mul(l, r); }
     public static BinaryValueExpression<NumericValue> sub(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Sub(l, r); }
     public static UnaryValueExpression<NumericValue> neg(ValueExpression<NumericValue> v) { return new Neg(v); }
-    public static ValueExpression<Value> con(int... bytes) { return new Con<Value>(new Value(toByteArray(bytes))); }
-    public static ValueExpression<NumericValue> con(long v) { return new Con<NumericValue>(new NumericValue(BigInteger.valueOf(v))); }
-    public static ValueExpression<StringValue> con(String s) { return new Con<StringValue>(new StringValue(s)); }
+    public static ValueExpression<Value> con(int... bytes) { return new Con<Value>(new Value(toByteArray(bytes), new Encoding())); }
+    public static ValueExpression<NumericValue> con(long v) { return new Con<NumericValue>(new NumericValue(BigInteger.valueOf(v), new Encoding())); }
+    public static ValueExpression<StringValue> con(String s) { return new Con<StringValue>(new StringValue(s, new Encoding())); }
     public static ValueExpression<Value> refVal(String s) { return new Ref<Value>(s); }
     public static ValueExpression<NumericValue> refNum(String s) { return new Ref<NumericValue>(s); }
     public static ValueExpression<StringValue> refStr(String s) { return new Ref<StringValue>(s); }
     public static ValueExpression<Value> cat(ValueExpression<Value> l, ValueExpression<Value> r) { return new Cat(l, r); }
-    
+
     public static BinaryLogicalExpression and(Expression l, Expression r) { return new And(l, r); }
     public static BinaryLogicalExpression or(Expression l, Expression r) { return new Or(l, r); }
     public static UnaryLogicalExpression not(Expression e) { return new Not(e); }
     public static Expression expTrue() { return new True(); }
-    
+
     public static <T extends Value>ComparisonExpression<T> eq(ValueExpression<T> p) { return new Eq<T>(p); }
     public static ComparisonExpression<NumericValue> gt(ValueExpression<NumericValue> p) { return new Gt(p); }
     public static ComparisonExpression<NumericValue> lt(ValueExpression<NumericValue> p) { return new Lt(p); }
-    
+
 }

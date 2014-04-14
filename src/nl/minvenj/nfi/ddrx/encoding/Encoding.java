@@ -38,6 +38,14 @@ public class Encoding {
         this(DEFAULT_SIGNED, charset);
     }
 
+    public Encoding(Encoding encoding, boolean signed) {
+        this(signed, encoding.getCharset());
+    }
+
+    public Encoding(Encoding encoding, Charset charset) {
+        this(encoding.isSigned(), charset);
+    }
+
     public Encoding(boolean signed, Charset charset) {
         _signed = signed;
         _charset = charset;

@@ -21,7 +21,7 @@ import java.math.BigInteger;
 import nl.minvenj.nfi.ddrx.data.Environment;
 
 public class Mul extends BinaryValueExpression<NumericValue> {
-    
+
     public Mul(ValueExpression<NumericValue> lop, ValueExpression<NumericValue> rop) {
         super(lop, rop);
     }
@@ -29,14 +29,14 @@ public class Mul extends BinaryValueExpression<NumericValue> {
     @Override
     public NumericValue eval(final Environment env) {
         return _lop.eval(env).operation(new NumericValueOperation() {
-            
+
             @Override
             public NumericValue execute(final BigInteger lv) {
                 return _rop.eval(env).operation(new NumericValueOperation() {
-                    
+
                     @Override
                     public NumericValue execute(final BigInteger rv) {
-                        return new NumericValue(lv.multiply(rv));
+                        return new NumericValue(lv.multiply(rv), env.getEncoding());
                     }
                 });
             }

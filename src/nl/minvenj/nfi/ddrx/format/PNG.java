@@ -52,13 +52,13 @@ public class PNG {
                                                 seq(defVal("chunkdata", refNum("length"), expTrue()),
                                                     defVal("crc32", con(4), eq(new UnaryValueExpression<Value>(cat(refVal("chunktype"), refVal("chunkdata"))) {
                                                         @Override
-                                                        public Value eval(Environment env) {
+                                                        public Value eval(final Environment env) {
                                                             return _op.eval(env).operation(new ValueOperation() {
                                                                 @Override
                                                                 public Value execute(byte[] value) {
                                                                     CRC32 crc = new CRC32();
                                                                     crc.update(value);
-                                                                    return new NumericValue(BigInteger.valueOf(crc.getValue()));
+                                                                    return new NumericValue(BigInteger.valueOf(crc.getValue()), env.getEncoding());
                                                                 }
                                                             });
                                                         }

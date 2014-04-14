@@ -16,21 +16,19 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
-import java.nio.charset.Charset;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class StringValue extends Value {
 
-    private final static Charset charset = Charset.forName("ISO646-US");
-
     private final String _stringValue;
 
-    public StringValue(String name, byte[] value) {
-        super(name, value);
-        _stringValue = new String(_data, charset);
+    public StringValue(String name, byte[] value, Encoding encoding) {
+        super(name, value, encoding);
+        _stringValue = new String(_data, encoding.getCharset());
     }
 
-    public StringValue(String value) {
-        super("", value.getBytes(charset));
+    public StringValue(String value, Encoding encoding) {
+        super("", value.getBytes(encoding.getCharset()), encoding);
         _stringValue = value;
     }
 

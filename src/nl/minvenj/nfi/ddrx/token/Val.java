@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.ddrx.token;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.expression.value.NumericValue;
 import nl.minvenj.nfi.ddrx.expression.value.Value;
@@ -28,14 +29,20 @@ public class Val<T extends Value> implements Token {
     private final ValueExpression<NumericValue> _size;
     private final Expression _pred;
     private final Class<T> _type;
-    
+    private final Encoding _encoding;
+
     public Val(String name, ValueExpression<NumericValue> size, Expression pred, Class<T> type) {
+        this(name, size, pred, type, null);
+    }
+
+    public Val(String name, ValueExpression<NumericValue> size, Expression pred, Class<T> type, Encoding encoding) {
         _name = name;
         _size = size;
         _pred = pred;
         _type = type;
+        _encoding = encoding;
     }
-    
+
     @Override
     public boolean parse(Environment env) {
         final byte[] data = new byte[_size.eval(env).getNumericValue().intValue()];
@@ -45,7 +52,8 @@ public class Val<T extends Value> implements Token {
                 env.reset();
                 return false;
             }
-            env.put(_type.getConstructor(new Class<?>[] { String.class, byte[].class }).newInstance(new Object[] {_name, data }));
+            final Encoding encoding = _encoding == null ? env.getEncoding() : _encoding;
+            env.put(_type.getConstructor(new Class<?>[] { String.class, byte[].class, Encoding.class }).newInstance(new Object[] { _name, data, encoding }));
         } catch (Throwable t) {
             t.printStackTrace();
             throw new RuntimeException(t);
@@ -58,7 +66,7 @@ public class Val<T extends Value> implements Token {
             return false;
         }
     }
-    
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(\"" + _name + "\"," + _size + "," + _pred + ",)";

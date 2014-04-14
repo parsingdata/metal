@@ -18,17 +18,19 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 import java.math.BigInteger;
 
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
+
 public class NumericValue extends Value {
 
     private final BigInteger _numericValue;
 
-    public NumericValue(String name, byte[] data) {
-        super(name, data);
+    public NumericValue(String name, byte[] data, Encoding encoding) {
+        super(name, data, encoding);
         _numericValue = new BigInteger(data);
     }
 
-    public NumericValue(BigInteger value) {
-        super(compact(value.toByteArray()));
+    public NumericValue(BigInteger value, Encoding encoding) {
+        super(compact(value.toByteArray()), encoding);
         _numericValue = value;
     }
 

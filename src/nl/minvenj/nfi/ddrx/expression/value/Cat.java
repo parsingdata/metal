@@ -19,7 +19,7 @@ package nl.minvenj.nfi.ddrx.expression.value;
 import nl.minvenj.nfi.ddrx.data.Environment;
 
 public class Cat extends BinaryValueExpression<Value> {
-    
+
     public Cat(ValueExpression<Value> lop, ValueExpression<Value> rop) {
         super(lop, rop);
     }
@@ -27,17 +27,17 @@ public class Cat extends BinaryValueExpression<Value> {
     @Override
     public Value eval(final Environment env) {
         return _lop.eval(env).operation(new ValueOperation() {
-            
+
             @Override
             public Value execute(final byte[] lv) {
                 return _rop.eval(env).operation(new ValueOperation() {
-                    
+
                     @Override
                     public Value execute(final byte[] rv) {
-                        byte[] res = new byte[lv.length+rv.length];
+                        byte[] res = new byte[lv.length + rv.length];
                         System.arraycopy(lv, 0, res, 0, lv.length);
                         System.arraycopy(rv, 0, res, lv.length, rv.length);
-                        return new Value(res);
+                        return new Value(res, env.getEncoding());
                     }
                 });
             }

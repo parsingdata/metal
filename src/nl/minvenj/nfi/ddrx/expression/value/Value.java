@@ -16,30 +16,34 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
+
 public class Value {
-    
+
     public static final String DEFAULT_NAME = "CONSTANT_VALUE";
-    
+
     protected final String _name;
     protected final byte[] _data;
-    
-    public Value(String name, byte[] data) {
+    protected final Encoding _encoding;
+
+    public Value(byte[] data, Encoding encoding) {
+        this(DEFAULT_NAME, data, encoding);
+    }
+
+    public Value(String name, byte[] data, Encoding encoding) {
         _name = name;
         _data = data;
+        _encoding = encoding;
     }
-    
-    public Value(byte[] data) {
-        this(DEFAULT_NAME, data);
-    }
-    
+
     public String getName() {
         return _name;
     }
-    
+
     public byte[] getValue() {
         return _data;
     }
-    
+
     public int compareTo(Value other) {
         if (_data.length != other.getValue().length) {
             return -1;
@@ -51,9 +55,9 @@ public class Value {
         }
         return 0;
     }
-    
+
     public Value operation(ValueOperation op) {
         return op.execute(_data);
     }
-    
+
 }
