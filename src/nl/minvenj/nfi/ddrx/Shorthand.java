@@ -67,8 +67,10 @@ public class Shorthand {
     public static BinaryValueExpression<NumericValue> sub(ValueExpression<NumericValue> l, ValueExpression<NumericValue> r) { return new Sub(l, r); }
     public static UnaryValueExpression<NumericValue> neg(ValueExpression<NumericValue> v) { return new Neg(v); }
     public static ValueExpression<Value> con(int... bytes) { return new Con<Value>(new Value(toByteArray(bytes), new Encoding())); }
-    public static ValueExpression<NumericValue> con(long v) { return new Con<NumericValue>(new NumericValue(BigInteger.valueOf(v), new Encoding())); }
-    public static ValueExpression<StringValue> con(String s) { return new Con<StringValue>(new StringValue(s, new Encoding())); }
+    public static ValueExpression<NumericValue> con(long v) { return con(v, new Encoding()); }
+    public static ValueExpression<NumericValue> con(long v, Encoding encoding) { return new Con<NumericValue>(new NumericValue(BigInteger.valueOf(v), encoding)); }
+    public static ValueExpression<StringValue> con(String s) { return con(s, new Encoding()); }
+    public static ValueExpression<StringValue> con(String s, Encoding encoding) { return new Con<StringValue>(new StringValue(s, encoding)); }
     public static ValueExpression<Value> refVal(String s) { return new Ref<Value>(s); }
     public static ValueExpression<NumericValue> refNum(String s) { return new Ref<NumericValue>(s); }
     public static ValueExpression<StringValue> refStr(String s) { return new Ref<StringValue>(s); }
