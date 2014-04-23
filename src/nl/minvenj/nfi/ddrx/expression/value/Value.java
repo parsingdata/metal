@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
+import java.math.BigInteger;
+
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class Value {
@@ -44,20 +46,34 @@ public class Value {
         return _data;
     }
 
-    public int compareTo(Value other) {
-        if (_data.length != other.getValue().length) {
-            return -1;
-        }
-        for (int i = 0; i < _data.length; i++) {
-            if (_data[i] != other.getValue()[i]) {
-                return -1;
-            }
-        }
-        return 0;
+    public Encoding getEncoding() {
+        return _encoding;
+    }
+
+    public BigInteger asNumeric() {
+        return _encoding.isSigned() ? new BigInteger(_data) : new BigInteger(1, _data);
+    }
+
+    public String asString() {
+        return new String(_data, _encoding.getCharset());
     }
 
     public Value operation(ValueOperation op) {
         return op.execute(_data);
+    }
+
+    public Value operation(NumericOperation op) {
+        return op.execute(asNumeric());
+    }
+
+    @Override
+    public String toString() {
+        String val = "";
+        for (byte b : _data) {
+            if (val.length() > 0) { val += " "; }
+            val += String.format("%02x", b);
+        }
+        return getClass().getSimpleName() + "(" + val + ")";
     }
 
 }

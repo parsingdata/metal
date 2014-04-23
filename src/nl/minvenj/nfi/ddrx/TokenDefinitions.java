@@ -17,36 +17,39 @@
 package nl.minvenj.nfi.ddrx;
 
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
-import static nl.minvenj.nfi.ddrx.Shorthand.defNum;
-import static nl.minvenj.nfi.ddrx.Shorthand.eq;
+import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.expTrue;
 import static nl.minvenj.nfi.ddrx.Shorthand.not;
-import static nl.minvenj.nfi.ddrx.Shorthand.refNum;
-
+import static nl.minvenj.nfi.ddrx.Shorthand.ref;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 public class TokenDefinitions {
-    
+
     private TokenDefinitions() {}
 
-    public static Token anyNum(String name) {
-        return defNum(name, con(1), expTrue());
+    public static Token any(String name) {
+        return def(name, con(1), expTrue());
     }
 
-    public static Token eqNum(String name, int value) {
-        return defNum(name, con(1), eq(con(value)));
+    public static Token any(String name, Encoding encoding) {
+        return def(name, con(1), expTrue(), encoding);
     }
-    
-    public static Token notEqNum(String name, int value) {
-        return defNum(name, con(1), not(eq(con(value))));
+
+    public static Token eq(String name, int value) {
+        return def(name, con(1), Shorthand.eq(con(value)));
     }
-    
-    public static Token eqRefNum(String name, String ref) {
-        return defNum(name, con(1), eq(refNum(ref)));
+
+    public static Token notEq(String name, int value) {
+        return def(name, con(1), not(Shorthand.eq(con(value))));
     }
-    
-    public static Token notEqRefNum(String name, String ref) {
-        return defNum(name, con(1), not(eq(refNum(ref))));
+
+    public static Token eqRef(String name, String ref) {
+        return def(name, con(1), Shorthand.eq(ref(ref)));
     }
-    
+
+    public static Token notEqRef(String name, String ref) {
+        return def(name, con(1), not(Shorthand.eq(ref(ref))));
+    }
+
 }

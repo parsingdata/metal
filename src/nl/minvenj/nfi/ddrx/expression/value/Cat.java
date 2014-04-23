@@ -18,9 +18,9 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 
-public class Cat extends BinaryValueExpression<Value> {
+public class Cat extends BinaryValueExpression {
 
-    public Cat(ValueExpression<Value> lop, ValueExpression<Value> rop) {
+    public Cat(ValueExpression lop, ValueExpression rop) {
         super(lop, rop);
     }
 

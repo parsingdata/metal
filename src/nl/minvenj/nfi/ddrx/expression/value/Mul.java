@@ -20,23 +20,23 @@ import java.math.BigInteger;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 
-public class Mul extends BinaryValueExpression<NumericValue> {
+public class Mul extends BinaryValueExpression {
 
-    public Mul(ValueExpression<NumericValue> lop, ValueExpression<NumericValue> rop) {
+    public Mul(ValueExpression lop, ValueExpression rop) {
         super(lop, rop);
     }
 
     @Override
-    public NumericValue eval(final Environment env) {
-        return _lop.eval(env).operation(new NumericValueOperation() {
+    public Value eval(final Environment env) {
+        return _lop.eval(env).operation(new NumericOperation() {
 
             @Override
-            public NumericValue execute(final BigInteger lv) {
-                return _rop.eval(env).operation(new NumericValueOperation() {
+            public Value execute(final BigInteger lv) {
+                return _rop.eval(env).operation(new NumericOperation() {
 
                     @Override
-                    public NumericValue execute(final BigInteger rv) {
-                        return new NumericValue(lv.multiply(rv), env.getEncoding());
+                    public Value execute(final BigInteger rv) {
+                        return ConstantFactory.createFromNumeric(lv.multiply(rv), env.getEncoding());
                     }
                 });
             }

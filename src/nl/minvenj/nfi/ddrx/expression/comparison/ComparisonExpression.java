@@ -17,20 +17,19 @@
 package nl.minvenj.nfi.ddrx.expression.comparison;
 
 import nl.minvenj.nfi.ddrx.expression.Expression;
-import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public abstract class ComparisonExpression<T extends Value> implements Expression {
-    
-    protected final ValueExpression<T> _predicate;
-    
-    public ComparisonExpression(ValueExpression<T> predicate) {
+public abstract class ComparisonExpression implements Expression {
+
+    protected final ValueExpression _predicate;
+
+    public ComparisonExpression(ValueExpression predicate) {
         _predicate = predicate;
     }
-    
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + _predicate + ")";
     }
-    
+
 }

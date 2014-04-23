@@ -27,7 +27,7 @@ import nl.minvenj.nfi.ddrx.expression.value.Value;
 
 public class Environment {
 
-    private final HashMap<String, ValueStack<?>> _vals;
+    private final HashMap<String, Stack<Value>> _vals;
     private final Stack<String> _order;
     private final Stack<Integer> _marked;
     private final ByteStream _input;
@@ -38,7 +38,7 @@ public class Environment {
     }
 
     public Environment(ByteStream input, Encoding encoding) {
-        _vals = new HashMap<String, ValueStack<?>>();
+        _vals = new HashMap<String, Stack<Value>>();
         _order = new Stack<String>();
         _marked = new Stack<Integer>();
         _input = input;
@@ -49,32 +49,24 @@ public class Environment {
         return _encoding;
     }
 
-    @SuppressWarnings("unchecked")
-    private <T extends Value> ValueStack<T> getStack(Class<T> valueClass, String name) {
+    private Stack<Value> getStack(String name) {
         if (!_vals.containsKey(name)) {
-            _vals.put(name, new ValueStack<T>(valueClass));
+            _vals.put(name, new Stack<Value>());
         }
-        return (ValueStack<T>) _vals.get(name);
+        return _vals.get(name);
     }
 
-    @SuppressWarnings("unchecked")
-    private <T extends Value> Class<T> classOf(T value) {
-        return (Class<T>) value.getClass();
-    }
-
-    public <T extends Value> void put(T value) {
-        getStack(classOf(value), value.getName()).push(value);
+    public void put(Value value) {
+        getStack(value.getName()).push(value);
         _order.push(value.getName());
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends Value> T get(String name) {
-        return _vals.containsKey(name) ? (T) _vals.get(name).peek() : null;
+    public Value get(String name) {
+        return _vals.containsKey(name) ? _vals.get(name).peek() : null;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends Value> T current() {
-        return _order.isEmpty() ? null : (T) get(_order.peek());
+    public Value current() {
+        return _order.isEmpty() ? null : get(_order.peek());
     }
 
     private void removeLast() {

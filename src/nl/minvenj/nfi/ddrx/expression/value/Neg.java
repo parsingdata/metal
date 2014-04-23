@@ -20,19 +20,19 @@ import java.math.BigInteger;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 
-public class Neg extends UnaryValueExpression<NumericValue> {
+public class Neg extends UnaryValueExpression {
 
-    public Neg(ValueExpression<NumericValue> op) {
+    public Neg(ValueExpression op) {
         super(op);
     }
 
     @Override
-    public NumericValue eval(final Environment env) {
-        return _op.eval(env).operation(new NumericValueOperation() {
+    public Value eval(final Environment env) {
+        return _op.eval(env).operation(new NumericOperation() {
 
             @Override
-            public NumericValue execute(BigInteger value) {
-                return new NumericValue(value.negate(), env.getEncoding());
+            public Value execute(BigInteger value) {
+                return ConstantFactory.createFromNumeric(value.negate(), env.getEncoding());
             }
 
         });

@@ -17,18 +17,27 @@
 package nl.minvenj.nfi.ddrx.expression.comparison;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class Eq<T extends Value> extends ComparisonExpression<T> {
-    
-    public Eq(ValueExpression<T> predicate) {
+public class Eq extends ComparisonExpression {
+
+    public Eq(ValueExpression predicate) {
         super(predicate);
     }
 
     @Override
     public boolean eval(Environment env) {
-        return env.current().compareTo(_predicate.eval(env)) == 0;
+        final byte[] l = env.current().getValue();
+        final byte[] r = _predicate.eval(env).getValue();
+        if (l.length != r.length) {
+            return false;
+        }
+        for (int i = 0; i < l.length; i++) {
+            if (l[i] != r[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

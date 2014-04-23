@@ -18,17 +18,22 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 
-public class Ref<T extends Value> implements ValueExpression<T> {
-    
+public class Ref implements ValueExpression {
+
     private final String _name;
-    
+
     public Ref(String name) {
         _name = name;
     }
 
     @Override
-    public T eval(Environment env) {
+    public Value eval(Environment env) {
         return env.get(_name);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _name + ")";
     }
 
 }

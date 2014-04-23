@@ -18,8 +18,8 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 
-public interface ValueExpression<T extends Value> {
-    
-    T eval(Environment env);
-    
+public interface ValueExpression {
+
+    Value eval(Environment env);
+
 }

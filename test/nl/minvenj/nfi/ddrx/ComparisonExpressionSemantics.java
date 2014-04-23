@@ -17,86 +17,78 @@
 package nl.minvenj.nfi.ddrx;
 
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
-import static nl.minvenj.nfi.ddrx.Shorthand.defNum;
-import static nl.minvenj.nfi.ddrx.Shorthand.defStr;
-import static nl.minvenj.nfi.ddrx.Shorthand.defVal;
+import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
 import static nl.minvenj.nfi.ddrx.Shorthand.expTrue;
 import static nl.minvenj.nfi.ddrx.Shorthand.gt;
 import static nl.minvenj.nfi.ddrx.Shorthand.lt;
-import static nl.minvenj.nfi.ddrx.Shorthand.refNum;
-import static nl.minvenj.nfi.ddrx.Shorthand.refStr;
-import static nl.minvenj.nfi.ddrx.Shorthand.refVal;
+import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.TokenDefinitions.anyNum;
+import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.data.Environment.stream;
+import nl.minvenj.nfi.ddrx.expression.comparison.ComparisonExpression;
+import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import nl.minvenj.nfi.ddrx.expression.comparison.ComparisonExpression;
-import nl.minvenj.nfi.ddrx.expression.value.NumericValue;
-import nl.minvenj.nfi.ddrx.expression.value.StringValue;
-import nl.minvenj.nfi.ddrx.expression.value.Value;
-import nl.minvenj.nfi.ddrx.token.Token;
-
 @RunWith(JUnit4.class)
 public class ComparisonExpressionSemantics {
-    
-    private Token numCom(int size, ComparisonExpression<NumericValue> comparison) {
-        return seq(anyNum("a"),
-                   defNum("b", con(size), comparison));
+
+    private Token numCom(int size, ComparisonExpression comparison) {
+        return seq(any("a"),
+                   def("b", con(size), comparison));
     }
-    
-    private Token strCom(int size, ComparisonExpression<StringValue> comparison) {
-        return seq(defStr("a", con(size), expTrue()),
-                   defStr("b", con(size), comparison));
+
+    private Token strCom(int size, ComparisonExpression comparison) {
+        return seq(def("a", con(size), expTrue()),
+                   def("b", con(size), comparison));
     }
-    
-    private Token valCom(int size, ComparisonExpression<Value> comparison) {
-        return seq(defVal("a", con(size), expTrue()),
-                   defVal("b", con(size), comparison));
+
+    private Token valCom(int size, ComparisonExpression comparison) {
+        return seq(def("a", con(size), expTrue()),
+                   def("b", con(size), comparison));
     }
-    
+
     @Test
     public void EqNum() {
-        Token eq = numCom(1, eq(refNum("a")));
+        Token eq = numCom(1, eq(ref("a")));
         Assert.assertTrue(eq.parse(stream(1, 1)));
         Assert.assertFalse(eq.parse(stream(1, 2)));
     }
-    
+
     @Test
     public void Gt() {
-        Token eq = numCom(1, gt(refNum("a")));
+        Token eq = numCom(1, gt(ref("a")));
         Assert.assertFalse(eq.parse(stream(1, 1)));
         Assert.assertTrue(eq.parse(stream(1, 2)));
         Assert.assertFalse(eq.parse(stream(2, 1)));
     }
-    
+
     @Test
     public void Lt() {
-        Token eq = numCom(1, lt(refNum("a")));
+        Token eq = numCom(1, lt(ref("a")));
         Assert.assertFalse(eq.parse(stream(1, 1)));
         Assert.assertFalse(eq.parse(stream(1, 2)));
         Assert.assertTrue(eq.parse(stream(2, 1)));
     }
-    
+
     @Test
     public void EqStr() {
         String a = "abc";
         String b = "abd";
-        Token eq = strCom(a.length(), eq(refStr("a")));
+        Token eq = strCom(a.length(), eq(ref("a")));
         Assert.assertTrue(eq.parse(stream(a + a)));
         Assert.assertFalse(eq.parse(stream(a + b)));
     }
-    
+
     @Test
     public void EqVal() {
-        Token eq = valCom(1, eq(refVal("a")));
+        Token eq = valCom(1, eq(ref("a")));
         Assert.assertTrue(eq.parse(stream(1, 1)));
         Assert.assertFalse(eq.parse(stream(1, 2)));
     }
-    
+
 }

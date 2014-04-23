@@ -14,35 +14,20 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.data;
+package nl.minvenj.nfi.ddrx.expression.comparison;
 
-import java.util.Stack;
+import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-import nl.minvenj.nfi.ddrx.expression.value.Value;
+public class LtNum extends ComparisonExpression {
 
-public class ValueStack<T extends Value> {
-    
-    private final Class<T> _valueClass;
-    private final Stack<T> _stack;
-    
-    public ValueStack(Class<T> valueClass) {
-        _valueClass = valueClass;
-        _stack = new Stack<T>();
+    public LtNum(ValueExpression predicate) {
+        super(predicate);
     }
-    
-    public void push(T value) {
-        _stack.push(_valueClass.cast(value));
+
+    @Override
+    public boolean eval(Environment env) {
+        return _predicate.eval(env).asNumeric().compareTo(env.current().asNumeric()) == 1;
     }
-    
-    public T peek() {
-        return _stack.peek();
-    }
-    
-    public T pop() {
-        return _stack.pop();
-    }
-    
-    public int size() {
-        return _stack.size();
-    }
+
 }

@@ -19,33 +19,30 @@ package nl.minvenj.nfi.ddrx.token;
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.Expression;
-import nl.minvenj.nfi.ddrx.expression.value.NumericValue;
 import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class Val<T extends Value> implements Token {
+public class Val implements Token {
 
     private final String _name;
-    private final ValueExpression<NumericValue> _size;
+    private final ValueExpression _size;
     private final Expression _pred;
-    private final Class<T> _type;
     private final Encoding _encoding;
 
-    public Val(String name, ValueExpression<NumericValue> size, Expression pred, Class<T> type) {
-        this(name, size, pred, type, null);
+    public Val(String name, ValueExpression size, Expression pred) {
+        this(name, size, pred, null);
     }
 
-    public Val(String name, ValueExpression<NumericValue> size, Expression pred, Class<T> type, Encoding encoding) {
+    public Val(String name, ValueExpression size, Expression pred, Encoding encoding) {
         _name = name;
         _size = size;
         _pred = pred;
-        _type = type;
         _encoding = encoding;
     }
 
     @Override
     public boolean parse(Environment env) {
-        final byte[] data = new byte[_size.eval(env).getNumericValue().intValue()];
+        final byte[] data = new byte[_size.eval(env).asNumeric().intValue()];
         env.mark();
         try {
             if (env.read(data) != data.length) {
@@ -53,7 +50,7 @@ public class Val<T extends Value> implements Token {
                 return false;
             }
             final Encoding encoding = _encoding == null ? env.getEncoding() : _encoding;
-            env.put(_type.getConstructor(new Class<?>[] { String.class, byte[].class, Encoding.class }).newInstance(new Object[] { _name, data, encoding }));
+            env.put(new Value(_name, data, encoding));
         } catch (Throwable t) {
             t.printStackTrace();
             throw new RuntimeException(t);

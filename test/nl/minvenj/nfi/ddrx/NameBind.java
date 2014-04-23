@@ -17,42 +17,41 @@
 package nl.minvenj.nfi.ddrx;
 
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.TokenDefinitions.anyNum;
-import static nl.minvenj.nfi.ddrx.TokenDefinitions.eqRefNum;
+import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
+import static nl.minvenj.nfi.ddrx.TokenDefinitions.eqRef;
+import static nl.minvenj.nfi.ddrx.data.Environment.stream;
+import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static nl.minvenj.nfi.ddrx.data.Environment.stream;
-import nl.minvenj.nfi.ddrx.token.Token;
-
 @RunWith(JUnit4.class)
 public class NameBind {
-    
-    private Token sequenceMatch2 = seq(anyNum("a"),
-                                       eqRefNum("b", "a"));
+
+    private Token sequenceMatch2 = seq(any("a"),
+                                       eqRef("b", "a"));
     private Token sequenceMatch3 = seq(sequenceMatch2,
-                                       eqRefNum("c", "a"));
+                                       eqRef("c", "a"));
     private Token sequenceMatchTransitive3 = seq(sequenceMatch2,
-                                                 eqRefNum("c", "b"));
+                                                 eqRef("c", "b"));
 
     @Test
     public void sequenceMatch2() {
         Assert.assertTrue(sequenceMatch2.parse(stream(42, 42)));
     }
-    
+
     @Test
     public void sequenceNoMatch2() {
         Assert.assertFalse(sequenceMatch2.parse(stream(42, 21)));
     }
-    
+
     @Test
     public void sequenceMatch3() {
         Assert.assertTrue(sequenceMatch3.parse(stream(42, 42, 42)));
     }
-    
+
     @Test
     public void sequenceNoMatch3() {
         Assert.assertFalse(sequenceMatchTransitive3.parse(stream(42, 42, 21)));
@@ -60,12 +59,12 @@ public class NameBind {
         Assert.assertFalse(sequenceMatchTransitive3.parse(stream(21, 42, 42)));
         Assert.assertFalse(sequenceMatchTransitive3.parse(stream(21, 42, 63)));
     }
-    
+
     @Test
     public void sequenceMatchTransitive3() {
         Assert.assertTrue(sequenceMatchTransitive3.parse(stream(42, 42, 42)));
     }
-    
+
     @Test
     public void sequenceNoMatchTransitive3() {
         Assert.assertFalse(sequenceMatchTransitive3.parse(stream(42, 42, 21)));
@@ -73,5 +72,5 @@ public class NameBind {
         Assert.assertFalse(sequenceMatchTransitive3.parse(stream(21, 42, 42)));
         Assert.assertFalse(sequenceMatchTransitive3.parse(stream(21, 42, 63)));
     }
-    
+
 }

@@ -17,19 +17,19 @@
 package nl.minvenj.nfi.ddrx.expression.value;
 
 
-public abstract class BinaryValueExpression<T extends Value> implements ValueExpression<T> {
-    
-    protected final ValueExpression<T> _lop;
-    protected final ValueExpression<T> _rop;
-    
-    public BinaryValueExpression(ValueExpression<T> lop, ValueExpression<T> rop) {
+public abstract class BinaryValueExpression implements ValueExpression {
+
+    protected final ValueExpression _lop;
+    protected final ValueExpression _rop;
+
+    public BinaryValueExpression(ValueExpression lop, ValueExpression rop) {
         _lop = lop;
         _rop = rop;
     }
-    
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + _lop + "," + _rop + ")";
     }
-    
+
 }

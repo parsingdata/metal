@@ -18,22 +18,22 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 
-public class Con<T extends Value> implements ValueExpression<T> {
-    
-    private final T _val;
-    
-    public Con(T val) {
+public class Con implements ValueExpression {
+
+    private final Value _val;
+
+    public Con(Value val) {
         _val = val;
     }
 
     @Override
-    public T eval(Environment env) {
+    public Value eval(Environment env) {
         return _val;
     }
-    
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + _val.toString() + ")";
     }
-    
+
 }

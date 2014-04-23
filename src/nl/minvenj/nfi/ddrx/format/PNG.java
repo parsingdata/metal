@@ -18,14 +18,12 @@ package nl.minvenj.nfi.ddrx.format;
 
 import static nl.minvenj.nfi.ddrx.Shorthand.cat;
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
-import static nl.minvenj.nfi.ddrx.Shorthand.defNum;
-import static nl.minvenj.nfi.ddrx.Shorthand.defStr;
-import static nl.minvenj.nfi.ddrx.Shorthand.defVal;
+import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
+import static nl.minvenj.nfi.ddrx.Shorthand.eqNum;
 import static nl.minvenj.nfi.ddrx.Shorthand.expTrue;
 import static nl.minvenj.nfi.ddrx.Shorthand.not;
-import static nl.minvenj.nfi.ddrx.Shorthand.refNum;
-import static nl.minvenj.nfi.ddrx.Shorthand.refVal;
+import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 
@@ -39,16 +37,16 @@ import nl.minvenj.nfi.ddrx.token.Token;
 
 public class PNG {
 
-    private static final Token HEADER = seq(defVal("highbit", con(1), eq(con(0x89))),
-                                            seq(defStr("PNG", con(3), eq(con("PNG"))),
-                                                defVal("controlchars", con(4), eq(con(0x0d0a1a0a)))));
-    private static final Token FOOTER = seq(defNum("footerlength", con(4), eq(con(0))),
-                                            seq(defStr("footertype", con(4), eq(con("IEND"))),
-                                                defVal("footercrc32", con(4), eq(con(0xae426082l)))));
-    private static final Token STRUCT = seq(defNum("length", con(4), expTrue()),
-                                            seq(defStr("chunktype", con(4), not(eq(con("IEND")))),
-                                                seq(defVal("chunkdata", refNum("length"), expTrue()),
-                                                    defVal("crc32", con(4), eq(new UnaryValueExpression<Value>(cat(refVal("chunktype"), refVal("chunkdata"))) {
+    private static final Token HEADER = seq(def("highbit", con(1), eq(con(0x89))),
+                                            seq(def("PNG", con(3), eq(con("PNG"))),
+                                                def("controlchars", con(4), eq(con(0x0d0a1a0a)))));
+    private static final Token FOOTER = seq(def("footerlength", con(4), eqNum(con(0))),
+                                            seq(def("footertype", con(4), eq(con("IEND"))),
+                                                def("footercrc32", con(4), eq(con(0xae426082l)))));
+    private static final Token STRUCT = seq(def("length", con(4), expTrue()),
+                                            seq(def("chunktype", con(4), not(eq(con("IEND")))),
+                                                seq(def("chunkdata", ref("length"), expTrue()),
+                                                    def("crc32", con(4), eq(new UnaryValueExpression(cat(ref("chunktype"), ref("chunkdata"))) {
                                                         @Override
                                                         public Value eval(final Environment env) {
                                                             return _op.eval(env).operation(new ValueOperation() {

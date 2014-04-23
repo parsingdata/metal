@@ -17,22 +17,21 @@
 package nl.minvenj.nfi.ddrx;
 
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
-import static nl.minvenj.nfi.ddrx.Shorthand.defVal;
+import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
 import static nl.minvenj.nfi.ddrx.data.Environment.stream;
+import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import nl.minvenj.nfi.ddrx.token.Token;
-
 @RunWith(JUnit4.class)
 public class Simple {
 
     private Token buildSimpleToken(String name, int size, int predicate) {
-        return defVal(name,
+        return def(name,
                       con(size),
                       eq(con(predicate)));
     }
@@ -48,7 +47,7 @@ public class Simple {
         Token t = buildSimpleToken("r1", 2, 1);
         Assert.assertFalse(t.parse(stream(1, 2, 3, 4)));
     }
-    
+
     @Test
     public void predicateError() {
         Token t = buildSimpleToken("r1", 1, 2);

@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.value;
+package nl.minvenj.nfi.ddrx.expression.comparison;
 
-public interface StringValueOperation {
-    
-    public StringValue execute(String value);
+import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
+
+public class EqNum extends ComparisonExpression {
+
+    public EqNum(ValueExpression predicate) {
+        super(predicate);
+    }
+
+    @Override
+    public boolean eval(Environment env) {
+        return env.current().asNumeric().compareTo(_predicate.eval(env).asNumeric()) == 0;
+    }
 
 }

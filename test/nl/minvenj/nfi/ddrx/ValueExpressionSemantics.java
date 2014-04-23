@@ -18,30 +18,29 @@ package nl.minvenj.nfi.ddrx;
 
 import static nl.minvenj.nfi.ddrx.Shorthand.cat;
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
-import static nl.minvenj.nfi.ddrx.Shorthand.defVal;
+import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
-import static nl.minvenj.nfi.ddrx.Shorthand.refVal;
+import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.TokenDefinitions.anyNum;
+import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.data.Environment.stream;
+import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import nl.minvenj.nfi.ddrx.token.Token;
-
 @RunWith(JUnit4.class)
 public class ValueExpressionSemantics {
-    
+
     @Test
     public void Cat() {
-        Token cat = seq(anyNum("a"),
-                        seq(anyNum("b"),
-                            defVal("c", con(2), eq(cat(refVal("a"), refVal("b"))))));
+        Token cat = seq(any("a"),
+                        seq(any("b"),
+                            def("c", con(2), eq(cat(ref("a"), ref("b"))))));
         Assert.assertTrue(cat.parse(stream(1, 2, 1, 2)));
         Assert.assertFalse(cat.parse(stream(1, 2, 12, 12)));
     }
-    
+
 }

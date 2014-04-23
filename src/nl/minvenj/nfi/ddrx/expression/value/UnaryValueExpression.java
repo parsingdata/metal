@@ -16,17 +16,17 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
-public abstract class UnaryValueExpression<T extends Value> implements ValueExpression<T> {
-    
-    protected final ValueExpression<T> _op;
-    
-    public UnaryValueExpression(ValueExpression<T> op) {
+public abstract class UnaryValueExpression implements ValueExpression {
+
+    protected final ValueExpression _op;
+
+    public UnaryValueExpression(ValueExpression op) {
         _op = op;
     }
-    
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + _op + ")";
     }
-    
+
 }
