@@ -16,8 +16,6 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
-import java.math.BigInteger;
-
 import nl.minvenj.nfi.ddrx.data.Environment;
 
 public class Neg extends UnaryValueExpression {
@@ -28,14 +26,7 @@ public class Neg extends UnaryValueExpression {
 
     @Override
     public Value eval(final Environment env) {
-        return _op.eval(env).operation(new NumericOperation() {
-
-            @Override
-            public Value execute(BigInteger value) {
-                return ConstantFactory.createFromNumeric(value.negate(), env.getEncoding());
-            }
-
-        });
+        return ConstantFactory.createFromNumeric(_op.eval(env).asNumeric().negate(), env.getEncoding());
     }
 
 }

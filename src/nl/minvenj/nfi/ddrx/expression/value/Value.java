@@ -62,10 +62,6 @@ public class Value {
         return op.execute(_data);
     }
 
-    public Value operation(NumericOperation op) {
-        return op.execute(asNumeric());
-    }
-
     @Override
     public String toString() {
         String val = "";

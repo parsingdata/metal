@@ -26,22 +26,12 @@ public class Cat extends BinaryValueExpression {
 
     @Override
     public Value eval(final Environment env) {
-        return _lop.eval(env).operation(new ValueOperation() {
-
-            @Override
-            public Value execute(final byte[] lv) {
-                return _rop.eval(env).operation(new ValueOperation() {
-
-                    @Override
-                    public Value execute(final byte[] rv) {
-                        byte[] res = new byte[lv.length + rv.length];
-                        System.arraycopy(lv, 0, res, 0, lv.length);
-                        System.arraycopy(rv, 0, res, lv.length, rv.length);
-                        return new Value(res, env.getEncoding());
-                    }
-                });
-            }
-        });
+        final byte[] l = _lop.eval(env).getValue();
+        final byte[] r = _rop.eval(env).getValue();
+        byte[] res = new byte[l.length + r.length];
+        System.arraycopy(l, 0, res, 0, l.length);
+        System.arraycopy(r, 0, res, l.length, r.length);
+        return new Value(res, env.getEncoding());
     }
 
 }

@@ -16,8 +16,6 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
-import java.math.BigInteger;
-
 import nl.minvenj.nfi.ddrx.data.Environment;
 
 public class Add extends BinaryValueExpression {
@@ -28,19 +26,7 @@ public class Add extends BinaryValueExpression {
 
     @Override
     public Value eval(final Environment env) {
-        return _lop.eval(env).operation(new NumericOperation() {
-
-            @Override
-            public Value execute(final BigInteger lv) {
-                return _rop.eval(env).operation(new NumericOperation() {
-
-                    @Override
-                    public Value execute(final BigInteger rv) {
-                        return ConstantFactory.createFromNumeric(lv.add(rv), env.getEncoding());
-                    }
-                });
-            }
-        });
+        return ConstantFactory.createFromNumeric(_lop.eval(env).asNumeric().add(_rop.eval(env).asNumeric()), env.getEncoding());
     }
 
 }
