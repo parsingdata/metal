@@ -19,6 +19,8 @@ package nl.minvenj.nfi.ddrx;
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
+import static nl.minvenj.nfi.ddrx.Shorthand.eqNum;
+import static nl.minvenj.nfi.ddrx.Shorthand.eqStr;
 import static nl.minvenj.nfi.ddrx.Shorthand.expTrue;
 import static nl.minvenj.nfi.ddrx.Shorthand.gtNum;
 import static nl.minvenj.nfi.ddrx.Shorthand.ltNum;
@@ -26,69 +28,69 @@ import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.data.Environment.stream;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.expression.comparison.ComparisonExpression;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
-@RunWith(JUnit4.class)
+@RunWith(Parameterized.class)
 public class ComparisonExpressionSemantics {
 
-    private Token numCom(int size, ComparisonExpression comparison) {
+    @Parameters(name="{0}")
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] {
+                { "1 == 1 (true)", numCom(1, eqNum(ref("a"))), stream(1, 1), true },
+                { "2 == 1 (false)", numCom(1, eqNum(ref("a"))), stream(1, 2), false },
+                { "1 > 1 (false)", numCom(1, gtNum(ref("a"))), stream(1, 1), false},
+                { "2 > 1 (true)", numCom(1, gtNum(ref("a"))), stream(1, 2), true},
+                { "1 > 2 (false)", numCom(1, gtNum(ref("a"))), stream(2, 1), false},
+                { "1 < 1 (false)", numCom(1, ltNum(ref("a"))), stream(1, 1), false},
+                { "2 < 1 (false)", numCom(1, ltNum(ref("a"))), stream(1, 2), false},
+                { "1 < 2 (true)", numCom(1, ltNum(ref("a"))), stream(2, 1), true},
+                { "\"abc\" == \"abc\" (true)", strCom(3, eqStr(ref("a"))), stream("abcabc"), true},
+                { "\"abd\" == \"abc\" (false)", strCom(3, eqStr(ref("a"))), stream("abcabd"), false},
+                { "0x01 == 0x01 (true)", valCom(1, eq(ref("a"))), stream(1, 1), true},
+                { "0x02 == 0x01 (false)", valCom(1, eq(ref("a"))), stream(1, 2), false}
+        });
+    }
+
+    private final Token _token;
+    private final Environment _env;
+    private final boolean _result;
+
+    public ComparisonExpressionSemantics(String desc, Token token, Environment env, boolean result) {
+        _token = token;
+        _env = env;
+        _result = result;
+    }
+
+    @Test
+    public void test() {
+        Assert.assertEquals(_result, _token.parse(_env));
+    }
+
+    private static Token numCom(int size, ComparisonExpression comparison) {
         return seq(any("a"),
                    def("b", con(size), comparison));
     }
 
-    private Token strCom(int size, ComparisonExpression comparison) {
+    private static Token strCom(int size, ComparisonExpression comparison) {
         return seq(def("a", con(size), expTrue()),
                    def("b", con(size), comparison));
     }
 
-    private Token valCom(int size, ComparisonExpression comparison) {
+    private static Token valCom(int size, ComparisonExpression comparison) {
         return seq(def("a", con(size), expTrue()),
                    def("b", con(size), comparison));
-    }
-
-    @Test
-    public void EqNum() {
-        Token eq = numCom(1, eq(ref("a")));
-        Assert.assertTrue(eq.parse(stream(1, 1)));
-        Assert.assertFalse(eq.parse(stream(1, 2)));
-    }
-
-    @Test
-    public void Gt() {
-        Token eq = numCom(1, gtNum(ref("a")));
-        Assert.assertFalse(eq.parse(stream(1, 1)));
-        Assert.assertTrue(eq.parse(stream(1, 2)));
-        Assert.assertFalse(eq.parse(stream(2, 1)));
-    }
-
-    @Test
-    public void Lt() {
-        Token eq = numCom(1, ltNum(ref("a")));
-        Assert.assertFalse(eq.parse(stream(1, 1)));
-        Assert.assertFalse(eq.parse(stream(1, 2)));
-        Assert.assertTrue(eq.parse(stream(2, 1)));
-    }
-
-    @Test
-    public void EqStr() {
-        String a = "abc";
-        String b = "abd";
-        Token eq = strCom(a.length(), eq(ref("a")));
-        Assert.assertTrue(eq.parse(stream(a + a)));
-        Assert.assertFalse(eq.parse(stream(a + b)));
-    }
-
-    @Test
-    public void EqVal() {
-        Token eq = valCom(1, eq(ref("a")));
-        Assert.assertTrue(eq.parse(stream(1, 1)));
-        Assert.assertFalse(eq.parse(stream(1, 2)));
     }
 
 }
