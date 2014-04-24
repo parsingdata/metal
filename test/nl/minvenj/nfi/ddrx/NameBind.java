@@ -20,57 +20,44 @@ import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.eqRef;
 import static nl.minvenj.nfi.ddrx.data.Environment.stream;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.token.Token;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.runners.Parameterized.Parameters;
 
-@RunWith(JUnit4.class)
-public class NameBind {
+public class NameBind extends ParameterizedParse {
+    
+    @Parameters(name="{0}")
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] {
+            { "[0x2a, 0x2a] b == a (true)", sequenceMatch2, stream(42, 42), true },
+            { "[0x2a, 0x15] b == a (false)", sequenceMatch2, stream(42, 21), false },
+            { "[0x2a, 0x2a, 0x2a] b == a, c == a (true)", sequenceMatch3, stream(42, 42, 42), true },
+            { "[0x2a, 0x2a, 0x15] b == a, c == a (false)", sequenceMatch3, stream(42, 42, 21), false },
+            { "[0x2a, 0x15, 0x2a] b == a, c == a (false)", sequenceMatch3, stream(42, 21, 42), false },
+            { "[0x15, 0x2a, 0x2a] b == a, c == a (false)", sequenceMatch3, stream(21, 42, 42), false },
+            { "[0x15, 0x2a, 0x3f] b == a, c == a (false)", sequenceMatch3, stream(21, 42, 63), false },
+            { "[0x2a, 0x2a, 0x2a] b == a, c == b (true)", sequenceMatchTransitive3, stream(42, 42, 42), true },
+            { "[0x2a, 0x2a, 0x15] b == a, c == b (false)", sequenceMatchTransitive3, stream(42, 42, 21), false },
+            { "[0x2a, 0x15, 0x2a] b == a, c == b (false)", sequenceMatchTransitive3, stream(42, 21, 42), false },
+            { "[0x15, 0x2a, 0x2a] b == a, c == b (false)", sequenceMatchTransitive3, stream(21, 42, 42), false },
+            { "[0x15, 0x2a, 0x63] b == a, c == b (false)", sequenceMatchTransitive3, stream(21, 42, 63), false }
+        });
+    }
 
-    private Token sequenceMatch2 = seq(any("a"),
+    public NameBind(String desc, Token token, Environment env, boolean result) {
+        super(token, env, result);
+    }
+
+    private static Token sequenceMatch2 = seq(any("a"),
                                        eqRef("b", "a"));
-    private Token sequenceMatch3 = seq(sequenceMatch2,
+    private static Token sequenceMatch3 = seq(sequenceMatch2,
                                        eqRef("c", "a"));
-    private Token sequenceMatchTransitive3 = seq(sequenceMatch2,
+    private static Token sequenceMatchTransitive3 = seq(sequenceMatch2,
                                                  eqRef("c", "b"));
-
-    @Test
-    public void sequenceMatch2() {
-        Assert.assertTrue(sequenceMatch2.parse(stream(42, 42)));
-    }
-
-    @Test
-    public void sequenceNoMatch2() {
-        Assert.assertFalse(sequenceMatch2.parse(stream(42, 21)));
-    }
-
-    @Test
-    public void sequenceMatch3() {
-        Assert.assertTrue(sequenceMatch3.parse(stream(42, 42, 42)));
-    }
-
-    @Test
-    public void sequenceNoMatch3() {
-        Assert.assertFalse(sequenceMatchTransitive3.parse(stream(42, 42, 21)));
-        Assert.assertFalse(sequenceMatchTransitive3.parse(stream(42, 21, 42)));
-        Assert.assertFalse(sequenceMatchTransitive3.parse(stream(21, 42, 42)));
-        Assert.assertFalse(sequenceMatchTransitive3.parse(stream(21, 42, 63)));
-    }
-
-    @Test
-    public void sequenceMatchTransitive3() {
-        Assert.assertTrue(sequenceMatchTransitive3.parse(stream(42, 42, 42)));
-    }
-
-    @Test
-    public void sequenceNoMatchTransitive3() {
-        Assert.assertFalse(sequenceMatchTransitive3.parse(stream(42, 42, 21)));
-        Assert.assertFalse(sequenceMatchTransitive3.parse(stream(42, 21, 42)));
-        Assert.assertFalse(sequenceMatchTransitive3.parse(stream(21, 42, 42)));
-        Assert.assertFalse(sequenceMatchTransitive3.parse(stream(21, 42, 63)));
-    }
 
 }
