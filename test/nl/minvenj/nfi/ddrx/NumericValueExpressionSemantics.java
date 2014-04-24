@@ -28,21 +28,74 @@ import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.Shorthand.sub;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.data.Environment.stream;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
 import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 import nl.minvenj.nfi.ddrx.token.Token;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.runners.Parameterized.Parameters;
 
-@RunWith(JUnit4.class)
-public class NumericValueExpressionSemantics {
+public class NumericValueExpressionSemantics extends ParameterizedParse {
+    
+    @Parameters(name="{0}")
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] {
+            { "[signed] 1 + 2 == 3 (true)", addSigned, stream(1, 2, 3), true },
+            { "[signed] -10 + 3 == -7 (true)", addSigned, stream(-10, 3, -7), true },
+            { "[signed] -10 + -8 == -18 (true)", addSigned, stream(-10, -8, -18), true },
+            { "[signed] 10 + -7 == 3 (true)", addSigned, stream(10, -7, 3), true },
+            { "[signed] 10 + -25 == -15 (true)", addSigned, stream(10, -25, -15), true },
+            { "[signed] 1 + 2 == 4 (false)", addSigned, stream(1, 2, 4), false },
+            { "[unsigned] 1 + 2 == 3 (true)", addUnsigned, stream(1, 2, 3), true },
+            { "[unsigned] -10 + 3 == -7 (true)", addUnsigned, stream(-10, 3, -7), true },
+            { "[unsigned] 1 + 2 == 4 (false)", addUnsigned, stream(1, 2, 4), false },
+            { "[unsigned] 130 + 50 == 180 (true)", addUnsigned, stream(130, 50, 180), true },
+            { "[unsigned] 130 + 50 == 180 (true)", addUnsigned, stream(130, 50, 180), true },
+            { "[signed] 8 / 2 == 4 (true)", div, stream(8, 2, 4), true },
+            { "[signed] 1 / 2 == 0 (true)", div, stream(1, 2, 0), true },
+            { "[signed] 7 / 8 == 0 (true)", div, stream(7, 8, 0), true },
+            { "[signed] 3 / 2 == 1 (true)", div, stream(3, 2, 1), true },
+            { "[signed] 1 / 1 == 1 (true)", div, stream(1, 1, 1), true },
+            { "[signed] 4 / 2 == 1 (false)", div, stream(4, 2, 1), false },
+            { "[signed] 2 * 2 == 4 (true)", mul, stream(2, 2, 4), true },
+            { "[signed] 0 * 42 == 0 (true)", mul, stream(0, 42, 0), true },
+            { "[signed] 42 * 0 == 0 (true)", mul, stream(42, 0, 0), true },
+            { "[signed] 1 * 1 == 1 (true)", mul, stream(1, 1, 1), true },
+            { "[signed] 0 * 0 == 0 (true)", mul, stream(0, 0, 0), true },
+            { "[signed] 2 * 3 == 8 (false)", mul, stream(2, 3, 8), false },
+            { "[signed] 8 - 2 == 6 (true)", sub, stream(8, 2, 6), true },
+            { "[signed] 3 - 10 == -7 (true)", sub, stream(3, 10, -7), true },
+            { "[signed] 0 - 42 == -42 (true)", sub, stream(0, 42, -42), true },
+            { "[signed] -42 - 10 == -52 (true)", sub, stream(-42, 10, -52), true },
+            { "[signed] -42 - -10 == -32 (true)", sub, stream(-42, -10, -32), true },
+            { "[signed] -42 - 42 == 0 (false)", sub, stream(-42, 42, 0), false },
+            { "[signed] -(1) == -1 (true)", neg, stream(1, -1), true },
+            { "[signed] -(2) == -2 (true)", neg, stream(2, -2), true },
+            { "[signed] -(3) == -3 (true)", neg, stream(3, -3), true },
+            { "[signed] -(0) == 0 (true)", neg, stream(0, 0), true },
+            { "[signed] -(4) == 4 (false)", neg, stream(4, 4), false },
+            { "[signed] -(-5) == -5 (false)", neg, stream(-5, -5), false }
+        });
+    }
+    
+    public NumericValueExpressionSemantics(String desc, Token token, Environment env, boolean result) {
+        super(token, env, result);
+    }
 
-    private Token singleToken(String firstName, String secondName, ValueExpression ve, Encoding encoding) {
+    private static Token addSigned = binaryValueExpressionToken(add(ref("a"), ref("b")), new Encoding(true));
+    private static Token addUnsigned = binaryValueExpressionToken(add(ref("a"), ref("b")), new Encoding(false));
+    private static Token div = binaryValueExpressionToken(div(ref("a"), ref("b")), new Encoding(true));
+    private static Token mul = binaryValueExpressionToken(mul(ref("a"), ref("b")), new Encoding(true));
+    private static Token sub = binaryValueExpressionToken(sub(ref("a"), ref("b")), new Encoding(true));
+    private static Token neg = unaryValueExpressionToken(neg(ref("a")), new Encoding(true));
+
+    private static Token singleToken(String firstName, String secondName, ValueExpression ve, Encoding encoding) {
         return seq(any(firstName, encoding),
                    def(secondName,
                           con(1),
@@ -50,73 +103,13 @@ public class NumericValueExpressionSemantics {
                           encoding));
     }
 
-    private Token binaryValueExpressionToken(BinaryValueExpression bve, Encoding encoding) {
+    private static Token binaryValueExpressionToken(BinaryValueExpression bve, Encoding encoding) {
         return seq(any("a", encoding),
                    singleToken("b", "c", bve, encoding));
     }
 
-    private Token unaryValueExpressionToken(UnaryValueExpression uve, Encoding encoding) {
+    private static Token unaryValueExpressionToken(UnaryValueExpression uve, Encoding encoding) {
         return singleToken("a", "b", uve, encoding);
-    }
-
-    @Test
-    public void Add() {
-        Token addSigned = binaryValueExpressionToken(add(ref("a"), ref("b")), new Encoding(true));
-        Assert.assertTrue(addSigned.parse(stream(1, 2, 3)));
-        Assert.assertTrue(addSigned.parse(stream(-10, 3, -7)));
-        Assert.assertTrue(addSigned.parse(stream(-10, -8, -18)));
-        Assert.assertTrue(addSigned.parse(stream(10, -7, 3)));
-        Assert.assertTrue(addSigned.parse(stream(10, -25, -15)));
-        Assert.assertFalse(addSigned.parse(stream(1, 2, 4)));
-        Token addUnsigned = binaryValueExpressionToken(add(ref("a"), ref("b")), new Encoding(false));
-        Assert.assertTrue(addUnsigned.parse(stream(1, 2, 3)));
-        Assert.assertTrue(addUnsigned.parse(stream(-10, 3, -7)));
-        Assert.assertFalse(addUnsigned.parse(stream(1, 2, 4)));
-        Assert.assertTrue(addUnsigned.parse(stream(130, 50, 180)));
-    }
-
-    @Test
-    public void Div() {
-        Token div = binaryValueExpressionToken(div(ref("a"), ref("b")), new Encoding(true));
-        Assert.assertTrue(div.parse(stream(8, 2, 4)));
-        Assert.assertTrue(div.parse(stream(1, 2, 0)));
-        Assert.assertTrue(div.parse(stream(7, 8, 0)));
-        Assert.assertTrue(div.parse(stream(3, 2, 1)));
-        Assert.assertTrue(div.parse(stream(1, 1, 1)));
-        Assert.assertFalse(div.parse(stream(4, 2, 1)));
-    }
-
-    @Test
-    public void Mul() {
-        Token mul = binaryValueExpressionToken(mul(ref("a"), ref("b")), new Encoding(true));
-        Assert.assertTrue(mul.parse(stream(2, 2, 4)));
-        Assert.assertTrue(mul.parse(stream(0, 42, 0)));
-        Assert.assertTrue(mul.parse(stream(42, 0, 0)));
-        Assert.assertTrue(mul.parse(stream(1, 1, 1)));
-        Assert.assertTrue(mul.parse(stream(0, 0, 0)));
-        Assert.assertFalse(mul.parse(stream(2, 3, 8)));
-    }
-
-    @Test
-    public void Sub() {
-        Token sub = binaryValueExpressionToken(sub(ref("a"), ref("b")), new Encoding(true));
-        Assert.assertTrue(sub.parse(stream(8, 2, 6)));
-        Assert.assertTrue(sub.parse(stream(3, 10, -7)));
-        Assert.assertTrue(sub.parse(stream(0, 42, -42)));
-        Assert.assertTrue(sub.parse(stream(-42, 10, -52)));
-        Assert.assertTrue(sub.parse(stream(-42, -10, -32)));
-        Assert.assertFalse(sub.parse(stream(-42, 42, 0)));
-    }
-
-    @Test
-    public void Neg() {
-        Token neg = unaryValueExpressionToken(neg(ref("a")), new Encoding(true));
-        Assert.assertTrue(neg.parse(stream(1, -1)));
-        Assert.assertTrue(neg.parse(stream(2, -2)));
-        Assert.assertTrue(neg.parse(stream(-3, 3)));
-        Assert.assertTrue(neg.parse(stream(0, 0)));
-        Assert.assertFalse(neg.parse(stream(4, 4)));
-        Assert.assertFalse(neg.parse(stream(-5, -5)));
     }
 
 }
