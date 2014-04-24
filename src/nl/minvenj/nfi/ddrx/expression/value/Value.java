@@ -46,10 +46,6 @@ public class Value {
         return _data;
     }
 
-    public Encoding getEncoding() {
-        return _encoding;
-    }
-
     public BigInteger asNumeric() {
         return _encoding.isSigned() ? new BigInteger(_data) : new BigInteger(1, _data);
     }

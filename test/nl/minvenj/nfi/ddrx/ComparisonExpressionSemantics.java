@@ -20,8 +20,8 @@ import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
 import static nl.minvenj.nfi.ddrx.Shorthand.expTrue;
-import static nl.minvenj.nfi.ddrx.Shorthand.gt;
-import static nl.minvenj.nfi.ddrx.Shorthand.lt;
+import static nl.minvenj.nfi.ddrx.Shorthand.gtNum;
+import static nl.minvenj.nfi.ddrx.Shorthand.ltNum;
 import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
@@ -61,7 +61,7 @@ public class ComparisonExpressionSemantics {
 
     @Test
     public void Gt() {
-        Token eq = numCom(1, gt(ref("a")));
+        Token eq = numCom(1, gtNum(ref("a")));
         Assert.assertFalse(eq.parse(stream(1, 1)));
         Assert.assertTrue(eq.parse(stream(1, 2)));
         Assert.assertFalse(eq.parse(stream(2, 1)));
@@ -69,7 +69,7 @@ public class ComparisonExpressionSemantics {
 
     @Test
     public void Lt() {
-        Token eq = numCom(1, lt(ref("a")));
+        Token eq = numCom(1, ltNum(ref("a")));
         Assert.assertFalse(eq.parse(stream(1, 1)));
         Assert.assertFalse(eq.parse(stream(1, 2)));
         Assert.assertTrue(eq.parse(stream(2, 1)));

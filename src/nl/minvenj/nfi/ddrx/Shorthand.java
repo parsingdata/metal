@@ -23,6 +23,7 @@ import nl.minvenj.nfi.ddrx.expression.True;
 import nl.minvenj.nfi.ddrx.expression.comparison.ComparisonExpression;
 import nl.minvenj.nfi.ddrx.expression.comparison.Eq;
 import nl.minvenj.nfi.ddrx.expression.comparison.EqNum;
+import nl.minvenj.nfi.ddrx.expression.comparison.EqStr;
 import nl.minvenj.nfi.ddrx.expression.comparison.GtNum;
 import nl.minvenj.nfi.ddrx.expression.comparison.LtNum;
 import nl.minvenj.nfi.ddrx.expression.logical.And;
@@ -76,8 +77,9 @@ public class Shorthand {
     public static Expression expTrue() { return new True(); }
 
     public static ComparisonExpression eq(ValueExpression p) { return new Eq(p); }
+    public static ComparisonExpression eqStr(ValueExpression p) { return new EqStr(p); }
     public static ComparisonExpression eqNum(ValueExpression p) { return new EqNum(p); }
-    public static ComparisonExpression gt(ValueExpression p) { return new GtNum(p); }
-    public static ComparisonExpression lt(ValueExpression p) { return new LtNum(p); }
+    public static ComparisonExpression gtNum(ValueExpression p) { return new GtNum(p); }
+    public static ComparisonExpression ltNum(ValueExpression p) { return new LtNum(p); }
 
 }
