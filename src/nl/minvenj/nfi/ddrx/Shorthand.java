@@ -16,7 +16,6 @@
 
 package nl.minvenj.nfi.ddrx;
 
-import static nl.minvenj.nfi.ddrx.data.Environment.toByteArray;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.expression.True;
@@ -42,7 +41,6 @@ import nl.minvenj.nfi.ddrx.expression.value.Neg;
 import nl.minvenj.nfi.ddrx.expression.value.Ref;
 import nl.minvenj.nfi.ddrx.expression.value.Sub;
 import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
-import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 import nl.minvenj.nfi.ddrx.token.Cho;
 import nl.minvenj.nfi.ddrx.token.Rep;
@@ -63,7 +61,6 @@ public class Shorthand {
     public static BinaryValueExpression mul(ValueExpression l, ValueExpression r) { return new Mul(l, r); }
     public static BinaryValueExpression sub(ValueExpression l, ValueExpression r) { return new Sub(l, r); }
     public static UnaryValueExpression neg(ValueExpression v) { return new Neg(v); }
-    public static ValueExpression con(int... bytes) { return new Con(new Value(toByteArray(bytes), new Encoding())); }
     public static ValueExpression con(long v) { return con(v, new Encoding()); }
     public static ValueExpression con(long v, Encoding encoding) { return new Con(ConstantFactory.createFromNumeric(v, encoding)); }
     public static ValueExpression con(String s) { return con(s, new Encoding()); }

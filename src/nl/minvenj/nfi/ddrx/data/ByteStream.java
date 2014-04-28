@@ -18,72 +18,66 @@ package nl.minvenj.nfi.ddrx.data;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Stack;
 
 public class ByteStream extends InputStream {
-    
+
     private final byte[] _data;
     private final Stack<Integer> _marked;
     private int _offset;
-    
-    public ByteStream(String path) throws IOException {
-        this(Files.readAllBytes(Paths.get(path)));
-    }
-    
+
     public ByteStream(byte[] data) {
         _data = data;
         _marked = new Stack<Integer>();
         _offset = 0;
     }
-    
+
     @Override
     public boolean markSupported() {
         return true;
     }
-    
+
     @Override
     public synchronized void mark(int readlimit) {
         _marked.add(_offset);
     }
-    
+
     public void mark() {
         mark(0);
     }
-    
+
     @Override
     public void reset() {
         _offset = pop();
     }
-    
+
     @Override
     public int available() throws IOException {
         return atEnd() ? 0 : _data.length - _offset;
     }
-    
+
     public void clear() {
         pop();
     }
-    
+
     private int pop() {
         if (_marked.isEmpty()) {
             throw new RuntimeException("Stream was not marked.");
         }
         return _marked.pop();
     }
-    
+
     public int read() {
         return atEnd() ? -1 : _data[_offset++] & 0xFF;
     }
-    
+
     public boolean atEnd() {
         return _offset >= _data.length;
     }
-    
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + _data.length + ")";
     }
-    
+
 }
