@@ -42,48 +42,48 @@ import nl.minvenj.nfi.ddrx.token.Token;
 import org.junit.runners.Parameterized.Parameters;
 
 public class NumericValueExpressionSemantics extends ParameterizedParse {
-    
-    @Parameters(name="{0}")
+
+    @Parameters(name="{0} ({3})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-            { "[signed] 1 + 2 == 3 (true)", addSigned, stream(1, 2, 3), true },
-            { "[signed] -10 + 3 == -7 (true)", addSigned, stream(-10, 3, -7), true },
-            { "[signed] -10 + -8 == -18 (true)", addSigned, stream(-10, -8, -18), true },
-            { "[signed] 10 + -7 == 3 (true)", addSigned, stream(10, -7, 3), true },
-            { "[signed] 10 + -25 == -15 (true)", addSigned, stream(10, -25, -15), true },
-            { "[signed] 1 + 2 == 4 (false)", addSigned, stream(1, 2, 4), false },
-            { "[unsigned] 1 + 2 == 3 (true)", addUnsigned, stream(1, 2, 3), true },
-            { "[unsigned] -10 + 3 == -7 (true)", addUnsigned, stream(-10, 3, -7), true },
-            { "[unsigned] 1 + 2 == 4 (false)", addUnsigned, stream(1, 2, 4), false },
-            { "[unsigned] 130 + 50 == 180 (true)", addUnsigned, stream(130, 50, 180), true },
-            { "[unsigned] 130 + 50 == 180 (true)", addUnsigned, stream(130, 50, 180), true },
-            { "[signed] 8 / 2 == 4 (true)", div, stream(8, 2, 4), true },
-            { "[signed] 1 / 2 == 0 (true)", div, stream(1, 2, 0), true },
-            { "[signed] 7 / 8 == 0 (true)", div, stream(7, 8, 0), true },
-            { "[signed] 3 / 2 == 1 (true)", div, stream(3, 2, 1), true },
-            { "[signed] 1 / 1 == 1 (true)", div, stream(1, 1, 1), true },
-            { "[signed] 4 / 2 == 1 (false)", div, stream(4, 2, 1), false },
-            { "[signed] 2 * 2 == 4 (true)", mul, stream(2, 2, 4), true },
-            { "[signed] 0 * 42 == 0 (true)", mul, stream(0, 42, 0), true },
-            { "[signed] 42 * 0 == 0 (true)", mul, stream(42, 0, 0), true },
-            { "[signed] 1 * 1 == 1 (true)", mul, stream(1, 1, 1), true },
-            { "[signed] 0 * 0 == 0 (true)", mul, stream(0, 0, 0), true },
-            { "[signed] 2 * 3 == 8 (false)", mul, stream(2, 3, 8), false },
-            { "[signed] 8 - 2 == 6 (true)", sub, stream(8, 2, 6), true },
-            { "[signed] 3 - 10 == -7 (true)", sub, stream(3, 10, -7), true },
-            { "[signed] 0 - 42 == -42 (true)", sub, stream(0, 42, -42), true },
-            { "[signed] -42 - 10 == -52 (true)", sub, stream(-42, 10, -52), true },
-            { "[signed] -42 - -10 == -32 (true)", sub, stream(-42, -10, -32), true },
-            { "[signed] -42 - 42 == 0 (false)", sub, stream(-42, 42, 0), false },
-            { "[signed] -(1) == -1 (true)", neg, stream(1, -1), true },
-            { "[signed] -(2) == -2 (true)", neg, stream(2, -2), true },
-            { "[signed] -(3) == -3 (true)", neg, stream(3, -3), true },
-            { "[signed] -(0) == 0 (true)", neg, stream(0, 0), true },
-            { "[signed] -(4) == 4 (false)", neg, stream(4, 4), false },
-            { "[signed] -(-5) == -5 (false)", neg, stream(-5, -5), false }
+            { "[signed] 1 + 2 == 3", addSigned, stream(1, 2, 3), true },
+            { "[signed] -10 + 3 == -7", addSigned, stream(-10, 3, -7), true },
+            { "[signed] -10 + -8 == -18", addSigned, stream(-10, -8, -18), true },
+            { "[signed] 10 + -7 == 3", addSigned, stream(10, -7, 3), true },
+            { "[signed] 10 + -25 == -15", addSigned, stream(10, -25, -15), true },
+            { "[signed] 1 + 2 == 4", addSigned, stream(1, 2, 4), false },
+            { "[unsigned] 1 + 2 == 3", addUnsigned, stream(1, 2, 3), true },
+            { "[unsigned] -10 + 3 == -7", addUnsigned, stream(-10, 3, -7), true },
+            { "[unsigned] 1 + 2 == 4", addUnsigned, stream(1, 2, 4), false },
+            { "[unsigned] 130 + 50 == 180", addUnsigned, stream(130, 50, 180), true },
+            { "[unsigned] 130 + 50 == 180", addUnsigned, stream(130, 50, 180), true },
+            { "[signed] 8 / 2 == 4", div, stream(8, 2, 4), true },
+            { "[signed] 1 / 2 == 0", div, stream(1, 2, 0), true },
+            { "[signed] 7 / 8 == 0", div, stream(7, 8, 0), true },
+            { "[signed] 3 / 2 == 1", div, stream(3, 2, 1), true },
+            { "[signed] 1 / 1 == 1", div, stream(1, 1, 1), true },
+            { "[signed] 4 / 2 == 1", div, stream(4, 2, 1), false },
+            { "[signed] 2 * 2 == 4", mul, stream(2, 2, 4), true },
+            { "[signed] 0 * 42 == 0", mul, stream(0, 42, 0), true },
+            { "[signed] 42 * 0 == 0", mul, stream(42, 0, 0), true },
+            { "[signed] 1 * 1 == 1", mul, stream(1, 1, 1), true },
+            { "[signed] 0 * 0 == 0", mul, stream(0, 0, 0), true },
+            { "[signed] 2 * 3 == 8", mul, stream(2, 3, 8), false },
+            { "[signed] 8 - 2 == 6", sub, stream(8, 2, 6), true },
+            { "[signed] 3 - 10 == -7", sub, stream(3, 10, -7), true },
+            { "[signed] 0 - 42 == -42", sub, stream(0, 42, -42), true },
+            { "[signed] -42 - 10 == -52", sub, stream(-42, 10, -52), true },
+            { "[signed] -42 - -10 == -32", sub, stream(-42, -10, -32), true },
+            { "[signed] -42 - 42 == 0", sub, stream(-42, 42, 0), false },
+            { "[signed] -(1) == -1", neg, stream(1, -1), true },
+            { "[signed] -(2) == -2", neg, stream(2, -2), true },
+            { "[signed] -(3) == -3", neg, stream(3, -3), true },
+            { "[signed] -(0) == 0", neg, stream(0, 0), true },
+            { "[signed] -(4) == 4", neg, stream(4, 4), false },
+            { "[signed] -(-5) == -5", neg, stream(-5, -5), false }
         });
     }
-    
+
     public NumericValueExpressionSemantics(String desc, Token token, Environment env, boolean result) {
         super(token, env, result);
     }

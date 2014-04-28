@@ -30,22 +30,22 @@ import nl.minvenj.nfi.ddrx.token.Token;
 import org.junit.runners.Parameterized.Parameters;
 
 public class NameBind extends ParameterizedParse {
-    
-    @Parameters(name="{0}")
+
+    @Parameters(name="{0} ({3})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-            { "[0x2a, 0x2a] b == a (true)", sequenceMatch2, stream(42, 42), true },
-            { "[0x2a, 0x15] b == a (false)", sequenceMatch2, stream(42, 21), false },
-            { "[0x2a, 0x2a, 0x2a] b == a, c == a (true)", sequenceMatch3, stream(42, 42, 42), true },
-            { "[0x2a, 0x2a, 0x15] b == a, c == a (false)", sequenceMatch3, stream(42, 42, 21), false },
-            { "[0x2a, 0x15, 0x2a] b == a, c == a (false)", sequenceMatch3, stream(42, 21, 42), false },
-            { "[0x15, 0x2a, 0x2a] b == a, c == a (false)", sequenceMatch3, stream(21, 42, 42), false },
-            { "[0x15, 0x2a, 0x3f] b == a, c == a (false)", sequenceMatch3, stream(21, 42, 63), false },
-            { "[0x2a, 0x2a, 0x2a] b == a, c == b (true)", sequenceMatchTransitive3, stream(42, 42, 42), true },
-            { "[0x2a, 0x2a, 0x15] b == a, c == b (false)", sequenceMatchTransitive3, stream(42, 42, 21), false },
-            { "[0x2a, 0x15, 0x2a] b == a, c == b (false)", sequenceMatchTransitive3, stream(42, 21, 42), false },
-            { "[0x15, 0x2a, 0x2a] b == a, c == b (false)", sequenceMatchTransitive3, stream(21, 42, 42), false },
-            { "[0x15, 0x2a, 0x63] b == a, c == b (false)", sequenceMatchTransitive3, stream(21, 42, 63), false }
+            { "[0x2a, 0x2a] b == a", sequenceMatch2, stream(42, 42), true },
+            { "[0x2a, 0x15] b == a", sequenceMatch2, stream(42, 21), false },
+            { "[0x2a, 0x2a, 0x2a] b == a, c == a", sequenceMatch3, stream(42, 42, 42), true },
+            { "[0x2a, 0x2a, 0x15] b == a, c == a", sequenceMatch3, stream(42, 42, 21), false },
+            { "[0x2a, 0x15, 0x2a] b == a, c == a", sequenceMatch3, stream(42, 21, 42), false },
+            { "[0x15, 0x2a, 0x2a] b == a, c == a", sequenceMatch3, stream(21, 42, 42), false },
+            { "[0x15, 0x2a, 0x3f] b == a, c == a", sequenceMatch3, stream(21, 42, 63), false },
+            { "[0x2a, 0x2a, 0x2a] b == a, c == b", sequenceMatchTransitive3, stream(42, 42, 42), true },
+            { "[0x2a, 0x2a, 0x15] b == a, c == b", sequenceMatchTransitive3, stream(42, 42, 21), false },
+            { "[0x2a, 0x15, 0x2a] b == a, c == b", sequenceMatchTransitive3, stream(42, 21, 42), false },
+            { "[0x15, 0x2a, 0x2a] b == a, c == b", sequenceMatchTransitive3, stream(21, 42, 42), false },
+            { "[0x15, 0x2a, 0x63] b == a, c == b", sequenceMatchTransitive3, stream(21, 42, 63), false }
         });
     }
 

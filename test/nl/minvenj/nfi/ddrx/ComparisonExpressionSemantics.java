@@ -40,21 +40,21 @@ import org.junit.runners.Parameterized.Parameters;
 
 public class ComparisonExpressionSemantics extends ParameterizedParse {
 
-    @Parameters(name="{0}")
+    @Parameters(name="{0} ({3})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-            { "1 == 1 (true)", numCom(1, eqNum(ref("a"))), stream(1, 1), true },
-            { "2 == 1 (false)", numCom(1, eqNum(ref("a"))), stream(1, 2), false },
-            { "1 > 1 (false)", numCom(1, gtNum(ref("a"))), stream(1, 1), false},
-            { "2 > 1 (true)", numCom(1, gtNum(ref("a"))), stream(1, 2), true},
-            { "1 > 2 (false)", numCom(1, gtNum(ref("a"))), stream(2, 1), false},
-            { "1 < 1 (false)", numCom(1, ltNum(ref("a"))), stream(1, 1), false},
-            { "2 < 1 (false)", numCom(1, ltNum(ref("a"))), stream(1, 2), false},
-            { "1 < 2 (true)", numCom(1, ltNum(ref("a"))), stream(2, 1), true},
-            { "\"abc\" == \"abc\" (true)", strCom(3, eqStr(ref("a"))), stream("abcabc"), true},
-            { "\"abd\" == \"abc\" (false)", strCom(3, eqStr(ref("a"))), stream("abcabd"), false},
-            { "0x01 == 0x01 (true)", valCom(1, eq(ref("a"))), stream(1, 1), true},
-            { "0x02 == 0x01 (false)", valCom(1, eq(ref("a"))), stream(1, 2), false}
+            { "1 == 1", numCom(1, eqNum(ref("a"))), stream(1, 1), true },
+            { "2 == 1", numCom(1, eqNum(ref("a"))), stream(1, 2), false },
+            { "1 > 1", numCom(1, gtNum(ref("a"))), stream(1, 1), false},
+            { "2 > 1", numCom(1, gtNum(ref("a"))), stream(1, 2), true},
+            { "1 > 2", numCom(1, gtNum(ref("a"))), stream(2, 1), false},
+            { "1 < 1", numCom(1, ltNum(ref("a"))), stream(1, 1), false},
+            { "2 < 1", numCom(1, ltNum(ref("a"))), stream(1, 2), false},
+            { "1 < 2", numCom(1, ltNum(ref("a"))), stream(2, 1), true},
+            { "\"abc\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabc"), true},
+            { "\"abd\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabd"), false},
+            { "0x01 == 0x01", valCom(1, eq(ref("a"))), stream(1, 1), true},
+            { "0x02 == 0x01", valCom(1, eq(ref("a"))), stream(1, 2), false}
         });
     }
 
