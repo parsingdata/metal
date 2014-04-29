@@ -17,8 +17,6 @@
 package nl.minvenj.nfi.ddrx.data;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -34,10 +32,10 @@ public class Environment {
     private final Encoding _encoding;
 
     public Environment(ByteStream input) {
-        this(input, new Encoding());
+        this(new Encoding(), input);
     }
 
-    public Environment(ByteStream input, Encoding encoding) {
+    public Environment(Encoding encoding, ByteStream input) {
         _vals = new HashMap<String, Stack<Value>>();
         _order = new Stack<String>();
         _marked = new Stack<Integer>();
@@ -99,26 +97,6 @@ public class Environment {
 
     public int read(byte[] data) throws IOException {
         return _input.read(data);
-    }
-
-    public static Environment stream(int... bytes) {
-        return new Environment(new ByteStream(toByteArray(bytes)));
-    }
-
-    public static Environment stream(Path path) throws IOException {
-        return new Environment(new ByteStream(Files.readAllBytes(path)));
-    }
-
-    public static Environment stream(String value) {
-        return new Environment(new ByteStream(value.getBytes()));
-    }
-
-    public static byte[] toByteArray(int... bytes) {
-        final byte[] out = new byte[bytes.length];
-        for (int i = 0; i < bytes.length; i++) {
-            out[i] = (byte) bytes[i];
-        }
-        return out;
     }
 
 }

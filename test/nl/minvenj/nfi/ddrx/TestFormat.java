@@ -16,7 +16,7 @@
 
 package nl.minvenj.nfi.ddrx;
 
-import static nl.minvenj.nfi.ddrx.data.Environment.stream;
+import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -31,12 +31,12 @@ import nl.minvenj.nfi.ddrx.format.PNG;
 
 @RunWith(JUnit4.class)
 public class TestFormat {
-    
+
     private static final Path FILE = Paths.get("testdata/test.png");
-    
+
     @Test
     public void parsePNG() throws IOException {
         Assert.assertTrue(PNG.FORMAT.parse(stream(FILE)));
     }
-    
+
 }

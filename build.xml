@@ -57,7 +57,7 @@
                     <pathelement location="${test.dir}"/>
                 </classpath>
                 <formatter type="xml" />
-                <batchtest todir="${test.report.dir}">
+                <batchtest todir="${test.report.dir}" skipNonTests="true">
                     <fileset dir="test">
                         <include name="**/*.java"/>
                     </fileset>

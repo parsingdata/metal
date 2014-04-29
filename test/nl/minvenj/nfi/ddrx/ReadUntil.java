@@ -20,7 +20,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.eq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.notEq;
-import static nl.minvenj.nfi.ddrx.data.Environment.stream;
+import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;

@@ -23,7 +23,7 @@ import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.eq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.eqRef;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.notEqRef;
-import static nl.minvenj.nfi.ddrx.data.Environment.stream;
+import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;

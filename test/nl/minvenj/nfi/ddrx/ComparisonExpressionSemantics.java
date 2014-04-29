@@ -27,7 +27,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.ltNum;
 import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
-import static nl.minvenj.nfi.ddrx.data.Environment.stream;
+import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,6 +35,7 @@ import java.util.Collection;
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.expression.comparison.ComparisonExpression;
 import nl.minvenj.nfi.ddrx.token.Token;
+import nl.minvenj.nfi.ddrx.util.ParameterizedParse;
 
 import org.junit.runners.Parameterized.Parameters;
 

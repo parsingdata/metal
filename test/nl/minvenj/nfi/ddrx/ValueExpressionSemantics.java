@@ -23,7 +23,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.eq;
 import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
-import static nl.minvenj.nfi.ddrx.data.Environment.stream;
+import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
@@ -33,7 +33,7 @@ import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class ValueExpressionSemantics {
-    
+
     private Token cat = seq(any("a"),
                             seq(any("b"),
                                 def("c", con(2), eq(cat(ref("a"), ref("b"))))));
@@ -42,7 +42,7 @@ public class ValueExpressionSemantics {
     public void Cat() {
         Assert.assertTrue(cat.parse(stream(1, 2, 1, 2)));
     }
-    
+
     @Test
     public void CatNoMatch() {
         Assert.assertFalse(cat.parse(stream(1, 2, 12, 12)));
