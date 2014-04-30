@@ -27,7 +27,7 @@ public class GtNum extends ComparisonExpression {
 
     @Override
     public boolean eval(Environment env) {
-        return _predicate.eval(env).asNumeric().compareTo(env.current().asNumeric()) == -1;
+        return _predicate.eval(env).asNumeric().compareTo(env.current().asNumeric()) < 0;
     }
 
 }
