@@ -31,10 +31,6 @@ public class Environment {
     private final ByteStream _input;
     private final Encoding _encoding;
 
-    public Environment(ByteStream input) {
-        this(new Encoding(), input);
-    }
-
     public Environment(Encoding encoding, ByteStream input) {
         _vals = new HashMap<String, Stack<Value>>();
         _order = new Stack<String>();
