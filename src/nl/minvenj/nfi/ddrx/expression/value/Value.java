@@ -18,6 +18,8 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 import java.math.BigInteger;
 
+import javax.xml.bind.DatatypeConverter;
+
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class Value {
@@ -60,12 +62,7 @@ public class Value {
 
     @Override
     public String toString() {
-        String val = "";
-        for (byte b : _data) {
-            if (val.length() > 0) { val += " "; }
-            val += String.format("%02x", b);
-        }
-        return getClass().getSimpleName() + "(" + val + ")";
+        return getClass().getSimpleName() + "(" + DatatypeConverter.printHexBinary(_data) + ")";
     }
 
 }
