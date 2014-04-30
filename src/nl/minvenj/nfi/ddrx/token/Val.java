@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.token;
 
+import java.io.IOException;
+
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.Expression;
@@ -28,10 +30,6 @@ public class Val implements Token {
     private final ValueExpression _size;
     private final Expression _pred;
     private final Encoding _encoding;
-
-    public Val(String name, ValueExpression size, Expression pred) {
-        this(name, size, pred, null);
-    }
 
     public Val(String name, ValueExpression size, Expression pred, Encoding encoding) {
         _name = name;
@@ -49,19 +47,17 @@ public class Val implements Token {
                 env.reset();
                 return false;
             }
-            final Encoding encoding = _encoding == null ? env.getEncoding() : _encoding;
-            env.put(new Value(_name, data, encoding));
-        } catch (Throwable t) {
-            t.printStackTrace();
-            throw new RuntimeException(t);
+            env.put(new Value(_name, data, _encoding));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        if (_pred.eval(env)) {
+        final boolean ret = _pred.eval(env);
+        if (ret) {
             env.clear();
-            return true;
         } else {
             env.reset();
-            return false;
         }
+        return ret;
     }
 
     @Override

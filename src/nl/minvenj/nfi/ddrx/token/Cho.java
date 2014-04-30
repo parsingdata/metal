@@ -30,21 +30,14 @@ public class Cho implements Token {
 
     @Override
     public boolean parse(Environment env) {
-    	env.mark();
-    	if (_l.parse(env)) {
-    		env.clear();
-    		return true;
-    	} else {
-    		env.reset();
-    		env.mark();
-    		if (_r.parse(env)) {
-    			env.clear();
-    			return true;
-    		} else {
-    			env.reset();
-    			return false;
-    		}
-    	}
+        env.mark();
+        final boolean ret = _l.parse(env) || _r.parse(env);
+        if (ret) {
+            env.clear();
+        } else {
+            env.reset();
+        }
+        return ret;
     }
     
     @Override

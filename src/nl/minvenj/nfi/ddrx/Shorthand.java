@@ -50,7 +50,7 @@ import nl.minvenj.nfi.ddrx.token.Val;
 
 public class Shorthand {
 
-    public static Token def(String name, ValueExpression size, Expression pred) { return new Val(name, size, pred); }
+    public static Token def(String name, ValueExpression size, Expression pred) { return def(name, size, pred, new Encoding()); }
     public static Token def(String name, ValueExpression size, Expression pred, Encoding encoding) { return new Val(name, size, pred, encoding); }
     public static Token cho(Token l, Token r) { return new Cho(l, r); }
     public static Token rep(Token t) { return new Rep(t); }
