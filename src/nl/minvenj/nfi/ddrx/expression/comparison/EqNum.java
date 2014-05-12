@@ -16,18 +16,22 @@
 
 package nl.minvenj.nfi.ddrx.expression.comparison;
 
-import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
 public class EqNum extends ComparisonExpression {
+
+    public EqNum(ValueExpression current, ValueExpression predicate) {
+        super(current, predicate);
+    }
 
     public EqNum(ValueExpression predicate) {
         super(predicate);
     }
 
     @Override
-    public boolean eval(Environment env) {
-        return env.current().asNumeric().compareTo(_predicate.eval(env).asNumeric()) == 0;
+    public boolean compare(Value current, Value predicate) {
+        return current.asNumeric().compareTo(predicate.asNumeric()) == 0;
     }
 
 }

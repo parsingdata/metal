@@ -16,16 +16,31 @@
 
 package nl.minvenj.nfi.ddrx.expression.comparison;
 
+import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.expression.Expression;
+import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
 public abstract class ComparisonExpression implements Expression {
 
-    protected final ValueExpression _predicate;
+    private final ValueExpression _current;
+    private final ValueExpression _predicate;
 
-    public ComparisonExpression(ValueExpression predicate) {
+    public ComparisonExpression(ValueExpression current, ValueExpression predicate) {
+        _current = current;
         _predicate = predicate;
     }
+
+    public ComparisonExpression(ValueExpression predicate) {
+        this(null, predicate);
+    }
+
+    @Override
+    public boolean eval(Environment env) {
+        return compare(_current == null ? env.current() : _current.eval(env), _predicate.eval(env));
+    }
+
+    public abstract boolean compare(Value current, Value predicate);
 
     @Override
     public String toString() {

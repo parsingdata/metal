@@ -16,26 +16,26 @@
 
 package nl.minvenj.nfi.ddrx.expression.comparison;
 
-import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
 public class Eq extends ComparisonExpression {
+
+    public Eq(ValueExpression current, ValueExpression predicate) {
+        super(current, predicate);
+    }
 
     public Eq(ValueExpression predicate) {
         super(predicate);
     }
 
     @Override
-    public boolean eval(Environment env) {
-        final byte[] l = env.current().getValue();
-        final byte[] r = _predicate.eval(env).getValue();
-        if (l.length != r.length) {
-            return false;
-        }
+    public boolean compare(Value current, Value predicate) {
+        final byte[] l = current.getValue();
+        final byte[] r = predicate.getValue();
+        if (l.length != r.length) { return false; }
         for (int i = 0; i < l.length; i++) {
-            if (l[i] != r[i]) {
-                return false;
-            }
+            if (l[i] != r[i]) { return false; }
         }
         return true;
     }
