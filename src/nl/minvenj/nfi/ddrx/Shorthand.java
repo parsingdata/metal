@@ -46,12 +46,12 @@ import nl.minvenj.nfi.ddrx.token.Cho;
 import nl.minvenj.nfi.ddrx.token.Rep;
 import nl.minvenj.nfi.ddrx.token.Seq;
 import nl.minvenj.nfi.ddrx.token.Token;
-import nl.minvenj.nfi.ddrx.token.Val;
+import nl.minvenj.nfi.ddrx.token.Def;
 
 public class Shorthand {
 
     public static Token def(String name, ValueExpression size, Expression pred) { return def(name, size, pred, new Encoding()); }
-    public static Token def(String name, ValueExpression size, Expression pred, Encoding encoding) { return new Val(name, size, pred, encoding); }
+    public static Token def(String name, ValueExpression size, Expression pred, Encoding encoding) { return new Def(name, size, pred, encoding); }
     public static Token cho(Token l, Token r) { return new Cho(l, r); }
     public static Token rep(Token t) { return new Rep(t); }
     public static Token seq(Token l, Token r) { return new Seq(l, r); }

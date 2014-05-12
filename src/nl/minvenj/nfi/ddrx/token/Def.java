@@ -24,14 +24,14 @@ import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class Val implements Token {
+public class Def implements Token {
 
     private final String _name;
     private final ValueExpression _size;
     private final Expression _pred;
     private final Encoding _encoding;
 
-    public Val(String name, ValueExpression size, Expression pred, Encoding encoding) {
+    public Def(String name, ValueExpression size, Expression pred, Encoding encoding) {
         _name = name;
         _size = size;
         _pred = pred;
@@ -47,10 +47,10 @@ public class Val implements Token {
                 env.reset();
                 return false;
             }
-            env.put(new Value(_name, data, _encoding));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        env.put(new Value(_name, data, _encoding));
         final boolean ret = _pred.eval(env);
         if (ret) {
             env.clear();

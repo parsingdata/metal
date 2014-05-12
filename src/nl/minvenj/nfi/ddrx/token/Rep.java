@@ -19,27 +19,27 @@ package nl.minvenj.nfi.ddrx.token;
 import nl.minvenj.nfi.ddrx.data.Environment;
 
 public class Rep implements Token {
-    
-    private final Token _node;
-    
-    public Rep(Token node) {
-        _node = node;
+
+    private final Token _op;
+
+    public Rep(Token op) {
+        _op = op;
     }
-    
+
     @Override
     public boolean parse(Environment env) {
     	env.mark();
-    	while (_node.parse(env)) {
-    		env.clear();
-    		env.mark();
+    	if (!_op.parse(env)) {
+    	    env.reset();
+    	    return true;
     	}
-    	env.reset();
-    	return true;
+    	env.clear();
+    	return parse(env);
     }
-    
+
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _node + ")";
+        return getClass().getSimpleName() + "(" + _op + ")";
     }
-    
+
 }
