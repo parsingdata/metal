@@ -44,7 +44,7 @@ public abstract class ComparisonExpression implements Expression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _predicate + ")";
+        return getClass().getSimpleName() + "(" + (_current == null ? "" : _current + ",") + _predicate + ")";
     }
 
 }
