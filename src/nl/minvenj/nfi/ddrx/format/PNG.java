@@ -16,6 +16,7 @@
 
 package nl.minvenj.nfi.ddrx.format;
 
+import static nl.minvenj.nfi.ddrx.Callback.crc32;
 import static nl.minvenj.nfi.ddrx.Shorthand.cat;
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import static nl.minvenj.nfi.ddrx.Shorthand.def;
@@ -26,42 +27,22 @@ import static nl.minvenj.nfi.ddrx.Shorthand.not;
 import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
-
-import java.util.zip.CRC32;
-
-import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
-import nl.minvenj.nfi.ddrx.expression.value.Value;
-import nl.minvenj.nfi.ddrx.expression.value.ValueOperation;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 public class PNG {
 
     private static final Token HEADER = seq(def("highbit", con(1), eq(con(0x89))),
-                                            seq(def("PNG", con(3), eq(con("PNG"))),
-                                                def("controlchars", con(4), eq(con(0x0d0a1a0a)))));
+                                        seq(def("PNG", con(3), eq(con("PNG"))),
+                                            def("controlchars", con(4), eq(con(0x0d0a1a0a)))));
     private static final Token FOOTER = seq(def("footerlength", con(4), eqNum(con(0))),
-                                            seq(def("footertype", con(4), eq(con("IEND"))),
-                                                def("footercrc32", con(4), eq(con(0xae426082l)))));
+                                        seq(def("footertype", con(4), eq(con("IEND"))),
+                                            def("footercrc32", con(4), eq(con(0xae426082l)))));
     private static final Token STRUCT = seq(def("length", con(4), expTrue()),
-                                            seq(def("chunktype", con(4), not(eq(con("IEND")))),
-                                                seq(def("chunkdata", ref("length"), expTrue()),
-                                                    def("crc32", con(4), eq(new UnaryValueExpression(cat(ref("chunktype"), ref("chunkdata"))) {
-                                                        @Override
-                                                        public Value eval(final Environment env) {
-                                                            return _op.eval(env).operation(new ValueOperation() {
-                                                                @Override
-                                                                public Value execute(byte[] value) {
-                                                                    CRC32 crc = new CRC32();
-                                                                    crc.update(value);
-                                                                    final long crcValue = crc.getValue();
-                                                                    return new Value(new byte[] { (byte)((crcValue & 0xff000000) >> 24), (byte)((crcValue & 0xff0000) >> 16), (byte)((crcValue & 0xff00) >> 8), (byte)(crcValue & 0xff) }, env.getEncoding());
-                                                                }
-                                                            });
-                                                        }
-                                                    })))));
+                                        seq(def("chunktype", con(4), not(eq(con("IEND")))),
+                                        seq(def("chunkdata", ref("length")),
+                                            def("crc32", con(4), eq(crc32(cat(ref("chunktype"), ref("chunkdata"))))))));
     public static final Token FORMAT = seq(HEADER,
-                                           seq(rep(STRUCT),
-                                               FOOTER));
+                                       seq(rep(STRUCT),
+                                           FOOTER));
 
 }
