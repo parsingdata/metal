@@ -50,8 +50,9 @@ import nl.minvenj.nfi.ddrx.token.Def;
 
 public class Shorthand {
 
-    public static Token def(String name, ValueExpression size, Expression pred) { return def(name, size, pred, new Encoding()); }
     public static Token def(String name, ValueExpression size, Expression pred, Encoding encoding) { return new Def(name, size, pred, encoding); }
+    public static Token def(String name, ValueExpression size, Expression pred) { return def(name, size, pred, new Encoding()); }
+    public static Token def(String name, ValueExpression size) { return def(name, size, expTrue()); }
     public static Token cho(Token l, Token r) { return new Cho(l, r); }
     public static Token rep(Token t) { return new Rep(t); }
     public static Token seq(Token l, Token r) { return new Seq(l, r); }
@@ -74,9 +75,14 @@ public class Shorthand {
     public static Expression expTrue() { return new True(); }
 
     public static ComparisonExpression eq(ValueExpression p) { return new Eq(p); }
+    public static ComparisonExpression eq(ValueExpression c, ValueExpression p) { return new Eq(c, p); }
     public static ComparisonExpression eqStr(ValueExpression p) { return new EqStr(p); }
+    public static ComparisonExpression eqStr(ValueExpression c, ValueExpression p) { return new EqStr(c, p); }
     public static ComparisonExpression eqNum(ValueExpression p) { return new EqNum(p); }
+    public static ComparisonExpression eqNum(ValueExpression c, ValueExpression p) { return new EqNum(c, p); }
     public static ComparisonExpression gtNum(ValueExpression p) { return new GtNum(p); }
+    public static ComparisonExpression gtNum(ValueExpression c, ValueExpression p) { return new GtNum(c, p); }
     public static ComparisonExpression ltNum(ValueExpression p) { return new LtNum(p); }
+    public static ComparisonExpression ltNum(ValueExpression c, ValueExpression p) { return new LtNum(c, p); }
 
 }
