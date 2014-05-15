@@ -49,7 +49,8 @@ public class Value {
     }
 
     public BigInteger asNumeric() {
-        return _encoding.isSigned() ? new BigInteger(_data) : new BigInteger(1, _data);
+        return _encoding.isSigned() ? new BigInteger(_encoding.getByteOrder().apply(_data))
+                                    : new BigInteger(1, _encoding.getByteOrder().apply(_data));
     }
 
     public String asString() {

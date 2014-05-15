@@ -38,6 +38,10 @@ public class Def implements Token {
         _encoding = encoding;
     }
 
+    public Def(String name, ValueExpression size, Expression pred) {
+        this(name, size, pred, null);
+    }
+
     @Override
     public boolean parse(Environment env) {
         final byte[] data = new byte[_size.eval(env).asNumeric().intValue()];
@@ -50,7 +54,7 @@ public class Def implements Token {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        env.put(new Value(_name, data, _encoding));
+        env.put(new Value(_name, data, _encoding == null ? env.getEncoding() : _encoding));
         final boolean ret = _pred.eval(env);
         if (ret) {
             env.clear();

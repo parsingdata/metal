@@ -22,33 +22,32 @@ public class Encoding {
 
     private static final boolean DEFAULT_SIGNED = false;
     private static final Charset DEFAULT_CHARSET = Charset.forName("ISO646-US");
+    private static final ByteOrder DEFAULT_BYTE_ORDER = ByteOrder.BIG_ENDIAN;
 
     private final boolean _signed;
     private final Charset _charset;
+    private final ByteOrder _byteOrder;
 
     public Encoding() {
-        this(DEFAULT_SIGNED, DEFAULT_CHARSET);
+        this(DEFAULT_SIGNED, DEFAULT_CHARSET, DEFAULT_BYTE_ORDER);
     }
 
     public Encoding(boolean signed) {
-        this(signed, DEFAULT_CHARSET);
+        this(signed, DEFAULT_CHARSET, DEFAULT_BYTE_ORDER);
     }
 
     public Encoding(Charset charset) {
-        this(DEFAULT_SIGNED, charset);
+        this(DEFAULT_SIGNED, charset, DEFAULT_BYTE_ORDER);
     }
 
-    public Encoding(Encoding encoding, boolean signed) {
-        this(signed, encoding.getCharset());
+    public Encoding(ByteOrder byteOrder) {
+        this(DEFAULT_SIGNED, DEFAULT_CHARSET, byteOrder);
     }
 
-    public Encoding(Encoding encoding, Charset charset) {
-        this(encoding.isSigned(), charset);
-    }
-
-    public Encoding(boolean signed, Charset charset) {
+    public Encoding(boolean signed, Charset charset, ByteOrder byteOrder) {
         _signed = signed;
         _charset = charset;
+        _byteOrder = byteOrder;
     }
 
     public boolean isSigned() {
@@ -57,6 +56,10 @@ public class Encoding {
 
     public Charset getCharset() {
         return _charset;
+    }
+
+    public ByteOrder getByteOrder() {
+        return _byteOrder;
     }
 
 }
