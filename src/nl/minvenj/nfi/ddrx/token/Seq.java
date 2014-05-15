@@ -17,32 +17,38 @@
 package nl.minvenj.nfi.ddrx.token;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
-public class Seq implements Token {
-    
+public class Seq extends Token {
+
     private final Token _l;
     private final Token _r;
-    
-    public Seq(Token l, Token r) {
+
+    public Seq(Token l, Token r, Encoding enc) {
+        super(enc);
         _l = l;
         _r = r;
     }
-    
-    @Override
-    public boolean parse(Environment env) {
-    	env.mark();
-    	final boolean ret = _l.parse(env) && _r.parse(env);
-    	if (ret) {
-    	    env.clear();
-    	} else {
-    	    env.reset();
-    	}
-    	return ret;
+
+    public Seq(Token l, Token r) {
+        this(l, r, null);
     }
-    
+
+    @Override
+    protected boolean parseImpl(Environment env, Encoding enc) {
+        env.mark();
+        final boolean ret = _l.parse(env, enc) && _r.parse(env, enc);
+        if (ret) {
+            env.clear();
+        } else {
+            env.reset();
+        }
+        return ret;
+    }
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + _l + "," + _r + ")";
     }
-    
+
 }

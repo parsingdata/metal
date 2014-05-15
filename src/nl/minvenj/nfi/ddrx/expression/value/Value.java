@@ -28,16 +28,16 @@ public class Value {
 
     protected final String _name;
     protected final byte[] _data;
-    protected final Encoding _encoding;
+    protected final Encoding _enc;
 
-    public Value(byte[] data, Encoding encoding) {
-        this(DEFAULT_NAME, data, encoding);
+    public Value(byte[] data, Encoding enc) {
+        this(DEFAULT_NAME, data, enc);
     }
 
     public Value(String name, byte[] data, Encoding encoding) {
         _name = name;
         _data = data;
-        _encoding = encoding;
+        _enc = encoding;
     }
 
     public String getName() {
@@ -49,16 +49,20 @@ public class Value {
     }
 
     public BigInteger asNumeric() {
-        return _encoding.isSigned() ? new BigInteger(_encoding.getByteOrder().apply(_data))
-                                    : new BigInteger(1, _encoding.getByteOrder().apply(_data));
+        return _enc.isSigned() ? new BigInteger(_enc.getByteOrder().apply(_data))
+                                    : new BigInteger(1, _enc.getByteOrder().apply(_data));
     }
 
     public String asString() {
-        return new String(_data, _encoding.getCharset());
+        return new String(_data, _enc.getCharset());
+    }
+
+    public Encoding getEncoding() {
+        return _enc;
     }
 
     public Value operation(ValueOperation op) {
-        return op.execute(_data);
+        return op.execute(this);
     }
 
     @Override

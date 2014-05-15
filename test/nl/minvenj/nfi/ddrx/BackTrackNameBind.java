@@ -24,6 +24,7 @@ import static nl.minvenj.nfi.ddrx.TokenDefinitions.eq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.eqRef;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.notEqRef;
 import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
+import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
@@ -43,22 +44,22 @@ public class BackTrackNameBind {
 
     @Test
     public void choiceRefLeft() {
-        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 2)));
+        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 2), enc()));
     }
 
     @Test
     public void choiceRefRight() {
-        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 3)));
+        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 3), enc()));
     }
 
     @Test
     public void choiceRefNone() {
-        Assert.assertFalse(_choiceRef.parse(stream(1, 1, 2)));
+        Assert.assertFalse(_choiceRef.parse(stream(1, 1, 2), enc()));
     }
 
     @Test
     public void repeatRef() {
-        Assert.assertTrue(_repeatRef.parse(stream(42, 42, 42, 21, 21, 21)));
+        Assert.assertTrue(_repeatRef.parse(stream(42, 42, 42, 21, 21, 21), enc()));
     }
 
 }

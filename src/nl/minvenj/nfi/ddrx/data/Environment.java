@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Stack;
 
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.value.Value;
 
 public class Environment {
@@ -29,18 +28,12 @@ public class Environment {
     private final Stack<String> _order;
     private final Stack<Integer> _marked;
     private final ByteStream _input;
-    private final Encoding _encoding;
 
-    public Environment(Encoding encoding, ByteStream input) {
+    public Environment(ByteStream input) {
         _vals = new HashMap<String, Stack<Value>>();
         _order = new Stack<String>();
         _marked = new Stack<Integer>();
         _input = input;
-        _encoding = encoding;
-    }
-
-    public Encoding getEncoding() {
-        return _encoding;
     }
 
     private Stack<Value> getStack(String name) {

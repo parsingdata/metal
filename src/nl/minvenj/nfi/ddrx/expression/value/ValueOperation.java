@@ -18,6 +18,6 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 public interface ValueOperation {
 
-    public Value execute(final byte[] value);
+    public Value execute(final Value value);
 
 }

@@ -16,14 +16,14 @@
 
 package nl.minvenj.nfi.ddrx;
 
+import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
+import static nl.minvenj.nfi.ddrx.util.EncodingFactory.le;
 import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import nl.minvenj.nfi.ddrx.encoding.ByteOrder;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.format.PNG;
 import nl.minvenj.nfi.ddrx.format.ZIP;
 
@@ -40,12 +40,12 @@ public class TestFormat {
 
     @Test
     public void parsePNG() throws IOException {
-        Assert.assertTrue(PNG.FORMAT.parse(stream(PNGFILE)));
+        Assert.assertTrue(PNG.FORMAT.parse(stream(PNGFILE), enc()));
     }
 
     @Test
     public void parseZIP() throws IOException {
-        Assert.assertTrue(ZIP.FORMAT.parse(stream(new Encoding(ByteOrder.LITTLE_ENDIAN), ZIPFILE)));
+        Assert.assertTrue(ZIP.FORMAT.parse(stream(ZIPFILE), le()));
     }
 
 }

@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.ddrx.expression.value;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class Cat extends BinaryValueExpression {
 
@@ -26,12 +27,14 @@ public class Cat extends BinaryValueExpression {
 
     @Override
     public Value eval(final Environment env) {
-        final byte[] l = _lop.eval(env).getValue();
-        final byte[] r = _rop.eval(env).getValue();
-        byte[] res = new byte[l.length + r.length];
-        System.arraycopy(l, 0, res, 0, l.length);
-        System.arraycopy(r, 0, res, l.length, r.length);
-        return new Value(res, env.getEncoding());
+        final Value l = _lop.eval(env);
+        final Encoding enc = l.getEncoding();
+        final byte[] lb = l.getValue();
+        final byte[] rb = _rop.eval(env).getValue();
+        byte[] res = new byte[lb.length + rb.length];
+        System.arraycopy(lb, 0, res, 0, lb.length);
+        System.arraycopy(rb, 0, res, lb.length, rb.length);
+        return new Value(res, enc);
     }
 
 }

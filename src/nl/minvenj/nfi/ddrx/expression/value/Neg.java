@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.ddrx.expression.value;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class Neg extends UnaryValueExpression {
 
@@ -26,7 +27,9 @@ public class Neg extends UnaryValueExpression {
 
     @Override
     public Value eval(final Environment env) {
-        return ConstantFactory.createFromNumeric(_op.eval(env).asNumeric().negate(), env.getEncoding());
+        final Value op = _op.eval(env);
+        final Encoding enc = op.getEncoding();
+        return ConstantFactory.createFromNumeric(op.asNumeric().negate(), enc);
     }
 
 }

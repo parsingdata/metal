@@ -17,9 +17,20 @@
 package nl.minvenj.nfi.ddrx.token;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
-public interface Token {
-    
-    public boolean parse(Environment env);
-    
+public abstract class Token {
+
+    protected final Encoding _enc;
+
+    protected Token(Encoding enc) {
+        _enc = enc;
+    }
+
+    public boolean parse(Environment env, Encoding enc) {
+        return _enc == null ? parseImpl(env, enc) : parseImpl(env, _enc);
+    }
+
+    protected abstract boolean parseImpl(Environment env, Encoding enc);
+
 }

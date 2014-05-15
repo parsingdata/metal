@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.value;
+package nl.minvenj.nfi.ddrx.util;
 
-import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.ByteOrder;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
-public class Sub extends BinaryValueExpression {
+public class EncodingFactory {
 
-    public Sub(ValueExpression lop, ValueExpression rop) {
-        super(lop, rop);
+    public static Encoding enc() {
+        return new Encoding();
     }
 
-    @Override
-    public Value eval(final Environment env) {
-        final Value l = _lop.eval(env);
-        final Encoding enc = l.getEncoding();
-        return ConstantFactory.createFromNumeric(l.asNumeric().subtract(_rop.eval(env).asNumeric()), enc);
+    public static Encoding signed() {
+        return new Encoding(true);
+    }
+
+    public static Encoding le() {
+        return new Encoding(ByteOrder.LITTLE_ENDIAN);
     }
 
 }

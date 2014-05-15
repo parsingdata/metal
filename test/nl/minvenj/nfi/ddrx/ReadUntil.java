@@ -20,6 +20,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.eq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.notEq;
+import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
 import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 import nl.minvenj.nfi.ddrx.token.Token;
 
@@ -36,17 +37,17 @@ public class ReadUntil {
 
     @Test
     public void readUntilConstant() {
-        Assert.assertTrue(_readUntil.parse(stream(1, 2, 3, 4, 42)));
+        Assert.assertTrue(_readUntil.parse(stream(1, 2, 3, 4, 42), enc()));
     }
 
     @Test
     public void readUntilNoSkipping() {
-        Assert.assertTrue(_readUntil.parse(stream(42)));
+        Assert.assertTrue(_readUntil.parse(stream(42), enc()));
     }
 
     @Test
     public void readUntilErrorNoTerminator() {
-        Assert.assertFalse(_readUntil.parse(stream(1, 2, 3, 4)));
+        Assert.assertFalse(_readUntil.parse(stream(1, 2, 3, 4), enc()));
     }
 
 }

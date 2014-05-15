@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.ddrx.expression.value;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class Mul extends BinaryValueExpression {
 
@@ -26,7 +27,9 @@ public class Mul extends BinaryValueExpression {
 
     @Override
     public Value eval(final Environment env) {
-        return ConstantFactory.createFromNumeric(_lop.eval(env).asNumeric().multiply(_rop.eval(env).asNumeric()), env.getEncoding());
+        final Value l = _lop.eval(env);
+        final Encoding enc = l.getEncoding();
+        return ConstantFactory.createFromNumeric(l.asNumeric().multiply(_rop.eval(env).asNumeric()), enc);
     }
 
 }

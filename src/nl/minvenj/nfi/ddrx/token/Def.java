@@ -24,18 +24,17 @@ import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class Def implements Token {
+public class Def extends Token {
 
     private final String _name;
     private final ValueExpression _size;
     private final Expression _pred;
-    private final Encoding _encoding;
 
-    public Def(String name, ValueExpression size, Expression pred, Encoding encoding) {
+    public Def(String name, ValueExpression size, Expression pred, Encoding enc) {
+        super(enc);
         _name = name;
         _size = size;
         _pred = pred;
-        _encoding = encoding;
     }
 
     public Def(String name, ValueExpression size, Expression pred) {
@@ -43,7 +42,7 @@ public class Def implements Token {
     }
 
     @Override
-    public boolean parse(Environment env) {
+    protected boolean parseImpl(Environment env, Encoding enc) {
         final byte[] data = new byte[_size.eval(env).asNumeric().intValue()];
         env.mark();
         try {
@@ -54,7 +53,7 @@ public class Def implements Token {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        env.put(new Value(_name, data, _encoding == null ? env.getEncoding() : _encoding));
+        env.put(new Value(_name, data, enc));
         final boolean ret = _pred.eval(env);
         if (ret) {
             env.clear();

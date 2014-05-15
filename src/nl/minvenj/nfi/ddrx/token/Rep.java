@@ -17,24 +17,30 @@
 package nl.minvenj.nfi.ddrx.token;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
-public class Rep implements Token {
+public class Rep extends Token {
 
     private final Token _op;
 
-    public Rep(Token op) {
+    public Rep(Token op, Encoding enc) {
+        super(enc);
         _op = op;
     }
 
+    public Rep(Token op) {
+        this(op, null);
+    }
+
     @Override
-    public boolean parse(Environment env) {
-    	env.mark();
-    	if (!_op.parse(env)) {
-    	    env.reset();
-    	    return true;
-    	}
-    	env.clear();
-    	return parse(env);
+    protected boolean parseImpl(Environment env, Encoding enc) {
+        env.mark();
+        if (!_op.parse(env, enc)) {
+            env.reset();
+            return true;
+        }
+        env.clear();
+        return parse(env, enc);
     }
 
     @Override

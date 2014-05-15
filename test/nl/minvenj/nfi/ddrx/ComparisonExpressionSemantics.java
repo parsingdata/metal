@@ -27,12 +27,15 @@ import static nl.minvenj.nfi.ddrx.Shorthand.ltNum;
 import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
+import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
 import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collection;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.comparison.ComparisonExpression;
 import nl.minvenj.nfi.ddrx.token.Token;
 import nl.minvenj.nfi.ddrx.util.ParameterizedParse;
@@ -44,23 +47,23 @@ public class ComparisonExpressionSemantics extends ParameterizedParse {
     @Parameters(name="{0} ({3})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-            { "1 == 1", numCom(1, eqNum(ref("a"))), stream(1, 1), true },
-            { "2 == 1", numCom(1, eqNum(ref("a"))), stream(1, 2), false },
-            { "1 > 1", numCom(1, gtNum(ref("a"))), stream(1, 1), false},
-            { "2 > 1", numCom(1, gtNum(ref("a"))), stream(1, 2), true},
-            { "1 > 2", numCom(1, gtNum(ref("a"))), stream(2, 1), false},
-            { "1 < 1", numCom(1, ltNum(ref("a"))), stream(1, 1), false},
-            { "2 < 1", numCom(1, ltNum(ref("a"))), stream(1, 2), false},
-            { "1 < 2", numCom(1, ltNum(ref("a"))), stream(2, 1), true},
-            { "\"abc\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabc"), true},
-            { "\"abd\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabd"), false},
-            { "0x01 == 0x01", valCom(1, eq(ref("a"))), stream(1, 1), true},
-            { "0x02 == 0x01", valCom(1, eq(ref("a"))), stream(1, 2), false}
+            { "1 == 1", numCom(1, eqNum(ref("a"))), stream(1, 1), enc(), true },
+            { "2 == 1", numCom(1, eqNum(ref("a"))), stream(1, 2), enc(), false },
+            { "1 > 1", numCom(1, gtNum(ref("a"))), stream(1, 1), enc(), false},
+            { "2 > 1", numCom(1, gtNum(ref("a"))), stream(1, 2), enc(), true},
+            { "1 > 2", numCom(1, gtNum(ref("a"))), stream(2, 1), enc(), false},
+            { "1 < 1", numCom(1, ltNum(ref("a"))), stream(1, 1), enc(), false},
+            { "2 < 1", numCom(1, ltNum(ref("a"))), stream(1, 2), enc(), false},
+            { "1 < 2", numCom(1, ltNum(ref("a"))), stream(2, 1), enc(), true},
+            { "\"abc\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabc", Charset.forName("ISO646-US")), enc(), true},
+            { "\"abd\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabd", Charset.forName("ISO646-US")), enc(), false},
+            { "0x01 == 0x01", valCom(1, eq(ref("a"))), stream(1, 1), enc(), true},
+            { "0x02 == 0x01", valCom(1, eq(ref("a"))), stream(1, 2), enc(), false}
         });
     }
 
-    public ComparisonExpressionSemantics(String desc, Token token, Environment env, boolean result) {
-        super(token, env, result);
+    public ComparisonExpressionSemantics(String desc, Token token, Environment env, Encoding enc, boolean result) {
+        super(token, env, enc, result);
     }
 
     private static Token numCom(int size, ComparisonExpression comparison) {

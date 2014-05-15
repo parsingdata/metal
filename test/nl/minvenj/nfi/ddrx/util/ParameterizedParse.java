@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.ddrx.util;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
@@ -31,17 +32,19 @@ public class ParameterizedParse {
 
     private final Token _token;
     private final Environment _env;
+    private final Encoding _enc;
     private final boolean _result;
 
-    public ParameterizedParse(Token token, Environment env, boolean result) {
+    public ParameterizedParse(Token token, Environment env, Encoding enc, boolean result) {
         _token = token;
         _env = env;
+        _enc = enc;
         _result = result;
     }
 
     @Test
     public void test() {
-        Assert.assertEquals(_result, _token.parse(_env));
+        Assert.assertEquals(_result, _token.parse(_env, _enc));
     }
 
 }

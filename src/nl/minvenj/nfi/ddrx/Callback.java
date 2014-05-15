@@ -32,14 +32,14 @@ public class Callback {
             public Value eval(final Environment env) {
                 return _op.eval(env).operation(new ValueOperation() {
                     @Override
-                    public Value execute(byte[] value) {
+                    public Value execute(final Value value) {
                         CRC32 crc = new CRC32();
-                        crc.update(value);
+                        crc.update(value.getValue());
                         final long crcValue = crc.getValue();
                         return new Value(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
                                                       (byte)((crcValue & 0xff0000) >> 16),
                                                       (byte)((crcValue & 0xff00) >> 8),
-                                                      (byte)(crcValue & 0xff) }, env.getEncoding());
+                                                      (byte)(crcValue & 0xff) }, value.getEncoding());
                     }
                 });
             }

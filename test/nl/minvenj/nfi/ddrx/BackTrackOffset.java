@@ -22,6 +22,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.eq;
 import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
+import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
@@ -44,42 +45,42 @@ public class BackTrackOffset {
 
     @Test
     public void choiceLeft() {
-        Assert.assertTrue(_backTrackChoice.parse(stream(1, 2)));
+        Assert.assertTrue(_backTrackChoice.parse(stream(1, 2), enc()));
     }
 
     @Test
     public void choiceRight() {
-        Assert.assertTrue(_backTrackChoice.parse(stream(1, 3)));
+        Assert.assertTrue(_backTrackChoice.parse(stream(1, 3), enc()));
     }
 
     @Test
     public void choiceNone() {
-        Assert.assertFalse(_backTrackChoice.parse(stream(1, 4)));
+        Assert.assertFalse(_backTrackChoice.parse(stream(1, 4), enc()));
     }
 
     @Test
     public void repeatZero() {
-        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 3)));
+        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 3), enc()));
     }
 
     @Test
     public void repeatOnce() {
-        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 3)));
+        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 3), enc()));
     }
 
     @Test
     public void repeatTwice() {
-        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 2, 1, 3)));
+        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 2, 1, 3), enc()));
     }
 
     @Test
     public void repeatNone() {
-        Assert.assertFalse(_backTrackRepeat.parse(stream(1, 4)));
+        Assert.assertFalse(_backTrackRepeat.parse(stream(1, 4), enc()));
     }
 
     @Test
     public void deepMatch() {
-        Assert.assertTrue(_backTrackDeep.parse(stream(1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 84)));
+        Assert.assertTrue(_backTrackDeep.parse(stream(1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 84), enc()));
     }
 
 }

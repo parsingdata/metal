@@ -23,6 +23,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.eq;
 import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
+import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
 import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 import nl.minvenj.nfi.ddrx.token.Token;
 
@@ -40,12 +41,12 @@ public class ValueExpressionSemantics {
 
     @Test
     public void Cat() {
-        Assert.assertTrue(cat.parse(stream(1, 2, 1, 2)));
+        Assert.assertTrue(cat.parse(stream(1, 2, 1, 2), enc()));
     }
 
     @Test
     public void CatNoMatch() {
-        Assert.assertFalse(cat.parse(stream(1, 2, 12, 12)));
+        Assert.assertFalse(cat.parse(stream(1, 2, 12, 12), enc()));
     }
 
 }

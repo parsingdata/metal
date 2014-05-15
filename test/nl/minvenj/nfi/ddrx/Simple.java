@@ -20,6 +20,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
 import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
+import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
@@ -39,25 +40,25 @@ public class Simple {
     @Test
     public void correct() {
         Token t = buildSimpleToken("r1", 1, 1);
-        Assert.assertTrue(t.parse(stream(1, 2, 3, 4)));
+        Assert.assertTrue(t.parse(stream(1, 2, 3, 4), enc()));
     }
 
     @Test
     public void sizeError() {
         Token t = buildSimpleToken("r1", 2, 1);
-        Assert.assertFalse(t.parse(stream(1, 2, 3, 4)));
+        Assert.assertFalse(t.parse(stream(1, 2, 3, 4), enc()));
     }
 
     @Test
     public void predicateError() {
         Token t = buildSimpleToken("r1", 1, 2);
-        Assert.assertFalse(t.parse(stream(1, 2, 3, 4)));
+        Assert.assertFalse(t.parse(stream(1, 2, 3, 4), enc()));
     }
 
     @Test
     public void sourceError() {
         Token t = buildSimpleToken("r1", 1, 1);
-        Assert.assertFalse(t.parse(stream(2, 2, 2, 2)));
+        Assert.assertFalse(t.parse(stream(2, 2, 2, 2), enc()));
     }
 
 }

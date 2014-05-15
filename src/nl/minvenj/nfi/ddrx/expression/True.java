@@ -24,10 +24,10 @@ public class True implements Expression {
     public boolean eval(Environment env) {
         return true;
     }
-    
+
     @Override
     public String toString() {
         return "True";
     }
-    
+
 }

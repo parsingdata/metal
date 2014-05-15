@@ -17,36 +17,24 @@
 package nl.minvenj.nfi.ddrx.util;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class EnvironmentFactory {
 
     public static Environment stream(int... bytes) {
-        return stream(new Encoding(), bytes);
-    }
-
-    public static Environment stream(Encoding e, int... bytes) {
-        return new Environment(e, new InMemoryByteStream(toByteArray(bytes)));
-    }
-
-    public static Environment stream(Encoding e, Path path) throws IOException {
-        return new Environment(e, new InMemoryByteStream(Files.readAllBytes(path)));
+        return new Environment(new InMemoryByteStream(toByteArray(bytes)));
     }
 
     public static Environment stream(Path path) throws IOException {
-        return stream(new Encoding(), path);
+        return new Environment(new InMemoryByteStream(Files.readAllBytes(path)));
     }
 
-    public static Environment stream(Encoding e, String value) {
-        return new Environment(e, new InMemoryByteStream(value.getBytes(e.getCharset())));
-    }
-
-    public static Environment stream(String value) {
-        return stream(new Encoding(), value);
+    public static Environment stream(String value, Charset charset) {
+        return new Environment(new InMemoryByteStream(value.getBytes(charset)));
     }
 
     public static byte[] toByteArray(int... bytes) {
