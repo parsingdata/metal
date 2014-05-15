@@ -22,21 +22,30 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import nl.minvenj.nfi.ddrx.encoding.ByteOrder;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
+import nl.minvenj.nfi.ddrx.format.PNG;
+import nl.minvenj.nfi.ddrx.format.ZIP;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import nl.minvenj.nfi.ddrx.format.PNG;
-
 @RunWith(JUnit4.class)
 public class TestFormat {
 
-    private static final Path FILE = Paths.get("testdata/test.png");
+    private static final Path PNGFILE = Paths.get("testdata/test.png");
+    private static final Path ZIPFILE = Paths.get("testdata/test-zip30-ubuntu.zip");
 
     @Test
     public void parsePNG() throws IOException {
-        Assert.assertTrue(PNG.FORMAT.parse(stream(FILE)));
+        Assert.assertTrue(PNG.FORMAT.parse(stream(PNGFILE)));
+    }
+
+    @Test
+    public void parseZIP() throws IOException {
+        Assert.assertTrue(ZIP.FORMAT.parse(stream(new Encoding(ByteOrder.LITTLE_ENDIAN), ZIPFILE)));
     }
 
 }
