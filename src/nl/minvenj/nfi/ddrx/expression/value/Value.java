@@ -50,7 +50,7 @@ public class Value {
 
     public BigInteger asNumeric() {
         return _enc.isSigned() ? new BigInteger(_enc.getByteOrder().apply(_data))
-                                    : new BigInteger(1, _enc.getByteOrder().apply(_data));
+                               : new BigInteger(1, _enc.getByteOrder().apply(_data));
     }
 
     public String asString() {

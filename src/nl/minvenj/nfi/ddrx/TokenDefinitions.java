@@ -29,7 +29,7 @@ public class TokenDefinitions {
     private TokenDefinitions() {}
 
     public static Token any(String name) {
-        return def(name, con(1), expTrue());
+        return def(name, con(1));
     }
 
     public static Token any(String name, Encoding encoding) {
