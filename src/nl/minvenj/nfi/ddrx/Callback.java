@@ -17,6 +17,8 @@
 package nl.minvenj.nfi.ddrx;
 
 import java.util.zip.CRC32;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
@@ -36,10 +38,34 @@ public class Callback {
                         CRC32 crc = new CRC32();
                         crc.update(value.getValue());
                         final long crcValue = crc.getValue();
-                        return new Value(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
-                                                      (byte)((crcValue & 0xff0000) >> 16),
-                                                      (byte)((crcValue & 0xff00) >> 8),
-                                                      (byte)(crcValue & 0xff) }, value.getEncoding());
+                        return new Value(value.getEncoding().getByteOrder().apply(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
+                                                                                               (byte)((crcValue & 0xff0000) >> 16),
+                                                                                               (byte)((crcValue & 0xff00) >> 8),
+                                                                                               (byte)(crcValue & 0xff) }), value.getEncoding());
+                    }
+                });
+            }
+        };
+    }
+    
+    public static ValueExpression inflate(ValueExpression target) {
+        return new UnaryValueExpression(target) {
+            @Override
+            public Value eval(Environment env) {
+                return _op.eval(env).operation(new ValueOperation() {
+                    @Override
+                    public Value execute(Value value) {
+                        Inflater inf = new Inflater(true);
+                        inf.setInput(value.getValue());
+                        final byte[] tmp = new byte[value.getValue().length];
+                        try {
+                            final int size = inf.inflate(tmp);
+                            final byte[] out = new byte[size];
+                            System.arraycopy(tmp, 0, out, 0, size);
+                            return new Value(out, value.getEncoding());
+                        } catch (DataFormatException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 });
             }

@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.format;
 
+import static nl.minvenj.nfi.ddrx.Callback.crc32;
+import static nl.minvenj.nfi.ddrx.Callback.inflate;
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
@@ -39,7 +41,7 @@ public class ZIP {
                                             seq(def("extrafieldsize", con(2)),
                                             seq(def("filename", ref("filenamesize")),
                                             seq(def("extrafield", ref("extrafieldsize")),
-                                                def("compresseddata", ref("compressedsize")))))))))))))));
+                                                def("compresseddata", ref("compressedsize"), eq(crc32(inflate(ref("compresseddata"))), ref("filecrc32"))))))))))))))));
     private static final Token FILES = rep(LOCAL_FILE);
 
     private static final Token DIR_ENTRY = seq(def("dirsignature", con(4), eq(con(0x504b0102))),
