@@ -21,17 +21,23 @@ import static nl.minvenj.nfi.ddrx.Callback.inflate;
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
+import static nl.minvenj.nfi.ddrx.Shorthand.eqNum;
 import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import nl.minvenj.nfi.ddrx.token.Token;
 
+/*
+ * Implements limited subset of ZIP file format:
+ * - Only single-part files.
+ * - Only Deflate compression scheme.
+ */
 public class ZIP {
 
     private static final Token LOCAL_FILE = seq(def("filesignature", con(4), eq(con(0x504b0304))),
                                             seq(def("extractversion", con(2)),
                                             seq(def("bitflag", con(2)),
-                                            seq(def("compressionmethod", con(2)),
+                                            seq(def("compressionmethod", con(2), eqNum(con(8))),
                                             seq(def("lastmodtime", con(2)),
                                             seq(def("lastmoddate", con(2)),
                                             seq(def("filecrc32", con(4)),
@@ -57,7 +63,7 @@ public class ZIP {
                                            seq(def("filenamesize", con(2)),
                                            seq(def("extrafieldsize", con(2)),
                                            seq(def("filecommentsize", con(2)),
-                                           seq(def("filedisk", con(2)),
+                                           seq(def("filedisk", con(2), eqNum(con(0))),
                                            seq(def("intfileattr", con(2)),
                                            seq(def("extfileattr", con(4)),
                                            seq(def("offset", con(4)),
@@ -67,10 +73,10 @@ public class ZIP {
     private static final Token DIRS = rep(DIR_ENTRY);
 
     private static final Token END_OF_DIR = seq(def("endofdirsignature", con(4), eq(con(0x504b0506))),
-                                            seq(def("disknumber", con(2)),
-                                            seq(def("dirdisk", con(2)),
-                                            seq(def("numlocaldirs", con(2)),
-                                            seq(def("numtotaldirs", con(2)),
+                                            seq(def("disknumber", con(2), eqNum(con(0))),
+                                            seq(def("dirdisk", con(2), eqNum(con(0))),
+                                            seq(def("numlocaldirs", con(2), eqNum(con(1))),
+                                            seq(def("numtotaldirs", con(2), eqNum(con(1))),
                                             seq(def("dirsize", con(4)),
                                             seq(def("diroffset", con(4)),
                                             seq(def("commentsize", con(2)),
