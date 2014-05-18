@@ -30,21 +30,25 @@ import nl.minvenj.nfi.ddrx.token.Token;
 
 public class PNG {
 
-    private static final Token HEADER = seq(def("highbit", con(1), eq(con(0x89))),
-                                        seq(def("PNG", con(3), eq(con("PNG"))),
-                                            def("controlchars", con(4), eq(con(0x0d0a1a0a)))));
+    private static final Token HEADER =
+            seq(def("highbit", con(1), eq(con(0x89))),
+            seq(def("PNG", con(3), eq(con("PNG"))),
+                def("controlchars", con(4), eq(con(0x0d0a1a0a)))));
 
-    private static final Token FOOTER = seq(def("footerlength", con(4), eqNum(con(0))),
-                                        seq(def("footertype", con(4), eq(con("IEND"))),
-                                            def("footercrc32", con(4), eq(con(0xae426082l)))));
+    private static final Token FOOTER =
+            seq(def("footerlength", con(4), eqNum(con(0))),
+            seq(def("footertype", con(4), eq(con("IEND"))),
+                def("footercrc32", con(4), eq(con(0xae426082l)))));
 
-    private static final Token STRUCT = seq(def("length", con(4)),
-                                        seq(def("chunktype", con(4), not(eq(con("IEND")))),
-                                        seq(def("chunkdata", ref("length")),
-                                            def("crc32", con(4), eq(crc32(cat(ref("chunktype"), ref("chunkdata"))))))));
+    private static final Token STRUCT =
+            seq(def("length", con(4)),
+            seq(def("chunktype", con(4), not(eq(con("IEND")))),
+            seq(def("chunkdata", ref("length")),
+                def("crc32", con(4), eq(crc32(cat(ref("chunktype"), ref("chunkdata"))))))));
 
-    public static final Token FORMAT = seq(HEADER,
-                                       seq(rep(STRUCT),
-                                           FOOTER));
+    public static final Token FORMAT =
+            seq(HEADER,
+            seq(rep(STRUCT),
+                FOOTER));
 
 }

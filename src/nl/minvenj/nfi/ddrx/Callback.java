@@ -16,9 +16,11 @@
 
 package nl.minvenj.nfi.ddrx;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.zip.CRC32;
-import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
+import java.util.zip.InflaterOutputStream;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
@@ -56,14 +58,13 @@ public class Callback {
                     @Override
                     public Value execute(Value value) {
                         Inflater inf = new Inflater(true);
-                        inf.setInput(value.getValue());
-                        final byte[] tmp = new byte[value.getValue().length];
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        InflaterOutputStream ios = new InflaterOutputStream(bos, inf);
                         try {
-                            final int size = inf.inflate(tmp);
-                            final byte[] out = new byte[size];
-                            System.arraycopy(tmp, 0, out, 0, size);
-                            return new Value(out, value.getEncoding());
-                        } catch (DataFormatException e) {
+                            ios.write(value.getValue());
+                            ios.close();
+                            return new Value(bos.toByteArray(), value.getEncoding());
+                        } catch (IOException e) {
                             return new Value(new byte[] {}, value.getEncoding());
                         }
                     }

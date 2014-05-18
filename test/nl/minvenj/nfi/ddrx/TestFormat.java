@@ -36,7 +36,8 @@ import org.junit.runners.JUnit4;
 public class TestFormat {
 
     private static final Path PNGFILE = Paths.get("testdata/test.png");
-    private static final Path ZIPFILE = Paths.get("testdata/test-zip30-ubuntu.zip");
+    private static final Path ZIPFILE1 = Paths.get("testdata/singlefile-zip30-ubuntu.zip");
+    private static final Path ZIPFILE2 = Paths.get("testdata/multifile-zip30-ubuntu.zip");
 
     @Test
     public void parsePNG() throws IOException {
@@ -45,7 +46,12 @@ public class TestFormat {
 
     @Test
     public void parseZIP() throws IOException {
-        Assert.assertTrue(ZIP.FORMAT.parse(stream(ZIPFILE), le()));
+        Assert.assertTrue(ZIP.FORMAT.parse(stream(ZIPFILE1), le()));
+    }
+    
+    @Test
+    public void parseZIP2() throws IOException {
+        Assert.assertTrue(ZIP.FORMAT.parse(stream(ZIPFILE2), le()));
     }
 
 }
