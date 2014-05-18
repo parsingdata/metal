@@ -64,7 +64,7 @@ public class Callback {
                             System.arraycopy(tmp, 0, out, 0, size);
                             return new Value(out, value.getEncoding());
                         } catch (DataFormatException e) {
-                            throw new RuntimeException(e);
+                            return new Value(new byte[] {}, value.getEncoding());
                         }
                     }
                 });
