@@ -24,23 +24,23 @@ import nl.minvenj.nfi.ddrx.expression.value.Value;
 
 public class Environment {
 
-    private final HashMap<String, Stack<Value>> _vals;
+    private final HashMap<String, Stack<Value>> _values;
     private final Stack<String> _order;
     private final Stack<Integer> _marked;
     private final ByteStream _input;
 
     public Environment(ByteStream input) {
-        _vals = new HashMap<String, Stack<Value>>();
+        _values = new HashMap<String, Stack<Value>>();
         _order = new Stack<String>();
         _marked = new Stack<Integer>();
         _input = input;
     }
 
     private Stack<Value> getStack(String name) {
-        if (!_vals.containsKey(name)) {
-            _vals.put(name, new Stack<Value>());
+        if (!_values.containsKey(name)) {
+            _values.put(name, new Stack<Value>());
         }
-        return _vals.get(name);
+        return _values.get(name);
     }
 
     public void put(Value value) {
@@ -49,7 +49,7 @@ public class Environment {
     }
 
     public Value get(String name) {
-        return _vals.containsKey(name) ? _vals.get(name).peek() : null;
+        return _values.containsKey(name) ? _values.get(name).peek() : null;
     }
 
     public Value current() {
@@ -59,9 +59,9 @@ public class Environment {
     private void removeLast() {
         if (_order.size() > 0) {
             final String name = _order.pop();
-            _vals.get(name).pop();
-            if (_vals.get(name).size() == 0) {
-                _vals.remove(name);
+            _values.get(name).pop();
+            if (_values.get(name).size() == 0) {
+                _values.remove(name);
             }
         }
     }
