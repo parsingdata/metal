@@ -23,10 +23,11 @@ import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
 import static nl.minvenj.nfi.ddrx.Shorthand.eqNum;
-import static nl.minvenj.nfi.ddrx.Shorthand.or;
 import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
+import static nl.minvenj.nfi.ddrx.Shorthand.expTrue;
+import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 /*
@@ -36,37 +37,30 @@ import nl.minvenj.nfi.ddrx.token.Token;
  */
 public class ZIP {
 
-    private static final Token LOCAL_DEFLATED_FILE =
+    private static Token localFileBody(int cm, Expression usp) {
+        return
             seq(def("filesignature", con(4), eq(con(0x504b0304))),
             seq(def("extractversion", con(2)),
             seq(def("bitflag", con(2)),
-            seq(def("compressionmethod", con(2), eqNum(con(8))),
+            seq(def("compressionmethod", con(2), eqNum(con(cm))),
             seq(def("lastmodtime", con(2)),
             seq(def("lastmoddate", con(2)),
-            seq(def("filecrc32", con(4)),
+            seq(def("crc32", con(4)),
             seq(def("compressedsize", con(4)),
-            seq(def("uncompressedsize", con(4)),
+            seq(def("uncompressedsize", con(4), usp),
             seq(def("filenamesize", con(2)),
             seq(def("extrafieldsize", con(2)),
             seq(def("filename", ref("filenamesize")),
-            seq(def("extrafield", ref("extrafieldsize")),
-                def("compresseddata", ref("compressedsize"), eq(crc32(inflate(ref("compresseddata"))), ref("filecrc32"))))))))))))))));
+                def("extrafield", ref("extrafieldsize"))))))))))))));
+    }
+
+    private static final Token LOCAL_DEFLATED_FILE =
+            seq(localFileBody(8, expTrue()),
+                def("compresseddata", ref("compressedsize"), eq(crc32(inflate(ref("compresseddata"))), ref("crc32"))));
 
     private static final Token LOCAL_STORED_FILE =
-            seq(def("filesignature", con(4), eq(con(0x504b0304))),
-            seq(def("extractversion", con(2)),
-            seq(def("bitflag", con(2)),
-            seq(def("compressionmethod", con(2), eqNum(con(0))),
-            seq(def("lastmodtime", con(2)),
-            seq(def("lastmoddate", con(2)),
-            seq(def("filecrc32", con(4)),
-            seq(def("compressedsize", con(4)),
-            seq(def("uncompressedsize", con(4), eq(ref("compressedsize"))),
-            seq(def("filenamesize", con(2)),
-            seq(def("extrafieldsize", con(2)),
-            seq(def("filename", ref("filenamesize")),
-            seq(def("extrafield", ref("extrafieldsize")),
-                def("compresseddata", ref("compressedsize")))))))))))))));
+            seq(localFileBody(0, eq(ref("compressedsize"))),
+                def("compresseddata", ref("compressedsize")));
 
     private static final Token FILES =
             rep(cho(LOCAL_DEFLATED_FILE,
@@ -80,7 +74,7 @@ public class ZIP {
             seq(def("compressionmethod", con(2)),
             seq(def("lastmodtime", con(2)),
             seq(def("lastmoddate", con(2)),
-            seq(def("dircrc32", con(4)),
+            seq(def("crc32", con(4)),
             seq(def("compressedsize", con(4)),
             seq(def("uncompressedsize", con(4)),
             seq(def("filenamesize", con(2)),
