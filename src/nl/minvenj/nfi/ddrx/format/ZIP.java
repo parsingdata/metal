@@ -37,7 +37,7 @@ import nl.minvenj.nfi.ddrx.token.Token;
  */
 public class ZIP {
 
-    private static Token localFileBody(int cm, Expression usp) {
+    private static Token localFileBody(int cm, Expression crc, Expression cs, Expression usp) {
         return
             seq(def("filesignature", con(4), eq(con(0x504b0304))),
             seq(def("extractversion", con(2)),
@@ -45,8 +45,8 @@ public class ZIP {
             seq(def("compressionmethod", con(2), eqNum(con(cm))),
             seq(def("lastmodtime", con(2)),
             seq(def("lastmoddate", con(2)),
-            seq(def("crc32", con(4)),
-            seq(def("compressedsize", con(4)),
+            seq(def("crc32", con(4), crc),
+            seq(def("compressedsize", con(4), cs),
             seq(def("uncompressedsize", con(4), usp),
             seq(def("filenamesize", con(2)),
             seq(def("extrafieldsize", con(2)),
@@ -55,16 +55,20 @@ public class ZIP {
     }
 
     private static final Token LOCAL_DEFLATED_FILE =
-            seq(localFileBody(8, expTrue()),
+            seq(localFileBody(8, expTrue(), expTrue(), expTrue()),
                 def("compresseddata", ref("compressedsize"), eq(crc32(inflate(ref("compresseddata"))), ref("crc32"))));
 
+    private static final Token LOCAL_EMPTY_FILE =
+            localFileBody(0, eqNum(con(0)), eqNum(con(0)), eqNum(con(0)));
+
     private static final Token LOCAL_STORED_FILE =
-            seq(localFileBody(0, eq(ref("compressedsize"))),
-                def("compresseddata", ref("compressedsize")));
+            seq(localFileBody(0, expTrue(), expTrue(), eq(ref("compressedsize"))),
+                def("compresseddata", ref("compressedsize"), eq(crc32(ref("compresseddata")), ref("crc32"))));
 
     private static final Token FILES =
             rep(cho(LOCAL_DEFLATED_FILE,
-                    LOCAL_STORED_FILE));
+                cho(LOCAL_EMPTY_FILE,
+                    LOCAL_STORED_FILE)));
 
     private static final Token DIR_ENTRY =
             seq(def("dirsignature", con(4), eq(con(0x504b0102))),
