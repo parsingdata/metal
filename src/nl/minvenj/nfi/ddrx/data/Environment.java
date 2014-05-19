@@ -17,53 +17,40 @@
 package nl.minvenj.nfi.ddrx.data;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import nl.minvenj.nfi.ddrx.expression.value.Value;
 
 public class Environment {
 
-    private final HashMap<String, Stack<Value>> _values;
-    private final Stack<String> _order;
-    private final Stack<Integer> _marked;
+    private final Deque<Value> _order;
+    private final Deque<Integer> _marked;
     private final ByteStream _input;
 
     public Environment(ByteStream input) {
-        _values = new HashMap<String, Stack<Value>>();
-        _order = new Stack<String>();
-        _marked = new Stack<Integer>();
+        _order = new ArrayDeque<Value>();
+        _marked = new ArrayDeque<Integer>();
         _input = input;
     }
 
-    private Stack<Value> getStack(String name) {
-        if (!_values.containsKey(name)) {
-            _values.put(name, new Stack<Value>());
-        }
-        return _values.get(name);
-    }
-
     public void put(Value value) {
-        getStack(value.getName()).push(value);
-        _order.push(value.getName());
+        _order.push(value);
     }
 
     public Value get(String name) {
-        return _values.containsKey(name) ? _values.get(name).peek() : null;
+        for (Value v : _order) {
+            if (v.getName().equals(name)) { return v; }
+        }
+        return null;
     }
 
     public Value current() {
-        return _order.isEmpty() ? null : get(_order.peek());
+        return _order.peek();
     }
 
     private void removeLast() {
-        if (_order.size() > 0) {
-            final String name = _order.pop();
-            _values.get(name).pop();
-            if (_values.get(name).size() == 0) {
-                _values.remove(name);
-            }
-        }
+        _order.pop();
     }
 
     public void mark() {
