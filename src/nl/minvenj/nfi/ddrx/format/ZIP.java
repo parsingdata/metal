@@ -23,10 +23,11 @@ import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
 import static nl.minvenj.nfi.ddrx.Shorthand.eqNum;
+import static nl.minvenj.nfi.ddrx.Shorthand.expTrue;
 import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.Shorthand.expTrue;
+import static nl.minvenj.nfi.ddrx.Shorthand.sub;
 import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.token.Token;
 
@@ -55,15 +56,18 @@ public class ZIP {
     }
 
     private static final Token LOCAL_DEFLATED_FILE =
+            sub("file",
             seq(localFileBody(8, expTrue(), expTrue(), expTrue()),
-                def("compresseddata", ref("compressedsize"), eq(crc32(inflate(ref("compresseddata"))), ref("crc32"))));
+                def("compresseddata", ref("compressedsize"), eq(crc32(inflate(ref("compresseddata"))), ref("crc32")))));
 
     private static final Token LOCAL_EMPTY_FILE =
-            localFileBody(0, eqNum(con(0)), eqNum(con(0)), eqNum(con(0)));
+            sub("file",
+            localFileBody(0, eqNum(con(0)), eqNum(con(0)), eqNum(con(0))));
 
     private static final Token LOCAL_STORED_FILE =
+            sub("file",
             seq(localFileBody(0, expTrue(), expTrue(), eq(ref("compressedsize"))),
-                def("compresseddata", ref("compressedsize"), eq(crc32(ref("compresseddata")), ref("crc32"))));
+                def("compresseddata", ref("compressedsize"), eq(crc32(ref("compresseddata")), ref("crc32")))));
 
     private static final Token FILES =
             rep(cho(LOCAL_DEFLATED_FILE,
@@ -71,6 +75,7 @@ public class ZIP {
                     LOCAL_STORED_FILE)));
 
     private static final Token DIR_ENTRY =
+            sub("dir",
             seq(def("dirsignature", con(4), eq(con(0x504b0102))),
             seq(def("makeversion", con(2)),
             seq(def("extractversion", con(2)),
@@ -90,12 +95,13 @@ public class ZIP {
             seq(def("offset", con(4)),
             seq(def("filename", ref("filenamesize")),
             seq(def("extrafield", ref("extrafieldsize")),
-                def("filecomment", ref("filecommentsize")))))))))))))))))))));
+                def("filecomment", ref("filecommentsize"))))))))))))))))))))));
 
     private static final Token DIRS =
             rep(DIR_ENTRY);
 
     private static final Token END_OF_DIR =
+            sub("endofdir",
             seq(def("endofdirsignature", con(4), eq(con(0x504b0506))),
             seq(def("disknumber", con(2), eqNum(con(0))),
             seq(def("dirdisk", con(2), eqNum(con(0))),
@@ -104,11 +110,12 @@ public class ZIP {
             seq(def("dirsize", con(4)),
             seq(def("diroffset", con(4)),
             seq(def("commentsize", con(2)),
-                def("comment", ref("commentsize"))))))))));
+                def("comment", ref("commentsize")))))))))));
 
     public static final Token FORMAT =
+            sub("ZIP",
             seq(FILES,
             seq(DIRS,
-                END_OF_DIR));
+                END_OF_DIR)));
 
 }

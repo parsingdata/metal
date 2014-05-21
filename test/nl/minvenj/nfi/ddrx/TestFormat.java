@@ -48,7 +48,7 @@ public class TestFormat {
     public void parseZIP() throws IOException {
         Assert.assertTrue(ZIP.FORMAT.parse(stream(ZIPFILE1), le()));
     }
-    
+
     @Test
     public void parseZIP2() throws IOException {
         Assert.assertTrue(ZIP.FORMAT.parse(stream(ZIPFILE2), le()));

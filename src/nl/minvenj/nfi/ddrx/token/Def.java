@@ -42,7 +42,7 @@ public class Def extends Token {
     }
 
     @Override
-    protected boolean parseImpl(Environment env, Encoding enc) {
+    protected boolean parseImpl(String name, Environment env, Encoding enc) {
         final byte[] data = new byte[_size.eval(env).asNumeric().intValue()];
         env.mark();
         try {
@@ -53,7 +53,7 @@ public class Def extends Token {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        env.put(new Value(_name, data, enc));
+        env.put(new Value(name + "." + _name, data, enc));
         final boolean ret = _pred.eval(env);
         if (ret) {
             env.clear();

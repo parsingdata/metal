@@ -26,29 +26,34 @@ import static nl.minvenj.nfi.ddrx.Shorthand.not;
 import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
+import static nl.minvenj.nfi.ddrx.Shorthand.sub;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 public class PNG {
 
     private static final Token HEADER =
+            sub("signature",
             seq(def("highbit", con(1), eq(con(0x89))),
             seq(def("PNG", con(3), eq(con("PNG"))),
-                def("controlchars", con(4), eq(con(0x0d0a1a0a)))));
+                def("controlchars", con(4), eq(con(0x0d0a1a0a))))));
 
     private static final Token FOOTER =
+            sub("footer",
             seq(def("footerlength", con(4), eqNum(con(0))),
             seq(def("footertype", con(4), eq(con("IEND"))),
-                def("footercrc32", con(4), eq(con(0xae426082l)))));
+                def("footercrc32", con(4), eq(con(0xae426082l))))));
 
     private static final Token STRUCT =
+            sub("chunk",
             seq(def("length", con(4)),
             seq(def("chunktype", con(4), not(eq(con("IEND")))),
             seq(def("chunkdata", ref("length")),
-                def("crc32", con(4), eq(crc32(cat(ref("chunktype"), ref("chunkdata"))))))));
+                def("crc32", con(4), eq(crc32(cat(ref("chunktype"), ref("chunkdata")))))))));
 
     public static final Token FORMAT =
+            sub("PNG",
             seq(HEADER,
             seq(rep(STRUCT),
-                FOOTER));
+                FOOTER)));
 
 }

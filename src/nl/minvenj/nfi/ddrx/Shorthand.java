@@ -43,10 +43,10 @@ import nl.minvenj.nfi.ddrx.expression.value.Sub;
 import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 import nl.minvenj.nfi.ddrx.token.Cho;
+import nl.minvenj.nfi.ddrx.token.Def;
 import nl.minvenj.nfi.ddrx.token.Rep;
 import nl.minvenj.nfi.ddrx.token.Seq;
 import nl.minvenj.nfi.ddrx.token.Token;
-import nl.minvenj.nfi.ddrx.token.Def;
 
 public class Shorthand {
 
@@ -56,6 +56,7 @@ public class Shorthand {
     public static Token cho(Token l, Token r) { return new Cho(l, r); }
     public static Token rep(Token t) { return new Rep(t); }
     public static Token seq(Token l, Token r) { return new Seq(l, r); }
+    public static Token sub(String n, Token t) { return new nl.minvenj.nfi.ddrx.token.Sub(n, t); }
 
     public static BinaryValueExpression add(ValueExpression l, ValueExpression r) { return new Add(l, r); }
     public static BinaryValueExpression div(ValueExpression l, ValueExpression r) { return new Div(l, r); }

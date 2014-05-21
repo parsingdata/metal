@@ -35,9 +35,9 @@ public class Cho extends Token {
     }
 
     @Override
-    protected boolean parseImpl(Environment env, Encoding enc) {
+    protected boolean parseImpl(String name, Environment env, Encoding enc) {
         env.mark();
-        final boolean ret = _l.parse(env, enc) || _r.parse(env, enc);
+        final boolean ret = _l.parse(name, env, enc) || _r.parse(name, env, enc);
         if (ret) {
             env.clear();
         } else {

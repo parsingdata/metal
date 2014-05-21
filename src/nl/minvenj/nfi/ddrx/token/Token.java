@@ -21,16 +21,22 @@ import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public abstract class Token {
 
+    public final static String DEFAULT_NAME = "W";
+
     protected final Encoding _enc;
 
     protected Token(Encoding enc) {
         _enc = enc;
     }
 
-    public boolean parse(Environment env, Encoding enc) {
-        return _enc == null ? parseImpl(env, enc) : parseImpl(env, _enc);
+    public boolean parse(String name, Environment env, Encoding enc) {
+        return _enc == null ? parseImpl(name, env, enc) : parseImpl(name, env, _enc);
     }
 
-    protected abstract boolean parseImpl(Environment env, Encoding enc);
+    public boolean parse(Environment env, Encoding enc) {
+        return parse(DEFAULT_NAME, env, enc);
+    }
+
+    protected abstract boolean parseImpl(String name, Environment env, Encoding enc);
 
 }

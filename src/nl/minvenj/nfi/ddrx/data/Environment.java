@@ -19,6 +19,7 @@ package nl.minvenj.nfi.ddrx.data;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Iterator;
 
 import nl.minvenj.nfi.ddrx.expression.value.Value;
 
@@ -40,7 +41,7 @@ public class Environment {
 
     public Value get(String name) {
         for (Value v : _order) {
-            if (v.getName().equals(name)) { return v; }
+            if (v.getName().endsWith("." + name)) { return v; }
         }
         return null;
     }
@@ -73,6 +74,17 @@ public class Environment {
 
     public int read(byte[] data) throws IOException {
         return _input.read(data);
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        Iterator<Value> i = _order.descendingIterator();
+        while (i.hasNext()) {
+            sb.append(i.next().getName());
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 
 }

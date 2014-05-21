@@ -33,14 +33,14 @@ public class Rep extends Token {
     }
 
     @Override
-    protected boolean parseImpl(Environment env, Encoding enc) {
+    protected boolean parseImpl(String name, Environment env, Encoding enc) {
         env.mark();
-        if (!_op.parse(env, enc)) {
+        if (!_op.parse(name, env, enc)) {
             env.reset();
             return true;
         }
         env.clear();
-        return parse(env, enc);
+        return parse(name, env, enc);
     }
 
     @Override
