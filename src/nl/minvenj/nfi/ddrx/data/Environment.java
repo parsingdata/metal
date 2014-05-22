@@ -18,8 +18,10 @@ package nl.minvenj.nfi.ddrx.data;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Iterator;
+import java.util.List;
 
 import nl.minvenj.nfi.ddrx.expression.value.Value;
 
@@ -48,6 +50,14 @@ public class Environment {
 
     public Value current() {
         return _order.peek();
+    }
+
+    public List<Value> getPrefix(String prefix) {
+        ArrayList<Value> result = new ArrayList<Value>();
+        for (Value v : _order) {
+            if (v.getName().startsWith(prefix)) { result.add(0, v); }
+        }
+        return result;
     }
 
     private void removeLast() {

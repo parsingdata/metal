@@ -17,7 +17,6 @@
 package nl.minvenj.nfi.ddrx;
 
 import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
-import static nl.minvenj.nfi.ddrx.util.EncodingFactory.le;
 import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
@@ -46,12 +45,12 @@ public class TestFormat {
 
     @Test
     public void parseZIP() throws IOException {
-        Assert.assertTrue(ZIP.FORMAT.parse(stream(ZIPFILE1), le()));
+        Assert.assertTrue(ZIP.FORMAT.parse(stream(ZIPFILE1), enc()));
     }
 
     @Test
     public void parseZIP2() throws IOException {
-        Assert.assertTrue(ZIP.FORMAT.parse(stream(ZIPFILE2), le()));
+        Assert.assertTrue(ZIP.FORMAT.parse(stream(ZIPFILE2), enc()));
     }
 
 }

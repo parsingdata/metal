@@ -23,21 +23,32 @@ public class Str extends Token {
 
     private final String _name;
     private final Token _op;
+    private final StructSink _sink;
 
-    public Str(String name, Token op, Encoding enc) {
+    public Str(String name, Token op, Encoding enc, StructSink sink) {
         super(enc);
         _name = name;
         _op = op;
+        _sink = sink;
+    }
+
+    public Str(String name, Token op, Encoding enc) {
+        this(name, op, enc, null);
+    }
+
+    public Str(String name, Token op, StructSink sink) {
+        this(name, op, null, sink);
     }
 
     public Str(String name, Token op) {
-        this(name, op, null);
+        this(name, op, null, null);
     }
 
     @Override
     protected boolean parseImpl(String name, Environment env, Encoding enc) {
         boolean ret = _op.parse(name + "." + _name, env, enc);
-        if (ret) {
+        if (ret && _sink != null) {
+            _sink.handleStruct(env.getPrefix(name + "." + _name));
         }
         return ret;
     }

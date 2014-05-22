@@ -47,17 +47,21 @@ import nl.minvenj.nfi.ddrx.token.Def;
 import nl.minvenj.nfi.ddrx.token.Rep;
 import nl.minvenj.nfi.ddrx.token.Seq;
 import nl.minvenj.nfi.ddrx.token.Str;
+import nl.minvenj.nfi.ddrx.token.StructSink;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 public class Shorthand {
 
     public static Token def(String name, ValueExpression size, Expression pred, Encoding encoding) { return new Def(name, size, pred, encoding); }
-    public static Token def(String name, ValueExpression size, Expression pred) { return def(name, size, pred, null); }
+    public static Token def(String name, ValueExpression size, Expression pred) { return new Def(name, size, pred); }
     public static Token def(String name, ValueExpression size) { return def(name, size, expTrue()); }
     public static Token cho(Token l, Token r) { return new Cho(l, r); }
     public static Token rep(Token t) { return new Rep(t); }
     public static Token seq(Token l, Token r) { return new Seq(l, r); }
     public static Token str(String n, Token t) { return new Str(n, t); }
+    public static Token str(String n, Token t, Encoding e) { return new Str(n, t, e); }
+    public static Token str(String n, Token t, StructSink s) { return new Str(n, t, s); }
+    public static Token str(String n, Token t, Encoding e, StructSink s) { return new Str(n, t, e, s); }
 
     public static BinaryValueExpression add(ValueExpression l, ValueExpression r) { return new Add(l, r); }
     public static BinaryValueExpression div(ValueExpression l, ValueExpression r) { return new Div(l, r); }

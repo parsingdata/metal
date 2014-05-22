@@ -27,6 +27,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.Shorthand.str;
+import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 public class PNG {
@@ -54,6 +55,6 @@ public class PNG {
             str("PNG",
             seq(HEADER,
             seq(rep(STRUCT),
-                FOOTER)));
+                FOOTER)), enc());
 
 }
