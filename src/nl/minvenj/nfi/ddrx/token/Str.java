@@ -19,18 +19,18 @@ package nl.minvenj.nfi.ddrx.token;
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
-public class Sub extends Token {
+public class Str extends Token {
 
     private final String _name;
     private final Token _op;
 
-    public Sub(String name, Token op, Encoding enc) {
+    public Str(String name, Token op, Encoding enc) {
         super(enc);
         _name = name;
         _op = op;
     }
 
-    public Sub(String name, Token op) {
+    public Str(String name, Token op) {
         this(name, op, null);
     }
 

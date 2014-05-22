@@ -27,8 +27,9 @@ import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.Shorthand.sub;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
+import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
+import static nl.minvenj.nfi.ddrx.util.EncodingFactory.signed;
 import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
-import static nl.minvenj.nfi.ddrx.util.EncodingFactory.*;
 
 import java.util.Arrays;
 import java.util.Collection;

@@ -27,7 +27,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.expTrue;
 import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.Shorthand.sub;
+import static nl.minvenj.nfi.ddrx.Shorthand.str;
 import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.token.Token;
 
@@ -56,16 +56,16 @@ public class ZIP {
     }
 
     private static final Token LOCAL_DEFLATED_FILE =
-            sub("file",
+            str("file",
             seq(localFileBody(8, expTrue(), expTrue(), expTrue()),
                 def("compresseddata", ref("compressedsize"), eq(crc32(inflate(ref("compresseddata"))), ref("crc32")))));
 
     private static final Token LOCAL_EMPTY_FILE =
-            sub("file",
+            str("file",
             localFileBody(0, eqNum(con(0)), eqNum(con(0)), eqNum(con(0))));
 
     private static final Token LOCAL_STORED_FILE =
-            sub("file",
+            str("file",
             seq(localFileBody(0, expTrue(), expTrue(), eq(ref("compressedsize"))),
                 def("compresseddata", ref("compressedsize"), eq(crc32(ref("compresseddata")), ref("crc32")))));
 
@@ -75,7 +75,7 @@ public class ZIP {
                     LOCAL_STORED_FILE)));
 
     private static final Token DIR_ENTRY =
-            sub("dir",
+            str("dir",
             seq(def("dirsignature", con(4), eq(con(0x504b0102))),
             seq(def("makeversion", con(2)),
             seq(def("extractversion", con(2)),
@@ -101,7 +101,7 @@ public class ZIP {
             rep(DIR_ENTRY);
 
     private static final Token END_OF_DIR =
-            sub("endofdir",
+            str("endofdir",
             seq(def("endofdirsignature", con(4), eq(con(0x504b0506))),
             seq(def("disknumber", con(2), eqNum(con(0))),
             seq(def("dirdisk", con(2), eqNum(con(0))),
@@ -113,7 +113,7 @@ public class ZIP {
                 def("comment", ref("commentsize")))))))))));
 
     public static final Token FORMAT =
-            sub("ZIP",
+            str("ZIP",
             seq(FILES,
             seq(DIRS,
                 END_OF_DIR)));
