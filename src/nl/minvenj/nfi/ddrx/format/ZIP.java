@@ -28,7 +28,8 @@ import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.Shorthand.str;
-import static nl.minvenj.nfi.ddrx.util.EncodingFactory.le;
+import nl.minvenj.nfi.ddrx.encoding.ByteOrder;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.token.Token;
 
@@ -117,6 +118,6 @@ public class ZIP {
             str("ZIP",
             seq(FILES,
             seq(DIRS,
-                END_OF_DIR)), le());
+                END_OF_DIR)), new Encoding(ByteOrder.LITTLE_ENDIAN));
 
 }
