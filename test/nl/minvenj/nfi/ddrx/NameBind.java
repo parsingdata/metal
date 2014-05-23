@@ -34,7 +34,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 public class NameBind extends ParameterizedParse {
 
-    @Parameters(name="{0} ({3})")
+    @Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
             { "[0x2a, 0x2a] b == a", sequenceMatch2, stream(42, 42), enc(), true },

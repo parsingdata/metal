@@ -44,7 +44,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 public class ComparisonExpressionSemantics extends ParameterizedParse {
 
-    @Parameters(name="{0} ({3})")
+    @Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
             { "1 == 1", numCom(1, eqNum(ref("a"))), stream(1, 1), enc(), true },

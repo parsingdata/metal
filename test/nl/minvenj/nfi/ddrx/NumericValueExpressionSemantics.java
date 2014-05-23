@@ -46,7 +46,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 public class NumericValueExpressionSemantics extends ParameterizedParse {
 
-    @Parameters(name="{0} ({3})")
+    @Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
             { "[signed] 1 + 2 == 3", add, stream(1, 2, 3), signed(), true },
