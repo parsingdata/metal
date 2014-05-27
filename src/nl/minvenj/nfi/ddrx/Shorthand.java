@@ -30,19 +30,20 @@ import nl.minvenj.nfi.ddrx.expression.logical.BinaryLogicalExpression;
 import nl.minvenj.nfi.ddrx.expression.logical.Not;
 import nl.minvenj.nfi.ddrx.expression.logical.Or;
 import nl.minvenj.nfi.ddrx.expression.logical.UnaryLogicalExpression;
-import nl.minvenj.nfi.ddrx.expression.value.Add;
 import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
 import nl.minvenj.nfi.ddrx.expression.value.Cat;
 import nl.minvenj.nfi.ddrx.expression.value.Con;
 import nl.minvenj.nfi.ddrx.expression.value.ConstantFactory;
-import nl.minvenj.nfi.ddrx.expression.value.Div;
-import nl.minvenj.nfi.ddrx.expression.value.Mod;
-import nl.minvenj.nfi.ddrx.expression.value.Mul;
-import nl.minvenj.nfi.ddrx.expression.value.Neg;
-import nl.minvenj.nfi.ddrx.expression.value.Ref;
-import nl.minvenj.nfi.ddrx.expression.value.Sub;
 import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
+import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Add;
+import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Div;
+import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Mod;
+import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Mul;
+import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Neg;
+import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Sub;
+import nl.minvenj.nfi.ddrx.expression.value.reference.First;
+import nl.minvenj.nfi.ddrx.expression.value.reference.Ref;
 import nl.minvenj.nfi.ddrx.token.Cho;
 import nl.minvenj.nfi.ddrx.token.Def;
 import nl.minvenj.nfi.ddrx.token.Rep;
@@ -75,6 +76,7 @@ public class Shorthand {
     public static ValueExpression con(String s) { return con(s, new Encoding()); }
     public static ValueExpression con(String s, Encoding encoding) { return new Con(ConstantFactory.createFromString(s, encoding)); }
     public static ValueExpression ref(String s) { return new Ref(s); }
+    public static ValueExpression first(String s) { return new First(s); }
     public static ValueExpression cat(ValueExpression l, ValueExpression r) { return new Cat(l, r); }
 
     public static BinaryLogicalExpression and(Expression l, Expression r) { return new And(l, r); }

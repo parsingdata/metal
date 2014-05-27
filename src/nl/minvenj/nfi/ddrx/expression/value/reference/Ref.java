@@ -14,22 +14,28 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.value;
+package nl.minvenj.nfi.ddrx.expression.value.reference;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
+import nl.minvenj.nfi.ddrx.expression.value.Value;
+import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class Neg extends UnaryValueExpression {
+public class Ref implements ValueExpression {
 
-    public Neg(ValueExpression op) {
-        super(op);
+    private final String _name;
+
+    public Ref(String name) {
+        _name = name;
     }
 
     @Override
-    public Value eval(final Environment env) {
-        final Value op = _op.eval(env);
-        final Encoding enc = op.getEncoding();
-        return ConstantFactory.createFromNumeric(op.asNumeric().negate(), enc);
+    public Value eval(Environment env) {
+        return env.get(_name);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _name + ")";
     }
 
 }

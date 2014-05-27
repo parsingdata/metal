@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.value;
+package nl.minvenj.nfi.ddrx.expression.value.reference;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.expression.value.Value;
+import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class Ref implements ValueExpression {
+public class First implements ValueExpression {
 
     private final String _name;
 
-    public Ref(String name) {
+    public First(String name) {
         _name = name;
     }
 
     @Override
     public Value eval(Environment env) {
-        return env.get(_name);
+        return env.getAll(_name).getLast();
     }
 
     @Override

@@ -16,11 +16,16 @@
 
 package nl.minvenj.nfi.ddrx;
 
+import static nl.minvenj.nfi.ddrx.Shorthand.con;
+import static nl.minvenj.nfi.ddrx.Shorthand.def;
+import static nl.minvenj.nfi.ddrx.Shorthand.eq;
+import static nl.minvenj.nfi.ddrx.Shorthand.first;
+import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.eqRef;
-import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
+import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,7 +37,7 @@ import nl.minvenj.nfi.ddrx.util.ParameterizedParse;
 
 import org.junit.runners.Parameterized.Parameters;
 
-public class NameBind extends ParameterizedParse {
+public class ReferenceValueExpressionSemantics extends ParameterizedParse {
 
     @Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
@@ -48,11 +53,13 @@ public class NameBind extends ParameterizedParse {
             { "[0x2a, 0x2a, 0x15] b == a, c == b", sequenceMatchTransitive3, stream(42, 42, 21), enc(), false },
             { "[0x2a, 0x15, 0x2a] b == a, c == b", sequenceMatchTransitive3, stream(42, 21, 42), enc(), false },
             { "[0x15, 0x2a, 0x2a] b == a, c == b", sequenceMatchTransitive3, stream(21, 42, 42), enc(), false },
-            { "[0x15, 0x2a, 0x63] b == a, c == b", sequenceMatchTransitive3, stream(21, 42, 63), enc(), false }
+            { "[0x15, 0x2a, 0x63] b == a, c == b", sequenceMatchTransitive3, stream(21, 42, 63), enc(), false },
+            { "[1, 2, 1] a, a, first(a)", repFirst, stream(1, 2, 1), enc(), true },
+            { "[1, 2, 3] a, a, first(a)", repFirst, stream(1, 2, 3), enc(), false }
         });
     }
 
-    public NameBind(String desc, Token token, Environment env, Encoding enc, boolean result) {
+    public ReferenceValueExpressionSemantics(String desc, Token token, Environment env, Encoding enc, boolean result) {
         super(token, env, enc, result);
     }
 
@@ -62,5 +69,9 @@ public class NameBind extends ParameterizedParse {
                                               eqRef("c", "a"));
     private static Token sequenceMatchTransitive3 = seq(sequenceMatch2,
                                                         eqRef("c", "b"));
+    
+    private static Token repFirst = seq(any("a"),
+                                    seq(any("a"),
+                                        def("a", con(1), eq(first("a")))));
 
 }

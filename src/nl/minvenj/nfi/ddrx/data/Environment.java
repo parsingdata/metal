@@ -47,6 +47,16 @@ public class Environment {
         }
         return null;
     }
+    
+    public Deque<Value> getAll(String name) {
+        Deque<Value> all = new ArrayDeque<Value>();
+        for (Value v : _order) {
+            if (v.getName().endsWith("." + name)) {
+                all.add(v);
+            }
+        }
+        return all;
+    }
 
     public Value current() {
         return _order.peek();

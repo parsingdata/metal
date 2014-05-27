@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.value;
+package nl.minvenj.nfi.ddrx.expression.value.arithmetic;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
+import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
+import nl.minvenj.nfi.ddrx.expression.value.ConstantFactory;
+import nl.minvenj.nfi.ddrx.expression.value.Value;
+import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class Sub extends BinaryValueExpression {
+public class Div extends BinaryValueExpression {
 
-    public Sub(ValueExpression lop, ValueExpression rop) {
+    public Div(ValueExpression lop, ValueExpression rop) {
         super(lop, rop);
     }
 
@@ -29,7 +33,7 @@ public class Sub extends BinaryValueExpression {
     public Value eval(final Environment env) {
         final Value l = _lop.eval(env);
         final Encoding enc = l.getEncoding();
-        return ConstantFactory.createFromNumeric(l.asNumeric().subtract(_rop.eval(env).asNumeric()), enc);
+        return ConstantFactory.createFromNumeric(l.asNumeric().divide(_rop.eval(env).asNumeric()), enc);
     }
 
 }
