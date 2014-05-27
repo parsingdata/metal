@@ -36,6 +36,7 @@ import nl.minvenj.nfi.ddrx.expression.value.Cat;
 import nl.minvenj.nfi.ddrx.expression.value.Con;
 import nl.minvenj.nfi.ddrx.expression.value.ConstantFactory;
 import nl.minvenj.nfi.ddrx.expression.value.Div;
+import nl.minvenj.nfi.ddrx.expression.value.Mod;
 import nl.minvenj.nfi.ddrx.expression.value.Mul;
 import nl.minvenj.nfi.ddrx.expression.value.Neg;
 import nl.minvenj.nfi.ddrx.expression.value.Ref;
@@ -67,6 +68,7 @@ public class Shorthand {
     public static BinaryValueExpression div(ValueExpression l, ValueExpression r) { return new Div(l, r); }
     public static BinaryValueExpression mul(ValueExpression l, ValueExpression r) { return new Mul(l, r); }
     public static BinaryValueExpression sub(ValueExpression l, ValueExpression r) { return new Sub(l, r); }
+    public static BinaryValueExpression mod(ValueExpression l, ValueExpression r) { return new Mod(l, r); }
     public static UnaryValueExpression neg(ValueExpression v) { return new Neg(v); }
     public static ValueExpression con(long v) { return con(v, new Encoding()); }
     public static ValueExpression con(long v, Encoding encoding) { return new Con(ConstantFactory.createFromNumeric(v, encoding)); }

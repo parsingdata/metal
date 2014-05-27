@@ -21,6 +21,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.div;
 import static nl.minvenj.nfi.ddrx.Shorthand.eqNum;
+import static nl.minvenj.nfi.ddrx.Shorthand.mod;
 import static nl.minvenj.nfi.ddrx.Shorthand.mul;
 import static nl.minvenj.nfi.ddrx.Shorthand.neg;
 import static nl.minvenj.nfi.ddrx.Shorthand.ref;
@@ -78,6 +79,11 @@ public class NumericValueExpressionSemantics extends ParameterizedParse {
             { "[signed] -42 - 10 == -52", sub, stream(-42, 10, -52), signed(), true },
             { "[signed] -42 - -10 == -32", sub, stream(-42, -10, -32), signed(), true },
             { "[signed] -42 - 42 == 0", sub, stream(-42, 42, 0), signed(), false },
+            { "[signed] 10 % 5 == 0", mod, stream(10, 5, 0), signed(), true },
+            { "[signed] 10 % 4 == 2", mod, stream(10, 4, 2), signed(), true },
+            { "[signed] 10 % 10 == 0", mod, stream(10, 10, 0), signed(), true },
+            { "[signed] -10 % 5 == 0", mod, stream(-10, 5, 0), signed(), true },
+            { "[signed] -10 % 4 == 2", mod, stream(-10, 4, 2), signed(), true },
             { "[signed] -(1) == -1", neg, stream(1, -1), signed(), true },
             { "[signed] -(2) == -2", neg, stream(2, -2), signed(), true },
             { "[signed] -(3) == -3", neg, stream(3, -3), signed(), true },
@@ -95,6 +101,7 @@ public class NumericValueExpressionSemantics extends ParameterizedParse {
     private static Token div = binaryValueExpressionToken(div(ref("a"), ref("b")));
     private static Token mul = binaryValueExpressionToken(mul(ref("a"), ref("b")));
     private static Token sub = binaryValueExpressionToken(sub(ref("a"), ref("b")));
+    private static Token mod = binaryValueExpressionToken(mod(ref("a"), ref("b")));
     private static Token neg = unaryValueExpressionToken(neg(ref("a")));
 
     private static Token singleToken(String firstName, String secondName, ValueExpression ve) {
