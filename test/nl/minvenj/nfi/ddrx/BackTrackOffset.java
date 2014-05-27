@@ -33,15 +33,24 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class BackTrackOffset {
 
-    private Token _backTrackChoice = cho(seq(any("a"), eq("b", 2)),
-                                         seq(any("c"), eq("d", 3)));
+    private Token _backTrackChoice = cho(seq(any("a"),
+                                             eq("b", 2)),
+                                         seq(any("c"),
+                                             eq("d", 3)));
 
-    private Token _backTrackRepeat = seq(rep(seq(eq("a", 1), eq("b", 2))),
-                                         seq(eq("c", 1), eq("d", 3)));
+    private Token _backTrackRepeat = seq(rep(seq(eq("a", 1),
+                                                 eq("b", 2))),
+                                         seq(eq("c", 1),
+                                             eq("d", 3)));
 
-    private Token _backTrackDeepFragment = rep(seq(any("a"), seq(any("b"), cho(eq("c", 21), eq("d", 42)))));
-    private Token _backTrackDeep = cho(seq(_backTrackDeepFragment, eq("e", 63)),
-                                       seq(_backTrackDeepFragment, eq("f", 84)));
+    private Token _backTrackDeepFragment = rep(seq(any("a"),
+                                               seq(any("b"),
+                                                   cho(eq("c", 21),
+                                                       eq("d", 42)))));
+    private Token _backTrackDeep = cho(seq(_backTrackDeepFragment,
+                                           eq("e", 63)),
+                                       seq(_backTrackDeepFragment,
+                                           eq("f", 84)));
 
     @Test
     public void choiceLeft() {

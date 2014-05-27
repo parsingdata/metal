@@ -69,8 +69,8 @@ public class LogicalExpressionSemantics extends ParameterizedParse {
 
     private static Token logicalExp(LogicalExpression le) {
         return seq(any("a"),
-                   seq(any("b"),
-                       def("c", con(1), le)));
+               seq(any("b"),
+                   def("c", con(1), le)));
     }
 
 }

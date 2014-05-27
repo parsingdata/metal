@@ -36,8 +36,8 @@ import org.junit.runners.JUnit4;
 public class BackTrackNameBind {
 
     private Token _choiceRef = seq(any("a"),
-                                   cho(seq(any("a"), eqRef("b", "a")),
-                                       seq(notEqRef("b", "a"), any("c"))));
+                               cho(seq(any("a"), eqRef("b", "a")),
+                                   seq(notEqRef("b", "a"), any("c"))));
 
     private Token _repeatRef = seq(rep(eq("a", 42)),
                                    rep(notEqRef("b", "a")));

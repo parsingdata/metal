@@ -32,9 +32,7 @@ import org.junit.runners.JUnit4;
 public class Simple {
 
     private Token buildSimpleToken(String name, int size, int predicate) {
-        return def(name,
-                      con(size),
-                      eq(con(predicate)));
+        return def(name, con(size), eq(con(predicate)));
     }
 
     @Test

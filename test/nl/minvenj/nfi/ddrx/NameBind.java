@@ -57,10 +57,10 @@ public class NameBind extends ParameterizedParse {
     }
 
     private static Token sequenceMatch2 = seq(any("a"),
-                                       eqRef("b", "a"));
+                                              eqRef("b", "a"));
     private static Token sequenceMatch3 = seq(sequenceMatch2,
-                                       eqRef("c", "a"));
+                                              eqRef("c", "a"));
     private static Token sequenceMatchTransitive3 = seq(sequenceMatch2,
-                                                 eqRef("c", "b"));
+                                                        eqRef("c", "b"));
 
 }

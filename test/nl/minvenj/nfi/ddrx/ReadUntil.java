@@ -33,7 +33,7 @@ import org.junit.runners.JUnit4;
 public class ReadUntil {
 
     private Token _readUntil = seq(rep(notEq("other", 42)),
-                                   eq("terminator", 42));
+                                       eq("terminator", 42));
 
     @Test
     public void readUntilConstant() {

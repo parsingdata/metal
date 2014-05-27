@@ -106,9 +106,7 @@ public class NumericValueExpressionSemantics extends ParameterizedParse {
 
     private static Token singleToken(String firstName, String secondName, ValueExpression ve) {
         return seq(any(firstName),
-                   def(secondName,
-                          con(1),
-                          eqNum(ve)));
+                   def(secondName, con(1), eqNum(ve)));
     }
 
     private static Token binaryValueExpressionToken(BinaryValueExpression bve) {
