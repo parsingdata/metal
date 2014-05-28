@@ -20,7 +20,6 @@ import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
 import static nl.minvenj.nfi.ddrx.Shorthand.first;
-import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.eqRef;
@@ -54,8 +53,8 @@ public class ReferenceValueExpressionSemantics extends ParameterizedParse {
             { "[0x2a, 0x15, 0x2a] b == a, c == b", sequenceMatchTransitive3, stream(42, 21, 42), enc(), false },
             { "[0x15, 0x2a, 0x2a] b == a, c == b", sequenceMatchTransitive3, stream(21, 42, 42), enc(), false },
             { "[0x15, 0x2a, 0x63] b == a, c == b", sequenceMatchTransitive3, stream(21, 42, 63), enc(), false },
-            { "[1, 2, 1] a, a, first(a)", repFirst, stream(1, 2, 1), enc(), true },
-            { "[1, 2, 3] a, a, first(a)", repFirst, stream(1, 2, 3), enc(), false }
+            { "[1, 2, 1] a, a, first(a)", refFirst, stream(1, 2, 1), enc(), true },
+            { "[1, 2, 3] a, a, first(a)", refFirst, stream(1, 2, 3), enc(), false }
         });
     }
 
@@ -70,7 +69,7 @@ public class ReferenceValueExpressionSemantics extends ParameterizedParse {
     private static Token sequenceMatchTransitive3 = seq(sequenceMatch2,
                                                         eqRef("c", "b"));
     
-    private static Token repFirst = seq(any("a"),
+    private static Token refFirst = seq(any("a"),
                                     seq(any("a"),
                                         def("a", con(1), eq(first("a")))));
 
