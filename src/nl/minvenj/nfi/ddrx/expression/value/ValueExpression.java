@@ -20,6 +20,6 @@ import nl.minvenj.nfi.ddrx.data.Environment;
 
 public interface ValueExpression {
 
-    Value eval(Environment env);
+    OptionalValue eval(Environment env);
 
 }

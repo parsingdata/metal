@@ -17,7 +17,7 @@
 package nl.minvenj.nfi.ddrx.expression.value.reference;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.expression.value.Value;
+import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
 public class Ref implements ValueExpression {
@@ -29,8 +29,8 @@ public class Ref implements ValueExpression {
     }
 
     @Override
-    public Value eval(Environment env) {
-        return env.get(_name);
+    public OptionalValue eval(Environment env) {
+        return OptionalValue.of(env.get(_name));
     }
 
     @Override

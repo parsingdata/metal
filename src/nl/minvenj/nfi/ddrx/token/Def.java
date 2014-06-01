@@ -21,6 +21,7 @@ import java.io.IOException;
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.Expression;
+import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
 import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
@@ -43,7 +44,9 @@ public class Def extends Token {
 
     @Override
     protected boolean parseImpl(String name, Environment env, Encoding enc) {
-        final byte[] data = new byte[_size.eval(env).asNumeric().intValue()];
+        final OptionalValue size = _size.eval(env);
+        if (!size.isPresent()) { return false; }
+        final byte[] data = new byte[size.get().asNumeric().intValue()];
         env.mark();
         try {
             if (env.read(data) != data.length) {

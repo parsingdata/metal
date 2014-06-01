@@ -18,6 +18,7 @@ package nl.minvenj.nfi.ddrx.expression.comparison;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.expression.Expression;
+import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
 import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
@@ -37,7 +38,11 @@ public abstract class ComparisonExpression implements Expression {
 
     @Override
     public boolean eval(Environment env) {
-        return compare(_current == null ? env.current() : _current.eval(env), _predicate.eval(env));
+        final OptionalValue ocv = _current == null ? OptionalValue.of(env.current()) : _current.eval(env);
+        if (!ocv.isPresent()) { return false; }
+        final OptionalValue opv = _predicate.eval(env);
+        if (!opv.isPresent()) { return false; }
+        return compare(ocv.get(), opv.get());
     }
 
     public abstract boolean compare(Value current, Value predicate);

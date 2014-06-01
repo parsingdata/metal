@@ -27,8 +27,8 @@ public class Con implements ValueExpression {
     }
 
     @Override
-    public Value eval(Environment env) {
-        return _val;
+    public OptionalValue eval(Environment env) {
+        return OptionalValue.of(_val);
     }
 
     @Override

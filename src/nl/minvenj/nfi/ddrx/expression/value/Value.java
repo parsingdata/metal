@@ -61,7 +61,7 @@ public class Value {
         return _enc;
     }
 
-    public Value operation(ValueOperation op) {
+    public OptionalValue operation(ValueOperation op) {
         return op.execute(this);
     }
 

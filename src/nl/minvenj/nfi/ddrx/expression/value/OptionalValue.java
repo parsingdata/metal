@@ -16,28 +16,38 @@
 
 package nl.minvenj.nfi.ddrx.expression.value;
 
-import nl.minvenj.nfi.ddrx.data.Environment;
+import java.util.NoSuchElementException;
 
-public abstract class UnaryValueExpression implements ValueExpression {
-
-    protected final ValueExpression _op;
-
-    public UnaryValueExpression(ValueExpression op) {
-        _op = op;
+public class OptionalValue {
+    
+    private final Value _value;
+    
+    private OptionalValue(Value value) {
+        _value = value;
     }
     
-    @Override
-    public OptionalValue eval(Environment env) {
-        final OptionalValue v = _op.eval(env);
-        if (!v.isPresent()) { return v; }
-        return evalImpl(v.get(), env);
+    private OptionalValue() {
+        this(null);
     }
     
-    public abstract OptionalValue evalImpl(Value v, Environment env);
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" + _op + ")";
+    public static OptionalValue of(Value value) {
+        return new OptionalValue(value);
+    }
+    
+    public static OptionalValue empty() {
+        return new OptionalValue();
+    }
+    
+    public boolean isPresent() {
+        return _value != null;
+    }
+    
+    public Value get() {
+        if (isPresent()) {
+            return _value;
+        } else {
+            throw new NoSuchElementException("OptionalValue instance is empty.");
+        }
     }
 
 }
