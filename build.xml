@@ -57,9 +57,10 @@
                     <pathelement location="${test.dir}"/>
                 </classpath>
                 <formatter type="xml" />
-                <batchtest todir="${test.report.dir}" skipNonTests="true">
+                <batchtest todir="${test.report.dir}">
                     <fileset dir="test">
                         <include name="**/*.java"/>
+                        <exclude name="**/util/*.java"/>
                     </fileset>
                 </batchtest>
             </junit>
