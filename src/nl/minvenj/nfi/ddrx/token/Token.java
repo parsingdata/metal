@@ -23,7 +23,7 @@ public abstract class Token {
 
     public final static String DEFAULT_NAME = "W";
 
-    protected final Encoding _enc;
+    private final Encoding _enc;
 
     protected Token(Encoding enc) {
         _enc = enc;

@@ -34,7 +34,7 @@ public class Callback {
     public static ValueExpression crc32(ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public OptionalValue evalImpl(Value v, Environment env) {
+            public OptionalValue eval(Value v, Environment env) {
                 return v.operation(new ValueOperation() {
                     @Override
                     public OptionalValue execute(final Value value) {
@@ -54,7 +54,7 @@ public class Callback {
     public static ValueExpression inflate(ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public OptionalValue evalImpl(Value v, Environment env) {
+            public OptionalValue eval(Value v, Environment env) {
                 return v.operation(new ValueOperation() {
                     @Override
                     public OptionalValue execute(Value value) {

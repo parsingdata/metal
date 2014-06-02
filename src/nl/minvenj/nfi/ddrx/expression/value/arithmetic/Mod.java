@@ -32,7 +32,7 @@ public class Mod extends BinaryValueExpression {
     }
 
     @Override
-    public OptionalValue evalImpl(Value lv, Value rv, Environment env) {
+    public OptionalValue eval(Value lv, Value rv, Environment env) {
         if (rv.asNumeric().compareTo(BigInteger.ZERO) < 0) { return OptionalValue.empty(); }
         return OptionalValue.of(ConstantFactory.createFromNumeric(lv.asNumeric().mod(rv.asNumeric()), lv.getEncoding()));
     }

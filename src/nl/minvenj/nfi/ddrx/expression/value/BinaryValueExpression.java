@@ -21,24 +21,24 @@ import nl.minvenj.nfi.ddrx.data.Environment;
 
 public abstract class BinaryValueExpression implements ValueExpression {
 
-    protected final ValueExpression _lop;
-    protected final ValueExpression _rop;
+    private final ValueExpression _lop;
+    private final ValueExpression _rop;
 
     public BinaryValueExpression(ValueExpression lop, ValueExpression rop) {
         _lop = lop;
         _rop = rop;
     }
-    
+
     @Override
     public OptionalValue eval(Environment env) {
         final OptionalValue lv = _lop.eval(env);
         if (!lv.isPresent()) { return lv; }
         final OptionalValue rv = _rop.eval(env);
         if (!rv.isPresent()) { return rv; }
-        return evalImpl(lv.get(), rv.get(), env);
+        return eval(lv.get(), rv.get(), env);
     }
-    
-    public abstract OptionalValue evalImpl(Value lv, Value rv, Environment env);
+
+    public abstract OptionalValue eval(Value lv, Value rv, Environment env);
 
     @Override
     public String toString() {

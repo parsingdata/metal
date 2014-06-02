@@ -25,7 +25,7 @@ public class Cat extends BinaryValueExpression {
     }
 
     @Override
-    public OptionalValue evalImpl(Value lv, Value rv, Environment env) {
+    public OptionalValue eval(Value lv, Value rv, Environment env) {
         final byte[] lb = lv.getValue();
         final byte[] rb = rv.getValue();
         byte[] res = new byte[lb.length + rb.length];

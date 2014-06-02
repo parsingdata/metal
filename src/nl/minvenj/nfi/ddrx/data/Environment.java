@@ -23,6 +23,7 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 
+import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
 import nl.minvenj.nfi.ddrx.expression.value.Value;
 
 public class Environment {
@@ -41,13 +42,13 @@ public class Environment {
         _order.push(value);
     }
 
-    public Value get(String name) {
+    public OptionalValue get(String name) {
         for (Value v : _order) {
-            if (v.getName().endsWith("." + name)) { return v; }
+            if (v.getName().endsWith("." + name)) { return OptionalValue.of(v); }
         }
-        return null;
+        return OptionalValue.empty();
     }
-    
+
     public Deque<Value> getAll(String name) {
         Deque<Value> all = new ArrayDeque<Value>();
         for (Value v : _order) {
@@ -58,8 +59,8 @@ public class Environment {
         return all;
     }
 
-    public Value current() {
-        return _order.peek();
+    public OptionalValue current() {
+        return OptionalValue.of(_order.peek());
     }
 
     public List<Value> getPrefix(String prefix) {

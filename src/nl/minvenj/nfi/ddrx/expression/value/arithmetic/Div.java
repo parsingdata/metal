@@ -32,7 +32,7 @@ public class Div extends BinaryValueExpression {
     }
 
     @Override
-    public OptionalValue evalImpl(Value lv, Value rv, Environment env) {
+    public OptionalValue eval(Value lv, Value rv, Environment env) {
         if (rv.asNumeric().equals(BigInteger.ZERO)) { return OptionalValue.empty(); }
         return OptionalValue.of(ConstantFactory.createFromNumeric(lv.asNumeric().divide(rv.asNumeric()), lv.getEncoding()));
     }

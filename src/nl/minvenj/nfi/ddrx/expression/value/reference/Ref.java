@@ -30,7 +30,7 @@ public class Ref implements ValueExpression {
 
     @Override
     public OptionalValue eval(Environment env) {
-        return OptionalValue.of(env.get(_name));
+        return env.get(_name);
     }
 
     @Override

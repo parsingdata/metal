@@ -20,20 +20,20 @@ import nl.minvenj.nfi.ddrx.data.Environment;
 
 public abstract class UnaryValueExpression implements ValueExpression {
 
-    protected final ValueExpression _op;
+    private final ValueExpression _op;
 
     public UnaryValueExpression(ValueExpression op) {
         _op = op;
     }
-    
+
     @Override
     public OptionalValue eval(Environment env) {
         final OptionalValue v = _op.eval(env);
         if (!v.isPresent()) { return v; }
-        return evalImpl(v.get(), env);
+        return eval(v.get(), env);
     }
-    
-    public abstract OptionalValue evalImpl(Value v, Environment env);
+
+    public abstract OptionalValue eval(Value v, Environment env);
 
     @Override
     public String toString() {

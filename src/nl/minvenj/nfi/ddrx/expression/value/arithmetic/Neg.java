@@ -30,7 +30,7 @@ public class Neg extends UnaryValueExpression {
     }
 
     @Override
-    public OptionalValue evalImpl(Value v, Environment env) {
+    public OptionalValue eval(Value v, Environment env) {
         return OptionalValue.of(ConstantFactory.createFromNumeric(v.asNumeric().negate(), v.getEncoding()));
     }
 

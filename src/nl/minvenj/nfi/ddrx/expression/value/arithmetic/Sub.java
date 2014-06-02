@@ -30,7 +30,7 @@ public class Sub extends BinaryValueExpression {
     }
 
     @Override
-    public OptionalValue evalImpl(Value lv, Value rv, Environment env) {
+    public OptionalValue eval(Value lv, Value rv, Environment env) {
         return OptionalValue.of(ConstantFactory.createFromNumeric(lv.asNumeric().subtract(rv.asNumeric()), lv.getEncoding()));
     }
 
