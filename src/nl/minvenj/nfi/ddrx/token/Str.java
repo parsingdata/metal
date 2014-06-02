@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.token;
 
+import java.io.IOException;
+
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
@@ -45,7 +47,7 @@ public class Str extends Token {
     }
 
     @Override
-    protected boolean parseImpl(String name, Environment env, Encoding enc) {
+    protected boolean parseImpl(String name, Environment env, Encoding enc) throws IOException {
         boolean ret = _op.parse(name + "." + _name, env, enc);
         if (ret && _sink != null) {
             _sink.handleStruct(env.getPrefix(name + "." + _name));

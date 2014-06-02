@@ -23,6 +23,9 @@ import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.eq;
 import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
+
+import java.io.IOException;
+
 import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
@@ -53,42 +56,42 @@ public class BackTrackOffset {
                                            eq("f", 84)));
 
     @Test
-    public void choiceLeft() {
+    public void choiceLeft() throws IOException {
         Assert.assertTrue(_backTrackChoice.parse(stream(1, 2), enc()));
     }
 
     @Test
-    public void choiceRight() {
+    public void choiceRight() throws IOException {
         Assert.assertTrue(_backTrackChoice.parse(stream(1, 3), enc()));
     }
 
     @Test
-    public void choiceNone() {
+    public void choiceNone() throws IOException {
         Assert.assertFalse(_backTrackChoice.parse(stream(1, 4), enc()));
     }
 
     @Test
-    public void repeatZero() {
+    public void repeatZero() throws IOException {
         Assert.assertTrue(_backTrackRepeat.parse(stream(1, 3), enc()));
     }
 
     @Test
-    public void repeatOnce() {
+    public void repeatOnce() throws IOException {
         Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 3), enc()));
     }
 
     @Test
-    public void repeatTwice() {
+    public void repeatTwice() throws IOException {
         Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 2, 1, 3), enc()));
     }
 
     @Test
-    public void repeatNone() {
+    public void repeatNone() throws IOException {
         Assert.assertFalse(_backTrackRepeat.parse(stream(1, 4), enc()));
     }
 
     @Test
-    public void deepMatch() {
+    public void deepMatch() throws IOException {
         Assert.assertTrue(_backTrackDeep.parse(stream(1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 84), enc()));
     }
 

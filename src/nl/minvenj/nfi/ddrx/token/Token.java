@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.token;
 
+import java.io.IOException;
+
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
@@ -29,14 +31,14 @@ public abstract class Token {
         _enc = enc;
     }
 
-    public boolean parse(String name, Environment env, Encoding enc) {
+    public boolean parse(String name, Environment env, Encoding enc) throws IOException {
         return _enc == null ? parseImpl(name, env, enc) : parseImpl(name, env, _enc);
     }
 
-    public boolean parse(Environment env, Encoding enc) {
+    public boolean parse(Environment env, Encoding enc) throws IOException {
         return parse(DEFAULT_NAME, env, enc);
     }
 
-    protected abstract boolean parseImpl(String name, Environment env, Encoding enc);
+    protected abstract boolean parseImpl(String name, Environment env, Encoding enc) throws IOException;
 
 }

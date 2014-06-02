@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.token;
 
+import java.io.IOException;
+
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
@@ -35,7 +37,7 @@ public class Cho extends Token {
     }
 
     @Override
-    protected boolean parseImpl(String name, Environment env, Encoding enc) {
+    protected boolean parseImpl(String name, Environment env, Encoding enc) throws IOException {
         env.mark();
         final boolean ret = _l.parse(name, env, enc) || _r.parse(name, env, enc);
         if (ret) {

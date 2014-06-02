@@ -22,6 +22,9 @@ import static nl.minvenj.nfi.ddrx.TokenDefinitions.eq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.notEq;
 import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
 import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
+
+import java.io.IOException;
+
 import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
@@ -36,17 +39,17 @@ public class ReadUntil {
                                        eq("terminator", 42));
 
     @Test
-    public void readUntilConstant() {
+    public void readUntilConstant() throws IOException {
         Assert.assertTrue(_readUntil.parse(stream(1, 2, 3, 4, 42), enc()));
     }
 
     @Test
-    public void readUntilNoSkipping() {
+    public void readUntilNoSkipping() throws IOException {
         Assert.assertTrue(_readUntil.parse(stream(42), enc()));
     }
 
     @Test
-    public void readUntilErrorNoTerminator() {
+    public void readUntilErrorNoTerminator() throws IOException {
         Assert.assertFalse(_readUntil.parse(stream(1, 2, 3, 4), enc()));
     }
 

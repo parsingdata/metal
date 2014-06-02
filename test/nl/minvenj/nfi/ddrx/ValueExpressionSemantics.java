@@ -25,6 +25,9 @@ import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
 import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
+
+import java.io.IOException;
+
 import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
@@ -40,12 +43,12 @@ public class ValueExpressionSemantics {
                             def("c", con(2), eq(cat(ref("a"), ref("b"))))));
 
     @Test
-    public void Cat() {
+    public void Cat() throws IOException {
         Assert.assertTrue(cat.parse(stream(1, 2, 1, 2), enc()));
     }
 
     @Test
-    public void CatNoMatch() {
+    public void CatNoMatch() throws IOException {
         Assert.assertFalse(cat.parse(stream(1, 2, 12, 12), enc()));
     }
 

@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.token;
 
+import java.io.IOException;
+
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
@@ -33,7 +35,7 @@ public class Rep extends Token {
     }
 
     @Override
-    protected boolean parseImpl(String name, Environment env, Encoding enc) {
+    protected boolean parseImpl(String name, Environment env, Encoding enc) throws IOException {
         env.mark();
         if (!_op.parse(name, env, enc)) {
             env.reset();

@@ -18,12 +18,15 @@ package nl.minvenj.nfi.ddrx;
 
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import static nl.minvenj.nfi.ddrx.Shorthand.def;
-import static nl.minvenj.nfi.ddrx.Shorthand.eq;
-import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
+import static nl.minvenj.nfi.ddrx.Shorthand.div;
+import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
+import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
+import nl.minvenj.nfi.ddrx.data.ByteStream;
+import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
@@ -32,34 +35,34 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
-public class Simple {
-
-    private Token buildSimpleToken(String name, int size, int predicate) {
-        return def(name, con(size), eq(con(predicate)));
-    }
+public class Errors {
 
     @Test
-    public void correct() throws IOException {
-        Token t = buildSimpleToken("r1", 1, 1);
-        Assert.assertTrue(t.parse(stream(1, 2, 3, 4), enc()));
+    public void noValueForSize() throws IOException {
+        Token t = def("a", div(con(10), con(0)));
+        Assert.assertFalse(t.parse(stream(1), enc()));
     }
 
-    @Test
-    public void sizeError() throws IOException {
-        Token t = buildSimpleToken("r1", 2, 1);
-        Assert.assertFalse(t.parse(stream(1, 2, 3, 4), enc()));
-    }
+    @Test(expected=IOException.class)
+    public void ioError() throws IOException {
+        Token t = any("a");
+        ByteStream stream = new ByteStream() {
 
-    @Test
-    public void predicateError() throws IOException {
-        Token t = buildSimpleToken("r1", 1, 2);
-        Assert.assertFalse(t.parse(stream(1, 2, 3, 4), enc()));
-    }
+            @Override
+            public void mark() {}
 
-    @Test
-    public void sourceError() throws IOException {
-        Token t = buildSimpleToken("r1", 1, 1);
-        Assert.assertFalse(t.parse(stream(2, 2, 2, 2), enc()));
+            @Override
+            public void reset() {}
+
+            @Override
+            public void clear() {}
+
+            @Override
+            public int read(byte[] data) throws IOException { throw new IOException(); }
+
+        };
+        Environment env = new Environment(stream);
+        t.parse(env, enc());
     }
 
 }

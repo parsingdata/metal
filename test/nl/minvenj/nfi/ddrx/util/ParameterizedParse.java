@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.util;
 
+import java.io.IOException;
+
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.token.Token;
@@ -43,7 +45,7 @@ public class ParameterizedParse {
     }
 
     @Test
-    public void test() {
+    public void test() throws IOException {
         Assert.assertEquals(_result, _token.parse(_env, _enc));
     }
 
