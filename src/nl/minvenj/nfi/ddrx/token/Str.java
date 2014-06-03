@@ -48,10 +48,12 @@ public class Str extends Token {
 
     @Override
     protected boolean parseImpl(String outerScope, Environment env, Encoding enc) throws IOException {
+        env.pushScope();
         boolean ret = _op.parse(outerScope + "." + _scope, env, enc);
         if (ret && _sink != null) {
-            _sink.handleStruct(env.getPrefix(outerScope + "." + _scope));
+            _sink.handleStruct(env.getPrefixInScope(outerScope + "." + _scope));
         }
+        env.popScope();
         return ret;
     }
 

@@ -30,12 +30,22 @@ public class Environment {
 
     private final Deque<Value> _order;
     private final Deque<Integer> _marked;
+    private final Deque<Integer> _scopes;
     private final ByteStream _input;
 
     public Environment(ByteStream input) {
         _order = new ArrayDeque<Value>();
         _marked = new ArrayDeque<Integer>();
+        _scopes = new ArrayDeque<Integer>();
         _input = input;
+    }
+
+    public void pushScope() {
+        _scopes.push(_order.size());
+    }
+
+    public void popScope() {
+        _scopes.pop();
     }
 
     public void put(Value value) {
@@ -63,9 +73,12 @@ public class Environment {
         return OptionalValue.of(_order.peek());
     }
 
-    public List<Value> getPrefix(String prefix) {
-        ArrayList<Value> result = new ArrayList<Value>();
-        for (Value v : _order) {
+    public List<Value> getPrefixInScope(String prefix) {
+        final ArrayList<Value> result = new ArrayList<Value>();
+        final int scopeSize = _order.size() - _scopes.peek();
+        final Iterator<Value> iterator = _order.iterator();
+        for (int i = 0; i < scopeSize && iterator.hasNext(); i++) {
+            final Value v = iterator.next();
             if (v.getScope().startsWith(prefix)) { result.add(0, v); }
         }
         return result;
