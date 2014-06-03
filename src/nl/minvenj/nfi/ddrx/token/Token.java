@@ -31,14 +31,14 @@ public abstract class Token {
         _enc = enc;
     }
 
-    public boolean parse(String name, Environment env, Encoding enc) throws IOException {
-        return _enc == null ? parseImpl(name, env, enc) : parseImpl(name, env, _enc);
+    public boolean parse(String scope, Environment env, Encoding enc) throws IOException {
+        return _enc == null ? parseImpl(scope, env, enc) : parseImpl(scope, env, _enc);
     }
 
     public boolean parse(Environment env, Encoding enc) throws IOException {
         return parse(DEFAULT_NAME, env, enc);
     }
 
-    protected abstract boolean parseImpl(String name, Environment env, Encoding enc) throws IOException;
+    protected abstract boolean parseImpl(String scope, Environment env, Encoding enc) throws IOException;
 
 }

@@ -23,34 +23,34 @@ import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class Str extends Token {
 
-    private final String _name;
+    private final String _scope;
     private final Token _op;
     private final StructSink _sink;
 
-    public Str(String name, Token op, Encoding enc, StructSink sink) {
+    public Str(String scope, Token op, Encoding enc, StructSink sink) {
         super(enc);
-        _name = name;
+        _scope = scope;
         _op = op;
         _sink = sink;
     }
 
-    public Str(String name, Token op, Encoding enc) {
-        this(name, op, enc, null);
+    public Str(String scope, Token op, Encoding enc) {
+        this(scope, op, enc, null);
     }
 
-    public Str(String name, Token op, StructSink sink) {
-        this(name, op, null, sink);
+    public Str(String scope, Token op, StructSink sink) {
+        this(scope, op, null, sink);
     }
 
-    public Str(String name, Token op) {
-        this(name, op, null, null);
+    public Str(String scope, Token op) {
+        this(scope, op, null, null);
     }
 
     @Override
-    protected boolean parseImpl(String name, Environment env, Encoding enc) throws IOException {
-        boolean ret = _op.parse(name + "." + _name, env, enc);
+    protected boolean parseImpl(String outerScope, Environment env, Encoding enc) throws IOException {
+        boolean ret = _op.parse(outerScope + "." + _scope, env, enc);
         if (ret && _sink != null) {
-            _sink.handleStruct(env.getPrefix(name + "." + _name));
+            _sink.handleStruct(env.getPrefix(outerScope + "." + _scope));
         }
         return ret;
     }

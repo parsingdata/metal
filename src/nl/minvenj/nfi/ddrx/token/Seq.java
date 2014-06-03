@@ -37,9 +37,9 @@ public class Seq extends Token {
     }
 
     @Override
-    protected boolean parseImpl(String name, Environment env, Encoding enc) throws IOException {
+    protected boolean parseImpl(String scope, Environment env, Encoding enc) throws IOException {
         env.mark();
-        final boolean ret = _l.parse(name, env, enc) && _r.parse(name, env, enc);
+        final boolean ret = _l.parse(scope, env, enc) && _r.parse(scope, env, enc);
         if (ret) {
             env.clear();
         } else {

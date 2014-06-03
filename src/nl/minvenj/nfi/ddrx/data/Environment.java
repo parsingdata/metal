@@ -66,7 +66,7 @@ public class Environment {
     public List<Value> getPrefix(String prefix) {
         ArrayList<Value> result = new ArrayList<Value>();
         for (Value v : _order) {
-            if (v.getScope().equals(prefix)) { result.add(0, v); }
+            if (v.getScope().startsWith(prefix)) { result.add(0, v); }
         }
         return result;
     }
