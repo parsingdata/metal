@@ -24,24 +24,40 @@ import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class Value {
 
+    public static final String DEFAULT_SCOPE = "EMPTY_SCOPE";
+    public static final String SEPARATOR = ".";
     public static final String DEFAULT_NAME = "CONSTANT_VALUE";
 
+    protected final String _scope;
     protected final String _name;
     protected final byte[] _data;
     protected final Encoding _enc;
 
     public Value(byte[] data, Encoding enc) {
-        this(DEFAULT_NAME, data, enc);
+        this(DEFAULT_SCOPE, DEFAULT_NAME, data, enc);
     }
 
-    public Value(String name, byte[] data, Encoding encoding) {
+    public Value(String scope, String name, byte[] data, Encoding encoding) {
+        _scope = scope;
         _name = name;
         _data = data;
         _enc = encoding;
     }
 
+    public String getScope() {
+        return _scope;
+    }
+
     public String getName() {
         return _name;
+    }
+
+    public String getFullName() {
+        return getScope() + SEPARATOR + getName();
+    }
+
+    public boolean matches(String name) {
+        return getFullName().equals(name) || getFullName().endsWith(SEPARATOR + name);
     }
 
     public byte[] getValue() {

@@ -44,7 +44,7 @@ public class Environment {
 
     public OptionalValue get(String name) {
         for (Value v : _order) {
-            if (v.getName().endsWith("." + name)) { return OptionalValue.of(v); }
+            if (v.matches(name)) { return OptionalValue.of(v); }
         }
         return OptionalValue.empty();
     }
@@ -52,7 +52,7 @@ public class Environment {
     public Deque<Value> getAll(String name) {
         Deque<Value> all = new ArrayDeque<Value>();
         for (Value v : _order) {
-            if (v.getName().endsWith("." + name)) {
+            if (v.matches(name)) {
                 all.add(v);
             }
         }
@@ -66,7 +66,7 @@ public class Environment {
     public List<Value> getPrefix(String prefix) {
         ArrayList<Value> result = new ArrayList<Value>();
         for (Value v : _order) {
-            if (v.getName().startsWith(prefix)) { result.add(0, v); }
+            if (v.getScope().equals(prefix)) { result.add(0, v); }
         }
         return result;
     }
@@ -102,7 +102,7 @@ public class Environment {
         StringBuffer sb = new StringBuffer();
         Iterator<Value> i = _order.descendingIterator();
         while (i.hasNext()) {
-            sb.append(i.next().getName());
+            sb.append(i.next().getFullName());
             sb.append("\n");
         }
         return sb.toString();

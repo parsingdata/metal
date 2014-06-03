@@ -52,7 +52,7 @@ public class Def extends Token {
             env.reset();
             return false;
         }
-        env.put(new Value(name + "." + _name, data, enc));
+        env.put(new Value(name, _name, data, enc));
         final boolean ret = _pred.eval(env);
         if (ret) {
             env.clear();
