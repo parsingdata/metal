@@ -42,7 +42,7 @@ public class Rep extends Token {
             return true;
         }
         env.clear();
-        return parse(scope, env, enc);
+        return parse(scope + "$", env, enc);
     }
 
     @Override
