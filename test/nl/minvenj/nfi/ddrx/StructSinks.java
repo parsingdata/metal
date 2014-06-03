@@ -38,51 +38,36 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class StructSinks {
 
-    private static Token token(StructSink s) {
-        return str("test", seq(any("a"), any("b")), s);
-    }
-
-    private static void check(List<Value> struct) {
-        Assert.assertEquals(2, struct.size());
-        Assert.assertTrue(struct.get(0).getName().equals("a"));
-        Assert.assertTrue(struct.get(1).getName().equals("b"));
-    }
+    private final static Token TOKEN =
+        str("test", seq(any("a"), any("b")), new StructSink() {
+            @Override
+            public void handleStruct(List<Value> struct) {
+                Assert.assertEquals(2, struct.size());
+                Assert.assertTrue(struct.get(0).getName().equals("a"));
+                Assert.assertTrue(struct.get(1).getName().equals("b"));
+            }
+        });
 
     @Test
     public void structSinkSingle() throws IOException {
-        token(new StructSink() {
-            @Override
-            public void handleStruct(List<Value> struct) {
-                check(struct);
-            }
-        }).parse(stream(1, 2), enc());
+        TOKEN.parse(stream(1, 2), enc());
     }
 
     @Test
     public void structSinkMultiInRep() throws IOException {
-        rep(token(new StructSink() {
-            @Override
-            public void handleStruct(List<Value> struct) {
-                check(struct);
-            }
-        })).parse(stream(1, 2, 3, 4), enc());
+        rep(TOKEN).parse(stream(1, 2, 3, 4), enc());
     }
 
     @Test
     public void structSinkMultiOverRep() throws IOException {
-        str("outer", rep(token(new StructSink() {
-            @Override
-            public void handleStruct(List<Value> struct) {
-                check(struct);
-            }
-        })), new StructSink() {
+        str("outer", rep(TOKEN), new StructSink() {
             @Override
             public void handleStruct(List<Value> struct) {
                 Assert.assertEquals(4, struct.size());
-                Assert.assertTrue(struct.get(0).getName().equals("a"));
-                Assert.assertTrue(struct.get(1).getName().equals("b"));
-                Assert.assertTrue(struct.get(2).getName().equals("a"));
-                Assert.assertTrue(struct.get(3).getName().equals("b"));
+                for (int i = 0; i < struct.size(); i++) {
+                    Assert.assertEquals((i & 1) == 0 ? "a" : "b", struct.get(i).getName());
+                    Assert.assertEquals(i+1, struct.get(i).asNumeric().intValue());
+                }
             }
         }).parse(stream(1, 2, 3, 4), enc());
     }
