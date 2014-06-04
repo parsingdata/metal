@@ -24,12 +24,12 @@ import java.util.Deque;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 
-public class Reduce implements ValueExpression {
-    
+public class Reduce<T extends BinaryValueExpression> implements ValueExpression {
+
     private final String _name;
-    private final Class<BinaryValueExpression> _reducer;
-    
-    public Reduce(String name, Class<BinaryValueExpression> reducer) {
+    private final Class<T> _reducer;
+
+    public Reduce(String name, Class<T> reducer) {
         _name = name;
         _reducer = reducer;
     }
@@ -38,7 +38,7 @@ public class Reduce implements ValueExpression {
     public OptionalValue eval(Environment env) {
         try {
             Deque<Value> values = env.getAll(_name);
-            Constructor<BinaryValueExpression> con = _reducer.getConstructor(ValueExpression.class, ValueExpression.class);
+            Constructor<T> con = _reducer.getConstructor(ValueExpression.class, ValueExpression.class);
             if (values.size() > 0) {
                 return reduce(env, con, OptionalValue.of(values.pop()), values);
             }
@@ -47,8 +47,8 @@ public class Reduce implements ValueExpression {
         }
         return OptionalValue.empty();
     }
-    
-    private OptionalValue reduce(Environment env, Constructor<BinaryValueExpression> con, OptionalValue head, Deque<Value> tail) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+
+    private OptionalValue reduce(Environment env, Constructor<T> con, OptionalValue head, Deque<Value> tail) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         if (!head.isPresent() || tail.size() == 0) { return head; }
         return reduce(env, con, con.newInstance(con(head.get()), con(tail.pop())).eval(env), tail);
     }
