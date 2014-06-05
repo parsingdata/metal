@@ -16,9 +16,11 @@
 
 package nl.minvenj.nfi.ddrx;
 
+import static nl.minvenj.nfi.ddrx.Shorthand.add;
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
+import static nl.minvenj.nfi.ddrx.Shorthand.mul;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
@@ -30,7 +32,8 @@ import java.util.Collection;
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.value.Reduce;
-import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Add;
+import nl.minvenj.nfi.ddrx.expression.value.Reducer;
+import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 import nl.minvenj.nfi.ddrx.token.Token;
 import nl.minvenj.nfi.ddrx.util.ParameterizedParse;
 
@@ -41,7 +44,10 @@ public class Reducers extends ParameterizedParse {
     @Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-            { "[1, 2, 3, 6] a, a, a, sum(a)", add, stream(1, 2, 3, 6), enc(), true },
+            { "[1, 2, 3, 6] a, a, a, addAll(a)", token(addReducer), stream(1, 2, 3, 6), enc(), true },
+            { "[1, 2, 3, 7] a, a, a, addAll(a)", token(addReducer), stream(1, 2, 3, 7), enc(), false },
+            { "[1, 2, 3, 6] a, a, a, mulAll(a)", token(mulReducer), stream(1, 2, 3, 6), enc(), true },
+            { "[1, 2, 3, 7] a, a, a, mulAll(a)", token(mulReducer), stream(1, 2, 3, 7), enc(), false },
         });
     }
 
@@ -49,9 +55,14 @@ public class Reducers extends ParameterizedParse {
         super(token, env, enc, result);
     }
 
-    private final static Token add = seq(any("a"),
-                                     seq(any("a"),
-                                     seq(any("a"),
-                                         def("b", con(1), eq(new Reduce<Add>("a", Add.class))))));
+    private static Token token(Reducer reducer) {
+        return seq(any("a"),
+               seq(any("a"),
+               seq(any("a"),
+                   def("b", con(1), eq(new Reduce("a", reducer))))));
+    }
+
+    private final static Reducer addReducer = new Reducer() { @Override public ValueExpression reduce(ValueExpression l, ValueExpression r) { return add(l, r); } };
+    private final static Reducer mulReducer = new Reducer() { @Override public ValueExpression reduce(ValueExpression l, ValueExpression r) { return mul(l, r); } };
 
 }

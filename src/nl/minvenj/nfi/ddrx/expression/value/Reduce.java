@@ -18,39 +18,32 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Deque;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 
-public class Reduce<T extends BinaryValueExpression> implements ValueExpression {
+public class Reduce implements ValueExpression {
 
     private final String _name;
-    private final Class<T> _reducer;
+    private final Reducer _reducer;
 
-    public Reduce(String name, Class<T> reducer) {
+    public Reduce(String name, Reducer reducer) {
         _name = name;
         _reducer = reducer;
     }
 
     @Override
     public OptionalValue eval(Environment env) {
-        try {
-            Deque<Value> values = env.getAll(_name);
-            Constructor<T> con = _reducer.getConstructor(ValueExpression.class, ValueExpression.class);
-            if (values.size() > 0) {
-                return reduce(env, con, OptionalValue.of(values.pop()), values);
-            }
-        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            e.printStackTrace();
+        Deque<Value> values = env.getAll(_name);
+        if (values.size() == 0) {
+            return OptionalValue.empty();
         }
-        return OptionalValue.empty();
+        return reduce(env, _reducer, OptionalValue.of(values.pop()), values);
     }
 
-    private OptionalValue reduce(Environment env, Constructor<T> con, OptionalValue head, Deque<Value> tail) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    private OptionalValue reduce(Environment env, Reducer reducer, OptionalValue head, Deque<Value> tail) {
         if (!head.isPresent() || tail.size() == 0) { return head; }
-        return reduce(env, con, con.newInstance(con(head.get()), con(tail.pop())).eval(env), tail);
+        return reduce(env, reducer, reducer.reduce(con(head.get()), con(tail.pop())).eval(env), tail);
     }
 
 }
