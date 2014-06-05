@@ -34,6 +34,8 @@ import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
 import nl.minvenj.nfi.ddrx.expression.value.Cat;
 import nl.minvenj.nfi.ddrx.expression.value.Con;
 import nl.minvenj.nfi.ddrx.expression.value.ConstantFactory;
+import nl.minvenj.nfi.ddrx.expression.value.Reduce;
+import nl.minvenj.nfi.ddrx.expression.value.Reducer;
 import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
 import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
@@ -80,6 +82,7 @@ public class Shorthand {
     public static ValueExpression ref(String s) { return new Ref(s); }
     public static ValueExpression first(String s) { return new First(s); }
     public static ValueExpression cat(ValueExpression l, ValueExpression r) { return new Cat(l, r); }
+    public static ValueExpression reduce(String name, Reducer reducer) { return new Reduce(name, reducer); }
 
     public static BinaryLogicalExpression and(Expression l, Expression r) { return new And(l, r); }
     public static BinaryLogicalExpression or(Expression l, Expression r) { return new Or(l, r); }
