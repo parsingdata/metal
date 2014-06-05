@@ -25,6 +25,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.expTrue;
 import static nl.minvenj.nfi.ddrx.Shorthand.gtNum;
 import static nl.minvenj.nfi.ddrx.Shorthand.ltNum;
 import static nl.minvenj.nfi.ddrx.Shorthand.ref;
+import static nl.minvenj.nfi.ddrx.Shorthand.self;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
@@ -49,16 +50,18 @@ public class ComparisonExpressionSemantics extends ParameterizedParse {
         return Arrays.asList(new Object[][] {
             { "1 == 1", numCom(1, eqNum(ref("a"))), stream(1, 1), enc(), true },
             { "2 == 1", numCom(1, eqNum(ref("a"))), stream(1, 2), enc(), false },
-            { "1 > 1", numCom(1, gtNum(ref("a"))), stream(1, 1), enc(), false},
-            { "2 > 1", numCom(1, gtNum(ref("a"))), stream(1, 2), enc(), true},
-            { "1 > 2", numCom(1, gtNum(ref("a"))), stream(2, 1), enc(), false},
-            { "1 < 1", numCom(1, ltNum(ref("a"))), stream(1, 1), enc(), false},
-            { "2 < 1", numCom(1, ltNum(ref("a"))), stream(1, 2), enc(), false},
-            { "1 < 2", numCom(1, ltNum(ref("a"))), stream(2, 1), enc(), true},
-            { "\"abc\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabc", Charset.forName("ISO646-US")), enc(), true},
-            { "\"abd\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabd", Charset.forName("ISO646-US")), enc(), false},
-            { "0x01 == 0x01", valCom(1, eq(ref("a"))), stream(1, 1), enc(), true},
-            { "0x02 == 0x01", valCom(1, eq(ref("a"))), stream(1, 2), enc(), false}
+            { "1 > 1", numCom(1, gtNum(ref("a"))), stream(1, 1), enc(), false },
+            { "2 > 1", numCom(1, gtNum(ref("a"))), stream(1, 2), enc(), true },
+            { "1 > 2", numCom(1, gtNum(ref("a"))), stream(2, 1), enc(), false },
+            { "1 < 1", numCom(1, ltNum(ref("a"))), stream(1, 1), enc(), false },
+            { "2 < 1", numCom(1, ltNum(ref("a"))), stream(1, 2), enc(), false },
+            { "1 < 2", numCom(1, ltNum(ref("a"))), stream(2, 1), enc(), true },
+            { "\"abc\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabc", Charset.forName("ISO646-US")), enc(), true },
+            { "\"abd\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabd", Charset.forName("ISO646-US")), enc(), false },
+            { "0x01 == 0x01", valCom(1, eq(ref("a"))), stream(1, 1), enc(), true },
+            { "0x02 == 0x01", valCom(1, eq(ref("a"))), stream(1, 2), enc(), false },
+            { "0x01 == 0x01 with self", valCom(1, eq(self, ref("a"))), stream(1, 1), enc(), true },
+            { "0x01 == 0x02 with self", valCom(1, eq(self, ref("a"))), stream(1, 2), enc(), false }
         });
     }
 

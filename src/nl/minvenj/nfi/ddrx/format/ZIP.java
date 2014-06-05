@@ -26,6 +26,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.eqNum;
 import static nl.minvenj.nfi.ddrx.Shorthand.expTrue;
 import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.rep;
+import static nl.minvenj.nfi.ddrx.Shorthand.self;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.Shorthand.str;
 import nl.minvenj.nfi.ddrx.encoding.ByteOrder;
@@ -60,7 +61,7 @@ public class ZIP {
     private static final Token LOCAL_DEFLATED_FILE =
             str("file",
             seq(localFileBody(8, expTrue(), expTrue(), expTrue()),
-                def("compresseddata", ref("compressedsize"), eq(crc32(inflate(ref("compresseddata"))), ref("crc32")))));
+                def("compresseddata", ref("compressedsize"), eq(crc32(inflate(self)), ref("crc32")))));
 
     private static final Token LOCAL_EMPTY_FILE =
             str("file",
@@ -69,7 +70,7 @@ public class ZIP {
     private static final Token LOCAL_STORED_FILE =
             str("file",
             seq(localFileBody(0, expTrue(), expTrue(), eq(ref("compressedsize"))),
-                def("compresseddata", ref("compressedsize"), eq(crc32(ref("compresseddata")), ref("crc32")))));
+                def("compresseddata", ref("compressedsize"), eq(crc32(self), ref("crc32")))));
 
     private static final Token FILES =
             rep(cho(LOCAL_DEFLATED_FILE,
