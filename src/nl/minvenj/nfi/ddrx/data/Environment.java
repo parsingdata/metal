@@ -61,7 +61,9 @@ public class Environment {
 
     public Deque<Value> getAll(String name) {
         Deque<Value> all = new ArrayDeque<Value>();
-        for (Value v : _order) {
+        Iterator<Value> iter = _order.descendingIterator();
+        while (iter.hasNext()) {
+            final Value v = iter.next();
             if (v.matches(name)) {
                 all.add(v);
             }

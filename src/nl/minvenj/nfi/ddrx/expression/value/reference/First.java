@@ -37,7 +37,7 @@ public class First implements ValueExpression {
         if (all.isEmpty()) {
             return OptionalValue.empty();
         } else {
-            return OptionalValue.of(all.getLast());
+            return OptionalValue.of(all.getFirst());
         }
     }
 
