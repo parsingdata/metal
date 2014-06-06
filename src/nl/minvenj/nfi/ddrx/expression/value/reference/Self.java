@@ -27,4 +27,9 @@ public class Self implements ValueExpression {
         return env.current();
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
+
 }

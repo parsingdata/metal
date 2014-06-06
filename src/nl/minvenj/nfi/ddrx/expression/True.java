@@ -27,7 +27,7 @@ public class True implements Expression {
 
     @Override
     public String toString() {
-        return "True";
+        return getClass().getSimpleName();
     }
 
 }
