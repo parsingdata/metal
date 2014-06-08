@@ -21,11 +21,13 @@ import static nl.minvenj.nfi.ddrx.Shorthand.cat;
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
+import static nl.minvenj.nfi.ddrx.Shorthand.eqNum;
 import static nl.minvenj.nfi.ddrx.Shorthand.mul;
 import static nl.minvenj.nfi.ddrx.Shorthand.reduce;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
+import static nl.minvenj.nfi.ddrx.util.EncodingFactory.le;
 import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 
 import java.util.Arrays;
@@ -33,6 +35,7 @@ import java.util.Collection;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
+import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.expression.value.Reducer;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 import nl.minvenj.nfi.ddrx.token.Token;
@@ -52,7 +55,11 @@ public class Reducers extends ParameterizedParse {
             { "[1, 2, 4, 15] a, a, a, (addAll(a)+mulAll(a))", reduceAllAplusMulA, stream(1, 2, 4, 15), enc(), true },
             { "[1, 2, 4, 16] a, a, a, (addAll(a)+mulAll(a))", reduceAllAplusMulA, stream(1, 2, 4, 16), enc(), false },
             { "[1, 2, 3, 1, 2, 3] a, a, a, catAll(a)", reduceCatA, stream(1, 2, 3, 1, 2, 3), enc(), true },
-            { "[1, 2, 3, 3, 2, 1] a, a, a, catAll(a)", reduceCatA, stream(1, 2, 3, 3, 2, 1), enc(), false }
+            { "[1, 2, 3, 3, 2, 1] a, a, a, catAll(a)", reduceCatA, stream(1, 2, 3, 3, 2, 1), enc(), false },
+            { "[1, 2, 3, 1, 2, 3] a, a, a, catAll(a) BE", reduceCatAToNumBE, stream(1, 2, 3, 1, 2, 3), enc(), true },
+            { "[1, 2, 3, 3, 2, 1] a, a, a, catAll(a) BE", reduceCatAToNumBE, stream(1, 2, 3, 3, 2, 1), enc(), false },
+            { "[1, 2, 3, 1, 2, 3] a, a, a, catAll(a) LE", reduceCatAToNumLE, stream(1, 2, 3, 1, 2, 3), enc(), false },
+            { "[1, 2, 3, 3, 2, 1] a, a, a, catAll(a) LE", reduceCatAToNumLE, stream(1, 2, 3, 3, 2, 1), enc(), true }
         });
     }
 
@@ -64,16 +71,22 @@ public class Reducers extends ParameterizedParse {
     private final static Reducer mulReducer = new Reducer() { @Override public ValueExpression reduce(ValueExpression l, ValueExpression r) { return mul(l, r); } };
     private final static Reducer catReducer = new Reducer() { @Override public ValueExpression reduce(ValueExpression l, ValueExpression r) { return cat(l, r); } };
 
-    private final static Token reduceAddA = token(1, reduce("a", addReducer));
-    private final static Token reduceMulA = token(1, reduce("a", mulReducer));
-    private final static Token reduceAllAplusMulA = token(1, add(reduce("a", addReducer), reduce("a", mulReducer)));
-    private final static Token reduceCatA = token(3, reduce("a", catReducer));
+    private final static Token reduceAddA = token(1, eq(reduce("a", addReducer)));
+    private final static Token reduceMulA = token(1, eq(reduce("a", mulReducer)));
+    private final static Token reduceAllAplusMulA = token(1, eq(add(reduce("a", addReducer), reduce("a", mulReducer))));
+    private final static Token reduceCatA = token(3, eq(reduce("a", catReducer)));
+    private final static Token reduceCatAToNumBE = token(3, eqNum(reduce("a", catReducer)), enc());    
+    private final static Token reduceCatAToNumLE = token(3, eqNum(reduce("a", catReducer)), le());    
 
-    private static Token token(long size, ValueExpression eqPred) {
+    private static Token token(long size, Expression pred, Encoding enc) {
         return seq(any("a"),
                seq(any("a"),
                seq(any("a"),
-                   def("b", con(size), eq(eqPred)))));
+                   def("b", con(size), pred, enc))));
+    }
+
+    private static Token token(long size, Expression pred) {
+        return token(size, pred, enc());
     }
 
 }
