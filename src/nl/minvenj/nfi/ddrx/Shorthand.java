@@ -32,7 +32,7 @@ import nl.minvenj.nfi.ddrx.expression.logical.Or;
 import nl.minvenj.nfi.ddrx.expression.logical.UnaryLogicalExpression;
 import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
 import nl.minvenj.nfi.ddrx.expression.value.Cat;
-import nl.minvenj.nfi.ddrx.expression.value.Con;
+import nl.minvenj.nfi.ddrx.expression.value.Const;
 import nl.minvenj.nfi.ddrx.expression.value.ConstantFactory;
 import nl.minvenj.nfi.ddrx.expression.value.Reduce;
 import nl.minvenj.nfi.ddrx.expression.value.Reducer;
@@ -76,10 +76,10 @@ public class Shorthand {
     public static BinaryValueExpression mod(ValueExpression l, ValueExpression r) { return new Mod(l, r); }
     public static UnaryValueExpression neg(ValueExpression v) { return new Neg(v); }
     public static ValueExpression con(long v) { return con(v, new Encoding()); }
-    public static ValueExpression con(long v, Encoding encoding) { return new Con(ConstantFactory.createFromNumeric(v, encoding)); }
+    public static ValueExpression con(long v, Encoding encoding) { return new Const(ConstantFactory.createFromNumeric(v, encoding)); }
     public static ValueExpression con(String s) { return con(s, new Encoding()); }
-    public static ValueExpression con(String s, Encoding encoding) { return new Con(ConstantFactory.createFromString(s, encoding)); }
-    public static ValueExpression con(Value v) { return new Con(v); }
+    public static ValueExpression con(String s, Encoding encoding) { return new Const(ConstantFactory.createFromString(s, encoding)); }
+    public static ValueExpression con(Value v) { return new Const(v); }
     public static final ValueExpression self = new Self();
     public static ValueExpression ref(String s) { return new Ref(s); }
     public static ValueExpression first(String s) { return new First(s); }

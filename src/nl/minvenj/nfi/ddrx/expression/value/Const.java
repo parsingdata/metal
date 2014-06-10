@@ -18,11 +18,11 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 
-public class Con implements ValueExpression {
+public class Const implements ValueExpression {
 
     private final Value _val;
 
-    public Con(Value val) {
+    public Const(Value val) {
         _val = val;
     }
 
