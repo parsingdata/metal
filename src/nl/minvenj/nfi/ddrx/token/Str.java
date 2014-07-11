@@ -56,5 +56,10 @@ public class Str extends Token {
         env.popScope();
         return ret;
     }
+    
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _scope + "," + _op + (_sink != null ? "," + _sink : "") + ")";
+    }
 
 }

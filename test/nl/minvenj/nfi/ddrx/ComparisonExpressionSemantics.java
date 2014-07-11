@@ -58,10 +58,10 @@ public class ComparisonExpressionSemantics extends ParameterizedParse {
             { "1 < 2", numCom(1, ltNum(ref("a"))), stream(2, 1), enc(), true },
             { "\"abc\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabc", Charset.forName("ISO646-US")), enc(), true },
             { "\"abd\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabd", Charset.forName("ISO646-US")), enc(), false },
-            { "0x01 == 0x01", valCom(1, eq(ref("a"))), stream(1, 1), enc(), true },
-            { "0x02 == 0x01", valCom(1, eq(ref("a"))), stream(1, 2), enc(), false },
-            { "0x01 == 0x01 with self", valCom(1, eq(self, ref("a"))), stream(1, 1), enc(), true },
-            { "0x01 == 0x02 with self", valCom(1, eq(self, ref("a"))), stream(1, 2), enc(), false }
+            { "1 == 1", valCom(1, eq(ref("a"))), stream(1, 1), enc(), true },
+            { "2 == 1", valCom(1, eq(ref("a"))), stream(1, 2), enc(), false },
+            { "1 == 1 with self", valCom(1, eq(self, ref("a"))), stream(1, 1), enc(), true },
+            { "1 == 2 with self", valCom(1, eq(self, ref("a"))), stream(1, 2), enc(), false }
         });
     }
 
