@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ddrx" default="report" xmlns:jacoco="antlib:org.jacoco.ant">
+<project name="ddrx" default="jar" xmlns:jacoco="antlib:org.jacoco.ant">
 
     <property name="output.dir" location="antbuild"/>
     <property name="bin.dir" location="${output.dir}/bin"/>
     <property name="release.dir" location="${bin.dir}/release"/>
+    <property name="jar.release.dir" location="${bin.dir}/jar"/>
     <property name="debug.dir" location="${bin.dir}/debug"/>
     <property name="test.dir" location="${bin.dir}/test"/>
     <property name="report.dir" location="${output.dir}/report"/>
     <property name="test.report.dir" location="${report.dir}/test"/>
     <property name="coverage.report.dir" location="${report.dir}/coverage"/>
     <property name="coverage.data.file" location="${coverage.report.dir}/jacoco.exec"/>
+    <property name="release.version" value="0.1.0"/>
+    <property name="release.name" value="ddrx"/>
+    <property name="jar.name" value="${release.name}-${release.version}.jar"/>
     
     <presetdef name="javac">
         <javac includeantruntime="false"/>
@@ -39,6 +43,7 @@
         <mkdir dir="${report.dir}"/>
         <mkdir dir="${test.report.dir}"/>
         <mkdir dir="${coverage.report.dir}"/>
+        <mkdir dir="${jar.release.dir}"/>
     </target>
     
     <target name="compile" depends="makedirs">
@@ -96,5 +101,15 @@
     </target>
     
     <target name="report" depends="testreport,coveragereport"/>
+    
+    <target name="jar" depends="report">
+        <jar destfile="${jar.release.dir}/${jar.name}">
+            <fileset dir="${release.dir}"/>
+            <manifest>
+                <attribute name="Vendor" value="NFI"/>
+                <attribute name="Version" value="${release.version}"/>
+            </manifest>
+        </jar>
+    </target>
 
 </project>
