@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="ddrx" default="jar" xmlns:jacoco="antlib:org.jacoco.ant">
+<project name="ddrx" default="all" xmlns:jacoco="antlib:org.jacoco.ant">
 
     <property name="output.dir" location="antbuild"/>
     <property name="bin.dir" location="${output.dir}/bin"/>
@@ -13,7 +13,8 @@
     <property name="coverage.data.file" location="${coverage.report.dir}/jacoco.exec"/>
     <property name="release.version" value="0.1.0"/>
     <property name="release.name" value="ddrx"/>
-    <property name="jar.name" value="${release.name}-${release.version}.jar"/>
+    <property name="jar.bin.name" value="${release.name}-${release.version}.jar"/>
+    <property name="jar.src.name" value="${release.name}-${release.version}-src.jar"/>
     
     <presetdef name="javac">
         <javac includeantruntime="false"/>
@@ -102,14 +103,23 @@
     
     <target name="report" depends="testreport,coveragereport"/>
     
-    <target name="jar" depends="report">
-        <jar destfile="${jar.release.dir}/${jar.name}">
+    <target name="jar" depends="test">
+        <jar destfile="${jar.release.dir}/${jar.bin.name}">
             <fileset dir="${release.dir}"/>
             <manifest>
                 <attribute name="Vendor" value="NFI"/>
                 <attribute name="Version" value="${release.version}"/>
             </manifest>
         </jar>
+        <jar destfile="${jar.release.dir}/${jar.src.name}">
+            <fileset dir="src"/>
+            <manifest>
+                <attribute name="Vendor" value="NFI"/>
+                <attribute name="Version" value="${release.version}"/>
+            </manifest>
+        </jar>
     </target>
+    
+    <target name="all" depends="report,jar"/>
 
 </project>
