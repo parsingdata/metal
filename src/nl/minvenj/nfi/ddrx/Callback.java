@@ -42,9 +42,9 @@ public class Callback {
                         crc.update(value.getValue());
                         final long crcValue = crc.getValue();
                         return OptionalValue.of(new Value(value.getEncoding().getByteOrder().apply(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
-                                                                                               (byte)((crcValue & 0xff0000) >> 16),
-                                                                                               (byte)((crcValue & 0xff00) >> 8),
-                                                                                               (byte)(crcValue & 0xff) }), value.getEncoding()));
+                                                                                                                (byte)((crcValue & 0xff0000) >> 16),
+                                                                                                                (byte)((crcValue & 0xff00) >> 8),
+                                                                                                                (byte)(crcValue & 0xff) }), value.getEncoding()));
                     }
                 });
             }
