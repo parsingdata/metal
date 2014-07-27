@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import nl.minvenj.nfi.ddrx.format.JPEG;
 import nl.minvenj.nfi.ddrx.format.PNG;
 import nl.minvenj.nfi.ddrx.format.ZIP;
 
@@ -37,6 +38,7 @@ public class TestFormat {
     private static final Path PNGFILE = Paths.get("testdata/test.png");
     private static final Path ZIPFILE1 = Paths.get("testdata/singlefile-zip30-ubuntu.zip");
     private static final Path ZIPFILE2 = Paths.get("testdata/multifile-zip30-ubuntu.zip");
+    private static final Path JPEGFILE = Paths.get("testdata/test.jpg");
 
     @Test
     public void parsePNG() throws IOException {
@@ -51,6 +53,11 @@ public class TestFormat {
     @Test
     public void parseZIP2() throws IOException {
         Assert.assertTrue(ZIP.FORMAT.parse(stream(ZIPFILE2), enc()));
+    }
+    
+    @Test
+    public void parseJPEG() throws IOException {
+        Assert.assertTrue(JPEG.FORMAT.parse(stream(JPEGFILE), enc()));
     }
 
 }
