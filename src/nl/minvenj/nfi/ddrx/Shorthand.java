@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx;
 
+import java.util.Arrays;
+
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.expression.True;
@@ -63,7 +65,7 @@ public class Shorthand {
     public static Token def(String name, ValueExpression size) { return def(name, size, expTrue()); }
     public static Token cho(Token l, Token r) { return new Cho(l, r); }
     public static Token rep(Token t) { return new Rep(t); }
-    public static Token seq(Token l, Token r) { return new Seq(l, r); }
+    public static Token seq(Token l, Token r, Token... tokens) { return tokens.length == 0 ? new Seq(l, r) : seq(l, seq(r, tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length))); }
     public static Token str(String n, Token t) { return new Str(n, t); }
     public static Token str(String n, Token t, Encoding e) { return new Str(n, t, e); }
     public static Token str(String n, Token t, StructSink s) { return new Str(n, t, s); }

@@ -35,26 +35,26 @@ public class PNG {
     private static final Token HEADER =
             str("signature",
             seq(def("highbit", con(1), eq(con(0x89))),
-            seq(def("PNG", con(3), eq(con("PNG"))),
-                def("controlchars", con(4), eq(con(0x0d0a1a0a))))));
+                def("PNG", con(3), eq(con("PNG"))),
+                def("controlchars", con(4), eq(con(0x0d0a1a0a)))));
 
     private static final Token FOOTER =
             str("footer",
             seq(def("footerlength", con(4), eqNum(con(0))),
-            seq(def("footertype", con(4), eq(con("IEND"))),
-                def("footercrc32", con(4), eq(con(0xae426082l))))));
+                def("footertype", con(4), eq(con("IEND"))),
+                def("footercrc32", con(4), eq(con(0xae426082l)))));
 
     private static final Token STRUCT =
             str("chunk",
             seq(def("length", con(4)),
-            seq(def("chunktype", con(4), not(eq(con("IEND")))),
-            seq(def("chunkdata", ref("length")),
-                def("crc32", con(4), eq(crc32(cat(ref("chunktype"), ref("chunkdata")))))))));
+                def("chunktype", con(4), not(eq(con("IEND")))),
+                def("chunkdata", ref("length")),
+                def("crc32", con(4), eq(crc32(cat(ref("chunktype"), ref("chunkdata")))))));
 
     public static final Token FORMAT =
             str("PNG",
             seq(HEADER,
-            seq(rep(STRUCT),
-                FOOTER)), new Encoding());
+                rep(STRUCT),
+                FOOTER), new Encoding());
 
 }

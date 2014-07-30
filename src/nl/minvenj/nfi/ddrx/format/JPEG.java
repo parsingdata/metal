@@ -37,37 +37,37 @@ import nl.minvenj.nfi.ddrx.token.Token;
  * approach will lead to stack overflow on files of realistic size.
  */
 public class JPEG {
-    
-    private static final Token HEADER = 
+
+    private static final Token HEADER =
             str("start of image",
             seq(def("marker", con(1), eq(con(0xff))),
                 def("identifier", con(1), eq(con(0xd8)))));
-    
+
     private static final Token FOOTER =
             str("end of image",
             seq(def("marker", con(1), eq(con(0xff))),
                 def("identifier", con(1), eq(con(0xd9)))));
-    
+
     private static final Token SIZED_SEGMENT =
             str("sized segment",
             seq(def("marker", con(1), eq(con(0xff))),
-            seq(def("identifier", con(1), or(ltNum(con(0xd8)), gtNum(con(0xda)))),
-            seq(def("length", con(2)),
-                def("payload", sub(ref("length"), con(2)))))));
-    
+                def("identifier", con(1), or(ltNum(con(0xd8)), gtNum(con(0xda)))),
+                def("length", con(2)),
+                def("payload", sub(ref("length"), con(2)))));
+
     private static final Token SCAN_SEGMENT =
             str("scan segment",
             seq(def("marker", con(1), eq(con(0xff))),
-            seq(def("identifier", con(1), eq(con(0xda))),
-            seq(def("length", con(2)),
-            seq(def("payload", sub(ref("length"), con(2))),
-            rep(cho(def("scandata", con(1), not(eq(con(0xff)))),
-                    def("escape", con(2), or(eq(con(0xff00)), and(gtNum(con(0xffcf)), ltNum(con(0xffd8))))))))))));
-    
+                def("identifier", con(1), eq(con(0xda))),
+                def("length", con(2)),
+                def("payload", sub(ref("length"), con(2))),
+                rep(cho(def("scandata", con(1), not(eq(con(0xff)))),
+                        def("escape", con(2), or(eq(con(0xff00)), and(gtNum(con(0xffcf)), ltNum(con(0xffd8)))))))));
+
     public static final Token FORMAT =
             str("JPEG",
             seq(HEADER,
-            seq(rep(cho(SIZED_SEGMENT, SCAN_SEGMENT)),
-                FOOTER)));
-    
+                rep(cho(SIZED_SEGMENT, SCAN_SEGMENT)),
+                FOOTER));
+
 }
