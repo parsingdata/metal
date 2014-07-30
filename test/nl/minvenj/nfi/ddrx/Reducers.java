@@ -80,9 +80,9 @@ public class Reducers extends ParameterizedParse {
 
     private static Token token(long size, Expression pred, Encoding enc) {
         return seq(any("a"),
-               seq(any("a"),
-               seq(any("a"),
-                   def("b", con(size), pred, enc))));
+                   any("a"),
+                   any("a"),
+                   def("b", con(size), pred, enc));
     }
 
     private static Token token(long size, Expression pred) {

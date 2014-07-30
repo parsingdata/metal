@@ -75,8 +75,8 @@ public class ReferenceValueExpressionSemantics extends ParameterizedParse {
 
     private static Token refList(ValueExpression exp) {
         return seq(any("a"),
-               seq(any("a"),
-                   def("z", con(1), eq(exp))));
+                   any("a"),
+                   def("z", con(1), eq(exp)));
     }
 
 }

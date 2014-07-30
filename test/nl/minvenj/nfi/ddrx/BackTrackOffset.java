@@ -47,9 +47,9 @@ public class BackTrackOffset {
                                              eq("d", 3)));
 
     private Token _backTrackDeepFragment = rep(seq(any("a"),
-                                               seq(any("b"),
+                                                   any("b"),
                                                    cho(eq("c", 21),
-                                                       eq("d", 42)))));
+                                                       eq("d", 42))));
     private Token _backTrackDeep = cho(seq(_backTrackDeepFragment,
                                            eq("e", 63)),
                                        seq(_backTrackDeepFragment,

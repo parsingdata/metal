@@ -39,8 +39,8 @@ import org.junit.runners.JUnit4;
 public class ValueExpressionSemantics {
 
     private Token cat = seq(any("a"),
-                        seq(any("b"),
-                            def("c", con(2), eq(cat(ref("a"), ref("b"))))));
+                            any("b"),
+                            def("c", con(2), eq(cat(ref("a"), ref("b")))));
 
     @Test
     public void Cat() throws IOException {
