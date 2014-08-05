@@ -16,18 +16,24 @@
 
 package nl.minvenj.nfi.ddrx;
 
-import static nl.minvenj.nfi.ddrx.Shorthand.*;
+import static nl.minvenj.nfi.ddrx.Shorthand.cho;
+import static nl.minvenj.nfi.ddrx.Shorthand.con;
+import static nl.minvenj.nfi.ddrx.Shorthand.def;
+import static nl.minvenj.nfi.ddrx.Shorthand.eq;
+import static nl.minvenj.nfi.ddrx.Shorthand.gtNum;
+import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
 import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
+import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.token.Token;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import nl.minvenj.nfi.ddrx.token.Token;
 
 @RunWith(JUnit4.class)
 public class Shorthands {
@@ -38,9 +44,9 @@ public class Shorthands {
                                             def("c", con(1), eq(con(3))));
 
     private final Token multiChoice = cho(
-                                          def("a", con(1), eq(con(1))),
-                                          def("b", con(1), eq(con(2))),
-                                          def("c", con(1), eq(con(3))));
+                                          def("a", con(1), gtNum(con(2))),
+                                          def("b", con(1), gtNum(con(1))),
+                                          def("c", con(1), gtNum(con(0))));
 
     @Test
     public void sequenceMultiMatch() throws IOException {
@@ -53,13 +59,29 @@ public class Shorthands {
     }
 
     @Test
-    public void choiceMultiMatch() throws IOException {
-        Assert.assertTrue(multiChoice.parse(stream(3, 2, 1), enc()));
+    public void choiceMultiMatchA() throws IOException {
+        runChoice(3, "a");
+    }
+
+    @Test
+    public void choiceMultiMatchB() throws IOException {
+        runChoice(2, "b");
+    }
+
+    @Test
+    public void choiceMultiMatchC() throws IOException {
+        runChoice(1, "c");
+    }
+
+    private void runChoice(int data, String matched) throws IOException {
+        Environment enva = stream(data);
+        Assert.assertTrue(multiChoice.parse(enva, enc()));
+        Assert.assertTrue(enva.current().get().getName().equals(matched));
     }
 
     @Test
     public void choiceMultiNoMatch() throws IOException {
-        Assert.assertFalse(multiChoice.parse(stream(42, 63, 84), enc()));
+        Assert.assertFalse(multiChoice.parse(stream(0), enc()));
     }
 
 }
