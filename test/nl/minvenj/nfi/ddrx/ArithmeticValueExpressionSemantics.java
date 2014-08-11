@@ -29,6 +29,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.Shorthand.sub;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
+import static nl.minvenj.nfi.ddrx.util.EncodingFactory.le;
 import static nl.minvenj.nfi.ddrx.util.EncodingFactory.signed;
 import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 
@@ -73,6 +74,8 @@ public class ArithmeticValueExpressionSemantics extends ParameterizedParse {
             { "[signed] 42 * 0 == 0", mul, stream(42, 0, 0), signed(), true },
             { "[signed] 1 * 1 == 1", mul, stream(1, 1, 1), signed(), true },
             { "[signed] 0 * 0 == 0", mul, stream(0, 0, 0), signed(), true },
+            { "[unsigned] 42 * 42 == 1764", mul2, stream(42,42,6,228), enc(), true },
+            { "[little endian] 42 * 42 == 1764", mul2, stream(42,42,228,6), le(), true },
             { "[signed] 2 * 3 == 8", mul, stream(2, 3, 8), signed(), false },
             { "[signed] 8 - 2 == 6", sub, stream(8, 2, 6), signed(), true },
             { "[signed] 3 - 10 == -7", sub, stream(3, 10, -7), signed(), true },
@@ -99,25 +102,26 @@ public class ArithmeticValueExpressionSemantics extends ParameterizedParse {
         super(token, env, enc, result);
     }
 
-    private static Token add = binaryValueExpressionToken(add(ref("a"), ref("b")));
-    private static Token div = binaryValueExpressionToken(div(ref("a"), ref("b")));
-    private static Token mul = binaryValueExpressionToken(mul(ref("a"), ref("b")));
-    private static Token sub = binaryValueExpressionToken(sub(ref("a"), ref("b")));
-    private static Token mod = binaryValueExpressionToken(mod(ref("a"), ref("b")));
+    private static Token add = binaryValueExpressionToken(add(ref("a"), ref("b")), 1);
+    private static Token div = binaryValueExpressionToken(div(ref("a"), ref("b")), 1);
+    private static Token mul = binaryValueExpressionToken(mul(ref("a"), ref("b")), 1);
+    private static Token mul2 = binaryValueExpressionToken(mul(ref("a"), ref("b")), 2);
+    private static Token sub = binaryValueExpressionToken(sub(ref("a"), ref("b")), 1);
+    private static Token mod = binaryValueExpressionToken(mod(ref("a"), ref("b")), 1);
     private static Token neg = unaryValueExpressionToken(neg(ref("a")));
 
-    private static Token singleToken(String firstName, String secondName, ValueExpression ve) {
+    private static Token singleToken(String firstName, String secondName, int resultSize, ValueExpression ve) {
         return seq(any(firstName),
-                   def(secondName, con(1), eqNum(ve)));
+                   def(secondName, con(resultSize), eqNum(ve)));
     }
 
-    private static Token binaryValueExpressionToken(BinaryValueExpression bve) {
+    private static Token binaryValueExpressionToken(BinaryValueExpression bve, int resultSize) {
         return seq(any("a"),
-                   singleToken("b", "c", bve));
+                   singleToken("b", "c", resultSize, bve));
     }
 
     private static Token unaryValueExpressionToken(UnaryValueExpression uve) {
-        return singleToken("a", "b", uve);
+        return singleToken("a", "b", 1, uve);
     }
 
 }
