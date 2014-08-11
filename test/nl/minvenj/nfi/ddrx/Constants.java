@@ -41,4 +41,9 @@ public class Constants {
         Assert.assertEquals(1764, ConstantFactory.createFromNumeric(BigInteger.valueOf(1764), le()).asNumeric().longValue());
     }
 
+    @Test
+    public void numericEdgeCase() {
+        Assert.assertEquals(256, ConstantFactory.createFromNumeric(BigInteger.valueOf(256), le()).asNumeric().longValue());
+    }
+
 }

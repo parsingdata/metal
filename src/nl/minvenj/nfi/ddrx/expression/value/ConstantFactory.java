@@ -40,15 +40,14 @@ public class ConstantFactory {
         if (in.length < 2) {
             return in;
         }
-        // little endian: reverse array
-        byte[] beIn = byteOrder == ByteOrder.LITTLE_ENDIAN ? reverse(in) : in;
-
         // strip leading zero bytes
         int i = 0;
-        for (; i < beIn.length && beIn[i] == 0; i++);
-        byte[] out = new byte[beIn.length - i];
-        System.arraycopy(beIn, i, out, 0, out.length);
-        return out;
+        for (; i < in.length && in[i] == 0; i++);
+        byte[] out = new byte[in.length - i];
+        System.arraycopy(in, i, out, 0, out.length);
+        
+        // little endian: reverse array
+        return (byteOrder == ByteOrder.LITTLE_ENDIAN) ? reverse(out) : out;
     }
     
     public static byte[] reverse(byte[] in) {
