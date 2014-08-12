@@ -53,6 +53,10 @@ public class InMemoryByteStream implements ByteStream {
         return toCopy;
     }
 
+    public long offset() {
+        return _offset;
+    }
+
     private int pop() {
         if (_marked.isEmpty()) { throw new RuntimeException("Stream was not marked."); }
         return _marked.pop();

@@ -60,6 +60,9 @@ public class Errors {
             @Override
             public int read(byte[] data) throws IOException { throw new IOException(); }
 
+            @Override
+            public long offset() { return 0L; }
+
         };
         Environment env = new Environment(stream);
         t.parse(env, enc());

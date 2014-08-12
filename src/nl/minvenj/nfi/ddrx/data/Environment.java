@@ -112,6 +112,10 @@ public class Environment {
         return _input.read(data);
     }
 
+    public long offset() {
+        return _input.offset();
+    }
+
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();

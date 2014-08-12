@@ -51,7 +51,7 @@ public class Str extends Token {
         env.pushScope();
         boolean ret = _op.parse(outerScope + "." + _scope, env, enc);
         if (ret && _sink != null) {
-            _sink.handleStruct(env.getPrefixInScope(outerScope + "." + _scope));
+            _sink.handleStruct(env.offset(), env.getPrefixInScope(outerScope + "." + _scope));
         }
         env.popScope();
         return ret;

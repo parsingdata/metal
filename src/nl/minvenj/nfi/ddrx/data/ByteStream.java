@@ -24,5 +24,6 @@ public interface ByteStream {
     void reset();
     void clear();
     int read(byte[] data) throws IOException;
+    long offset();
 
 }

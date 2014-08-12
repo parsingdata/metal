@@ -22,6 +22,6 @@ import nl.minvenj.nfi.ddrx.expression.value.Value;
 
 public interface StructSink {
 
-    void handleStruct(List<Value> struct);
+    void handleStruct(long offset, List<Value> struct);
 
 }
