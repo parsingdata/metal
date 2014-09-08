@@ -17,9 +17,10 @@
 package nl.minvenj.nfi.ddrx.expression.value;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public interface ValueExpression {
 
-    OptionalValue eval(Environment env);
+    OptionalValue eval(Environment env, Encoding enc);
 
 }

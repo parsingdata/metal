@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.ddrx.expression.value;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public abstract class UnaryValueExpression implements ValueExpression {
 
@@ -27,8 +28,8 @@ public abstract class UnaryValueExpression implements ValueExpression {
     }
 
     @Override
-    public OptionalValue eval(Environment env) {
-        final OptionalValue v = _op.eval(env);
+    public OptionalValue eval(Environment env, Encoding enc) {
+        final OptionalValue v = _op.eval(env, enc);
         if (!v.isPresent()) { return v; }
         return eval(v.get(), env);
     }

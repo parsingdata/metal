@@ -61,7 +61,6 @@ public class ArithmeticValueExpressionSemantics extends ParameterizedParse {
             { "[unsigned] -10 + 3 == -7", add, stream(-10, 3, -7), enc(), true },
             { "[unsigned] 1 + 2 == 4", add, stream(1, 2, 4), enc(), false },
             { "[unsigned] 130 + 50 == 180", add, stream(130, 50, 180), enc(), true },
-            { "[unsigned] 130 + 50 == 180", add, stream(130, 50, 180), enc(), true },
             { "[signed] 8 / 2 == 4", div, stream(8, 2, 4), signed(), true },
             { "[signed] 1 / 2 == 0", div, stream(1, 2, 0), signed(), true },
             { "[signed] 7 / 8 == 0", div, stream(7, 8, 0), signed(), true },

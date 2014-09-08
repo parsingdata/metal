@@ -17,11 +17,12 @@
 package nl.minvenj.nfi.ddrx.expression;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class True implements Expression {
 
     @Override
-    public boolean eval(Environment env) {
+    public boolean eval(Environment env, Encoding enc) {
         return true;
     }
 

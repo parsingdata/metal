@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.ddrx.expression.value;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class Const implements ValueExpression {
 
@@ -27,7 +28,7 @@ public class Const implements ValueExpression {
     }
 
     @Override
-    public OptionalValue eval(Environment env) {
+    public OptionalValue eval(Environment env, Encoding enc) {
         return OptionalValue.of(_val);
     }
 

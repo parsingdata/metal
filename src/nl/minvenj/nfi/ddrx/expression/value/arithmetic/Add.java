@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.ddrx.expression.value.arithmetic;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
 import nl.minvenj.nfi.ddrx.expression.value.ConstantFactory;
 import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
@@ -30,8 +31,8 @@ public class Add extends BinaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(Value lv, Value rv, Environment env) {
-        return OptionalValue.of(ConstantFactory.createFromNumeric(lv.asNumeric().add(rv.asNumeric()), lv.getEncoding()));
+    public OptionalValue eval(Value lv, Value rv, Environment env, Encoding enc) {
+        return OptionalValue.of(ConstantFactory.createFromNumeric(lv.asNumeric().add(rv.asNumeric()), enc));
     }
 
 }

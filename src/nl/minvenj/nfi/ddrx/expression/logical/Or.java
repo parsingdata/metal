@@ -17,18 +17,18 @@
 package nl.minvenj.nfi.ddrx.expression.logical;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
-
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.Expression;
 
 public class Or extends BinaryLogicalExpression {
-    
+
     public Or(Expression lop, Expression rop) {
         super(lop, rop);
     }
 
     @Override
-    public boolean eval(Environment env) {
-        return _lop.eval(env) || _rop.eval(env);
+    public boolean eval(Environment env, Encoding enc) {
+        return _lop.eval(env, enc) || _rop.eval(env, enc);
     }
 
 }

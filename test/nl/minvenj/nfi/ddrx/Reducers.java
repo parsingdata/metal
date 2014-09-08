@@ -58,15 +58,15 @@ public class Reducers extends ParameterizedParse {
             { "[1, 2, 3, 3, 2, 1] a, a, a, catAll(a)", reduceCatA, stream(1, 2, 3, 3, 2, 1), enc(), false },
             { "[1, 2, 3, 1, 2, 3] a, a, a, catAll(a) BE", reduceCatAToNumBE, stream(1, 2, 3, 1, 2, 3), enc(), true },
             { "[1, 2, 3, 3, 2, 1] a, a, a, catAll(a) BE", reduceCatAToNumBE, stream(1, 2, 3, 3, 2, 1), enc(), false },
-            { "[1, 2, 3, 1, 2, 3] a, a, a, catAll(a) LE", reduceCatAToNumLE, stream(1, 2, 3, 1, 2, 3), enc(), false },
-            { "[1, 2, 3, 3, 2, 1] a, a, a, catAll(a) LE", reduceCatAToNumLE, stream(1, 2, 3, 3, 2, 1), enc(), true }
+            { "[3, 2, 1, 3, 2, 1] a, a, a, catAll(a) LE", reduceCatAToNumLE, stream(3, 2, 1, 3, 2, 1), enc(), true },
+            { "[3, 2, 1, 1, 2, 3] a, a, a, catAll(a) LE", reduceCatAToNumLE, stream(3, 2, 1, 1, 2, 3), enc(), false }
         });
     }
 
     public Reducers(String desc, Token token, Environment env, Encoding enc, boolean result) {
         super(token, env, enc, result);
     }
-    
+
     private final static Reducer addReducer = new Reducer() { @Override public ValueExpression reduce(ValueExpression l, ValueExpression r) { return add(l, r); } };
     private final static Reducer mulReducer = new Reducer() { @Override public ValueExpression reduce(ValueExpression l, ValueExpression r) { return mul(l, r); } };
     private final static Reducer catReducer = new Reducer() { @Override public ValueExpression reduce(ValueExpression l, ValueExpression r) { return cat(l, r); } };
@@ -75,8 +75,8 @@ public class Reducers extends ParameterizedParse {
     private final static Token reduceMulA = token(1, eq(reduce("a", mulReducer)));
     private final static Token reduceAllAplusMulA = token(1, eq(add(reduce("a", addReducer), reduce("a", mulReducer))));
     private final static Token reduceCatA = token(3, eq(reduce("a", catReducer)));
-    private final static Token reduceCatAToNumBE = token(3, eqNum(reduce("a", catReducer)), enc());    
-    private final static Token reduceCatAToNumLE = token(3, eqNum(reduce("a", catReducer)), le());    
+    private final static Token reduceCatAToNumBE = token(3, eqNum(reduce("a", catReducer)), enc());
+    private final static Token reduceCatAToNumLE = token(3, eqNum(reduce("a", catReducer)), le());
 
     private static Token token(long size, Expression pred, Encoding enc) {
         return seq(any("a"),

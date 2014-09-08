@@ -21,6 +21,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import java.util.Deque;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class Reduce implements ValueExpression {
 
@@ -33,17 +34,17 @@ public class Reduce implements ValueExpression {
     }
 
     @Override
-    public OptionalValue eval(Environment env) {
+    public OptionalValue eval(Environment env, Encoding enc) {
         Deque<Value> values = env.getAll(_name);
         if (values.size() == 0) {
             return OptionalValue.empty();
         }
-        return reduce(env, _reducer, OptionalValue.of(values.pop()), values);
+        return reduce(env, enc, _reducer, OptionalValue.of(values.pop()), values);
     }
 
-    private OptionalValue reduce(Environment env, Reducer reducer, OptionalValue head, Deque<Value> tail) {
+    private OptionalValue reduce(Environment env, Encoding enc, Reducer reducer, OptionalValue head, Deque<Value> tail) {
         if (!head.isPresent() || tail.size() == 0) { return head; }
-        return reduce(env, reducer, reducer.reduce(con(head.get()), con(tail.pop())).eval(env), tail);
+        return reduce(env, enc, reducer, reducer.reduce(con(head.get()), con(tail.pop())).eval(env, enc), tail);
     }
 
 }

@@ -54,7 +54,7 @@ public class TestFormat {
     public void parseZIP2() throws IOException {
         Assert.assertTrue(ZIP.FORMAT.parse(stream(ZIPFILE2), enc()));
     }
-    
+
     @Test
     public void parseJPEG() throws IOException {
         Assert.assertTrue(JPEG.FORMAT.parse(stream(JPEGFILE), enc()));

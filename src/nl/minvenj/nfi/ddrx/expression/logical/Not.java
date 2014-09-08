@@ -17,18 +17,18 @@
 package nl.minvenj.nfi.ddrx.expression.logical;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
-
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.Expression;
 
 public class Not extends UnaryLogicalExpression {
-    
+
     public Not(Expression op) {
         super(op);
     }
 
     @Override
-    public boolean eval(Environment env) {
-        return !_op.eval(env);
+    public boolean eval(Environment env, Encoding enc) {
+        return !_op.eval(env, enc);
     }
 
 }
