@@ -4,4 +4,5 @@ target/
 build/
 *.class
 *.jar
+.settings/
 
