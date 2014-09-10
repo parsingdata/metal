@@ -46,7 +46,7 @@ import nl.minvenj.nfi.ddrx.util.ParameterizedParse;
 
 import org.junit.runners.Parameterized.Parameters;
 
-public class ArithmeticValueExpressionSemantics extends ParameterizedParse {
+public class ArithmeticValueExpressionSemanticsTest extends ParameterizedParse {
 
     @Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
@@ -97,7 +97,7 @@ public class ArithmeticValueExpressionSemantics extends ParameterizedParse {
         });
     }
 
-    public ArithmeticValueExpressionSemantics(String desc, Token token, Environment env, Encoding enc, boolean result) {
+    public ArithmeticValueExpressionSemanticsTest(String desc, Token token, Environment env, Encoding enc, boolean result) {
         super(token, env, enc, result);
     }
 

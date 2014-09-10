@@ -36,7 +36,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
-public class BackTrackNameBind {
+public class BackTrackNameBindTest {
 
     private Token _choiceRef = seq(any("a"),
                                cho(seq(any("a"), eqRef("b", "a")),

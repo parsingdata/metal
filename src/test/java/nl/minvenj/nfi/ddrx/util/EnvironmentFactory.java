@@ -17,9 +17,10 @@
 package nl.minvenj.nfi.ddrx.util;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 
@@ -29,8 +30,8 @@ public class EnvironmentFactory {
         return new Environment(new InMemoryByteStream(toByteArray(bytes)));
     }
 
-    public static Environment stream(Path path) throws IOException {
-        return new Environment(new InMemoryByteStream(Files.readAllBytes(path)));
+    public static Environment stream(URI resource) throws IOException {
+        return new Environment(new InMemoryByteStream(Files.readAllBytes(Paths.get(resource))));
     }
 
     public static Environment stream(String value, Charset charset) {

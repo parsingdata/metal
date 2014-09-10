@@ -34,7 +34,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
-public class BackTrackOffset {
+public class BackTrackOffsetTest {
 
     private Token _backTrackChoice = cho(seq(any("a"),
                                              eq("b", 2)),

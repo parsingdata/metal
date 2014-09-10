@@ -43,7 +43,7 @@ import nl.minvenj.nfi.ddrx.util.ParameterizedParse;
 
 import org.junit.runners.Parameterized.Parameters;
 
-public class ComparisonExpressionSemantics extends ParameterizedParse {
+public class ComparisonExpressionSemanticsTest extends ParameterizedParse {
 
     @Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
@@ -65,7 +65,7 @@ public class ComparisonExpressionSemantics extends ParameterizedParse {
         });
     }
 
-    public ComparisonExpressionSemantics(String desc, Token token, Environment env, Encoding enc, boolean result) {
+    public ComparisonExpressionSemanticsTest(String desc, Token token, Environment env, Encoding enc, boolean result) {
         super(token, env, enc, result);
     }
 

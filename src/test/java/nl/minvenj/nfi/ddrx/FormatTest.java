@@ -20,8 +20,8 @@ import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
 import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import nl.minvenj.nfi.ddrx.format.JPEG;
 import nl.minvenj.nfi.ddrx.format.PNG;
@@ -33,31 +33,35 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
-public class TestFormat {
+public class FormatTest {
 
-    private static final Path PNGFILE = Paths.get("testdata/test.png");
-    private static final Path ZIPFILE1 = Paths.get("testdata/singlefile-zip30-ubuntu.zip");
-    private static final Path ZIPFILE2 = Paths.get("testdata/multifile-zip30-ubuntu.zip");
-    private static final Path JPEGFILE = Paths.get("testdata/test.jpg");
+    private static final String PNGFILE = "/test.png";
+    private static final String ZIPFILE1 = "/singlefile-zip30-ubuntu.zip";
+    private static final String ZIPFILE2 = "/multifile-zip30-ubuntu.zip";
+    private static final String JPEGFILE = "/test.jpg";
 
     @Test
-    public void parsePNG() throws IOException {
-        Assert.assertTrue(PNG.FORMAT.parse(stream(PNGFILE), enc()));
+    public void parsePNG() throws IOException, URISyntaxException {
+        Assert.assertTrue(PNG.FORMAT.parse(stream(toURI(PNGFILE)), enc()));
     }
 
     @Test
-    public void parseZIP() throws IOException {
-        Assert.assertTrue(ZIP.FORMAT.parse(stream(ZIPFILE1), enc()));
+    public void parseZIP() throws IOException, URISyntaxException {
+        Assert.assertTrue(ZIP.FORMAT.parse(stream(toURI(ZIPFILE1)), enc()));
     }
 
     @Test
-    public void parseZIP2() throws IOException {
-        Assert.assertTrue(ZIP.FORMAT.parse(stream(ZIPFILE2), enc()));
+    public void parseZIP2() throws IOException, URISyntaxException {
+        Assert.assertTrue(ZIP.FORMAT.parse(stream(toURI(ZIPFILE2)), enc()));
     }
 
     @Test
-    public void parseJPEG() throws IOException {
-        Assert.assertTrue(JPEG.FORMAT.parse(stream(JPEGFILE), enc()));
+    public void parseJPEG() throws IOException, URISyntaxException {
+        Assert.assertTrue(JPEG.FORMAT.parse(stream(toURI(JPEGFILE)), enc()));
+    }
+
+    private URI toURI(String resource) throws URISyntaxException {
+        return getClass().getResource(resource).toURI();
     }
 
 }

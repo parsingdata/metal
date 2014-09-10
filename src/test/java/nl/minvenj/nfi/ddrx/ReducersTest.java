@@ -43,7 +43,7 @@ import nl.minvenj.nfi.ddrx.util.ParameterizedParse;
 
 import org.junit.runners.Parameterized.Parameters;
 
-public class Reducers extends ParameterizedParse {
+public class ReducersTest extends ParameterizedParse {
 
     @Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
@@ -63,7 +63,7 @@ public class Reducers extends ParameterizedParse {
         });
     }
 
-    public Reducers(String desc, Token token, Environment env, Encoding enc, boolean result) {
+    public ReducersTest(String desc, Token token, Environment env, Encoding enc, boolean result) {
         super(token, env, enc, result);
     }
 

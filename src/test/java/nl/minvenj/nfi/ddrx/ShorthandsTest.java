@@ -36,7 +36,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
-public class Shorthands {
+public class ShorthandsTest {
 
     private final Token multiSequence = seq(
                                             def("a", con(1), eq(con(1))),

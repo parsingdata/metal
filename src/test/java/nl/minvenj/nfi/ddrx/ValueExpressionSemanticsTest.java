@@ -16,11 +16,15 @@
 
 package nl.minvenj.nfi.ddrx;
 
+import static nl.minvenj.nfi.ddrx.Shorthand.cat;
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
-import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
+import static nl.minvenj.nfi.ddrx.Shorthand.ref;
+import static nl.minvenj.nfi.ddrx.Shorthand.seq;
+import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
+import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
@@ -32,34 +36,20 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
-public class Simple {
+public class ValueExpressionSemanticsTest {
 
-    private Token buildSimpleToken(String name, int size, int predicate) {
-        return def(name, con(size), eq(con(predicate)));
+    private Token cat = seq(any("a"),
+                            any("b"),
+                            def("c", con(2), eq(cat(ref("a"), ref("b")))));
+
+    @Test
+    public void Cat() throws IOException {
+        Assert.assertTrue(cat.parse(stream(1, 2, 1, 2), enc()));
     }
 
     @Test
-    public void correct() throws IOException {
-        Token t = buildSimpleToken("r1", 1, 1);
-        Assert.assertTrue(t.parse(stream(1, 2, 3, 4), enc()));
-    }
-
-    @Test
-    public void sizeError() throws IOException {
-        Token t = buildSimpleToken("r1", 2, 1);
-        Assert.assertFalse(t.parse(stream(1, 2, 3, 4), enc()));
-    }
-
-    @Test
-    public void predicateError() throws IOException {
-        Token t = buildSimpleToken("r1", 1, 2);
-        Assert.assertFalse(t.parse(stream(1, 2, 3, 4), enc()));
-    }
-
-    @Test
-    public void sourceError() throws IOException {
-        Token t = buildSimpleToken("r1", 1, 1);
-        Assert.assertFalse(t.parse(stream(2, 2, 2, 2), enc()));
+    public void CatNoMatch() throws IOException {
+        Assert.assertFalse(cat.parse(stream(1, 2, 12, 12), enc()));
     }
 
 }

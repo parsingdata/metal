@@ -37,7 +37,7 @@ import nl.minvenj.nfi.ddrx.token.StructSink;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 @RunWith(JUnit4.class)
-public class StructSinks {
+public class StructSinksTest {
 
     @Test
     public void structSinkSingle() throws IOException {
