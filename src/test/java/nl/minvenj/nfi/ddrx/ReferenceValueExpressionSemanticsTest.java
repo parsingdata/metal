@@ -62,16 +62,16 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
         });
     }
 
-    public ReferenceValueExpressionSemanticsTest(String desc, Token token, Environment env, Encoding enc, boolean result) {
+    public ReferenceValueExpressionSemanticsTest(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
         super(token, env, enc, result);
     }
 
-    private static Token sequenceMatch2 = seq(any("a"),
-                                              eqRef("b", "a"));
-    private static Token sequenceMatch3 = seq(sequenceMatch2,
-                                              eqRef("c", "a"));
-    private static Token sequenceMatchTransitive3 = seq(sequenceMatch2,
-                                                        eqRef("c", "b"));
+    private static final Token sequenceMatch2 = seq(any("a"),
+                                                    eqRef("b", "a"));
+    private static final Token sequenceMatch3 = seq(sequenceMatch2,
+                                                    eqRef("c", "a"));
+    private static final Token sequenceMatchTransitive3 = seq(sequenceMatch2,
+                                                              eqRef("c", "b"));
 
     private static Token refList(ValueExpression exp) {
         return seq(any("a"),

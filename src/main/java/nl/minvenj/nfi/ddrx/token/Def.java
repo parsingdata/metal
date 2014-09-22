@@ -19,6 +19,8 @@ package nl.minvenj.nfi.ddrx.token;
 import java.io.IOException;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.data.ParseResult;
+import nl.minvenj.nfi.ddrx.data.ValueList;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
@@ -31,35 +33,29 @@ public class Def extends Token {
     private final ValueExpression _size;
     private final Expression _pred;
 
-    public Def(String name, ValueExpression size, Expression pred, Encoding enc) {
+    public Def(final String name, final ValueExpression size, final Expression pred, final Encoding enc) {
         super(enc);
         _name = name;
         _size = size;
         _pred = pred;
     }
 
-    public Def(String name, ValueExpression size, Expression pred) {
+    public Def(final String name, final ValueExpression size, final Expression pred) {
         this(name, size, pred, null);
     }
 
     @Override
-    protected boolean parseImpl(String scope, Environment env, Encoding enc) throws IOException {
+    protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final OptionalValue size = _size.eval(env, enc);
-        if (!size.isPresent()) { return false; }
+        if (!size.isPresent()) {
+            return new ParseResult(false, env);
+        }
         final byte[] data = new byte[size.get().asNumeric().intValue()];
-        env.mark();
-        if (env.read(data) != data.length) {
-            env.reset();
-            return false;
+        if (env.input.read(env.offset, data) != data.length) {
+            return new ParseResult(false, env);
         }
-        env.put(new Value(scope, _name, data, enc));
-        final boolean ret = _pred.eval(env, enc);
-        if (ret) {
-            env.clear();
-        } else {
-            env.reset();
-        }
-        return ret;
+        final Environment newEnv = new Environment(new ValueList(new Value(scope, _name, env.offset, data, enc), env.order), env.input, env.offset+size.get().asNumeric().intValue());
+        return _pred.eval(newEnv, enc) ? new ParseResult(true, newEnv) : new ParseResult(false, env);
     }
 
     @Override

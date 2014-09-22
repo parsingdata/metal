@@ -21,6 +21,6 @@ import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public interface Expression {
 
-    boolean eval(Environment env, Encoding enc);
+    boolean eval(final Environment env, final Encoding enc);
 
 }

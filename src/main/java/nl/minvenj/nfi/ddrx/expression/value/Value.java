@@ -27,19 +27,22 @@ public class Value {
     public static final String DEFAULT_SCOPE = "EMPTY_SCOPE";
     public static final String SEPARATOR = ".";
     public static final String DEFAULT_NAME = "CONSTANT_VALUE";
+    public static final long DEFAULT_OFFSET = 0L;
 
-    protected final String _scope;
-    protected final String _name;
-    protected final byte[] _data;
-    protected final Encoding _enc;
+    private final String _scope;
+    private final String _name;
+    private final long _offset;
+    private final byte[] _data;
+    private final Encoding _enc;
 
-    public Value(byte[] data, Encoding enc) {
-        this(DEFAULT_SCOPE, DEFAULT_NAME, data, enc);
+    public Value(final byte[] data, final Encoding enc) {
+        this(DEFAULT_SCOPE, DEFAULT_NAME, DEFAULT_OFFSET, data, enc);
     }
 
-    public Value(String scope, String name, byte[] data, Encoding encoding) {
+    public Value(final String scope, final String name, final long offset, final byte[] data, final Encoding encoding) {
         _scope = scope;
         _name = name;
+        _offset = offset;
         _data = data;
         _enc = encoding;
     }
@@ -56,10 +59,14 @@ public class Value {
         return getScope() + SEPARATOR + getName();
     }
 
-    public boolean matches(String name) {
+    public boolean matches(final String name) {
         return getFullName().equals(name) || getFullName().endsWith(SEPARATOR + name);
     }
-
+    
+    public long getOffset() {
+        return _offset;
+    }
+    
     public byte[] getValue() {
         return _data;
     }
@@ -77,13 +84,13 @@ public class Value {
         return _enc;
     }
 
-    public OptionalValue operation(ValueOperation op) {
+    public OptionalValue operation(final ValueOperation op) {
         return op.execute(this);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + DatatypeConverter.printHexBinary(_data) + ")";
+        return getName() + ":" + getClass().getSimpleName() + "(" + DatatypeConverter.printHexBinary(_data) + ")";
     }
 
 }

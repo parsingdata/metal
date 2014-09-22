@@ -60,48 +60,48 @@ import nl.minvenj.nfi.ddrx.token.Token;
 
 public class Shorthand {
 
-    public static Token def(String name, ValueExpression size, Expression pred, Encoding encoding) { return new Def(name, size, pred, encoding); }
-    public static Token def(String name, ValueExpression size, Expression pred) { return new Def(name, size, pred); }
-    public static Token def(String name, ValueExpression size) { return def(name, size, expTrue()); }
-    public static Token cho(Token l, Token r, Token... tokens) { return tokens.length == 0 ? new Cho(l, r) : cho(l, cho(r, tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length))); }
-    public static Token rep(Token t) { return new Rep(t); }
-    public static Token seq(Token l, Token r, Token... tokens) { return tokens.length == 0 ? new Seq(l, r) : seq(l, seq(r, tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length))); }
-    public static Token str(String n, Token t) { return new Str(n, t); }
-    public static Token str(String n, Token t, Encoding e) { return new Str(n, t, e); }
-    public static Token str(String n, Token t, StructSink s) { return new Str(n, t, s); }
-    public static Token str(String n, Token t, Encoding e, StructSink s) { return new Str(n, t, e, s); }
+    public static Token def(final String name, final ValueExpression size, final Expression pred, final Encoding encoding) { return new Def(name, size, pred, encoding); }
+    public static Token def(final String name, final ValueExpression size, final Expression pred) { return new Def(name, size, pred); }
+    public static Token def(final String name, final ValueExpression size) { return def(name, size, expTrue()); }
+    public static Token cho(final Token l, final Token r, final Token... tokens) { return tokens.length == 0 ? new Cho(l, r) : cho(l, cho(r, tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length))); }
+    public static Token rep(final Token t) { return new Rep(t); }
+    public static Token seq(final Token l, final Token r, final Token... tokens) { return tokens.length == 0 ? new Seq(l, r) : seq(l, seq(r, tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length))); }
+    public static Token str(final String n, final Token t) { return new Str(n, t); }
+    public static Token str(final String n, final Token t, final Encoding e) { return new Str(n, t, e); }
+    public static Token str(final String n, final Token t, final StructSink s) { return new Str(n, t, s); }
+    public static Token str(final String n, final Token t, final Encoding e, final StructSink s) { return new Str(n, t, e, s); }
 
-    public static BinaryValueExpression add(ValueExpression l, ValueExpression r) { return new Add(l, r); }
-    public static BinaryValueExpression div(ValueExpression l, ValueExpression r) { return new Div(l, r); }
-    public static BinaryValueExpression mul(ValueExpression l, ValueExpression r) { return new Mul(l, r); }
-    public static BinaryValueExpression sub(ValueExpression l, ValueExpression r) { return new Sub(l, r); }
-    public static BinaryValueExpression mod(ValueExpression l, ValueExpression r) { return new Mod(l, r); }
-    public static UnaryValueExpression neg(ValueExpression v) { return new Neg(v); }
-    public static ValueExpression con(long v) { return con(v, new Encoding()); }
-    public static ValueExpression con(long v, Encoding encoding) { return new Const(ConstantFactory.createFromNumeric(v, encoding)); }
-    public static ValueExpression con(String s) { return con(s, new Encoding()); }
-    public static ValueExpression con(String s, Encoding encoding) { return new Const(ConstantFactory.createFromString(s, encoding)); }
-    public static ValueExpression con(Value v) { return new Const(v); }
+    public static BinaryValueExpression add(final ValueExpression l, final ValueExpression r) { return new Add(l, r); }
+    public static BinaryValueExpression div(final ValueExpression l, final ValueExpression r) { return new Div(l, r); }
+    public static BinaryValueExpression mul(final ValueExpression l, final ValueExpression r) { return new Mul(l, r); }
+    public static BinaryValueExpression sub(final ValueExpression l, final ValueExpression r) { return new Sub(l, r); }
+    public static BinaryValueExpression mod(final ValueExpression l, final ValueExpression r) { return new Mod(l, r); }
+    public static UnaryValueExpression neg(final ValueExpression v) { return new Neg(v); }
+    public static ValueExpression con(final long v) { return con(v, new Encoding()); }
+    public static ValueExpression con(final long v, final Encoding encoding) { return new Const(ConstantFactory.createFromNumeric(v, encoding)); }
+    public static ValueExpression con(final String s) { return con(s, new Encoding()); }
+    public static ValueExpression con(final String s, final Encoding encoding) { return new Const(ConstantFactory.createFromString(s, encoding)); }
+    public static ValueExpression con(final Value v) { return new Const(v); }
     public static final ValueExpression self = new Self();
-    public static ValueExpression ref(String s) { return new Ref(s); }
-    public static ValueExpression first(String s) { return new First(s); }
-    public static ValueExpression cat(ValueExpression l, ValueExpression r) { return new Cat(l, r); }
-    public static ValueExpression reduce(String name, Reducer reducer) { return new Reduce(name, reducer); }
+    public static ValueExpression ref(final String s) { return new Ref(s); }
+    public static ValueExpression first(final String s) { return new First(s); }
+    public static ValueExpression cat(final ValueExpression l, final ValueExpression r) { return new Cat(l, r); }
+    public static ValueExpression reduce(final String name, final Reducer reducer) { return new Reduce(name, reducer); }
 
-    public static BinaryLogicalExpression and(Expression l, Expression r) { return new And(l, r); }
-    public static BinaryLogicalExpression or(Expression l, Expression r) { return new Or(l, r); }
-    public static UnaryLogicalExpression not(Expression e) { return new Not(e); }
+    public static BinaryLogicalExpression and(final Expression l, final Expression r) { return new And(l, r); }
+    public static BinaryLogicalExpression or(final Expression l, final Expression r) { return new Or(l, r); }
+    public static UnaryLogicalExpression not(final Expression e) { return new Not(e); }
     public static Expression expTrue() { return new True(); }
 
-    public static ComparisonExpression eq(ValueExpression p) { return new Eq(p); }
-    public static ComparisonExpression eq(ValueExpression c, ValueExpression p) { return new Eq(c, p); }
-    public static ComparisonExpression eqStr(ValueExpression p) { return new EqStr(p); }
-    public static ComparisonExpression eqStr(ValueExpression c, ValueExpression p) { return new EqStr(c, p); }
-    public static ComparisonExpression eqNum(ValueExpression p) { return new EqNum(p); }
-    public static ComparisonExpression eqNum(ValueExpression c, ValueExpression p) { return new EqNum(c, p); }
-    public static ComparisonExpression gtNum(ValueExpression p) { return new GtNum(p); }
-    public static ComparisonExpression gtNum(ValueExpression c, ValueExpression p) { return new GtNum(c, p); }
-    public static ComparisonExpression ltNum(ValueExpression p) { return new LtNum(p); }
-    public static ComparisonExpression ltNum(ValueExpression c, ValueExpression p) { return new LtNum(c, p); }
+    public static ComparisonExpression eq(final ValueExpression p) { return new Eq(p); }
+    public static ComparisonExpression eq(final ValueExpression c, ValueExpression p) { return new Eq(c, p); }
+    public static ComparisonExpression eqStr(final ValueExpression p) { return new EqStr(p); }
+    public static ComparisonExpression eqStr(final ValueExpression c, final ValueExpression p) { return new EqStr(c, p); }
+    public static ComparisonExpression eqNum(final ValueExpression p) { return new EqNum(p); }
+    public static ComparisonExpression eqNum(final ValueExpression c, final ValueExpression p) { return new EqNum(c, p); }
+    public static ComparisonExpression gtNum(final ValueExpression p) { return new GtNum(p); }
+    public static ComparisonExpression gtNum(final ValueExpression c, final ValueExpression p) { return new GtNum(c, p); }
+    public static ComparisonExpression ltNum(final ValueExpression p) { return new LtNum(p); }
+    public static ComparisonExpression ltNum(final ValueExpression c, final ValueExpression p) { return new LtNum(c, p); }
 
 }

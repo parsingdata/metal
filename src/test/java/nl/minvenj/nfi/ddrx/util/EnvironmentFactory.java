@@ -23,22 +23,23 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.data.ValueList;
 
 public class EnvironmentFactory {
 
-    public static Environment stream(int... bytes) {
-        return new Environment(new InMemoryByteStream(toByteArray(bytes)));
+    public static Environment stream(final int... bytes) {
+        return new Environment(new ValueList(), new InMemoryByteStream(toByteArray(bytes)), 0);
     }
 
-    public static Environment stream(URI resource) throws IOException {
-        return new Environment(new InMemoryByteStream(Files.readAllBytes(Paths.get(resource))));
+    public static Environment stream(final URI resource) throws IOException {
+        return new Environment(new ValueList(), new InMemoryByteStream(Files.readAllBytes(Paths.get(resource))), 0L);
     }
 
-    public static Environment stream(String value, Charset charset) {
-        return new Environment(new InMemoryByteStream(value.getBytes(charset)));
+    public static Environment stream(final String value, final Charset charset) {
+        return new Environment(new ValueList(), new InMemoryByteStream(value.getBytes(charset)), 0L);
     }
 
-    public static byte[] toByteArray(int... bytes) {
+    public static byte[] toByteArray(final int... bytes) {
         final byte[] out = new byte[bytes.length];
         for (int i = 0; i < bytes.length; i++) {
             out[i] = (byte) bytes[i];

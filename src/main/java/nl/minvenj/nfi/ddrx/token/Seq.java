@@ -19,6 +19,7 @@ package nl.minvenj.nfi.ddrx.token;
 import java.io.IOException;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.data.ParseResult;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class Seq extends Token {
@@ -26,26 +27,21 @@ public class Seq extends Token {
     private final Token _l;
     private final Token _r;
 
-    public Seq(Token l, Token r, Encoding enc) {
+    public Seq(final Token l, final Token r, final Encoding enc) {
         super(enc);
         _l = l;
         _r = r;
     }
 
-    public Seq(Token l, Token r) {
+    public Seq(final Token l, final Token r) {
         this(l, r, null);
     }
 
     @Override
-    protected boolean parseImpl(String scope, Environment env, Encoding enc) throws IOException {
-        env.mark();
-        final boolean ret = _l.parse(scope, env, enc) && _r.parse(scope, env, enc);
-        if (ret) {
-            env.clear();
-        } else {
-            env.reset();
-        }
-        return ret;
+    protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
+        final ParseResult lRes = _l.parse(scope, env, enc);
+        if (!lRes.succeeded()) { return lRes; }
+        return _r.parse(scope, lRes.getEnvironment(), enc);
     }
 
     @Override

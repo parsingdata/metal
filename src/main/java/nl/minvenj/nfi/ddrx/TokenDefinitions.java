@@ -28,27 +28,27 @@ public class TokenDefinitions {
 
     private TokenDefinitions() {}
 
-    public static Token any(String name) {
+    public static Token any(final String name) {
         return def(name, con(1));
     }
 
-    public static Token any(String name, Encoding encoding) {
+    public static Token any(final String name, final Encoding encoding) {
         return def(name, con(1), expTrue(), encoding);
     }
 
-    public static Token eq(String name, int value) {
+    public static Token eq(final String name, final int value) {
         return def(name, con(1), Shorthand.eq(con(value)));
     }
 
-    public static Token notEq(String name, int value) {
+    public static Token notEq(final String name, final int value) {
         return def(name, con(1), not(Shorthand.eq(con(value))));
     }
 
-    public static Token eqRef(String name, String ref) {
+    public static Token eqRef(final String name, final String ref) {
         return def(name, con(1), Shorthand.eq(ref(ref)));
     }
 
-    public static Token notEqRef(String name, String ref) {
+    public static Token notEqRef(final String name, final String ref) {
         return def(name, con(1), not(Shorthand.eq(ref(ref))));
     }
 

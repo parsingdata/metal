@@ -25,13 +25,13 @@ public abstract class BinaryValueExpression implements ValueExpression {
     private final ValueExpression _lop;
     private final ValueExpression _rop;
 
-    public BinaryValueExpression(ValueExpression lop, ValueExpression rop) {
+    public BinaryValueExpression(final ValueExpression lop, final ValueExpression rop) {
         _lop = lop;
         _rop = rop;
     }
 
     @Override
-    public OptionalValue eval(Environment env, Encoding enc) {
+    public OptionalValue eval(final Environment env, final Encoding enc) {
         final OptionalValue lv = _lop.eval(env, enc);
         if (!lv.isPresent()) { return lv; }
         final OptionalValue rv = _rop.eval(env, enc);
@@ -39,7 +39,7 @@ public abstract class BinaryValueExpression implements ValueExpression {
         return eval(lv.get(), rv.get(), env, enc);
     }
 
-    public abstract OptionalValue eval(Value lv, Value rv, Environment env, Encoding enc);
+    public abstract OptionalValue eval(final Value lv, final Value rv, final Environment env, final Encoding enc);
 
     @Override
     public String toString() {

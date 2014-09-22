@@ -16,29 +16,27 @@
 
 package nl.minvenj.nfi.ddrx.expression.value.reference;
 
-import java.util.Deque;
-
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.data.ValueList;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
-import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
 public class First implements ValueExpression {
 
     private final String _name;
 
-    public First(String name) {
+    public First(final String name) {
         _name = name;
     }
 
     @Override
-    public OptionalValue eval(Environment env, Encoding enc) {
-        Deque<Value> all = env.getAll(_name);
+    public OptionalValue eval(final Environment env, final Encoding enc) {
+        final ValueList all = env.order.getAll(_name);
         if (all.isEmpty()) {
             return OptionalValue.empty();
         } else {
-            return OptionalValue.of(all.getFirst());
+            return all.getFirst();
         }
     }
 

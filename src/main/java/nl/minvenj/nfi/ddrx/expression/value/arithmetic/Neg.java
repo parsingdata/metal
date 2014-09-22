@@ -25,12 +25,12 @@ import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
 public class Neg extends UnaryValueExpression {
 
-    public Neg(ValueExpression op) {
+    public Neg(final ValueExpression op) {
         super(op);
     }
 
     @Override
-    public OptionalValue eval(Value v, Environment env) {
+    public OptionalValue eval(final Value v, final Environment env) {
         return OptionalValue.of(ConstantFactory.createFromNumeric(v.asNumeric().negate(), v.getEncoding()));
     }
 

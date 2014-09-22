@@ -17,49 +17,22 @@
 package nl.minvenj.nfi.ddrx.util;
 
 import java.io.IOException;
-import java.util.Stack;
 
 import nl.minvenj.nfi.ddrx.data.ByteStream;
 
 public class InMemoryByteStream implements ByteStream {
 
     private final byte[] _data;
-    private final Stack<Integer> _marked;
-    private int _offset;
 
-    public InMemoryByteStream(byte[] data) {
+    public InMemoryByteStream(final byte[] data) {
         _data = data;
-        _marked = new Stack<Integer>();
-        _offset = 0;
     }
 
-    public void mark() {
-        _marked.add(_offset);
-    }
-
-    public void reset() {
-        _offset = pop();
-    }
-
-    public void clear() {
-        pop();
-    }
-
-    public int read(byte[] data) throws IOException {
-        if (_offset >= _data.length) { return 0; }
-        int toCopy = _offset + data.length > _data.length ? _data.length - _offset : data.length;
-        System.arraycopy(_data, _offset, data, 0, toCopy);
-        _offset += toCopy;
+    public int read(final long offset, final byte[] data) throws IOException {
+        if (offset >= _data.length) { return 0; }
+        final int toCopy = (int)offset + data.length > _data.length ? _data.length - (int)offset : data.length;
+        System.arraycopy(_data, (int)offset, data, 0, toCopy);
         return toCopy;
-    }
-
-    public long offset() {
-        return _offset;
-    }
-
-    private int pop() {
-        if (_marked.isEmpty()) { throw new RuntimeException("Stream was not marked."); }
-        return _marked.pop();
     }
 
     @Override

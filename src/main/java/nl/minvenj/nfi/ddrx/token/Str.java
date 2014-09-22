@@ -19,7 +19,9 @@ package nl.minvenj.nfi.ddrx.token;
 import java.io.IOException;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.data.ParseResult;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
+import nl.minvenj.nfi.ddrx.expression.value.Value;
 
 public class Str extends Token {
 
@@ -27,35 +29,33 @@ public class Str extends Token {
     private final Token _op;
     private final StructSink _sink;
 
-    public Str(String scope, Token op, Encoding enc, StructSink sink) {
+    public Str(final String scope, final Token op, final Encoding enc, final StructSink sink) {
         super(enc);
         _scope = scope;
         _op = op;
         _sink = sink;
     }
 
-    public Str(String scope, Token op, Encoding enc) {
+    public Str(final String scope, final Token op, final Encoding enc) {
         this(scope, op, enc, null);
     }
 
-    public Str(String scope, Token op, StructSink sink) {
+    public Str(final String scope, final Token op, final StructSink sink) {
         this(scope, op, null, sink);
     }
 
-    public Str(String scope, Token op) {
+    public Str(final String scope, final Token op) {
         this(scope, op, null, null);
     }
 
     @Override
-    protected boolean parseImpl(String outerScope, Environment env, Encoding enc) throws IOException {
-        long startOffset = env.offset();
-        env.pushScope();
-        boolean ret = _op.parse(outerScope + "." + _scope, env, enc);
-        if (ret && _sink != null) {
-            _sink.handleStruct(startOffset, env.getPrefixInScope(outerScope + "." + _scope));
+    protected ParseResult parseImpl(final String outerScope, final Environment env, final Encoding enc) throws IOException {
+        final Value prefix = env.order.head;
+        final ParseResult res = _op.parse(outerScope + "." + _scope, env, enc);
+        if (res.succeeded() && _sink != null) {
+            _sink.handleStruct(outerScope, res.getEnvironment(), enc, res.getEnvironment().order.getValuesSincePrefix(prefix));
         }
-        env.popScope();
-        return ret;
+        return res;
     }
     
     @Override

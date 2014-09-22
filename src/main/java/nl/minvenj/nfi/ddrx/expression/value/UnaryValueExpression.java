@@ -23,18 +23,18 @@ public abstract class UnaryValueExpression implements ValueExpression {
 
     private final ValueExpression _op;
 
-    public UnaryValueExpression(ValueExpression op) {
+    public UnaryValueExpression(final ValueExpression op) {
         _op = op;
     }
 
     @Override
-    public OptionalValue eval(Environment env, Encoding enc) {
+    public OptionalValue eval(final Environment env, final Encoding enc) {
         final OptionalValue v = _op.eval(env, enc);
         if (!v.isPresent()) { return v; }
         return eval(v.get(), env);
     }
 
-    public abstract OptionalValue eval(Value v, Environment env);
+    public abstract OptionalValue eval(final Value v, final Environment env);
 
     @Override
     public String toString() {

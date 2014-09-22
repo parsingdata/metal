@@ -37,7 +37,7 @@ public class ParameterizedParse {
     private final Encoding _enc;
     private final boolean _result;
 
-    public ParameterizedParse(Token token, Environment env, Encoding enc, boolean result) {
+    public ParameterizedParse(final Token token, final Environment env, final Encoding enc, final boolean result) {
         _token = token;
         _env = env;
         _enc = enc;
@@ -46,7 +46,7 @@ public class ParameterizedParse {
 
     @Test
     public void test() throws IOException {
-        Assert.assertEquals(_result, _token.parse(_env, _enc));
+        Assert.assertEquals(_result, _token.parse(_env, _enc).succeeded());
     }
 
 }

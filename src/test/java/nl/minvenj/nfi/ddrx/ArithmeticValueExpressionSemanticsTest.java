@@ -97,7 +97,7 @@ public class ArithmeticValueExpressionSemanticsTest extends ParameterizedParse {
         });
     }
 
-    public ArithmeticValueExpressionSemanticsTest(String desc, Token token, Environment env, Encoding enc, boolean result) {
+    public ArithmeticValueExpressionSemanticsTest(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
         super(token, env, enc, result);
     }
 
@@ -109,17 +109,17 @@ public class ArithmeticValueExpressionSemanticsTest extends ParameterizedParse {
     private static Token mod = binaryValueExpressionToken(mod(ref("a"), ref("b")), 1);
     private static Token neg = unaryValueExpressionToken(neg(ref("a")));
 
-    private static Token singleToken(String firstName, String secondName, int resultSize, ValueExpression ve) {
+    private static Token singleToken(final String firstName, final String secondName, final int resultSize, final ValueExpression ve) {
         return seq(any(firstName),
                    def(secondName, con(resultSize), eqNum(ve)));
     }
 
-    private static Token binaryValueExpressionToken(BinaryValueExpression bve, int resultSize) {
+    private static Token binaryValueExpressionToken(final BinaryValueExpression bve, final int resultSize) {
         return seq(any("a"),
                    singleToken("b", "c", resultSize, bve));
     }
 
-    private static Token unaryValueExpressionToken(UnaryValueExpression uve) {
+    private static Token unaryValueExpressionToken(final UnaryValueExpression uve) {
         return singleToken("a", "b", 1, uve);
     }
 

@@ -63,13 +63,13 @@ public class ReducersTest extends ParameterizedParse {
         });
     }
 
-    public ReducersTest(String desc, Token token, Environment env, Encoding enc, boolean result) {
+    public ReducersTest(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
         super(token, env, enc, result);
     }
 
-    private final static Reducer addReducer = new Reducer() { @Override public ValueExpression reduce(ValueExpression l, ValueExpression r) { return add(l, r); } };
-    private final static Reducer mulReducer = new Reducer() { @Override public ValueExpression reduce(ValueExpression l, ValueExpression r) { return mul(l, r); } };
-    private final static Reducer catReducer = new Reducer() { @Override public ValueExpression reduce(ValueExpression l, ValueExpression r) { return cat(l, r); } };
+    private final static Reducer addReducer = new Reducer() { @Override public ValueExpression reduce(final ValueExpression l, final ValueExpression r) { return add(l, r); } };
+    private final static Reducer mulReducer = new Reducer() { @Override public ValueExpression reduce(final ValueExpression l, final ValueExpression r) { return mul(l, r); } };
+    private final static Reducer catReducer = new Reducer() { @Override public ValueExpression reduce(final ValueExpression l, final ValueExpression r) { return cat(l, r); } };
 
     private final static Token reduceAddA = token(1, eq(reduce("a", addReducer)));
     private final static Token reduceMulA = token(1, eq(reduce("a", mulReducer)));
@@ -78,14 +78,14 @@ public class ReducersTest extends ParameterizedParse {
     private final static Token reduceCatAToNumBE = token(3, eqNum(reduce("a", catReducer)), enc());
     private final static Token reduceCatAToNumLE = token(3, eqNum(reduce("a", catReducer)), le());
 
-    private static Token token(long size, Expression pred, Encoding enc) {
+    private static Token token(final long size, final Expression pred, final Encoding enc) {
         return seq(any("a"),
                    any("a"),
                    any("a"),
                    def("b", con(size), pred, enc));
     }
 
-    private static Token token(long size, Expression pred) {
+    private static Token token(final long size, final Expression pred) {
         return token(size, pred, enc());
     }
 

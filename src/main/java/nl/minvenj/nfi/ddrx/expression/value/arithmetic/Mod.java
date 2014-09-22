@@ -28,12 +28,12 @@ import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
 public class Mod extends BinaryValueExpression {
 
-    public Mod(ValueExpression lop, ValueExpression rop) {
+    public Mod(final ValueExpression lop, final ValueExpression rop) {
         super(lop, rop);
     }
 
     @Override
-    public OptionalValue eval(Value lv, Value rv, Environment env, Encoding enc) {
+    public OptionalValue eval(final Value lv, final Value rv, final Environment env, final Encoding enc) {
         if (rv.asNumeric().compareTo(BigInteger.ZERO) < 0) { return OptionalValue.empty(); }
         return OptionalValue.of(ConstantFactory.createFromNumeric(lv.asNumeric().mod(rv.asNumeric()), enc));
     }

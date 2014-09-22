@@ -21,16 +21,16 @@ import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
 public class Eq extends ComparisonExpression {
 
-    public Eq(ValueExpression current, ValueExpression predicate) {
+    public Eq(final ValueExpression current, final ValueExpression predicate) {
         super(current, predicate);
     }
 
-    public Eq(ValueExpression predicate) {
+    public Eq(final ValueExpression predicate) {
         super(predicate);
     }
 
     @Override
-    public boolean compare(Value current, Value predicate) {
+    public boolean compare(final Value current, final Value predicate) {
         final byte[] l = current.getValue();
         final byte[] r = predicate.getValue();
         if (l.length != r.length) { return false; }

@@ -22,12 +22,12 @@ import nl.minvenj.nfi.ddrx.expression.Expression;
 
 public class Not extends UnaryLogicalExpression {
 
-    public Not(Expression op) {
+    public Not(final Expression op) {
         super(op);
     }
 
     @Override
-    public boolean eval(Environment env, Encoding enc) {
+    public boolean eval(final Environment env, final Encoding enc) {
         return !_op.eval(env, enc);
     }
 

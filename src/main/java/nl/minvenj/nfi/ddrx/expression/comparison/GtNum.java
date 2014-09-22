@@ -21,16 +21,16 @@ import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
 public class GtNum extends ComparisonExpression {
 
-    public GtNum(ValueExpression current, ValueExpression predicate) {
+    public GtNum(final ValueExpression current, final ValueExpression predicate) {
         super(current, predicate);
     }
 
-    public GtNum(ValueExpression predicate) {
+    public GtNum(final ValueExpression predicate) {
         super(predicate);
     }
 
     @Override
-    public boolean compare(Value current, Value predicate) {
+    public boolean compare(final Value current, final Value predicate) {
         return current.asNumeric().compareTo(predicate.asNumeric()) > 0;
     }
 

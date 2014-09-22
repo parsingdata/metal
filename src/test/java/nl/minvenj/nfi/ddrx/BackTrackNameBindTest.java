@@ -38,31 +38,31 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class BackTrackNameBindTest {
 
-    private Token _choiceRef = seq(any("a"),
-                               cho(seq(any("a"), eqRef("b", "a")),
-                                   seq(notEqRef("b", "a"), any("c"))));
+    private final Token _choiceRef = seq(any("a"),
+                                         cho(seq(any("a"), eqRef("b", "a")),
+                                             seq(notEqRef("b", "a"), any("c"))));
 
-    private Token _repeatRef = seq(rep(eq("a", 42)),
-                                   rep(notEqRef("b", "a")));
+    private final Token _repeatRef = seq(rep(eq("a", 42)),
+                                         rep(notEqRef("b", "a")));
 
     @Test
     public void choiceRefLeft() throws IOException {
-        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 2), enc()));
+        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 2), enc()).succeeded());
     }
 
     @Test
     public void choiceRefRight() throws IOException {
-        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 3), enc()));
+        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 3), enc()).succeeded());
     }
 
     @Test
     public void choiceRefNone() throws IOException {
-        Assert.assertFalse(_choiceRef.parse(stream(1, 1, 2), enc()));
+        Assert.assertFalse(_choiceRef.parse(stream(1, 1, 2), enc()).succeeded());
     }
 
     @Test
     public void repeatRef() throws IOException {
-        Assert.assertTrue(_repeatRef.parse(stream(42, 42, 42, 21, 21, 21), enc()));
+        Assert.assertTrue(_repeatRef.parse(stream(42, 42, 42, 21, 21, 21), enc()).succeeded());
     }
 
 }

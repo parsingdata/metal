@@ -25,13 +25,13 @@ public class Ref implements ValueExpression {
 
     private final String _name;
 
-    public Ref(String name) {
+    public Ref(final String name) {
         _name = name;
     }
 
     @Override
-    public OptionalValue eval(Environment env, Encoding enc) {
-        return env.get(_name);
+    public OptionalValue eval(final Environment env, final Encoding enc) {
+        return env.order.get(_name);
     }
 
     @Override

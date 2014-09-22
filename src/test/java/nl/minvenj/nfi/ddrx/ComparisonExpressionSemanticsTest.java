@@ -65,21 +65,21 @@ public class ComparisonExpressionSemanticsTest extends ParameterizedParse {
         });
     }
 
-    public ComparisonExpressionSemanticsTest(String desc, Token token, Environment env, Encoding enc, boolean result) {
+    public ComparisonExpressionSemanticsTest(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
         super(token, env, enc, result);
     }
 
-    private static Token numCom(int size, ComparisonExpression comparison) {
+    private static Token numCom(final int size, final ComparisonExpression comparison) {
         return seq(any("a"),
                    def("b", con(size), comparison));
     }
 
-    private static Token strCom(int size, ComparisonExpression comparison) {
+    private static Token strCom(final int size, final ComparisonExpression comparison) {
         return seq(def("a", con(size), expTrue()),
                    def("b", con(size), comparison));
     }
 
-    private static Token valCom(int size, ComparisonExpression comparison) {
+    private static Token valCom(final int size, final ComparisonExpression comparison) {
         return seq(def("a", con(size), expTrue()),
                    def("b", con(size), comparison));
     }

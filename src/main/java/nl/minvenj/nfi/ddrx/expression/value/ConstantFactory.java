@@ -23,26 +23,26 @@ import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class ConstantFactory {
 
-    public static Value createFromNumeric(BigInteger value, Encoding enc) {
+    public static Value createFromNumeric(final BigInteger value, final Encoding enc) {
         return new Value(compact(value.toByteArray()), new Encoding(enc.isSigned(), enc.getCharset(), ByteOrder.BIG_ENDIAN));
     }
 
-    public static Value createFromNumeric(long value, Encoding enc) {
+    public static Value createFromNumeric(final long value, final Encoding enc) {
         return createFromNumeric(BigInteger.valueOf(value), enc);
     }
 
-    public static Value createFromString(String value, Encoding encoding) {
+    public static Value createFromString(final String value, final Encoding encoding) {
         return new Value(value.getBytes(encoding.getCharset()), encoding);
     }
 
-    private static byte[] compact(byte[] in) {
+    private static byte[] compact(final byte[] in) {
         if (in.length < 2) {
             return in;
         }
         // strip leading zero bytes
         int i = 0;
         for (; i < in.length && in[i] == 0; i++);
-        byte[] out = new byte[in.length - i];
+        final byte[] out = new byte[in.length - i];
         System.arraycopy(in, i, out, 0, out.length);
         return out;
     }

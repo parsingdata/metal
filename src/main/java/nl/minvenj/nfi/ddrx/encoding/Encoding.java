@@ -32,19 +32,19 @@ public class Encoding {
         this(DEFAULT_SIGNED, DEFAULT_CHARSET, DEFAULT_BYTE_ORDER);
     }
 
-    public Encoding(boolean signed) {
+    public Encoding(final boolean signed) {
         this(signed, DEFAULT_CHARSET, DEFAULT_BYTE_ORDER);
     }
 
-    public Encoding(Charset charset) {
+    public Encoding(final Charset charset) {
         this(DEFAULT_SIGNED, charset, DEFAULT_BYTE_ORDER);
     }
 
-    public Encoding(ByteOrder byteOrder) {
+    public Encoding(final ByteOrder byteOrder) {
         this(DEFAULT_SIGNED, DEFAULT_CHARSET, byteOrder);
     }
 
-    public Encoding(boolean signed, Charset charset, ByteOrder byteOrder) {
+    public Encoding(final boolean signed, final Charset charset, final ByteOrder byteOrder) {
         _signed = signed;
         _charset = charset;
         _byteOrder = byteOrder;

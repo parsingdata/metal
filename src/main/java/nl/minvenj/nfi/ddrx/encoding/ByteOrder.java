@@ -18,14 +18,14 @@ package nl.minvenj.nfi.ddrx.encoding;
 
 public enum ByteOrder {
 
-    BIG_ENDIAN { public byte[] apply(byte[] b) { return b.clone(); } },
-    LITTLE_ENDIAN { public byte[] apply(byte[] b) {
-        byte[] o = b.clone();
+    BIG_ENDIAN { public byte[] apply(final byte[] b) { return b.clone(); } },
+    LITTLE_ENDIAN { public byte[] apply(final byte[] b) {
+        final byte[] o = b.clone();
         for (int i = 0; i < b.length; i++) {
             o[i] = b[(b.length-1)-i];
         }
         return o;
     } };
 
-    public abstract byte[] apply(byte[] b);
+    public abstract byte[] apply(final byte[] b);
 }

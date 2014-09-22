@@ -22,12 +22,12 @@ import nl.minvenj.nfi.ddrx.expression.Expression;
 
 public class Or extends BinaryLogicalExpression {
 
-    public Or(Expression lop, Expression rop) {
+    public Or(final Expression lop, final Expression rop) {
         super(lop, rop);
     }
 
     @Override
-    public boolean eval(Environment env, Encoding enc) {
+    public boolean eval(final Environment env, final Encoding enc) {
         return _lop.eval(env, enc) || _rop.eval(env, enc);
     }
 

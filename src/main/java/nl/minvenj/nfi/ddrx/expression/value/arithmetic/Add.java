@@ -26,12 +26,12 @@ import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
 public class Add extends BinaryValueExpression {
 
-    public Add(ValueExpression lop, ValueExpression rop) {
+    public Add(final ValueExpression lop, final ValueExpression rop) {
         super(lop, rop);
     }
 
     @Override
-    public OptionalValue eval(Value lv, Value rv, Environment env, Encoding enc) {
+    public OptionalValue eval(final Value lv, final Value rv, final Environment env, final Encoding enc) {
         return OptionalValue.of(ConstantFactory.createFromNumeric(lv.asNumeric().add(rv.asNumeric()), enc));
     }
 

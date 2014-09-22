@@ -16,12 +16,12 @@
 
 package nl.minvenj.nfi.ddrx.token;
 
-import java.util.List;
-
-import nl.minvenj.nfi.ddrx.expression.value.Value;
+import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.data.ValueList;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public interface StructSink {
 
-    void handleStruct(long offset, List<Value> struct);
+    void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ValueList struct);
 
 }

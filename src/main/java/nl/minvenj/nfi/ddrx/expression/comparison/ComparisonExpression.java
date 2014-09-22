@@ -28,25 +28,25 @@ public abstract class ComparisonExpression implements Expression {
     private final ValueExpression _current;
     private final ValueExpression _predicate;
 
-    public ComparisonExpression(ValueExpression current, ValueExpression predicate) {
+    public ComparisonExpression(final ValueExpression current, final ValueExpression predicate) {
         _current = current;
         _predicate = predicate;
     }
 
-    public ComparisonExpression(ValueExpression predicate) {
+    public ComparisonExpression(final ValueExpression predicate) {
         this(null, predicate);
     }
 
     @Override
-    public boolean eval(Environment env, Encoding enc) {
-        final OptionalValue ocv = _current == null ? env.current() : _current.eval(env, enc);
+    public boolean eval(final Environment env, final Encoding enc) {
+        final OptionalValue ocv = _current == null ? env.order.current() : _current.eval(env, enc);
         if (!ocv.isPresent()) { return false; }
         final OptionalValue opv = _predicate.eval(env, enc);
         if (!opv.isPresent()) { return false; }
         return compare(ocv.get(), opv.get());
     }
 
-    public abstract boolean compare(Value current, Value predicate);
+    public abstract boolean compare(final Value current, final Value predicate);
 
     @Override
     public String toString() {

@@ -24,8 +24,8 @@ import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 public class Self implements ValueExpression {
 
     @Override
-    public OptionalValue eval(Environment env, Encoding enc) {
-        return env.current();
+    public OptionalValue eval(final Environment env, final Encoding enc) {
+        return env.order.current();
     }
 
     @Override

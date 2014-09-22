@@ -21,15 +21,15 @@ import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class Cat extends BinaryValueExpression {
 
-    public Cat(ValueExpression lop, ValueExpression rop) {
+    public Cat(final ValueExpression lop, final ValueExpression rop) {
         super(lop, rop);
     }
 
     @Override
-    public OptionalValue eval(Value lv, Value rv, Environment env, Encoding enc) {
+    public OptionalValue eval(final Value lv, final Value rv, final Environment env, final Encoding enc) {
         final byte[] lb = lv.getValue();
         final byte[] rb = rv.getValue();
-        byte[] res = new byte[lb.length + rb.length];
+        final byte[] res = new byte[lb.length + rb.length];
         System.arraycopy(lb, 0, res, 0, lb.length);
         System.arraycopy(rb, 0, res, lb.length, rb.length);
         return OptionalValue.of(new Value(res, enc));

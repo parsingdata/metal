@@ -31,14 +31,14 @@ import nl.minvenj.nfi.ddrx.expression.value.ValueOperation;
 
 public class Callback {
 
-    public static ValueExpression crc32(ValueExpression target) {
+    public static ValueExpression crc32(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
             public OptionalValue eval(Value v, Environment env) {
                 return v.operation(new ValueOperation() {
                     @Override
                     public OptionalValue execute(final Value value) {
-                        CRC32 crc = new CRC32();
+                        final CRC32 crc = new CRC32();
                         crc.update(value.getValue());
                         final long crcValue = crc.getValue();
                         return OptionalValue.of(new Value(value.getEncoding().getByteOrder().apply(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
@@ -51,16 +51,16 @@ public class Callback {
         };
     }
     
-    public static ValueExpression inflate(ValueExpression target) {
+    public static ValueExpression inflate(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
             public OptionalValue eval(Value v, Environment env) {
                 return v.operation(new ValueOperation() {
                     @Override
                     public OptionalValue execute(Value value) {
-                        Inflater inf = new Inflater(true);
-                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                        InflaterOutputStream ios = new InflaterOutputStream(bos, inf);
+                        final Inflater inf = new Inflater(true);
+                        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        final InflaterOutputStream ios = new InflaterOutputStream(bos, inf);
                         try {
                             ios.write(value.getValue());
                             ios.close();

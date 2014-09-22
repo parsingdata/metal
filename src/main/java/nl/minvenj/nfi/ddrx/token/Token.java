@@ -19,6 +19,7 @@ package nl.minvenj.nfi.ddrx.token;
 import java.io.IOException;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.data.ParseResult;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public abstract class Token {
@@ -27,18 +28,18 @@ public abstract class Token {
 
     private final Encoding _enc;
 
-    protected Token(Encoding enc) {
+    protected Token(final Encoding enc) {
         _enc = enc;
     }
 
-    public boolean parse(String scope, Environment env, Encoding enc) throws IOException {
+    public ParseResult parse(final String scope, final Environment env, final Encoding enc) throws IOException {
         return _enc == null ? parseImpl(scope, env, enc) : parseImpl(scope, env, _enc);
     }
 
-    public boolean parse(Environment env, Encoding enc) throws IOException {
+    public ParseResult parse(final Environment env, final Encoding enc) throws IOException {
         return parse(DEFAULT_NAME, env, enc);
     }
 
-    protected abstract boolean parseImpl(String scope, Environment env, Encoding enc) throws IOException;
+    protected abstract ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException;
 
 }

@@ -36,63 +36,63 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class BackTrackOffsetTest {
 
-    private Token _backTrackChoice = cho(seq(any("a"),
-                                             eq("b", 2)),
-                                         seq(any("c"),
-                                             eq("d", 3)));
+    private final Token _backTrackChoice = cho(seq(any("a"),
+                                                   eq("b", 2)),
+                                               seq(any("c"),
+                                                   eq("d", 3)));
 
-    private Token _backTrackRepeat = seq(rep(seq(eq("a", 1),
-                                                 eq("b", 2))),
-                                         seq(eq("c", 1),
-                                             eq("d", 3)));
+    private final Token _backTrackRepeat = seq(rep(seq(eq("a", 1),
+                                                       eq("b", 2))),
+                                               seq(eq("c", 1),
+                                                   eq("d", 3)));
 
-    private Token _backTrackDeepFragment = rep(seq(any("a"),
-                                                   any("b"),
-                                                   cho(eq("c", 21),
-                                                       eq("d", 42))));
-    private Token _backTrackDeep = cho(seq(_backTrackDeepFragment,
-                                           eq("e", 63)),
-                                       seq(_backTrackDeepFragment,
-                                           eq("f", 84)));
+    private final Token _backTrackDeepFragment = rep(seq(any("a"),
+                                                         any("b"),
+                                                         cho(eq("c", 21),
+                                                             eq("d", 42))));
+    private final Token _backTrackDeep = cho(seq(_backTrackDeepFragment,
+                                                 eq("e", 63)),
+                                             seq(_backTrackDeepFragment,
+                                                 eq("f", 84)));
 
     @Test
     public void choiceLeft() throws IOException {
-        Assert.assertTrue(_backTrackChoice.parse(stream(1, 2), enc()));
+        Assert.assertTrue(_backTrackChoice.parse(stream(1, 2), enc()).succeeded());
     }
 
     @Test
     public void choiceRight() throws IOException {
-        Assert.assertTrue(_backTrackChoice.parse(stream(1, 3), enc()));
+        Assert.assertTrue(_backTrackChoice.parse(stream(1, 3), enc()).succeeded());
     }
 
     @Test
     public void choiceNone() throws IOException {
-        Assert.assertFalse(_backTrackChoice.parse(stream(1, 4), enc()));
+        Assert.assertFalse(_backTrackChoice.parse(stream(1, 4), enc()).succeeded());
     }
 
     @Test
     public void repeatZero() throws IOException {
-        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 3), enc()));
+        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 3), enc()).succeeded());
     }
 
     @Test
     public void repeatOnce() throws IOException {
-        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 3), enc()));
+        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 3), enc()).succeeded());
     }
 
     @Test
     public void repeatTwice() throws IOException {
-        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 2, 1, 3), enc()));
+        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 2, 1, 3), enc()).succeeded());
     }
 
     @Test
     public void repeatNone() throws IOException {
-        Assert.assertFalse(_backTrackRepeat.parse(stream(1, 4), enc()));
+        Assert.assertFalse(_backTrackRepeat.parse(stream(1, 4), enc()).succeeded());
     }
 
     @Test
     public void deepMatch() throws IOException {
-        Assert.assertTrue(_backTrackDeep.parse(stream(1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 84), enc()));
+        Assert.assertTrue(_backTrackDeep.parse(stream(1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 84), enc()).succeeded());
     }
 
 }

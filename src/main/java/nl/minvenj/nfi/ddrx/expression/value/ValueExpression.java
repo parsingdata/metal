@@ -21,6 +21,6 @@ import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public interface ValueExpression {
 
-    OptionalValue eval(Environment env, Encoding enc);
+    OptionalValue eval(final Environment env, final Encoding enc);
 
 }

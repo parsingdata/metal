@@ -34,32 +34,32 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class SimpleTest {
 
-    private Token buildSimpleToken(String name, int size, int predicate) {
+    private Token buildSimpleToken(final String name, final int size, final int predicate) {
         return def(name, con(size), eq(con(predicate)));
     }
 
     @Test
     public void correct() throws IOException {
-        Token t = buildSimpleToken("r1", 1, 1);
-        Assert.assertTrue(t.parse(stream(1, 2, 3, 4), enc()));
+        final Token t = buildSimpleToken("r1", 1, 1);
+        Assert.assertTrue(t.parse(stream(1, 2, 3, 4), enc()).succeeded());
     }
 
     @Test
     public void sizeError() throws IOException {
-        Token t = buildSimpleToken("r1", 2, 1);
-        Assert.assertFalse(t.parse(stream(1, 2, 3, 4), enc()));
+        final Token t = buildSimpleToken("r1", 2, 1);
+        Assert.assertFalse(t.parse(stream(1, 2, 3, 4), enc()).succeeded());
     }
 
     @Test
     public void predicateError() throws IOException {
-        Token t = buildSimpleToken("r1", 1, 2);
-        Assert.assertFalse(t.parse(stream(1, 2, 3, 4), enc()));
+        final Token t = buildSimpleToken("r1", 1, 2);
+        Assert.assertFalse(t.parse(stream(1, 2, 3, 4), enc()).succeeded());
     }
 
     @Test
     public void sourceError() throws IOException {
-        Token t = buildSimpleToken("r1", 1, 1);
-        Assert.assertFalse(t.parse(stream(2, 2, 2, 2), enc()));
+        final Token t = buildSimpleToken("r1", 1, 1);
+        Assert.assertFalse(t.parse(stream(2, 2, 2, 2), enc()).succeeded());
     }
 
 }

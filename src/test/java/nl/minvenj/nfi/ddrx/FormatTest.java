@@ -42,25 +42,25 @@ public class FormatTest {
 
     @Test
     public void parsePNG() throws IOException, URISyntaxException {
-        Assert.assertTrue(PNG.FORMAT.parse(stream(toURI(PNGFILE)), enc()));
+        Assert.assertTrue(PNG.FORMAT.parse(stream(toURI(PNGFILE)), enc()).succeeded());
     }
 
     @Test
     public void parseZIP() throws IOException, URISyntaxException {
-        Assert.assertTrue(ZIP.FORMAT.parse(stream(toURI(ZIPFILE1)), enc()));
+        Assert.assertTrue(ZIP.FORMAT.parse(stream(toURI(ZIPFILE1)), enc()).succeeded());
     }
 
     @Test
     public void parseZIP2() throws IOException, URISyntaxException {
-        Assert.assertTrue(ZIP.FORMAT.parse(stream(toURI(ZIPFILE2)), enc()));
+        Assert.assertTrue(ZIP.FORMAT.parse(stream(toURI(ZIPFILE2)), enc()).succeeded());
     }
 
     @Test
     public void parseJPEG() throws IOException, URISyntaxException {
-        Assert.assertTrue(JPEG.FORMAT.parse(stream(toURI(JPEGFILE)), enc()));
+        Assert.assertTrue(JPEG.FORMAT.parse(stream(toURI(JPEGFILE)), enc()).succeeded());
     }
 
-    private URI toURI(String resource) throws URISyntaxException {
+    private URI toURI(final String resource) throws URISyntaxException {
         return getClass().getResource(resource).toURI();
     }
 

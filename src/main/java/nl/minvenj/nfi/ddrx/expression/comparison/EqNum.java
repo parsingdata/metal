@@ -21,16 +21,16 @@ import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
 public class EqNum extends ComparisonExpression {
 
-    public EqNum(ValueExpression current, ValueExpression predicate) {
+    public EqNum(final ValueExpression current, final ValueExpression predicate) {
         super(current, predicate);
     }
 
-    public EqNum(ValueExpression predicate) {
+    public EqNum(final ValueExpression predicate) {
         super(predicate);
     }
 
     @Override
-    public boolean compare(Value current, Value predicate) {
+    public boolean compare(final Value current, final Value predicate) {
         return current.asNumeric().compareTo(predicate.asNumeric()) == 0;
     }
 

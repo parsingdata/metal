@@ -22,7 +22,7 @@ public class OptionalValue {
     
     private final Value _value;
     
-    private OptionalValue(Value value) {
+    private OptionalValue(final Value value) {
         _value = value;
     }
     
@@ -30,7 +30,7 @@ public class OptionalValue {
         this(null);
     }
     
-    public static OptionalValue of(Value value) {
+    public static OptionalValue of(final Value value) {
         return new OptionalValue(value);
     }
     

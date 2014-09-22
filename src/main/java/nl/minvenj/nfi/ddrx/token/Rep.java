@@ -19,30 +19,27 @@ package nl.minvenj.nfi.ddrx.token;
 import java.io.IOException;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.data.ParseResult;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class Rep extends Token {
 
     private final Token _op;
 
-    public Rep(Token op, Encoding enc) {
+    public Rep(final Token op, final Encoding enc) {
         super(enc);
         _op = op;
     }
 
-    public Rep(Token op) {
+    public Rep(final Token op) {
         this(op, null);
     }
 
     @Override
-    protected boolean parseImpl(String scope, Environment env, Encoding enc) throws IOException {
-        env.mark();
-        if (!_op.parse(scope, env, enc)) {
-            env.reset();
-            return true;
-        }
-        env.clear();
-        return parse(scope, env, enc);
+    protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
+        final ParseResult res = _op.parse(scope, env, enc);
+        if (!res.succeeded()) { return new ParseResult(true, env); }
+        return parse(scope, res.getEnvironment(), enc);
     }
 
     @Override

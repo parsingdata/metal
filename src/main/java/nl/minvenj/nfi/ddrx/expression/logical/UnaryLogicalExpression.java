@@ -22,7 +22,7 @@ public abstract class UnaryLogicalExpression implements LogicalExpression {
     
     protected final Expression _op;
     
-    public UnaryLogicalExpression(Expression op) {
+    public UnaryLogicalExpression(final Expression op) {
         _op = op;
     }
     

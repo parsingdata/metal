@@ -38,18 +38,18 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ValueExpressionSemanticsTest {
 
-    private Token cat = seq(any("a"),
-                            any("b"),
-                            def("c", con(2), eq(cat(ref("a"), ref("b")))));
+    private final Token cat = seq(any("a"),
+                                  any("b"),
+                                  def("c", con(2), eq(cat(ref("a"), ref("b")))));
 
     @Test
     public void Cat() throws IOException {
-        Assert.assertTrue(cat.parse(stream(1, 2, 1, 2), enc()));
+        Assert.assertTrue(cat.parse(stream(1, 2, 1, 2), enc()).succeeded());
     }
 
     @Test
     public void CatNoMatch() throws IOException {
-        Assert.assertFalse(cat.parse(stream(1, 2, 12, 12), enc()));
+        Assert.assertFalse(cat.parse(stream(1, 2, 12, 12), enc()).succeeded());
     }
 
 }

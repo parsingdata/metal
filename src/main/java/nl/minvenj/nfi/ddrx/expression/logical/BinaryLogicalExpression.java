@@ -23,7 +23,7 @@ public abstract class BinaryLogicalExpression implements LogicalExpression {
     protected final Expression _lop;
     protected final Expression _rop;
     
-    public BinaryLogicalExpression(Expression lop, Expression rop) {
+    public BinaryLogicalExpression(final Expression lop, final Expression rop) {
         _lop = lop;
         _rop = rop;
     }

@@ -35,22 +35,22 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ReadUntilTest {
 
-    private Token _readUntil = seq(rep(notEq("other", 42)),
-                                       eq("terminator", 42));
+    private final Token _readUntil = seq(rep(notEq("other", 42)),
+                                         eq("terminator", 42));
 
     @Test
     public void readUntilConstant() throws IOException {
-        Assert.assertTrue(_readUntil.parse(stream(1, 2, 3, 4, 42), enc()));
+        Assert.assertTrue(_readUntil.parse(stream(1, 2, 3, 4, 42), enc()).succeeded());
     }
 
     @Test
     public void readUntilNoSkipping() throws IOException {
-        Assert.assertTrue(_readUntil.parse(stream(42), enc()));
+        Assert.assertTrue(_readUntil.parse(stream(42), enc()).succeeded());
     }
 
     @Test
     public void readUntilErrorNoTerminator() throws IOException {
-        Assert.assertFalse(_readUntil.parse(stream(1, 2, 3, 4), enc()));
+        Assert.assertFalse(_readUntil.parse(stream(1, 2, 3, 4), enc()).succeeded());
     }
 
 }

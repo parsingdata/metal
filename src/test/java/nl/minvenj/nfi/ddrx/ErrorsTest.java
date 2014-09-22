@@ -27,6 +27,7 @@ import java.io.IOException;
 
 import nl.minvenj.nfi.ddrx.data.ByteStream;
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.data.ValueList;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
@@ -39,32 +40,18 @@ public class ErrorsTest {
 
     @Test
     public void noValueForSize() throws IOException {
-        Token t = def("a", div(con(10), con(0)));
-        Assert.assertFalse(t.parse(stream(1), enc()));
+        final Token t = def("a", div(con(10), con(0)));
+        Assert.assertFalse(t.parse(stream(1), enc()).succeeded());
     }
 
     @Test(expected=IOException.class)
     public void ioError() throws IOException {
-        Token t = any("a");
-        ByteStream stream = new ByteStream() {
-
+        final Token t = any("a");
+        final ByteStream stream = new ByteStream() {
             @Override
-            public void mark() {}
-
-            @Override
-            public void reset() {}
-
-            @Override
-            public void clear() {}
-
-            @Override
-            public int read(byte[] data) throws IOException { throw new IOException(); }
-
-            @Override
-            public long offset() { return 0L; }
-
+            public int read(long offset, byte[] data) throws IOException { throw new IOException(); }
         };
-        Environment env = new Environment(stream);
+        final Environment env = new Environment(new ValueList(), stream, 0L);
         t.parse(env, enc());
     }
 

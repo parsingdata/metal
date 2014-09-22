@@ -59,15 +59,15 @@ public class LogicalExpressionSemanticsTest extends ParameterizedParse {
         });
     }
 
-    public LogicalExpressionSemanticsTest(String desc, Token token, Environment env, Encoding enc, boolean result) {
+    public LogicalExpressionSemanticsTest(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
         super(token, env, enc, result);
     }
 
-    private static Token andEqGt = logicalExp(and(eqNum(ref("a")), gtNum(ref("b"))));
-    private static Token orLtEq = logicalExp(or(ltNum(ref("a")), eqNum(ref("b"))));
-    private static Token notAndNotEqNotGt = logicalExp(not(and(not(eqNum(ref("a"))), not(gtNum(ref("b"))))));
+    private static final Token andEqGt = logicalExp(and(eqNum(ref("a")), gtNum(ref("b"))));
+    private static final Token orLtEq = logicalExp(or(ltNum(ref("a")), eqNum(ref("b"))));
+    private static final Token notAndNotEqNotGt = logicalExp(not(and(not(eqNum(ref("a"))), not(gtNum(ref("b"))))));
 
-    private static Token logicalExp(LogicalExpression le) {
+    private static Token logicalExp(final LogicalExpression le) {
         return seq(any("a"),
                    any("b"),
                    def("c", con(1), le));

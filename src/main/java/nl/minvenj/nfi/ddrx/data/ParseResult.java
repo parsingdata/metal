@@ -14,27 +14,24 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.value;
+package nl.minvenj.nfi.ddrx.data;
 
-import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
-
-public class Const implements ValueExpression {
-
-    private final Value _val;
-
-    public Const(final Value val) {
-        _val = val;
+public class ParseResult {
+    
+    private final boolean _succeeded;
+    private final Environment _environment;
+    
+    public ParseResult(final boolean succeeded, final Environment environment) {
+        _succeeded = succeeded;
+        _environment = environment;
     }
-
-    @Override
-    public OptionalValue eval(final Environment env, final Encoding enc) {
-        return OptionalValue.of(_val);
+    
+    public boolean succeeded() {
+        return _succeeded;
     }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" + _val.toString() + ")";
+    
+    public Environment getEnvironment() {
+        return _environment;
     }
-
+    
 }

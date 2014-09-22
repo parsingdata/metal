@@ -18,6 +18,6 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 public interface Reducer {
 
-    ValueExpression reduce(ValueExpression l, ValueExpression r);
+    ValueExpression reduce(final ValueExpression l, final ValueExpression r);
 
 }

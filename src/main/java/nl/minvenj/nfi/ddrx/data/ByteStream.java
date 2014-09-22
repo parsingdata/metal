@@ -20,10 +20,6 @@ import java.io.IOException;
 
 public interface ByteStream {
 
-    void mark();
-    void reset();
-    void clear();
-    int read(byte[] data) throws IOException;
-    long offset();
+    int read(final long offset, final byte[] data) throws IOException;
 
 }
