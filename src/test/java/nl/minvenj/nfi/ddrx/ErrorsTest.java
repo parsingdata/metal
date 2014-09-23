@@ -27,7 +27,7 @@ import java.io.IOException;
 
 import nl.minvenj.nfi.ddrx.data.ByteStream;
 import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.data.ValueList;
+import nl.minvenj.nfi.ddrx.data.ParsedValueList;
 import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
@@ -51,7 +51,7 @@ public class ErrorsTest {
             @Override
             public int read(long offset, byte[] data) throws IOException { throw new IOException(); }
         };
-        final Environment env = new Environment(new ValueList(), stream, 0L);
+        final Environment env = new Environment(new ParsedValueList(), stream, 0L);
         t.parse(env, enc());
     }
 

@@ -17,7 +17,7 @@
 package nl.minvenj.nfi.ddrx.expression.value.reference;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.data.ValueList;
+import nl.minvenj.nfi.ddrx.data.ParsedValueList;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
@@ -32,11 +32,11 @@ public class First implements ValueExpression {
 
     @Override
     public OptionalValue eval(final Environment env, final Encoding enc) {
-        final ValueList all = env.order.getAll(_name);
+        final ParsedValueList all = env.order.getAll(_name);
         if (all.isEmpty()) {
             return OptionalValue.empty();
         } else {
-            return all.getFirst();
+            return OptionalValue.of(all.getFirst());
         }
     }
 

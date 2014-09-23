@@ -31,7 +31,7 @@ public class Ref implements ValueExpression {
 
     @Override
     public OptionalValue eval(final Environment env, final Encoding enc) {
-        return env.order.get(_name);
+        return OptionalValue.of(env.order.get(_name));
     }
 
     @Override

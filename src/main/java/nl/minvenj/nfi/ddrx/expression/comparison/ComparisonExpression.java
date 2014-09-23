@@ -39,7 +39,7 @@ public abstract class ComparisonExpression implements Expression {
 
     @Override
     public boolean eval(final Environment env, final Encoding enc) {
-        final OptionalValue ocv = _current == null ? env.order.current() : _current.eval(env, enc);
+        final OptionalValue ocv = _current == null ? OptionalValue.of(env.order.current()) : _current.eval(env, enc);
         if (!ocv.isPresent()) { return false; }
         final OptionalValue opv = _predicate.eval(env, enc);
         if (!opv.isPresent()) { return false; }

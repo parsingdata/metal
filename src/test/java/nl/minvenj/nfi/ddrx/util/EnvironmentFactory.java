@@ -23,20 +23,20 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.data.ValueList;
+import nl.minvenj.nfi.ddrx.data.ParsedValueList;
 
 public class EnvironmentFactory {
 
     public static Environment stream(final int... bytes) {
-        return new Environment(new ValueList(), new InMemoryByteStream(toByteArray(bytes)), 0);
+        return new Environment(new ParsedValueList(), new InMemoryByteStream(toByteArray(bytes)), 0);
     }
 
     public static Environment stream(final URI resource) throws IOException {
-        return new Environment(new ValueList(), new InMemoryByteStream(Files.readAllBytes(Paths.get(resource))), 0L);
+        return new Environment(new ParsedValueList(), new InMemoryByteStream(Files.readAllBytes(Paths.get(resource))), 0L);
     }
 
     public static Environment stream(final String value, final Charset charset) {
-        return new Environment(new ValueList(), new InMemoryByteStream(value.getBytes(charset)), 0L);
+        return new Environment(new ParsedValueList(), new InMemoryByteStream(value.getBytes(charset)), 0L);
     }
 
     public static byte[] toByteArray(final int... bytes) {

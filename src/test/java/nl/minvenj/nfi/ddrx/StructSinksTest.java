@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.Deque;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.data.ValueList;
+import nl.minvenj.nfi.ddrx.data.ParsedValueList;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.token.StructSink;
 import nl.minvenj.nfi.ddrx.token.Token;
@@ -56,14 +56,14 @@ public class StructSinksTest {
     public void structSinkMultiOverRep() throws IOException {
         str("outer", rep(createToken(0L, 2L)), new StructSink() {
             @Override
-            public void handleStruct(String scopeName, Environment env, Encoding enc, ValueList struct) {
+            public void handleStruct(String scopeName, Environment env, Encoding enc, ParsedValueList struct) {
                 Assert.assertEquals(0L, struct.tail.tail.tail.head.getOffset());
                 Assert.assertNotNull(struct.head);
                 Assert.assertNotNull(struct.tail.head);
                 Assert.assertNotNull(struct.tail.tail.head);
                 Assert.assertNotNull(struct.tail.tail.tail.head);
                 Assert.assertNull(struct.tail.tail.tail.tail);
-                ValueList cur = struct;
+                ParsedValueList cur = struct;
                 for (int i = 0; i < 4; i++) {
                     Assert.assertEquals((i & 1) == 0 ? "b" : "a", cur.head.getName());
                     Assert.assertEquals(4-i, cur.head.asNumeric().intValue());
@@ -78,7 +78,7 @@ public class StructSinksTest {
 
         return str("test", seq(any("a"), any("b")), new StructSink() {
             @Override
-            public void handleStruct(String scopeName, Environment env, Encoding enc, ValueList struct) {
+            public void handleStruct(String scopeName, Environment env, Encoding enc, ParsedValueList struct) {
                 Assert.assertEquals(offsetDeque.pop().longValue(), struct.tail.head.getOffset());
                 Assert.assertNotNull(struct.head);
                 Assert.assertNotNull(struct.tail.head);

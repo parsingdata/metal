@@ -18,18 +18,18 @@ package nl.minvenj.nfi.ddrx.data;
 
 public class Environment {
 
-    public final ValueList order;
+    public final ParsedValueList order;
     public final ByteStream input;
     public final long offset;
 
-    public Environment(final ValueList order, final ByteStream input, final long offset) {
+    public Environment(final ParsedValueList order, final ByteStream input, final long offset) {
         this.order = order;
         this.input = input;
         this.offset = offset;
     }
 
     public Environment(final ByteStream input, final long offset) {
-        this(new ValueList(), input, offset);
+        this(new ParsedValueList(), input, offset);
     }
 
     @Override

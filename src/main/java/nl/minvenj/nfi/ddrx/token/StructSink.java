@@ -17,11 +17,11 @@
 package nl.minvenj.nfi.ddrx.token;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.data.ValueList;
+import nl.minvenj.nfi.ddrx.data.ParsedValueList;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public interface StructSink {
 
-    void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ValueList struct);
+    void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParsedValueList struct);
 
 }

@@ -74,7 +74,7 @@ public class ShorthandsTest {
     private void runChoice(final int data, final String matched) throws IOException {
         final ParseResult res = multiChoice.parse(stream(data), enc());
         Assert.assertTrue(res.succeeded());
-        Assert.assertTrue(res.getEnvironment().order.current().get().getName().equals(matched));
+        Assert.assertTrue(res.getEnvironment().order.current().getName().equals(matched));
     }
 
     @Test

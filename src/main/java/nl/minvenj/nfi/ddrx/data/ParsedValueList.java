@@ -16,23 +16,22 @@
 
 package nl.minvenj.nfi.ddrx.data;
 
-import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
-import nl.minvenj.nfi.ddrx.expression.value.Value;
+import nl.minvenj.nfi.ddrx.expression.value.ParsedValue;
 
-public class ValueList {
+public class ParsedValueList {
     
-    public final Value head;
-    public final ValueList tail;
+    public final ParsedValue head;
+    public final ParsedValueList tail;
     
-    public ValueList() {
+    public ParsedValueList() {
         this(null, null);
     }
     
-    public ValueList(final Value head) {
+    public ParsedValueList(final ParsedValue head) {
         this(head, null);
     }
     
-    public ValueList(final Value head, final ValueList tail){
+    public ParsedValueList(final ParsedValue head, final ParsedValueList tail){
         this.head = head;
         if (tail != null && tail.isEmpty()) {
             this.tail = null;
@@ -41,56 +40,56 @@ public class ValueList {
         }
     }
     
-    public OptionalValue get(final String name) {
+    public ParsedValue get(final String name) {
         if (head != null && head.matches(name)) {
-            return OptionalValue.of(head);
+            return head;
         } else if (tail != null) {
             return tail.get(name);
         } else {
-            return OptionalValue.empty();
+            return null;
         }
     }
     
-    public ValueList getAll(final String name) {
-        final ValueList t = tail != null ? tail.getAll(name) : null;
+    public ParsedValueList getAll(final String name) {
+        final ParsedValueList t = tail != null ? tail.getAll(name) : null;
         if (head != null && head.matches(name)) {
-            return new ValueList(head, t != null && t.head != null ? t : null);
+            return new ParsedValueList(head, t != null && t.head != null ? t : null);
         } else {
-            return t != null ? t : new ValueList();
+            return t != null ? t : new ParsedValueList();
         }
     }
     
-    public ValueList getValuesSincePrefix(final Value prefix) {
+    public ParsedValueList getValuesSincePrefix(final ParsedValue prefix) {
         if (head != null && head != prefix) {
-            final ValueList t = tail != null ? tail.getValuesSincePrefix(prefix) : null;
-            return new ValueList(head, t != null && t.head != null ? t : null);
+            final ParsedValueList t = tail != null ? tail.getValuesSincePrefix(prefix) : null;
+            return new ParsedValueList(head, t != null && t.head != null ? t : null);
         } else {
-            return new ValueList();
+            return new ParsedValueList();
         }
     }
     
-    public OptionalValue current() {
-        return OptionalValue.of(head);
+    public ParsedValue current() {
+        return head;
     }
     
     public boolean isEmpty() {
         return head == null && tail == null;
     }
     
-    public OptionalValue getFirst() {
-        if (head == null) { return OptionalValue.empty(); }
-        if (tail == null) { return OptionalValue.of(head); }
+    public ParsedValue getFirst() {
+        if (head == null) { return null; }
+        if (tail == null) { return head; }
         return tail.getFirst();
     }
     
-    public ValueList reverse() {
+    public ParsedValueList reverse() {
         if (isEmpty()) { return this; }
-        return reverse(tail, new ValueList(head, null));
+        return reverse(tail, new ParsedValueList(head, null));
     }
     
-    private ValueList reverse(final ValueList head, final ValueList tail) {
+    private ParsedValueList reverse(final ParsedValueList head, final ParsedValueList tail) {
         if (head == null) { return tail; }
-        return reverse(head.tail, new ValueList(head.head, tail));
+        return reverse(head.tail, new ParsedValueList(head.head, tail));
     }
     
     @Override

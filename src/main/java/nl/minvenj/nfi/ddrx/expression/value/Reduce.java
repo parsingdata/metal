@@ -18,7 +18,7 @@ package nl.minvenj.nfi.ddrx.expression.value;
 
 import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.data.ValueList;
+import nl.minvenj.nfi.ddrx.data.ParsedValueList;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class Reduce implements ValueExpression {
@@ -33,14 +33,14 @@ public class Reduce implements ValueExpression {
 
     @Override
     public OptionalValue eval(final Environment env, final Encoding enc) {
-        final ValueList values = env.order.getAll(_name).reverse();
+        final ParsedValueList values = env.order.getAll(_name).reverse();
         if (values.isEmpty()) {
             return OptionalValue.empty();
         }
         return reduce(env, enc, _reducer, OptionalValue.of(values.head), values.tail);
     }
 
-    private OptionalValue reduce(final Environment env, final Encoding enc, final Reducer reducer, final OptionalValue head, final ValueList tail) {
+    private OptionalValue reduce(final Environment env, final Encoding enc, final Reducer reducer, final OptionalValue head, final ParsedValueList tail) {
         if (!head.isPresent() || tail == null || tail.isEmpty()) { return head; }
         return reduce(env, enc, reducer, reducer.reduce(con(head.get()), con(tail.head)).eval(env, enc), tail.tail);
     }

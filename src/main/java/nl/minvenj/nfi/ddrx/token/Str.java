@@ -21,7 +21,7 @@ import java.io.IOException;
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.data.ParseResult;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
-import nl.minvenj.nfi.ddrx.expression.value.Value;
+import nl.minvenj.nfi.ddrx.expression.value.ParsedValue;
 
 public class Str extends Token {
 
@@ -50,7 +50,7 @@ public class Str extends Token {
 
     @Override
     protected ParseResult parseImpl(final String outerScope, final Environment env, final Encoding enc) throws IOException {
-        final Value prefix = env.order.head;
+        final ParsedValue prefix = env.order.head;
         final ParseResult res = _op.parse(outerScope + "." + _scope, env, enc);
         if (res.succeeded() && _sink != null) {
             _sink.handleStruct(outerScope, res.getEnvironment(), enc, res.getEnvironment().order.getValuesSincePrefix(prefix));

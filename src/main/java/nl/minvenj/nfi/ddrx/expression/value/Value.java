@@ -24,47 +24,12 @@ import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class Value {
 
-    public static final String DEFAULT_SCOPE = "EMPTY_SCOPE";
-    public static final String SEPARATOR = ".";
-    public static final String DEFAULT_NAME = "CONSTANT_VALUE";
-    public static final long DEFAULT_OFFSET = 0L;
-
-    private final String _scope;
-    private final String _name;
-    private final long _offset;
     private final byte[] _data;
     private final Encoding _enc;
 
     public Value(final byte[] data, final Encoding enc) {
-        this(DEFAULT_SCOPE, DEFAULT_NAME, DEFAULT_OFFSET, data, enc);
-    }
-
-    public Value(final String scope, final String name, final long offset, final byte[] data, final Encoding encoding) {
-        _scope = scope;
-        _name = name;
-        _offset = offset;
         _data = data;
-        _enc = encoding;
-    }
-
-    public String getScope() {
-        return _scope;
-    }
-
-    public String getName() {
-        return _name;
-    }
-
-    public String getFullName() {
-        return getScope() + SEPARATOR + getName();
-    }
-
-    public boolean matches(final String name) {
-        return getFullName().equals(name) || getFullName().endsWith(SEPARATOR + name);
-    }
-    
-    public long getOffset() {
-        return _offset;
+        _enc = enc;
     }
     
     public byte[] getValue() {
@@ -90,7 +55,7 @@ public class Value {
 
     @Override
     public String toString() {
-        return getName() + ":" + getClass().getSimpleName() + "(" + DatatypeConverter.printHexBinary(_data) + ")";
+        return getClass().getSimpleName() + "(" + DatatypeConverter.printHexBinary(_data) + ")";
     }
 
 }
