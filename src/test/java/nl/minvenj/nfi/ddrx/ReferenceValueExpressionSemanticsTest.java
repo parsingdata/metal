@@ -20,6 +20,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.con;
 import static nl.minvenj.nfi.ddrx.Shorthand.def;
 import static nl.minvenj.nfi.ddrx.Shorthand.eq;
 import static nl.minvenj.nfi.ddrx.Shorthand.first;
+import static nl.minvenj.nfi.ddrx.Shorthand.offset;
 import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
@@ -55,10 +56,14 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
             { "[2, 1, 2] b == a, c == b", sequenceMatchTransitive3, stream(2, 1, 2), enc(), false },
             { "[1, 2, 2] b == a, c == b", sequenceMatchTransitive3, stream(1, 2, 2), enc(), false },
             { "[1, 2, 3] b == a, c == b", sequenceMatchTransitive3, stream(1, 2, 3), enc(), false },
-            { "[1, 2, 1] a, a, first(a)", refList(first("a")), stream(1, 2, 1), enc(), true },
-            { "[1, 2, 3] a, a, first(a)", refList(first("a")), stream(1, 2, 3), enc(), false },
-            { "[1, 2, 3] a, a, first(b)", refList(first("b")), stream(1, 2, 3), enc(), false },
-            { "[1, 2, 3] a, a, ref(b)", refList(ref("b")), stream(1, 2, 3), enc(), false }
+            { "[1, 2, 1] a, a, first(a)", refList("a", "a", first("a")), stream(1, 2, 1), enc(), true },
+            { "[1, 2, 3] a, a, first(a)", refList("a", "a", first("a")), stream(1, 2, 3), enc(), false },
+            { "[1, 2, 3] a, a, first(b)", refList("a", "a", first("b")), stream(1, 2, 3), enc(), false },
+            { "[1, 2, 3] a, a, ref(b)", refList("a", "a", ref("b")), stream(1, 2, 3), enc(), false },
+            { "[1, 2, 0] a, b, offset(a)", refList("a", "b", offset("a")), stream(1, 2, 0), enc(), true },
+            { "[1, 2, 1] a, a, offset(a)", refList("a", "a", offset("a")), stream(1, 2, 1), enc(), true },
+            { "[1, 2, 2] a, b, offset(z)", refList("a", "b", offset("z")), stream(1, 2, 2), enc(), true },
+            { "[1, 2, 3] a, b, offset(c)", refList("a", "b", offset("c")), stream(1, 2, 3), enc(), false }
         });
     }
 
@@ -73,9 +78,9 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
     private static final Token sequenceMatchTransitive3 = seq(sequenceMatch2,
                                                               eqRef("c", "b"));
 
-    private static Token refList(ValueExpression exp) {
-        return seq(any("a"),
-                   any("a"),
+    private static Token refList(final String first, final String second, final ValueExpression exp) {
+        return seq(any(first),
+                   any(second),
                    def("z", con(1), eq(exp)));
     }
 

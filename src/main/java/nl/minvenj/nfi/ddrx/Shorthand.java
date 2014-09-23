@@ -48,6 +48,7 @@ import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Mul;
 import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Neg;
 import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Sub;
 import nl.minvenj.nfi.ddrx.expression.value.reference.First;
+import nl.minvenj.nfi.ddrx.expression.value.reference.Offset;
 import nl.minvenj.nfi.ddrx.expression.value.reference.Ref;
 import nl.minvenj.nfi.ddrx.expression.value.reference.Self;
 import nl.minvenj.nfi.ddrx.token.Cho;
@@ -85,6 +86,7 @@ public class Shorthand {
     public static final ValueExpression self = new Self();
     public static ValueExpression ref(final String s) { return new Ref(s); }
     public static ValueExpression first(final String s) { return new First(s); }
+    public static ValueExpression offset(final String s) { return new Offset(s); }
     public static ValueExpression cat(final ValueExpression l, final ValueExpression r) { return new Cat(l, r); }
     public static ValueExpression reduce(final String name, final Reducer reducer) { return new Reduce(name, reducer); }
 
