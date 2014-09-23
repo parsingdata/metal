@@ -28,6 +28,10 @@ public class Environment {
         this.offset = offset;
     }
 
+    public Environment(final ByteStream input, final long offset) {
+        this(new ValueList(), input, offset);
+    }
+
     @Override
     public String toString() {
         return "stream: " + input + "; offset: " + offset + "; order: " + order;
