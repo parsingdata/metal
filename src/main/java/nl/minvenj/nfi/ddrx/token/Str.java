@@ -31,21 +31,11 @@ public class Str extends Token {
 
     public Str(final String scope, final Token op, final Encoding enc, final StructSink sink) {
         super(enc);
+        if (scope == null) { throw new IllegalArgumentException("Argument scope may not be null."); }
         _scope = scope;
+        if (op == null) { throw new IllegalArgumentException("Argument op may not be null."); }
         _op = op;
         _sink = sink;
-    }
-
-    public Str(final String scope, final Token op, final Encoding enc) {
-        this(scope, op, enc, null);
-    }
-
-    public Str(final String scope, final Token op, final StructSink sink) {
-        this(scope, op, null, sink);
-    }
-
-    public Str(final String scope, final Token op) {
-        this(scope, op, null, null);
     }
 
     @Override

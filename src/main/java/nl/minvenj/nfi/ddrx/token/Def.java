@@ -35,13 +35,12 @@ public class Def extends Token {
 
     public Def(final String name, final ValueExpression size, final Expression pred, final Encoding enc) {
         super(enc);
+        if (name == null) { throw new IllegalArgumentException("Argument name may not be null."); }
         _name = name;
+        if (size == null) { throw new IllegalArgumentException("Argument size may not be null."); }
         _size = size;
+        if (pred == null) { throw new IllegalArgumentException("Argument pred may not be null."); }
         _pred = pred;
-    }
-
-    public Def(final String name, final ValueExpression size, final Expression pred) {
-        this(name, size, pred, null);
     }
 
     @Override

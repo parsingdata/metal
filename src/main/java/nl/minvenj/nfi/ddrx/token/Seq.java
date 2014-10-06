@@ -29,12 +29,10 @@ public class Seq extends Token {
 
     public Seq(final Token l, final Token r, final Encoding enc) {
         super(enc);
+        if (l == null) { throw new IllegalArgumentException("Argument l may not be null."); }
         _l = l;
+        if (r == null) { throw new IllegalArgumentException("Argument r may not be null."); }
         _r = r;
-    }
-
-    public Seq(final Token l, final Token r) {
-        this(l, r, null);
     }
 
     @Override

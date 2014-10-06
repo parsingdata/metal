@@ -28,11 +28,8 @@ public class Rep extends Token {
 
     public Rep(final Token op, final Encoding enc) {
         super(enc);
+        if (op == null) { throw new IllegalArgumentException("Argument op may not be null."); }
         _op = op;
-    }
-
-    public Rep(final Token op) {
-        this(op, null);
     }
 
     @Override
