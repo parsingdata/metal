@@ -67,10 +67,12 @@ public class Shorthand {
     public static Token cho(final Token l, final Token r, final Token... tokens) { return tokens.length == 0 ? new Cho(l, r, null) : cho(l, cho(r, tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length))); }
     public static Token rep(final Token t) { return new Rep(t, null); }
     public static Token seq(final Token l, final Token r, final Token... tokens) { return tokens.length == 0 ? new Seq(l, r, null) : seq(l, seq(r, tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length))); }
-    public static Token str(final String n, final Token t) { return new Str(n, t, null, null); }
-    public static Token str(final String n, final Token t, final Encoding e) { return new Str(n, t, e, null); }
-    public static Token str(final String n, final Token t, final StructSink s) { return new Str(n, t, null, s); }
-    public static Token str(final String n, final Token t, final Encoding e, final StructSink s) { return new Str(n, t, e, s); }
+    public static Token str(final String n, final Token t) { return str(n, t, null, null, null); }
+    public static Token str(final String n, final Token t, final Encoding e) { return str(n, t, e, null, null); }
+    public static Token str(final String n, final Token t, final StructSink s) { return str(n, t, null, s, null); }
+    public static Token str(final String n, final Token t, final StructSink s, final Expression p) { return str(n, t, null, s, p); }
+    public static Token str(final String n, final Token t, final Encoding e, final StructSink s) { return new Str(n, t, e, s, null); }
+    public static Token str(final String n, final Token t, final Encoding e, final StructSink s, final Expression p) { return new Str(n, t, e, s, p); }
 
     public static BinaryValueExpression add(final ValueExpression l, final ValueExpression r) { return new Add(l, r); }
     public static BinaryValueExpression div(final ValueExpression l, final ValueExpression r) { return new Div(l, r); }

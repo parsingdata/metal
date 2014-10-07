@@ -16,6 +16,9 @@
 
 package nl.minvenj.nfi.ddrx;
 
+import static nl.minvenj.nfi.ddrx.Shorthand.con;
+import static nl.minvenj.nfi.ddrx.Shorthand.eqNum;
+import static nl.minvenj.nfi.ddrx.Shorthand.not;
 import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.Shorthand.str;
@@ -87,6 +90,17 @@ public class StructSinksTest {
                 Assert.assertTrue(struct.head.getName().equals("b"));
             }
         });
+    }
+    
+    @Test
+    public void structSinkWithPredicate() throws IOException {
+        rep(str("outer", any("a"), new StructSink() {
+            @Override
+            public void handleStruct(String scopeName, Environment env, Encoding enc, ParsedValueList struct) {
+                Assert.assertNotNull(struct.head);
+                Assert.assertNull(struct.tail);
+                Assert.assertTrue(struct.head.asNumeric().intValue() == 2 || struct.head.asNumeric().intValue() == 4);
+            }}, not(eqNum(con(1))))).parse(stream(1, 2, 1, 4), enc());
     }
 
 }
