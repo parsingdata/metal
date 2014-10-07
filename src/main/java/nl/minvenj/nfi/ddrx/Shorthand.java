@@ -63,7 +63,7 @@ public class Shorthand {
 
     public static Token def(final String name, final ValueExpression size, final Expression pred, final Encoding encoding) { return new Def(name, size, pred, encoding); }
     public static Token def(final String name, final ValueExpression size, final Expression pred) { return new Def(name, size, pred, null); }
-    public static Token def(final String name, final ValueExpression size) { return def(name, size, expTrue()); }
+    public static Token def(final String name, final ValueExpression size) { return def(name, size, null); }
     public static Token cho(final Token l, final Token r, final Token... tokens) { return tokens.length == 0 ? new Cho(l, r, null) : cho(l, cho(r, tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length))); }
     public static Token rep(final Token t) { return new Rep(t, null); }
     public static Token seq(final Token l, final Token r, final Token... tokens) { return tokens.length == 0 ? new Seq(l, r, null) : seq(l, seq(r, tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length))); }

@@ -23,6 +23,7 @@ import nl.minvenj.nfi.ddrx.data.ParseResult;
 import nl.minvenj.nfi.ddrx.data.ParsedValueList;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.Expression;
+import nl.minvenj.nfi.ddrx.expression.True;
 import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
 import nl.minvenj.nfi.ddrx.expression.value.ParsedValue;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
@@ -39,8 +40,7 @@ public class Def extends Token {
         _name = name;
         if (size == null) { throw new IllegalArgumentException("Argument size may not be null."); }
         _size = size;
-        if (pred == null) { throw new IllegalArgumentException("Argument pred may not be null."); }
-        _pred = pred;
+        _pred = pred == null ? new True() : pred;
     }
 
     @Override
