@@ -73,6 +73,7 @@ public class Shorthand {
     public static Token str(final String n, final Token t, final StructSink s, final Expression p) { return str(n, t, null, s, p); }
     public static Token str(final String n, final Token t, final Encoding e, final StructSink s) { return new Str(n, t, e, s, null); }
     public static Token str(final String n, final Token t, final Encoding e, final StructSink s, final Expression p) { return new Str(n, t, e, s, p); }
+    public static Token sub(final Token t) { return new nl.minvenj.nfi.ddrx.token.Sub(t, null); }
 
     public static BinaryValueExpression add(final ValueExpression l, final ValueExpression r) { return new Add(l, r); }
     public static BinaryValueExpression div(final ValueExpression l, final ValueExpression r) { return new Div(l, r); }
