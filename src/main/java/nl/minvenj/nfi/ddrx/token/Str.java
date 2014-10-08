@@ -23,7 +23,6 @@ import nl.minvenj.nfi.ddrx.data.ParseResult;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.expression.True;
-import nl.minvenj.nfi.ddrx.expression.value.ParsedValue;
 
 public class Str extends Token {
 
@@ -44,10 +43,9 @@ public class Str extends Token {
 
     @Override
     protected ParseResult parseImpl(final String outerScope, final Environment env, final Encoding enc) throws IOException {
-        final ParsedValue prefix = env.order.head;
         final ParseResult res = _op.parse(outerScope + "." + _scope, env, enc);
         if (res.succeeded() && _sink != null && _pred.eval(res.getEnvironment(), enc)) {
-            _sink.handleStruct(outerScope, res.getEnvironment(), enc, res.getEnvironment().order.getValuesSincePrefix(prefix));
+            _sink.handleStruct(outerScope, res.getEnvironment(), enc, res.getEnvironment().order.getValuesSincePrefix(env.order.head));
         }
         return res;
     }

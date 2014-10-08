@@ -73,7 +73,8 @@ public class Shorthand {
     public static Token str(final String n, final Token t, final StructSink s, final Expression p) { return str(n, t, null, s, p); }
     public static Token str(final String n, final Token t, final Encoding e, final StructSink s) { return new Str(n, t, e, s, null); }
     public static Token str(final String n, final Token t, final Encoding e, final StructSink s, final Expression p) { return new Str(n, t, e, s, p); }
-    public static Token sub(final Token t) { return new nl.minvenj.nfi.ddrx.token.Sub(t, null); }
+    public static Token sub(final Token t) { return sub(t, null); }
+    public static Token sub(final Token t, final String n) { return new nl.minvenj.nfi.ddrx.token.Sub(t, n, null); }
 
     public static BinaryValueExpression add(final ValueExpression l, final ValueExpression r) { return new Add(l, r); }
     public static BinaryValueExpression div(final ValueExpression l, final ValueExpression r) { return new Div(l, r); }
@@ -82,9 +83,9 @@ public class Shorthand {
     public static BinaryValueExpression mod(final ValueExpression l, final ValueExpression r) { return new Mod(l, r); }
     public static UnaryValueExpression neg(final ValueExpression v) { return new Neg(v); }
     public static ValueExpression con(final long v) { return con(v, new Encoding()); }
-    public static ValueExpression con(final long v, final Encoding encoding) { return new Const(ConstantFactory.createFromNumeric(v, encoding)); }
+    public static ValueExpression con(final long v, final Encoding encoding) { return con(ConstantFactory.createFromNumeric(v, encoding)); }
     public static ValueExpression con(final String s) { return con(s, new Encoding()); }
-    public static ValueExpression con(final String s, final Encoding encoding) { return new Const(ConstantFactory.createFromString(s, encoding)); }
+    public static ValueExpression con(final String s, final Encoding encoding) { return con(ConstantFactory.createFromString(s, encoding)); }
     public static ValueExpression con(final Value v) { return new Const(v); }
     public static final ValueExpression self = new Self();
     public static ValueExpression ref(final String s) { return new Ref(s); }

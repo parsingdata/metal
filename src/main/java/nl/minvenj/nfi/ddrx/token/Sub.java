@@ -20,22 +20,33 @@ import java.io.IOException;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.data.ParseResult;
+import nl.minvenj.nfi.ddrx.data.ParsedValueList;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
+import nl.minvenj.nfi.ddrx.expression.value.ParsedValue;
 
 public class Sub extends Token {
     
     private final Token _op;
+    private final String _refName;
 
-    public Sub(final Token op, final Encoding enc) {
+    public Sub(final Token op, final String refName, final Encoding enc) {
         super(enc);
         if (op == null) { throw new IllegalArgumentException("Argument op may not be null."); }
         _op = op;
+        _refName = refName;
     }
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final ParseResult res = _op.parse(scope, env, enc);
-        return res.succeeded() ? new ParseResult(true, new Environment(res.getEnvironment().order, res.getEnvironment().input, res.getEnvironment().order.current().asNumeric().longValue())) : res;
+        if (res.succeeded()) {
+            final ParsedValueList sub = res.getEnvironment().order.getValuesSincePrefix(env.order.head);
+            final ParsedValue ref = _refName == null ? sub.head : sub.get(_refName);
+            if (ref != null) {
+                return new ParseResult(true, new Environment(res.getEnvironment().order, res.getEnvironment().input, ref.asNumeric().longValue()));
+            }
+        }
+        return res;
     }
 
 }

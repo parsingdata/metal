@@ -16,16 +16,23 @@
 
 package nl.minvenj.nfi.ddrx;
 
+import static nl.minvenj.nfi.ddrx.Shorthand.con;
+import static nl.minvenj.nfi.ddrx.Shorthand.def;
+import static nl.minvenj.nfi.ddrx.Shorthand.eq;
 import static nl.minvenj.nfi.ddrx.Shorthand.rep;
+import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.Shorthand.sub;
 import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
 import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
 import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import nl.minvenj.nfi.ddrx.data.ParseResult;
 import nl.minvenj.nfi.ddrx.data.ParsedValueList;
+import nl.minvenj.nfi.ddrx.token.Token;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -49,6 +56,28 @@ public class SubStructTest {
             Assert.assertEquals(list.head.asNumeric().intValue(), next);
             traverse((int)list.head.getOffset(), list.tail);
         }
+    }
+    
+    @Test
+    public void linkedList() throws IOException {
+        Token t = sub(seq(def("header", con(1), eq(con(0))),
+                          def("next", con(1)),
+                          def("footer", con(1), eq(con(1)))), "next");
+        ParseResult res = rep(t).parse(stream(0, 8, 1, 42, 0, 12, 1, 84, 0, 4, 1), enc());
+                                   /* offset: 0, 1, 2,  3, 4,  5, 6,  7, 8, 9,10
+                                    * struct: -------      --------      -------
+                                    * ref 1:     +-----------------------^
+                                    * ref 2:               ^----------------+
+                                    * ref 3:                   +----------------*
+                                    */
+        Assert.assertTrue(res.succeeded());
+        List<Integer> values = Arrays.asList(0, 8, 1, 0, 4, 1, 0, 12, 1);
+        ParsedValueList order = res.getEnvironment().order.reverse();
+        for (int i = 0; i < values.size(); i++) {
+            Assert.assertEquals((int)values.get(i), order.head.asNumeric().intValue());
+            order = order.tail;
+        }
+        Assert.assertNull(order);
     }
 
 }
