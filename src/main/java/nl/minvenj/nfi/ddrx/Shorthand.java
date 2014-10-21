@@ -47,6 +47,8 @@ import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Mod;
 import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Mul;
 import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Neg;
 import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Sub;
+import nl.minvenj.nfi.ddrx.expression.value.bitwise.ShiftLeft;
+import nl.minvenj.nfi.ddrx.expression.value.bitwise.ShiftRight;
 import nl.minvenj.nfi.ddrx.expression.value.reference.First;
 import nl.minvenj.nfi.ddrx.expression.value.reference.Offset;
 import nl.minvenj.nfi.ddrx.expression.value.reference.Ref;
@@ -83,12 +85,18 @@ public class Shorthand {
     public static BinaryValueExpression sub(final ValueExpression l, final ValueExpression r) { return new Sub(l, r); }
     public static BinaryValueExpression mod(final ValueExpression l, final ValueExpression r) { return new Mod(l, r); }
     public static UnaryValueExpression neg(final ValueExpression v) { return new Neg(v); }
+    public static BinaryValueExpression and(final ValueExpression l, final ValueExpression r) { return new nl.minvenj.nfi.ddrx.expression.value.bitwise.And(l, r); }
+    public static BinaryValueExpression or(final ValueExpression l, final ValueExpression r) { return new nl.minvenj.nfi.ddrx.expression.value.bitwise.Or(l, r); }
+    public static UnaryValueExpression not(final ValueExpression v) { return new nl.minvenj.nfi.ddrx.expression.value.bitwise.Not(v); }
+    public static BinaryValueExpression shl(final ValueExpression l, final ValueExpression r) { return new ShiftLeft(l, r); }
+    public static BinaryValueExpression shr(final ValueExpression l, final ValueExpression r) { return new ShiftRight(l, r); }
     public static ValueExpression con(final long v) { return con(v, new Encoding()); }
     public static ValueExpression con(final long v, final Encoding encoding) { return new Const(ConstantFactory.createFromNumeric(v, encoding)); }
     public static ValueExpression con(final String s) { return con(s, new Encoding()); }
     public static ValueExpression con(final String s, final Encoding encoding) { return new Const(ConstantFactory.createFromString(s, encoding)); }
     public static ValueExpression con(final Value v) { return new Const(v); }
-    public static ValueExpression con(final int... values) { return new Const(new Value(toByteArray(values), null)); }
+    public static ValueExpression con(final Encoding enc, final int... values) { return new Const(new Value(toByteArray(values), enc)); }
+    public static ValueExpression con(final int... values) { return con(new Encoding(), values); }
     public static final ValueExpression self = new Self();
     public static ValueExpression ref(final String s) { return new Ref(s); }
     public static ValueExpression first(final String s) { return new First(s); }
