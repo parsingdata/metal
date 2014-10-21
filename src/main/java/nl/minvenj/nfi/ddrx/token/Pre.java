@@ -43,4 +43,9 @@ public class Pre extends Token {
         return _op.parse(env, enc);
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _op + ", " + _pred + ")";
+    }
+
 }
