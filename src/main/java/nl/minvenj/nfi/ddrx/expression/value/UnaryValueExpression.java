@@ -31,10 +31,10 @@ public abstract class UnaryValueExpression implements ValueExpression {
     public OptionalValue eval(final Environment env, final Encoding enc) {
         final OptionalValue v = _op.eval(env, enc);
         if (!v.isPresent()) { return v; }
-        return eval(v.get(), env);
+        return eval(v.get(), env, enc);
     }
 
-    public abstract OptionalValue eval(final Value v, final Environment env);
+    public abstract OptionalValue eval(final Value v, final Environment env, final Encoding enc);
 
     @Override
     public String toString() {

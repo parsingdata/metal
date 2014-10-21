@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.ddrx.expression.value.arithmetic;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.value.ConstantFactory;
 import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
 import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
@@ -30,8 +31,8 @@ public class Neg extends UnaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value v, final Environment env) {
-        return OptionalValue.of(ConstantFactory.createFromNumeric(v.asNumeric().negate(), v.getEncoding()));
+    public OptionalValue eval(final Value v, final Environment env, final Encoding enc) {
+        return OptionalValue.of(ConstantFactory.createFromNumeric(v.asNumeric().negate(), enc));
     }
 
 }
