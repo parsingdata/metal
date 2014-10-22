@@ -19,35 +19,40 @@ package nl.minvenj.nfi.ddrx.expression.value;
 import java.util.NoSuchElementException;
 
 public class OptionalValue {
-    
+
     private final Value _value;
-    
+
     private OptionalValue(final Value value) {
         _value = value;
     }
-    
+
     private OptionalValue() {
         this(null);
     }
-    
+
     public static OptionalValue of(final Value value) {
         return new OptionalValue(value);
     }
-    
+
     public static OptionalValue empty() {
         return new OptionalValue();
     }
-    
+
     public boolean isPresent() {
         return _value != null;
     }
-    
+
     public Value get() {
         if (isPresent()) {
             return _value;
         } else {
             throw new NoSuchElementException("OptionalValue instance is empty.");
         }
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + (!isPresent() ? "empty" : _value) + ")";
     }
 
 }

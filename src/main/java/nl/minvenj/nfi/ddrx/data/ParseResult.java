@@ -17,21 +17,26 @@
 package nl.minvenj.nfi.ddrx.data;
 
 public class ParseResult {
-    
+
     private final boolean _succeeded;
     private final Environment _environment;
-    
+
     public ParseResult(final boolean succeeded, final Environment environment) {
         _succeeded = succeeded;
         _environment = environment;
     }
-    
+
     public boolean succeeded() {
         return _succeeded;
     }
-    
+
     public Environment getEnvironment() {
         return _environment;
     }
-    
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _succeeded + ", " + _environment + ")";
+    }
+
 }
