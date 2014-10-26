@@ -23,6 +23,7 @@ import java.util.zip.Inflater;
 import java.util.zip.InflaterOutputStream;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
 import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
 import nl.minvenj.nfi.ddrx.expression.value.Value;
@@ -34,38 +35,38 @@ public class Callback {
     public static ValueExpression crc32(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public OptionalValue eval(Value v, Environment env) {
+            public OptionalValue eval(final Value v, final Environment env, final Encoding enc) {
                 return v.operation(new ValueOperation() {
                     @Override
                     public OptionalValue execute(final Value value) {
                         final CRC32 crc = new CRC32();
                         crc.update(value.getValue());
                         final long crcValue = crc.getValue();
-                        return OptionalValue.of(new Value(value.getEncoding().getByteOrder().apply(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
-                                                                                                                (byte)((crcValue & 0xff0000) >> 16),
-                                                                                                                (byte)((crcValue & 0xff00) >> 8),
-                                                                                                                (byte)(crcValue & 0xff) }), value.getEncoding()));
+                        return OptionalValue.of(new Value(enc.getByteOrder().apply(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
+                                                                                                (byte)((crcValue & 0xff0000) >> 16),
+                                                                                                (byte)((crcValue & 0xff00) >> 8),
+                                                                                                (byte)(crcValue & 0xff) }), enc));
                     }
                 });
             }
         };
     }
-    
+
     public static ValueExpression inflate(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public OptionalValue eval(Value v, Environment env) {
+            public OptionalValue eval(final Value v, final Environment env, final Encoding enc) {
                 return v.operation(new ValueOperation() {
                     @Override
-                    public OptionalValue execute(Value value) {
+                    public OptionalValue execute(final Value value) {
                         final Inflater inf = new Inflater(true);
                         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         final InflaterOutputStream ios = new InflaterOutputStream(bos, inf);
                         try {
                             ios.write(value.getValue());
                             ios.close();
-                            return OptionalValue.of(new Value(bos.toByteArray(), value.getEncoding()));
-                        } catch (IOException e) {
+                            return OptionalValue.of(new Value(bos.toByteArray(), enc));
+                        } catch (final IOException e) {
                             return OptionalValue.empty();
                         }
                     }

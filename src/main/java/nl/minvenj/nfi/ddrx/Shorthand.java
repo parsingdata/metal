@@ -47,12 +47,15 @@ import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Mod;
 import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Mul;
 import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Neg;
 import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Sub;
+import nl.minvenj.nfi.ddrx.expression.value.bitwise.ShiftLeft;
+import nl.minvenj.nfi.ddrx.expression.value.bitwise.ShiftRight;
 import nl.minvenj.nfi.ddrx.expression.value.reference.First;
 import nl.minvenj.nfi.ddrx.expression.value.reference.Offset;
 import nl.minvenj.nfi.ddrx.expression.value.reference.Ref;
 import nl.minvenj.nfi.ddrx.expression.value.reference.Self;
 import nl.minvenj.nfi.ddrx.token.Cho;
 import nl.minvenj.nfi.ddrx.token.Def;
+import nl.minvenj.nfi.ddrx.token.Pre;
 import nl.minvenj.nfi.ddrx.token.Rep;
 import nl.minvenj.nfi.ddrx.token.Seq;
 import nl.minvenj.nfi.ddrx.token.Str;
@@ -63,7 +66,8 @@ public class Shorthand {
 
     public static Token def(final String name, final ValueExpression size, final Expression pred, final Encoding encoding) { return new Def(name, size, pred, encoding); }
     public static Token def(final String name, final ValueExpression size, final Expression pred) { return new Def(name, size, pred, null); }
-    public static Token def(final String name, final ValueExpression size) { return def(name, size, null); }
+    public static Token def(final String name, final ValueExpression size, final Encoding enc) { return def(name, size, null, enc); }
+    public static Token def(final String name, final ValueExpression size) { return def(name, size, null, null); }
     public static Token cho(final Token l, final Token r, final Token... tokens) { return tokens.length == 0 ? new Cho(l, r, null) : cho(l, cho(r, tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length))); }
     public static Token rep(final Token t) { return new Rep(t, null); }
     public static Token seq(final Token l, final Token r, final Token... tokens) { return tokens.length == 0 ? new Seq(l, r, null) : seq(l, seq(r, tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length))); }
@@ -74,7 +78,10 @@ public class Shorthand {
     public static Token str(final String n, final Token t, final Encoding e, final StructSink s) { return new Str(n, t, e, s, null); }
     public static Token str(final String n, final Token t, final Encoding e, final StructSink s, final Expression p) { return new Str(n, t, e, s, p); }
     public static Token sub(final Token t) { return sub(t, null); }
-    public static Token sub(final Token t, final String n) { return new nl.minvenj.nfi.ddrx.token.Sub(t, n, null); }
+    public static Token sub(final Token t, final String n) { return sub(t, n, null); }
+    public static Token sub(final Token t, final String n, final Encoding e) { return new nl.minvenj.nfi.ddrx.token.Sub(t, n, e); }
+    public static Token pre(final Token t, final Expression p) { return pre(t, p, null); }
+    public static Token pre(final Token t, final Expression p, final Encoding e) { return new Pre(t, p, e); }
 
     public static BinaryValueExpression add(final ValueExpression l, final ValueExpression r) { return new Add(l, r); }
     public static BinaryValueExpression div(final ValueExpression l, final ValueExpression r) { return new Div(l, r); }
@@ -82,11 +89,18 @@ public class Shorthand {
     public static BinaryValueExpression sub(final ValueExpression l, final ValueExpression r) { return new Sub(l, r); }
     public static BinaryValueExpression mod(final ValueExpression l, final ValueExpression r) { return new Mod(l, r); }
     public static UnaryValueExpression neg(final ValueExpression v) { return new Neg(v); }
+    public static BinaryValueExpression and(final ValueExpression l, final ValueExpression r) { return new nl.minvenj.nfi.ddrx.expression.value.bitwise.And(l, r); }
+    public static BinaryValueExpression or(final ValueExpression l, final ValueExpression r) { return new nl.minvenj.nfi.ddrx.expression.value.bitwise.Or(l, r); }
+    public static UnaryValueExpression not(final ValueExpression v) { return new nl.minvenj.nfi.ddrx.expression.value.bitwise.Not(v); }
+    public static BinaryValueExpression shl(final ValueExpression l, final ValueExpression r) { return new ShiftLeft(l, r); }
+    public static BinaryValueExpression shr(final ValueExpression l, final ValueExpression r) { return new ShiftRight(l, r); }
     public static ValueExpression con(final long v) { return con(v, new Encoding()); }
     public static ValueExpression con(final long v, final Encoding encoding) { return con(ConstantFactory.createFromNumeric(v, encoding)); }
     public static ValueExpression con(final String s) { return con(s, new Encoding()); }
     public static ValueExpression con(final String s, final Encoding encoding) { return con(ConstantFactory.createFromString(s, encoding)); }
     public static ValueExpression con(final Value v) { return new Const(v); }
+    public static ValueExpression con(final Encoding enc, final int... values) { return new Const(new Value(toByteArray(values), enc)); }
+    public static ValueExpression con(final int... values) { return con(new Encoding(), values); }
     public static final ValueExpression self = new Self();
     public static ValueExpression ref(final String s) { return new Ref(s); }
     public static ValueExpression first(final String s) { return new First(s); }
@@ -100,7 +114,7 @@ public class Shorthand {
     public static Expression expTrue() { return new True(); }
 
     public static ComparisonExpression eq(final ValueExpression p) { return new Eq(p); }
-    public static ComparisonExpression eq(final ValueExpression c, ValueExpression p) { return new Eq(c, p); }
+    public static ComparisonExpression eq(final ValueExpression c, final ValueExpression p) { return new Eq(c, p); }
     public static ComparisonExpression eqStr(final ValueExpression p) { return new EqStr(p); }
     public static ComparisonExpression eqStr(final ValueExpression c, final ValueExpression p) { return new EqStr(c, p); }
     public static ComparisonExpression eqNum(final ValueExpression p) { return new EqNum(p); }
@@ -109,5 +123,13 @@ public class Shorthand {
     public static ComparisonExpression gtNum(final ValueExpression c, final ValueExpression p) { return new GtNum(c, p); }
     public static ComparisonExpression ltNum(final ValueExpression p) { return new LtNum(p); }
     public static ComparisonExpression ltNum(final ValueExpression c, final ValueExpression p) { return new LtNum(c, p); }
+
+    public static byte[] toByteArray(final int... bytes) {
+        final byte[] out = new byte[bytes.length];
+        for (int i = 0; i < bytes.length; i++) {
+            out[i] = (byte) bytes[i];
+        }
+        return out;
+    }
 
 }

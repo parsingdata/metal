@@ -14,31 +14,25 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.value;
+package nl.minvenj.nfi.ddrx.expression.value.bitwise;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
+import nl.minvenj.nfi.ddrx.expression.value.ConstantFactory;
+import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
+import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
+import nl.minvenj.nfi.ddrx.expression.value.Value;
+import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public abstract class UnaryValueExpression implements ValueExpression {
+public class Not extends UnaryValueExpression {
 
-    private final ValueExpression _op;
-
-    public UnaryValueExpression(final ValueExpression op) {
-        _op = op;
+    public Not(final ValueExpression op) {
+        super(op);
     }
 
     @Override
-    public OptionalValue eval(final Environment env, final Encoding enc) {
-        final OptionalValue v = _op.eval(env, enc);
-        if (!v.isPresent()) { return v; }
-        return eval(v.get(), env, enc);
-    }
-
-    public abstract OptionalValue eval(final Value v, final Environment env, final Encoding enc);
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" + _op + ")";
+    public OptionalValue eval(final Value op, final Environment env, final Encoding enc) {
+        return OptionalValue.of(ConstantFactory.createFromNumeric(op.asNumeric().not(), enc));
     }
 
 }

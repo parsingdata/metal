@@ -16,43 +16,36 @@
 
 package nl.minvenj.nfi.ddrx.token;
 
+import static nl.minvenj.nfi.ddrx.Shorthand.expTrue;
+
 import java.io.IOException;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.data.ParseResult;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.Expression;
-import nl.minvenj.nfi.ddrx.expression.True;
 
-public class Str extends Token {
+public class Pre extends Token {
 
-    private final String _scope;
     private final Token _op;
-    private final StructSink _sink;
     private final Expression _pred;
 
-    public Str(final String scope, final Token op, final Encoding enc, final StructSink sink, final Expression pred) {
+    public Pre(final Token op, final Expression pred, final Encoding enc) {
         super(enc);
-        if (scope == null) { throw new IllegalArgumentException("Argument scope may not be null."); }
-        _scope = scope;
         if (op == null) { throw new IllegalArgumentException("Argument op may not be null."); }
         _op = op;
-        _sink = sink;
-        _pred = pred == null ? new True() : pred;
+        _pred = pred == null ? expTrue() : pred;
     }
 
     @Override
-    protected ParseResult parseImpl(final String outerScope, final Environment env, final Encoding enc) throws IOException {
-        final ParseResult res = _op.parse(outerScope + "." + _scope, env, enc);
-        if (res.succeeded() && _sink != null && _pred.eval(res.getEnvironment(), enc)) {
-            _sink.handleStruct(outerScope, res.getEnvironment(), enc, res.getEnvironment().order.getValuesSincePrefix(env.order.head));
-        }
-        return res;
+    protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
+        if (!_pred.eval(env, enc)) { return new ParseResult(true, env); }
+        return _op.parse(env, enc);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _scope + "," + _op + (_sink != null ? "," + _sink : "") + ")";
+        return getClass().getSimpleName() + "(" + _op + ", " + _pred + ")";
     }
 
 }

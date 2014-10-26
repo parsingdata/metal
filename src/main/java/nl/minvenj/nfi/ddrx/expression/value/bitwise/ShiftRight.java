@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.value.arithmetic;
+package nl.minvenj.nfi.ddrx.expression.value.bitwise;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
+import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
 import nl.minvenj.nfi.ddrx.expression.value.ConstantFactory;
 import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
-import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
 import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class Neg extends UnaryValueExpression {
+public class ShiftRight extends BinaryValueExpression {
 
-    public Neg(final ValueExpression op) {
-        super(op);
+    public ShiftRight(final ValueExpression lop, final ValueExpression rop) {
+        super(lop, rop);
     }
 
     @Override
-    public OptionalValue eval(final Value v, final Environment env, final Encoding enc) {
-        return OptionalValue.of(ConstantFactory.createFromNumeric(v.asNumeric().negate(), enc));
+    public OptionalValue eval(final Value lv, final Value rv, final Environment env, final Encoding enc) {
+        return OptionalValue.of(ConstantFactory.createFromNumeric(lv.asNumeric().shiftRight(rv.asNumeric().intValue()), enc));
     }
 
 }

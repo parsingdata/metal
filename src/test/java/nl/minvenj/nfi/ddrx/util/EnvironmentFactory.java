@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.util;
 
+import static nl.minvenj.nfi.ddrx.Shorthand.toByteArray;
+
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -37,14 +39,6 @@ public class EnvironmentFactory {
 
     public static Environment stream(final String value, final Charset charset) {
         return new Environment(new ParsedValueList(), new InMemoryByteStream(value.getBytes(charset)), 0L);
-    }
-
-    public static byte[] toByteArray(final int... bytes) {
-        final byte[] out = new byte[bytes.length];
-        for (int i = 0; i < bytes.length; i++) {
-            out[i] = (byte) bytes[i];
-        }
-        return out;
     }
 
 }
