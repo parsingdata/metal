@@ -35,11 +35,11 @@ public class ShiftLeft extends BinaryValueExpression {
     @Override
     public OptionalValue eval(final Value lv, final Value rv, final Environment env, final Encoding enc) {
         final BitSet lbs = lv.asBitSet();
-        final int shiftRight = rv.asNumeric().intValue();
-        final int bitCount = (lv.getValue().length * 8) + shiftRight;
+        final int shiftLeft = rv.asNumeric().intValue();
+        final int bitCount = lbs.length() + shiftLeft;
         final BitSet out = new BitSet(bitCount);
-        for (int i = lbs.nextSetBit(0); i >= 0; i = lbs.nextSetBit(i)) {
-            out.set(i + shiftRight);
+        for (int i = lbs.nextSetBit(0); i >= 0; i = lbs.nextSetBit(i+1)) {
+            out.set(i + shiftLeft);
         }
         final int minSize = (bitCount + 7) / 8;
         return OptionalValue.of(ConstantFactory.createFromBitSet(out, minSize, enc));
