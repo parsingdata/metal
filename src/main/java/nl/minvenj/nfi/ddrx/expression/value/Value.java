@@ -47,16 +47,7 @@ public class Value {
     }
 
     public BitSet asBitSet() {
-        final byte[] data = _enc.getByteOrder().apply(_data);
-        final BitSet bitSet = new BitSet(data.length * 8);
-        for (int i = 0; i < data.length; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (((data[i] >> j) & 1) == 1) {
-                    bitSet.set((i * 8) + j);
-                }
-            }
-        }
-        return bitSet;
+        return BitSet.valueOf(_data);
     }
 
     public Encoding getEncoding() {

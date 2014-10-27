@@ -36,7 +36,7 @@ public class ShiftRight extends BinaryValueExpression {
     public OptionalValue eval(final Value lv, final Value rv, final Environment env, final Encoding enc) {
         final BitSet lbs = lv.asBitSet();
         final int shift = rv.asNumeric().intValue();
-        return OptionalValue.of(ConstantFactory.createFromBitSet(lbs.get(shift, shift > lbs.length() ? shift : lbs.length()), lv.getValue().length, enc));
+        return OptionalValue.of(ConstantFactory.createFromBitSet(lbs.get(shift, Math.max(shift, lbs.length())), lv.getValue().length, enc));
     }
 
 }
