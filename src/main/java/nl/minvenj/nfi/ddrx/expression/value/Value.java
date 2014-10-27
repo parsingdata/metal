@@ -31,7 +31,7 @@ public class Value {
         _data = data;
         _enc = enc;
     }
-    
+
     public byte[] getValue() {
         return _data;
     }

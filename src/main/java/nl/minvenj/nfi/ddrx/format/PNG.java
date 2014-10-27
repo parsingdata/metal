@@ -27,6 +27,7 @@ import static nl.minvenj.nfi.ddrx.Shorthand.ref;
 import static nl.minvenj.nfi.ddrx.Shorthand.rep;
 import static nl.minvenj.nfi.ddrx.Shorthand.seq;
 import static nl.minvenj.nfi.ddrx.Shorthand.str;
+
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.token.Token;
 
@@ -36,13 +37,13 @@ public class PNG {
             str("signature",
             seq(def("highbit", con(1), eq(con(0x89))),
                 def("PNG", con(3), eq(con("PNG"))),
-                def("controlchars", con(4), eq(con(0x0d0a1a0a)))));
+                def("controlchars", con(4), eq(con(0x0d, 0x0a, 0x1a, 0x0a)))));
 
     private static final Token FOOTER =
             str("footer",
             seq(def("footerlength", con(4), eqNum(con(0))),
                 def("footertype", con(4), eq(con("IEND"))),
-                def("footercrc32", con(4), eq(con(0xae426082l)))));
+                def("footercrc32", con(4), eq(con(0xae, 0x42, 0x60, 0x82)))));
 
     private static final Token STRUCT =
             str("chunk",

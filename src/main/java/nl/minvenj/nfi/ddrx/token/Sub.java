@@ -25,7 +25,7 @@ import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.value.ParsedValue;
 
 public class Sub extends Token {
-    
+
     private final Token _op;
     private final String _refName;
 
@@ -42,17 +42,11 @@ public class Sub extends Token {
         if (res.succeeded()) {
             final ParsedValueList sub = res.getEnvironment().order.getValuesSincePrefix(env.order.head);
             final ParsedValue ref = _refName == null ? sub.head : sub.get(_refName);
-            if (ref != null && !containsOffset(res.getEnvironment().order, ref.asNumeric().longValue())) {
+            if (ref != null && !res.getEnvironment().order.containsOffset(ref.asNumeric().longValue())) {
                 return new ParseResult(true, new Environment(res.getEnvironment().order, res.getEnvironment().input, ref.asNumeric().longValue()));
             }
         }
         return res;
-    }
-
-    private boolean containsOffset(final ParsedValueList order, final long offset) {
-        if (order == null || order.head == null) { return false; }
-        if (order.head.getOffset() == offset) { return true; }
-        return containsOffset(order.tail, offset);
     }
 
 }

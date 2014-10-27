@@ -19,18 +19,18 @@ package nl.minvenj.nfi.ddrx.data;
 import nl.minvenj.nfi.ddrx.expression.value.ParsedValue;
 
 public class ParsedValueList {
-    
+
     public final ParsedValue head;
     public final ParsedValueList tail;
-    
+
     public ParsedValueList() {
         this(null, null);
     }
-    
+
     public ParsedValueList(final ParsedValue head) {
         this(head, null);
     }
-    
+
     public ParsedValueList(final ParsedValue head, final ParsedValueList tail){
         this.head = head;
         if (tail != null && tail.isEmpty()) {
@@ -39,7 +39,7 @@ public class ParsedValueList {
             this.tail = tail;
         }
     }
-    
+
     public ParsedValue get(final String name) {
         if (head != null && head.matches(name)) {
             return head;
@@ -49,7 +49,7 @@ public class ParsedValueList {
             return null;
         }
     }
-    
+
     public ParsedValueList getAll(final String name) {
         final ParsedValueList t = tail != null ? tail.getAll(name) : null;
         if (head != null && head.matches(name)) {
@@ -58,7 +58,7 @@ public class ParsedValueList {
             return t != null ? t : new ParsedValueList();
         }
     }
-    
+
     public ParsedValueList getValuesSincePrefix(final ParsedValue prefix) {
         if (head != null && head != prefix) {
             final ParsedValueList t = tail != null ? tail.getValuesSincePrefix(prefix) : null;
@@ -67,34 +67,41 @@ public class ParsedValueList {
             return new ParsedValueList();
         }
     }
-    
+
     public ParsedValue current() {
         return head;
     }
-    
+
     public boolean isEmpty() {
         return head == null && tail == null;
     }
-    
+
     public ParsedValue getFirst() {
         if (head == null) { return null; }
         if (tail == null) { return head; }
         return tail.getFirst();
     }
-    
+
+    public boolean containsOffset(final long offset) {
+        if (head == null) { return false; }
+        if (head.getOffset() == offset) { return true; }
+        if (tail == null) { return false; }
+        return tail.containsOffset(offset);
+    }
+
     public ParsedValueList reverse() {
         if (isEmpty()) { return this; }
         return reverse(tail, new ParsedValueList(head, null));
     }
-    
+
     private ParsedValueList reverse(final ParsedValueList head, final ParsedValueList tail) {
         if (head == null) { return tail; }
         return reverse(head.tail, new ParsedValueList(head.head, tail));
     }
-    
+
     @Override
     public String toString() {
         return (head != null ? ">" + head : "") + (tail != null ? tail.toString() : "");
     }
-    
+
 }
