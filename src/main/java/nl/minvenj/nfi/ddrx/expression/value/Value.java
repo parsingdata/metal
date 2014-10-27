@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.ddrx.expression.value;
 
 import java.math.BigInteger;
+import java.util.BitSet;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -43,6 +44,19 @@ public class Value {
 
     public String asString() {
         return new String(_data, _enc.getCharset());
+    }
+
+    public BitSet asBitSet() {
+        final byte[] data = _enc.getByteOrder().apply(_data);
+        final BitSet bitSet = new BitSet(data.length * 8);
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (((data[i] >> j) & 1) == 1) {
+                    bitSet.set((i * 8) + j);
+                }
+            }
+        }
+        return bitSet;
     }
 
     public Encoding getEncoding() {

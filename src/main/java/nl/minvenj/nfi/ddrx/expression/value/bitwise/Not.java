@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.expression.value.bitwise;
 
+import java.util.BitSet;
+
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.value.ConstantFactory;
@@ -32,7 +34,9 @@ public class Not extends UnaryValueExpression {
 
     @Override
     public OptionalValue eval(final Value op, final Environment env, final Encoding enc) {
-        return OptionalValue.of(ConstantFactory.createFromNumeric(op.asNumeric().not(), enc));
+        final BitSet value = op.asBitSet();
+        value.flip(0, op.getValue().length * 8);
+        return OptionalValue.of(ConstantFactory.createFromBitSet(value, op.getValue().length, enc));
     }
 
 }
