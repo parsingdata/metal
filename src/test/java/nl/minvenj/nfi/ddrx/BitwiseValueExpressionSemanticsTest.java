@@ -36,7 +36,7 @@ import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.token.Token;
 import nl.minvenj.nfi.ddrx.util.ParameterizedParse;
 
-public class BitwiseValueExpressionSemantics extends ParameterizedParse {
+public class BitwiseValueExpressionSemanticsTest extends ParameterizedParse {
 
     @Parameters(name = "{0} ({4})")
     public static Collection<Object[]> data() {
@@ -48,7 +48,7 @@ public class BitwiseValueExpressionSemantics extends ParameterizedParse {
         });
     }
 
-    public BitwiseValueExpressionSemantics(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
+    public BitwiseValueExpressionSemanticsTest(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
         super(token, env, enc, result);
     }
 
