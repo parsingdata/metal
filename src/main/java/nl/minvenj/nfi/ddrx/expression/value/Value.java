@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.ddrx.expression.value;
 
 import java.math.BigInteger;
+import java.util.BitSet;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -31,7 +32,7 @@ public class Value {
         _data = data;
         _enc = enc;
     }
-    
+
     public byte[] getValue() {
         return _data;
     }
@@ -43,6 +44,10 @@ public class Value {
 
     public String asString() {
         return new String(_data, _enc.getCharset());
+    }
+
+    public BitSet asBitSet() {
+        return BitSet.valueOf(_data);
     }
 
     public Encoding getEncoding() {

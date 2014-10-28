@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.ddrx.expression.value;
 
 import java.math.BigInteger;
+import java.util.BitSet;
 
 import nl.minvenj.nfi.ddrx.encoding.ByteOrder;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
@@ -31,8 +32,15 @@ public class ConstantFactory {
         return createFromNumeric(BigInteger.valueOf(value), enc);
     }
 
-    public static Value createFromString(final String value, final Encoding encoding) {
-        return new Value(value.getBytes(encoding.getCharset()), encoding);
+    public static Value createFromString(final String value, final Encoding enc) {
+        return new Value(value.getBytes(enc.getCharset()), enc);
+    }
+
+    public static Value createFromBitSet(final BitSet value, final int minSize, final Encoding enc) {
+        final byte[] bytes = value.toByteArray();
+        final byte[] out = new byte[Math.max(minSize, bytes.length)];
+        System.arraycopy(bytes, 0, out, 0, bytes.length);
+        return new Value(out, enc);
     }
 
     private static byte[] compact(final byte[] in) {

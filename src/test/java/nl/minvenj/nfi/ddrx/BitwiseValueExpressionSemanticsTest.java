@@ -1,0 +1,112 @@
+/*
+ * Copyright 2013-2016 Netherlands Forensic Institute
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package nl.minvenj.nfi.ddrx;
+
+import static nl.minvenj.nfi.ddrx.Shorthand.and;
+import static nl.minvenj.nfi.ddrx.Shorthand.con;
+import static nl.minvenj.nfi.ddrx.Shorthand.def;
+import static nl.minvenj.nfi.ddrx.Shorthand.eq;
+import static nl.minvenj.nfi.ddrx.Shorthand.not;
+import static nl.minvenj.nfi.ddrx.Shorthand.or;
+import static nl.minvenj.nfi.ddrx.Shorthand.ref;
+import static nl.minvenj.nfi.ddrx.Shorthand.seq;
+import static nl.minvenj.nfi.ddrx.Shorthand.shl;
+import static nl.minvenj.nfi.ddrx.Shorthand.shr;
+import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
+import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.encoding.Encoding;
+import nl.minvenj.nfi.ddrx.token.Token;
+import nl.minvenj.nfi.ddrx.util.ParameterizedParse;
+
+import org.junit.runners.Parameterized.Parameters;
+
+public class BitwiseValueExpressionSemanticsTest extends ParameterizedParse {
+
+    @Parameters(name = "{0} ({4})")
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] {
+            { "[170, 85] a, not(a)", simpleNot(1), stream(170, 85), enc(), true },
+            { "[0, 255] a not(a)", simpleNot(1), stream(0, 255), enc(), true },
+            { "[255, 0] a not(a)", simpleNot(1), stream(255, 0), enc(), true },
+            { "[0, 1] a not(a)", simpleNot(1), stream(0, 1), enc(), false },
+            { "[170, 85, 85, 170] a, not(a)", simpleNot(2), stream(170, 85, 85, 170), enc(), true },
+            { "[255, 0, 0, 255] a not(a)", simpleNot(2), stream(255, 0, 0, 255), enc(), true },
+            { "[170, 85, 0] a b and(a, b)", simpleAnd(1), stream(170, 85, 0), enc(), true },
+            { "[0, 255, 0] a b and(a, b)", simpleAnd(1), stream(0, 255, 0), enc(), true },
+            { "[255, 0, 0] a b and(a, b)", simpleAnd(1), stream(255, 0, 0), enc(), true },
+            { "[0, 1, 1] a b and(a, b)", simpleAnd(1), stream(0, 1, 1), enc(), false },
+            { "[170, 85, 85, 170, 0, 0] a b and(a, b)", simpleAnd(2), stream(170, 85, 85, 170, 0, 0), enc(), true },
+            { "[0, 255, 255, 0, 0, 0] a b and(a, b)", simpleAnd(2), stream(0, 255, 255, 0, 0, 0), enc(), true },
+            { "[255, 0, 0, 255, 0, 0] a b and(a, b)", simpleAnd(2), stream(255, 0, 0, 255, 0, 0), enc(), true },
+            { "[170, 85, 255] a b or(a, b)", simpleOr(1), stream(170, 85, 255), enc(), true },
+            { "[0, 255, 255] a b or(a, b)", simpleOr(1), stream(0, 255, 255), enc(), true },
+            { "[255, 0, 255] a b or(a, b)", simpleOr(1), stream(255, 0, 255), enc(), true },
+            { "[0, 1, 0] a b or(a, b)", simpleOr(1), stream(0, 1, 0), enc(), false },
+            { "[170, 85, 85, 170, 255, 255] a b or(a, b)", simpleOr(2), stream(170, 85, 85, 170, 255, 255), enc(), true },
+            { "[0, 255, 255, 0, 255, 255] a b or(a, b)", simpleOr(2), stream(0, 255, 255, 0, 255, 255), enc(), true },
+            { "[255, 0, 0, 255, 255, 255] a b or(a, b)", simpleOr(2), stream(255, 0, 0, 255, 255, 255), enc(), true },
+            { "[85, 170] a a shl 1", simpleShiftLeft(1, 1), stream(85, 170), enc(), true },
+            { "[85, 0, 0, 170] a a shl 9", simpleShiftLeft(2, 9), stream(85, 0, 0, 170), enc(), true },
+            { "[1, 3] a a shl 1", simpleShiftLeft(1, 1), stream(1, 3), enc(), false },
+            { "[170, 85] a a shr 1", simpleShiftRight(1, 1), stream(170, 85), enc(), true },
+            { "[0, 170, 85, 0] a a shr 9", simpleShiftRight(2, 9), stream(0, 170, 85, 0), enc(), true },
+            { "[4, 1] a a shr 1", simpleShiftRight(1, 1), stream(4, 1), enc(), false }
+        });
+    }
+
+    public BitwiseValueExpressionSemanticsTest(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
+        super(token, env, enc, result);
+    }
+
+    private static Token simpleNot(final int size) {
+        return
+        seq(def("a", con(size)),
+            def("not(a)", con(size), eq(not(ref("a")))));
+    }
+
+    private static Token simpleAnd(final int size) {
+        return
+        seq(def("a", con(size)),
+            def("b", con(size)),
+            def("and(a, b)", con(size), eq(and(ref("a"), ref("b")))));
+    }
+    
+    private static Token simpleOr(final int size) {
+        return
+        seq(def("a", con(size)),
+            def("b", con(size)),
+            def("or(a, b)", con(size), eq(or(ref("a"), ref("b")))));
+    }
+    
+    private static Token simpleShiftLeft(final int size, final int shiftLeft) {
+        return
+        seq(def("a", con(size)),
+            def("a shl " + shiftLeft, con(size), eq(shl(ref("a"), con(shiftLeft)))));
+    }
+    
+    private static Token simpleShiftRight(final int size, final int shiftRight) {
+        return
+        seq(def("a", con(size)),
+            def("a shr " + shiftRight, con(size), eq(shr(ref("a"), con(shiftRight)))));
+    }
+
+}

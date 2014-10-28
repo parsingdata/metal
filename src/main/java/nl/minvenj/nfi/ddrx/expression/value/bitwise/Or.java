@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.ddrx.expression.value.bitwise;
 
+import java.util.BitSet;
+
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
@@ -32,7 +34,10 @@ public class Or extends BinaryValueExpression {
 
     @Override
     public OptionalValue eval(final Value lv, final Value rv, final Environment env, final Encoding enc) {
-        return OptionalValue.of(ConstantFactory.createFromNumeric(lv.asNumeric().or(rv.asNumeric()), enc));
+        final BitSet lbs = lv.asBitSet();
+        lbs.or(rv.asBitSet());
+        final int minSize = Math.max(lv.getValue().length, rv.getValue().length);
+        return OptionalValue.of(ConstantFactory.createFromBitSet(lbs, minSize, enc));
     }
 
 }

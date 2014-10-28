@@ -14,29 +14,35 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.value.bitwise;
+package nl.minvenj.nfi.ddrx.token;
 
-import java.util.BitSet;
+import java.io.IOException;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.data.ParseResult;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
-import nl.minvenj.nfi.ddrx.expression.value.ConstantFactory;
 import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
-import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
-import nl.minvenj.nfi.ddrx.expression.value.Value;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class Not extends UnaryValueExpression {
+public class Nod extends Token {
 
-    public Not(final ValueExpression op) {
-        super(op);
+    private final ValueExpression _size;
+
+    public Nod(final ValueExpression size, final Encoding enc) {
+        super(enc);
+        if (size == null) { throw new IllegalArgumentException("Argument size may not be null."); }
+        _size = size;
     }
 
     @Override
-    public OptionalValue eval(final Value op, final Environment env, final Encoding enc) {
-        final BitSet value = op.asBitSet();
-        value.flip(0, op.getValue().length * 8);
-        return OptionalValue.of(ConstantFactory.createFromBitSet(value, op.getValue().length, enc));
+    protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
+        final OptionalValue ov = _size.eval(env, enc);
+        return ov.isPresent() ? new ParseResult(true, new Environment(env.order, env.input, env.offset + ov.get().asNumeric().longValue())) : new ParseResult(false, env);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _size + ")";
     }
 
 }

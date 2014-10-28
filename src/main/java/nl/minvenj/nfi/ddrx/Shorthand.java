@@ -55,6 +55,8 @@ import nl.minvenj.nfi.ddrx.expression.value.reference.Ref;
 import nl.minvenj.nfi.ddrx.expression.value.reference.Self;
 import nl.minvenj.nfi.ddrx.token.Cho;
 import nl.minvenj.nfi.ddrx.token.Def;
+import nl.minvenj.nfi.ddrx.token.Nod;
+import nl.minvenj.nfi.ddrx.token.Opt;
 import nl.minvenj.nfi.ddrx.token.Pre;
 import nl.minvenj.nfi.ddrx.token.Rep;
 import nl.minvenj.nfi.ddrx.token.Seq;
@@ -77,8 +79,15 @@ public class Shorthand {
     public static Token str(final String n, final Token t, final StructSink s, final Expression p) { return str(n, t, null, s, p); }
     public static Token str(final String n, final Token t, final Encoding e, final StructSink s) { return new Str(n, t, e, s, null); }
     public static Token str(final String n, final Token t, final Encoding e, final StructSink s, final Expression p) { return new Str(n, t, e, s, p); }
-    public static Token pre(final Token t, final Expression p, final Encoding e) { return new Pre(t, p, e); }
+    public static Token sub(final Token t) { return sub(t, null); }
+    public static Token sub(final Token t, final ValueExpression a, final Encoding e) { return new nl.minvenj.nfi.ddrx.token.Sub(t, a, e); }
+    public static Token sub(final Token t, final ValueExpression a) { return sub(t, a, null); }
     public static Token pre(final Token t, final Expression p) { return pre(t, p, null); }
+    public static Token pre(final Token t, final Expression p, final Encoding e) { return new Pre(t, p, e); }
+    public static Token opt(final Token t) { return opt(t, null); }
+    public static Token opt(final Token t, final Encoding e) { return new Opt(t, e); }
+    public static Token nod(final ValueExpression s) { return new Nod(s, null); }
+    public static Token nod(final ValueExpression s, final Encoding e) { return new Nod(s, e); }
 
     public static BinaryValueExpression add(final ValueExpression l, final ValueExpression r) { return new Add(l, r); }
     public static BinaryValueExpression div(final ValueExpression l, final ValueExpression r) { return new Div(l, r); }
@@ -92,9 +101,9 @@ public class Shorthand {
     public static BinaryValueExpression shl(final ValueExpression l, final ValueExpression r) { return new ShiftLeft(l, r); }
     public static BinaryValueExpression shr(final ValueExpression l, final ValueExpression r) { return new ShiftRight(l, r); }
     public static ValueExpression con(final long v) { return con(v, new Encoding()); }
-    public static ValueExpression con(final long v, final Encoding encoding) { return new Const(ConstantFactory.createFromNumeric(v, encoding)); }
+    public static ValueExpression con(final long v, final Encoding encoding) { return con(ConstantFactory.createFromNumeric(v, encoding)); }
     public static ValueExpression con(final String s) { return con(s, new Encoding()); }
-    public static ValueExpression con(final String s, final Encoding encoding) { return new Const(ConstantFactory.createFromString(s, encoding)); }
+    public static ValueExpression con(final String s, final Encoding encoding) { return con(ConstantFactory.createFromString(s, encoding)); }
     public static ValueExpression con(final Value v) { return new Const(v); }
     public static ValueExpression con(final Encoding enc, final int... values) { return new Const(new Value(toByteArray(values), enc)); }
     public static ValueExpression con(final int... values) { return con(new Encoding(), values); }
