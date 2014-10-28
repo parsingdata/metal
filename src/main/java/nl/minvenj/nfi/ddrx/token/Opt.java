@@ -21,37 +21,26 @@ import java.io.IOException;
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.data.ParseResult;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
-import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
-import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 
-public class Sub extends Token {
+public class Opt extends Token {
 
     private final Token _op;
-    private final ValueExpression _addr;
 
-    public Sub(final Token op, final ValueExpression addr, final Encoding enc) {
+    public Opt(final Token op, final Encoding enc) {
         super(enc);
         if (op == null) { throw new IllegalArgumentException("Argument op may not be null."); }
         _op = op;
-        if (addr == null) { throw new IllegalArgumentException("Argument addr may not be null."); }
-        _addr = addr;
     }
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final OptionalValue ov = _addr.eval(env, enc);
-        if (ov.isPresent() && !env.order.containsOffset(ov.get().asNumeric().longValue())) {
-            final ParseResult res = _op.parse(scope, new Environment(env.order, env.input, ov.get().asNumeric().longValue()), enc);
-            if (res.succeeded()) {
-                return new ParseResult(true, new Environment(res.getEnvironment().order, res.getEnvironment().input, env.offset));
-            }
-        }
-        return new ParseResult(false, env);
+        final ParseResult result = _op.parse(scope, env, enc);
+        return result.succeeded() ? result : new ParseResult(true, env);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _op + ", " + _addr + ")";
+        return getClass().getSimpleName() + "(" + _op + ")";
     }
 
 }
