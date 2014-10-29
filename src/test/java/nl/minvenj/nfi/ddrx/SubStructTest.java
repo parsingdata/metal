@@ -62,12 +62,12 @@ public class SubStructTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
             { "linkedlist", linkedListSub, stream(0, 8, 1, 42, 0, 12, 1, 84, 0, 4, 1), true, new int[] { 0, 8, 1, 0, 4, 1, 0, 12, 1 }, new int[] { 0, 1, 2, 8, 9, 10, 4, 5, 6 } },
-                                  /* offset: 0, 1, 2,  3, 4,  5, 6,  7, 8, 9,10
-                                   * struct: -------      --------      -------
-                                   * ref 1:     +-----------------------^
-                                   * ref 2:               ^----------------+
-                                   * ref 3:                   +----------------*
-                                   */
+                                       /* offset: 0, 1, 2,  3, 4,  5, 6,  7, 8, 9,10
+                                        * struct: -------      --------      -------
+                                        * ref 1:     +-----------------------^
+                                        * ref 2:               ^----------------+
+                                        * ref 3:                   +----------------*
+                                        */
             { "linkedlist with self reference", linkedListSub, stream(0, 0, 1), true, new int[] { 0, 0, 1 }, new int[] { 0, 1, 2 } },
             { "linkedlist with cycle", linkedListSub, stream(0, 4, 1, 21, 0, 0, 1), true, new int[] { 0, 4, 1, 0, 0, 1 }, new int[] { 0, 1, 2, 4, 5, 6 } }
         });
