@@ -25,7 +25,7 @@ import nl.minvenj.nfi.ddrx.encoding.Encoding;
 public class ConstantFactory {
 
     public static Value createFromNumeric(final BigInteger value, final Encoding enc) {
-        return new Value(compact(value.toByteArray()), new Encoding(enc.isSigned(), enc.getCharset(), ByteOrder.BIG_ENDIAN));
+        return new Value(compact(value.toByteArray()), setToBE(enc));
     }
 
     public static Value createFromNumeric(final long value, final Encoding enc) {
@@ -40,7 +40,11 @@ public class ConstantFactory {
         final byte[] bytes = ByteOrder.LITTLE_ENDIAN.apply(value.toByteArray());
         final byte[] out = new byte[Math.max(minSize, bytes.length)];
         System.arraycopy(bytes, 0, out, out.length - bytes.length, bytes.length);
-        return new Value(out, enc);
+        return new Value(out, setToBE(enc));
+    }
+
+    private static Encoding setToBE(final Encoding enc) {
+        return new Encoding(enc.isSigned(), enc.getCharset(), ByteOrder.BIG_ENDIAN);
     }
 
     private static byte[] compact(final byte[] in) {
