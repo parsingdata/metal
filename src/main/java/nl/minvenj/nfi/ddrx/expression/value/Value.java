@@ -21,6 +21,7 @@ import java.util.BitSet;
 
 import javax.xml.bind.DatatypeConverter;
 
+import nl.minvenj.nfi.ddrx.encoding.ByteOrder;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 
 public class Value {
@@ -30,6 +31,7 @@ public class Value {
 
     public Value(final byte[] data, final Encoding enc) {
         _data = data;
+        if (enc == null) { throw new IllegalArgumentException("Argument enc may not be null."); }
         _enc = enc;
     }
 
@@ -47,7 +49,7 @@ public class Value {
     }
 
     public BitSet asBitSet() {
-        return BitSet.valueOf(_data);
+        return BitSet.valueOf(_enc.getByteOrder() == ByteOrder.BIG_ENDIAN ? ByteOrder.LITTLE_ENDIAN.apply(_data) : _data);
     }
 
     public Encoding getEncoding() {

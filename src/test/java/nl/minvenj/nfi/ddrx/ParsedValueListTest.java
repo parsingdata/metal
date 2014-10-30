@@ -16,17 +16,19 @@
 
 package nl.minvenj.nfi.ddrx;
 
-import nl.minvenj.nfi.ddrx.data.ParsedValueList;
-import nl.minvenj.nfi.ddrx.expression.value.ParsedValue;
+import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import nl.minvenj.nfi.ddrx.data.ParsedValueList;
+import nl.minvenj.nfi.ddrx.expression.value.ParsedValue;
+
 @RunWith(JUnit4.class)
 public class ParsedValueListTest {
-    
+
     private final ParsedValueList l1;
     private final ParsedValueList l2;
     private final ParsedValueList l3;
@@ -50,7 +52,7 @@ public class ParsedValueListTest {
         v5 = val("s1", 'e');
         l5 = new ParsedValueList(v5, l4);
     }
-    
+
     @Test
     public void traverse() {
         Assert.assertEquals(l5.head, v5);
@@ -64,17 +66,17 @@ public class ParsedValueListTest {
         Assert.assertEquals(l1.head, v1);
         Assert.assertEquals(l1.tail, null);
     }
-    
+
     @Test
     public void getSingleMatch() {
         Assert.assertEquals(l5.get("b"), v2);
     }
-    
+
     @Test
     public void getSingleNoMatch() {
         Assert.assertNull(l5.get("f"));
     }
-    
+
     @Test
     public void getMultiMultiMatch() {
         final ParsedValueList res = l5.getAll("a");
@@ -82,21 +84,21 @@ public class ParsedValueListTest {
         Assert.assertEquals(res.tail.head, v1);
         Assert.assertNull(res.tail.tail);
     }
-    
+
     @Test
     public void getMultiSingleMatch() {
         final ParsedValueList res = l5.getAll("d");
         Assert.assertEquals(res.head, v4);
         Assert.assertNull(res.tail);
     }
-    
+
     @Test
     public void getMultiNoMatch() {
         final ParsedValueList res = l5.getAll("f");
         Assert.assertNull(res.head);
         Assert.assertNull(res.tail);
     }
-    
+
     @Test
     public void getScopedMatch() {
         final ParsedValueList res = l5.getValuesSincePrefix(v3);
@@ -104,14 +106,14 @@ public class ParsedValueListTest {
         Assert.assertEquals(res.tail.head, v4);
         Assert.assertNull(res.tail.tail);
     }
-    
+
     @Test
     public void getScopedNoMatch() {
         final ParsedValueList res = l5.getValuesSincePrefix(v5);
         Assert.assertNull(res.head);
         Assert.assertNull(res.tail);
     }
-    
+
     @Test
     public void reverse() {
         final ParsedValueList rev = l5.reverse();
@@ -122,14 +124,14 @@ public class ParsedValueListTest {
         Assert.assertEquals(rev.tail.tail.tail.tail.head, v5);
         Assert.assertNull(rev.tail.tail.tail.tail.tail);
     }
-    
+
     @Test
     public void reverseEmpty() {
         Assert.assertTrue(new ParsedValueList().reverse().isEmpty());
     }
-    
+
     private ParsedValue val(final String s, final char c) {
-        return new ParsedValue(s, Character.toString(c), 0L, new byte[] { (byte)c }, null);
+        return new ParsedValue(s, Character.toString(c), 0L, new byte[] { (byte) c }, enc());
     }
 
 }

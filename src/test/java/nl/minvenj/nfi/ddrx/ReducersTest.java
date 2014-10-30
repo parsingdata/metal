@@ -33,6 +33,8 @@ import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.junit.runners.Parameterized.Parameters;
+
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.Expression;
@@ -40,8 +42,6 @@ import nl.minvenj.nfi.ddrx.expression.value.Reducer;
 import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
 import nl.minvenj.nfi.ddrx.token.Token;
 import nl.minvenj.nfi.ddrx.util.ParameterizedParse;
-
-import org.junit.runners.Parameterized.Parameters;
 
 public class ReducersTest extends ParameterizedParse {
 

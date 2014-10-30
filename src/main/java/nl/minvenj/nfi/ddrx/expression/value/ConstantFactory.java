@@ -37,9 +37,9 @@ public class ConstantFactory {
     }
 
     public static Value createFromBitSet(final BitSet value, final int minSize, final Encoding enc) {
-        final byte[] bytes = value.toByteArray();
+        final byte[] bytes = ByteOrder.LITTLE_ENDIAN.apply(value.toByteArray());
         final byte[] out = new byte[Math.max(minSize, bytes.length)];
-        System.arraycopy(bytes, 0, out, 0, bytes.length);
+        System.arraycopy(bytes, 0, out, out.length - bytes.length, bytes.length);
         return new Value(out, enc);
     }
 
