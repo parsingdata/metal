@@ -62,4 +62,9 @@ public class Encoding {
         return _byteOrder;
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + (_signed ? "SIGNED" : "UNSIGNED") + "," + _charset + "," + _byteOrder + ")";
+    }
+
 }
