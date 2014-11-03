@@ -83,7 +83,9 @@ public class Shorthand {
     public static Token sub(final Token t, final ValueExpression a, final Encoding e) { return new nl.minvenj.nfi.ddrx.token.Sub(t, a, e); }
     public static Token sub(final Token t, final ValueExpression a) { return sub(t, a, null); }
     public static Token pre(final Token t, final Expression p) { return pre(t, p, null); }
-    public static Token pre(final Token t, final Expression p, final Encoding e) { return new Pre(t, p, e); }
+    public static Token pre(final Token t, final Expression p, final Encoding e) { return new Pre(t, p, true, e); }
+    public static Token pre(final Token t, final Expression p, final boolean o) { return pre(t, p, o, null); }
+    public static Token pre(final Token t, final Expression p, final boolean o, final Encoding e) { return new Pre(t, p, o, e); }
     public static Token opt(final Token t) { return opt(t, null); }
     public static Token opt(final Token t, final Encoding e) { return new Opt(t, e); }
     public static Token nod(final ValueExpression s) { return new Nod(s, null); }
