@@ -136,6 +136,7 @@ public class ParsedValueListTest {
         Assert.assertEquals(5, l5.size());
     }
 
+    @Test
     public void sizeEmpty() {
         Assert.assertEquals(0, new ParsedValueList().size());
     }
