@@ -99,6 +99,12 @@ public class ParsedValueList {
         return reverse(head.tail, new ParsedValueList(head.head, tail));
     }
 
+    public long size() {
+        if (head == null) { return 0L; }
+        if (tail == null) { return 1L; }
+        return 1L + tail.size();
+    }
+
     @Override
     public String toString() {
         return (head != null ? ">" + head : "") + (tail != null ? tail.toString() : "");

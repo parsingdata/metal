@@ -130,6 +130,16 @@ public class ParsedValueListTest {
         Assert.assertTrue(new ParsedValueList().reverse().isEmpty());
     }
 
+    @Test
+    public void size() {
+        Assert.assertEquals(1, l1.size());
+        Assert.assertEquals(5, l5.size());
+    }
+
+    public void sizeEmpty() {
+        Assert.assertEquals(0, new ParsedValueList().size());
+    }
+
     private ParsedValue val(final String s, final char c) {
         return new ParsedValue(s, Character.toString(c), 0L, new byte[] { (byte) c }, enc());
     }
