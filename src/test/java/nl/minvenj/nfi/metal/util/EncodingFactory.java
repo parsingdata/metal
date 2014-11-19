@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.util;
+package nl.minvenj.nfi.metal.util;
 
-import nl.minvenj.nfi.ddrx.encoding.ByteOrder;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
+import nl.minvenj.nfi.metal.encoding.ByteOrder;
+import nl.minvenj.nfi.metal.encoding.Encoding;
 
 public class EncodingFactory {
 

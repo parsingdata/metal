@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.encoding;
+package nl.minvenj.nfi.metal.encoding;
 
 import java.nio.charset.Charset;
 

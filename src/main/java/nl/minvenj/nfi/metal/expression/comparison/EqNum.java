@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.comparison;
+package nl.minvenj.nfi.metal.expression.comparison;
 
-import nl.minvenj.nfi.ddrx.expression.value.Value;
-import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
+import nl.minvenj.nfi.metal.expression.value.Value;
+import nl.minvenj.nfi.metal.expression.value.ValueExpression;
 
 public class EqNum extends ComparisonExpression {
 

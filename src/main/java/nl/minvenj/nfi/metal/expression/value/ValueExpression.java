@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.value;
+package nl.minvenj.nfi.metal.expression.value;
 
-import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
+import nl.minvenj.nfi.metal.data.Environment;
+import nl.minvenj.nfi.metal.encoding.Encoding;
 
 public interface ValueExpression {
 

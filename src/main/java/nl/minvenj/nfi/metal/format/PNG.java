@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.format;
+package nl.minvenj.nfi.metal.format;
 
-import static nl.minvenj.nfi.ddrx.Callback.crc32;
-import static nl.minvenj.nfi.ddrx.Shorthand.cat;
-import static nl.minvenj.nfi.ddrx.Shorthand.con;
-import static nl.minvenj.nfi.ddrx.Shorthand.def;
-import static nl.minvenj.nfi.ddrx.Shorthand.eq;
-import static nl.minvenj.nfi.ddrx.Shorthand.eqNum;
-import static nl.minvenj.nfi.ddrx.Shorthand.not;
-import static nl.minvenj.nfi.ddrx.Shorthand.ref;
-import static nl.minvenj.nfi.ddrx.Shorthand.rep;
-import static nl.minvenj.nfi.ddrx.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.Shorthand.str;
+import static nl.minvenj.nfi.metal.Callback.crc32;
+import static nl.minvenj.nfi.metal.Shorthand.cat;
+import static nl.minvenj.nfi.metal.Shorthand.con;
+import static nl.minvenj.nfi.metal.Shorthand.def;
+import static nl.minvenj.nfi.metal.Shorthand.eq;
+import static nl.minvenj.nfi.metal.Shorthand.eqNum;
+import static nl.minvenj.nfi.metal.Shorthand.not;
+import static nl.minvenj.nfi.metal.Shorthand.ref;
+import static nl.minvenj.nfi.metal.Shorthand.rep;
+import static nl.minvenj.nfi.metal.Shorthand.seq;
+import static nl.minvenj.nfi.metal.Shorthand.str;
 
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
-import nl.minvenj.nfi.ddrx.token.Token;
+import nl.minvenj.nfi.metal.encoding.Encoding;
+import nl.minvenj.nfi.metal.token.Token;
 
 public class PNG {
 

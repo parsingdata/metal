@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx;
+package nl.minvenj.nfi.metal;
 
-import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
+import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import nl.minvenj.nfi.ddrx.data.ParsedValueList;
-import nl.minvenj.nfi.ddrx.expression.value.ParsedValue;
+import nl.minvenj.nfi.metal.data.ParsedValueList;
+import nl.minvenj.nfi.metal.expression.value.ParsedValue;
 
 @RunWith(JUnit4.class)
 public class ParsedValueListTest {

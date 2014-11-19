@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.util;
+package nl.minvenj.nfi.metal.util;
 
 import java.io.IOException;
 
-import nl.minvenj.nfi.ddrx.data.ByteStream;
+import nl.minvenj.nfi.metal.data.ByteStream;
 
 public class InMemoryByteStream implements ByteStream {
 

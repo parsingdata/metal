@@ -14,34 +14,34 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx;
+package nl.minvenj.nfi.metal;
 
-import static nl.minvenj.nfi.ddrx.Shorthand.add;
-import static nl.minvenj.nfi.ddrx.Shorthand.cat;
-import static nl.minvenj.nfi.ddrx.Shorthand.con;
-import static nl.minvenj.nfi.ddrx.Shorthand.def;
-import static nl.minvenj.nfi.ddrx.Shorthand.eq;
-import static nl.minvenj.nfi.ddrx.Shorthand.eqNum;
-import static nl.minvenj.nfi.ddrx.Shorthand.mul;
-import static nl.minvenj.nfi.ddrx.Shorthand.reduce;
-import static nl.minvenj.nfi.ddrx.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
-import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
-import static nl.minvenj.nfi.ddrx.util.EncodingFactory.le;
-import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
+import static nl.minvenj.nfi.metal.Shorthand.add;
+import static nl.minvenj.nfi.metal.Shorthand.cat;
+import static nl.minvenj.nfi.metal.Shorthand.con;
+import static nl.minvenj.nfi.metal.Shorthand.def;
+import static nl.minvenj.nfi.metal.Shorthand.eq;
+import static nl.minvenj.nfi.metal.Shorthand.eqNum;
+import static nl.minvenj.nfi.metal.Shorthand.mul;
+import static nl.minvenj.nfi.metal.Shorthand.reduce;
+import static nl.minvenj.nfi.metal.Shorthand.seq;
+import static nl.minvenj.nfi.metal.TokenDefinitions.any;
+import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
+import static nl.minvenj.nfi.metal.util.EncodingFactory.le;
+import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
 
 import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.runners.Parameterized.Parameters;
 
-import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
-import nl.minvenj.nfi.ddrx.expression.Expression;
-import nl.minvenj.nfi.ddrx.expression.value.Reducer;
-import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
-import nl.minvenj.nfi.ddrx.token.Token;
-import nl.minvenj.nfi.ddrx.util.ParameterizedParse;
+import nl.minvenj.nfi.metal.data.Environment;
+import nl.minvenj.nfi.metal.encoding.Encoding;
+import nl.minvenj.nfi.metal.expression.Expression;
+import nl.minvenj.nfi.metal.expression.value.Reducer;
+import nl.minvenj.nfi.metal.expression.value.ValueExpression;
+import nl.minvenj.nfi.metal.token.Token;
+import nl.minvenj.nfi.metal.util.ParameterizedParse;
 
 public class ReducersTest extends ParameterizedParse {
 

@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx;
+package nl.minvenj.nfi.metal;
 
-import static nl.minvenj.nfi.ddrx.Shorthand.cho;
-import static nl.minvenj.nfi.ddrx.Shorthand.rep;
-import static nl.minvenj.nfi.ddrx.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
-import static nl.minvenj.nfi.ddrx.TokenDefinitions.eq;
-import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
-import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
+import static nl.minvenj.nfi.metal.Shorthand.cho;
+import static nl.minvenj.nfi.metal.Shorthand.rep;
+import static nl.minvenj.nfi.metal.Shorthand.seq;
+import static nl.minvenj.nfi.metal.TokenDefinitions.any;
+import static nl.minvenj.nfi.metal.TokenDefinitions.eq;
+import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
+import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
 
 import java.io.IOException;
 
-import nl.minvenj.nfi.ddrx.token.Token;
+import nl.minvenj.nfi.metal.token.Token;
 
 import org.junit.Assert;
 import org.junit.Test;

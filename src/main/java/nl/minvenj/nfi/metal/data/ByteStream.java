@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.data;
+package nl.minvenj.nfi.metal.data;
 
 import java.io.IOException;
 

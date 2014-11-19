@@ -14,28 +14,28 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx;
+package nl.minvenj.nfi.metal;
 
-import static nl.minvenj.nfi.ddrx.Shorthand.con;
-import static nl.minvenj.nfi.ddrx.Shorthand.def;
-import static nl.minvenj.nfi.ddrx.Shorthand.eq;
-import static nl.minvenj.nfi.ddrx.Shorthand.first;
-import static nl.minvenj.nfi.ddrx.Shorthand.offset;
-import static nl.minvenj.nfi.ddrx.Shorthand.ref;
-import static nl.minvenj.nfi.ddrx.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
-import static nl.minvenj.nfi.ddrx.TokenDefinitions.eqRef;
-import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
-import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
+import static nl.minvenj.nfi.metal.Shorthand.con;
+import static nl.minvenj.nfi.metal.Shorthand.def;
+import static nl.minvenj.nfi.metal.Shorthand.eq;
+import static nl.minvenj.nfi.metal.Shorthand.first;
+import static nl.minvenj.nfi.metal.Shorthand.offset;
+import static nl.minvenj.nfi.metal.Shorthand.ref;
+import static nl.minvenj.nfi.metal.Shorthand.seq;
+import static nl.minvenj.nfi.metal.TokenDefinitions.any;
+import static nl.minvenj.nfi.metal.TokenDefinitions.eqRef;
+import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
+import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
-import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
-import nl.minvenj.nfi.ddrx.token.Token;
-import nl.minvenj.nfi.ddrx.util.ParameterizedParse;
+import nl.minvenj.nfi.metal.data.Environment;
+import nl.minvenj.nfi.metal.encoding.Encoding;
+import nl.minvenj.nfi.metal.expression.value.ValueExpression;
+import nl.minvenj.nfi.metal.token.Token;
+import nl.minvenj.nfi.metal.util.ParameterizedParse;
 
 import org.junit.runners.Parameterized.Parameters;
 

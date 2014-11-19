@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.comparison;
+package nl.minvenj.nfi.metal.expression.comparison;
 
-import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
-import nl.minvenj.nfi.ddrx.expression.Expression;
-import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
-import nl.minvenj.nfi.ddrx.expression.value.Value;
-import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
+import nl.minvenj.nfi.metal.data.Environment;
+import nl.minvenj.nfi.metal.encoding.Encoding;
+import nl.minvenj.nfi.metal.expression.Expression;
+import nl.minvenj.nfi.metal.expression.value.OptionalValue;
+import nl.minvenj.nfi.metal.expression.value.Value;
+import nl.minvenj.nfi.metal.expression.value.ValueExpression;
 
 public abstract class ComparisonExpression implements Expression {
 

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.value;
+package nl.minvenj.nfi.metal.expression.value;
 
-import static nl.minvenj.nfi.ddrx.Shorthand.con;
-import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.data.ParsedValueList;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
+import static nl.minvenj.nfi.metal.Shorthand.con;
+import nl.minvenj.nfi.metal.data.Environment;
+import nl.minvenj.nfi.metal.data.ParsedValueList;
+import nl.minvenj.nfi.metal.encoding.Encoding;
 
 public class Reduce implements ValueExpression {
 

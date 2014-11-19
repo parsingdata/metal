@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.format;
+package nl.minvenj.nfi.metal.format;
 
-import static nl.minvenj.nfi.ddrx.Callback.crc32;
-import static nl.minvenj.nfi.ddrx.Callback.inflate;
-import static nl.minvenj.nfi.ddrx.Shorthand.cho;
-import static nl.minvenj.nfi.ddrx.Shorthand.con;
-import static nl.minvenj.nfi.ddrx.Shorthand.def;
-import static nl.minvenj.nfi.ddrx.Shorthand.eq;
-import static nl.minvenj.nfi.ddrx.Shorthand.eqNum;
-import static nl.minvenj.nfi.ddrx.Shorthand.expTrue;
-import static nl.minvenj.nfi.ddrx.Shorthand.ref;
-import static nl.minvenj.nfi.ddrx.Shorthand.rep;
-import static nl.minvenj.nfi.ddrx.Shorthand.self;
-import static nl.minvenj.nfi.ddrx.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.Shorthand.str;
+import static nl.minvenj.nfi.metal.Callback.crc32;
+import static nl.minvenj.nfi.metal.Callback.inflate;
+import static nl.minvenj.nfi.metal.Shorthand.cho;
+import static nl.minvenj.nfi.metal.Shorthand.con;
+import static nl.minvenj.nfi.metal.Shorthand.def;
+import static nl.minvenj.nfi.metal.Shorthand.eq;
+import static nl.minvenj.nfi.metal.Shorthand.eqNum;
+import static nl.minvenj.nfi.metal.Shorthand.expTrue;
+import static nl.minvenj.nfi.metal.Shorthand.ref;
+import static nl.minvenj.nfi.metal.Shorthand.rep;
+import static nl.minvenj.nfi.metal.Shorthand.self;
+import static nl.minvenj.nfi.metal.Shorthand.seq;
+import static nl.minvenj.nfi.metal.Shorthand.str;
 
-import nl.minvenj.nfi.ddrx.encoding.ByteOrder;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
-import nl.minvenj.nfi.ddrx.expression.Expression;
-import nl.minvenj.nfi.ddrx.token.Token;
+import nl.minvenj.nfi.metal.encoding.ByteOrder;
+import nl.minvenj.nfi.metal.encoding.Encoding;
+import nl.minvenj.nfi.metal.expression.Expression;
+import nl.minvenj.nfi.metal.token.Token;
 
 /*
  * Implements limited subset of ZIP file format:

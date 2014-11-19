@@ -14,55 +14,55 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx;
+package nl.minvenj.nfi.metal;
 
 import java.util.Arrays;
 
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
-import nl.minvenj.nfi.ddrx.expression.Expression;
-import nl.minvenj.nfi.ddrx.expression.True;
-import nl.minvenj.nfi.ddrx.expression.comparison.ComparisonExpression;
-import nl.minvenj.nfi.ddrx.expression.comparison.Eq;
-import nl.minvenj.nfi.ddrx.expression.comparison.EqNum;
-import nl.minvenj.nfi.ddrx.expression.comparison.EqStr;
-import nl.minvenj.nfi.ddrx.expression.comparison.GtNum;
-import nl.minvenj.nfi.ddrx.expression.comparison.LtNum;
-import nl.minvenj.nfi.ddrx.expression.logical.And;
-import nl.minvenj.nfi.ddrx.expression.logical.BinaryLogicalExpression;
-import nl.minvenj.nfi.ddrx.expression.logical.Not;
-import nl.minvenj.nfi.ddrx.expression.logical.Or;
-import nl.minvenj.nfi.ddrx.expression.logical.UnaryLogicalExpression;
-import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
-import nl.minvenj.nfi.ddrx.expression.value.Cat;
-import nl.minvenj.nfi.ddrx.expression.value.Const;
-import nl.minvenj.nfi.ddrx.expression.value.ConstantFactory;
-import nl.minvenj.nfi.ddrx.expression.value.Reduce;
-import nl.minvenj.nfi.ddrx.expression.value.Reducer;
-import nl.minvenj.nfi.ddrx.expression.value.UnaryValueExpression;
-import nl.minvenj.nfi.ddrx.expression.value.Value;
-import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
-import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Add;
-import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Div;
-import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Mod;
-import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Mul;
-import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Neg;
-import nl.minvenj.nfi.ddrx.expression.value.arithmetic.Sub;
-import nl.minvenj.nfi.ddrx.expression.value.bitwise.ShiftLeft;
-import nl.minvenj.nfi.ddrx.expression.value.bitwise.ShiftRight;
-import nl.minvenj.nfi.ddrx.expression.value.reference.First;
-import nl.minvenj.nfi.ddrx.expression.value.reference.Offset;
-import nl.minvenj.nfi.ddrx.expression.value.reference.Ref;
-import nl.minvenj.nfi.ddrx.expression.value.reference.Self;
-import nl.minvenj.nfi.ddrx.token.Cho;
-import nl.minvenj.nfi.ddrx.token.Def;
-import nl.minvenj.nfi.ddrx.token.Nod;
-import nl.minvenj.nfi.ddrx.token.Opt;
-import nl.minvenj.nfi.ddrx.token.Pre;
-import nl.minvenj.nfi.ddrx.token.Rep;
-import nl.minvenj.nfi.ddrx.token.Seq;
-import nl.minvenj.nfi.ddrx.token.Str;
-import nl.minvenj.nfi.ddrx.token.StructSink;
-import nl.minvenj.nfi.ddrx.token.Token;
+import nl.minvenj.nfi.metal.encoding.Encoding;
+import nl.minvenj.nfi.metal.expression.Expression;
+import nl.minvenj.nfi.metal.expression.True;
+import nl.minvenj.nfi.metal.expression.comparison.ComparisonExpression;
+import nl.minvenj.nfi.metal.expression.comparison.Eq;
+import nl.minvenj.nfi.metal.expression.comparison.EqNum;
+import nl.minvenj.nfi.metal.expression.comparison.EqStr;
+import nl.minvenj.nfi.metal.expression.comparison.GtNum;
+import nl.minvenj.nfi.metal.expression.comparison.LtNum;
+import nl.minvenj.nfi.metal.expression.logical.And;
+import nl.minvenj.nfi.metal.expression.logical.BinaryLogicalExpression;
+import nl.minvenj.nfi.metal.expression.logical.Not;
+import nl.minvenj.nfi.metal.expression.logical.Or;
+import nl.minvenj.nfi.metal.expression.logical.UnaryLogicalExpression;
+import nl.minvenj.nfi.metal.expression.value.BinaryValueExpression;
+import nl.minvenj.nfi.metal.expression.value.Cat;
+import nl.minvenj.nfi.metal.expression.value.Const;
+import nl.minvenj.nfi.metal.expression.value.ConstantFactory;
+import nl.minvenj.nfi.metal.expression.value.Reduce;
+import nl.minvenj.nfi.metal.expression.value.Reducer;
+import nl.minvenj.nfi.metal.expression.value.UnaryValueExpression;
+import nl.minvenj.nfi.metal.expression.value.Value;
+import nl.minvenj.nfi.metal.expression.value.ValueExpression;
+import nl.minvenj.nfi.metal.expression.value.arithmetic.Add;
+import nl.minvenj.nfi.metal.expression.value.arithmetic.Div;
+import nl.minvenj.nfi.metal.expression.value.arithmetic.Mod;
+import nl.minvenj.nfi.metal.expression.value.arithmetic.Mul;
+import nl.minvenj.nfi.metal.expression.value.arithmetic.Neg;
+import nl.minvenj.nfi.metal.expression.value.arithmetic.Sub;
+import nl.minvenj.nfi.metal.expression.value.bitwise.ShiftLeft;
+import nl.minvenj.nfi.metal.expression.value.bitwise.ShiftRight;
+import nl.minvenj.nfi.metal.expression.value.reference.First;
+import nl.minvenj.nfi.metal.expression.value.reference.Offset;
+import nl.minvenj.nfi.metal.expression.value.reference.Ref;
+import nl.minvenj.nfi.metal.expression.value.reference.Self;
+import nl.minvenj.nfi.metal.token.Cho;
+import nl.minvenj.nfi.metal.token.Def;
+import nl.minvenj.nfi.metal.token.Nod;
+import nl.minvenj.nfi.metal.token.Opt;
+import nl.minvenj.nfi.metal.token.Pre;
+import nl.minvenj.nfi.metal.token.Rep;
+import nl.minvenj.nfi.metal.token.Seq;
+import nl.minvenj.nfi.metal.token.Str;
+import nl.minvenj.nfi.metal.token.StructSink;
+import nl.minvenj.nfi.metal.token.Token;
 
 public class Shorthand {
 
@@ -84,7 +84,7 @@ public class Shorthand {
     public static Token str(final String n, final Token t, final Encoding e, final StructSink s) { return new Str(n, t, e, s, null); }
     public static Token str(final String n, final Token t, final Encoding e, final StructSink s, final Expression p) { return new Str(n, t, e, s, p); }
     public static Token sub(final Token t) { return sub(t, null); }
-    public static Token sub(final Token t, final ValueExpression a, final Encoding e) { return new nl.minvenj.nfi.ddrx.token.Sub(t, a, e); }
+    public static Token sub(final Token t, final ValueExpression a, final Encoding e) { return new nl.minvenj.nfi.metal.token.Sub(t, a, e); }
     public static Token sub(final Token t, final ValueExpression a) { return sub(t, a, null); }
     public static Token pre(final Token t, final Expression p) { return pre(t, p, null); }
     public static Token pre(final Token t, final Expression p, final Encoding e) { return new Pre(t, p, true, e); }
@@ -101,9 +101,9 @@ public class Shorthand {
     public static BinaryValueExpression sub(final ValueExpression l, final ValueExpression r) { return new Sub(l, r); }
     public static BinaryValueExpression mod(final ValueExpression l, final ValueExpression r) { return new Mod(l, r); }
     public static UnaryValueExpression neg(final ValueExpression v) { return new Neg(v); }
-    public static BinaryValueExpression and(final ValueExpression l, final ValueExpression r) { return new nl.minvenj.nfi.ddrx.expression.value.bitwise.And(l, r); }
-    public static BinaryValueExpression or(final ValueExpression l, final ValueExpression r) { return new nl.minvenj.nfi.ddrx.expression.value.bitwise.Or(l, r); }
-    public static UnaryValueExpression not(final ValueExpression v) { return new nl.minvenj.nfi.ddrx.expression.value.bitwise.Not(v); }
+    public static BinaryValueExpression and(final ValueExpression l, final ValueExpression r) { return new nl.minvenj.nfi.metal.expression.value.bitwise.And(l, r); }
+    public static BinaryValueExpression or(final ValueExpression l, final ValueExpression r) { return new nl.minvenj.nfi.metal.expression.value.bitwise.Or(l, r); }
+    public static UnaryValueExpression not(final ValueExpression v) { return new nl.minvenj.nfi.metal.expression.value.bitwise.Not(v); }
     public static BinaryValueExpression shl(final ValueExpression l, final ValueExpression r) { return new ShiftLeft(l, r); }
     public static BinaryValueExpression shr(final ValueExpression l, final ValueExpression r) { return new ShiftRight(l, r); }
     public static ValueExpression con(final long v) { return con(v, new Encoding()); }

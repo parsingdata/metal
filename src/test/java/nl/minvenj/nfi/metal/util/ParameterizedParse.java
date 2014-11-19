@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.util;
+package nl.minvenj.nfi.metal.util;
 
 import java.io.IOException;
 
-import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
-import nl.minvenj.nfi.ddrx.token.Token;
+import nl.minvenj.nfi.metal.data.Environment;
+import nl.minvenj.nfi.metal.encoding.Encoding;
+import nl.minvenj.nfi.metal.token.Token;
 
 import org.junit.Assert;
 import org.junit.Ignore;

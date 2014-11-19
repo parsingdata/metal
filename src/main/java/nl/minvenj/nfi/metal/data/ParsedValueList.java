@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.data;
+package nl.minvenj.nfi.metal.data;
 
-import nl.minvenj.nfi.ddrx.expression.value.ParsedValue;
+import nl.minvenj.nfi.metal.expression.value.ParsedValue;
 
 public class ParsedValueList {
 

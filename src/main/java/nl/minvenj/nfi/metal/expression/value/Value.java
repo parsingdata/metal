@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.value;
+package nl.minvenj.nfi.metal.expression.value;
 
 import java.math.BigInteger;
 import java.util.BitSet;
 
 import javax.xml.bind.DatatypeConverter;
 
-import nl.minvenj.nfi.ddrx.encoding.ByteOrder;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
+import nl.minvenj.nfi.metal.encoding.ByteOrder;
+import nl.minvenj.nfi.metal.encoding.Encoding;
 
 public class Value {
 

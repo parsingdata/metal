@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.format;
+package nl.minvenj.nfi.metal.format;
 
-import static nl.minvenj.nfi.ddrx.Shorthand.and;
-import static nl.minvenj.nfi.ddrx.Shorthand.cho;
-import static nl.minvenj.nfi.ddrx.Shorthand.con;
-import static nl.minvenj.nfi.ddrx.Shorthand.def;
-import static nl.minvenj.nfi.ddrx.Shorthand.eq;
-import static nl.minvenj.nfi.ddrx.Shorthand.gtNum;
-import static nl.minvenj.nfi.ddrx.Shorthand.ltNum;
-import static nl.minvenj.nfi.ddrx.Shorthand.not;
-import static nl.minvenj.nfi.ddrx.Shorthand.or;
-import static nl.minvenj.nfi.ddrx.Shorthand.ref;
-import static nl.minvenj.nfi.ddrx.Shorthand.rep;
-import static nl.minvenj.nfi.ddrx.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.Shorthand.str;
-import static nl.minvenj.nfi.ddrx.Shorthand.sub;
-import nl.minvenj.nfi.ddrx.token.Token;
+import static nl.minvenj.nfi.metal.Shorthand.and;
+import static nl.minvenj.nfi.metal.Shorthand.cho;
+import static nl.minvenj.nfi.metal.Shorthand.con;
+import static nl.minvenj.nfi.metal.Shorthand.def;
+import static nl.minvenj.nfi.metal.Shorthand.eq;
+import static nl.minvenj.nfi.metal.Shorthand.gtNum;
+import static nl.minvenj.nfi.metal.Shorthand.ltNum;
+import static nl.minvenj.nfi.metal.Shorthand.not;
+import static nl.minvenj.nfi.metal.Shorthand.or;
+import static nl.minvenj.nfi.metal.Shorthand.ref;
+import static nl.minvenj.nfi.metal.Shorthand.rep;
+import static nl.minvenj.nfi.metal.Shorthand.seq;
+import static nl.minvenj.nfi.metal.Shorthand.str;
+import static nl.minvenj.nfi.metal.Shorthand.sub;
+import nl.minvenj.nfi.metal.token.Token;
 
 /*
  * Since nearly every byte of the scan data is individually matched, this

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.logical;
+package nl.minvenj.nfi.metal.expression.logical;
 
-import nl.minvenj.nfi.ddrx.expression.Expression;
+import nl.minvenj.nfi.metal.expression.Expression;
 
 public abstract class UnaryLogicalExpression implements LogicalExpression {
     

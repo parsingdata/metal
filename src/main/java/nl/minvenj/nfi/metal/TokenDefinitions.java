@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx;
+package nl.minvenj.nfi.metal;
 
-import static nl.minvenj.nfi.ddrx.Shorthand.con;
-import static nl.minvenj.nfi.ddrx.Shorthand.def;
-import static nl.minvenj.nfi.ddrx.Shorthand.expTrue;
-import static nl.minvenj.nfi.ddrx.Shorthand.not;
-import static nl.minvenj.nfi.ddrx.Shorthand.ref;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
-import nl.minvenj.nfi.ddrx.token.Token;
+import static nl.minvenj.nfi.metal.Shorthand.con;
+import static nl.minvenj.nfi.metal.Shorthand.def;
+import static nl.minvenj.nfi.metal.Shorthand.expTrue;
+import static nl.minvenj.nfi.metal.Shorthand.not;
+import static nl.minvenj.nfi.metal.Shorthand.ref;
+import nl.minvenj.nfi.metal.encoding.Encoding;
+import nl.minvenj.nfi.metal.token.Token;
 
 public class TokenDefinitions {
 

@@ -14,36 +14,36 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx;
+package nl.minvenj.nfi.metal;
 
-import static nl.minvenj.nfi.ddrx.Shorthand.add;
-import static nl.minvenj.nfi.ddrx.Shorthand.and;
-import static nl.minvenj.nfi.ddrx.Shorthand.cat;
-import static nl.minvenj.nfi.ddrx.Shorthand.cho;
-import static nl.minvenj.nfi.ddrx.Shorthand.con;
-import static nl.minvenj.nfi.ddrx.Shorthand.def;
-import static nl.minvenj.nfi.ddrx.Shorthand.div;
-import static nl.minvenj.nfi.ddrx.Shorthand.eq;
-import static nl.minvenj.nfi.ddrx.Shorthand.eqNum;
-import static nl.minvenj.nfi.ddrx.Shorthand.eqStr;
-import static nl.minvenj.nfi.ddrx.Shorthand.first;
-import static nl.minvenj.nfi.ddrx.Shorthand.gtNum;
-import static nl.minvenj.nfi.ddrx.Shorthand.ltNum;
-import static nl.minvenj.nfi.ddrx.Shorthand.mod;
-import static nl.minvenj.nfi.ddrx.Shorthand.mul;
-import static nl.minvenj.nfi.ddrx.Shorthand.neg;
-import static nl.minvenj.nfi.ddrx.Shorthand.nod;
-import static nl.minvenj.nfi.ddrx.Shorthand.not;
-import static nl.minvenj.nfi.ddrx.Shorthand.opt;
-import static nl.minvenj.nfi.ddrx.Shorthand.or;
-import static nl.minvenj.nfi.ddrx.Shorthand.pre;
-import static nl.minvenj.nfi.ddrx.Shorthand.ref;
-import static nl.minvenj.nfi.ddrx.Shorthand.rep;
-import static nl.minvenj.nfi.ddrx.Shorthand.self;
-import static nl.minvenj.nfi.ddrx.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.Shorthand.str;
-import static nl.minvenj.nfi.ddrx.Shorthand.sub;
-import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
+import static nl.minvenj.nfi.metal.Shorthand.add;
+import static nl.minvenj.nfi.metal.Shorthand.and;
+import static nl.minvenj.nfi.metal.Shorthand.cat;
+import static nl.minvenj.nfi.metal.Shorthand.cho;
+import static nl.minvenj.nfi.metal.Shorthand.con;
+import static nl.minvenj.nfi.metal.Shorthand.def;
+import static nl.minvenj.nfi.metal.Shorthand.div;
+import static nl.minvenj.nfi.metal.Shorthand.eq;
+import static nl.minvenj.nfi.metal.Shorthand.eqNum;
+import static nl.minvenj.nfi.metal.Shorthand.eqStr;
+import static nl.minvenj.nfi.metal.Shorthand.first;
+import static nl.minvenj.nfi.metal.Shorthand.gtNum;
+import static nl.minvenj.nfi.metal.Shorthand.ltNum;
+import static nl.minvenj.nfi.metal.Shorthand.mod;
+import static nl.minvenj.nfi.metal.Shorthand.mul;
+import static nl.minvenj.nfi.metal.Shorthand.neg;
+import static nl.minvenj.nfi.metal.Shorthand.nod;
+import static nl.minvenj.nfi.metal.Shorthand.not;
+import static nl.minvenj.nfi.metal.Shorthand.opt;
+import static nl.minvenj.nfi.metal.Shorthand.or;
+import static nl.minvenj.nfi.metal.Shorthand.pre;
+import static nl.minvenj.nfi.metal.Shorthand.ref;
+import static nl.minvenj.nfi.metal.Shorthand.rep;
+import static nl.minvenj.nfi.metal.Shorthand.self;
+import static nl.minvenj.nfi.metal.Shorthand.seq;
+import static nl.minvenj.nfi.metal.Shorthand.str;
+import static nl.minvenj.nfi.metal.Shorthand.sub;
+import static nl.minvenj.nfi.metal.TokenDefinitions.any;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -51,9 +51,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import nl.minvenj.nfi.ddrx.expression.Expression;
-import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
-import nl.minvenj.nfi.ddrx.token.Token;
+import nl.minvenj.nfi.metal.expression.Expression;
+import nl.minvenj.nfi.metal.expression.value.ValueExpression;
+import nl.minvenj.nfi.metal.token.Token;
 
 @RunWith(JUnit4.class)
 public class ToStringTest {

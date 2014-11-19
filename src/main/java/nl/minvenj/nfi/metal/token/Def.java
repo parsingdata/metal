@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.token;
+package nl.minvenj.nfi.metal.token;
 
 import java.io.IOException;
 
-import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.data.ParseResult;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
-import nl.minvenj.nfi.ddrx.expression.Expression;
-import nl.minvenj.nfi.ddrx.expression.True;
-import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
-import nl.minvenj.nfi.ddrx.expression.value.ParsedValue;
-import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
+import nl.minvenj.nfi.metal.data.Environment;
+import nl.minvenj.nfi.metal.data.ParseResult;
+import nl.minvenj.nfi.metal.encoding.Encoding;
+import nl.minvenj.nfi.metal.expression.Expression;
+import nl.minvenj.nfi.metal.expression.True;
+import nl.minvenj.nfi.metal.expression.value.OptionalValue;
+import nl.minvenj.nfi.metal.expression.value.ParsedValue;
+import nl.minvenj.nfi.metal.expression.value.ValueExpression;
 
 public class Def extends Token {
 

@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx;
+package nl.minvenj.nfi.metal;
 
-import static nl.minvenj.nfi.ddrx.Shorthand.con;
-import static nl.minvenj.nfi.ddrx.Shorthand.eqNum;
-import static nl.minvenj.nfi.ddrx.Shorthand.not;
-import static nl.minvenj.nfi.ddrx.Shorthand.rep;
-import static nl.minvenj.nfi.ddrx.Shorthand.seq;
-import static nl.minvenj.nfi.ddrx.Shorthand.str;
-import static nl.minvenj.nfi.ddrx.TokenDefinitions.any;
-import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
-import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
+import static nl.minvenj.nfi.metal.Shorthand.con;
+import static nl.minvenj.nfi.metal.Shorthand.eqNum;
+import static nl.minvenj.nfi.metal.Shorthand.not;
+import static nl.minvenj.nfi.metal.Shorthand.rep;
+import static nl.minvenj.nfi.metal.Shorthand.seq;
+import static nl.minvenj.nfi.metal.Shorthand.str;
+import static nl.minvenj.nfi.metal.TokenDefinitions.any;
+import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
+import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -36,11 +36,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.data.ParsedValueList;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
-import nl.minvenj.nfi.ddrx.token.StructSink;
-import nl.minvenj.nfi.ddrx.token.Token;
+import nl.minvenj.nfi.metal.data.Environment;
+import nl.minvenj.nfi.metal.data.ParsedValueList;
+import nl.minvenj.nfi.metal.encoding.Encoding;
+import nl.minvenj.nfi.metal.token.StructSink;
+import nl.minvenj.nfi.metal.token.Token;
 
 @RunWith(JUnit4.class)
 public class StructSinksTest {

@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.expression.value.arithmetic;
+package nl.minvenj.nfi.metal.expression.value.arithmetic;
 
 import java.math.BigInteger;
 
-import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
-import nl.minvenj.nfi.ddrx.expression.value.BinaryValueExpression;
-import nl.minvenj.nfi.ddrx.expression.value.ConstantFactory;
-import nl.minvenj.nfi.ddrx.expression.value.OptionalValue;
-import nl.minvenj.nfi.ddrx.expression.value.Value;
-import nl.minvenj.nfi.ddrx.expression.value.ValueExpression;
+import nl.minvenj.nfi.metal.data.Environment;
+import nl.minvenj.nfi.metal.encoding.Encoding;
+import nl.minvenj.nfi.metal.expression.value.BinaryValueExpression;
+import nl.minvenj.nfi.metal.expression.value.ConstantFactory;
+import nl.minvenj.nfi.metal.expression.value.OptionalValue;
+import nl.minvenj.nfi.metal.expression.value.Value;
+import nl.minvenj.nfi.metal.expression.value.ValueExpression;
 
 public class Mod extends BinaryValueExpression {
 

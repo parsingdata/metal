@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx.token;
+package nl.minvenj.nfi.metal.token;
 
 import java.io.IOException;
 
-import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.data.ParseResult;
-import nl.minvenj.nfi.ddrx.encoding.Encoding;
+import nl.minvenj.nfi.metal.data.Environment;
+import nl.minvenj.nfi.metal.data.ParseResult;
+import nl.minvenj.nfi.metal.encoding.Encoding;
 
 public class Seq extends Token {
 

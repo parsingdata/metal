@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.ddrx;
+package nl.minvenj.nfi.metal;
 
-import static nl.minvenj.nfi.ddrx.util.EncodingFactory.enc;
-import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
+import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
+import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import nl.minvenj.nfi.ddrx.format.JPEG;
-import nl.minvenj.nfi.ddrx.format.PNG;
-import nl.minvenj.nfi.ddrx.format.ZIP;
+import nl.minvenj.nfi.metal.format.JPEG;
+import nl.minvenj.nfi.metal.format.PNG;
+import nl.minvenj.nfi.metal.format.ZIP;
 
 import org.junit.Assert;
 import org.junit.Test;
