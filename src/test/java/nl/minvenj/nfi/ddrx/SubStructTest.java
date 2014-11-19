@@ -92,7 +92,7 @@ public class SubStructTest {
             Assert.assertEquals(_offsets[i], order.head.getOffset());
             order = order.tail;
         }
-        Assert.assertNull(order);
+        Assert.assertTrue(order.isEmpty());
     }
 
 }

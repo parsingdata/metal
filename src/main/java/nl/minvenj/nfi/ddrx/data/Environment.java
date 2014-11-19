@@ -29,7 +29,11 @@ public class Environment {
     }
 
     public Environment(final ByteStream input, final long offset) {
-        this(new ParsedValueList(), input, offset);
+        this(ParsedValueList.EMPTY, input, offset);
+    }
+
+    public Environment(final ByteStream input) {
+        this(ParsedValueList.EMPTY, input, 0L);
     }
 
     @Override

@@ -42,15 +42,15 @@ public class ParsedValueListTest {
 
     public ParsedValueListTest() {
         v1 = val("s1", 'a');
-        l1 = new ParsedValueList(v1);
+        l1 = ParsedValueList.create(v1);
         v2 = val("s1", 'b');
-        l2 = new ParsedValueList(v2, l1);
+        l2 = l1.add(v2);
         v3 = val("s2", 'a');
-        l3 = new ParsedValueList(v3, l2);
+        l3 = l2.add(v3);
         v4 = val("s1", 'd');
-        l4 = new ParsedValueList(v4, l3);
+        l4 = l3.add(v4);
         v5 = val("s1", 'e');
-        l5 = new ParsedValueList(v5, l4);
+        l5 = l4.add(v5);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class ParsedValueListTest {
         Assert.assertEquals(l2.head, v2);
         Assert.assertEquals(l2.tail, l1);
         Assert.assertEquals(l1.head, v1);
-        Assert.assertEquals(l1.tail, null);
+        Assert.assertTrue(l1.tail.isEmpty());
     }
 
     @Test
@@ -82,21 +82,20 @@ public class ParsedValueListTest {
         final ParsedValueList res = l5.getAll("a");
         Assert.assertEquals(res.head, v3);
         Assert.assertEquals(res.tail.head, v1);
-        Assert.assertNull(res.tail.tail);
+        Assert.assertTrue(res.tail.tail.isEmpty());
     }
 
     @Test
     public void getMultiSingleMatch() {
         final ParsedValueList res = l5.getAll("d");
         Assert.assertEquals(res.head, v4);
-        Assert.assertNull(res.tail);
+        Assert.assertTrue(res.tail.isEmpty());
     }
 
     @Test
     public void getMultiNoMatch() {
         final ParsedValueList res = l5.getAll("f");
-        Assert.assertNull(res.head);
-        Assert.assertNull(res.tail);
+        Assert.assertTrue(res.isEmpty());
     }
 
     @Test
@@ -104,14 +103,13 @@ public class ParsedValueListTest {
         final ParsedValueList res = l5.getValuesSincePrefix(v3);
         Assert.assertEquals(res.head, v5);
         Assert.assertEquals(res.tail.head, v4);
-        Assert.assertNull(res.tail.tail);
+        Assert.assertTrue(res.tail.tail.isEmpty());
     }
 
     @Test
     public void getScopedNoMatch() {
         final ParsedValueList res = l5.getValuesSincePrefix(v5);
-        Assert.assertNull(res.head);
-        Assert.assertNull(res.tail);
+        Assert.assertTrue(res.isEmpty());
     }
 
     @Test
@@ -122,23 +120,23 @@ public class ParsedValueListTest {
         Assert.assertEquals(rev.tail.tail.head, v3);
         Assert.assertEquals(rev.tail.tail.tail.head, v4);
         Assert.assertEquals(rev.tail.tail.tail.tail.head, v5);
-        Assert.assertNull(rev.tail.tail.tail.tail.tail);
+        Assert.assertTrue(rev.tail.tail.tail.tail.tail.isEmpty());
     }
 
     @Test
     public void reverseEmpty() {
-        Assert.assertTrue(new ParsedValueList().reverse().isEmpty());
+        Assert.assertTrue(ParsedValueList.EMPTY.reverse().isEmpty());
     }
 
     @Test
     public void size() {
-        Assert.assertEquals(1, l1.size());
-        Assert.assertEquals(5, l5.size());
+        Assert.assertEquals(1, l1.size);
+        Assert.assertEquals(5, l5.size);
     }
 
     @Test
     public void sizeEmpty() {
-        Assert.assertEquals(0, new ParsedValueList().size());
+        Assert.assertEquals(0, ParsedValueList.EMPTY.size);
     }
 
     private ParsedValue val(final String s, final char c) {

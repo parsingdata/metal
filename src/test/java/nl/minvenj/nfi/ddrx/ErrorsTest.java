@@ -25,15 +25,15 @@ import static nl.minvenj.nfi.ddrx.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
-import nl.minvenj.nfi.ddrx.data.ByteStream;
-import nl.minvenj.nfi.ddrx.data.Environment;
-import nl.minvenj.nfi.ddrx.data.ParsedValueList;
-import nl.minvenj.nfi.ddrx.token.Token;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import nl.minvenj.nfi.ddrx.data.ByteStream;
+import nl.minvenj.nfi.ddrx.data.Environment;
+import nl.minvenj.nfi.ddrx.data.ParsedValueList;
+import nl.minvenj.nfi.ddrx.token.Token;
 
 @RunWith(JUnit4.class)
 public class ErrorsTest {
@@ -49,9 +49,9 @@ public class ErrorsTest {
         final Token t = any("a");
         final ByteStream stream = new ByteStream() {
             @Override
-            public int read(long offset, byte[] data) throws IOException { throw new IOException(); }
+            public int read(final long offset, final byte[] data) throws IOException { throw new IOException(); }
         };
-        final Environment env = new Environment(new ParsedValueList(), stream, 0L);
+        final Environment env = new Environment(ParsedValueList.EMPTY, stream, 0L);
         t.parse(env, enc());
     }
 

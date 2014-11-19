@@ -22,50 +22,54 @@ public class ParsedValueList {
 
     public final ParsedValue head;
     public final ParsedValueList tail;
+    public final long size;
 
-    public ParsedValueList() {
-        this(null, null);
+    public static final ParsedValueList EMPTY = new ParsedValueList();
+
+    private ParsedValueList() {
+        head = null;
+        tail = null;
+        size = 0;
     }
 
-    public ParsedValueList(final ParsedValue head) {
-        this(head, null);
-    }
-
-    public ParsedValueList(final ParsedValue head, final ParsedValueList tail){
+    private ParsedValueList(final ParsedValue head, final ParsedValueList tail) {
+        assert head != null : "Argument head may not be null";
+        assert tail != null : "Argument tail may not be null";
         this.head = head;
-        if (tail != null && tail.isEmpty()) {
-            this.tail = null;
-        } else {
-            this.tail = tail;
-        }
+        this.tail = tail;
+        size = tail.size + 1;
+    }
+
+    public static ParsedValueList create(final ParsedValue head) {
+        return EMPTY.add(head);
+    }
+
+    public ParsedValueList add(final ParsedValue head) {
+        if (head == null) { throw new IllegalArgumentException("Argument head may not be null."); }
+        return new ParsedValueList(head, this);
     }
 
     public ParsedValue get(final String name) {
-        if (head != null && head.matches(name)) {
+        if (isEmpty()) { return null; }
+        if (head.matches(name)) {
             return head;
-        } else if (tail != null) {
-            return tail.get(name);
         } else {
-            return null;
+            return tail.get(name);
         }
     }
 
     public ParsedValueList getAll(final String name) {
-        final ParsedValueList t = tail != null ? tail.getAll(name) : null;
-        if (head != null && head.matches(name)) {
-            return new ParsedValueList(head, t != null && t.head != null ? t : null);
-        } else {
-            return t != null ? t : new ParsedValueList();
-        }
+        if (isEmpty()) { return this; }
+        final ParsedValueList t = tail.getAll(name);
+        if (head.matches(name)) { return t.add(head); }
+        else { return t; }
     }
 
     public ParsedValueList getValuesSincePrefix(final ParsedValue prefix) {
-        if (head != null && head != prefix) {
-            final ParsedValueList t = tail != null ? tail.getValuesSincePrefix(prefix) : null;
-            return new ParsedValueList(head, t != null && t.head != null ? t : null);
-        } else {
-            return new ParsedValueList();
-        }
+        if (isEmpty()) { return this; }
+        if (head == prefix) { return EMPTY; }
+        final ParsedValueList t = tail.getValuesSincePrefix(prefix);
+        return t.add(head);
     }
 
     public ParsedValue current() {
@@ -73,41 +77,34 @@ public class ParsedValueList {
     }
 
     public boolean isEmpty() {
-        return head == null && tail == null;
+        return size == 0;
     }
 
     public ParsedValue getFirst() {
-        if (head == null) { return null; }
-        if (tail == null) { return head; }
+        if (isEmpty()) { return null; }
+        if (tail.isEmpty()) { return head; }
         return tail.getFirst();
     }
 
     public boolean containsOffset(final long offset) {
-        if (head == null) { return false; }
+        if (isEmpty()) { return false; }
         if (head.getOffset() == offset) { return true; }
-        if (tail == null) { return false; }
         return tail.containsOffset(offset);
     }
 
     public ParsedValueList reverse() {
         if (isEmpty()) { return this; }
-        return reverse(tail, new ParsedValueList(head, null));
+        return reverse(tail, create(head));
     }
 
-    private ParsedValueList reverse(final ParsedValueList head, final ParsedValueList tail) {
-        if (head == null) { return tail; }
-        return reverse(head.tail, new ParsedValueList(head.head, tail));
-    }
-
-    public long size() {
-        if (head == null) { return 0L; }
-        if (tail == null) { return 1L; }
-        return 1L + tail.size();
+    private ParsedValueList reverse(final ParsedValueList oldList, final ParsedValueList newList) {
+        if (oldList.isEmpty()) { return newList; }
+        return reverse(oldList.tail, newList.add(oldList.head));
     }
 
     @Override
     public String toString() {
-        return (head != null ? ">" + head : "") + (tail != null ? tail.toString() : "");
+        return isEmpty() ? "" : ">" + head + tail.toString();
     }
 
 }

@@ -31,16 +31,16 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.data.ParsedValueList;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.token.StructSink;
 import nl.minvenj.nfi.ddrx.token.Token;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class StructSinksTest {
@@ -59,13 +59,9 @@ public class StructSinksTest {
     public void structSinkMultiOverRep() throws IOException {
         str("outer", rep(createToken(0L, 2L)), new StructSink() {
             @Override
-            public void handleStruct(String scopeName, Environment env, Encoding enc, ParsedValueList struct) {
+            public void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParsedValueList struct) {
                 Assert.assertEquals(0L, struct.tail.tail.tail.head.getOffset());
-                Assert.assertNotNull(struct.head);
-                Assert.assertNotNull(struct.tail.head);
-                Assert.assertNotNull(struct.tail.tail.head);
-                Assert.assertNotNull(struct.tail.tail.tail.head);
-                Assert.assertNull(struct.tail.tail.tail.tail);
+                Assert.assertTrue(struct.tail.tail.tail.tail.isEmpty());
                 ParsedValueList cur = struct;
                 for (int i = 0; i < 4; i++) {
                     Assert.assertEquals((i & 1) == 0 ? "b" : "a", cur.head.getName());
@@ -81,24 +77,21 @@ public class StructSinksTest {
 
         return str("test", seq(any("a"), any("b")), new StructSink() {
             @Override
-            public void handleStruct(String scopeName, Environment env, Encoding enc, ParsedValueList struct) {
+            public void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParsedValueList struct) {
                 Assert.assertEquals(offsetDeque.pop().longValue(), struct.tail.head.getOffset());
-                Assert.assertNotNull(struct.head);
-                Assert.assertNotNull(struct.tail.head);
-                Assert.assertNull(struct.tail.tail);
+                Assert.assertTrue(struct.tail.tail.isEmpty());
                 Assert.assertTrue(struct.tail.head.getName().equals("a"));
                 Assert.assertTrue(struct.head.getName().equals("b"));
             }
         });
     }
-    
+
     @Test
     public void structSinkWithPredicate() throws IOException {
         rep(str("outer", any("a"), new StructSink() {
             @Override
-            public void handleStruct(String scopeName, Environment env, Encoding enc, ParsedValueList struct) {
-                Assert.assertNotNull(struct.head);
-                Assert.assertNull(struct.tail);
+            public void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParsedValueList struct) {
+                Assert.assertTrue(struct.tail.isEmpty());
                 Assert.assertTrue(struct.head.asNumeric().intValue() == 2 || struct.head.asNumeric().intValue() == 4);
             }}, not(eqNum(con(1))))).parse(stream(1, 2, 1, 4), enc());
     }

@@ -20,7 +20,6 @@ import java.io.IOException;
 
 import nl.minvenj.nfi.ddrx.data.Environment;
 import nl.minvenj.nfi.ddrx.data.ParseResult;
-import nl.minvenj.nfi.ddrx.data.ParsedValueList;
 import nl.minvenj.nfi.ddrx.encoding.Encoding;
 import nl.minvenj.nfi.ddrx.expression.Expression;
 import nl.minvenj.nfi.ddrx.expression.True;
@@ -53,7 +52,7 @@ public class Def extends Token {
         if (env.input.read(env.offset, data) != data.length) {
             return new ParseResult(false, env);
         }
-        final Environment newEnv = new Environment(new ParsedValueList(new ParsedValue(scope, _name, env.offset, data, enc), env.order), env.input, env.offset+size.get().asNumeric().intValue());
+        final Environment newEnv = new Environment(env.order.add(new ParsedValue(scope, _name, env.offset, data, enc)), env.input, env.offset + size.get().asNumeric().intValue());
         return _pred.eval(newEnv, enc) ? new ParseResult(true, newEnv) : new ParseResult(false, env);
     }
 
