@@ -3,7 +3,7 @@
   <groupId>nl.minvenj.nfi.metal</groupId>
   <artifactId>metal</artifactId>
   <name>metal</name>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <url>http://forensicinstitute.nl</url>
 
