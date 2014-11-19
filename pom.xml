@@ -3,8 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>nl.minvenj.nfi.metal</groupId>
   <artifactId>metal</artifactId>
+  <name>metal</name>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
+  <url>http://forensicinstitute.nl</url>
+
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
@@ -16,21 +19,25 @@
   <properties>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
+    <junit.version>4.11</junit.version>
+    <jacoco.version>0.7.2.201409121644</jacoco.version>
   </properties>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.2.201409121644</version>
+        <version>${jacoco.version}</version>
         <executions>
           <execution>
             <goals>
@@ -63,7 +70,7 @@
                     <groupId>org.jacoco</groupId>
                     <artifactId> jacoco-maven-plugin 
                     </artifactId>
-                    <versionRange> [0.7.2.201409121644,) 
+                    <versionRange> [${jacoco.version},) 
                     </versionRange>
                     <goals>
                       <goal>prepare-agent</goal>
