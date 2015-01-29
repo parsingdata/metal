@@ -25,6 +25,7 @@
     <findbugs.version>3.0.0</findbugs.version>
     <pmd.version>3.3</pmd.version>
     <jxr.version>2.5</jxr.version>
+    <javadoc.version>2.10.1</javadoc.version>
   </properties>
 
   <dependencies>
@@ -119,6 +120,11 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
         <version>${jxr.version}</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>${javadoc.version}</version>
       </plugin>
     </plugins>
   </reporting>
