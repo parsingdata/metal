@@ -29,19 +29,17 @@ public class Pre extends Token {
 
     private final Token _op;
     private final Expression _pred;
-    private final boolean _onFalsePrecondition;
 
-    public Pre(final Token op, final Expression pred, final boolean onFalsePrecondition, final Encoding enc) {
+    public Pre(final Token op, final Expression pred, final Encoding enc) {
         super(enc);
         if (op == null) { throw new IllegalArgumentException("Argument op may not be null."); }
         _op = op;
         _pred = pred == null ? expTrue() : pred;
-        _onFalsePrecondition = onFalsePrecondition;
     }
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        if (!_pred.eval(env, enc)) { return new ParseResult(_onFalsePrecondition, env); }
+        if (!_pred.eval(env, enc)) { return new ParseResult(true, env); }
         return _op.parse(env, enc);
     }
 
