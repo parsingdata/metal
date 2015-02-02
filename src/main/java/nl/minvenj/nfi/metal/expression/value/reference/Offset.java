@@ -37,4 +37,9 @@ public class Offset implements ValueExpression {
         return ref != null ? OptionalValue.of(ConstantFactory.createFromNumeric(ref.getOffset(), ref.getEncoding())) : OptionalValue.empty();
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _name + ")";
+    }
+
 }
