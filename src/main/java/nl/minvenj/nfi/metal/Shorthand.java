@@ -64,7 +64,7 @@ import nl.minvenj.nfi.metal.token.Seq;
 import nl.minvenj.nfi.metal.token.Str;
 import nl.minvenj.nfi.metal.token.StructSink;
 import nl.minvenj.nfi.metal.token.Token;
-import nl.minvenj.nfi.metal.token.Whl;
+import nl.minvenj.nfi.metal.token.While;
 
 public class Shorthand {
 
@@ -91,7 +91,7 @@ public class Shorthand {
     public static Token pre(final Token t, final Expression p) { return pre(t, p, null); }
     public static Token pre(final Token t, final Expression p, final Encoding e) { return new Pre(t, p, e); }
     public static Token whl(final Token t, final Expression p) { return whl(t, p, null); }
-    public static Token whl(final Token t, final Expression p, final Encoding e) { return new Whl(t, p, e); }
+    public static Token whl(final Token t, final Expression p, final Encoding e) { return new While(t, p, e); }
     public static Token opt(final Token t) { return opt(t, null); }
     public static Token opt(final Token t, final Encoding e) { return new Opt(t, e); }
     public static Token nod(final ValueExpression s) { return new Nod(s, null); }

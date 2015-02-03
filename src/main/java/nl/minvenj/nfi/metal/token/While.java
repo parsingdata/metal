@@ -25,12 +25,12 @@ import nl.minvenj.nfi.metal.data.ParseResult;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.expression.Expression;
 
-public class Whl extends Token {
+public class While extends Token {
 
     private final Token _op;
     private final Expression _pred;
 
-    public Whl(final Token op, final Expression pred, final Encoding enc) {
+    public While(final Token op, final Expression pred, final Encoding enc) {
         super(enc);
         if (op == null) { throw new IllegalArgumentException("Argument op may not be null."); }
         _op = op;
@@ -39,8 +39,7 @@ public class Whl extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final boolean predicate = _pred.eval(env, enc);
-        if (!predicate) { return new ParseResult(true, env); }
+        if (!_pred.eval(env, enc)) { return new ParseResult(true, env); }
         final ParseResult res = _op.parse(scope, env, enc);
         if (!res.succeeded()) { return new ParseResult(false, env); }
         return parse(scope, res.getEnvironment(), enc);
