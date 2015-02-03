@@ -35,21 +35,21 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.junit.runners.Parameterized.Parameters;
+
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.expression.comparison.ComparisonExpression;
 import nl.minvenj.nfi.metal.token.Token;
 import nl.minvenj.nfi.metal.util.ParameterizedParse;
 
-import org.junit.runners.Parameterized.Parameters;
-
 public class ComparisonExpressionSemanticsTest extends ParameterizedParse {
 
     @Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-            { "1 == 1", numCom(1, eqNum(ref("a"))), stream(1, 1), enc(), true },
-            { "2 == 1", numCom(1, eqNum(ref("a"))), stream(1, 2), enc(), false },
+            { "1 == 1(eqNum)", numCom(1, eqNum(ref("a"))), stream(1, 1), enc(), true },
+            { "2 == 1(eqNum)", numCom(1, eqNum(ref("a"))), stream(1, 2), enc(), false },
             { "1 > 1", numCom(1, gtNum(ref("a"))), stream(1, 1), enc(), false },
             { "2 > 1", numCom(1, gtNum(ref("a"))), stream(1, 2), enc(), true },
             { "1 > 2", numCom(1, gtNum(ref("a"))), stream(2, 1), enc(), false },
@@ -58,8 +58,8 @@ public class ComparisonExpressionSemanticsTest extends ParameterizedParse {
             { "1 < 2", numCom(1, ltNum(ref("a"))), stream(2, 1), enc(), true },
             { "\"abc\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabc", Charset.forName("ISO646-US")), enc(), true },
             { "\"abd\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabd", Charset.forName("ISO646-US")), enc(), false },
-            { "1 == 1", valCom(1, eq(ref("a"))), stream(1, 1), enc(), true },
-            { "2 == 1", valCom(1, eq(ref("a"))), stream(1, 2), enc(), false },
+            { "1 == 1(eq)", valCom(1, eq(ref("a"))), stream(1, 1), enc(), true },
+            { "2 == 1(eq)", valCom(1, eq(ref("a"))), stream(1, 2), enc(), false },
             { "1 == 1 with self", valCom(1, eq(self, ref("a"))), stream(1, 1), enc(), true },
             { "1 == 2 with self", valCom(1, eq(self, ref("a"))), stream(1, 2), enc(), false }
         });
