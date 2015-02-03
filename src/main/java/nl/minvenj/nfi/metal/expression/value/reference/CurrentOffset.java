@@ -20,26 +20,18 @@ import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.expression.value.ConstantFactory;
 import nl.minvenj.nfi.metal.expression.value.OptionalValue;
-import nl.minvenj.nfi.metal.expression.value.ParsedValue;
 import nl.minvenj.nfi.metal.expression.value.ValueExpression;
 
-public class Offset implements ValueExpression {
-    
-    private final String _name;
-    
-    public Offset(final String name) {
-        _name = name;
-    }
+public class CurrentOffset implements ValueExpression {
 
     @Override
     public OptionalValue eval(final Environment env, final Encoding enc) {
-        final ParsedValue ref = env.order.get(_name);
-        return ref != null ? OptionalValue.of(ConstantFactory.createFromNumeric(ref.getOffset(), ref.getEncoding())) : OptionalValue.empty();
+        return OptionalValue.of(ConstantFactory.createFromNumeric(env.offset, new Encoding(true)));
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _name + ")";
+        return getClass().getSimpleName();
     }
 
 }

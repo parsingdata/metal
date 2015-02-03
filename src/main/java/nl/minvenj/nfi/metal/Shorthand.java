@@ -49,6 +49,7 @@ import nl.minvenj.nfi.metal.expression.value.arithmetic.Neg;
 import nl.minvenj.nfi.metal.expression.value.arithmetic.Sub;
 import nl.minvenj.nfi.metal.expression.value.bitwise.ShiftLeft;
 import nl.minvenj.nfi.metal.expression.value.bitwise.ShiftRight;
+import nl.minvenj.nfi.metal.expression.value.reference.CurrentOffset;
 import nl.minvenj.nfi.metal.expression.value.reference.First;
 import nl.minvenj.nfi.metal.expression.value.reference.Offset;
 import nl.minvenj.nfi.metal.expression.value.reference.Ref;
@@ -63,6 +64,7 @@ import nl.minvenj.nfi.metal.token.Seq;
 import nl.minvenj.nfi.metal.token.Str;
 import nl.minvenj.nfi.metal.token.StructSink;
 import nl.minvenj.nfi.metal.token.Token;
+import nl.minvenj.nfi.metal.token.While;
 
 public class Shorthand {
 
@@ -87,9 +89,9 @@ public class Shorthand {
     public static Token sub(final Token t, final ValueExpression a, final Encoding e) { return new nl.minvenj.nfi.metal.token.Sub(t, a, e); }
     public static Token sub(final Token t, final ValueExpression a) { return sub(t, a, null); }
     public static Token pre(final Token t, final Expression p) { return pre(t, p, null); }
-    public static Token pre(final Token t, final Expression p, final Encoding e) { return new Pre(t, p, true, e); }
-    public static Token pre(final Token t, final Expression p, final boolean o) { return pre(t, p, o, null); }
-    public static Token pre(final Token t, final Expression p, final boolean o, final Encoding e) { return new Pre(t, p, o, e); }
+    public static Token pre(final Token t, final Expression p, final Encoding e) { return new Pre(t, p, e); }
+    public static Token whl(final Token t, final Expression p) { return whl(t, p, null); }
+    public static Token whl(final Token t, final Expression p, final Encoding e) { return new While(t, p, e); }
     public static Token opt(final Token t) { return opt(t, null); }
     public static Token opt(final Token t, final Encoding e) { return new Opt(t, e); }
     public static Token nod(final ValueExpression s) { return new Nod(s, null); }
@@ -117,6 +119,7 @@ public class Shorthand {
     public static ValueExpression ref(final String s) { return new Ref(s); }
     public static ValueExpression first(final String s) { return new First(s); }
     public static ValueExpression offset(final String s) { return new Offset(s); }
+    public static final ValueExpression currentOffset = new CurrentOffset();
     public static ValueExpression cat(final ValueExpression l, final ValueExpression r) { return new Cat(l, r); }
     public static ValueExpression reduce(final String name, final Reducer reducer) { return new Reduce(name, reducer); }
 

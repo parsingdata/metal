@@ -16,12 +16,18 @@
 
 package nl.minvenj.nfi.metal;
 
+import static nl.minvenj.nfi.metal.Shorthand.add;
 import static nl.minvenj.nfi.metal.Shorthand.con;
+import static nl.minvenj.nfi.metal.Shorthand.currentOffset;
 import static nl.minvenj.nfi.metal.Shorthand.def;
+import static nl.minvenj.nfi.metal.Shorthand.eq;
 import static nl.minvenj.nfi.metal.Shorthand.eqNum;
+import static nl.minvenj.nfi.metal.Shorthand.ltNum;
+import static nl.minvenj.nfi.metal.Shorthand.offset;
 import static nl.minvenj.nfi.metal.Shorthand.pre;
 import static nl.minvenj.nfi.metal.Shorthand.ref;
 import static nl.minvenj.nfi.metal.Shorthand.seq;
+import static nl.minvenj.nfi.metal.Shorthand.whl;
 import static nl.minvenj.nfi.metal.TokenDefinitions.any;
 import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
 import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
@@ -29,12 +35,12 @@ import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.runners.Parameterized.Parameters;
-
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.token.Token;
 import nl.minvenj.nfi.metal.util.ParameterizedParse;
+
+import org.junit.runners.Parameterized.Parameters;
 
 public class ConditionalTokenTest extends ParameterizedParse {
 
@@ -44,7 +50,11 @@ public class ConditionalTokenTest extends ParameterizedParse {
             { "[1, 2, 3] a b c", preToken, stream(1, 2, 3), enc(), true },
             { "[2, 3] a c", preToken, stream(2, 3), enc(), true },
             { "[1, 2, 2] a b c(error)", preToken, stream(1, 2, 2), enc(), false },
-            { "[2, 2] a c(error)", preToken, stream(2, 2), enc(), false }
+            { "[2, 2] a c(error)", preToken, stream(2, 2), enc(), false },
+            { "[2, 1, 3, -1] a (a x any) -1", whileToken, stream(2, 1, 3, -1), enc(), true },
+            { "[0, -1] a (a x any) -1", whileToken, stream(0, -1), enc(), true },
+            { "[2, -1, -1, 0, -1, -1] a (a x any) -1(error)", whileToken, stream(2, -1, -1, 0, -1, -1), enc(), false },
+            { "[0, 0, -1] a (a x any) -1(error)", whileToken, stream(0, 0, -1), enc(), false }
         });
     }
 
@@ -55,5 +65,9 @@ public class ConditionalTokenTest extends ParameterizedParse {
     private static final Token preToken = seq(any("a"),
                                               pre(any("b"), eqNum(ref("a"), con(1))),
                                               def("c", con(1), eqNum(con(3))));
+    
+    private static final Token whileToken = seq(any("size"),
+                                                whl(any("value"), ltNum(currentOffset, add(ref("size"), add(offset("size"), con(1))))),
+                                                def("footer", con(1), eq(con(0xff))));
 
 }
