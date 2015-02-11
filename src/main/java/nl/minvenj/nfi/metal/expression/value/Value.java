@@ -30,13 +30,13 @@ public class Value {
     private final Encoding _enc;
 
     public Value(final byte[] data, final Encoding enc) {
-        _data = data;
+        _data = data.clone();
         if (enc == null) { throw new IllegalArgumentException("Argument enc may not be null."); }
         _enc = enc;
     }
 
     public byte[] getValue() {
-        return _data;
+        return _data.clone();
     }
 
     public BigInteger asNumeric() {
