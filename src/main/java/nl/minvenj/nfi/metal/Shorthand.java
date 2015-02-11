@@ -77,25 +77,27 @@ public class Shorthand {
     public static Token def(final String name, final long size, final Encoding enc) { return def(name, size, null, enc); }
     public static Token def(final String name, final long size) { return def(name, size, null, null); }
     public static Token cho(final Token l, final Token r, final Token... tokens) { return tokens.length == 0 ? new Cho(l, r, null) : cho(l, cho(r, tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length))); }
+    public static Token rep(final Token t, final Encoding e) { return new Rep(t, e); }
     public static Token rep(final Token t) { return new Rep(t, null); }
     public static Token seq(final Token l, final Token r, final Token... tokens) { return tokens.length == 0 ? new Seq(l, r, null) : seq(l, seq(r, tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length))); }
-    public static Token str(final String n, final Token t) { return str(n, t, null, null, null); }
     public static Token str(final String n, final Token t, final Encoding e) { return str(n, t, e, null, null); }
-    public static Token str(final String n, final Token t, final StructSink s) { return str(n, t, null, s, null); }
-    public static Token str(final String n, final Token t, final StructSink s, final Expression p) { return str(n, t, null, s, p); }
+    public static Token str(final String n, final Token t) { return str(n, t, null, null, null); }
     public static Token str(final String n, final Token t, final Encoding e, final StructSink s) { return new Str(n, t, e, s, null); }
+    public static Token str(final String n, final Token t, final StructSink s) { return str(n, t, null, s, null); }
     public static Token str(final String n, final Token t, final Encoding e, final StructSink s, final Expression p) { return new Str(n, t, e, s, p); }
-    public static Token sub(final Token t) { return sub(t, null); }
+    public static Token str(final String n, final Token t, final StructSink s, final Expression p) { return str(n, t, null, s, p); }
+    public static Token sub(final Token t, final Encoding e) { return sub(t, null, e); }
+    public static Token sub(final Token t) { return sub(t, null, null); }
     public static Token sub(final Token t, final ValueExpression a, final Encoding e) { return new nl.minvenj.nfi.metal.token.Sub(t, a, e); }
     public static Token sub(final Token t, final ValueExpression a) { return sub(t, a, null); }
-    public static Token pre(final Token t, final Expression p) { return pre(t, p, null); }
     public static Token pre(final Token t, final Expression p, final Encoding e) { return new Pre(t, p, e); }
-    public static Token whl(final Token t, final Expression p) { return whl(t, p, null); }
+    public static Token pre(final Token t, final Expression p) { return pre(t, p, null); }
     public static Token whl(final Token t, final Expression p, final Encoding e) { return new While(t, p, e); }
-    public static Token opt(final Token t) { return opt(t, null); }
+    public static Token whl(final Token t, final Expression p) { return whl(t, p, null); }
     public static Token opt(final Token t, final Encoding e) { return new Opt(t, e); }
-    public static Token nod(final ValueExpression s) { return new Nod(s, null); }
+    public static Token opt(final Token t) { return opt(t, null); }
     public static Token nod(final ValueExpression s, final Encoding e) { return new Nod(s, e); }
+    public static Token nod(final ValueExpression s) { return new Nod(s, null); }
 
     public static BinaryValueExpression add(final ValueExpression l, final ValueExpression r) { return new Add(l, r); }
     public static BinaryValueExpression div(final ValueExpression l, final ValueExpression r) { return new Div(l, r); }
