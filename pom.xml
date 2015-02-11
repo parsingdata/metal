@@ -110,6 +110,26 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
         <version>${pmd.version}</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>pmd</report>
+            </reports>
+            <configuration>
+              <rulesets>
+                <ruleset>${pom.basedir}/pmd-rules.xml</ruleset>
+              </rulesets>
+              <excludes>
+                <exclude>**nl/minvenj/nfi/metal/format/*.java</exclude>
+              </excludes>
+            </configuration>
+          </reportSet>
+          <reportSet>
+            <reports>
+              <report>cpd</report>
+            </reports>
+          </reportSet>
+        </reportSets>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
