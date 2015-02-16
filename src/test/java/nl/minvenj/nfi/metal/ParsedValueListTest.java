@@ -24,7 +24,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import nl.minvenj.nfi.metal.data.ParsedValueList;
-import nl.minvenj.nfi.metal.expression.value.ParsedValue;
+import nl.minvenj.nfi.metal.expression.value.ParseValue;
 
 @RunWith(JUnit4.class)
 public class ParsedValueListTest {
@@ -34,11 +34,11 @@ public class ParsedValueListTest {
     private final ParsedValueList l3;
     private final ParsedValueList l4;
     private final ParsedValueList l5;
-    private final ParsedValue v1;
-    private final ParsedValue v2;
-    private final ParsedValue v3;
-    private final ParsedValue v4;
-    private final ParsedValue v5;
+    private final ParseValue v1;
+    private final ParseValue v2;
+    private final ParseValue v3;
+    private final ParseValue v4;
+    private final ParseValue v5;
 
     public ParsedValueListTest() {
         v1 = val("s1", 'a');
@@ -139,8 +139,8 @@ public class ParsedValueListTest {
         Assert.assertEquals(0, ParsedValueList.EMPTY.size);
     }
 
-    private ParsedValue val(final String s, final char c) {
-        return new ParsedValue(s, Character.toString(c), 0L, new byte[] { (byte) c }, enc());
+    private ParseValue val(final String s, final char c) {
+        return new ParseValue(s, Character.toString(c), 0L, new byte[] { (byte) c }, enc());
     }
 
 }

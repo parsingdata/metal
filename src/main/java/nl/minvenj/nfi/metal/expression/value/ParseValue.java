@@ -18,7 +18,7 @@ package nl.minvenj.nfi.metal.expression.value;
 
 import nl.minvenj.nfi.metal.encoding.Encoding;
 
-public class ParsedValue extends Value {
+public class ParseValue extends Value {
     
     public static final String SEPARATOR = ".";
     
@@ -26,7 +26,7 @@ public class ParsedValue extends Value {
     private final String _name;
     private final long _offset;
     
-    public ParsedValue(final String scope, final String name, final long offset, final byte[] data, final Encoding enc) {
+    public ParseValue(final String scope, final String name, final long offset, final byte[] data, final Encoding enc) {
         super(data, enc);
         _scope = scope;
         _name = name;

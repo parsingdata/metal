@@ -16,11 +16,11 @@
 
 package nl.minvenj.nfi.metal.data;
 
-import nl.minvenj.nfi.metal.expression.value.ParsedValue;
+import nl.minvenj.nfi.metal.expression.value.ParseValue;
 
 public class ParsedValueList {
 
-    public final ParsedValue head;
+    public final ParseValue head;
     public final ParsedValueList tail;
     public final long size;
 
@@ -32,7 +32,7 @@ public class ParsedValueList {
         size = 0;
     }
 
-    private ParsedValueList(final ParsedValue head, final ParsedValueList tail) {
+    private ParsedValueList(final ParseValue head, final ParsedValueList tail) {
         assert head != null : "Argument head may not be null";
         assert tail != null : "Argument tail may not be null";
         this.head = head;
@@ -40,16 +40,16 @@ public class ParsedValueList {
         size = tail.size + 1;
     }
 
-    public static ParsedValueList create(final ParsedValue head) {
+    public static ParsedValueList create(final ParseValue head) {
         return EMPTY.add(head);
     }
 
-    public ParsedValueList add(final ParsedValue head) {
+    public ParsedValueList add(final ParseValue head) {
         if (head == null) { throw new IllegalArgumentException("Argument head may not be null."); }
         return new ParsedValueList(head, this);
     }
 
-    public ParsedValue get(final String name) {
+    public ParseValue get(final String name) {
         if (isEmpty()) { return null; }
         if (head.matches(name)) {
             return head;
@@ -65,14 +65,14 @@ public class ParsedValueList {
         else { return t; }
     }
 
-    public ParsedValueList getValuesSincePrefix(final ParsedValue prefix) {
+    public ParsedValueList getValuesSincePrefix(final ParseValue prefix) {
         if (isEmpty()) { return this; }
         if (head == prefix) { return EMPTY; }
         final ParsedValueList t = tail.getValuesSincePrefix(prefix);
         return t.add(head);
     }
 
-    public ParsedValue current() {
+    public ParseValue current() {
         return head;
     }
 
@@ -80,7 +80,7 @@ public class ParsedValueList {
         return size == 0;
     }
 
-    public ParsedValue getFirst() {
+    public ParseValue getFirst() {
         if (isEmpty()) { return null; }
         if (tail.isEmpty()) { return head; }
         return tail.getFirst();
