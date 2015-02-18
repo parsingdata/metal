@@ -14,23 +14,8 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.expression.value.reference;
+package nl.minvenj.nfi.metal.data;
 
-import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.encoding.Encoding;
-import nl.minvenj.nfi.metal.expression.value.OptionalValue;
-import nl.minvenj.nfi.metal.expression.value.ValueExpression;
-
-public class Self implements ValueExpression {
-
-    @Override
-    public OptionalValue eval(final Environment env, final Encoding enc) {
-        return OptionalValue.of(env.order.flatten().current());
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName();
-    }
+public interface ParseItem {
 
 }

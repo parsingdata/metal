@@ -16,37 +16,41 @@
 
 package nl.minvenj.nfi.metal.data;
 
-import nl.minvenj.nfi.metal.expression.value.ParseValue;
-
-public class ParsedValueList {
+public class ParseList {
 
     public final ParseValue head;
-    public final ParsedValueList tail;
+    public final ParseList tail;
     public final long size;
 
-    public static final ParsedValueList EMPTY = new ParsedValueList();
+    public static final ParseList EMPTY = new ParseList();
 
-    private ParsedValueList() {
+    private ParseList() {
         head = null;
         tail = null;
         size = 0;
     }
 
-    private ParsedValueList(final ParseValue head, final ParsedValueList tail) {
-        assert head != null : "Argument head may not be null";
-        assert tail != null : "Argument tail may not be null";
+    private ParseList(final ParseValue head, final ParseList tail) {
+        if (head == null) { throw new IllegalArgumentException("Argument head may not be null."); }
+        if (tail == null) { throw new IllegalArgumentException("Argument tail may not be null."); }
         this.head = head;
         this.tail = tail;
         size = tail.size + 1;
     }
 
-    public static ParsedValueList create(final ParseValue head) {
+    public static ParseList create(final ParseValue head) {
         return EMPTY.add(head);
     }
 
-    public ParsedValueList add(final ParseValue head) {
+    public ParseList add(final ParseValue head) {
         if (head == null) { throw new IllegalArgumentException("Argument head may not be null."); }
-        return new ParsedValueList(head, this);
+        return new ParseList(head, this);
+    }
+
+    public ParseList add(final ParseList list) {
+        if (list.isEmpty()) { return this; }
+        if (isEmpty()) { return list; }
+        return add(list.tail).add(list.head);
     }
 
     public ParseValue get(final String name) {
@@ -58,17 +62,17 @@ public class ParsedValueList {
         }
     }
 
-    public ParsedValueList getAll(final String name) {
+    public ParseList getAll(final String name) {
         if (isEmpty()) { return this; }
-        final ParsedValueList t = tail.getAll(name);
+        final ParseList t = tail.getAll(name);
         if (head.matches(name)) { return t.add(head); }
         else { return t; }
     }
 
-    public ParsedValueList getValuesSincePrefix(final ParseValue prefix) {
+    public ParseList getValuesSincePrefix(final ParseValue prefix) {
         if (isEmpty()) { return this; }
         if (head == prefix) { return EMPTY; }
-        final ParsedValueList t = tail.getValuesSincePrefix(prefix);
+        final ParseList t = tail.getValuesSincePrefix(prefix);
         return t.add(head);
     }
 
@@ -92,12 +96,12 @@ public class ParsedValueList {
         return tail.containsOffset(offset);
     }
 
-    public ParsedValueList reverse() {
+    public ParseList reverse() {
         if (isEmpty()) { return this; }
         return reverse(tail, create(head));
     }
 
-    private ParsedValueList reverse(final ParsedValueList oldList, final ParsedValueList newList) {
+    private ParseList reverse(final ParseList oldList, final ParseList newList) {
         if (oldList.isEmpty()) { return newList; }
         return reverse(oldList.tail, newList.add(oldList.head));
     }

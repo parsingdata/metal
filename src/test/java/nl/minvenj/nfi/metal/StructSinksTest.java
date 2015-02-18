@@ -37,7 +37,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParsedValueList;
+import nl.minvenj.nfi.metal.data.ParseList;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.token.StructSink;
 import nl.minvenj.nfi.metal.token.Token;
@@ -59,10 +59,10 @@ public class StructSinksTest {
     public void structSinkMultiOverRep() throws IOException {
         str("outer", rep(createToken(0L, 2L)), new StructSink() {
             @Override
-            public void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParsedValueList struct) {
+            public void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParseList struct) {
                 Assert.assertEquals(0L, struct.tail.tail.tail.head.getOffset());
                 Assert.assertTrue(struct.tail.tail.tail.tail.isEmpty());
-                ParsedValueList cur = struct;
+                ParseList cur = struct;
                 for (int i = 0; i < 4; i++) {
                     Assert.assertEquals((i & 1) == 0 ? "b" : "a", cur.head.getName());
                     Assert.assertEquals(4-i, cur.head.asNumeric().intValue());
@@ -77,7 +77,7 @@ public class StructSinksTest {
 
         return str("test", seq(any("a"), any("b")), new StructSink() {
             @Override
-            public void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParsedValueList struct) {
+            public void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParseList struct) {
                 Assert.assertEquals(offsetDeque.pop().longValue(), struct.tail.head.getOffset());
                 Assert.assertTrue(struct.tail.tail.isEmpty());
                 Assert.assertTrue(struct.tail.head.getName().equals("a"));
@@ -90,7 +90,7 @@ public class StructSinksTest {
     public void structSinkWithPredicate() throws IOException {
         rep(str("outer", any("a"), new StructSink() {
             @Override
-            public void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParsedValueList struct) {
+            public void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParseList struct) {
                 Assert.assertTrue(struct.tail.isEmpty());
                 Assert.assertTrue(struct.head.asNumeric().intValue() == 2 || struct.head.asNumeric().intValue() == 4);
             }}, not(eqNum(con(1))))).parse(stream(1, 2, 1, 4), enc());

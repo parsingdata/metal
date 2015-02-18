@@ -32,7 +32,6 @@ import org.junit.runners.JUnit4;
 
 import nl.minvenj.nfi.metal.data.ByteStream;
 import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParsedValueList;
 import nl.minvenj.nfi.metal.token.Token;
 
 @RunWith(JUnit4.class)
@@ -51,7 +50,7 @@ public class ErrorsTest {
             @Override
             public int read(final long offset, final byte[] data) throws IOException { throw new IOException(); }
         };
-        final Environment env = new Environment(ParsedValueList.EMPTY, stream, 0L);
+        final Environment env = new Environment(stream);
         t.parse(env, enc());
     }
 

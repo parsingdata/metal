@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.expression.value;
+package nl.minvenj.nfi.metal.data;
 
 import nl.minvenj.nfi.metal.encoding.Encoding;
+import nl.minvenj.nfi.metal.expression.value.Value;
 
-public class ParseValue extends Value {
-    
+public class ParseValue extends Value implements ParseItem {
+
     public static final String SEPARATOR = ".";
-    
+
     private final String _scope;
     private final String _name;
     private final long _offset;
-    
+
     public ParseValue(final String scope, final String name, final long offset, final byte[] data, final Encoding enc) {
         super(data, enc);
         _scope = scope;
@@ -48,14 +49,14 @@ public class ParseValue extends Value {
     public boolean matches(final String name) {
         return getFullName().equals(name) || getFullName().endsWith(SEPARATOR + name);
     }
-    
+
     public long getOffset() {
         return _offset;
     }
-    
+
     @Override
     public String toString() {
         return getName() + ":" + super.toString();
     }
-    
+
 }

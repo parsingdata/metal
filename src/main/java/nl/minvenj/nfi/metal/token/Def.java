@@ -18,13 +18,14 @@ package nl.minvenj.nfi.metal.token;
 
 import java.io.IOException;
 
+import nl.minvenj.nfi.metal.data.ParseValue;
+
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.data.ParseResult;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.expression.Expression;
 import nl.minvenj.nfi.metal.expression.True;
 import nl.minvenj.nfi.metal.expression.value.OptionalValue;
-import nl.minvenj.nfi.metal.expression.value.ParseValue;
 import nl.minvenj.nfi.metal.expression.value.ValueExpression;
 
 public class Def extends Token {
