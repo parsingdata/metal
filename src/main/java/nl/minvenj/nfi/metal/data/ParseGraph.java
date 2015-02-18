@@ -38,12 +38,15 @@ public class ParseGraph implements ParseItem {
         size = tail.size + 1;
     }
 
-    public static ParseGraph create(final ParseItem head) {
-        return EMPTY.add(head);
+    public static ParseGraph create(final ParseValue head) {
+        return new ParseGraph(head, EMPTY);
     }
 
-    public ParseGraph add(final ParseItem head) {
-        if (head == null) { throw new IllegalArgumentException("Argument head may not be null."); }
+    public static ParseGraph create(final ParseGraph head) {
+        return new ParseGraph(head, EMPTY);
+    }
+
+    public ParseGraph add(final ParseValue head) {
         return new ParseGraph(head, this);
     }
 
@@ -56,15 +59,4 @@ public class ParseGraph implements ParseItem {
         return tail.flatten().add(head instanceof ParseGraph ? ((ParseGraph) head).flatten() : ParseList.EMPTY.add((ParseValue) head));
     }
 
-/*    public ParseValue get(final String name) {
-        if (isEmpty()) { return null; }
-        if (head instanceof ParseGraph) {
-            final ParseValue val = ((ParseGraph) head).get(name);
-            if (val != null) { return val; }
-        } else {
-            if (((ParseValue) head).matches(name)) { return (ParseValue) head; }
-        }
-        return tail.get(name);
-    }
-
-*/}
+}
