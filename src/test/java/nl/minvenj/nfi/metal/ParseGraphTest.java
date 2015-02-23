@@ -26,7 +26,7 @@ import nl.minvenj.nfi.metal.data.ParseList;
 import nl.minvenj.nfi.metal.data.ParseValue;
 
 public class ParseGraphTest {
-
+    
     private final ParseGraph pg;
     private final ParseValue a;
     private final ParseValue b;
@@ -38,25 +38,42 @@ public class ParseGraphTest {
         b = makeVal('b');
         c = makeVal('c');
         d = makeVal('d');
-        ParseGraph pgb = ParseGraph.EMPTY;
-        ParseGraph pga = pgb.add(a);        // [a]
-        ParseGraph pg9 = pga.add(b);        // [b]
-        ParseGraph pg8 = pg9.addBranch();   //  +---+
-        ParseGraph pg7 = pg8.add(c);        //  |  [c]
-        ParseGraph pg6 = pg7.addBranch();   //  |   +---+
-        ParseGraph pg5 = pg6.add(d);        //  |   |  [d]
-        ParseGraph pg4 = pg5.add(a);        //  |   |  [a]
-        ParseGraph pg3 = pg4.closeBranch(); //  |   +---+
-        ParseGraph pg2 = pg3.add(b);        //  |  [b]
-        ParseGraph pg1 = pg2.closeBranch(); //  +---+
-        ParseGraph pg0 = pg1.add(c);        // [c]
-        pg = pg0.add(d);                    // [d]
+        pg = ParseGraph
+                 .EMPTY
+                 .add(a)         // [a]
+                 .add(b)         // [b]
+                 .addBranch()    //  +---+
+                 .add(c)         //  |  [c]
+                 .addBranch()    //  |   +---+
+                 .add(d)         //  |   |  [d]
+                 .add(a)         //  |   |  [a]
+                 .closeBranch()  //  |   +---+
+                 .add(b)         //  |  [b]
+                 .closeBranch()  //  +---+
+                 .add(c)         // [c]
+                 .add(d);        // [d]
     }
 
     @Test
     public void full() {
         Assert.assertTrue(pg.head.isValue());
         Assert.assertEquals(d, pg.head.getValue());
+        Assert.assertTrue(pg.tail.head.isValue());
+        Assert.assertEquals(c, pg.tail.head.getValue());
+        Assert.assertTrue(pg.tail.tail.head.isGraph());
+        Assert.assertTrue(pg.tail.tail.head.getGraph().head.isValue());
+        Assert.assertEquals(b, pg.tail.tail.head.getGraph().head.getValue());
+        Assert.assertTrue(pg.tail.tail.head.getGraph().tail.head.isGraph());
+        Assert.assertTrue(pg.tail.tail.head.getGraph().tail.head.getGraph().head.isValue());
+        Assert.assertEquals(a, pg.tail.tail.head.getGraph().tail.head.getGraph().head.getValue());
+        Assert.assertTrue(pg.tail.tail.head.getGraph().tail.head.getGraph().tail.head.isValue());
+        Assert.assertEquals(d, pg.tail.tail.head.getGraph().tail.head.getGraph().tail.head.getValue());
+        Assert.assertTrue(pg.tail.tail.head.getGraph().tail.tail.head.isValue());
+        Assert.assertEquals(c, pg.tail.tail.head.getGraph().tail.tail.head.getValue());
+        Assert.assertTrue(pg.tail.tail.tail.head.isValue());
+        Assert.assertEquals(b, pg.tail.tail.tail.head.getValue());
+        Assert.assertTrue(pg.tail.tail.tail.tail.head.isValue());
+        Assert.assertEquals(a, pg.tail.tail.tail.tail.head.getValue());
     }
 
     @Test
