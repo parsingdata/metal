@@ -20,6 +20,7 @@ public class ParseGraph {
 
     public final ParseItem head;
     public final ParseGraph tail;
+    public final boolean branched;
     public final long size;
 
     public static final ParseGraph EMPTY = new ParseGraph();
@@ -27,40 +28,40 @@ public class ParseGraph {
     private ParseGraph() {
         head = null;
         tail = null;
+        branched = false;
         size = 0;
     }
 
-    private ParseGraph(final ParseItem head, final ParseGraph tail) {
+    private ParseGraph(final ParseItem head, final ParseGraph tail, final boolean branched) {
         if (head == null) { throw new IllegalArgumentException("Argument head may not be null."); }
         if (tail == null) { throw new IllegalArgumentException("Argument tail may not be null."); }
+        if (head.isValue() && branched) { throw new IllegalArgumentException("Argument branch cannot be true when head contains a ParseValue."); }
         this.head = head;
         this.tail = tail;
+        this.branched = branched;
         size = tail.size + 1;
     }
-
-    public static ParseGraph create(final ParseValue head) {
-        return new ParseGraph(new ParseItem(head), EMPTY);
+    
+    private ParseGraph(final ParseItem head, final ParseGraph tail) {
+        this(head, tail, false);
     }
 
     public ParseGraph add(final ParseValue head) {
-        if (this.head.isGraph() && this.head.isOpen()) {
-            return new ParseGraph(new ParseItem(new ParseGraph(new ParseItem(head), this.head.getGraph()), true), this);
-        }
+        if (branched) { return new ParseGraph(new ParseItem(this.head.getGraph().add(head)), tail, true); }
         return new ParseGraph(new ParseItem(head), this);
     }
 
     public ParseGraph addBranch() {
-        if (this.head.isGraph() && this.head.isOpen()) {
-            return new ParseGraph(new ParseItem(this.head.getGraph().addBranch(), true), this);
-        }
-        return new ParseGraph(new ParseItem(EMPTY, true), this);
+        if (branched) { return new ParseGraph(new ParseItem(this.head.getGraph().addBranch()), tail, true); }
+        return new ParseGraph(new ParseItem(ParseGraph.EMPTY), this, true);
     }
 
-    public ParseGraph endBranch() {
-        if (this.head.isGraph() && this.head.isOpen() && !this.head.getGraph().isEmpty()) {
-            return new ParseGraph(new ParseItem(head.getGraph().endBranch(), true), this);
+    public ParseGraph closeBranch() {
+        if (!branched) { throw new IllegalStateException("Cannot close branch that is not open."); }
+        if (head.getGraph().branched) {
+            return new ParseGraph(new ParseItem(head.getGraph().closeBranch()), tail, true);
         }
-        return this;
+        return new ParseGraph(head, tail, false);
     }
 
     public boolean isEmpty() {
@@ -74,7 +75,7 @@ public class ParseGraph {
 
     @Override
     public String toString() {
-        return "ParseGraph(" + (head != null ? head.toString() : "null") + ", " + (tail != null ? tail.toString() : "null") + ")";
+        return "ParseGraph(" + (head != null ? head.toString() : "null") + ", " + (tail != null ? tail.toString() : "null") + ", " + branched + ")";
     }
 
 }

@@ -38,18 +38,19 @@ public class ParseGraphTest {
         b = makeVal('b');
         c = makeVal('c');
         d = makeVal('d');
-        pg = ParseGraph.create(a)    // [a]
-                       .add(b)       // [b]
-                       .addBranch()  //  +---+
-                       .add(c)       //  |  [c]
-                       .addBranch()  //  |   +---+
-                       .add(d)       //  |   |  [d]
-                       .add(a)       //  |   |  [a]
-                       .endBranch()  //  |   +---+
-                       .add(b)       //  |  [b]
-                       .endBranch()  //  +---+
-                       .add(c)       // [c]
-                       .add(d);      // [d]
+        ParseGraph pgb = ParseGraph.EMPTY;
+        ParseGraph pga = pgb.add(a);        // [a]
+        ParseGraph pg9 = pga.add(b);        // [b]
+        ParseGraph pg8 = pg9.addBranch();   //  +---+
+        ParseGraph pg7 = pg8.add(c);        //  |  [c]
+        ParseGraph pg6 = pg7.addBranch();   //  |   +---+
+        ParseGraph pg5 = pg6.add(d);        //  |   |  [d]
+        ParseGraph pg4 = pg5.add(a);        //  |   |  [a]
+        ParseGraph pg3 = pg4.closeBranch(); //  |   +---+
+        ParseGraph pg2 = pg3.add(b);        //  |  [b]
+        ParseGraph pg1 = pg2.closeBranch(); //  +---+
+        ParseGraph pg0 = pg1.add(c);        // [c]
+        pg = pg0.add(d);                    // [d]
     }
 
     @Test
