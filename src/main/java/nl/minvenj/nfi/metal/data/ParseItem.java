@@ -16,6 +16,50 @@
 
 package nl.minvenj.nfi.metal.data;
 
-public interface ParseItem {
+public final class ParseItem {
+
+    private final ParseValue _pv;
+    private final ParseGraph _pg;
+    private final boolean _open;
+
+    public ParseItem(final ParseValue pv) {
+        _pv = pv;
+        _pg = null;
+        _open = false;
+    }
+
+    public ParseItem(final ParseGraph pg, final boolean open) {
+        _pg = pg;
+        _pv = null;
+        _open = open;
+    }
+
+    public boolean isValue() { return _pv != null; }
+    public boolean isGraph() { return _pg != null; }
+
+    public ParseValue getValue() {
+        if (!isValue()) { throw new IllegalStateException("This ParseItem does not contain a ParseValue."); }
+        return _pv;
+    }
+
+    public ParseGraph getGraph() {
+        if (!isGraph()) { throw new IllegalStateException("This ParseItem does not contain a ParseGraph."); }
+        return _pg;
+    }
+
+    public boolean isOpen() {
+        return _open;
+    }
+
+    public ParseItem close() {
+        if (!isGraph()) { throw new IllegalStateException("Cannot close a ParseItem containing a ParseValue."); }
+        if (!isOpen()) { throw new IllegalStateException("Cannot close a closed ParseItem."); }
+        return new ParseItem(_pg, false);
+    }
+
+    @Override
+    public String toString() {
+        return isValue() ? "ParseValue(" + _pv.toString() + ")" : "ParseGraph(" + _pg.toString() + ", " + isOpen() + ")";
+    }
 
 }

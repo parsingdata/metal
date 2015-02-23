@@ -19,7 +19,7 @@ package nl.minvenj.nfi.metal.data;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.expression.value.Value;
 
-public class ParseValue extends Value implements ParseItem {
+public class ParseValue extends Value {
 
     public static final String SEPARATOR = ".";
 

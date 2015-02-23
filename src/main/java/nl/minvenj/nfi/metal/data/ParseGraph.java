@@ -16,7 +16,7 @@
 
 package nl.minvenj.nfi.metal.data;
 
-public class ParseGraph implements ParseItem {
+public class ParseGraph {
 
     public final ParseItem head;
     public final ParseGraph tail;
@@ -39,15 +39,28 @@ public class ParseGraph implements ParseItem {
     }
 
     public static ParseGraph create(final ParseValue head) {
-        return new ParseGraph(head, EMPTY);
-    }
-
-    public static ParseGraph create(final ParseGraph head) {
-        return new ParseGraph(head, EMPTY);
+        return new ParseGraph(new ParseItem(head), EMPTY);
     }
 
     public ParseGraph add(final ParseValue head) {
-        return new ParseGraph(head, this);
+        if (this.head.isGraph() && this.head.isOpen()) {
+            return new ParseGraph(new ParseItem(new ParseGraph(new ParseItem(head), this.head.getGraph()), true), this);
+        }
+        return new ParseGraph(new ParseItem(head), this);
+    }
+
+    public ParseGraph addBranch() {
+        if (this.head.isGraph() && this.head.isOpen()) {
+            return new ParseGraph(new ParseItem(this.head.getGraph().addBranch(), true), this);
+        }
+        return new ParseGraph(new ParseItem(EMPTY, true), this);
+    }
+
+    public ParseGraph endBranch() {
+        if (this.head.isGraph() && this.head.isOpen() && !this.head.getGraph().isEmpty()) {
+            return new ParseGraph(new ParseItem(head.getGraph().endBranch(), true), this);
+        }
+        return this;
     }
 
     public boolean isEmpty() {
@@ -56,7 +69,12 @@ public class ParseGraph implements ParseItem {
 
     public ParseList flatten() {
         if (isEmpty()) { return ParseList.EMPTY; }
-        return tail.flatten().add(head instanceof ParseGraph ? ((ParseGraph) head).flatten() : ParseList.EMPTY.add((ParseValue) head));
+        return tail.flatten().add(head.isGraph() ? head.getGraph().flatten() : ParseList.EMPTY.add(head.getValue()));
+    }
+
+    @Override
+    public String toString() {
+        return "ParseGraph(" + (head != null ? head.toString() : "null") + ", " + (tail != null ? tail.toString() : "null") + ")";
     }
 
 }
