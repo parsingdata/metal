@@ -22,15 +22,17 @@ public final class ParseItem {
     private final ParseGraph _pg;
 
     public ParseItem(final ParseValue pv) {
+        if (pv == null) { throw new IllegalArgumentException("Argument pv may not be null."); }
         _pv = pv;
         _pg = null;
     }
-    
+
     public ParseItem(final ParseGraph pg) {
+        if (pg == null) { throw new IllegalArgumentException("Argument pg may not be null."); }
         _pg = pg;
         _pv = null;
     }
-    
+
     public boolean isValue() { return _pv != null; }
     public boolean isGraph() { return _pg != null; }
 
