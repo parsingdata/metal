@@ -41,7 +41,7 @@ public class ParseGraph {
         this.branched = branched;
         size = tail.size + 1;
     }
-    
+
     private ParseGraph(final ParseItem head, final ParseGraph tail) {
         this(head, tail, false);
     }
@@ -49,6 +49,11 @@ public class ParseGraph {
     public ParseGraph add(final ParseValue head) {
         if (branched) { return new ParseGraph(new ParseItem(this.head.getGraph().add(head)), tail, true); }
         return new ParseGraph(new ParseItem(head), this);
+    }
+
+    public ParseGraph addRef(final long ref) {
+        if (branched) { return new ParseGraph(new ParseItem(this.head.getGraph().addRef(ref)), tail, true); }
+        return new ParseGraph(new ParseItem(ref), this);
     }
 
     public ParseGraph addBranch() {
@@ -63,7 +68,7 @@ public class ParseGraph {
         }
         return new ParseGraph(head, tail, false);
     }
-
+    
     public boolean isEmpty() {
         return size == 0;
     }
