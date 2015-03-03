@@ -23,26 +23,26 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import nl.minvenj.nfi.metal.data.ParseList;
+import nl.minvenj.nfi.metal.data.ParseValueList;
 import nl.minvenj.nfi.metal.data.ParseValue;
 
 @RunWith(JUnit4.class)
-public class ParseListTest {
+public class ParseValueListTest {
 
-    private final ParseList l1;
-    private final ParseList l2;
-    private final ParseList l3;
-    private final ParseList l4;
-    private final ParseList l5;
+    private final ParseValueList l1;
+    private final ParseValueList l2;
+    private final ParseValueList l3;
+    private final ParseValueList l4;
+    private final ParseValueList l5;
     private final ParseValue v1;
     private final ParseValue v2;
     private final ParseValue v3;
     private final ParseValue v4;
     private final ParseValue v5;
 
-    public ParseListTest() {
+    public ParseValueListTest() {
         v1 = val("s1", 'a');
-        l1 = ParseList.create(v1);
+        l1 = ParseValueList.create(v1);
         v2 = val("s1", 'b');
         l2 = l1.add(v2);
         v3 = val("s2", 'a');
@@ -55,7 +55,7 @@ public class ParseListTest {
 
     @Test
     public void addList() {
-        final ParseList l6 = l5.add(l5);
+        final ParseValueList l6 = l5.add(l5);
         Assert.assertEquals(v5, l6.head);
         Assert.assertEquals(v4, l6.tail.head);
         Assert.assertEquals(v3, l6.tail.tail.head);
@@ -95,7 +95,7 @@ public class ParseListTest {
 
     @Test
     public void getMultiMultiMatch() {
-        final ParseList res = l5.getAll("a");
+        final ParseValueList res = l5.getAll("a");
         Assert.assertEquals(res.head, v3);
         Assert.assertEquals(res.tail.head, v1);
         Assert.assertTrue(res.tail.tail.isEmpty());
@@ -103,20 +103,20 @@ public class ParseListTest {
 
     @Test
     public void getMultiSingleMatch() {
-        final ParseList res = l5.getAll("d");
+        final ParseValueList res = l5.getAll("d");
         Assert.assertEquals(res.head, v4);
         Assert.assertTrue(res.tail.isEmpty());
     }
 
     @Test
     public void getMultiNoMatch() {
-        final ParseList res = l5.getAll("f");
+        final ParseValueList res = l5.getAll("f");
         Assert.assertTrue(res.isEmpty());
     }
 
     @Test
     public void getScopedMatch() {
-        final ParseList res = l5.getValuesSincePrefix(v3);
+        final ParseValueList res = l5.getValuesSincePrefix(v3);
         Assert.assertEquals(res.head, v5);
         Assert.assertEquals(res.tail.head, v4);
         Assert.assertTrue(res.tail.tail.isEmpty());
@@ -124,13 +124,13 @@ public class ParseListTest {
 
     @Test
     public void getScopedNoMatch() {
-        final ParseList res = l5.getValuesSincePrefix(v5);
+        final ParseValueList res = l5.getValuesSincePrefix(v5);
         Assert.assertTrue(res.isEmpty());
     }
 
     @Test
     public void reverse() {
-        final ParseList rev = l5.reverse();
+        final ParseValueList rev = l5.reverse();
         Assert.assertEquals(rev.head, v1);
         Assert.assertEquals(rev.tail.head, v2);
         Assert.assertEquals(rev.tail.tail.head, v3);
@@ -141,7 +141,7 @@ public class ParseListTest {
 
     @Test
     public void reverseEmpty() {
-        Assert.assertTrue(ParseList.EMPTY.reverse().isEmpty());
+        Assert.assertTrue(ParseValueList.EMPTY.reverse().isEmpty());
     }
 
     @Test
@@ -152,7 +152,7 @@ public class ParseListTest {
 
     @Test
     public void sizeEmpty() {
-        Assert.assertEquals(0, ParseList.EMPTY.size);
+        Assert.assertEquals(0, ParseValueList.EMPTY.size);
     }
 
     private ParseValue val(final String s, final char c) {

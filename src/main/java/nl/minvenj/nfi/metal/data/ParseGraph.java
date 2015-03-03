@@ -68,14 +68,32 @@ public class ParseGraph {
         }
         return new ParseGraph(head, tail, false);
     }
+
+    public ParseGraphList getGraphs() {
+        if (isEmpty()) { return ParseGraphList.EMPTY; }
+        final ParseGraphList tailGraphs = tail.getGraphs();
+        if (head.isGraph()) { return tailGraphs.add(head.getGraph()).add(head.getGraph().getGraphs()); }
+        return tailGraphs;
+    }
     
+    public boolean containsValue() {
+        if (isEmpty()) { return false; }
+        return head.isValue() || tail.containsValue();
+    }
+    
+    public ParseValue getFirstValue() {
+        if (!containsValue()) { throw new IllegalStateException("Only call this method if containsValue() returns true."); }
+        if (tail.containsValue()) { return tail.getFirstValue(); }
+        return head.getValue();
+    }
+
     public boolean isEmpty() {
         return size == 0;
     }
 
-    public ParseList flatten() {
-        if (isEmpty()) { return ParseList.EMPTY; }
-        return tail.flatten().add(head.isGraph() ? head.getGraph().flatten() : ParseList.EMPTY.add(head.getValue()));
+    public ParseValueList flatten() {
+        if (isEmpty()) { return ParseValueList.EMPTY; }
+        return tail.flatten().add(head.isGraph() ? head.getGraph().flatten() : (head.isValue() ? ParseValueList.EMPTY.add(head.getValue()) : ParseValueList.EMPTY));
     }
 
     @Override

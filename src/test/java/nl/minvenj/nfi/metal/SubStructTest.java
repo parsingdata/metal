@@ -37,7 +37,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParseList;
+import nl.minvenj.nfi.metal.data.ParseValueList;
 import nl.minvenj.nfi.metal.data.ParseResult;
 import nl.minvenj.nfi.metal.token.Token;
 
@@ -86,7 +86,7 @@ public class SubStructTest {
         final ParseResult res = _token.parse(_env, enc());
         Assert.assertEquals(_result, res.succeeded());
         Assert.assertEquals(_values.length, _offsets.length);
-        ParseList order = res.getEnvironment().order.flatten().reverse();
+        ParseValueList order = res.getEnvironment().order.flatten().reverse();
         for (int i = 0; i < _values.length; i++) {
             Assert.assertEquals(_values[i], order.head.asNumeric().intValue());
             Assert.assertEquals(_offsets[i], order.head.getOffset());

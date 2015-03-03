@@ -35,7 +35,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParseList;
+import nl.minvenj.nfi.metal.data.ParseValueList;
 import nl.minvenj.nfi.metal.data.ParseResult;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.token.Token;
@@ -54,13 +54,13 @@ public class TreeTest {
                            pre(sub(this, ref("right")), not(eq(ref("right"), con(0))))).parse(scope, env, enc);
             }}.parse(stream(9, 0, 6, 10, 8, 8, 9, 1, 16, 20, 9, 2, 24, 28, 8, 8, 9, 3, 0, 0, 9, 4, 0, 0, 9, 5, 0, 0, 9, 6, 0, 0), enc());
         Assert.assertTrue(result.succeeded());
-        final ParseList nrs = result.getEnvironment().order.flatten().getAll("nr");
+        final ParseValueList nrs = result.getEnvironment().order.flatten().getAll("nr");
         for (int i = 0; i < 7; i++) {
             Assert.assertTrue(contains(nrs, i));
         }
     }
 
-    private boolean contains(final ParseList nrs, final int i) {
+    private boolean contains(final ParseValueList nrs, final int i) {
         if (nrs.head.asNumeric().intValue() == i) { return true; }
         if (nrs.tail != null) { return contains(nrs.tail, i); }
         return false;

@@ -17,18 +17,19 @@
 package nl.minvenj.nfi.metal;
 
 import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
+import nl.minvenj.nfi.metal.data.ParseGraph;
+import nl.minvenj.nfi.metal.data.ParseGraphList;
+import nl.minvenj.nfi.metal.data.ParseValue;
+import nl.minvenj.nfi.metal.data.ParseValueList;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import nl.minvenj.nfi.metal.data.ParseGraph;
-import nl.minvenj.nfi.metal.data.ParseList;
-import nl.minvenj.nfi.metal.data.ParseValue;
 
 public class ParseGraphTest {
 
     private final ParseGraph pg;
     private final ParseGraph pgc;
+    private final ParseGraph pgl;
     private final ParseValue a;
     private final ParseValue b;
     private final ParseValue c;
@@ -41,6 +42,11 @@ public class ParseGraphTest {
         d = makeVal('d', 6L);
         pg = makeSimpleGraph();
         pgc = makeCycleGraph();
+        pgl = makeLongGraph();
+    }
+
+    private static ParseValue makeVal(final char n, final long o) {
+        return new ParseValue("", Character.toString(n), o, new byte[] { (byte) n }, enc());
     }
 
     private ParseGraph makeSimpleGraph() {
@@ -58,16 +64,6 @@ public class ParseGraphTest {
             .closeBranch() //  +---+
             .add(c)        // [c]
             .add(d);       // [d]
-    }
-
-    private ParseGraph makeCycleGraph() {
-        return ParseGraph
-            .EMPTY
-            .add(a)
-            .addBranch()
-            .add(b)
-            .addRef(a.getOffset())
-            .closeBranch();
     }
 
     @Test
@@ -94,7 +90,7 @@ public class ParseGraphTest {
 
     @Test
     public void simpleFlatten() {
-        final ParseList flat = pg.flatten();
+        final ParseValueList flat = pg.flatten();
         Assert.assertEquals(d, flat.head);
         Assert.assertEquals(c, flat.tail.head);
         Assert.assertEquals(b, flat.tail.tail.head);
@@ -105,8 +101,63 @@ public class ParseGraphTest {
         Assert.assertEquals(a, flat.tail.tail.tail.tail.tail.tail.tail.head);
     }
 
-    private static ParseValue makeVal(final char n, final long o) {
-        return new ParseValue("", Character.toString(n), o, new byte[] { (byte) n }, enc());
+    private ParseGraph makeCycleGraph() {
+        return ParseGraph
+            .EMPTY
+            .add(a)
+            .addBranch()
+            .add(b)
+            .addRef(a.getOffset())
+            .closeBranch();
+    }
+    
+    @Test
+    public void cycle() {
+        Assert.assertEquals(2, pgc.size);
+        Assert.assertTrue(pgc.head.isGraph());
+        Assert.assertTrue(pgc.head.getGraph().head.isRef());
+        Assert.assertEquals(pgc, pgc.head.getGraph().head.getRef(pgc));
+        Assert.assertTrue(pgc.head.getGraph().tail.head.isValue());
+        Assert.assertEquals(b, pgc.head.getGraph().tail.head.getValue());
+        Assert.assertTrue(pgc.tail.head.isValue());
+        Assert.assertEquals(a, pgc.tail.head.getValue());
+    }
+    
+    private ParseGraph makeLongGraph() {
+        return ParseGraph
+            .EMPTY
+            .add(a)
+            .addBranch()
+            .addBranch()
+            .add(b)
+            .closeBranch()
+            .addBranch()
+            .closeBranch()
+            .add(c)
+            .addBranch()
+            .add(d)
+            .closeBranch()
+            .closeBranch()
+            .add(a)
+            .addBranch()
+            .add(b)
+            .closeBranch();
+    }
+    
+    @Test
+    public void listGraphs() {
+        final ParseGraphList list = pgl.getGraphs();
+        Assert.assertEquals(5, list.size);
+    }
+    
+    @Test
+    public void firstValue() {
+        Assert.assertTrue(pgl.containsValue());
+        Assert.assertEquals(a, pgl.getFirstValue());
+        Assert.assertEquals(b, pgl.head.getGraph().getFirstValue());
+        Assert.assertEquals(a, pg.getFirstValue());
+        Assert.assertEquals(c, pg.tail.tail.head.getGraph().getFirstValue());
+        Assert.assertEquals(d, pg.tail.tail.head.getGraph().tail.head.getGraph().getFirstValue());
     }
 
 }

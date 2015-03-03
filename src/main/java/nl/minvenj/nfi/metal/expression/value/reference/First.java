@@ -17,7 +17,7 @@
 package nl.minvenj.nfi.metal.expression.value.reference;
 
 import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParseList;
+import nl.minvenj.nfi.metal.data.ParseValueList;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.expression.value.OptionalValue;
 import nl.minvenj.nfi.metal.expression.value.ValueExpression;
@@ -32,7 +32,7 @@ public class First implements ValueExpression {
 
     @Override
     public OptionalValue eval(final Environment env, final Encoding enc) {
-        final ParseList all = env.order.flatten().getAll(_name);
+        final ParseValueList all = env.order.flatten().getAll(_name);
         if (all.isEmpty()) {
             return OptionalValue.empty();
         } else {

@@ -19,7 +19,7 @@ package nl.minvenj.nfi.metal.expression.value;
 import static nl.minvenj.nfi.metal.Shorthand.con;
 
 import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParseList;
+import nl.minvenj.nfi.metal.data.ParseValueList;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 
 public class Reduce implements ValueExpression {
@@ -34,14 +34,14 @@ public class Reduce implements ValueExpression {
 
     @Override
     public OptionalValue eval(final Environment env, final Encoding enc) {
-        final ParseList values = env.order.flatten().getAll(_name).reverse();
+        final ParseValueList values = env.order.flatten().getAll(_name).reverse();
         if (values.isEmpty()) {
             return OptionalValue.empty();
         }
         return reduce(env, enc, _reducer, OptionalValue.of(values.head), values.tail);
     }
 
-    private OptionalValue reduce(final Environment env, final Encoding enc, final Reducer reducer, final OptionalValue head, final ParseList tail) {
+    private OptionalValue reduce(final Environment env, final Encoding enc, final Reducer reducer, final OptionalValue head, final ParseValueList tail) {
         if (!head.isPresent() || tail == null || tail.isEmpty()) { return head; }
         return reduce(env, enc, reducer, reducer.reduce(con(head.get()), con(tail.head)).eval(env, enc), tail.tail);
     }
