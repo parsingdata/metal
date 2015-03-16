@@ -34,12 +34,20 @@ public class ParseGraphTest {
     private final ParseValue b;
     private final ParseValue c;
     private final ParseValue d;
+    private final ParseValue e;
+    private final ParseValue f;
+    private final ParseValue g;
+    private final ParseValue h;
 
     public ParseGraphTest() {
         a = makeVal('a', 0L);
         b = makeVal('b', 2L);
         c = makeVal('c', 4L);
         d = makeVal('d', 6L);
+        e = makeVal('e', 8L);
+        f = makeVal('f', 10L);
+        g = makeVal('g', 12L);
+        h = makeVal('h', 14L);
         pg = makeSimpleGraph();
         pgc = makeCycleGraph();
         pgl = makeLongGraph();
@@ -58,26 +66,26 @@ public class ParseGraphTest {
             .add(c)        //  |  [c]
             .addBranch()   //  |   +---+
             .add(d)        //  |   |  [d]
-            .add(a)        //  |   |  [a]
+            .add(e)        //  |   |  [e]
             .closeBranch() //  |   +---+
-            .add(b)        //  |  [b]
+            .add(f)        //  |  [f]
             .closeBranch() //  +---+
-            .add(c)        // [c]
-            .add(d);       // [d]
+            .add(g)        // [g]
+            .add(h);       // [h]
     }
 
     @Test
     public void simple() {
         Assert.assertTrue(pg.head.isValue());
-        Assert.assertEquals(d, pg.head.getValue());
+        Assert.assertEquals(h, pg.head.getValue());
         Assert.assertTrue(pg.tail.head.isValue());
-        Assert.assertEquals(c, pg.tail.head.getValue());
+        Assert.assertEquals(g, pg.tail.head.getValue());
         Assert.assertTrue(pg.tail.tail.head.isGraph());
         Assert.assertTrue(pg.tail.tail.head.getGraph().head.isValue());
-        Assert.assertEquals(b, pg.tail.tail.head.getGraph().head.getValue());
+        Assert.assertEquals(f, pg.tail.tail.head.getGraph().head.getValue());
         Assert.assertTrue(pg.tail.tail.head.getGraph().tail.head.isGraph());
         Assert.assertTrue(pg.tail.tail.head.getGraph().tail.head.getGraph().head.isValue());
-        Assert.assertEquals(a, pg.tail.tail.head.getGraph().tail.head.getGraph().head.getValue());
+        Assert.assertEquals(e, pg.tail.tail.head.getGraph().tail.head.getGraph().head.getValue());
         Assert.assertTrue(pg.tail.tail.head.getGraph().tail.head.getGraph().tail.head.isValue());
         Assert.assertEquals(d, pg.tail.tail.head.getGraph().tail.head.getGraph().tail.head.getValue());
         Assert.assertTrue(pg.tail.tail.head.getGraph().tail.tail.head.isValue());
@@ -91,10 +99,10 @@ public class ParseGraphTest {
     @Test
     public void simpleFlatten() {
         final ParseValueList flat = pg.flatten();
-        Assert.assertEquals(d, flat.head);
-        Assert.assertEquals(c, flat.tail.head);
-        Assert.assertEquals(b, flat.tail.tail.head);
-        Assert.assertEquals(a, flat.tail.tail.tail.head);
+        Assert.assertEquals(h, flat.head);
+        Assert.assertEquals(g, flat.tail.head);
+        Assert.assertEquals(f, flat.tail.tail.head);
+        Assert.assertEquals(e, flat.tail.tail.tail.head);
         Assert.assertEquals(d, flat.tail.tail.tail.tail.head);
         Assert.assertEquals(c, flat.tail.tail.tail.tail.tail.head);
         Assert.assertEquals(b, flat.tail.tail.tail.tail.tail.tail.head);
@@ -138,9 +146,9 @@ public class ParseGraphTest {
             .add(d)
             .closeBranch()
             .closeBranch()
-            .add(a)
+            .add(e)
             .addBranch()
-            .add(b)
+            .add(f)
             .closeBranch();
     }
     
@@ -153,11 +161,11 @@ public class ParseGraphTest {
     @Test
     public void firstValue() {
         Assert.assertTrue(pgl.containsValue());
-        Assert.assertEquals(a, pgl.getFirstValue());
-        Assert.assertEquals(b, pgl.head.getGraph().getFirstValue());
-        Assert.assertEquals(a, pg.getFirstValue());
-        Assert.assertEquals(c, pg.tail.tail.head.getGraph().getFirstValue());
-        Assert.assertEquals(d, pg.tail.tail.head.getGraph().tail.head.getGraph().getFirstValue());
+        Assert.assertEquals(a, pgl.getLowestOffsetValue());
+        Assert.assertEquals(f, pgl.head.getGraph().getLowestOffsetValue());
+        Assert.assertEquals(a, pg.getLowestOffsetValue());
+        Assert.assertEquals(c, pg.tail.tail.head.getGraph().getLowestOffsetValue());
+        Assert.assertEquals(d, pg.tail.tail.head.getGraph().tail.head.getGraph().getLowestOffsetValue());
     }
 
 }

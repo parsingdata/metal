@@ -85,10 +85,16 @@ public class ParseGraph {
         return head.isValue() || tail.containsValue();
     }
     
-    public ParseValue getFirstValue() {
+    public ParseValue getLowestOffsetValue() {
         if (!containsValue()) { throw new IllegalStateException("Only call this method if containsValue() returns true."); }
-        if (tail.containsValue()) { return tail.getFirstValue(); }
-        return head.getValue();
+        if (head.isValue()) { return tail.getLowestOffsetValue(head.getValue()); }
+        return tail.getLowestOffsetValue();
+    }
+    
+    private ParseValue getLowestOffsetValue(final ParseValue lowest) {
+        if (!containsValue()) { return lowest; }
+        if (head.isValue()) { return tail.getLowestOffsetValue(lowest.getOffset() < head.getValue().getOffset() ? lowest : head.getValue()); }
+        return tail.getLowestOffsetValue(lowest);
     }
     
     public boolean hasGraphAtRef(long ref) {
@@ -99,7 +105,7 @@ public class ParseGraph {
         if (graphs.isEmpty()) { return null; }
         final ParseGraph res = findRef(graphs.tail, ref);
         if (res != null) { return res; }
-        if (graphs.head.containsValue() && graphs.head.getFirstValue().getOffset() == ref) {
+        if (graphs.head.containsValue() && graphs.head.getLowestOffsetValue().getOffset() == ref) {
             return graphs.head;
         } else {
             return null;
