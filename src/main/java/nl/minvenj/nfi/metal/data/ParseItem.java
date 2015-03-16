@@ -58,20 +58,9 @@ public final class ParseItem {
 
     public ParseGraph getRef(final ParseGraph root) {
         if (!isRef()) { throw new IllegalStateException("This ParseItem does not contain a Reference."); }
-        return findRef(ParseGraphList.create(root).add(root.getGraphs()));
+        return ParseGraph.findRef(ParseGraphList.create(root).add(root.getGraphs()), _ref);
     }
     
-    private ParseGraph findRef(final ParseGraphList graphs) {
-        if (graphs.isEmpty()) { return null; }
-        final ParseGraph res = findRef(graphs.tail);
-        if (res != null) { return res; }
-        if (graphs.head.containsValue() && graphs.head.getFirstValue().getOffset() == _ref) {
-            return graphs.head;
-        } else {
-            return null;
-        }
-    }
-
     @Override
     public String toString() {
         return (isValue() ? "ParseValue(" + _pv.toString() : (isGraph() ? "ParseGraph(" + _pg.toString() : "Ref(" + _ref)) + ")";

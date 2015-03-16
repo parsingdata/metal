@@ -19,8 +19,8 @@ package nl.minvenj.nfi.metal;
 import static nl.minvenj.nfi.metal.Shorthand.con;
 import static nl.minvenj.nfi.metal.Shorthand.def;
 import static nl.minvenj.nfi.metal.Shorthand.eq;
+import static nl.minvenj.nfi.metal.Shorthand.opt;
 import static nl.minvenj.nfi.metal.Shorthand.ref;
-import static nl.minvenj.nfi.metal.Shorthand.rep;
 import static nl.minvenj.nfi.metal.Shorthand.seq;
 import static nl.minvenj.nfi.metal.Shorthand.sub;
 import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
@@ -30,16 +30,17 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 
+import nl.minvenj.nfi.metal.data.Environment;
+import nl.minvenj.nfi.metal.data.ParseResult;
+import nl.minvenj.nfi.metal.data.ParseValueList;
+import nl.minvenj.nfi.metal.encoding.Encoding;
+import nl.minvenj.nfi.metal.token.Token;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-
-import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParseValueList;
-import nl.minvenj.nfi.metal.data.ParseResult;
-import nl.minvenj.nfi.metal.token.Token;
 
 @RunWith(Parameterized.class)
 public class SubStructTest {
@@ -49,27 +50,39 @@ public class SubStructTest {
     private final boolean _result;
     private final int[] _values;
     private final int[] _offsets;
+    
+    private static class LinkedList extends Token {
+        
+        private final Token struct;
+        
+        public LinkedList(final Encoding enc) {
+            super(enc);
+            struct = 
+                seq(def("header", con(1), eq(con(0))),
+                def("next", con(1)),
+                opt(sub(this, ref("next"))),
+                def("footer", con(1), eq(con(1))));
+        }
 
-    private static final Token linkedListStruct =
-        seq(def("header", con(1), eq(con(0))),
-            def("next", con(1)),
-            def("footer", con(1), eq(con(1))));
-    private static final Token linkedListSub =
-        seq(linkedListStruct,
-            rep(sub(linkedListStruct, ref("next"))));
+        @Override
+        protected ParseResult parseImpl(String scope, Environment env, Encoding enc) throws IOException {
+            return struct.parse(scope, env, enc);
+        }
+
+    }
 
     @Parameters(name="{0}")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-            { "linkedlist", linkedListSub, stream(0, 8, 1, 42, 0, 12, 1, 84, 0, 4, 1), true, new int[] { 0, 8, 1, 0, 4, 1, 0, 12, 1 }, new int[] { 0, 1, 2, 8, 9, 10, 4, 5, 6 } },
-                                       /* offset: 0, 1, 2,  3, 4,  5, 6,  7, 8, 9,10
-                                        * struct: -------      --------      -------
-                                        * ref 1:     +-----------------------^
-                                        * ref 2:               ^----------------+
-                                        * ref 3:                   +----------------*
-                                        */
-            { "linkedlist with self reference", linkedListSub, stream(0, 0, 1), true, new int[] { 0, 0, 1 }, new int[] { 0, 1, 2 } },
-            { "linkedlist with cycle", linkedListSub, stream(0, 4, 1, 21, 0, 0, 1), true, new int[] { 0, 4, 1, 0, 0, 1 }, new int[] { 0, 1, 2, 4, 5, 6 } }
+            { "linkedlist", new LinkedList(enc()), stream(0, 8, 1, 42, 0, 12, 1, 84, 0, 4, 1), true, new int[] { 0, 8, 0, 4, 0, 12, 1, 1, 1 }, new int[] { 0, 1, 8, 9, 4, 5, 6, 10, 2 } },
+                                               /* offset: 0, 1, 2,  3, 4,  5, 6,  7, 8, 9,10
+                                                * struct: -------      --------      -------
+                                                * ref 1:     +-----------------------^
+                                                * ref 2:               ^----------------+
+                                                * ref 3:                   +----------------*
+                                                */
+            { "linkedlist with self reference", new LinkedList(enc()), stream(0, 0, 1), true, new int[] { 0, 0, 1 }, new int[] { 0, 1, 2 } },
+            { "linkedlist with cycle", new LinkedList(enc()), stream(0, 4, 1, 21, 0, 0, 1), true, new int[] { 0, 4, 0, 0, 1, 1 }, new int[] { 0, 1, 4, 5, 6, 2 } }
         });
     }
 

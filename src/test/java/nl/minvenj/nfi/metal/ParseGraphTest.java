@@ -147,9 +147,9 @@ public class ParseGraphTest {
     @Test
     public void listGraphs() {
         final ParseGraphList list = pgl.getGraphs();
-        Assert.assertEquals(5, list.size);
+        Assert.assertEquals(6, list.size);
     }
-    
+
     @Test
     public void firstValue() {
         Assert.assertTrue(pgl.containsValue());

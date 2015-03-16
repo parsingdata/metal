@@ -70,12 +70,16 @@ public class ParseGraph {
     }
 
     public ParseGraphList getGraphs() {
-        if (isEmpty()) { return ParseGraphList.EMPTY; }
-        final ParseGraphList tailGraphs = tail.getGraphs();
-        if (head.isGraph()) { return tailGraphs.add(head.getGraph()).add(head.getGraph().getGraphs()); }
-        return tailGraphs;
+        return getNestedGraphs().add(this);
     }
     
+    private ParseGraphList getNestedGraphs() {
+        if (isEmpty()) { return ParseGraphList.EMPTY; }
+        final ParseGraphList tailGraphs = tail.getNestedGraphs();
+        if (head.isGraph()) { return tailGraphs.add(head.getGraph()).add(head.getGraph().getNestedGraphs()); }
+        return tailGraphs;
+    }
+
     public boolean containsValue() {
         if (isEmpty()) { return false; }
         return head.isValue() || tail.containsValue();
@@ -85,6 +89,17 @@ public class ParseGraph {
         if (!containsValue()) { throw new IllegalStateException("Only call this method if containsValue() returns true."); }
         if (tail.containsValue()) { return tail.getFirstValue(); }
         return head.getValue();
+    }
+
+    public static ParseGraph findRef(final ParseGraphList graphs, final long ref) {
+        if (graphs.isEmpty()) { return null; }
+        final ParseGraph res = findRef(graphs.tail, ref);
+        if (res != null) { return res; }
+        if (graphs.head.containsValue() && graphs.head.getFirstValue().getOffset() == ref) {
+            return graphs.head;
+        } else {
+            return null;
+        }
     }
 
     public boolean isEmpty() {
