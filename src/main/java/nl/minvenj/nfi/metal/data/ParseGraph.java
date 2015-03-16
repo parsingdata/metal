@@ -95,7 +95,7 @@ public class ParseGraph {
         return findRef(getGraphs(), ref) != null;
     }
 
-    public static ParseGraph findRef(final ParseGraphList graphs, final long ref) {
+    static ParseGraph findRef(final ParseGraphList graphs, final long ref) {
         if (graphs.isEmpty()) { return null; }
         final ParseGraph res = findRef(graphs.tail, ref);
         if (res != null) { return res; }
