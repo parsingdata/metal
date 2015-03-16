@@ -90,6 +90,10 @@ public class ParseGraph {
         if (tail.containsValue()) { return tail.getFirstValue(); }
         return head.getValue();
     }
+    
+    public boolean hasGraphAtRef(long ref) {
+        return findRef(getGraphs(), ref) != null;
+    }
 
     public static ParseGraph findRef(final ParseGraphList graphs, final long ref) {
         if (graphs.isEmpty()) { return null; }

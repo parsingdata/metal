@@ -19,7 +19,6 @@ package nl.minvenj.nfi.metal.token;
 import java.io.IOException;
 
 import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParseGraph;
 import nl.minvenj.nfi.metal.data.ParseResult;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.expression.value.OptionalValue;
@@ -41,17 +40,15 @@ public class Sub extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final OptionalValue ov = _addr.eval(env, enc);
-        if (ov.isPresent()) {
-            if (ParseGraph.findRef(env.order.getGraphs(), ov.get().asNumeric().longValue()) == null) {
-                final ParseResult res = _op.parse(scope, new Environment(env.order.addBranch(), env.input, ov.get().asNumeric().longValue()), enc);
-                if (res.succeeded()) {
-                    return new ParseResult(true, new Environment(res.getEnvironment().order, res.getEnvironment().input, env.offset));
-                }
-            } else {
-                return new ParseResult(true, new Environment(env.order.addRef(ov.get().asNumeric().longValue()), env.input, env.offset));
+        if (!ov.isPresent()) { return new ParseResult(false, env); }
+        final long ref = ov.get().asNumeric().longValue();
+        if (!env.order.hasGraphAtRef(ref)) {
+            final ParseResult res = _op.parse(scope, new Environment(env.order.addBranch(), env.input, ref), enc);
+            if (res.succeeded()) {
+                return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, env.offset));
             }
         }
-        return new ParseResult(false, env);
+        return new ParseResult(true, new Environment(env.order.addRef(ref), env.input, env.offset));
     }
 
     @Override
