@@ -117,8 +117,7 @@ public class ParseGraph {
     }
 
     public ParseGraph reverse() {
-        if (isEmpty()) { return this; }
-        return reverse(tail, new ParseGraph(reverseItem(head), EMPTY));
+        return reverse(this, EMPTY);
     }
 
     private ParseGraph reverse(final ParseGraph oldGraph, final ParseGraph newGraph) {
@@ -127,7 +126,7 @@ public class ParseGraph {
     }
 
     private ParseItem reverseItem(final ParseItem item) {
-        return item.isValue() || item.isRef() ? item : new ParseItem(item.getGraph().reverse());
+        return item.isGraph() ? new ParseItem(item.getGraph().reverse()) : item;
     }
 
     public ParseValueList flatten() {

@@ -61,16 +61,15 @@ public class TreeTest {
     @Test
     public void checkTree() {
         Assert.assertTrue(_result.succeeded());
-        Assert.assertTrue(checkStruct(_result.getEnvironment().order.reverse(), 0, 0));
+        checkStruct(_result.getEnvironment().order.reverse(), 0, 0);
     }
 
-    private boolean checkStruct(final ParseGraph graph, final long offset, final int id) {
-        if (!graph.head.isValue()) { return false; }
-        if (graph.head.getValue().asNumeric().intValue() != 9) { return false; }
-        if (graph.head.getValue().getOffset() != offset) { return false; }
-        if (!graph.tail.head.isValue()) { return false; }
-        if (graph.tail.head.getValue().asNumeric().intValue() != id) { return false; }
-        return true;
+    private void checkStruct(final ParseGraph graph, final long offset, final int id) {
+        Assert.assertTrue(graph.head.isValue());
+        Assert.assertEquals(9, graph.head.getValue().asNumeric().intValue());
+        Assert.assertEquals(offset, graph.head.getValue().getOffset());
+        Assert.assertTrue(graph.tail.head.isValue());
+        Assert.assertEquals(id, graph.tail.head.getValue().asNumeric().intValue());
     }
 
     @Test
