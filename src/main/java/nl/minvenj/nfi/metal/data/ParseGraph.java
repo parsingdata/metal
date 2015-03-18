@@ -72,7 +72,7 @@ public class ParseGraph {
     public ParseGraphList getGraphs() {
         return getNestedGraphs().add(this);
     }
-    
+
     private ParseGraphList getNestedGraphs() {
         if (isEmpty()) { return ParseGraphList.EMPTY; }
         final ParseGraphList tailGraphs = tail.getNestedGraphs();
@@ -84,20 +84,20 @@ public class ParseGraph {
         if (isEmpty()) { return false; }
         return head.isValue() || tail.containsValue();
     }
-    
+
     public ParseValue getLowestOffsetValue() {
         if (!containsValue()) { throw new IllegalStateException("Only call this method if containsValue() returns true."); }
         if (head.isValue()) { return tail.getLowestOffsetValue(head.getValue()); }
         return tail.getLowestOffsetValue();
     }
-    
+
     private ParseValue getLowestOffsetValue(final ParseValue lowest) {
         if (!containsValue()) { return lowest; }
         if (head.isValue()) { return tail.getLowestOffsetValue(lowest.getOffset() < head.getValue().getOffset() ? lowest : head.getValue()); }
         return tail.getLowestOffsetValue(lowest);
     }
-    
-    public boolean hasGraphAtRef(long ref) {
+
+    public boolean hasGraphAtRef(final long ref) {
         return findRef(getGraphs(), ref) != null;
     }
 
@@ -114,6 +114,20 @@ public class ParseGraph {
 
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    public ParseGraph reverse() {
+        if (isEmpty()) { return this; }
+        return reverse(tail, new ParseGraph(reverseItem(head), EMPTY));
+    }
+
+    private ParseGraph reverse(final ParseGraph oldGraph, final ParseGraph newGraph) {
+        if (oldGraph.isEmpty()) { return newGraph; }
+        return reverse(oldGraph.tail, new ParseGraph(reverseItem(oldGraph.head), newGraph));
+    }
+
+    private ParseItem reverseItem(final ParseItem item) {
+        return item.isValue() || item.isRef() ? item : new ParseItem(item.getGraph().reverse());
     }
 
     public ParseValueList flatten() {

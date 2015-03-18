@@ -29,6 +29,11 @@ import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.data.ParseGraph;
 import nl.minvenj.nfi.metal.data.ParseResult;
@@ -36,16 +41,11 @@ import nl.minvenj.nfi.metal.data.ParseValueList;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.token.Token;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 @RunWith(JUnit4.class)
 public class TreeTest {
-    
+
     private final ParseResult _result;
-    
+
     public TreeTest() throws IOException {
         _result = new Token(null) { @Override protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
             return seq(def("head", con(1), eq(con(9))),
@@ -57,13 +57,13 @@ public class TreeTest {
             }
         }.parse(stream(9, 0, 6, 10, 8, 8, 9, 1, 16, 20, 9, 2, 24, 28, 8, 8, 9, 3, 0, 0, 9, 4, 0, 0, 9, 5, 0, 0, 9, 6, 0, 0), enc());
     }
-    
+
     @Test
     public void checkTree() {
         Assert.assertTrue(_result.succeeded());
-        //Assert.assertTrue(checkStruct(_result.getEnvironment().order, 0, 0));
+        Assert.assertTrue(checkStruct(_result.getEnvironment().order.reverse(), 0, 0));
     }
-    
+
     private boolean checkStruct(final ParseGraph graph, final long offset, final int id) {
         if (!graph.head.isValue()) { return false; }
         if (graph.head.getValue().asNumeric().intValue() != 9) { return false; }
@@ -72,7 +72,7 @@ public class TreeTest {
         if (graph.tail.head.getValue().asNumeric().intValue() != id) { return false; }
         return true;
     }
-    
+
     @Test
     public void checkTreeFlat() {
         Assert.assertTrue(_result.succeeded());
