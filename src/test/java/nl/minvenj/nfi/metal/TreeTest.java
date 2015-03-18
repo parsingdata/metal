@@ -36,6 +36,7 @@ import org.junit.runners.JUnit4;
 
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.data.ParseGraph;
+import nl.minvenj.nfi.metal.data.ParseItem;
 import nl.minvenj.nfi.metal.data.ParseResult;
 import nl.minvenj.nfi.metal.data.ParseValueList;
 import nl.minvenj.nfi.metal.encoding.Encoding;
@@ -61,15 +62,29 @@ public class TreeTest {
     @Test
     public void checkTree() {
         Assert.assertTrue(_result.succeeded());
-        checkStruct(_result.getEnvironment().order.reverse(), 0, 0);
+        checkStruct(_result.getEnvironment().order.reverse(), 0, 0, 6, 10);
     }
 
-    private void checkStruct(final ParseGraph graph, final long offset, final int id) {
-        Assert.assertTrue(graph.head.isValue());
-        Assert.assertEquals(9, graph.head.getValue().asNumeric().intValue());
-        Assert.assertEquals(offset, graph.head.getValue().getOffset());
-        Assert.assertTrue(graph.tail.head.isValue());
-        Assert.assertEquals(id, graph.tail.head.getValue().asNumeric().intValue());
+    private void checkStruct(final ParseGraph graph, final long offset, final int id, final long leftOffset, final long rightOffset) {
+        final ParseItem head = graph.head;
+        Assert.assertTrue(head.isValue());
+        Assert.assertEquals(9, head.getValue().asNumeric().intValue());
+        Assert.assertEquals(offset, head.getValue().getOffset());
+        final ParseItem nr = graph.tail.head;
+        Assert.assertTrue(nr.isValue());
+        Assert.assertEquals(id, nr.getValue().asNumeric().intValue());
+        final ParseItem left = graph.tail.tail.head;
+        Assert.assertTrue(left.isValue());
+        Assert.assertEquals(leftOffset, left.getValue().asNumeric().longValue());
+        if (leftOffset != 0) {
+            Assert.assertTrue(graph.tail.tail.tail.head.isGraph());
+        }
+        final ParseItem right = leftOffset != 0 ? graph.tail.tail.tail.tail.head : graph.tail.tail.tail.head;
+        Assert.assertTrue(right.isValue());
+        Assert.assertEquals(rightOffset, right.getValue().asNumeric().longValue());
+        if (rightOffset != 0) {
+            Assert.assertTrue((leftOffset != 0 ? graph.tail.tail.tail.tail.tail.head : graph.tail.tail.tail.tail.head).isGraph());
+        }
     }
 
     @Test
