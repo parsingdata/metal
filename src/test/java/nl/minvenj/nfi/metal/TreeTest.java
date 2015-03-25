@@ -46,10 +46,10 @@ import nl.minvenj.nfi.metal.token.Token;
 public class TreeTest {
 
     private static final int HEAD = 9;
-    private final ParseResult _result;
-
-    public TreeTest() throws IOException {
-        _result = new Token(null) { @Override protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
+    private static final Token TREE =
+        new Token(null) {
+            @Override
+            protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
             return seq(def("head", con(1), eq(con(HEAD))),
                        def("nr", con(1)),
                        def("left", con(1)),
@@ -57,13 +57,20 @@ public class TreeTest {
                        def("right", con(1)),
                        pre(sub(this, ref("right")), not(eq(ref("right"), con(0))))).parse(scope, env, enc);
             }
-        }.parse(stream(HEAD, 0, 6, 10, 8, 8, HEAD, 1, 16, 20, HEAD, 2, 24, 28, 8, 8, HEAD, 3, 0, 0, HEAD, 4, 0, 0, HEAD, 5, 0, 0, HEAD, 6, 0, 0), enc());
+        };
+
+    private final ParseResult _regular;
+    private final ParseResult _cyclic;
+
+    public TreeTest() throws IOException {
+        _regular = TREE.parse(stream(HEAD, 0, 6, 10, 8, 8, HEAD, 1, 16, 20, HEAD, 2, 24, 28, 8, 8, HEAD, 3, 0, 0, HEAD, 4, 0, 0, HEAD, 5, 0, 0, HEAD, 6, 0, 0), enc());
+        _cyclic = TREE.parse(stream(HEAD, 0, 4, 8, HEAD, 1, 8, 0, HEAD, 2, 0, 0), enc());
     }
 
     @Test
     public void checkTree() {
-        Assert.assertTrue(_result.succeeded());
-        checkStruct(_result.getEnvironment().order.reverse(), 0);
+        Assert.assertTrue(_regular.succeeded());
+        checkStruct(_regular.getEnvironment().order.reverse(), 0);
     }
 
     private void checkStruct(final ParseGraph graph, final long offset) {
@@ -92,8 +99,8 @@ public class TreeTest {
 
     @Test
     public void checkTreeFlat() {
-        Assert.assertTrue(_result.succeeded());
-        final ParseValueList nrs = _result.getEnvironment().order.flatten().getAll("nr");
+        Assert.assertTrue(_regular.succeeded());
+        final ParseValueList nrs = _regular.getEnvironment().order.flatten().getAll("nr");
         for (int i = 0; i < 7; i++) {
             Assert.assertTrue(contains(nrs, i));
         }
