@@ -45,45 +45,48 @@ import nl.minvenj.nfi.metal.token.Token;
 @RunWith(JUnit4.class)
 public class TreeTest {
 
+    private static final int HEAD = 9;
     private final ParseResult _result;
 
     public TreeTest() throws IOException {
         _result = new Token(null) { @Override protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-            return seq(def("head", con(1), eq(con(9))),
+            return seq(def("head", con(1), eq(con(HEAD))),
                        def("nr", con(1)),
                        def("left", con(1)),
                        pre(sub(this, ref("left")), not(eq(ref("left"), con(0)))),
                        def("right", con(1)),
                        pre(sub(this, ref("right")), not(eq(ref("right"), con(0))))).parse(scope, env, enc);
             }
-        }.parse(stream(9, 0, 6, 10, 8, 8, 9, 1, 16, 20, 9, 2, 24, 28, 8, 8, 9, 3, 0, 0, 9, 4, 0, 0, 9, 5, 0, 0, 9, 6, 0, 0), enc());
+        }.parse(stream(HEAD, 0, 6, 10, 8, 8, HEAD, 1, 16, 20, HEAD, 2, 24, 28, 8, 8, HEAD, 3, 0, 0, HEAD, 4, 0, 0, HEAD, 5, 0, 0, HEAD, 6, 0, 0), enc());
     }
 
     @Test
     public void checkTree() {
         Assert.assertTrue(_result.succeeded());
-        checkStruct(_result.getEnvironment().order.reverse(), 0, 0, 6, 10);
+        checkStruct(_result.getEnvironment().order.reverse(), 0);
     }
 
-    private void checkStruct(final ParseGraph graph, final long offset, final int id, final long leftOffset, final long rightOffset) {
+    private void checkStruct(final ParseGraph graph, final long offset) {
         final ParseItem head = graph.head;
         Assert.assertTrue(head.isValue());
-        Assert.assertEquals(9, head.getValue().asNumeric().intValue());
+        Assert.assertEquals(HEAD, head.getValue().asNumeric().intValue());
         Assert.assertEquals(offset, head.getValue().getOffset());
         final ParseItem nr = graph.tail.head;
         Assert.assertTrue(nr.isValue());
-        Assert.assertEquals(id, nr.getValue().asNumeric().intValue());
         final ParseItem left = graph.tail.tail.head;
         Assert.assertTrue(left.isValue());
-        Assert.assertEquals(leftOffset, left.getValue().asNumeric().longValue());
+        final long leftOffset = left.getValue().asNumeric().longValue();
         if (leftOffset != 0) {
             Assert.assertTrue(graph.tail.tail.tail.head.isGraph());
+            checkStruct(graph.tail.tail.tail.head.getGraph(), leftOffset);
         }
         final ParseItem right = leftOffset != 0 ? graph.tail.tail.tail.tail.head : graph.tail.tail.tail.head;
         Assert.assertTrue(right.isValue());
-        Assert.assertEquals(rightOffset, right.getValue().asNumeric().longValue());
+        final long rightOffset = right.getValue().asNumeric().longValue();
         if (rightOffset != 0) {
-            Assert.assertTrue((leftOffset != 0 ? graph.tail.tail.tail.tail.tail.head : graph.tail.tail.tail.tail.head).isGraph());
+            final ParseItem rightItem = (leftOffset != 0 ? graph.tail.tail.tail.tail.tail.head : graph.tail.tail.tail.tail.head);
+            Assert.assertTrue(rightItem.isGraph());
+            checkStruct(rightItem.getGraph(), rightOffset);
         }
     }
 
