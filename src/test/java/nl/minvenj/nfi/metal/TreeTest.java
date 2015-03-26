@@ -64,41 +64,75 @@ public class TreeTest {
 
     public TreeTest() throws IOException {
         _regular = TREE.parse(stream(HEAD, 0, 6, 10, 8, 8, HEAD, 1, 16, 20, HEAD, 2, 24, 28, 8, 8, HEAD, 3, 0, 0, HEAD, 4, 0, 0, HEAD, 5, 0, 0, HEAD, 6, 0, 0), enc());
-        _cyclic = TREE.parse(stream(HEAD, 0, 4, 8, HEAD, 1, 8, 0, HEAD, 2, 0, 0), enc());
+                                  /* *--------+---+        *---------+---+  *---------+---+        *--------*--*  *--------*--*  *--------*--*  *--------*--*
+                                   *          \---|--------/         \---|--|---------|---|--------/              |              |              |
+                                   *              \----------------------|--/         \---|-----------------------|--------------/              |
+                                   *                                     \----------------|-----------------------/                             |
+                                   *                                                      \-----------------------------------------------------/
+                                   */
+        _cyclic = TREE.parse(stream(HEAD, 0, 4, 8, HEAD, 1, 8, 0, HEAD, 2, 4, 0), enc());
+                                 /* *--------+--+  *--------+--*  *--------+--*
+                                  *          \--|--/        \-----/        |
+                                  *             \--|--------------/        |
+                                  *                \-----------------------/
+                                  */
     }
 
     @Test
-    public void checkTree() {
+    public void checkRegularTree() {
         Assert.assertTrue(_regular.succeeded());
         checkStruct(_regular.getEnvironment().order.reverse(), 0);
     }
 
+    @Test
+    public void checkCyclicTree() {
+        Assert.assertTrue(_cyclic.succeeded());
+        checkStruct(_cyclic.getEnvironment().order.reverse(), 0);
+    }
+
     private void checkStruct(final ParseGraph graph, final long offset) {
-        final ParseItem head = graph.head;
-        Assert.assertTrue(head.isValue());
-        Assert.assertEquals(HEAD, head.getValue().asNumeric().intValue());
-        Assert.assertEquals(offset, head.getValue().getOffset());
-        final ParseItem nr = graph.tail.head;
-        Assert.assertTrue(nr.isValue());
+        checkStruct(graph, graph, offset);
+    }
+
+    private void checkStruct(final ParseGraph root, final ParseGraph graph, final long offset) {
+        checkHeader(graph, offset);
         final ParseItem left = graph.tail.tail.head;
         Assert.assertTrue(left.isValue());
         final long leftOffset = left.getValue().asNumeric().longValue();
         if (leftOffset != 0) {
-            Assert.assertTrue(graph.tail.tail.tail.head.isGraph());
-            checkStruct(graph.tail.tail.tail.head.getGraph(), leftOffset);
+            final ParseItem leftItem = graph.tail.tail.tail.head;
+            Assert.assertFalse(leftItem.isValue());
+            if (leftItem.isGraph()) {
+                checkStruct(root, graph.tail.tail.tail.head.getGraph(), leftOffset);
+            } else if (leftItem.isRef()) {
+                checkHeader(leftItem.getRef(root), leftOffset);
+            }
         }
         final ParseItem right = leftOffset != 0 ? graph.tail.tail.tail.tail.head : graph.tail.tail.tail.head;
         Assert.assertTrue(right.isValue());
         final long rightOffset = right.getValue().asNumeric().longValue();
         if (rightOffset != 0) {
             final ParseItem rightItem = (leftOffset != 0 ? graph.tail.tail.tail.tail.tail.head : graph.tail.tail.tail.tail.head);
-            Assert.assertTrue(rightItem.isGraph());
-            checkStruct(rightItem.getGraph(), rightOffset);
+            Assert.assertFalse(rightItem.isValue());
+            if (rightItem.isGraph()) {
+                checkStruct(root, rightItem.getGraph(), rightOffset);
+            } else if (rightItem.isRef()) {
+                checkHeader(rightItem.getRef(root), rightOffset);
+            }
         }
     }
 
+    private void checkHeader(final ParseGraph graph, final long offset) {
+        final ParseItem head = graph.head;
+        Assert.assertTrue(head.isValue());
+        Assert.assertEquals(HEAD, head.getValue().asNumeric().intValue());
+        Assert.assertEquals(offset, head.getValue().getOffset());
+        final ParseItem nr = graph.tail.head;
+        Assert.assertTrue(nr.isValue());
+    }
+
     @Test
-    public void checkTreeFlat() {
+    public void checkRegularTreeFlat() {
         Assert.assertTrue(_regular.succeeded());
         final ParseValueList nrs = _regular.getEnvironment().order.flatten().getAll("nr");
         for (int i = 0; i < 7; i++) {
