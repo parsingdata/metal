@@ -86,7 +86,7 @@ public class ParseGraph {
     }
 
     public ParseValue getLowestOffsetValue() {
-        if (!containsValue()) { throw new IllegalStateException("Only call this method if containsValue() returns true."); }
+        if (!containsValue()) { throw new IllegalStateException("Cannot determine lowest offset if graph does not contain a value."); }
         if (head.isValue()) { return tail.getLowestOffsetValue(head.getValue()); }
         return tail.getLowestOffsetValue();
     }
