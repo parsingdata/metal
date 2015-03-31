@@ -29,38 +29,118 @@ import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
-import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParseResult;
-import nl.minvenj.nfi.metal.data.ParsedValueList;
-import nl.minvenj.nfi.metal.encoding.Encoding;
-import nl.minvenj.nfi.metal.token.Token;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import nl.minvenj.nfi.metal.data.Environment;
+import nl.minvenj.nfi.metal.data.ParseGraph;
+import nl.minvenj.nfi.metal.data.ParseItem;
+import nl.minvenj.nfi.metal.data.ParseResult;
+import nl.minvenj.nfi.metal.data.ParseValueList;
+import nl.minvenj.nfi.metal.encoding.Encoding;
+import nl.minvenj.nfi.metal.token.Token;
+
 @RunWith(JUnit4.class)
 public class TreeTest {
 
-    @Test
-    public void parseTree2() throws IOException {
-        final ParseResult result = new Token(null) { @Override protected ParseResult parseImpl(String scope, Environment env, Encoding enc) throws IOException {
-                return seq(def("head", con(1), eq(con(9))),
-                           def("nr", con(1)),
-                           def("left", con(1)),
-                           pre(sub(this, ref("left")), not(eq(ref("left"), con(0)))),
-                           def("right", con(1)),
-                           pre(sub(this, ref("right")), not(eq(ref("right"), con(0))))).parse(scope, env, enc);
-            }}.parse(stream(9, 0, 6, 10, 8, 8, 9, 1, 16, 20, 9, 2, 24, 28, 8, 8, 9, 3, 0, 0, 9, 4, 0, 0, 9, 5, 0, 0, 9, 6, 0, 0), enc());
-            Assert.assertTrue(result.succeeded());
-            ParsedValueList nrs = result.getEnvironment().order.getAll("nr");
-            for (int i = 0; i < 7; i++) {
-                Assert.assertTrue(contains(nrs, i));
+    private static final int HEAD = 9;
+    private static final Token TREE =
+        new Token(null) {
+            @Override
+            protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
+            return seq(def("head", con(1), eq(con(HEAD))),
+                       def("nr", con(1)),
+                       def("left", con(1)),
+                       pre(sub(this, ref("left")), not(eq(ref("left"), con(0)))),
+                       def("right", con(1)),
+                       pre(sub(this, ref("right")), not(eq(ref("right"), con(0))))).parse(scope, env, enc);
             }
+        };
+
+    private final ParseResult _regular;
+    private final ParseResult _cyclic;
+
+    public TreeTest() throws IOException {
+        _regular = TREE.parse(stream(HEAD, 0, 6, 10, 8, 8, HEAD, 1, 16, 20, HEAD, 2, 24, 28, 8, 8, HEAD, 3, 0, 0, HEAD, 4, 0, 0, HEAD, 5, 0, 0, HEAD, 6, 0, 0), enc());
+                                  /* *--------+---+        *---------+---+  *---------+---+        *--------*--*  *--------*--*  *--------*--*  *--------*--*
+                                   *          \---|--------/         \---|--|---------|---|--------/              |              |              |
+                                   *              \----------------------|--/         \---|-----------------------|--------------/              |
+                                   *                                     \----------------|-----------------------/                             |
+                                   *                                                      \-----------------------------------------------------/
+                                   */
+        _cyclic = TREE.parse(stream(HEAD, 0, 4, 8, HEAD, 1, 8, 0, HEAD, 2, 4, 0), enc());
+                                 /* *--------+--+  *--------+--*  *--------+--*
+                                  *          \--|--/        \-----/        |
+                                  *             \--|--------------/        |
+                                  *                \-----------------------/
+                                  */
     }
 
-    private boolean contains(ParsedValueList nrs, int i) {
+    @Test
+    public void checkRegularTree() {
+        Assert.assertTrue(_regular.succeeded());
+        checkStruct(_regular.getEnvironment().order.reverse(), 0);
+    }
+
+    @Test
+    public void checkCyclicTree() {
+        Assert.assertTrue(_cyclic.succeeded());
+        checkStruct(_cyclic.getEnvironment().order.reverse(), 0);
+    }
+
+    private void checkStruct(final ParseGraph graph, final long offset) {
+        checkStruct(graph, graph, offset);
+    }
+
+    private void checkStruct(final ParseGraph root, final ParseGraph graph, final long offset) {
+        checkHeader(graph, offset);
+        final ParseItem left = graph.tail.tail.head;
+        Assert.assertTrue(left.isValue());
+        final long leftOffset = left.getValue().asNumeric().longValue();
+        if (leftOffset != 0) {
+            final ParseItem leftItem = graph.tail.tail.tail.head;
+            Assert.assertFalse(leftItem.isValue());
+            if (leftItem.isGraph()) {
+                checkStruct(root, leftItem.getGraph(), leftOffset);
+            } else if (leftItem.isRef()) {
+                checkHeader(leftItem.getRef(root), leftOffset);
+            }
+        }
+        final ParseItem right = leftOffset != 0 ? graph.tail.tail.tail.tail.head : graph.tail.tail.tail.head;
+        Assert.assertTrue(right.isValue());
+        final long rightOffset = right.getValue().asNumeric().longValue();
+        if (rightOffset != 0) {
+            final ParseItem rightItem = (leftOffset != 0 ? graph.tail.tail.tail.tail.tail.head : graph.tail.tail.tail.tail.head);
+            Assert.assertFalse(rightItem.isValue());
+            if (rightItem.isGraph()) {
+                checkStruct(root, rightItem.getGraph(), rightOffset);
+            } else if (rightItem.isRef()) {
+                checkHeader(rightItem.getRef(root), rightOffset);
+            }
+        }
+    }
+
+    private void checkHeader(final ParseGraph graph, final long offset) {
+        final ParseItem head = graph.head;
+        Assert.assertTrue(head.isValue());
+        Assert.assertEquals(HEAD, head.getValue().asNumeric().intValue());
+        Assert.assertEquals(offset, head.getValue().getOffset());
+        final ParseItem nr = graph.tail.head;
+        Assert.assertTrue(nr.isValue());
+    }
+
+    @Test
+    public void checkRegularTreeFlat() {
+        Assert.assertTrue(_regular.succeeded());
+        final ParseValueList nrs = _regular.getEnvironment().order.flatten().getAll("nr");
+        for (int i = 0; i < 7; i++) {
+            Assert.assertTrue(contains(nrs, i));
+        }
+    }
+
+    private boolean contains(final ParseValueList nrs, final int i) {
         if (nrs.head.asNumeric().intValue() == i) { return true; }
         if (nrs.tail != null) { return contains(nrs.tail, i); }
         return false;

@@ -25,7 +25,7 @@ public class Self implements ValueExpression {
 
     @Override
     public OptionalValue eval(final Environment env, final Encoding enc) {
-        return OptionalValue.of(env.order.current());
+        return OptionalValue.of(env.order.flatten().current());
     }
 
     @Override

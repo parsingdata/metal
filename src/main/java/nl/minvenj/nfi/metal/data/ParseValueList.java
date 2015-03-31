@@ -16,40 +16,46 @@
 
 package nl.minvenj.nfi.metal.data;
 
-import nl.minvenj.nfi.metal.expression.value.ParsedValue;
+public class ParseValueList {
 
-public class ParsedValueList {
-
-    public final ParsedValue head;
-    public final ParsedValueList tail;
+    public final ParseValue head;
+    public final ParseValueList tail;
     public final long size;
 
-    public static final ParsedValueList EMPTY = new ParsedValueList();
+    public static final ParseValueList EMPTY = new ParseValueList();
 
-    private ParsedValueList() {
+    private ParseValueList() {
         head = null;
         tail = null;
         size = 0;
     }
 
-    private ParsedValueList(final ParsedValue head, final ParsedValueList tail) {
-        assert head != null : "Argument head may not be null";
-        assert tail != null : "Argument tail may not be null";
+    private ParseValueList(final ParseValue head, final ParseValueList tail) {
+        if (head == null) { throw new IllegalArgumentException("Argument head may not be null."); }
+        if (tail == null) { throw new IllegalArgumentException("Argument tail may not be null."); }
         this.head = head;
         this.tail = tail;
         size = tail.size + 1;
     }
 
-    public static ParsedValueList create(final ParsedValue head) {
+    public static ParseValueList create(final ParseValue head) {
+        if (head == null) { throw new IllegalArgumentException("Argument head may not be null."); }
         return EMPTY.add(head);
     }
 
-    public ParsedValueList add(final ParsedValue head) {
+    public ParseValueList add(final ParseValue head) {
         if (head == null) { throw new IllegalArgumentException("Argument head may not be null."); }
-        return new ParsedValueList(head, this);
+        return new ParseValueList(head, this);
     }
 
-    public ParsedValue get(final String name) {
+    public ParseValueList add(final ParseValueList list) {
+        if (list == null) { throw new IllegalArgumentException("Argument list may not be null."); }
+        if (list.isEmpty()) { return this; }
+        if (isEmpty()) { return list; }
+        return add(list.tail).add(list.head);
+    }
+
+    public ParseValue get(final String name) {
         if (isEmpty()) { return null; }
         if (head.matches(name)) {
             return head;
@@ -58,21 +64,21 @@ public class ParsedValueList {
         }
     }
 
-    public ParsedValueList getAll(final String name) {
+    public ParseValueList getAll(final String name) {
         if (isEmpty()) { return this; }
-        final ParsedValueList t = tail.getAll(name);
+        final ParseValueList t = tail.getAll(name);
         if (head.matches(name)) { return t.add(head); }
         else { return t; }
     }
 
-    public ParsedValueList getValuesSincePrefix(final ParsedValue prefix) {
+    public ParseValueList getValuesSincePrefix(final ParseValue prefix) {
         if (isEmpty()) { return this; }
         if (head == prefix) { return EMPTY; }
-        final ParsedValueList t = tail.getValuesSincePrefix(prefix);
+        final ParseValueList t = tail.getValuesSincePrefix(prefix);
         return t.add(head);
     }
 
-    public ParsedValue current() {
+    public ParseValue current() {
         return head;
     }
 
@@ -80,7 +86,7 @@ public class ParsedValueList {
         return size == 0;
     }
 
-    public ParsedValue getFirst() {
+    public ParseValue getFirst() {
         if (isEmpty()) { return null; }
         if (tail.isEmpty()) { return head; }
         return tail.getFirst();
@@ -92,12 +98,12 @@ public class ParsedValueList {
         return tail.containsOffset(offset);
     }
 
-    public ParsedValueList reverse() {
+    public ParseValueList reverse() {
         if (isEmpty()) { return this; }
         return reverse(tail, create(head));
     }
 
-    private ParsedValueList reverse(final ParsedValueList oldList, final ParsedValueList newList) {
+    private ParseValueList reverse(final ParseValueList oldList, final ParseValueList newList) {
         if (oldList.isEmpty()) { return newList; }
         return reverse(oldList.tail, newList.add(oldList.head));
     }

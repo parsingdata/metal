@@ -17,11 +17,11 @@
 package nl.minvenj.nfi.metal.token;
 
 import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParsedValueList;
+import nl.minvenj.nfi.metal.data.ParseValueList;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 
 public interface StructSink {
 
-    void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParsedValueList struct);
+    void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParseValueList struct);
 
 }

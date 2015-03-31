@@ -18,13 +18,14 @@ package nl.minvenj.nfi.metal.token;
 
 import java.io.IOException;
 
+import nl.minvenj.nfi.metal.data.ParseValue;
+
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.data.ParseResult;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.expression.Expression;
 import nl.minvenj.nfi.metal.expression.True;
 import nl.minvenj.nfi.metal.expression.value.OptionalValue;
-import nl.minvenj.nfi.metal.expression.value.ParsedValue;
 import nl.minvenj.nfi.metal.expression.value.ValueExpression;
 
 public class Def extends Token {
@@ -52,7 +53,7 @@ public class Def extends Token {
         if (env.input.read(env.offset, data) != data.length) {
             return new ParseResult(false, env);
         }
-        final Environment newEnv = new Environment(env.order.add(new ParsedValue(scope, _name, env.offset, data, enc)), env.input, env.offset + size.get().asNumeric().intValue());
+        final Environment newEnv = new Environment(env.order.add(new ParseValue(scope, _name, env.offset, data, enc)), env.input, env.offset + size.get().asNumeric().intValue());
         return _pred.eval(newEnv, enc) ? new ParseResult(true, newEnv) : new ParseResult(false, env);
     }
 

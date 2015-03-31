@@ -18,22 +18,22 @@ package nl.minvenj.nfi.metal.data;
 
 public class Environment {
 
-    public final ParsedValueList order;
+    public final ParseGraph order;
     public final ByteStream input;
     public final long offset;
 
-    public Environment(final ParsedValueList order, final ByteStream input, final long offset) {
+    public Environment(final ParseGraph order, final ByteStream input, final long offset) {
         this.order = order;
         this.input = input;
         this.offset = offset;
     }
 
     public Environment(final ByteStream input, final long offset) {
-        this(ParsedValueList.EMPTY, input, offset);
+        this(ParseGraph.EMPTY, input, offset);
     }
 
     public Environment(final ByteStream input) {
-        this(ParsedValueList.EMPTY, input, 0L);
+        this(ParseGraph.EMPTY, input, 0L);
     }
 
     @Override

@@ -27,13 +27,13 @@ import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
-import nl.minvenj.nfi.metal.data.ParseResult;
-import nl.minvenj.nfi.metal.token.Token;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import nl.minvenj.nfi.metal.data.ParseResult;
+import nl.minvenj.nfi.metal.token.Token;
 
 @RunWith(JUnit4.class)
 public class ShorthandsTest {
@@ -74,7 +74,7 @@ public class ShorthandsTest {
     private void runChoice(final int data, final String matched) throws IOException {
         final ParseResult res = multiChoice.parse(stream(data), enc());
         Assert.assertTrue(res.succeeded());
-        Assert.assertTrue(res.getEnvironment().order.current().getName().equals(matched));
+        Assert.assertTrue(res.getEnvironment().order.flatten().current().getName().equals(matched));
     }
 
     @Test
