@@ -103,7 +103,7 @@ public class TreeTest {
             final ParseItem leftItem = graph.tail.tail.tail.head;
             Assert.assertFalse(leftItem.isValue());
             if (leftItem.isGraph()) {
-                checkStruct(root, graph.tail.tail.tail.head.getGraph(), leftOffset);
+                checkStruct(root, leftItem.getGraph(), leftOffset);
             } else if (leftItem.isRef()) {
                 checkHeader(leftItem.getRef(root), leftOffset);
             }

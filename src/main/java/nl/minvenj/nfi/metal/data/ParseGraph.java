@@ -69,6 +69,16 @@ public class ParseGraph {
         return new ParseGraph(head, tail, false);
     }
 
+    public ParseGraphList getRefs() {
+        return getRefs(this);
+    }
+
+    private ParseGraphList getRefs(final ParseGraph root) {
+        if (isEmpty()) { return ParseGraphList.EMPTY; }
+        if (head.isRef() && head.getRef(root) == null) { throw new IllegalStateException("A ref must point to an existing graph."); }
+        return tail.getRefs(root).add(head.isGraph() ? head.getGraph().getRefs(root) : (head.isRef() ? ParseGraphList.EMPTY.add(head.getRef(root)) : ParseGraphList.EMPTY));
+    }
+
     public ParseGraphList getGraphs() {
         return getNestedGraphs().add(this);
     }
@@ -107,9 +117,8 @@ public class ParseGraph {
         if (res != null) { return res; }
         if (graphs.head.containsValue() && graphs.head.getLowestOffsetValue().getOffset() == ref) {
             return graphs.head;
-        } else {
-            return null;
         }
+        return null;
     }
 
     public boolean isEmpty() {

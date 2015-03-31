@@ -42,13 +42,12 @@ public class Sub extends Token {
         final OptionalValue ov = _addr.eval(env, enc);
         if (!ov.isPresent()) { return new ParseResult(false, env); }
         final long ref = ov.get().asNumeric().longValue();
-        if (!env.order.hasGraphAtRef(ref)) {
-            final ParseResult res = _op.parse(scope, new Environment(env.order.addBranch(), env.input, ref), enc);
-            if (res.succeeded()) {
-                return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, env.offset));
-            }
+        if (env.order.hasGraphAtRef(ref)) { return new ParseResult(true, new Environment(env.order.addRef(ref), env.input, env.offset)); }
+        final ParseResult res = _op.parse(scope, new Environment(env.order.addBranch(), env.input, ref), enc);
+        if (res.succeeded()) {
+            return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, env.offset));
         }
-        return new ParseResult(true, new Environment(env.order.addRef(ref), env.input, env.offset));
+        return new ParseResult(false, env);
     }
 
     @Override
