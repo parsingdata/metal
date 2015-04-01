@@ -22,27 +22,29 @@ import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.data.ParseValueList;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 
-public class Reduce implements ValueExpression {
+public class FoldLeft implements ValueExpression {
 
     private final String _name;
     private final Reducer _reducer;
+    private final ValueExpression _init;
 
-    public Reduce(final String name, final Reducer reducer) {
+    public FoldLeft(final String name, final Reducer reducer, final ValueExpression init) {
         _name = name;
         _reducer = reducer;
+        _init = init;
     }
 
     @Override
     public OptionalValue eval(final Environment env, final Encoding enc) {
+        final OptionalValue init = _init != null ? _init.eval(env, enc) : OptionalValue.empty();
         final ParseValueList values = env.order.flatten().getAll(_name).reverse();
-        if (values.isEmpty()) {
-            return OptionalValue.empty();
-        }
+        if (values.isEmpty()) { return init; }
+        if (init.isPresent()) { return reduce(env, enc, _reducer, init, values); }
         return reduce(env, enc, _reducer, OptionalValue.of(values.head), values.tail);
     }
 
     private OptionalValue reduce(final Environment env, final Encoding enc, final Reducer reducer, final OptionalValue head, final ParseValueList tail) {
-        if (!head.isPresent() || tail == null || tail.isEmpty()) { return head; }
+        if (!head.isPresent() || tail.isEmpty()) { return head; }
         return reduce(env, enc, reducer, reducer.reduce(con(head.get()), con(tail.head)).eval(env, enc), tail.tail);
     }
 

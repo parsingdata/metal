@@ -36,7 +36,8 @@ import nl.minvenj.nfi.metal.expression.value.BinaryValueExpression;
 import nl.minvenj.nfi.metal.expression.value.Cat;
 import nl.minvenj.nfi.metal.expression.value.Const;
 import nl.minvenj.nfi.metal.expression.value.ConstantFactory;
-import nl.minvenj.nfi.metal.expression.value.Reduce;
+import nl.minvenj.nfi.metal.expression.value.FoldLeft;
+import nl.minvenj.nfi.metal.expression.value.FoldRight;
 import nl.minvenj.nfi.metal.expression.value.Reducer;
 import nl.minvenj.nfi.metal.expression.value.UnaryValueExpression;
 import nl.minvenj.nfi.metal.expression.value.Value;
@@ -123,7 +124,12 @@ public class Shorthand {
     public static ValueExpression offset(final String s) { return new Offset(s); }
     public static final ValueExpression currentOffset = new CurrentOffset();
     public static ValueExpression cat(final ValueExpression l, final ValueExpression r) { return new Cat(l, r); }
-    public static ValueExpression reduce(final String name, final Reducer reducer) { return new Reduce(name, reducer); }
+    public static ValueExpression foldLeft(final String name, final Reducer reducer) { return new FoldLeft(name, reducer, null); }
+    public static ValueExpression foldLeft(final String name, final Reducer reducer, ValueExpression i) { return new FoldLeft(name, reducer, i); }
+    public static ValueExpression foldRight(final String name, final Reducer reducer) { return new FoldRight(name, reducer, null); }
+    public static ValueExpression foldRight(final String name, final Reducer reducer, ValueExpression i) { return new FoldRight(name, reducer, i); }
+    public static ValueExpression reduce(final String name, final Reducer reducer) { return foldRight(name, reducer); }
+    public static ValueExpression reduce(final String name, final Reducer reducer, ValueExpression i) { return foldRight(name, reducer, i); }
 
     public static BinaryLogicalExpression and(final Expression l, final Expression r) { return new And(l, r); }
     public static BinaryLogicalExpression or(final Expression l, final Expression r) { return new Or(l, r); }
