@@ -46,7 +46,6 @@ public class FoldRight implements ValueExpression {
     private OptionalValue reduce(final Environment env, final Encoding enc, final Reducer reducer, final OptionalValue head, final ParseValueList tail) {
         if (!head.isPresent() || tail.isEmpty()) { return head; }
         return reduce(env, enc, reducer, reducer.reduce(con(tail.head), con(head.get())).eval(env, enc), tail.tail);
-//        return reducer.reduce(con(head.get()), con(reduce(env, enc, reducer, con(tail.head).eval(env, enc), tail.tail).get())).eval(env, enc);
     }
 
 }
