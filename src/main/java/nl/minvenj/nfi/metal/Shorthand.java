@@ -128,8 +128,8 @@ public class Shorthand {
     public static ValueExpression foldLeft(final String name, final Reducer reducer, ValueExpression i) { return new FoldLeft(name, reducer, i); }
     public static ValueExpression foldRight(final String name, final Reducer reducer) { return new FoldRight(name, reducer, null); }
     public static ValueExpression foldRight(final String name, final Reducer reducer, ValueExpression i) { return new FoldRight(name, reducer, i); }
-    public static ValueExpression reduce(final String name, final Reducer reducer) { return foldRight(name, reducer); }
-    public static ValueExpression reduce(final String name, final Reducer reducer, ValueExpression i) { return foldRight(name, reducer, i); }
+    public static ValueExpression fold(final String name, final Reducer reducer) { return foldRight(name, reducer); }
+    public static ValueExpression fold(final String name, final Reducer reducer, ValueExpression i) { return foldRight(name, reducer, i); }
 
     public static BinaryLogicalExpression and(final Expression l, final Expression r) { return new And(l, r); }
     public static BinaryLogicalExpression or(final Expression l, final Expression r) { return new Or(l, r); }

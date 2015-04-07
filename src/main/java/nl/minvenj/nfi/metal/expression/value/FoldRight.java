@@ -39,13 +39,13 @@ public class FoldRight implements ValueExpression {
         final OptionalValue init = _init != null ? _init.eval(env, enc) : OptionalValue.empty();
         final ParseValueList values = env.order.flatten().getAll(_name);
         if (values.isEmpty()) { return init; }
-        if (init.isPresent()) { return reduce(env, enc, _reducer, init, values); }
-        return reduce(env, enc, _reducer, OptionalValue.of(values.head), values.tail);
+        if (init.isPresent()) { return fold(env, enc, _reducer, init, values); }
+        return fold(env, enc, _reducer, OptionalValue.of(values.head), values.tail);
     }
 
-    private OptionalValue reduce(final Environment env, final Encoding enc, final Reducer reducer, final OptionalValue head, final ParseValueList tail) {
+    private OptionalValue fold(final Environment env, final Encoding enc, final Reducer reducer, final OptionalValue head, final ParseValueList tail) {
         if (!head.isPresent() || tail.isEmpty()) { return head; }
-        return reduce(env, enc, reducer, reducer.reduce(con(tail.head), con(head.get())).eval(env, enc), tail.tail);
+        return fold(env, enc, reducer, reducer.reduce(con(tail.head), con(head.get())).eval(env, enc), tail.tail);
     }
 
 }
