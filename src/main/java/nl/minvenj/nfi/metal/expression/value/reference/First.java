@@ -27,6 +27,7 @@ public class First implements ValueExpression {
     private final String _name;
 
     public First(final String name) {
+        if (name == null) { throw new IllegalArgumentException("Argument name may not be null."); }
         _name = name;
     }
 

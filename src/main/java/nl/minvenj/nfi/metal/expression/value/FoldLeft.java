@@ -29,7 +29,9 @@ public class FoldLeft implements ValueExpression {
     private final ValueExpression _init;
 
     public FoldLeft(final String name, final Reducer reducer, final ValueExpression init) {
+        if (name == null) { throw new IllegalArgumentException("Argument name may not be null."); }
         _name = name;
+        if (reducer == null) { throw new IllegalArgumentException("Argument reducer may not be null."); }
         _reducer = reducer;
         _init = init;
     }

@@ -19,16 +19,17 @@ package nl.minvenj.nfi.metal.expression.logical;
 import nl.minvenj.nfi.metal.expression.Expression;
 
 public abstract class UnaryLogicalExpression implements LogicalExpression {
-    
+
     protected final Expression _op;
-    
+
     public UnaryLogicalExpression(final Expression op) {
+        if (op == null) { throw new IllegalArgumentException("Argument op may not be null."); }
         _op = op;
     }
-    
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + _op + ")";
     }
-    
+
 }

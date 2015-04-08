@@ -136,15 +136,15 @@ public class Shorthand {
     public static UnaryLogicalExpression not(final Expression e) { return new Not(e); }
     public static Expression expTrue() { return new True(); }
 
-    public static ComparisonExpression eq(final ValueExpression p) { return new Eq(p); }
+    public static ComparisonExpression eq(final ValueExpression p) { return new Eq(null, p); }
     public static ComparisonExpression eq(final ValueExpression c, final ValueExpression p) { return new Eq(c, p); }
-    public static ComparisonExpression eqStr(final ValueExpression p) { return new EqStr(p); }
+    public static ComparisonExpression eqStr(final ValueExpression p) { return new EqStr(null, p); }
     public static ComparisonExpression eqStr(final ValueExpression c, final ValueExpression p) { return new EqStr(c, p); }
-    public static ComparisonExpression eqNum(final ValueExpression p) { return new EqNum(p); }
+    public static ComparisonExpression eqNum(final ValueExpression p) { return new EqNum(null, p); }
     public static ComparisonExpression eqNum(final ValueExpression c, final ValueExpression p) { return new EqNum(c, p); }
-    public static ComparisonExpression gtNum(final ValueExpression p) { return new GtNum(p); }
+    public static ComparisonExpression gtNum(final ValueExpression p) { return new GtNum(null, p); }
     public static ComparisonExpression gtNum(final ValueExpression c, final ValueExpression p) { return new GtNum(c, p); }
-    public static ComparisonExpression ltNum(final ValueExpression p) { return new LtNum(p); }
+    public static ComparisonExpression ltNum(final ValueExpression p) { return new LtNum(null, p); }
     public static ComparisonExpression ltNum(final ValueExpression c, final ValueExpression p) { return new LtNum(c, p); }
 
     public static byte[] toByteArray(final int... bytes) {

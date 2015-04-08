@@ -24,6 +24,7 @@ public abstract class UnaryValueExpression implements ValueExpression {
     private final ValueExpression _op;
 
     public UnaryValueExpression(final ValueExpression op) {
+        if (op == null) { throw new IllegalArgumentException("Argument op may not be null."); }
         _op = op;
     }
 

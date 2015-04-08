@@ -30,11 +30,8 @@ public abstract class ComparisonExpression implements Expression {
 
     public ComparisonExpression(final ValueExpression current, final ValueExpression predicate) {
         _current = current;
+        if (predicate == null) { throw new IllegalArgumentException("Argument predicate may not be null."); }
         _predicate = predicate;
-    }
-
-    public ComparisonExpression(final ValueExpression predicate) {
-        this(null, predicate);
     }
 
     @Override

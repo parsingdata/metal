@@ -19,18 +19,20 @@ package nl.minvenj.nfi.metal.expression.logical;
 import nl.minvenj.nfi.metal.expression.Expression;
 
 public abstract class BinaryLogicalExpression implements LogicalExpression {
-    
+
     protected final Expression _lop;
     protected final Expression _rop;
-    
+
     public BinaryLogicalExpression(final Expression lop, final Expression rop) {
+        if (lop == null) { throw new IllegalArgumentException("Argument lop may not be null."); }
         _lop = lop;
+        if (rop == null) { throw new IllegalArgumentException("Argument rop may not be null."); }
         _rop = rop;
     }
-    
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + _lop + "," + _rop + ")";
     }
-    
+
 }
