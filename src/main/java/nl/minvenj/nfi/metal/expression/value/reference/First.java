@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.metal.expression.value.reference;
 
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
+
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.data.ParseValueList;
 import nl.minvenj.nfi.metal.encoding.Encoding;
@@ -27,8 +29,7 @@ public class First implements ValueExpression {
     private final String _name;
 
     public First(final String name) {
-        if (name == null) { throw new IllegalArgumentException("Argument name may not be null."); }
-        _name = name;
+        _name = checkNotNull(name, "name");
     }
 
     @Override

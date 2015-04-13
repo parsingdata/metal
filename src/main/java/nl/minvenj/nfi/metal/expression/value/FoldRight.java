@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.metal.expression.value;
 
 import static nl.minvenj.nfi.metal.Shorthand.con;
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
 
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.data.ParseValueList;
@@ -29,10 +30,8 @@ public class FoldRight implements ValueExpression {
     private final ValueExpression _init;
 
     public FoldRight(final String name, final Reducer reducer, final ValueExpression init) {
-        if (name == null) { throw new IllegalArgumentException("Argument name may not be null."); }
-        _name = name;
-        if (reducer == null) { throw new IllegalArgumentException("Argument reducer may not be null."); }
-        _reducer = reducer;
+        _name = checkNotNull(name, "name");
+        _reducer = checkNotNull(reducer, "reducer");
         _init = init;
     }
 

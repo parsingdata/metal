@@ -14,25 +14,13 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.expression.logical;
+package nl.minvenj.nfi.metal;
 
-import static nl.minvenj.nfi.metal.Util.checkNotNull;
+public class Util {
 
-import nl.minvenj.nfi.metal.expression.Expression;
-
-public abstract class BinaryLogicalExpression implements LogicalExpression {
-
-    protected final Expression _lop;
-    protected final Expression _rop;
-
-    public BinaryLogicalExpression(final Expression lop, final Expression rop) {
-        _lop = checkNotNull(lop, "lop");
-        _rop = checkNotNull(rop, "rop");
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" + _lop + "," + _rop + ")";
+    public static <T>T checkNotNull(final T argument, final String name) {
+        if (argument == null) { throw new IllegalArgumentException("Argument " + name + " may not be null."); }
+        return argument;
     }
 
 }

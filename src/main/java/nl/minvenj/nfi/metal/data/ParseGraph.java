@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.metal.data;
 
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
+
 public class ParseGraph {
 
     public final ParseItem head;
@@ -33,11 +35,9 @@ public class ParseGraph {
     }
 
     private ParseGraph(final ParseItem head, final ParseGraph tail, final boolean branched) {
-        if (head == null) { throw new IllegalArgumentException("Argument head may not be null."); }
-        if (tail == null) { throw new IllegalArgumentException("Argument tail may not be null."); }
+        this.head = checkNotNull(head, "head");
         if (head.isValue() && branched) { throw new IllegalArgumentException("Argument branch cannot be true when head contains a ParseValue."); }
-        this.head = head;
-        this.tail = tail;
+        this.tail = checkNotNull(tail, "tail");
         this.branched = branched;
         size = tail.size + 1;
     }

@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.metal.data;
 
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
+
 public class ParseValueList {
 
     public final ParseValue head;
@@ -31,25 +33,21 @@ public class ParseValueList {
     }
 
     private ParseValueList(final ParseValue head, final ParseValueList tail) {
-        if (head == null) { throw new IllegalArgumentException("Argument head may not be null."); }
-        if (tail == null) { throw new IllegalArgumentException("Argument tail may not be null."); }
-        this.head = head;
-        this.tail = tail;
+        this.head = checkNotNull(head, "head");
+        this.tail = checkNotNull(tail, "tail");
         size = tail.size + 1;
     }
 
     public static ParseValueList create(final ParseValue head) {
-        if (head == null) { throw new IllegalArgumentException("Argument head may not be null."); }
-        return EMPTY.add(head);
+        return EMPTY.add(checkNotNull(head, "head"));
     }
 
     public ParseValueList add(final ParseValue head) {
-        if (head == null) { throw new IllegalArgumentException("Argument head may not be null."); }
-        return new ParseValueList(head, this);
+        return new ParseValueList(checkNotNull(head, "head"), this);
     }
 
     public ParseValueList add(final ParseValueList list) {
-        if (list == null) { throw new IllegalArgumentException("Argument list may not be null."); }
+        checkNotNull(list, "list");
         if (list.isEmpty()) { return this; }
         if (isEmpty()) { return list; }
         return add(list.tail).add(list.head);

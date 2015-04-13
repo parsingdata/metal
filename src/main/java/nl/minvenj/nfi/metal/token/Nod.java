@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.metal.token;
 
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
+
 import java.io.IOException;
 
 import nl.minvenj.nfi.metal.data.Environment;
@@ -30,8 +32,7 @@ public class Nod extends Token {
 
     public Nod(final ValueExpression size, final Encoding enc) {
         super(enc);
-        if (size == null) { throw new IllegalArgumentException("Argument size may not be null."); }
-        _size = size;
+        _size = checkNotNull(size, "size");
     }
 
     @Override

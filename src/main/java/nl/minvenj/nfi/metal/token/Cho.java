@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.metal.token;
 
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
+
 import java.io.IOException;
 
 import nl.minvenj.nfi.metal.data.Environment;
@@ -29,10 +31,8 @@ public class Cho extends Token {
 
     public Cho(final Token l, final Token r, final Encoding enc) {
         super(enc);
-        if (l == null) { throw new IllegalArgumentException("Argument l may not be null."); }
-        _l = l;
-        if (r == null) { throw new IllegalArgumentException("Argument r may not be null."); }
-        _r = r;
+        _l = checkNotNull(l, "l");
+        _r = checkNotNull(r, "r");
     }
 
     @Override

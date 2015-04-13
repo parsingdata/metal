@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.metal.token;
 
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
+
 import java.io.IOException;
 
 import nl.minvenj.nfi.metal.data.Environment;
@@ -33,10 +35,8 @@ public class Str extends Token {
 
     public Str(final String scope, final Token op, final Encoding enc, final StructSink sink, final Expression pred) {
         super(enc);
-        if (scope == null) { throw new IllegalArgumentException("Argument scope may not be null."); }
-        _scope = scope;
-        if (op == null) { throw new IllegalArgumentException("Argument op may not be null."); }
-        _op = op;
+        _scope = checkNotNull(scope, "scope");
+        _op = checkNotNull(op, "op");
         _sink = sink;
         _pred = pred == null ? new True() : pred;
     }
