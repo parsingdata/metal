@@ -16,21 +16,23 @@
 
 package nl.minvenj.nfi.metal.expression.logical;
 
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
+
 import nl.minvenj.nfi.metal.expression.Expression;
 
 public abstract class BinaryLogicalExpression implements LogicalExpression {
-    
+
     protected final Expression _lop;
     protected final Expression _rop;
-    
+
     public BinaryLogicalExpression(final Expression lop, final Expression rop) {
-        _lop = lop;
-        _rop = rop;
+        _lop = checkNotNull(lop, "lop");
+        _rop = checkNotNull(rop, "rop");
     }
-    
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + _lop + "," + _rop + ")";
     }
-    
+
 }

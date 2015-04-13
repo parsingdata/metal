@@ -16,8 +16,10 @@
 
 package nl.minvenj.nfi.metal.data;
 
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
+
 public class ParseGraphList {
-    
+
     public final ParseGraph head;
     public final ParseGraphList tail;
     public final long size;
@@ -29,32 +31,28 @@ public class ParseGraphList {
         tail = null;
         size = 0;
     }
-    
+
     private ParseGraphList(final ParseGraph head, final ParseGraphList tail) {
-        if (head == null) { throw new IllegalArgumentException("Argument head may not be null."); }
-        if (tail == null) { throw new IllegalArgumentException("Argument tail may not be null."); }
-        this.head = head;
-        this.tail = tail;
+        this.head = checkNotNull(head, "head");
+        this.tail = checkNotNull(tail, "tail");
         size = tail.size + 1;
     }
-    
+
     public static ParseGraphList create(final ParseGraph head) {
-        if (head == null) { throw new IllegalArgumentException("Argument head may not be null."); }
-        return EMPTY.add(head);
+        return EMPTY.add(checkNotNull(head, "head"));
     }
-    
+
     public ParseGraphList add(final ParseGraph head) {
-        if (head == null) { throw new IllegalArgumentException("Argument head may not be null."); }
-        return new ParseGraphList(head, this);
+        return new ParseGraphList(checkNotNull(head, "head"), this);
     }
-    
+
     public ParseGraphList add(final ParseGraphList list) {
-        if (list == null) { throw new IllegalArgumentException("Argument list may not be null."); }
+        checkNotNull(list, "list");
         if (list.isEmpty()) { return this; }
         if (isEmpty()) { return list; }
         return add(list.tail).add(list.head);
     }
-    
+
     public boolean isEmpty() {
         return size == 0;
     }

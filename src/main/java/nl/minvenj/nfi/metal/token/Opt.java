@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.metal.token;
 
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
+
 import java.io.IOException;
 
 import nl.minvenj.nfi.metal.data.Environment;
@@ -28,8 +30,7 @@ public class Opt extends Token {
 
     public Opt(final Token op, final Encoding enc) {
         super(enc);
-        if (op == null) { throw new IllegalArgumentException("Argument op may not be null."); }
-        _op = op;
+        _op = checkNotNull(op, "op");
     }
 
     @Override

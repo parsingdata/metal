@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.metal.expression.value;
 
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
+
 import java.math.BigInteger;
 import java.util.BitSet;
 
@@ -31,8 +33,7 @@ public class Value {
 
     public Value(final byte[] data, final Encoding enc) {
         _data = data.clone();
-        if (enc == null) { throw new IllegalArgumentException("Argument enc may not be null."); }
-        _enc = enc;
+        _enc = checkNotNull(enc, "enc");
     }
 
     public byte[] getValue() {

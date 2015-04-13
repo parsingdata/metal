@@ -25,10 +25,6 @@ public class GtNum extends ComparisonExpression {
         super(current, predicate);
     }
 
-    public GtNum(final ValueExpression predicate) {
-        super(predicate);
-    }
-
     @Override
     public boolean compare(final Value current, final Value predicate) {
         return current.asNumeric().compareTo(predicate.asNumeric()) > 0;

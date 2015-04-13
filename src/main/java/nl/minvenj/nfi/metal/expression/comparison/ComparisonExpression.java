@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.metal.expression.comparison;
 
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
+
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.expression.Expression;
@@ -30,11 +32,7 @@ public abstract class ComparisonExpression implements Expression {
 
     public ComparisonExpression(final ValueExpression current, final ValueExpression predicate) {
         _current = current;
-        _predicate = predicate;
-    }
-
-    public ComparisonExpression(final ValueExpression predicate) {
-        this(null, predicate);
+        _predicate = checkNotNull(predicate, "predicate");
     }
 
     @Override

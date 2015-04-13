@@ -25,10 +25,6 @@ public class EqStr extends ComparisonExpression {
         super(current, predicate);
     }
 
-    public EqStr(final ValueExpression predicate) {
-        super(predicate);
-    }
-
     @Override
     public boolean compare(final Value current, final Value predicate) {
         return current.asString().equals(predicate.asString());

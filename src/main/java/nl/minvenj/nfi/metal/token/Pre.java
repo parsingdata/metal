@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.metal.token;
 
 import static nl.minvenj.nfi.metal.Shorthand.expTrue;
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
 
 import java.io.IOException;
 
@@ -32,8 +33,7 @@ public class Pre extends Token {
 
     public Pre(final Token op, final Expression pred, final Encoding enc) {
         super(enc);
-        if (op == null) { throw new IllegalArgumentException("Argument op may not be null."); }
-        _op = op;
+        _op = checkNotNull(op, "op");
         _pred = pred == null ? expTrue() : pred;
     }
 

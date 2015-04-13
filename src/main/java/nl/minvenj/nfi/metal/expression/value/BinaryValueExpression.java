@@ -16,9 +16,10 @@
 
 package nl.minvenj.nfi.metal.expression.value;
 
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
+
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.encoding.Encoding;
-
 
 public abstract class BinaryValueExpression implements ValueExpression {
 
@@ -26,8 +27,8 @@ public abstract class BinaryValueExpression implements ValueExpression {
     private final ValueExpression _rop;
 
     public BinaryValueExpression(final ValueExpression lop, final ValueExpression rop) {
-        _lop = lop;
-        _rop = rop;
+        _lop = checkNotNull(lop, "lop");
+        _rop = checkNotNull(rop, "rop");
     }
 
     @Override

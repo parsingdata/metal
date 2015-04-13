@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.metal.expression.value;
 
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
+
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 
@@ -24,7 +26,7 @@ public abstract class UnaryValueExpression implements ValueExpression {
     private final ValueExpression _op;
 
     public UnaryValueExpression(final ValueExpression op) {
-        _op = op;
+        _op = checkNotNull(op, "op");
     }
 
     @Override

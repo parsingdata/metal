@@ -16,19 +16,21 @@
 
 package nl.minvenj.nfi.metal.expression.logical;
 
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
+
 import nl.minvenj.nfi.metal.expression.Expression;
 
 public abstract class UnaryLogicalExpression implements LogicalExpression {
-    
+
     protected final Expression _op;
-    
+
     public UnaryLogicalExpression(final Expression op) {
-        _op = op;
+        _op = checkNotNull(op, "op");
     }
-    
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + _op + ")";
     }
-    
+
 }

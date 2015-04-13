@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.metal.data;
 
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
+
 public final class ParseItem {
 
     private final ParseValue _pv;
@@ -23,15 +25,13 @@ public final class ParseItem {
     private final long _ref;
 
     public ParseItem(final ParseValue pv) {
-        if (pv == null) { throw new IllegalArgumentException("Argument pv may not be null."); }
-        _pv = pv;
+        _pv = checkNotNull(pv, "pv");
         _pg = null;
         _ref = 0;
     }
 
     public ParseItem(final ParseGraph pg) {
-        if (pg == null) { throw new IllegalArgumentException("Argument pg may not be null."); }
-        _pg = pg;
+        _pg = checkNotNull(pg, "pg");
         _pv = null;
         _ref = 0;
     }
@@ -60,7 +60,7 @@ public final class ParseItem {
         if (!isRef()) { throw new IllegalStateException("This ParseItem does not contain a Reference."); }
         return ParseGraph.findRef(ParseGraphList.create(root).add(root.getGraphs()), _ref);
     }
-    
+
     @Override
     public String toString() {
         return (isValue() ? "ParseValue(" + _pv.toString() : (isGraph() ? "ParseGraph(" + _pg.toString() : "Ref(" + _ref)) + ")";

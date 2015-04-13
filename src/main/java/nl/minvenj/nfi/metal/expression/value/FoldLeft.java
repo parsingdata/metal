@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.metal.expression.value;
 
 import static nl.minvenj.nfi.metal.Shorthand.con;
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
 
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.data.ParseValueList;
@@ -29,8 +30,8 @@ public class FoldLeft implements ValueExpression {
     private final ValueExpression _init;
 
     public FoldLeft(final String name, final Reducer reducer, final ValueExpression init) {
-        _name = name;
-        _reducer = reducer;
+        _name = checkNotNull(name, "name");
+        _reducer = checkNotNull(reducer, "reducer");
         _init = init;
     }
 

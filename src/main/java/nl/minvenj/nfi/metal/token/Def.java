@@ -16,12 +16,13 @@
 
 package nl.minvenj.nfi.metal.token;
 
-import java.io.IOException;
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
 
-import nl.minvenj.nfi.metal.data.ParseValue;
+import java.io.IOException;
 
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.data.ParseResult;
+import nl.minvenj.nfi.metal.data.ParseValue;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.expression.Expression;
 import nl.minvenj.nfi.metal.expression.True;
@@ -36,10 +37,8 @@ public class Def extends Token {
 
     public Def(final String name, final ValueExpression size, final Expression pred, final Encoding enc) {
         super(enc);
-        if (name == null) { throw new IllegalArgumentException("Argument name may not be null."); }
-        _name = name;
-        if (size == null) { throw new IllegalArgumentException("Argument size may not be null."); }
-        _size = size;
+        _name = checkNotNull(name, "name");
+        _size = checkNotNull(size, "size");
         _pred = pred == null ? new True() : pred;
     }
 

@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.expression.comparison;
+package nl.minvenj.nfi.metal;
 
-import nl.minvenj.nfi.metal.expression.value.Value;
-import nl.minvenj.nfi.metal.expression.value.ValueExpression;
+public class Util {
 
-public class EqNum extends ComparisonExpression {
-
-    public EqNum(final ValueExpression current, final ValueExpression predicate) {
-        super(current, predicate);
-    }
-
-    @Override
-    public boolean compare(final Value current, final Value predicate) {
-        return current.asNumeric().compareTo(predicate.asNumeric()) == 0;
+    public static <T>T checkNotNull(final T argument, final String name) {
+        if (argument == null) { throw new IllegalArgumentException("Argument " + name + " may not be null."); }
+        return argument;
     }
 
 }
