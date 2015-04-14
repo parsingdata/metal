@@ -61,6 +61,7 @@ import nl.minvenj.nfi.metal.token.Nod;
 import nl.minvenj.nfi.metal.token.Opt;
 import nl.minvenj.nfi.metal.token.Pre;
 import nl.minvenj.nfi.metal.token.Rep;
+import nl.minvenj.nfi.metal.token.RepN;
 import nl.minvenj.nfi.metal.token.Seq;
 import nl.minvenj.nfi.metal.token.Str;
 import nl.minvenj.nfi.metal.token.StructSink;
@@ -80,6 +81,8 @@ public class Shorthand {
     public static Token cho(final Token l, final Token r, final Token... tokens) { return tokens.length == 0 ? new Cho(l, r, null) : cho(l, cho(r, tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length))); }
     public static Token rep(final Token t, final Encoding e) { return new Rep(t, e); }
     public static Token rep(final Token t) { return new Rep(t, null); }
+    public static Token repn(final Token t, final ValueExpression n, final Encoding e) { return new RepN(t, n, e); }
+    public static Token repn(final Token t, final ValueExpression n) { return new RepN(t, n, null); }
     public static Token seq(final Token l, final Token r, final Token... tokens) { return tokens.length == 0 ? new Seq(l, r, null) : seq(l, seq(r, tokens[0], Arrays.copyOfRange(tokens, 1, tokens.length))); }
     public static Token str(final String n, final Token t, final Encoding e) { return str(n, t, e, null, null); }
     public static Token str(final String n, final Token t) { return str(n, t, null, null, null); }
@@ -125,11 +128,11 @@ public class Shorthand {
     public static final ValueExpression currentOffset = new CurrentOffset();
     public static ValueExpression cat(final ValueExpression l, final ValueExpression r) { return new Cat(l, r); }
     public static ValueExpression foldLeft(final String name, final Reducer reducer) { return new FoldLeft(name, reducer, null); }
-    public static ValueExpression foldLeft(final String name, final Reducer reducer, ValueExpression i) { return new FoldLeft(name, reducer, i); }
+    public static ValueExpression foldLeft(final String name, final Reducer reducer, final ValueExpression i) { return new FoldLeft(name, reducer, i); }
     public static ValueExpression foldRight(final String name, final Reducer reducer) { return new FoldRight(name, reducer, null); }
-    public static ValueExpression foldRight(final String name, final Reducer reducer, ValueExpression i) { return new FoldRight(name, reducer, i); }
+    public static ValueExpression foldRight(final String name, final Reducer reducer, final ValueExpression i) { return new FoldRight(name, reducer, i); }
     public static ValueExpression fold(final String name, final Reducer reducer) { return foldRight(name, reducer); }
-    public static ValueExpression fold(final String name, final Reducer reducer, ValueExpression i) { return foldRight(name, reducer, i); }
+    public static ValueExpression fold(final String name, final Reducer reducer, final ValueExpression i) { return foldRight(name, reducer, i); }
 
     public static BinaryLogicalExpression and(final Expression l, final Expression r) { return new And(l, r); }
     public static BinaryLogicalExpression or(final Expression l, final Expression r) { return new Or(l, r); }
