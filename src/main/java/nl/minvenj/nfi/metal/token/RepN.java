@@ -39,9 +39,9 @@ public class RepN extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final OptionalValue val = _n.eval(env, enc);
-        if (!val.isPresent()) { return new ParseResult(false, env); }
-        return parseImpl(val.get().asNumeric().longValue(), scope, env, enc);
+        final OptionalValue count = _n.eval(env, enc);
+        if (!count.isPresent()) { return new ParseResult(false, env); }
+        return parseImpl(count.get().asNumeric().longValue(), scope, env, enc);
     }
 
     private ParseResult parseImpl(final long count, final String scope, final Environment env, final Encoding enc) throws IOException {
