@@ -58,7 +58,7 @@ public class DefSizeTest {
     @Test
     public void testInvalidLength() throws IOException {
         final ByteStream stream = new InMemoryByteStream(new byte[]{
-            -1, -1, -1, -1, // length = -1
+            (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, // length = -1
             0x04, 0x08
         });
         final ParseResult result = FORMAT.parse(new Environment(stream), new Encoding());
