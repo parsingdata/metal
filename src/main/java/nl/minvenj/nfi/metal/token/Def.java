@@ -48,7 +48,11 @@ public class Def extends Token {
         if (!size.isPresent()) {
             return new ParseResult(false, env);
         }
-        final byte[] data = new byte[size.get().asNumeric().intValue()];
+        final int dataSize = size.get().asNumeric().intValue();
+        if (dataSize < 0) {
+            return new ParseResult(false, env);
+        }
+        final byte[] data = new byte[dataSize];
         if (env.input.read(env.offset, data) != data.length) {
             return new ParseResult(false, env);
         }
