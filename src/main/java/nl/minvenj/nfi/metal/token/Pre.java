@@ -40,7 +40,7 @@ public class Pre extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         if (!_pred.eval(env, enc)) { return new ParseResult(true, env); }
-        return _op.parse(env, enc);
+        return _op.parse(scope, env, enc);
     }
 
     @Override
