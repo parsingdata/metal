@@ -23,4 +23,12 @@ public class Util {
         return argument;
     }
 
+    public static <T>T[] checkContainsNoNulls(final T[] argument, final String name) {
+        checkNotNull(argument, name);
+        for (final T arg : argument) {
+            if (arg == null) { throw new IllegalArgumentException("Value in array " + name + " may not be null."); }
+        }
+        return argument;
+    }
+
 }
