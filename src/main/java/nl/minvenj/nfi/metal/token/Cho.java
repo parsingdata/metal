@@ -16,9 +16,10 @@
 
 package nl.minvenj.nfi.metal.token;
 
-import static nl.minvenj.nfi.metal.Util.checkNotNull;
+import static nl.minvenj.nfi.metal.Util.checkContainsNoNulls;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.data.ParseResult;
@@ -26,25 +27,29 @@ import nl.minvenj.nfi.metal.encoding.Encoding;
 
 public class Cho extends Token {
 
-    private final Token _l;
-    private final Token _r;
+    private final Token[] _tokens;
 
-    public Cho(final Token l, final Token r, final Encoding enc) {
+    public Cho(final Encoding enc, final Token... tokens) {
         super(enc);
-        _l = checkNotNull(l, "l");
-        _r = checkNotNull(r, "r");
+        _tokens = checkContainsNoNulls(tokens, "tokens");
+        if (tokens.length < 2) { throw new IllegalArgumentException("At least two Tokens are required."); }
     }
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final ParseResult lRes = _l.parse(scope, env, enc);
-        if (lRes.succeeded()) { return lRes; }
-        return _r.parse(scope, env, enc);
+        return parseImpl(scope, env, enc, 0);
+    }
+
+    private ParseResult parseImpl(final String scope, final Environment env, final Encoding enc, final int index) throws IOException {
+        if (index >= _tokens.length) { return new ParseResult(false, env); }
+        final ParseResult res = _tokens[index].parse(scope, env, enc);
+        if (res.succeeded()) { return res; }
+        return parseImpl(scope, env, enc, index + 1);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _l + "," + _r + ")";
+        return getClass().getSimpleName() + "(" + Arrays.toString(_tokens) + ")";
     }
 
 }
