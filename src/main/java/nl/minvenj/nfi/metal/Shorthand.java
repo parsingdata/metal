@@ -16,8 +16,6 @@
 
 package nl.minvenj.nfi.metal;
 
-import java.util.Arrays;
-
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.expression.Expression;
 import nl.minvenj.nfi.metal.expression.True;

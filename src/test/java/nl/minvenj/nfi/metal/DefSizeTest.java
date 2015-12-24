@@ -51,7 +51,7 @@ public class DefSizeTest {
         Assert.assertTrue(result.succeeded());
         Assert.assertArrayEquals(
             new byte[]{0x04, 0x08},
-            result.getEnvironment().order.flatten().get("data").getValue()
+            result.getEnvironment().order.get("data").getValue()
         );
     }
 
@@ -64,6 +64,6 @@ public class DefSizeTest {
         final ParseResult result = FORMAT.parse(new Environment(stream), new Encoding());
 
         Assert.assertFalse(result.succeeded());
-        Assert.assertEquals(-1, result.getEnvironment().order.flatten().get("length").asNumeric().intValue());
+        Assert.assertEquals(-1, result.getEnvironment().order.get("length").asNumeric().intValue());
     }
 }

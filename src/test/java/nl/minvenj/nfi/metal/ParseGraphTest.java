@@ -17,13 +17,13 @@
 package nl.minvenj.nfi.metal;
 
 import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
-import nl.minvenj.nfi.metal.data.ParseGraph;
-import nl.minvenj.nfi.metal.data.ParseGraphList;
-import nl.minvenj.nfi.metal.data.ParseValue;
-import nl.minvenj.nfi.metal.data.ParseValueList;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import nl.minvenj.nfi.metal.data.ParseGraph;
+import nl.minvenj.nfi.metal.data.ParseGraphList;
+import nl.minvenj.nfi.metal.data.ParseValue;
 
 public class ParseGraphTest {
 
@@ -94,19 +94,6 @@ public class ParseGraphTest {
         Assert.assertEquals(b, pg.tail.tail.tail.head.getValue());
         Assert.assertTrue(pg.tail.tail.tail.tail.head.isValue());
         Assert.assertEquals(a, pg.tail.tail.tail.tail.head.getValue());
-    }
-
-    @Test
-    public void simpleFlatten() {
-        final ParseValueList flat = pg.flatten();
-        Assert.assertEquals(h, flat.head);
-        Assert.assertEquals(g, flat.tail.head);
-        Assert.assertEquals(f, flat.tail.tail.head);
-        Assert.assertEquals(e, flat.tail.tail.tail.head);
-        Assert.assertEquals(d, flat.tail.tail.tail.tail.head);
-        Assert.assertEquals(c, flat.tail.tail.tail.tail.tail.head);
-        Assert.assertEquals(b, flat.tail.tail.tail.tail.tail.tail.head);
-        Assert.assertEquals(a, flat.tail.tail.tail.tail.tail.tail.tail.head);
     }
 
     private ParseGraph makeCycleGraph() {

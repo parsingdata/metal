@@ -35,7 +35,7 @@ public class Offset implements ValueExpression {
 
     @Override
     public OptionalValue eval(final Environment env, final Encoding enc) {
-        final ParseValue ref = env.order.flatten().get(_name);
+        final ParseValue ref = env.order.get(_name);
         return ref != null ? OptionalValue.of(ConstantFactory.createFromNumeric(ref.getOffset(), ref.getEncoding())) : OptionalValue.empty();
     }
 

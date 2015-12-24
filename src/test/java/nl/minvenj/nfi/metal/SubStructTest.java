@@ -16,6 +16,8 @@
 
 package nl.minvenj.nfi.metal;
 
+import static org.junit.Assert.fail;
+
 import static nl.minvenj.nfi.metal.Shorthand.con;
 import static nl.minvenj.nfi.metal.Shorthand.def;
 import static nl.minvenj.nfi.metal.Shorthand.eq;
@@ -38,7 +40,6 @@ import org.junit.runners.Parameterized.Parameters;
 
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.data.ParseResult;
-import nl.minvenj.nfi.metal.data.ParseValueList;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.token.Token;
 
@@ -60,9 +61,9 @@ public class SubStructTest {
             super(enc);
             struct =
                 seq(def("header", con(1), eq(con(0))),
-                def("next", con(1)),
-                opt(sub(this, ref("next"))),
-                def("footer", con(1), eq(con(1))));
+                    def("next", con(1)),
+                    opt(sub(this, ref("next"))),
+                    def("footer", con(1), eq(con(1))));
         }
 
         @Override
@@ -98,16 +99,17 @@ public class SubStructTest {
 
     @Test
     public void test() throws IOException {
-        final ParseResult res = _token.parse(_env, enc());
-        Assert.assertEquals(_result, res.succeeded());
-        Assert.assertEquals(_values.length, _offsets.length);
-        ParseValueList order = res.getEnvironment().order.flatten().reverse();
-        for (int i = 0; i < _values.length; i++) {
-            Assert.assertEquals(_values[i], order.head.asNumeric().intValue());
-            Assert.assertEquals(_offsets[i], order.head.getOffset());
-            order = order.tail;
-        }
-        Assert.assertTrue(order.isEmpty());
+        fail();
+//        final ParseResult res = _token.parse(_env, enc());
+//        Assert.assertEquals(_result, res.succeeded());
+//        Assert.assertEquals(_values.length, _offsets.length);
+//        ParseValueList order = res.getEnvironment().order.flatten().reverse();
+//        for (int i = 0; i < _values.length; i++) {
+//            Assert.assertEquals(_values[i], order.head.asNumeric().intValue());
+//            Assert.assertEquals(_offsets[i], order.head.getOffset());
+//            order = order.tail;
+//        }
+//        Assert.assertTrue(order.isEmpty());
     }
 
     @Test

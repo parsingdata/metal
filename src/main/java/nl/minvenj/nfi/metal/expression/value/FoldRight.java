@@ -38,7 +38,7 @@ public class FoldRight implements ValueExpression {
     @Override
     public OptionalValue eval(final Environment env, final Encoding enc) {
         final OptionalValue init = _init != null ? _init.eval(env, enc) : OptionalValue.empty();
-        final ParseValueList values = env.order.flatten().getAll(_name);
+        final ParseValueList values = env.order.getAll(_name);
         if (values.isEmpty()) { return init; }
         if (init.isPresent()) { return fold(env, enc, _reducer, init, values); }
         return fold(env, enc, _reducer, OptionalValue.of(values.head), values.tail);

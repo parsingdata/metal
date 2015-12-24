@@ -129,6 +129,38 @@ public class ParseGraph {
         return reverse(this, EMPTY);
     }
 
+    public ParseValue get(final String name) {
+        if (isEmpty()) { return null; }
+        if (head.isValue() && head.getValue().matches(name)) { return head.getValue(); }
+        if (head.isGraph()) {
+            final ParseValue val = head.getGraph().get(name);
+            if (val != null) { return val; }
+        }
+        return tail.get(name);
+    }
+
+    public ParseValue current() {
+        if (isEmpty()) { return null; }
+        if (head.isValue()) { return head.getValue(); }
+        if (head.isGraph()) {
+            final ParseValue val = head.getGraph().current();
+            if (val != null) { return val; } // TODO: else?
+        }
+        return tail.current(); // Ignore current is it's a reference.
+    }
+
+    public ParseValueList getAll(final String name) {
+        return getAll(name, ParseValueList.EMPTY);
+    }
+
+    private ParseValueList getAll(final String name, final ParseValueList result) {
+        if (isEmpty()) { return result; }
+        final ParseValueList tailResults = tail.getAll(name, result);
+        if (head.isValue() && head.getValue().matches(name)) { return tailResults.add(head.getValue()); }
+        if (head.isGraph()) { return tailResults.add(head.getGraph().getAll(name, result)); }
+        return tailResults;
+    }
+
     private ParseGraph reverse(final ParseGraph oldGraph, final ParseGraph newGraph) {
         if (oldGraph.isEmpty()) { return newGraph; }
         return reverse(oldGraph.tail, new ParseGraph(reverseItem(oldGraph.head), newGraph));
@@ -136,11 +168,6 @@ public class ParseGraph {
 
     private ParseItem reverseItem(final ParseItem item) {
         return item.isGraph() ? new ParseItem(item.getGraph().reverse()) : item;
-    }
-
-    public ParseValueList flatten() {
-        if (isEmpty()) { return ParseValueList.EMPTY; }
-        return tail.flatten().add(head.isGraph() ? head.getGraph().flatten() : (head.isValue() ? ParseValueList.EMPTY.add(head.getValue()) : ParseValueList.EMPTY));
     }
 
     @Override
