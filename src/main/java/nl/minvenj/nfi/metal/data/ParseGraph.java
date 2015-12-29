@@ -175,4 +175,14 @@ public class ParseGraph {
         return "ParseGraph(" + (head != null ? head.toString() : "null") + ", " + (tail != null ? tail.toString() : "null") + ", " + branched + ")";
     }
 
+    public ParseGraph getGraphAfter(final ParseItem lastHead) {
+        return getGraphAfter(lastHead, EMPTY);
+    }
+
+    private ParseGraph getGraphAfter(final ParseItem lastHead, final ParseGraph result) {
+        if (isEmpty()) { return EMPTY; }
+        if (head == lastHead) { return result; }
+        return new ParseGraph(head, tail.getGraphAfter(lastHead, result));
+    }
+
 }

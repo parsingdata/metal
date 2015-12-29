@@ -16,8 +16,6 @@
 
 package nl.minvenj.nfi.metal;
 
-import static org.junit.Assert.fail;
-
 import static nl.minvenj.nfi.metal.Shorthand.con;
 import static nl.minvenj.nfi.metal.Shorthand.def;
 import static nl.minvenj.nfi.metal.Shorthand.eq;
@@ -39,6 +37,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import nl.minvenj.nfi.metal.data.Environment;
+import nl.minvenj.nfi.metal.data.ParseGraph;
 import nl.minvenj.nfi.metal.data.ParseResult;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.token.Token;
@@ -99,17 +98,16 @@ public class SubStructTest {
 
     @Test
     public void test() throws IOException {
-        fail();
-//        final ParseResult res = _token.parse(_env, enc());
-//        Assert.assertEquals(_result, res.succeeded());
-//        Assert.assertEquals(_values.length, _offsets.length);
-//        ParseValueList order = res.getEnvironment().order.flatten().reverse();
-//        for (int i = 0; i < _values.length; i++) {
-//            Assert.assertEquals(_values[i], order.head.asNumeric().intValue());
-//            Assert.assertEquals(_offsets[i], order.head.getOffset());
-//            order = order.tail;
-//        }
-//        Assert.assertTrue(order.isEmpty());
+        final ParseResult res = _token.parse(_env, enc());
+        Assert.assertEquals(_result, res.succeeded());
+        Assert.assertEquals(_values.length, _offsets.length);
+        ParseGraph order = res.getEnvironment().order.reverse();
+        for (int i = 0; i < _values.length; i++) {
+            Assert.assertEquals(_values[i], order.head.getValue().asNumeric().intValue());
+            Assert.assertEquals(_offsets[i], order.head.getValue().getOffset());
+            order = order.tail;
+        }
+        Assert.assertTrue(order.isEmpty());
     }
 
     @Test
