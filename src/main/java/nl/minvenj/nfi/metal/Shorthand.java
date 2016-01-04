@@ -16,8 +16,6 @@
 
 package nl.minvenj.nfi.metal;
 
-import java.util.Arrays;
-
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.expression.Expression;
 import nl.minvenj.nfi.metal.expression.True;
@@ -92,8 +90,6 @@ public class Shorthand {
     public static Token str(final String n, final Token t, final StructSink s) { return str(n, t, null, s, null); }
     public static Token str(final String n, final Token t, final Encoding e, final StructSink s, final Expression p) { return new Str(n, t, e, s, p); }
     public static Token str(final String n, final Token t, final StructSink s, final Expression p) { return str(n, t, null, s, p); }
-    public static Token sub(final Token t, final Encoding e) { return sub(t, null, e); }
-    public static Token sub(final Token t) { return sub(t, null, null); }
     public static Token sub(final Token t, final ValueExpression a, final Encoding e) { return new nl.minvenj.nfi.metal.token.Sub(t, a, e); }
     public static Token sub(final Token t, final ValueExpression a) { return sub(t, a, null); }
     public static Token pre(final Token t, final Expression p, final Encoding e) { return new Pre(t, p, e); }
