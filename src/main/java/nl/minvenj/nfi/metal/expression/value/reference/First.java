@@ -34,7 +34,7 @@ public class First implements ValueExpression {
 
     @Override
     public OptionalValue eval(final Environment env, final Encoding enc) {
-        final ParseValueList all = env.order.flatten().getAll(_name);
+        final ParseValueList all = env.order.getAll(_name);
         if (all.isEmpty()) {
             return OptionalValue.empty();
         } else {

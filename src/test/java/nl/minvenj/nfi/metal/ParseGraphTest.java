@@ -17,13 +17,14 @@
 package nl.minvenj.nfi.metal;
 
 import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
-import nl.minvenj.nfi.metal.data.ParseGraph;
-import nl.minvenj.nfi.metal.data.ParseGraphList;
-import nl.minvenj.nfi.metal.data.ParseValue;
-import nl.minvenj.nfi.metal.data.ParseValueList;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import nl.minvenj.nfi.metal.data.ParseGraph;
+import nl.minvenj.nfi.metal.data.ParseGraphList;
+import nl.minvenj.nfi.metal.data.ParseItem;
+import nl.minvenj.nfi.metal.data.ParseValue;
 
 public class ParseGraphTest {
 
@@ -96,19 +97,6 @@ public class ParseGraphTest {
         Assert.assertEquals(a, pg.tail.tail.tail.tail.head.getValue());
     }
 
-    @Test
-    public void simpleFlatten() {
-        final ParseValueList flat = pg.flatten();
-        Assert.assertEquals(h, flat.head);
-        Assert.assertEquals(g, flat.tail.head);
-        Assert.assertEquals(f, flat.tail.tail.head);
-        Assert.assertEquals(e, flat.tail.tail.tail.head);
-        Assert.assertEquals(d, flat.tail.tail.tail.tail.head);
-        Assert.assertEquals(c, flat.tail.tail.tail.tail.tail.head);
-        Assert.assertEquals(b, flat.tail.tail.tail.tail.tail.tail.head);
-        Assert.assertEquals(a, flat.tail.tail.tail.tail.tail.tail.tail.head);
-    }
-
     private ParseGraph makeCycleGraph() {
         return ParseGraph
             .EMPTY
@@ -118,7 +106,7 @@ public class ParseGraphTest {
             .addRef(a.getOffset())
             .closeBranch();
     }
-    
+
     @Test
     public void cycle() {
         Assert.assertEquals(2, pgc.size);
@@ -130,7 +118,7 @@ public class ParseGraphTest {
         Assert.assertTrue(pgc.tail.head.isValue());
         Assert.assertEquals(a, pgc.tail.head.getValue());
     }
-    
+
     private ParseGraph makeLongGraph() {
         return ParseGraph
             .EMPTY
@@ -151,7 +139,7 @@ public class ParseGraphTest {
             .add(f)
             .closeBranch();
     }
-    
+
     @Test
     public void listGraphs() {
         final ParseGraphList list = pgl.getGraphs();
@@ -166,6 +154,22 @@ public class ParseGraphTest {
         Assert.assertEquals(a, pg.getLowestOffsetValue());
         Assert.assertEquals(c, pg.tail.tail.head.getGraph().getLowestOffsetValue());
         Assert.assertEquals(d, pg.tail.tail.head.getGraph().tail.head.getGraph().getLowestOffsetValue());
+    }
+
+    @Test
+    public void testSimpleGetGraphAfter() {
+        final ParseGraph graph = makeSimpleGraph();
+        final ParseItem itemB = graph.tail.tail.tail.head;
+        Assert.assertTrue(itemB.isValue());
+        Assert.assertEquals(b, itemB.getValue());
+        final ParseGraph subGraph = graph.getGraphAfter(itemB);
+        Assert.assertTrue(subGraph.head.isValue());
+        Assert.assertEquals(h, subGraph.head.getValue());
+        Assert.assertTrue(subGraph.tail.head.isValue());
+        Assert.assertEquals(g, subGraph.tail.head.getValue());
+        Assert.assertTrue(subGraph.tail.tail.head.isGraph());
+        Assert.assertTrue(subGraph.tail.tail.head.getGraph().head.isValue());
+        Assert.assertEquals(f, subGraph.tail.tail.head.getGraph().head.getValue());
     }
 
 }

@@ -134,13 +134,14 @@ public class TreeTest {
     @Test
     public void checkRegularTreeFlat() {
         Assert.assertTrue(_regular.succeeded());
-        final ParseValueList nrs = _regular.getEnvironment().order.flatten().getAll("nr");
+        final ParseValueList nrs = _regular.getEnvironment().order.getAll("nr");
         for (int i = 0; i < 7; i++) {
             Assert.assertTrue(contains(nrs, i));
         }
     }
 
     private boolean contains(final ParseValueList nrs, final int i) {
+        if (nrs.isEmpty()) { return false; }
         if (nrs.head.asNumeric().intValue() == i) { return true; }
         if (nrs.tail != null) { return contains(nrs.tail, i); }
         return false;
