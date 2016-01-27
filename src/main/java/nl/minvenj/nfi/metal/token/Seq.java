@@ -37,13 +37,15 @@ public class Seq extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        return parseImpl(scope, env, enc, 0);
+        final ParseResult res = iterate(scope, new Environment(env.order.addBranch(), env.input, env.offset), enc, 0);
+        if (res.succeeded()) { return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset)); }
+        return new ParseResult(false, env);
     }
 
-    private ParseResult parseImpl(final String scope, final Environment env, final Encoding enc, final int index) throws IOException {
+    private ParseResult iterate(final String scope, final Environment env, final Encoding enc, final int index) throws IOException {
         if (index >= _tokens.length) { return new ParseResult(true, env); }
         final ParseResult res = _tokens[index].parse(scope, env, enc);
-        if (res.succeeded()) { return parseImpl(scope, res.getEnvironment(), enc, index + 1); }
+        if (res.succeeded()) { return iterate(scope, res.getEnvironment(), enc, index + 1); }
         return res;
     }
 

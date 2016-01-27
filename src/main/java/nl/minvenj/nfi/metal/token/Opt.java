@@ -35,8 +35,9 @@ public class Opt extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final ParseResult result = _op.parse(scope, env, enc);
-        return result.succeeded() ? result : new ParseResult(true, env);
+        final ParseResult res = _op.parse(scope, new Environment(env.order.addBranch(), env.input, env.offset), enc);
+        if (res.succeeded()) { return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset)); }
+        return new ParseResult(true, env);
     }
 
     @Override
