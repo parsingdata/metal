@@ -78,10 +78,10 @@ public class StructSinksTest {
         return str("test", seq(any("a"), any("b")), new StructSink() {
             @Override
             public void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParseGraph struct) {
-                Assert.assertEquals(offsetDeque.pop().longValue(), struct.tail.head.getValue().getOffset());
-                Assert.assertTrue(struct.tail.tail.isEmpty());
-                Assert.assertTrue(struct.tail.head.getValue().getName().equals("a"));
-                Assert.assertTrue(struct.head.getValue().getName().equals("b"));
+                Assert.assertEquals(offsetDeque.pop().longValue(), struct.head.getGraph().tail.head.getValue().getOffset());
+                Assert.assertTrue(struct.head.getGraph().tail.tail.isEmpty());
+                Assert.assertTrue(struct.head.getGraph().tail.head.getValue().getName().equals("a"));
+                Assert.assertTrue(struct.head.getGraph().head.getValue().getName().equals("b"));
             }
         });
     }
