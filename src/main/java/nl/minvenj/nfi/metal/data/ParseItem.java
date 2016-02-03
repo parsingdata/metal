@@ -36,10 +36,10 @@ public final class ParseItem {
         _pr = null;
     }
 
-    public ParseItem(final ParseRef ref) {
+    public ParseItem(final ParseRef pr) {
         _pg = null;
         _pv = null;
-        _pr = ref;
+        _pr = checkNotNull(pr, "pr");
     }
 
     public boolean isValue() { return _pv != null; }
