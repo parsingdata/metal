@@ -105,7 +105,7 @@ public class TreeTest {
             if (leftItem.isGraph()) {
                 checkStruct(root, leftItem.getGraph(), leftOffset);
             } else if (leftItem.isRef()) {
-                checkHeader(leftItem.getRef(root), leftOffset);
+                checkHeader(leftItem.getRef().resolve(root), leftOffset);
             }
         }
         final ParseItem right = leftOffset != 0 ? graph.tail.tail.tail.tail.head : graph.tail.tail.tail.head;
@@ -117,7 +117,7 @@ public class TreeTest {
             if (rightItem.isGraph()) {
                 checkStruct(root, rightItem.getGraph(), rightOffset);
             } else if (rightItem.isRef()) {
-                checkHeader(rightItem.getRef(root), rightOffset);
+                checkHeader(rightItem.getRef().resolve(root), rightOffset);
             }
         }
     }

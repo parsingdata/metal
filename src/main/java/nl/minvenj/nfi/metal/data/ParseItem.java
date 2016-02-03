@@ -22,29 +22,29 @@ public final class ParseItem {
 
     private final ParseValue _pv;
     private final ParseGraph _pg;
-    private final long _ref;
+    private final ParseRef _pr;
 
     public ParseItem(final ParseValue pv) {
         _pv = checkNotNull(pv, "pv");
         _pg = null;
-        _ref = 0;
+        _pr = null;
     }
 
     public ParseItem(final ParseGraph pg) {
         _pg = checkNotNull(pg, "pg");
         _pv = null;
-        _ref = 0;
+        _pr = null;
     }
 
-    public ParseItem(final long ref) {
+    public ParseItem(final ParseRef ref) {
         _pg = null;
         _pv = null;
-        _ref = ref;
+        _pr = ref;
     }
 
     public boolean isValue() { return _pv != null; }
     public boolean isGraph() { return _pg != null; }
-    public boolean isRef() { return _pv == null && _pg == null; }
+    public boolean isRef() { return _pr != null; }
 
     public ParseValue getValue() {
         if (!isValue()) { throw new IllegalStateException("This ParseItem does not contain a ParseValue."); }
@@ -56,14 +56,14 @@ public final class ParseItem {
         return _pg;
     }
 
-    public ParseGraph getRef(final ParseGraph root) {
+    public ParseRef getRef() {
         if (!isRef()) { throw new IllegalStateException("This ParseItem does not contain a Reference."); }
-        return ParseGraph.findRef(ParseGraphList.create(root).add(root.getGraphs()), _ref);
+        return _pr;
     }
 
     @Override
     public String toString() {
-        return (isValue() ? "ParseValue(" + _pv.toString() : (isGraph() ? "ParseGraph(" + _pg.toString() : "Ref(" + _ref)) + ")";
+        return (isValue() ? "ParseValue(" + _pv.toString() : (isGraph() ? "ParseGraph(" + _pg.toString() : "Ref(" + _pr)) + ")";
     }
 
 }

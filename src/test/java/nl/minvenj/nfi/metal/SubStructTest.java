@@ -88,7 +88,7 @@ public class SubStructTest {
         final ParseGraph out = res.getEnvironment().order;
         Assert.assertEquals(1, out.getRefs().size);
         checkBranch(out, 0, 0);
-        checkBranch(out.tail.head.getRef(out), 0, 0); // Check cycle
+        checkBranch(out.tail.head.getRef().resolve(out), 0, 0); // Check cycle
     }
     
     @Test
@@ -101,7 +101,7 @@ public class SubStructTest {
         Assert.assertEquals(1, out.getRefs().size);
         checkBranch(out, 0, 4);
         checkBranch(out.tail.head.getGraph(), 4, 0);
-        checkBranch(out.tail.head.getGraph().tail.head.getRef(out), 0, 4); // Check cycle
+        checkBranch(out.tail.head.getGraph().tail.head.getRef().resolve(out), 0, 4); // Check cycle
     }
 
     private void checkBranch(final ParseGraph graph, final int graphOffset, final int nextOffset) {

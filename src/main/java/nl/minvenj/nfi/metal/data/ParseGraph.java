@@ -53,7 +53,7 @@ public class ParseGraph {
 
     public ParseGraph addRef(final long ref) {
         if (branched) { return new ParseGraph(new ParseItem(this.head.getGraph().addRef(ref)), tail, true); }
-        return new ParseGraph(new ParseItem(ref), this);
+        return new ParseGraph(new ParseItem(new ParseRef(ref)), this);
     }
 
     public ParseGraph addBranch() {
@@ -75,8 +75,8 @@ public class ParseGraph {
 
     private ParseGraphList getRefs(final ParseGraph root) {
         if (isEmpty()) { return ParseGraphList.EMPTY; }
-        if (head.isRef() && head.getRef(root) == null) { throw new IllegalStateException("A ref must point to an existing graph."); }
-        return tail.getRefs(root).add(head.isGraph() ? head.getGraph().getRefs(root) : (head.isRef() ? ParseGraphList.EMPTY.add(head.getRef(root)) : ParseGraphList.EMPTY));
+        if (head.isRef() && head.getRef().resolve(root) == null) { throw new IllegalStateException("A ref must point to an existing graph."); }
+        return tail.getRefs(root).add(head.isGraph() ? head.getGraph().getRefs(root) : (head.isRef() ? ParseGraphList.EMPTY.add(head.getRef().resolve(root)) : ParseGraphList.EMPTY));
     }
 
     public ParseGraphList getGraphs() {
