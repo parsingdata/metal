@@ -16,6 +16,10 @@
 
 package nl.minvenj.nfi.metal;
 
+import static nl.minvenj.nfi.metal.Shorthand.con;
+import static nl.minvenj.nfi.metal.Shorthand.def;
+import static nl.minvenj.nfi.metal.Shorthand.sub;
+import static nl.minvenj.nfi.metal.TokenDefinitions.any;
 import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
 import nl.minvenj.nfi.metal.data.ParseGraph;
 import nl.minvenj.nfi.metal.data.ParseGraphList;
@@ -55,7 +59,7 @@ public class ParseGraphTest {
     }
 
     private static ParseValue makeVal(final char n, final long o) {
-        return new ParseValue("", Character.toString(n), o, new byte[] { (byte) n }, enc());
+        return new ParseValue("", Character.toString(n), def(Character.toString(n), o), o, new byte[] { (byte) n }, enc());
     }
 
     private ParseGraph makeSimpleGraph() {
@@ -103,7 +107,7 @@ public class ParseGraphTest {
             .add(a)
             .addBranch()
             .add(b)
-            .addRef(a.getOffset())
+            .addRef(a.getOffset(), sub(any("a"), con(a.getOffset())))
             .closeBranch();
     }
 

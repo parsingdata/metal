@@ -16,25 +16,31 @@
 
 package nl.minvenj.nfi.metal.data;
 
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
+import nl.minvenj.nfi.metal.token.Token;
+
 public class ParseRef implements ParseItem {
 
-    private final long _ref;
+    public final long location;
+    public final Token definition;
 
-    public ParseRef(final long ref) {
-        _ref = ref;
+    public ParseRef(final long location, final Token definition) {
+        this.location = location;
+        this.definition = checkNotNull(definition, "definition");
     }
 
     public ParseGraph resolve(final ParseGraph root) {
-        return ParseGraph.findRef(ParseGraphList.create(root).add(root.getGraphs()), _ref);
+        return ParseGraph.findRef(ParseGraphList.create(root).add(root.getGraphs()), location);
     }
 
     @Override public boolean isValue() { return false; }
     @Override public boolean isGraph() { return false; }
     @Override public boolean isRef() { return true; }
+    @Override public Token getDefinition() { return definition; }
 
     @Override
     public String toString() {
-        return "ParseRef(" + _ref + ")";
+        return "ParseRef(" + location + ")";
     }
 
 }

@@ -17,12 +17,14 @@
 package nl.minvenj.nfi.metal.data;
 
 import static nl.minvenj.nfi.metal.Util.checkNotNull;
+import nl.minvenj.nfi.metal.token.Token;
 
 public class ParseGraph implements ParseItem {
 
     public final ParseItem head;
     public final ParseGraph tail;
     public final boolean branched;
+    public final Token definition;
     public final long size;
 
     public static final ParseGraph EMPTY = new ParseGraph();
@@ -31,42 +33,44 @@ public class ParseGraph implements ParseItem {
         head = null;
         tail = null;
         branched = false;
+        definition = null;
         size = 0;
     }
 
-    private ParseGraph(final ParseItem head, final ParseGraph tail, final boolean branched) {
+    private ParseGraph(final ParseItem head, final ParseGraph tail, final Token definition, final boolean branched) {
         this.head = checkNotNull(head, "head");
         if (head.isValue() && branched) { throw new IllegalArgumentException("Argument branch cannot be true when head contains a ParseValue."); }
         this.tail = checkNotNull(tail, "tail");
         this.branched = branched;
+        this.definition = definition;
         size = tail.size + 1;
     }
 
-    private ParseGraph(final ParseItem head, final ParseGraph tail) {
-        this(head, tail, false);
+    private ParseGraph(final ParseItem head, final ParseGraph tail, final Token definition) {
+        this(head, tail, definition, false);
     }
 
     public ParseGraph add(final ParseValue head) {
-        if (branched) { return new ParseGraph(((ParseGraph)this.head).add(head), tail, true); }
-        return new ParseGraph(head, this);
+        if (branched) { return new ParseGraph(((ParseGraph)this.head).add(head), tail, definition, true); }
+        return new ParseGraph(head, this, definition);
     }
 
-    public ParseGraph addRef(final long ref) {
-        if (branched) { return new ParseGraph(((ParseGraph)this.head).addRef(ref), tail, true); }
-        return new ParseGraph(new ParseRef(ref), this);
+    public ParseGraph addRef(final long ref, final Token definition) {
+        if (branched) { return new ParseGraph(((ParseGraph)this.head).addRef(ref, definition), tail, this.definition, true); }
+        return new ParseGraph(new ParseRef(ref, definition), this, this.definition);
     }
 
     public ParseGraph addBranch() {
-        if (branched) { return new ParseGraph(((ParseGraph)this.head).addBranch(), tail, true); }
-        return new ParseGraph(ParseGraph.EMPTY, this, true);
+        if (branched) { return new ParseGraph(((ParseGraph)this.head).addBranch(), tail, definition, true); }
+        return new ParseGraph(ParseGraph.EMPTY, this, definition, true);
     }
 
     public ParseGraph closeBranch() {
         if (!branched) { throw new IllegalStateException("Cannot close branch that is not open."); }
         if (((ParseGraph)head).branched) {
-            return new ParseGraph(((ParseGraph)head).closeBranch(), tail, true);
+            return new ParseGraph(((ParseGraph)head).closeBranch(), tail, definition, true);
         }
-        return new ParseGraph(head, tail, false);
+        return new ParseGraph(head, tail, definition, false);
     }
 
     public ParseGraphList getRefs() {
@@ -174,7 +178,7 @@ public class ParseGraph implements ParseItem {
 
     private ParseGraph reverse(final ParseGraph oldGraph, final ParseGraph newGraph) {
         if (oldGraph.isEmpty()) { return newGraph; }
-        return reverse(oldGraph.tail, new ParseGraph(reverseItem(oldGraph.head), newGraph));
+        return reverse(oldGraph.tail, new ParseGraph(reverseItem(oldGraph.head), newGraph, this.definition));
     }
 
     private ParseItem reverseItem(final ParseItem item) {
@@ -192,12 +196,13 @@ public class ParseGraph implements ParseItem {
     private ParseGraph getGraphAfter(final ParseItem lastHead, final ParseGraph result) {
         if (isEmpty()) { return EMPTY; }
         if (head == lastHead) { return result; }
-        return new ParseGraph(head, tail.getGraphAfter(lastHead, result));
+        return new ParseGraph(head, tail.getGraphAfter(lastHead, result), this.definition);
     }
 
     @Override public boolean isValue() { return false; }
     @Override public boolean isGraph() { return true; }
     @Override public boolean isRef() { return false; }
+    @Override public Token getDefinition() { return definition; }
 
     @Override
     public String toString() {

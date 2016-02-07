@@ -16,10 +16,14 @@
 
 package nl.minvenj.nfi.metal.data;
 
+import nl.minvenj.nfi.metal.token.Token;
+
 public interface ParseItem {
 
     boolean isValue();
     boolean isGraph();
     boolean isRef();
+
+    Token getDefinition();
 
 }
