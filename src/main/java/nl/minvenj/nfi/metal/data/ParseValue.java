@@ -19,7 +19,7 @@ package nl.minvenj.nfi.metal.data;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.expression.value.Value;
 
-public class ParseValue extends Value {
+public class ParseValue extends Value implements ParseItem {
 
     public static final String SEPARATOR = ".";
 
@@ -54,9 +54,13 @@ public class ParseValue extends Value {
         return _offset;
     }
 
+    @Override public boolean isValue() { return true; }
+    @Override public boolean isGraph() { return false; }
+    @Override public boolean isRef() { return false; }
+
     @Override
     public String toString() {
-        return getName() + ":" + super.toString();
+        return "ParseValue(" + getName() + ":" + super.toString() + ")";
     }
 
 }

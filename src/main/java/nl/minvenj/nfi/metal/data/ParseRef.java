@@ -16,7 +16,7 @@
 
 package nl.minvenj.nfi.metal.data;
 
-public class ParseRef {
+public class ParseRef implements ParseItem {
 
     private final long _ref;
 
@@ -26,6 +26,15 @@ public class ParseRef {
 
     public ParseGraph resolve(final ParseGraph root) {
         return ParseGraph.findRef(ParseGraphList.create(root).add(root.getGraphs()), _ref);
+    }
+
+    @Override public boolean isValue() { return false; }
+    @Override public boolean isGraph() { return false; }
+    @Override public boolean isRef() { return true; }
+
+    @Override
+    public String toString() {
+        return "ParseRef(" + _ref + ")";
     }
 
 }

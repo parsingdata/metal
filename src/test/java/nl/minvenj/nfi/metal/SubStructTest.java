@@ -31,7 +31,9 @@ import java.io.IOException;
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.data.ParseGraph;
 import nl.minvenj.nfi.metal.data.ParseItem;
+import nl.minvenj.nfi.metal.data.ParseRef;
 import nl.minvenj.nfi.metal.data.ParseResult;
+import nl.minvenj.nfi.metal.data.ParseValue;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.token.Token;
 
@@ -59,7 +61,7 @@ public class SubStructTest {
         }
 
     }
-    
+
     @Test
     public void linkedList() throws IOException {
         final Token token = new LinkedList(enc());
@@ -75,10 +77,10 @@ public class SubStructTest {
         final ParseGraph out = res.getEnvironment().order;
         Assert.assertEquals(0, out.getRefs().size); // No cycles
         checkBranch(out, 0, 8);
-        checkBranch(out.tail.head.getGraph(), 8, 4);
-        checkLeaf(out.tail.head.getGraph().tail.head.getGraph(), 4, 12);
+        checkBranch((ParseGraph)out.tail.head, 8, 4);
+        checkLeaf((ParseGraph)((ParseGraph)out.tail.head).tail.head, 4, 12);
     }
-    
+
     @Test
     public void linkedListWithSelfReference() throws IOException {
         final Token token = new LinkedList(enc());
@@ -88,9 +90,9 @@ public class SubStructTest {
         final ParseGraph out = res.getEnvironment().order;
         Assert.assertEquals(1, out.getRefs().size);
         checkBranch(out, 0, 0);
-        checkBranch(out.tail.head.getRef().resolve(out), 0, 0); // Check cycle
+        checkBranch(((ParseRef)out.tail.head).resolve(out), 0, 0); // Check cycle
     }
-    
+
     @Test
     public void linkedListWithCycle() throws IOException {
         final Token token = new LinkedList(enc());
@@ -100,8 +102,8 @@ public class SubStructTest {
         final ParseGraph out = res.getEnvironment().order;
         Assert.assertEquals(1, out.getRefs().size);
         checkBranch(out, 0, 4);
-        checkBranch(out.tail.head.getGraph(), 4, 0);
-        checkBranch(out.tail.head.getGraph().tail.head.getRef().resolve(out), 0, 4); // Check cycle
+        checkBranch((ParseGraph)out.tail.head, 4, 0);
+        checkBranch(((ParseRef)((ParseGraph)out.tail.head).tail.head).resolve(out), 0, 4); // Check cycle
     }
 
     private void checkBranch(final ParseGraph graph, final int graphOffset, final int nextOffset) {
@@ -109,17 +111,17 @@ public class SubStructTest {
         checkValue(graph.tail.tail.head, nextOffset, graphOffset + 1); // next
         checkValue(graph.tail.tail.tail.head, 0, graphOffset); // header
     }
-    
+
     private void checkLeaf(final ParseGraph graph, final int graphOffset, final int nextOffset) {
         checkValue(graph.head, 1, graphOffset + 2); // footer
         checkValue(graph.tail.head, nextOffset, graphOffset + 1); // next
         checkValue(graph.tail.tail.head, 0, graphOffset); // header
     }
-    
+
     private void checkValue(final ParseItem item, final int value, final int offset) {
         Assert.assertTrue(item.isValue());
-        Assert.assertEquals(value, item.getValue().asNumeric().intValue());
-        Assert.assertEquals(offset, item.getValue().getOffset());
+        Assert.assertEquals(value, ((ParseValue)item).asNumeric().intValue());
+        Assert.assertEquals(offset, ((ParseValue)item).getOffset());
     }
-    
+
 }

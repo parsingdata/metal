@@ -18,7 +18,7 @@ package nl.minvenj.nfi.metal.data;
 
 import static nl.minvenj.nfi.metal.Util.checkNotNull;
 
-public class ParseGraph {
+public class ParseGraph implements ParseItem {
 
     public final ParseItem head;
     public final ParseGraph tail;
@@ -47,24 +47,24 @@ public class ParseGraph {
     }
 
     public ParseGraph add(final ParseValue head) {
-        if (branched) { return new ParseGraph(new ParseItem(this.head.getGraph().add(head)), tail, true); }
-        return new ParseGraph(new ParseItem(head), this);
+        if (branched) { return new ParseGraph(((ParseGraph)this.head).add(head), tail, true); }
+        return new ParseGraph(head, this);
     }
 
     public ParseGraph addRef(final long ref) {
-        if (branched) { return new ParseGraph(new ParseItem(this.head.getGraph().addRef(ref)), tail, true); }
-        return new ParseGraph(new ParseItem(new ParseRef(ref)), this);
+        if (branched) { return new ParseGraph(((ParseGraph)this.head).addRef(ref), tail, true); }
+        return new ParseGraph(new ParseRef(ref), this);
     }
 
     public ParseGraph addBranch() {
-        if (branched) { return new ParseGraph(new ParseItem(this.head.getGraph().addBranch()), tail, true); }
-        return new ParseGraph(new ParseItem(ParseGraph.EMPTY), this, true);
+        if (branched) { return new ParseGraph(((ParseGraph)this.head).addBranch(), tail, true); }
+        return new ParseGraph(ParseGraph.EMPTY, this, true);
     }
 
     public ParseGraph closeBranch() {
         if (!branched) { throw new IllegalStateException("Cannot close branch that is not open."); }
-        if (head.getGraph().branched) {
-            return new ParseGraph(new ParseItem(head.getGraph().closeBranch()), tail, true);
+        if (((ParseGraph)head).branched) {
+            return new ParseGraph(((ParseGraph)head).closeBranch(), tail, true);
         }
         return new ParseGraph(head, tail, false);
     }
@@ -75,8 +75,8 @@ public class ParseGraph {
 
     private ParseGraphList getRefs(final ParseGraph root) {
         if (isEmpty()) { return ParseGraphList.EMPTY; }
-        if (head.isRef() && head.getRef().resolve(root) == null) { throw new IllegalStateException("A ref must point to an existing graph."); }
-        return tail.getRefs(root).add(head.isGraph() ? head.getGraph().getRefs(root) : (head.isRef() ? ParseGraphList.EMPTY.add(head.getRef().resolve(root)) : ParseGraphList.EMPTY));
+        if (head.isRef() && ((ParseRef)head).resolve(root) == null) { throw new IllegalStateException("A ref must point to an existing graph."); }
+        return tail.getRefs(root).add(head.isGraph() ? ((ParseGraph)head).getRefs(root) : (head.isRef() ? ParseGraphList.EMPTY.add(((ParseRef)head).resolve(root)) : ParseGraphList.EMPTY));
     }
 
     public ParseGraphList getGraphs() {
@@ -86,7 +86,7 @@ public class ParseGraph {
     private ParseGraphList getNestedGraphs() {
         if (isEmpty()) { return ParseGraphList.EMPTY; }
         final ParseGraphList tailGraphs = tail.getNestedGraphs();
-        if (head.isGraph()) { return tailGraphs.add(head.getGraph()).add(head.getGraph().getNestedGraphs()); }
+        if (head.isGraph()) { return tailGraphs.add((ParseGraph)head).add(((ParseGraph)head).getNestedGraphs()); }
         return tailGraphs;
     }
 
@@ -97,13 +97,13 @@ public class ParseGraph {
 
     public ParseValue getLowestOffsetValue() {
         if (!containsValue()) { throw new IllegalStateException("Cannot determine lowest offset if graph does not contain a value."); }
-        if (head.isValue()) { return tail.getLowestOffsetValue(head.getValue()); }
+        if (head.isValue()) { return tail.getLowestOffsetValue((ParseValue)head); }
         return tail.getLowestOffsetValue();
     }
 
     private ParseValue getLowestOffsetValue(final ParseValue lowest) {
         if (!containsValue()) { return lowest; }
-        if (head.isValue()) { return tail.getLowestOffsetValue(lowest.getOffset() < head.getValue().getOffset() ? lowest : head.getValue()); }
+        if (head.isValue()) { return tail.getLowestOffsetValue(lowest.getOffset() < ((ParseValue)head).getOffset() ? lowest : ((ParseValue)head)); }
         return tail.getLowestOffsetValue(lowest);
     }
 
@@ -135,9 +135,9 @@ public class ParseGraph {
      */
     public ParseValue get(final String name) {
         if (isEmpty()) { return null; }
-        if (head.isValue() && head.getValue().matches(name)) { return head.getValue(); }
+        if (head.isValue() && ((ParseValue)head).matches(name)) { return (ParseValue)head; }
         if (head.isGraph()) {
-            final ParseValue val = head.getGraph().get(name);
+            final ParseValue val = ((ParseGraph)head).get(name);
             if (val != null) { return val; }
         }
         return tail.get(name);
@@ -148,9 +148,9 @@ public class ParseGraph {
      */
     public ParseValue current() {
         if (isEmpty()) { return null; }
-        if (head.isValue()) { return head.getValue(); }
+        if (head.isValue()) { return (ParseValue)head; }
         if (head.isGraph()) {
-            final ParseValue val = head.getGraph().current();
+            final ParseValue val = ((ParseGraph)head).current();
             if (val != null) { return val; }
         }
         return tail.current(); // Ignore current if it's a reference (or an empty graph)
@@ -167,8 +167,8 @@ public class ParseGraph {
     private ParseValueList getAll(final String name, final ParseValueList result) {
         if (isEmpty()) { return result; }
         final ParseValueList tailResults = tail.getAll(name, result);
-        if (head.isValue() && head.getValue().matches(name)) { return tailResults.add(head.getValue()); }
-        if (head.isGraph()) { return tailResults.add(head.getGraph().getAll(name, result)); }
+        if (head.isValue() && ((ParseValue)head).matches(name)) { return tailResults.add((ParseValue)head); }
+        if (head.isGraph()) { return tailResults.add(((ParseGraph)head).getAll(name, result)); }
         return tailResults;
     }
 
@@ -178,12 +178,7 @@ public class ParseGraph {
     }
 
     private ParseItem reverseItem(final ParseItem item) {
-        return item.isGraph() ? new ParseItem(item.getGraph().reverse()) : item;
-    }
-
-    @Override
-    public String toString() {
-        return "ParseGraph(" + (head != null ? head.toString() : "null") + ", " + (tail != null ? tail.toString() : "null") + ", " + branched + ")";
+        return item.isGraph() ? ((ParseGraph)item).reverse() : item;
     }
 
     /**
@@ -198,6 +193,15 @@ public class ParseGraph {
         if (isEmpty()) { return EMPTY; }
         if (head == lastHead) { return result; }
         return new ParseGraph(head, tail.getGraphAfter(lastHead, result));
+    }
+
+    @Override public boolean isValue() { return false; }
+    @Override public boolean isGraph() { return true; }
+    @Override public boolean isRef() { return false; }
+
+    @Override
+    public String toString() {
+        return "ParseGraph(" + (head != null ? head.toString() : "null") + ", " + (tail != null ? tail.toString() : "null") + ", " + branched + ")";
     }
 
 }

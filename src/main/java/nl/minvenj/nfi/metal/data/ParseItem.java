@@ -16,54 +16,10 @@
 
 package nl.minvenj.nfi.metal.data;
 
-import static nl.minvenj.nfi.metal.Util.checkNotNull;
+public interface ParseItem {
 
-public final class ParseItem {
-
-    private final ParseValue _pv;
-    private final ParseGraph _pg;
-    private final ParseRef _pr;
-
-    public ParseItem(final ParseValue pv) {
-        _pv = checkNotNull(pv, "pv");
-        _pg = null;
-        _pr = null;
-    }
-
-    public ParseItem(final ParseGraph pg) {
-        _pg = checkNotNull(pg, "pg");
-        _pv = null;
-        _pr = null;
-    }
-
-    public ParseItem(final ParseRef pr) {
-        _pg = null;
-        _pv = null;
-        _pr = checkNotNull(pr, "pr");
-    }
-
-    public boolean isValue() { return _pv != null; }
-    public boolean isGraph() { return _pg != null; }
-    public boolean isRef() { return _pr != null; }
-
-    public ParseValue getValue() {
-        if (!isValue()) { throw new IllegalStateException("This ParseItem does not contain a ParseValue."); }
-        return _pv;
-    }
-
-    public ParseGraph getGraph() {
-        if (!isGraph()) { throw new IllegalStateException("This ParseItem does not contain a ParseGraph."); }
-        return _pg;
-    }
-
-    public ParseRef getRef() {
-        if (!isRef()) { throw new IllegalStateException("This ParseItem does not contain a Reference."); }
-        return _pr;
-    }
-
-    @Override
-    public String toString() {
-        return (isValue() ? "ParseValue(" + _pv.toString() : (isGraph() ? "ParseGraph(" + _pg.toString() : "Ref(" + _pr)) + ")";
-    }
+    boolean isValue();
+    boolean isGraph();
+    boolean isRef();
 
 }
