@@ -107,7 +107,7 @@ public class ParseGraphTest {
             .add(a)
             .addBranch()
             .add(b)
-            .addRef(a.getOffset(), sub(any("a"), con(a.getOffset())))
+            .add(new ParseRef(a.getOffset(), sub(any("a"), con(a.getOffset()))))
             .closeBranch();
     }
 

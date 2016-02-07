@@ -55,9 +55,9 @@ public class ParseGraph implements ParseItem {
         return new ParseGraph(head, this, definition);
     }
 
-    public ParseGraph addRef(final long ref, final Token definition) {
-        if (branched) { return new ParseGraph(((ParseGraph)this.head).addRef(ref, definition), tail, this.definition, true); }
-        return new ParseGraph(new ParseRef(ref, definition), this, this.definition);
+    public ParseGraph add(final ParseRef ref) {
+        if (branched) { return new ParseGraph(((ParseGraph)this.head).add(ref), tail, this.definition, true); }
+        return new ParseGraph(ref, this, this.definition);
     }
 
     public ParseGraph addBranch() {
@@ -178,7 +178,7 @@ public class ParseGraph implements ParseItem {
 
     private ParseGraph reverse(final ParseGraph oldGraph, final ParseGraph newGraph) {
         if (oldGraph.isEmpty()) { return newGraph; }
-        return reverse(oldGraph.tail, new ParseGraph(reverseItem(oldGraph.head), newGraph, this.definition));
+        return reverse(oldGraph.tail, new ParseGraph(reverseItem(oldGraph.head), newGraph, definition));
     }
 
     private ParseItem reverseItem(final ParseItem item) {
@@ -196,7 +196,7 @@ public class ParseGraph implements ParseItem {
     private ParseGraph getGraphAfter(final ParseItem lastHead, final ParseGraph result) {
         if (isEmpty()) { return EMPTY; }
         if (head == lastHead) { return result; }
-        return new ParseGraph(head, tail.getGraphAfter(lastHead, result), this.definition);
+        return new ParseGraph(head, tail.getGraphAfter(lastHead, result), definition);
     }
 
     @Override public boolean isValue() { return false; }
