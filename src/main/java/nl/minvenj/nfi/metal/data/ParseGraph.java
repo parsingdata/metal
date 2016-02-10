@@ -17,6 +17,10 @@
 package nl.minvenj.nfi.metal.data;
 
 import static nl.minvenj.nfi.metal.Util.checkNotNull;
+
+import java.io.IOException;
+
+import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.token.Token;
 
 public class ParseGraph implements ParseItem {
@@ -27,13 +31,18 @@ public class ParseGraph implements ParseItem {
     public final Token definition;
     public final long size;
 
-    public static final ParseGraph EMPTY = new ParseGraph();
+    private static final Token PLACE_HOLDER = new Token(null) {
+        @Override protected ParseResult parseImpl(String scope, Environment env, Encoding enc) throws IOException { throw new IllegalStateException("This placeholder may not be invoked."); }
+        @Override public String toString() { return "Placeholder"; };
+    };
 
-    private ParseGraph() {
+    public static final ParseGraph EMPTY = new ParseGraph(PLACE_HOLDER);
+
+    private ParseGraph(final Token definition) {
         head = null;
         tail = null;
         branched = false;
-        definition = null;
+        this.definition = checkNotNull(definition, "definition");
         size = 0;
     }
 
@@ -42,7 +51,7 @@ public class ParseGraph implements ParseItem {
         if (head.isValue() && branched) { throw new IllegalArgumentException("Argument branch cannot be true when head contains a ParseValue."); }
         this.tail = checkNotNull(tail, "tail");
         this.branched = branched;
-        this.definition = definition;
+        this.definition = checkNotNull(definition, "definition");
         size = tail.size + 1;
     }
 
@@ -51,8 +60,8 @@ public class ParseGraph implements ParseItem {
     }
 
     public ParseGraph add(final ParseValue head) {
-        if (branched) { return new ParseGraph(((ParseGraph)this.head).add(head), tail, definition, true); }
-        return new ParseGraph(head, this, definition);
+        if (branched) { return new ParseGraph(((ParseGraph)this.head).add(head), tail, this.definition, true); }
+        return new ParseGraph(head, this, this.definition);
     }
 
     public ParseGraph add(final ParseRef ref) {
@@ -60,15 +69,15 @@ public class ParseGraph implements ParseItem {
         return new ParseGraph(ref, this, this.definition);
     }
 
-    public ParseGraph addBranch() {
-        if (branched) { return new ParseGraph(((ParseGraph)this.head).addBranch(), tail, definition, true); }
-        return new ParseGraph(ParseGraph.EMPTY, this, definition, true);
+    public ParseGraph addBranch(final Token definition) {
+        if (branched) { return new ParseGraph(((ParseGraph)this.head).addBranch(definition), tail, definition, true); }
+        return new ParseGraph(new ParseGraph(definition), this, definition, true);
     }
 
-    public ParseGraph closeBranch() {
+    public ParseGraph closeBranch(final Token definition) {
         if (!branched) { throw new IllegalStateException("Cannot close branch that is not open."); }
         if (((ParseGraph)head).branched) {
-            return new ParseGraph(((ParseGraph)head).closeBranch(), tail, definition, true);
+            return new ParseGraph(((ParseGraph)head).closeBranch(definition), tail, definition, true);
         }
         return new ParseGraph(head, tail, definition, false);
     }

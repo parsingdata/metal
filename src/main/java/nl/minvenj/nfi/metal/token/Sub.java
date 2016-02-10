@@ -44,9 +44,9 @@ public class Sub extends Token {
         if (!ov.isPresent()) { return new ParseResult(false, env); }
         final long ref = ov.get().asNumeric().longValue();
         if (env.order.hasGraphAtRef(ref)) { return new ParseResult(true, new Environment(env.order.add(new ParseRef(ref, this)), env.input, env.offset)); }
-        final ParseResult res = _op.parse(scope, new Environment(env.order.addBranch(), env.input, ref), enc);
+        final ParseResult res = _op.parse(scope, new Environment(env.order.addBranch(this), env.input, ref), enc);
         if (res.succeeded()) {
-            return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, env.offset));
+            return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(this), res.getEnvironment().input, env.offset));
         }
         return new ParseResult(false, env);
     }

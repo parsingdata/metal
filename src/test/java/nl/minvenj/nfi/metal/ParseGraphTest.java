@@ -26,11 +26,14 @@ import nl.minvenj.nfi.metal.data.ParseGraphList;
 import nl.minvenj.nfi.metal.data.ParseItem;
 import nl.minvenj.nfi.metal.data.ParseRef;
 import nl.minvenj.nfi.metal.data.ParseValue;
+import nl.minvenj.nfi.metal.token.Token;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 public class ParseGraphTest {
+
+    private final Token t = any("t");
 
     private final ParseGraph pg;
     private final ParseGraph pgc;
@@ -67,14 +70,14 @@ public class ParseGraphTest {
             .EMPTY
             .add(a)        // [a]
             .add(b)        // [b]
-            .addBranch()   //  +---+
+            .addBranch(t)  //  +---+
             .add(c)        //  |  [c]
-            .addBranch()   //  |   +---+
+            .addBranch(t)  //  |   +---+
             .add(d)        //  |   |  [d]
             .add(e)        //  |   |  [e]
-            .closeBranch() //  |   +---+
+            .closeBranch(t)//  |   +---+
             .add(f)        //  |  [f]
-            .closeBranch() //  +---+
+            .closeBranch(t)//  +---+
             .add(g)        // [g]
             .add(h);       // [h]
     }
@@ -105,10 +108,10 @@ public class ParseGraphTest {
         return ParseGraph
             .EMPTY
             .add(a)
-            .addBranch()
+            .addBranch(t)
             .add(b)
             .add(new ParseRef(a.getOffset(), sub(any("a"), con(a.getOffset()))))
-            .closeBranch();
+            .closeBranch(t);
     }
 
     @Test
@@ -127,21 +130,21 @@ public class ParseGraphTest {
         return ParseGraph
             .EMPTY
             .add(a)
-            .addBranch()
-            .addBranch()
+            .addBranch(t)
+            .addBranch(t)
             .add(b)
-            .closeBranch()
-            .addBranch()
-            .closeBranch()
+            .closeBranch(t)
+            .addBranch(t)
+            .closeBranch(t)
             .add(c)
-            .addBranch()
+            .addBranch(t)
             .add(d)
-            .closeBranch()
-            .closeBranch()
+            .closeBranch(t)
+            .closeBranch(t)
             .add(e)
-            .addBranch()
+            .addBranch(t)
             .add(f)
-            .closeBranch();
+            .closeBranch(t);
     }
 
     @Test
