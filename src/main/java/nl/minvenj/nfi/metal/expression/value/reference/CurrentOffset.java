@@ -26,7 +26,8 @@ public class CurrentOffset implements ValueExpression {
 
     @Override
     public OptionalValue eval(final Environment env, final Encoding enc) {
-        return OptionalValue.of(ConstantFactory.createFromNumeric(env.offset, new Encoding(true)));
+        // override encoding, *always* us unsigned numbers for the current offset
+        return OptionalValue.of(ConstantFactory.createFromNumeric(env.offset, new Encoding(false)));
     }
 
     @Override
