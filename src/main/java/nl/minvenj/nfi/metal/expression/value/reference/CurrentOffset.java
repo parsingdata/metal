@@ -22,11 +22,15 @@ import nl.minvenj.nfi.metal.expression.value.ConstantFactory;
 import nl.minvenj.nfi.metal.expression.value.OptionalValue;
 import nl.minvenj.nfi.metal.expression.value.ValueExpression;
 
+/**
+ * Retrieve the current environment offset.
+ *
+ * Note that the current offset is an unsigned value.
+ */
 public class CurrentOffset implements ValueExpression {
 
     @Override
     public OptionalValue eval(final Environment env, final Encoding enc) {
-        // override encoding, *always* us unsigned numbers for the current offset
         return OptionalValue.of(ConstantFactory.createFromNumeric(env.offset, new Encoding(false)));
     }
 
