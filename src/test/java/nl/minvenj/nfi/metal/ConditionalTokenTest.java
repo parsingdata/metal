@@ -68,6 +68,6 @@ public class ConditionalTokenTest extends ParameterizedParse {
     
     private static final Token whileToken = seq(any("size"),
                                                 whl(any("value"), ltNum(currentOffset, add(ref("size"), add(offset("size"), con(1))))),
-                                                def("footer", con(1), eq(con(0xff))));
+                                                def("footer", con(1), eqNum(con(-1))));
 
 }

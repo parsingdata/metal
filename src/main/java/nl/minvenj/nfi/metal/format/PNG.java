@@ -35,7 +35,7 @@ public class PNG {
 
     private static final Token HEADER =
             str("signature",
-            seq(def("highbit", con(1), eq(con(0x89))),
+            seq(def("highbit", con(1), eq(con(0x89)), new Encoding(false)),
                 def("PNG", con(3), eq(con("PNG"))),
                 def("controlchars", con(4), eq(con(0x0d, 0x0a, 0x1a, 0x0a)))));
 

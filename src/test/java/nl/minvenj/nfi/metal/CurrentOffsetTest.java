@@ -77,7 +77,7 @@ public class CurrentOffsetTest {
         // value - offset + 1 should be 0:
         final Token offsetValidation = rep(def("byte", con(1), eqNum(sub(self, sub(currentOffset, con(1))), con(0))));
 
-        final ParseResult parse = offsetValidation.parse(env, new Encoding(true));
+        final ParseResult parse = offsetValidation.parse(env, new Encoding(false));
         assertTrue(parse.succeeded());
         assertEquals(256, parse.getEnvironment().offset);
     }

@@ -25,7 +25,7 @@ import nl.minvenj.nfi.metal.encoding.Encoding;
 public class ConstantFactory {
 
     public static Value createFromNumeric(final BigInteger value, final Encoding enc) {
-        return new Value(compact(value.toByteArray()), setToBE(enc));
+        return new Value(/*compact(*/value.toByteArray()/*)*/, setToBE(enc));
     }
 
     public static Value createFromNumeric(final long value, final Encoding enc) {
