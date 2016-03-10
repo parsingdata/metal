@@ -17,6 +17,7 @@
 package nl.minvenj.nfi.metal.expression.value;
 
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.util.BitSet;
 
 import nl.minvenj.nfi.metal.encoding.ByteOrder;
@@ -29,7 +30,7 @@ public class ConstantFactory {
     }
 
     public static Value createFromNumeric(final long value, final Encoding enc) {
-        return createFromNumeric(BigInteger.valueOf(value), enc);
+        return new Value(value == 0 ? new byte[] { 0 } : compact(ByteBuffer.allocate(8).putLong(value).array()), setToBE(enc));
     }
 
     public static Value createFromString(final String value, final Encoding enc) {
