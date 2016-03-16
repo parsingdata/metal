@@ -40,7 +40,6 @@ public class ConstantValueTest extends ParameterizedParse {
 	@Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-//            { "[signed] 1 + 2 == 3", add, stream(1, 2, 3), signed(), true },
         	{ "a", single(1, eq(con(0))), stream(0), signed(), true },
         	{ "au", single(1, eq(con(0))), stream(0), enc(), true },
         	{ "a2", single(1, eq(con(-1))), stream(-1), signed(), true },
