@@ -22,6 +22,9 @@ import nl.minvenj.nfi.metal.expression.value.ConstantFactory;
 import nl.minvenj.nfi.metal.expression.value.OptionalValue;
 import nl.minvenj.nfi.metal.expression.value.ValueExpression;
 
+/**
+ * Retrieve the current environment offset.
+ */
 public class CurrentOffset implements ValueExpression {
 
     @Override
