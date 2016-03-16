@@ -25,7 +25,7 @@ import nl.minvenj.nfi.metal.encoding.Encoding;
 public class ConstantFactory {
 
     public static Value createFromNumeric(final BigInteger value, final Encoding enc) {
-        return new Value(compact(value.toByteArray()), setToBE(enc));
+        return new Value(compact(value.toByteArray(), enc.isSigned()), setToBE(enc));
     }
 
     public static Value createFromNumeric(final long value, final Encoding enc) {
@@ -47,10 +47,9 @@ public class ConstantFactory {
         return new Encoding(enc.isSigned(), enc.getCharset(), ByteOrder.BIG_ENDIAN);
     }
 
-    private static byte[] compact(final byte[] in) {
-        if (in.length < 2) {
-            return in;
-        }
+    private static byte[] compact(final byte[] in, boolean signed) {
+        if (signed) { return in; }
+        if (in.length < 2) { return in; }
         // strip leading zero bytes
         int i = 0;
         for (; i < in.length && in[i] == 0; i++);
