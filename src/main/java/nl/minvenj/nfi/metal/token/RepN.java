@@ -42,7 +42,7 @@ public class RepN extends Token {
         final OptionalValue count = _n.eval(env, enc);
         if (!count.isPresent()) { return new ParseResult(false, env); }
         final ParseResult res = iterate(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc, count.get().asNumeric().longValue());
-        if (res.succeeded()) { return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(this), res.getEnvironment().input, res.getEnvironment().offset)); }
+        if (res.succeeded()) { return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset)); }
         return new ParseResult(false, env);
     }
 

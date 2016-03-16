@@ -38,7 +38,7 @@ public class Cho extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final ParseResult res = iterate(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc, 0);
-        if (res.succeeded()) { return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(this), res.getEnvironment().input, res.getEnvironment().offset)); }
+        if (res.succeeded()) { return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset)); }
         return new ParseResult(false, env);
     }
 

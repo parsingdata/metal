@@ -31,12 +31,12 @@ public class ParseGraph implements ParseItem {
     public final Token definition;
     public final long size;
 
-    private static final Token PLACE_HOLDER = new Token(null) {
+    public static final Token NONE = new Token(null) {
         @Override protected ParseResult parseImpl(String scope, Environment env, Encoding enc) throws IOException { throw new IllegalStateException("This placeholder may not be invoked."); }
-        @Override public String toString() { return "Placeholder"; };
+        @Override public String toString() { return "None"; };
     };
 
-    public static final ParseGraph EMPTY = new ParseGraph(PLACE_HOLDER);
+    public static final ParseGraph EMPTY = new ParseGraph(NONE);
 
     private ParseGraph(final Token definition) {
         head = null;
@@ -70,16 +70,16 @@ public class ParseGraph implements ParseItem {
     }
 
     public ParseGraph addBranch(final Token definition) {
-        if (branched) { return new ParseGraph(((ParseGraph)this.head).addBranch(definition), tail, definition, true); }
-        return new ParseGraph(new ParseGraph(definition), this, definition, true);
+        if (branched) { return new ParseGraph(((ParseGraph)this.head).addBranch(definition), tail, this.definition, true); }
+        return new ParseGraph(new ParseGraph(definition), this, this.definition, true);
     }
 
-    public ParseGraph closeBranch(final Token definition) {
+    public ParseGraph closeBranch() {
         if (!branched) { throw new IllegalStateException("Cannot close branch that is not open."); }
         if (((ParseGraph)head).branched) {
-            return new ParseGraph(((ParseGraph)head).closeBranch(definition), tail, definition, true);
+            return new ParseGraph(((ParseGraph)head).closeBranch(), tail, this.definition, true);
         }
-        return new ParseGraph(head, tail, definition, false);
+        return new ParseGraph(head, tail, this.definition, false);
     }
 
     public ParseGraphList getRefs() {

@@ -46,7 +46,7 @@ public class Str extends Token {
     protected ParseResult parseImpl(final String outerScope, final Environment env, final Encoding enc) throws IOException {
         final ParseResult res = _op.parse(outerScope + "." + _scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
         if (!res.succeeded()) { return new ParseResult(false, env); }
-        final ParseResult closedResult = new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(this), res.getEnvironment().input, res.getEnvironment().offset));
+        final ParseResult closedResult = new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset));
         if (_sink != null && _pred.eval(closedResult.getEnvironment(), enc)) {
             _sink.handleStruct(outerScope, closedResult.getEnvironment(), enc, (ParseGraph)closedResult.getEnvironment().order.head);
         }
