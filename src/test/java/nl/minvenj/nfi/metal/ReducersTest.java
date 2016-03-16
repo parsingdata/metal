@@ -92,7 +92,7 @@ public class ReducersTest extends ParameterizedParse {
     private final static Token reduceCatAToNumBE = token(3, eqNum(fold("a", catReducer)), enc());
     private final static Token reduceCatAToNumLE = token(3, eqNum(fold("a", catReducer)), le());
     private final static Token foldLeftSubA = token(1, eq(foldLeft("a", subReducer)));
-    private final static Token foldLeftSubAInit2 = token(1, eqNum(foldLeft("a", subReducer, con(2))));
+    private final static Token foldLeftSubAInit2 = token(1, eq(foldLeft("a", subReducer, con(2))));
     private final static Token foldRightSubA = token(1, eq(foldRight("a", subReducer)));
     private final static Token foldRightSubAInit2 = token(1, eq(foldRight("a", subReducer, con(2))));
 
