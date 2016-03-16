@@ -24,8 +24,6 @@ import nl.minvenj.nfi.metal.expression.value.ValueExpression;
 
 /**
  * Retrieve the current environment offset.
- *
- * Note that the current offset is an unsigned value.
  */
 public class CurrentOffset implements ValueExpression {
 

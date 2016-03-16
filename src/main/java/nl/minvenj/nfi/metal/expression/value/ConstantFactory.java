@@ -17,7 +17,6 @@
 package nl.minvenj.nfi.metal.expression.value;
 
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.util.BitSet;
 
 import nl.minvenj.nfi.metal.encoding.ByteOrder;
