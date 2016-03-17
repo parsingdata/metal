@@ -36,7 +36,6 @@ import nl.minvenj.nfi.metal.data.ParseGraph;
 import nl.minvenj.nfi.metal.data.ParseItem;
 import nl.minvenj.nfi.metal.data.ParseRef;
 import nl.minvenj.nfi.metal.data.ParseResult;
-import nl.minvenj.nfi.metal.data.ParseValue;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.token.Token;
 
@@ -77,13 +76,13 @@ public class SubStructTest {
         final ParseGraph out = res.getEnvironment().order;
         Assert.assertEquals(0, out.getRefs().size); // No cycles
 
-        final ParseGraph first = (ParseGraph) out.head;
+        final ParseGraph first = out.head.asGraph();
         checkBranch(first, 0, 8);
 
-        final ParseGraph second = (ParseGraph) ((ParseGraph) ((ParseGraph) first.tail.head).head).head;
+        final ParseGraph second = first.tail.head.asGraph().head.asGraph().head.asGraph();
         checkBranch(second, 8, 4);
 
-        final ParseGraph third = (ParseGraph) ((ParseGraph) ((ParseGraph) second.tail.head).head).head;
+        final ParseGraph third = second.tail.head.asGraph().head.asGraph().head.asGraph();
         checkLeaf(third, 4, 12);
     }
 
@@ -96,10 +95,10 @@ public class SubStructTest {
         final ParseGraph out = res.getEnvironment().order;
         Assert.assertEquals(1, out.getRefs().size);
 
-        final ParseGraph first = (ParseGraph) out.head;
+        final ParseGraph first = out.head.asGraph();
         checkBranch(first, 0, 0);
 
-        final ParseRef ref = (ParseRef) ((ParseGraph) (first.tail.head)).head;
+        final ParseRef ref = first.tail.head.asGraph().head.asRef();
         checkBranch(ref.resolve(out), 0, 0); // Check cycle
     }
 
@@ -112,13 +111,13 @@ public class SubStructTest {
         final ParseGraph out = res.getEnvironment().order;
         Assert.assertEquals(1, out.getRefs().size);
 
-        final ParseGraph first = (ParseGraph) out.head;
+        final ParseGraph first = out.head.asGraph();
         checkBranch(first, 0, 4);
 
-        final ParseGraph second = (ParseGraph) ((ParseGraph) ((ParseGraph) first.tail.head).head).head;
+        final ParseGraph second = first.tail.head.asGraph().head.asGraph().head.asGraph();
         checkBranch(second, 4, 0);
 
-        final ParseRef ref = (ParseRef) ((ParseGraph) (second.tail.head)).head;
+        final ParseRef ref = second.tail.head.asGraph().head.asRef();
         checkBranch(ref.resolve(out), 0, 4); // Check cycle
     }
 
@@ -136,8 +135,8 @@ public class SubStructTest {
 
     private void checkValue(final ParseItem item, final int value, final int offset) {
         Assert.assertTrue(item.isValue());
-        Assert.assertEquals(value, ((ParseValue)item).asNumeric().intValue());
-        Assert.assertEquals(offset, ((ParseValue)item).getOffset());
+        Assert.assertEquals(value, item.asValue().asNumeric().intValue());
+        Assert.assertEquals(offset, item.asValue().getOffset());
     }
 
 }
