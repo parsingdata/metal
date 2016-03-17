@@ -33,6 +33,8 @@ import nl.minvenj.nfi.metal.token.Token;
 
 public class DefinitionTest {
 	
+	// TODO: METAL-41: Add a bunch of additional tests here to check whether all Token types work correctly.
+	
 	@Test
 	public void singleDef() throws IOException {
 		final Token singleDef = def("a", con(1));
