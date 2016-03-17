@@ -31,18 +31,17 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 
-import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParseGraph;
-import nl.minvenj.nfi.metal.data.ParseValue;
-import nl.minvenj.nfi.metal.encoding.Encoding;
-import nl.minvenj.nfi.metal.token.Str;
-import nl.minvenj.nfi.metal.token.StructSink;
-import nl.minvenj.nfi.metal.token.Token;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import nl.minvenj.nfi.metal.data.Environment;
+import nl.minvenj.nfi.metal.data.ParseGraph;
+import nl.minvenj.nfi.metal.encoding.Encoding;
+import nl.minvenj.nfi.metal.token.Str;
+import nl.minvenj.nfi.metal.token.StructSink;
+import nl.minvenj.nfi.metal.token.Token;
 
 @RunWith(JUnit4.class)
 public class StructSinksTest {
@@ -70,12 +69,12 @@ public class StructSinksTest {
                 Assert.assertEquals(((Str)struct.definition).scope, OUTER_NAME);
 
                 // Check whether it contains the first nested Str
-                Assert.assertTrue(((ParseGraph)struct.head).head.getDefinition() instanceof Str);
-                Assert.assertEquals(((Str)((ParseGraph)struct.head).head.getDefinition()).scope, INNER_NAME);
+                Assert.assertTrue(struct.head.asGraph().head.getDefinition() instanceof Str);
+                Assert.assertEquals(((Str)struct.head.asGraph().head.getDefinition()).scope, INNER_NAME);
 
                 // And the second one
-                Assert.assertTrue(((ParseGraph)struct.head).tail.head.getDefinition() instanceof Str);
-                Assert.assertEquals(((Str)((ParseGraph)struct.head).tail.head.getDefinition()).scope, INNER_NAME);
+                Assert.assertTrue(struct.head.asGraph().tail.head.getDefinition() instanceof Str);
+                Assert.assertEquals(((Str)struct.head.asGraph().tail.head.getDefinition()).scope, INNER_NAME);
             }
         }).parse(stream(1, 2, 3, 4), enc());
     }
@@ -91,10 +90,10 @@ public class StructSinksTest {
                 Assert.assertEquals(((Str)struct.definition).scope, INNER_NAME);
 
                 // Test for correct offsets and names of values
-                Assert.assertEquals(offsetDeque.pop().longValue(), ((ParseValue)((ParseGraph)struct.head).tail.head).getOffset());
-                Assert.assertTrue(((ParseGraph)struct.head).tail.tail.isEmpty());
-                Assert.assertTrue(((ParseValue)((ParseGraph)struct.head).tail.head).getName().equals("a"));
-                Assert.assertTrue(((ParseValue)((ParseGraph)struct.head).head).getName().equals("b"));
+                Assert.assertEquals(offsetDeque.pop().longValue(), struct.head.asGraph().tail.head.asValue().getOffset());
+                Assert.assertTrue(struct.head.asGraph().tail.tail.isEmpty());
+                Assert.assertTrue(struct.head.asGraph().tail.head.asValue().getName().equals("a"));
+                Assert.assertTrue(struct.head.asGraph().head.asValue().getName().equals("b"));
             }
         });
     }
@@ -105,7 +104,7 @@ public class StructSinksTest {
             @Override
             public void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParseGraph struct) {
                 Assert.assertTrue(struct.tail.isEmpty());
-                Assert.assertTrue(((ParseValue)struct.head).asNumeric().intValue() == 2 || ((ParseValue)struct.head).asNumeric().intValue() == 4);
+                Assert.assertTrue(struct.head.asValue().asNumeric().intValue() == 2 || struct.head.asValue().asNumeric().intValue() == 4);
             }}, not(eqNum(con(1))))).parse(stream(1, 2, 1, 4), enc());
     }
 

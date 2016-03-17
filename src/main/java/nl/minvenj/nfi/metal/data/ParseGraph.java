@@ -60,24 +60,24 @@ public class ParseGraph implements ParseItem {
     }
 
     public ParseGraph add(final ParseValue head) {
-        if (branched) { return new ParseGraph(((ParseGraph)this.head).add(head), tail, this.definition, true); }
+        if (branched) { return new ParseGraph(this.head.asGraph().add(head), tail, this.definition, true); }
         return new ParseGraph(head, this, this.definition);
     }
 
     public ParseGraph add(final ParseRef ref) {
-        if (branched) { return new ParseGraph(((ParseGraph)this.head).add(ref), tail, this.definition, true); }
+        if (branched) { return new ParseGraph(this.head.asGraph().add(ref), tail, this.definition, true); }
         return new ParseGraph(ref, this, this.definition);
     }
 
     public ParseGraph addBranch(final Token definition) {
-        if (branched) { return new ParseGraph(((ParseGraph)this.head).addBranch(definition), tail, this.definition, true); }
+        if (branched) { return new ParseGraph(this.head.asGraph().addBranch(definition), tail, this.definition, true); }
         return new ParseGraph(new ParseGraph(definition), this, this.definition, true);
     }
 
     public ParseGraph closeBranch() {
         if (!branched) { throw new IllegalStateException("Cannot close branch that is not open."); }
-        if (((ParseGraph)head).branched) {
-            return new ParseGraph(((ParseGraph)head).closeBranch(), tail, this.definition, true);
+        if (head.asGraph().branched) {
+            return new ParseGraph(head.asGraph().closeBranch(), tail, this.definition, true);
         }
         return new ParseGraph(head, tail, this.definition, false);
     }
@@ -88,8 +88,8 @@ public class ParseGraph implements ParseItem {
 
     private ParseGraphList getRefs(final ParseGraph root) {
         if (isEmpty()) { return ParseGraphList.EMPTY; }
-        if (head.isRef() && ((ParseRef)head).resolve(root) == null) { throw new IllegalStateException("A ref must point to an existing graph."); }
-        return tail.getRefs(root).add(head.isGraph() ? ((ParseGraph)head).getRefs(root) : (head.isRef() ? ParseGraphList.EMPTY.add(((ParseRef)head).resolve(root)) : ParseGraphList.EMPTY));
+        if (head.isRef() && head.asRef().resolve(root) == null) { throw new IllegalStateException("A ref must point to an existing graph."); }
+        return tail.getRefs(root).add(head.isGraph() ? head.asGraph().getRefs(root) : (head.isRef() ? ParseGraphList.EMPTY.add(head.asRef().resolve(root)) : ParseGraphList.EMPTY));
     }
 
     public ParseGraphList getGraphs() {
@@ -99,7 +99,7 @@ public class ParseGraph implements ParseItem {
     private ParseGraphList getNestedGraphs() {
         if (isEmpty()) { return ParseGraphList.EMPTY; }
         final ParseGraphList tailGraphs = tail.getNestedGraphs();
-        if (head.isGraph()) { return tailGraphs.add((ParseGraph)head).add(((ParseGraph)head).getNestedGraphs()); }
+        if (head.isGraph()) { return tailGraphs.add(head.asGraph()).add(head.asGraph().getNestedGraphs()); }
         return tailGraphs;
     }
 
@@ -110,13 +110,13 @@ public class ParseGraph implements ParseItem {
 
     public ParseValue getLowestOffsetValue() {
         if (!containsValue()) { throw new IllegalStateException("Cannot determine lowest offset if graph does not contain a value."); }
-        if (head.isValue()) { return tail.getLowestOffsetValue((ParseValue)head); }
+        if (head.isValue()) { return tail.getLowestOffsetValue(head.asValue()); }
         return tail.getLowestOffsetValue();
     }
 
     private ParseValue getLowestOffsetValue(final ParseValue lowest) {
         if (!containsValue()) { return lowest; }
-        if (head.isValue()) { return tail.getLowestOffsetValue(lowest.getOffset() < ((ParseValue)head).getOffset() ? lowest : ((ParseValue)head)); }
+        if (head.isValue()) { return tail.getLowestOffsetValue(lowest.getOffset() < (head.asValue()).getOffset() ? lowest : head.asValue()); }
         return tail.getLowestOffsetValue(lowest);
     }
 
@@ -148,9 +148,9 @@ public class ParseGraph implements ParseItem {
      */
     public ParseValue get(final String name) {
         if (isEmpty()) { return null; }
-        if (head.isValue() && ((ParseValue)head).matches(name)) { return (ParseValue)head; }
+        if (head.isValue() && head.asValue().matches(name)) { return head.asValue(); }
         if (head.isGraph()) {
-            final ParseValue val = ((ParseGraph)head).get(name);
+            final ParseValue val = head.asGraph().get(name);
             if (val != null) { return val; }
         }
         return tail.get(name);
@@ -160,9 +160,9 @@ public class ParseGraph implements ParseItem {
         if (definition == null) { throw new IllegalArgumentException("Argument definition may not be null."); }
         if (this.definition == definition) { return this; }
         if (isEmpty()) { return null; }
-        if (head.isValue() && ((ParseValue)head).definition == definition) { return head; }
+        if (head.isValue() && head.asValue().definition == definition) { return head; }
         if (head.isGraph()) {
-            final ParseItem item = ((ParseGraph)head).get(definition);
+            final ParseItem item = head.asGraph().get(definition);
             if (item != null) { return item; }
         }
         return tail.get(definition);
@@ -173,9 +173,9 @@ public class ParseGraph implements ParseItem {
      */
     public ParseValue current() {
         if (isEmpty()) { return null; }
-        if (head.isValue()) { return (ParseValue)head; }
+        if (head.isValue()) { return head.asValue(); }
         if (head.isGraph()) {
-            final ParseValue val = ((ParseGraph)head).current();
+            final ParseValue val = head.asGraph().current();
             if (val != null) { return val; }
         }
         return tail.current(); // Ignore current if it's a reference (or an empty graph)
@@ -192,8 +192,8 @@ public class ParseGraph implements ParseItem {
     private ParseValueList getAll(final String name, final ParseValueList result) {
         if (isEmpty()) { return result; }
         final ParseValueList tailResults = tail.getAll(name, result);
-        if (head.isValue() && ((ParseValue)head).matches(name)) { return tailResults.add((ParseValue)head); }
-        if (head.isGraph()) { return tailResults.add(((ParseGraph)head).getAll(name, result)); }
+        if (head.isValue() && head.asValue().matches(name)) { return tailResults.add(head.asValue()); }
+        if (head.isGraph()) { return tailResults.add(head.asGraph().getAll(name, result)); }
         return tailResults;
     }
 
@@ -203,7 +203,7 @@ public class ParseGraph implements ParseItem {
     }
 
     private ParseItem reverseItem(final ParseItem item) {
-        return item.isGraph() ? ((ParseGraph)item).reverse() : item;
+        return item.isGraph() ? item.asGraph().reverse() : item;
     }
 
     /**
@@ -223,6 +223,9 @@ public class ParseGraph implements ParseItem {
     @Override public boolean isValue() { return false; }
     @Override public boolean isGraph() { return true; }
     @Override public boolean isRef() { return false; }
+    @Override public ParseValue asValue() { throw new UnsupportedOperationException("Cannot convert ParseGraph to ParseValue."); }
+    @Override public ParseGraph asGraph() { return this; }
+    @Override public ParseRef asRef() { throw new UnsupportedOperationException("Cannot convert ParseGraph to ParseRef."); }
     @Override public Token getDefinition() { return definition; }
 
     @Override

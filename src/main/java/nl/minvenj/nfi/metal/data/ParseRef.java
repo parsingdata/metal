@@ -36,6 +36,9 @@ public class ParseRef implements ParseItem {
     @Override public boolean isValue() { return false; }
     @Override public boolean isGraph() { return false; }
     @Override public boolean isRef() { return true; }
+    @Override public ParseValue asValue() { throw new UnsupportedOperationException("Cannot convert ParseRef to ParseValue."); }
+    @Override public ParseGraph asGraph() { throw new UnsupportedOperationException("Cannot convert ParseRef to ParseGraph."); }
+    @Override public ParseRef asRef() { return this; }
     @Override public Token getDefinition() { return definition; }
 
     @Override

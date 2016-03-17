@@ -89,15 +89,15 @@ public class ParseGraphTest {
         Assert.assertTrue(pg.tail.head.isValue());
         Assert.assertEquals(g, pg.tail.head);
         Assert.assertTrue(pg.tail.tail.head.isGraph());
-        Assert.assertTrue(((ParseGraph)pg.tail.tail.head).head.isValue());
-        Assert.assertEquals(f, ((ParseGraph)pg.tail.tail.head).head);
-        Assert.assertTrue(((ParseGraph)pg.tail.tail.head).tail.head.isGraph());
-        Assert.assertTrue(((ParseGraph)((ParseGraph)pg.tail.tail.head).tail.head).head.isValue());
-        Assert.assertEquals(e, ((ParseGraph)((ParseGraph)pg.tail.tail.head).tail.head).head);
-        Assert.assertTrue(((ParseGraph)((ParseGraph)pg.tail.tail.head).tail.head).tail.head.isValue());
-        Assert.assertEquals(d, ((ParseGraph)((ParseGraph)pg.tail.tail.head).tail.head).tail.head);
-        Assert.assertTrue(((ParseGraph)pg.tail.tail.head).tail.tail.head.isValue());
-        Assert.assertEquals(c, ((ParseGraph)pg.tail.tail.head).tail.tail.head);
+        Assert.assertTrue(pg.tail.tail.head.asGraph().head.isValue());
+        Assert.assertEquals(f, pg.tail.tail.head.asGraph().head);
+        Assert.assertTrue(pg.tail.tail.head.asGraph().tail.head.isGraph());
+        Assert.assertTrue(pg.tail.tail.head.asGraph().tail.head.asGraph().head.isValue());
+        Assert.assertEquals(e, pg.tail.tail.head.asGraph().tail.head.asGraph().head);
+        Assert.assertTrue(pg.tail.tail.head.asGraph().tail.head.asGraph().tail.head.isValue());
+        Assert.assertEquals(d, pg.tail.tail.head.asGraph().tail.head.asGraph().tail.head);
+        Assert.assertTrue(pg.tail.tail.head.asGraph().tail.tail.head.isValue());
+        Assert.assertEquals(c, pg.tail.tail.head.asGraph().tail.tail.head);
         Assert.assertTrue(pg.tail.tail.tail.head.isValue());
         Assert.assertEquals(b, pg.tail.tail.tail.head);
         Assert.assertTrue(pg.tail.tail.tail.tail.head.isValue());
@@ -118,10 +118,10 @@ public class ParseGraphTest {
     public void cycle() {
         Assert.assertEquals(2, pgc.size);
         Assert.assertTrue(pgc.head.isGraph());
-        Assert.assertTrue(((ParseGraph)pgc.head).head.isRef());
-        Assert.assertEquals(pgc, ((ParseRef)((ParseGraph)pgc.head).head).resolve(pgc));
-        Assert.assertTrue(((ParseGraph)pgc.head).tail.head.isValue());
-        Assert.assertEquals(b, ((ParseGraph)pgc.head).tail.head);
+        Assert.assertTrue(pgc.head.asGraph().head.isRef());
+        Assert.assertEquals(pgc, pgc.head.asGraph().head.asRef().resolve(pgc));
+        Assert.assertTrue(pgc.head.asGraph().tail.head.isValue());
+        Assert.assertEquals(b, pgc.head.asGraph().tail.head);
         Assert.assertTrue(pgc.tail.head.isValue());
         Assert.assertEquals(a, pgc.tail.head);
     }
@@ -157,10 +157,10 @@ public class ParseGraphTest {
     public void firstValue() {
         Assert.assertTrue(pgl.containsValue());
         Assert.assertEquals(a, pgl.getLowestOffsetValue());
-        Assert.assertEquals(f, ((ParseGraph)pgl.head).getLowestOffsetValue());
+        Assert.assertEquals(f, pgl.head.asGraph().getLowestOffsetValue());
         Assert.assertEquals(a, pg.getLowestOffsetValue());
-        Assert.assertEquals(c, ((ParseGraph)pg.tail.tail.head).getLowestOffsetValue());
-        Assert.assertEquals(d, ((ParseGraph)((ParseGraph)pg.tail.tail.head).tail.head).getLowestOffsetValue());
+        Assert.assertEquals(c, pg.tail.tail.head.asGraph().getLowestOffsetValue());
+        Assert.assertEquals(d, pg.tail.tail.head.asGraph().tail.head.asGraph().getLowestOffsetValue());
     }
 
     @Test
@@ -175,8 +175,8 @@ public class ParseGraphTest {
         Assert.assertTrue(subGraph.tail.head.isValue());
         Assert.assertEquals(g, subGraph.tail.head);
         Assert.assertTrue(subGraph.tail.tail.head.isGraph());
-        Assert.assertTrue(((ParseGraph)subGraph.tail.tail.head).head.isValue());
-        Assert.assertEquals(f, ((ParseGraph)subGraph.tail.tail.head).head);
+        Assert.assertTrue(subGraph.tail.tail.head.asGraph().head.isValue());
+        Assert.assertEquals(f, subGraph.tail.tail.head.asGraph().head);
     }
 
 }

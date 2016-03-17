@@ -21,7 +21,6 @@ import static nl.minvenj.nfi.metal.Util.checkNotNull;
 import java.io.IOException;
 
 import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParseGraph;
 import nl.minvenj.nfi.metal.data.ParseResult;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.expression.Expression;
@@ -48,7 +47,7 @@ public class Str extends Token {
         if (!res.succeeded()) { return new ParseResult(false, env); }
         final ParseResult closedResult = new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset));
         if (_sink != null && _pred.eval(closedResult.getEnvironment(), enc)) {
-            _sink.handleStruct(outerScope, closedResult.getEnvironment(), enc, (ParseGraph)closedResult.getEnvironment().order.get(this));
+            _sink.handleStruct(outerScope, closedResult.getEnvironment(), enc, closedResult.getEnvironment().order.get(this).asGraph());
         }
         return closedResult;
     }

@@ -52,10 +52,10 @@ public class DefinitionTest {
 		Assert.assertTrue(res.succeeded());
 		Assert.assertTrue(res.getEnvironment().order.getDefinition() == ParseGraph.NONE);
 		Assert.assertTrue(res.getEnvironment().order.head.getDefinition() == smallSeq);
-		Assert.assertTrue(((ParseGraph)res.getEnvironment().order.head).head.getDefinition() == defB);
-		Assert.assertTrue(((ParseGraph)res.getEnvironment().order.head).tail.getDefinition() == smallSeq);
-		Assert.assertTrue(((ParseGraph)res.getEnvironment().order.head).tail.head.getDefinition() == defA);
-		Assert.assertTrue(((ParseGraph)res.getEnvironment().order.head).tail.tail.getDefinition() == smallSeq);
+		Assert.assertTrue(res.getEnvironment().order.head.asGraph().head.getDefinition() == defB);
+		Assert.assertTrue(res.getEnvironment().order.head.asGraph().tail.getDefinition() == smallSeq);
+		Assert.assertTrue(res.getEnvironment().order.head.asGraph().tail.head.getDefinition() == defA);
+		Assert.assertTrue(res.getEnvironment().order.head.asGraph().tail.tail.getDefinition() == smallSeq);
 		Assert.assertTrue(res.getEnvironment().order.tail.getDefinition() == ParseGraph.NONE);
 	}
 

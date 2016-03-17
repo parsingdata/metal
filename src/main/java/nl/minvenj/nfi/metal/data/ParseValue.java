@@ -61,6 +61,9 @@ public class ParseValue extends Value implements ParseItem {
     @Override public boolean isValue() { return true; }
     @Override public boolean isGraph() { return false; }
     @Override public boolean isRef() { return false; }
+    @Override public ParseValue asValue() { return this; }
+    @Override public ParseGraph asGraph() { throw new UnsupportedOperationException("Cannot convert ParseValue to ParseGraph."); }
+    @Override public ParseRef asRef() { throw new UnsupportedOperationException("Cannot convert ParseValue to ParseRef."); }
     @Override public Token getDefinition() { return definition; }
 
     @Override

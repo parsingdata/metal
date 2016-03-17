@@ -23,6 +23,9 @@ public interface ParseItem {
     boolean isValue();
     boolean isGraph();
     boolean isRef();
+    ParseValue asValue();
+    ParseRef asRef();
+    ParseGraph asGraph();
     Token getDefinition();
 
 }
