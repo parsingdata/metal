@@ -28,6 +28,9 @@ import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.data.ParseGraph;
 import nl.minvenj.nfi.metal.data.ParseItem;
@@ -36,9 +39,6 @@ import nl.minvenj.nfi.metal.data.ParseResult;
 import nl.minvenj.nfi.metal.data.ParseValue;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.token.Token;
-
-import org.junit.Assert;
-import org.junit.Test;
 
 public class SubStructTest {
 
@@ -76,9 +76,15 @@ public class SubStructTest {
         Assert.assertTrue(res.succeeded());
         final ParseGraph out = res.getEnvironment().order;
         Assert.assertEquals(0, out.getRefs().size); // No cycles
-        checkBranch(out, 0, 8);
-        checkBranch((ParseGraph)out.tail.head, 8, 4);
-        checkLeaf((ParseGraph)((ParseGraph)out.tail.head).tail.head, 4, 12);
+
+        final ParseGraph first = (ParseGraph) out.head;
+        checkBranch(first, 0, 8);
+
+        final ParseGraph second = (ParseGraph) ((ParseGraph) ((ParseGraph) first.tail.head).head).head;
+        checkBranch(second, 8, 4);
+
+        final ParseGraph third = (ParseGraph) ((ParseGraph) ((ParseGraph) second.tail.head).head).head;
+        checkLeaf(third, 4, 12);
     }
 
     @Test
@@ -89,8 +95,12 @@ public class SubStructTest {
         Assert.assertTrue(res.succeeded());
         final ParseGraph out = res.getEnvironment().order;
         Assert.assertEquals(1, out.getRefs().size);
-        checkBranch(out, 0, 0);
-        checkBranch(((ParseRef)out.tail.head).resolve(out), 0, 0); // Check cycle
+
+        final ParseGraph first = (ParseGraph) out.head;
+        checkBranch(first, 0, 0);
+
+        final ParseRef ref = (ParseRef) ((ParseGraph) (first.tail.head)).head;
+        checkBranch(ref.resolve(out), 0, 0); // Check cycle
     }
 
     @Test
@@ -101,9 +111,15 @@ public class SubStructTest {
         Assert.assertTrue(res.succeeded());
         final ParseGraph out = res.getEnvironment().order;
         Assert.assertEquals(1, out.getRefs().size);
-        checkBranch(out, 0, 4);
-        checkBranch((ParseGraph)out.tail.head, 4, 0);
-        checkBranch(((ParseRef)((ParseGraph)out.tail.head).tail.head).resolve(out), 0, 4); // Check cycle
+
+        final ParseGraph first = (ParseGraph) out.head;
+        checkBranch(first, 0, 4);
+
+        final ParseGraph second = (ParseGraph) ((ParseGraph) ((ParseGraph) first.tail.head).head).head;
+        checkBranch(second, 4, 0);
+
+        final ParseRef ref = (ParseRef) ((ParseGraph) (second.tail.head)).head;
+        checkBranch(ref.resolve(out), 0, 4); // Check cycle
     }
 
     private void checkBranch(final ParseGraph graph, final int graphOffset, final int nextOffset) {

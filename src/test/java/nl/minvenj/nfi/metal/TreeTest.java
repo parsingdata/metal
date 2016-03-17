@@ -29,6 +29,11 @@ import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.data.ParseGraph;
 import nl.minvenj.nfi.metal.data.ParseItem;
@@ -38,11 +43,6 @@ import nl.minvenj.nfi.metal.data.ParseValue;
 import nl.minvenj.nfi.metal.data.ParseValueList;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.token.Token;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public class TreeTest {
@@ -93,7 +93,7 @@ public class TreeTest {
     }
 
     private void checkStruct(final ParseGraph graph, final long offset) {
-        checkStruct(graph, graph, offset);
+        checkStruct(graph, (ParseGraph) graph.head, offset);
     }
 
     private void checkStruct(final ParseGraph root, final ParseGraph graph, final long offset) {
@@ -102,25 +102,26 @@ public class TreeTest {
         Assert.assertTrue(left.isValue());
         final long leftOffset = ((ParseValue)left).asNumeric().longValue();
         if (leftOffset != 0) {
-            final ParseItem leftItem = graph.tail.tail.tail.head;
-            Assert.assertFalse(leftItem.isValue());
-            if (leftItem.isGraph()) {
-                checkStruct(root, (ParseGraph)leftItem, leftOffset);
-            } else if (leftItem.isRef()) {
-                checkHeader(((ParseRef)leftItem).resolve(root), leftOffset);
-            }
+            final ParseItem leftItem = ((ParseGraph)graph.tail.tail.tail.head).head;
+            checkBranch(root, leftOffset, leftItem);
         }
+
         final ParseItem right = leftOffset != 0 ? graph.tail.tail.tail.tail.head : graph.tail.tail.tail.head;
         Assert.assertTrue(right.isValue());
         final long rightOffset = ((ParseValue)right).asNumeric().longValue();
         if (rightOffset != 0) {
             final ParseItem rightItem = (leftOffset != 0 ? graph.tail.tail.tail.tail.tail.head : graph.tail.tail.tail.tail.head);
-            Assert.assertFalse(rightItem.isValue());
-            if (rightItem.isGraph()) {
-                checkStruct(root, (ParseGraph)rightItem, rightOffset);
-            } else if (rightItem.isRef()) {
-                checkHeader(((ParseRef)rightItem).resolve(root), rightOffset);
-            }
+            final ParseItem rightSeq = ((ParseGraph)rightItem).head;
+            checkBranch(root, rightOffset, rightSeq);
+        }
+    }
+
+    private void checkBranch(final ParseGraph root, final long offset, final ParseItem item) {
+        Assert.assertFalse(item.isValue());
+        if (item.isGraph()) {
+            checkStruct(root, (ParseGraph)((ParseGraph) item).head, offset);
+        } else if (item.isRef()) {
+            checkHeader(((ParseRef) item).resolve(root), offset);
         }
     }
 
