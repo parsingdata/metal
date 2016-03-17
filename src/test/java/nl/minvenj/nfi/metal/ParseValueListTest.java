@@ -16,15 +16,15 @@
 
 package nl.minvenj.nfi.metal;
 
+import static nl.minvenj.nfi.metal.Shorthand.def;
 import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
+import nl.minvenj.nfi.metal.data.ParseValue;
+import nl.minvenj.nfi.metal.data.ParseValueList;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import nl.minvenj.nfi.metal.data.ParseValueList;
-import nl.minvenj.nfi.metal.data.ParseValue;
 
 @RunWith(JUnit4.class)
 public class ParseValueListTest {
@@ -156,7 +156,7 @@ public class ParseValueListTest {
     }
 
     private ParseValue val(final String s, final char c) {
-        return new ParseValue(s, Character.toString(c), 0L, new byte[] { (byte) c }, enc());
+        return new ParseValue(s, Character.toString(c), def(Character.toString(c), 0L), 0L, new byte[] { (byte) c }, enc());
     }
 
 }

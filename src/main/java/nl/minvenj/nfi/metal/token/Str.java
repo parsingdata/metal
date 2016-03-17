@@ -28,14 +28,14 @@ import nl.minvenj.nfi.metal.expression.True;
 
 public class Str extends Token {
 
-    private final String _scope;
+    public final String scope;
     private final Token _op;
     private final StructSink _sink;
     private final Expression _pred;
 
     public Str(final String scope, final Token op, final Encoding enc, final StructSink sink, final Expression pred) {
         super(enc);
-        _scope = checkNotNull(scope, "scope");
+        this.scope = checkNotNull(scope, "scope");
         _op = checkNotNull(op, "op");
         _sink = sink;
         _pred = pred == null ? new True() : pred;
@@ -43,16 +43,18 @@ public class Str extends Token {
 
     @Override
     protected ParseResult parseImpl(final String outerScope, final Environment env, final Encoding enc) throws IOException {
-        final ParseResult res = _op.parse(outerScope + "." + _scope, env, enc);
-        if (res.succeeded() && _sink != null && _pred.eval(res.getEnvironment(), enc)) {
-            _sink.handleStruct(outerScope, res.getEnvironment(), enc, res.getEnvironment().order.getGraphAfter(env.order.head));
+        final ParseResult res = _op.parse(outerScope + "." + scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
+        if (!res.succeeded()) { return new ParseResult(false, env); }
+        final ParseResult closedResult = new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset));
+        if (_sink != null && _pred.eval(closedResult.getEnvironment(), enc)) {
+            _sink.handleStruct(outerScope, closedResult.getEnvironment(), enc, closedResult.getEnvironment().order.get(this).asGraph());
         }
-        return res;
+        return closedResult;
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(\"" + _scope + "\"," + _op + (_sink != null ? "," + _sink : "") + ")";
+        return getClass().getSimpleName() + "(\"" + scope + "\"," + _op + (_sink != null ? "," + _sink : "") + ")";
     }
 
 }

@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import nl.minvenj.nfi.metal.data.ByteStream;
 import nl.minvenj.nfi.metal.data.Environment;
+import nl.minvenj.nfi.metal.data.ParseGraph;
 import nl.minvenj.nfi.metal.data.ParseResult;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.token.Token;
@@ -64,6 +65,7 @@ public class DefSizeTest {
         final ParseResult result = FORMAT.parse(new Environment(stream), new Encoding());
 
         Assert.assertFalse(result.succeeded());
-        Assert.assertEquals(-1, result.getEnvironment().order.get("length").asNumeric().intValue());
+        // The top-level Token (Seq) has failed, so no values are recorded in the ParseGraph.
+        Assert.assertEquals(ParseGraph.EMPTY, result.getEnvironment().order);
     }
 }

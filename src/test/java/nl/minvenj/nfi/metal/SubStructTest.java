@@ -28,15 +28,16 @@ import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import nl.minvenj.nfi.metal.data.Environment;
 import nl.minvenj.nfi.metal.data.ParseGraph;
 import nl.minvenj.nfi.metal.data.ParseItem;
+import nl.minvenj.nfi.metal.data.ParseRef;
 import nl.minvenj.nfi.metal.data.ParseResult;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.token.Token;
-
-import org.junit.Assert;
-import org.junit.Test;
 
 public class SubStructTest {
 
@@ -59,7 +60,7 @@ public class SubStructTest {
         }
 
     }
-    
+
     @Test
     public void linkedList() throws IOException {
         final Token token = new LinkedList(enc());
@@ -74,11 +75,17 @@ public class SubStructTest {
         Assert.assertTrue(res.succeeded());
         final ParseGraph out = res.getEnvironment().order;
         Assert.assertEquals(0, out.getRefs().size); // No cycles
-        checkBranch(out, 0, 8);
-        checkBranch(out.tail.head.getGraph(), 8, 4);
-        checkLeaf(out.tail.head.getGraph().tail.head.getGraph(), 4, 12);
+
+        final ParseGraph first = out.head.asGraph();
+        checkBranch(first, 0, 8);
+
+        final ParseGraph second = first.tail.head.asGraph().head.asGraph().head.asGraph();
+        checkBranch(second, 8, 4);
+
+        final ParseGraph third = second.tail.head.asGraph().head.asGraph().head.asGraph();
+        checkLeaf(third, 4, 12);
     }
-    
+
     @Test
     public void linkedListWithSelfReference() throws IOException {
         final Token token = new LinkedList(enc());
@@ -87,10 +94,14 @@ public class SubStructTest {
         Assert.assertTrue(res.succeeded());
         final ParseGraph out = res.getEnvironment().order;
         Assert.assertEquals(1, out.getRefs().size);
-        checkBranch(out, 0, 0);
-        checkBranch(out.tail.head.getRef(out), 0, 0); // Check cycle
+
+        final ParseGraph first = out.head.asGraph();
+        checkBranch(first, 0, 0);
+
+        final ParseRef ref = first.tail.head.asGraph().head.asRef();
+        checkBranch(ref.resolve(out), 0, 0); // Check cycle
     }
-    
+
     @Test
     public void linkedListWithCycle() throws IOException {
         final Token token = new LinkedList(enc());
@@ -99,9 +110,15 @@ public class SubStructTest {
         Assert.assertTrue(res.succeeded());
         final ParseGraph out = res.getEnvironment().order;
         Assert.assertEquals(1, out.getRefs().size);
-        checkBranch(out, 0, 4);
-        checkBranch(out.tail.head.getGraph(), 4, 0);
-        checkBranch(out.tail.head.getGraph().tail.head.getRef(out), 0, 4); // Check cycle
+
+        final ParseGraph first = out.head.asGraph();
+        checkBranch(first, 0, 4);
+
+        final ParseGraph second = first.tail.head.asGraph().head.asGraph().head.asGraph();
+        checkBranch(second, 4, 0);
+
+        final ParseRef ref = second.tail.head.asGraph().head.asRef();
+        checkBranch(ref.resolve(out), 0, 4); // Check cycle
     }
 
     private void checkBranch(final ParseGraph graph, final int graphOffset, final int nextOffset) {
@@ -109,17 +126,17 @@ public class SubStructTest {
         checkValue(graph.tail.tail.head, nextOffset, graphOffset + 1); // next
         checkValue(graph.tail.tail.tail.head, 0, graphOffset); // header
     }
-    
+
     private void checkLeaf(final ParseGraph graph, final int graphOffset, final int nextOffset) {
         checkValue(graph.head, 1, graphOffset + 2); // footer
         checkValue(graph.tail.head, nextOffset, graphOffset + 1); // next
         checkValue(graph.tail.tail.head, 0, graphOffset); // header
     }
-    
+
     private void checkValue(final ParseItem item, final int value, final int offset) {
         Assert.assertTrue(item.isValue());
-        Assert.assertEquals(value, item.getValue().asNumeric().intValue());
-        Assert.assertEquals(offset, item.getValue().getOffset());
+        Assert.assertEquals(value, item.asValue().asNumeric().intValue());
+        Assert.assertEquals(offset, item.asValue().getOffset());
     }
-    
+
 }

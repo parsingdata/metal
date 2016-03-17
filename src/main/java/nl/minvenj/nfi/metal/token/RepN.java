@@ -41,14 +41,16 @@ public class RepN extends Token {
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final OptionalValue count = _n.eval(env, enc);
         if (!count.isPresent()) { return new ParseResult(false, env); }
-        return parseImpl(count.get().asNumeric().longValue(), scope, env, enc);
+        final ParseResult res = iterate(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc, count.get().asNumeric().longValue());
+        if (res.succeeded()) { return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset)); }
+        return new ParseResult(false, env);
     }
 
-    private ParseResult parseImpl(final long count, final String scope, final Environment env, final Encoding enc) throws IOException {
+    private ParseResult iterate(final String scope, final Environment env, final Encoding enc, final long count) throws IOException {
         if (count <= 0) { return new ParseResult(true, env); }
         final ParseResult res = _op.parse(scope, env, enc);
-        if (!res.succeeded()) { return new ParseResult(false, env); }
-        return parseImpl(count - 1, scope, res.getEnvironment(), enc);
+        if (res.succeeded()) { return iterate(scope, res.getEnvironment(), enc, count - 1); }
+        return new ParseResult(false, env);
     }
 
     @Override

@@ -16,30 +16,34 @@
 
 package nl.minvenj.nfi.metal.data;
 
+import static nl.minvenj.nfi.metal.Util.checkNotNull;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.expression.value.Value;
+import nl.minvenj.nfi.metal.token.Token;
 
-public class ParseValue extends Value {
+public class ParseValue extends Value implements ParseItem {
 
     public static final String SEPARATOR = ".";
 
-    private final String _scope;
-    private final String _name;
-    private final long _offset;
+    public final String scope;
+    public final String name;
+    public Token definition;
+    public final long offset;
 
-    public ParseValue(final String scope, final String name, final long offset, final byte[] data, final Encoding enc) {
+    public ParseValue(final String scope, final String name, final Token definition, final long offset, final byte[] data, final Encoding enc) {
         super(data, enc);
-        _scope = scope;
-        _name = name;
-        _offset = offset;
+        this.scope = checkNotNull(scope, "scope");
+        this.name = checkNotNull(name, "name");
+        this.definition = checkNotNull(definition, "definition");
+        this.offset = offset;
     }
 
     public String getScope() {
-        return _scope;
+        return scope;
     }
 
     public String getName() {
-        return _name;
+        return name;
     }
 
     public String getFullName() {
@@ -51,12 +55,20 @@ public class ParseValue extends Value {
     }
 
     public long getOffset() {
-        return _offset;
+        return offset;
     }
+
+    @Override public boolean isValue() { return true; }
+    @Override public boolean isGraph() { return false; }
+    @Override public boolean isRef() { return false; }
+    @Override public ParseValue asValue() { return this; }
+    @Override public ParseGraph asGraph() { throw new UnsupportedOperationException("Cannot convert ParseValue to ParseGraph."); }
+    @Override public ParseRef asRef() { throw new UnsupportedOperationException("Cannot convert ParseValue to ParseRef."); }
+    @Override public Token getDefinition() { return definition; }
 
     @Override
     public String toString() {
-        return getName() + ":" + super.toString();
+        return "ParseValue(" + getName() + ":" + super.toString() + ")";
     }
 
 }
