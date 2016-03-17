@@ -156,6 +156,18 @@ public class ParseGraph implements ParseItem {
         return tail.get(name);
     }
 
+    public ParseItem get(final Token definition) {
+        if (definition == null) { throw new IllegalArgumentException("Argument definition may not be null."); }
+        if (this.definition == definition) { return this; }
+        if (isEmpty()) { return null; }
+        if (head.isValue() && ((ParseValue)head).definition == definition) { return head; }
+        if (head.isGraph()) {
+            final ParseItem item = ((ParseGraph)head).get(definition);
+            if (item != null) { return item; }
+        }
+        return tail.get(definition);
+    }
+
     /**
      * @return The first value (bottom-up) in this graph
      */
