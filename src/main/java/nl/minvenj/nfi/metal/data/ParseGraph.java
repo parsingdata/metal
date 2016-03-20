@@ -20,6 +20,8 @@ import static nl.minvenj.nfi.metal.Util.checkNotNull;
 
 import java.io.IOException;
 
+import nl.minvenj.nfi.metal.data.selection.*;
+import nl.minvenj.nfi.metal.data.transformation.Reversal;
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.token.Token;
 
@@ -55,7 +57,8 @@ public class ParseGraph implements ParseItem {
         size = tail.size + 1;
     }
 
-    private ParseGraph(final ParseItem head, final ParseGraph tail, final Token definition) {
+    // TODO see ByItem, this constructor used to be private
+    public ParseGraph(final ParseItem head, final ParseGraph tail, final Token definition) {
         this(head, tail, definition, false);
     }
 
@@ -83,24 +86,11 @@ public class ParseGraph implements ParseItem {
     }
 
     public ParseGraphList getRefs() {
-        return getRefs(this);
-    }
-
-    private ParseGraphList getRefs(final ParseGraph root) {
-        if (isEmpty()) { return ParseGraphList.EMPTY; }
-        if (head.isRef() && head.asRef().resolve(root) == null) { throw new IllegalStateException("A ref must point to an existing graph."); }
-        return tail.getRefs(root).add(head.isGraph() ? head.asGraph().getRefs(root) : (head.isRef() ? ParseGraphList.EMPTY.add(head.asRef().resolve(root)) : ParseGraphList.EMPTY));
+        return ByType.getRefs(this);
     }
 
     public ParseGraphList getGraphs() {
-        return getNestedGraphs().add(this);
-    }
-
-    private ParseGraphList getNestedGraphs() {
-        if (isEmpty()) { return ParseGraphList.EMPTY; }
-        final ParseGraphList tailGraphs = tail.getNestedGraphs();
-        if (head.isGraph()) { return tailGraphs.add(head.asGraph()).add(head.asGraph().getNestedGraphs()); }
-        return tailGraphs;
+        return ByType.getGraphs(this);
     }
 
     public boolean containsValue() {
@@ -109,29 +99,11 @@ public class ParseGraph implements ParseItem {
     }
 
     public ParseValue getLowestOffsetValue() {
-        if (!containsValue()) { throw new IllegalStateException("Cannot determine lowest offset if graph does not contain a value."); }
-        if (head.isValue()) { return tail.getLowestOffsetValue(head.asValue()); }
-        return tail.getLowestOffsetValue();
-    }
-
-    private ParseValue getLowestOffsetValue(final ParseValue lowest) {
-        if (!containsValue()) { return lowest; }
-        if (head.isValue()) { return tail.getLowestOffsetValue(lowest.getOffset() < (head.asValue()).getOffset() ? lowest : head.asValue()); }
-        return tail.getLowestOffsetValue(lowest);
+        return ByOffset.getLowestOffsetValue(this);
     }
 
     public boolean hasGraphAtRef(final long ref) {
-        return findRef(getGraphs(), ref) != null;
-    }
-
-    static ParseGraph findRef(final ParseGraphList graphs, final long ref) {
-        if (graphs.isEmpty()) { return null; }
-        final ParseGraph res = findRef(graphs.tail, ref);
-        if (res != null) { return res; }
-        if (graphs.head.containsValue() && graphs.head.getLowestOffsetValue().getOffset() == ref) {
-            return graphs.head;
-        }
-        return null;
+        return ByOffset.hasGraphAtRef(this, ref);
     }
 
     public boolean isEmpty() {
@@ -139,33 +111,15 @@ public class ParseGraph implements ParseItem {
     }
 
     public ParseGraph reverse() {
-        return reverse(this, EMPTY);
+        return Reversal.reverse(this, EMPTY);
     }
 
-    /**
-     * @param name Name of the value
-     * @return The first value (bottom-up) with the provided name in this graph
-     */
     public ParseValue get(final String name) {
-        if (isEmpty()) { return null; }
-        if (head.isValue() && head.asValue().matches(name)) { return head.asValue(); }
-        if (head.isGraph()) {
-            final ParseValue val = head.asGraph().get(name);
-            if (val != null) { return val; }
-        }
-        return tail.get(name);
+        return ByName.get(this, name);
     }
 
     public ParseItem get(final Token definition) {
-        if (definition == null) { throw new IllegalArgumentException("Argument definition may not be null."); }
-        if (this.definition == definition) { return this; }
-        if (isEmpty()) { return null; }
-        if (head.isValue() && head.asValue().definition == definition) { return head; }
-        if (head.isGraph()) {
-            final ParseItem item = head.asGraph().get(definition);
-            if (item != null) { return item; }
-        }
-        return tail.get(definition);
+        return ByToken.get(this, definition);
     }
 
     /**
@@ -181,29 +135,8 @@ public class ParseGraph implements ParseItem {
         return tail.current(); // Ignore current if it's a reference (or an empty graph)
     }
 
-    /**
-     * @param name Name of the value
-     * @return All values with the provided name in this graph
-     */
     public ParseValueList getAll(final String name) {
-        return getAll(name, ParseValueList.EMPTY);
-    }
-
-    private ParseValueList getAll(final String name, final ParseValueList result) {
-        if (isEmpty()) { return result; }
-        final ParseValueList tailResults = tail.getAll(name, result);
-        if (head.isValue() && head.asValue().matches(name)) { return tailResults.add(head.asValue()); }
-        if (head.isGraph()) { return tailResults.add(head.asGraph().getAll(name, result)); }
-        return tailResults;
-    }
-
-    private ParseGraph reverse(final ParseGraph oldGraph, final ParseGraph newGraph) {
-        if (oldGraph.isEmpty()) { return newGraph; }
-        return reverse(oldGraph.tail, new ParseGraph(reverseItem(oldGraph.head), newGraph, definition));
-    }
-
-    private ParseItem reverseItem(final ParseItem item) {
-        return item.isGraph() ? item.asGraph().reverse() : item;
+        return ByName.getAll(this, name);
     }
 
     /**
@@ -211,13 +144,7 @@ public class ParseGraph implements ParseItem {
      * @return The subgraph of this graph starting past (bottom-up) the provided lastHead
      */
     public ParseGraph getGraphAfter(final ParseItem lastHead) {
-        return getGraphAfter(lastHead, EMPTY);
-    }
-
-    private ParseGraph getGraphAfter(final ParseItem lastHead, final ParseGraph result) {
-        if (isEmpty()) { return EMPTY; }
-        if (head == lastHead) { return result; }
-        return new ParseGraph(head, tail.getGraphAfter(lastHead, result), definition);
+        return ByItem.getGraphAfter(this, lastHead);
     }
 
     @Override public boolean isValue() { return false; }
