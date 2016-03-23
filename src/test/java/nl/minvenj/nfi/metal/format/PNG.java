@@ -16,7 +16,6 @@
 
 package nl.minvenj.nfi.metal.format;
 
-import static nl.minvenj.nfi.metal.Callback.crc32;
 import static nl.minvenj.nfi.metal.Shorthand.cat;
 import static nl.minvenj.nfi.metal.Shorthand.con;
 import static nl.minvenj.nfi.metal.Shorthand.def;
@@ -27,6 +26,7 @@ import static nl.minvenj.nfi.metal.Shorthand.ref;
 import static nl.minvenj.nfi.metal.Shorthand.rep;
 import static nl.minvenj.nfi.metal.Shorthand.seq;
 import static nl.minvenj.nfi.metal.Shorthand.str;
+import static nl.minvenj.nfi.metal.format.Callback.crc32;
 
 import nl.minvenj.nfi.metal.encoding.Encoding;
 import nl.minvenj.nfi.metal.token.Token;
