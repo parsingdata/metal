@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal;
+package nl.minvenj.nfi.metal.format;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
