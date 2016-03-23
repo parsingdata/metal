@@ -40,22 +40,22 @@ public class ConstantValueTest extends ParameterizedParse {
 	@Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-        	{ "a", single(1, eq(con(0))), stream(0), signed(), true },
-        	{ "au", single(1, eq(con(0))), stream(0), enc(), true },
-        	{ "a2", single(1, eq(con(-1))), stream(-1), signed(), true },
-        	{ "a2u", single(1, eq(con(-1))), stream(-1), enc(), true },
-        	{ "a3", single(1, eqNum(con(-1, signed()))), stream(-1), signed(), true },
-        	{ "a3u", single(1, eqNum(con(-1))), stream(-1), enc(), true },
-        	{ "b", single(1, eq(con(0xff))), stream(0xff), signed(), true },
-        	{ "bu", single(1, eq(con(0xff))), stream(0xff), enc(), true },
-        	{ "c", single(2, eq(con(0x0123))), stream(0x01, 0x23), signed(), true },
-        	{ "cu", single(2, eq(con(0x0123))), stream(0x01, 0x23), enc(), true },
-        	{ "d", single(2, eq(con(0x8123))), stream(0x81, 0x23), signed(), true },
-        	{ "du", single(2, eq(con(0x8123))), stream(0x81, 0x23), enc(), true },
-        	{ "e", single(2, eq(con(0x01, 0x23))), stream(0x01, 0x23), signed(), true },
-        	{ "eu", single(2, eq(con(0x01, 0x23))), stream(0x01, 0x23), enc(), true },
-        	{ "f", single(2, eq(con(0x81, 0x23))), stream(0x81, 0x23), signed(), true },
-        	{ "fu", single(2, eq(con(0x81, 0x23))), stream(0x81, 0x23), enc(), true },
+        	{ "1 byte, Eq(0), Signed", single(1, eq(con(0))), stream(0), signed(), true },
+        	{ "1 byte, Eq(0), Unsigned", single(1, eq(con(0))), stream(0), enc(), true },
+        	{ "1 byte, Eq(-1), Signed", single(1, eq(con(-1))), stream(-1), signed(), true },
+        	{ "1 byte, Eq(-1), Unsigned", single(1, eq(con(-1))), stream(-1), enc(), true },
+        	{ "1 byte, EqNum(-1, Signed), Signed", single(1, eqNum(con(-1, signed()))), stream(-1), signed(), true },
+        	{ "1 byte, EqNum(-1), Unsigned", single(1, eqNum(con(-1))), stream(-1), enc(), true },
+        	{ "1 byte, Eq(0xff), Signed", single(1, eq(con(0xff))), stream(0xff), signed(), true },
+        	{ "1 byte, Eq(0xff), Unsigned", single(1, eq(con(0xff))), stream(0xff), enc(), true },
+        	{ "2 bytes, Eq(0x0123), Signed", single(2, eq(con(0x0123))), stream(0x01, 0x23), signed(), true },
+        	{ "2 bytes, Eq(0x0123), Unsigned", single(2, eq(con(0x0123))), stream(0x01, 0x23), enc(), true },
+        	{ "2 bytes, Eq(0x8123), Signed", single(2, eq(con(0x8123))), stream(0x81, 0x23), signed(), true },
+        	{ "2 bytes, Eq(0x8123), Unsigned", single(2, eq(con(0x8123))), stream(0x81, 0x23), enc(), true },
+        	{ "2 bytes, Eq(0x01, 0x23), Signed", single(2, eq(con(0x01, 0x23))), stream(0x01, 0x23), signed(), true },
+        	{ "2 bytes, Eq(0x01, 0x23), Unsigned", single(2, eq(con(0x01, 0x23))), stream(0x01, 0x23), enc(), true },
+        	{ "2 bytes, Eq(0x81, 0x23), Signed", single(2, eq(con(0x81, 0x23))), stream(0x81, 0x23), signed(), true },
+        	{ "2 bytes, Eq(0x81, 0x23), Unsigned", single(2, eq(con(0x81, 0x23))), stream(0x81, 0x23), enc(), true },
         });
     }
     
