@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.expression.logical;
+package io.parsingdata.metal.expression.logical;
 
-import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.encoding.Encoding;
-import nl.minvenj.nfi.metal.expression.Expression;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.Expression;
 
 public class Not extends UnaryLogicalExpression {
 

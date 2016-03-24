@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.encoding;
+package io.parsingdata.metal.encoding;
 
 public enum ByteOrder {
 

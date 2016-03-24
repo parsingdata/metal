@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal;
+package io.parsingdata.metal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import static nl.minvenj.nfi.metal.Shorthand.con;
-import static nl.minvenj.nfi.metal.Shorthand.currentOffset;
-import static nl.minvenj.nfi.metal.Shorthand.def;
-import static nl.minvenj.nfi.metal.Shorthand.eqNum;
-import static nl.minvenj.nfi.metal.Shorthand.self;
-import static nl.minvenj.nfi.metal.Shorthand.sub;
-import static nl.minvenj.nfi.metal.Shorthand.rep;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.currentOffset;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eqNum;
+import static io.parsingdata.metal.Shorthand.self;
+import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.Shorthand.rep;
 
 import java.io.IOException;
 
 import org.junit.Test;
 
-import nl.minvenj.nfi.metal.data.ByteStream;
-import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParseResult;
-import nl.minvenj.nfi.metal.encoding.Encoding;
-import nl.minvenj.nfi.metal.expression.value.OptionalValue;
-import nl.minvenj.nfi.metal.expression.value.reference.CurrentOffset;
-import nl.minvenj.nfi.metal.token.Token;
-import nl.minvenj.nfi.metal.util.InMemoryByteStream;
+import io.parsingdata.metal.data.ByteStream;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.reference.CurrentOffset;
+import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class CurrentOffsetTest {
 

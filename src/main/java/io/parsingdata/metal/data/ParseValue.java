@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.data;
+package io.parsingdata.metal.data;
 
-import static nl.minvenj.nfi.metal.Util.checkNotNull;
-import nl.minvenj.nfi.metal.encoding.Encoding;
-import nl.minvenj.nfi.metal.expression.value.Value;
-import nl.minvenj.nfi.metal.token.Token;
+import static io.parsingdata.metal.Util.checkNotNull;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.Value;
+import io.parsingdata.metal.token.Token;
 
 public class ParseValue extends Value implements ParseItem {
 

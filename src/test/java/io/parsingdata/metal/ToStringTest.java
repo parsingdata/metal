@@ -14,40 +14,40 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal;
+package io.parsingdata.metal;
 
-import static nl.minvenj.nfi.metal.Shorthand.add;
-import static nl.minvenj.nfi.metal.Shorthand.and;
-import static nl.minvenj.nfi.metal.Shorthand.cat;
-import static nl.minvenj.nfi.metal.Shorthand.cho;
-import static nl.minvenj.nfi.metal.Shorthand.con;
-import static nl.minvenj.nfi.metal.Shorthand.currentOffset;
-import static nl.minvenj.nfi.metal.Shorthand.def;
-import static nl.minvenj.nfi.metal.Shorthand.div;
-import static nl.minvenj.nfi.metal.Shorthand.eq;
-import static nl.minvenj.nfi.metal.Shorthand.eqNum;
-import static nl.minvenj.nfi.metal.Shorthand.eqStr;
-import static nl.minvenj.nfi.metal.Shorthand.first;
-import static nl.minvenj.nfi.metal.Shorthand.gtNum;
-import static nl.minvenj.nfi.metal.Shorthand.ltNum;
-import static nl.minvenj.nfi.metal.Shorthand.mod;
-import static nl.minvenj.nfi.metal.Shorthand.mul;
-import static nl.minvenj.nfi.metal.Shorthand.neg;
-import static nl.minvenj.nfi.metal.Shorthand.nod;
-import static nl.minvenj.nfi.metal.Shorthand.not;
-import static nl.minvenj.nfi.metal.Shorthand.offset;
-import static nl.minvenj.nfi.metal.Shorthand.opt;
-import static nl.minvenj.nfi.metal.Shorthand.or;
-import static nl.minvenj.nfi.metal.Shorthand.pre;
-import static nl.minvenj.nfi.metal.Shorthand.ref;
-import static nl.minvenj.nfi.metal.Shorthand.rep;
-import static nl.minvenj.nfi.metal.Shorthand.repn;
-import static nl.minvenj.nfi.metal.Shorthand.self;
-import static nl.minvenj.nfi.metal.Shorthand.seq;
-import static nl.minvenj.nfi.metal.Shorthand.str;
-import static nl.minvenj.nfi.metal.Shorthand.sub;
-import static nl.minvenj.nfi.metal.Shorthand.whl;
-import static nl.minvenj.nfi.metal.TokenDefinitions.any;
+import static io.parsingdata.metal.Shorthand.add;
+import static io.parsingdata.metal.Shorthand.and;
+import static io.parsingdata.metal.Shorthand.cat;
+import static io.parsingdata.metal.Shorthand.cho;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.currentOffset;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.div;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.eqNum;
+import static io.parsingdata.metal.Shorthand.eqStr;
+import static io.parsingdata.metal.Shorthand.first;
+import static io.parsingdata.metal.Shorthand.gtNum;
+import static io.parsingdata.metal.Shorthand.ltNum;
+import static io.parsingdata.metal.Shorthand.mod;
+import static io.parsingdata.metal.Shorthand.mul;
+import static io.parsingdata.metal.Shorthand.neg;
+import static io.parsingdata.metal.Shorthand.nod;
+import static io.parsingdata.metal.Shorthand.not;
+import static io.parsingdata.metal.Shorthand.offset;
+import static io.parsingdata.metal.Shorthand.opt;
+import static io.parsingdata.metal.Shorthand.or;
+import static io.parsingdata.metal.Shorthand.pre;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.rep;
+import static io.parsingdata.metal.Shorthand.repn;
+import static io.parsingdata.metal.Shorthand.self;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.str;
+import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.Shorthand.whl;
+import static io.parsingdata.metal.TokenDefinitions.any;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -55,9 +55,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import nl.minvenj.nfi.metal.expression.Expression;
-import nl.minvenj.nfi.metal.expression.value.ValueExpression;
-import nl.minvenj.nfi.metal.token.Token;
+import io.parsingdata.metal.expression.Expression;
+import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.token.Token;
 
 @RunWith(JUnit4.class)
 public class ToStringTest {

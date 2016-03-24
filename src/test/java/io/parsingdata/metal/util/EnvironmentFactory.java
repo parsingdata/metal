@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.util;
+package io.parsingdata.metal.util;
 
-import static nl.minvenj.nfi.metal.Shorthand.toByteArray;
+import static io.parsingdata.metal.Shorthand.toByteArray;
 
 import java.io.IOException;
 import java.net.URI;
@@ -24,7 +24,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import nl.minvenj.nfi.metal.data.Environment;
+import io.parsingdata.metal.data.Environment;
 
 public class EnvironmentFactory {
 

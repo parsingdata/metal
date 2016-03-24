@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.token;
+package io.parsingdata.metal.token;
 
-import static nl.minvenj.nfi.metal.Util.checkContainsNoNulls;
+import static io.parsingdata.metal.Util.checkContainsNoNulls;
 
 import java.io.IOException;
 import java.util.Arrays;
 
-import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParseResult;
-import nl.minvenj.nfi.metal.encoding.Encoding;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.encoding.Encoding;
 
 public class Cho extends Token {
 

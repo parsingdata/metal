@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.expression;
+package io.parsingdata.metal.expression;
 
-import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.encoding.Encoding;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.encoding.Encoding;
 
 public class True implements Expression {
 

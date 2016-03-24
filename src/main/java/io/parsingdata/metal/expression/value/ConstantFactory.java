@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.expression.value;
+package io.parsingdata.metal.expression.value;
 
 import java.math.BigInteger;
 import java.util.BitSet;
 
-import nl.minvenj.nfi.metal.encoding.ByteOrder;
-import nl.minvenj.nfi.metal.encoding.Encoding;
+import io.parsingdata.metal.encoding.ByteOrder;
+import io.parsingdata.metal.encoding.Encoding;
 
 public class ConstantFactory {
 

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal;
+package io.parsingdata.metal;
 
-import static nl.minvenj.nfi.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.con;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -30,33 +30,33 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParseResult;
-import nl.minvenj.nfi.metal.encoding.Encoding;
-import nl.minvenj.nfi.metal.expression.Expression;
-import nl.minvenj.nfi.metal.expression.comparison.Eq;
-import nl.minvenj.nfi.metal.expression.logical.And;
-import nl.minvenj.nfi.metal.expression.logical.Not;
-import nl.minvenj.nfi.metal.expression.value.Cat;
-import nl.minvenj.nfi.metal.expression.value.FoldLeft;
-import nl.minvenj.nfi.metal.expression.value.FoldRight;
-import nl.minvenj.nfi.metal.expression.value.Reducer;
-import nl.minvenj.nfi.metal.expression.value.ValueExpression;
-import nl.minvenj.nfi.metal.expression.value.arithmetic.Neg;
-import nl.minvenj.nfi.metal.expression.value.reference.First;
-import nl.minvenj.nfi.metal.expression.value.reference.Offset;
-import nl.minvenj.nfi.metal.expression.value.reference.Ref;
-import nl.minvenj.nfi.metal.token.Cho;
-import nl.minvenj.nfi.metal.token.Def;
-import nl.minvenj.nfi.metal.token.Nod;
-import nl.minvenj.nfi.metal.token.Opt;
-import nl.minvenj.nfi.metal.token.Pre;
-import nl.minvenj.nfi.metal.token.Rep;
-import nl.minvenj.nfi.metal.token.Seq;
-import nl.minvenj.nfi.metal.token.Str;
-import nl.minvenj.nfi.metal.token.Sub;
-import nl.minvenj.nfi.metal.token.Token;
-import nl.minvenj.nfi.metal.token.While;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.Expression;
+import io.parsingdata.metal.expression.comparison.Eq;
+import io.parsingdata.metal.expression.logical.And;
+import io.parsingdata.metal.expression.logical.Not;
+import io.parsingdata.metal.expression.value.Cat;
+import io.parsingdata.metal.expression.value.FoldLeft;
+import io.parsingdata.metal.expression.value.FoldRight;
+import io.parsingdata.metal.expression.value.Reducer;
+import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.expression.value.arithmetic.Neg;
+import io.parsingdata.metal.expression.value.reference.First;
+import io.parsingdata.metal.expression.value.reference.Offset;
+import io.parsingdata.metal.expression.value.reference.Ref;
+import io.parsingdata.metal.token.Cho;
+import io.parsingdata.metal.token.Def;
+import io.parsingdata.metal.token.Nod;
+import io.parsingdata.metal.token.Opt;
+import io.parsingdata.metal.token.Pre;
+import io.parsingdata.metal.token.Rep;
+import io.parsingdata.metal.token.Seq;
+import io.parsingdata.metal.token.Str;
+import io.parsingdata.metal.token.Sub;
+import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.token.While;
 
 @RunWith(Parameterized.class)
 public class ArgumentsTest {

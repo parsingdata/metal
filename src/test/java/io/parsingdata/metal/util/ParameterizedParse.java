@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.util;
+package io.parsingdata.metal.util;
 
 import java.io.IOException;
 
-import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.encoding.Encoding;
-import nl.minvenj.nfi.metal.token.Token;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
 
 import org.junit.Assert;
 import org.junit.Ignore;

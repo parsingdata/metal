@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal;
+package io.parsingdata.metal;
 
-import static nl.minvenj.nfi.metal.Shorthand.def;
-import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
-import nl.minvenj.nfi.metal.data.ParseValue;
-import nl.minvenj.nfi.metal.data.ParseValueList;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.ParseValueList;
 
 import org.junit.Assert;
 import org.junit.Test;

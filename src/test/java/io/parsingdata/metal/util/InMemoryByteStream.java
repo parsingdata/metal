@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.util;
+package io.parsingdata.metal.util;
 
 import java.io.IOException;
 
-import nl.minvenj.nfi.metal.data.ByteStream;
+import io.parsingdata.metal.data.ByteStream;
 
 public class InMemoryByteStream implements ByteStream {
 

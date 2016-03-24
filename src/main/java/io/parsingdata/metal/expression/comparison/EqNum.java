@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.expression.comparison;
+package io.parsingdata.metal.expression.comparison;
 
-import nl.minvenj.nfi.metal.expression.value.Value;
-import nl.minvenj.nfi.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.expression.value.Value;
+import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class EqNum extends ComparisonExpression {
 

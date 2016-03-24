@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.data;
+package io.parsingdata.metal.data;
 
-import static nl.minvenj.nfi.metal.Util.checkNotNull;
+import static io.parsingdata.metal.Util.checkNotNull;
 
 public class ParseValueList {
 

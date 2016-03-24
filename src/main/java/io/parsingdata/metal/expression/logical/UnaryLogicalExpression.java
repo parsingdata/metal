@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.expression.logical;
+package io.parsingdata.metal.expression.logical;
 
-import static nl.minvenj.nfi.metal.Util.checkNotNull;
+import static io.parsingdata.metal.Util.checkNotNull;
 
-import nl.minvenj.nfi.metal.expression.Expression;
+import io.parsingdata.metal.expression.Expression;
 
 public abstract class UnaryLogicalExpression implements LogicalExpression {
 
