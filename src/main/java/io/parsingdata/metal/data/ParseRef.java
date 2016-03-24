@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.data;
+package io.parsingdata.metal.data;
 
-import static nl.minvenj.nfi.metal.Util.checkNotNull;
+import static io.parsingdata.metal.Util.checkNotNull;
 
-import nl.minvenj.nfi.metal.data.selection.ByOffset;
-import nl.minvenj.nfi.metal.token.Token;
+import io.parsingdata.metal.data.selection.ByOffset;
+import io.parsingdata.metal.token.Token;
 
 public class ParseRef implements ParseItem {
 

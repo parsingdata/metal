@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.expression.value.reference;
+package io.parsingdata.metal.expression.value.reference;
 
-import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.encoding.Encoding;
-import nl.minvenj.nfi.metal.expression.value.ConstantFactory;
-import nl.minvenj.nfi.metal.expression.value.OptionalValue;
-import nl.minvenj.nfi.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.ConstantFactory;
+import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * Retrieve the current environment offset.

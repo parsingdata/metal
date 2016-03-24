@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.expression.value;
+package io.parsingdata.metal.expression.value;
 
-import static nl.minvenj.nfi.metal.Shorthand.con;
-import static nl.minvenj.nfi.metal.Util.checkNotNull;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Util.checkNotNull;
 
-import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParseValueList;
-import nl.minvenj.nfi.metal.encoding.Encoding;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseValueList;
+import io.parsingdata.metal.encoding.Encoding;
 
 public class FoldLeft implements ValueExpression {
 

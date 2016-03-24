@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.data;
+package io.parsingdata.metal.data;
 
-import static nl.minvenj.nfi.metal.Util.checkNotNull;
+import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
 
-import nl.minvenj.nfi.metal.data.selection.*;
-import nl.minvenj.nfi.metal.data.transformation.Reversal;
-import nl.minvenj.nfi.metal.encoding.Encoding;
-import nl.minvenj.nfi.metal.token.Token;
+import io.parsingdata.metal.data.selection.*;
+import io.parsingdata.metal.data.transformation.Reversal;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
 
 public class ParseGraph implements ParseItem {
 

@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>nl.minvenj.nfi.metal</groupId>
+  <groupId>io.parsingdata</groupId>
   <artifactId>metal</artifactId>
-  <name>metal</name>
+  <name>Metal</name>
   <version>3.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  <url>http://forensicinstitute.nl</url>
+  <url>http://parsingdata.io/</url>
 
   <licenses>
     <license>
@@ -123,9 +123,6 @@
               <rulesets>
                 <ruleset>${pom.basedir}/pmd-rules.xml</ruleset>
               </rulesets>
-              <excludes>
-                <exclude>**nl/minvenj/nfi/metal/format/*.java</exclude>
-              </excludes>
             </configuration>
           </reportSet>
           <reportSet>

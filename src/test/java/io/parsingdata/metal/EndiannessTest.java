@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal;
+package io.parsingdata.metal;
 
-import static nl.minvenj.nfi.metal.Shorthand.and;
-import static nl.minvenj.nfi.metal.Shorthand.con;
-import static nl.minvenj.nfi.metal.Shorthand.def;
-import static nl.minvenj.nfi.metal.Shorthand.eq;
-import static nl.minvenj.nfi.metal.Shorthand.self;
-import static nl.minvenj.nfi.metal.Shorthand.shr;
-import static nl.minvenj.nfi.metal.util.EncodingFactory.le;
-import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.Shorthand.and;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.self;
+import static io.parsingdata.metal.Shorthand.shr;
+import static io.parsingdata.metal.util.EncodingFactory.le;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import nl.minvenj.nfi.metal.token.Token;
+import io.parsingdata.metal.token.Token;
 
 public class EndiannessTest {
 

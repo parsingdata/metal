@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.data;
+package io.parsingdata.metal.data;
 
-import nl.minvenj.nfi.metal.token.Token;
+import io.parsingdata.metal.token.Token;
 
 public interface ParseItem {
 

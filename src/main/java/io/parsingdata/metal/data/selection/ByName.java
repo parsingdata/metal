@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.data.selection;
+package io.parsingdata.metal.data.selection;
 
-import nl.minvenj.nfi.metal.data.ParseGraph;
-import nl.minvenj.nfi.metal.data.ParseItem;
-import nl.minvenj.nfi.metal.data.ParseValue;
-import nl.minvenj.nfi.metal.data.ParseValueList;
+import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseItem;
+import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.ParseValueList;
 
 public class ByName {
 

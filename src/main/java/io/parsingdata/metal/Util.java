@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal;
+package io.parsingdata.metal;
 
 public class Util {
 

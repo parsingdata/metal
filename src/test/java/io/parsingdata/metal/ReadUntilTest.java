@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal;
+package io.parsingdata.metal;
 
-import static nl.minvenj.nfi.metal.Shorthand.rep;
-import static nl.minvenj.nfi.metal.Shorthand.seq;
-import static nl.minvenj.nfi.metal.TokenDefinitions.eq;
-import static nl.minvenj.nfi.metal.TokenDefinitions.notEq;
-import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
-import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.Shorthand.rep;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.TokenDefinitions.eq;
+import static io.parsingdata.metal.TokenDefinitions.notEq;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
-import nl.minvenj.nfi.metal.token.Token;
+import io.parsingdata.metal.token.Token;
 
 import org.junit.Assert;
 import org.junit.Test;

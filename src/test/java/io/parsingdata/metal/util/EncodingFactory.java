@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.util;
+package io.parsingdata.metal.util;
 
-import nl.minvenj.nfi.metal.encoding.ByteOrder;
-import nl.minvenj.nfi.metal.encoding.Encoding;
+import io.parsingdata.metal.encoding.ByteOrder;
+import io.parsingdata.metal.encoding.Encoding;
 
 public class EncodingFactory {
 

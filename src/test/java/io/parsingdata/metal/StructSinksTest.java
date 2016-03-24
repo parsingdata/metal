@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal;
+package io.parsingdata.metal;
 
-import static nl.minvenj.nfi.metal.Shorthand.con;
-import static nl.minvenj.nfi.metal.Shorthand.eqNum;
-import static nl.minvenj.nfi.metal.Shorthand.not;
-import static nl.minvenj.nfi.metal.Shorthand.rep;
-import static nl.minvenj.nfi.metal.Shorthand.seq;
-import static nl.minvenj.nfi.metal.Shorthand.str;
-import static nl.minvenj.nfi.metal.TokenDefinitions.any;
-import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
-import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.eqNum;
+import static io.parsingdata.metal.Shorthand.not;
+import static io.parsingdata.metal.Shorthand.rep;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.str;
+import static io.parsingdata.metal.TokenDefinitions.any;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 import java.util.ArrayDeque;
@@ -36,12 +36,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParseGraph;
-import nl.minvenj.nfi.metal.encoding.Encoding;
-import nl.minvenj.nfi.metal.token.Str;
-import nl.minvenj.nfi.metal.token.StructSink;
-import nl.minvenj.nfi.metal.token.Token;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Str;
+import io.parsingdata.metal.token.StructSink;
+import io.parsingdata.metal.token.Token;
 
 @RunWith(JUnit4.class)
 public class StructSinksTest {

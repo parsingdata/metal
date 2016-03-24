@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.format;
+package io.parsingdata.metal.format;
 
-import static nl.minvenj.nfi.metal.Shorthand.cho;
-import static nl.minvenj.nfi.metal.Shorthand.con;
-import static nl.minvenj.nfi.metal.Shorthand.def;
-import static nl.minvenj.nfi.metal.Shorthand.eq;
-import static nl.minvenj.nfi.metal.Shorthand.eqNum;
-import static nl.minvenj.nfi.metal.Shorthand.expTrue;
-import static nl.minvenj.nfi.metal.Shorthand.ref;
-import static nl.minvenj.nfi.metal.Shorthand.rep;
-import static nl.minvenj.nfi.metal.Shorthand.self;
-import static nl.minvenj.nfi.metal.Shorthand.seq;
-import static nl.minvenj.nfi.metal.Shorthand.str;
-import static nl.minvenj.nfi.metal.format.Callback.crc32;
-import static nl.minvenj.nfi.metal.format.Callback.inflate;
+import static io.parsingdata.metal.Shorthand.cho;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.eqNum;
+import static io.parsingdata.metal.Shorthand.expTrue;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.rep;
+import static io.parsingdata.metal.Shorthand.self;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.str;
+import static io.parsingdata.metal.format.Callback.crc32;
+import static io.parsingdata.metal.format.Callback.inflate;
 
-import nl.minvenj.nfi.metal.encoding.ByteOrder;
-import nl.minvenj.nfi.metal.encoding.Encoding;
-import nl.minvenj.nfi.metal.expression.Expression;
-import nl.minvenj.nfi.metal.token.Token;
+import io.parsingdata.metal.encoding.ByteOrder;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.Expression;
+import io.parsingdata.metal.token.Token;
 
 /*
  * Implements limited subset of ZIP file format:

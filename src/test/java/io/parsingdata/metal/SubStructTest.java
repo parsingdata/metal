@@ -14,30 +14,30 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal;
+package io.parsingdata.metal;
 
-import static nl.minvenj.nfi.metal.Shorthand.con;
-import static nl.minvenj.nfi.metal.Shorthand.def;
-import static nl.minvenj.nfi.metal.Shorthand.eq;
-import static nl.minvenj.nfi.metal.Shorthand.opt;
-import static nl.minvenj.nfi.metal.Shorthand.ref;
-import static nl.minvenj.nfi.metal.Shorthand.seq;
-import static nl.minvenj.nfi.metal.Shorthand.sub;
-import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
-import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.opt;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParseGraph;
-import nl.minvenj.nfi.metal.data.ParseItem;
-import nl.minvenj.nfi.metal.data.ParseRef;
-import nl.minvenj.nfi.metal.data.ParseResult;
-import nl.minvenj.nfi.metal.encoding.Encoding;
-import nl.minvenj.nfi.metal.token.Token;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseItem;
+import io.parsingdata.metal.data.ParseRef;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
 
 public class SubStructTest {
 

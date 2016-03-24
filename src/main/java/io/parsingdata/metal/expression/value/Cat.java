@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.expression.value;
+package io.parsingdata.metal.expression.value;
 
-import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.encoding.Encoding;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.encoding.Encoding;
 
 public class Cat extends BinaryValueExpression {
 

@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal;
+package io.parsingdata.metal;
 
-import static nl.minvenj.nfi.metal.Shorthand.con;
-import static nl.minvenj.nfi.metal.Shorthand.def;
-import static nl.minvenj.nfi.metal.Shorthand.sub;
-import static nl.minvenj.nfi.metal.TokenDefinitions.any;
-import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
-import nl.minvenj.nfi.metal.data.ParseGraph;
-import nl.minvenj.nfi.metal.data.ParseGraphList;
-import nl.minvenj.nfi.metal.data.ParseItem;
-import nl.minvenj.nfi.metal.data.ParseRef;
-import nl.minvenj.nfi.metal.data.ParseValue;
-import nl.minvenj.nfi.metal.token.Token;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.TokenDefinitions.any;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseGraphList;
+import io.parsingdata.metal.data.ParseItem;
+import io.parsingdata.metal.data.ParseRef;
+import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.token.Token;
 
 import org.junit.Assert;
 import org.junit.Test;

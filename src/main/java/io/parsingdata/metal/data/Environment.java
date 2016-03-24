@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.data;
+package io.parsingdata.metal.data;
 
 public class Environment {
 

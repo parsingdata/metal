@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.expression.value;
+package io.parsingdata.metal.expression.value;
 
-import static nl.minvenj.nfi.metal.Util.checkNotNull;
+import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
 import java.util.BitSet;
 
 import javax.xml.bind.DatatypeConverter;
 
-import nl.minvenj.nfi.metal.encoding.ByteOrder;
-import nl.minvenj.nfi.metal.encoding.Encoding;
+import io.parsingdata.metal.encoding.ByteOrder;
+import io.parsingdata.metal.encoding.Encoding;
 
 public class Value {
 

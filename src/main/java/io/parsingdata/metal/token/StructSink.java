@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal.token;
+package io.parsingdata.metal.token;
 
-import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.data.ParseGraph;
-import nl.minvenj.nfi.metal.encoding.Encoding;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.encoding.Encoding;
 
 public interface StructSink {
 

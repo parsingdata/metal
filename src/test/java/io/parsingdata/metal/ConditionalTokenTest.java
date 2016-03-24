@@ -14,31 +14,31 @@
  * limitations under the License.
  */
 
-package nl.minvenj.nfi.metal;
+package io.parsingdata.metal;
 
-import static nl.minvenj.nfi.metal.Shorthand.add;
-import static nl.minvenj.nfi.metal.Shorthand.con;
-import static nl.minvenj.nfi.metal.Shorthand.currentOffset;
-import static nl.minvenj.nfi.metal.Shorthand.def;
-import static nl.minvenj.nfi.metal.Shorthand.eq;
-import static nl.minvenj.nfi.metal.Shorthand.eqNum;
-import static nl.minvenj.nfi.metal.Shorthand.ltNum;
-import static nl.minvenj.nfi.metal.Shorthand.offset;
-import static nl.minvenj.nfi.metal.Shorthand.pre;
-import static nl.minvenj.nfi.metal.Shorthand.ref;
-import static nl.minvenj.nfi.metal.Shorthand.seq;
-import static nl.minvenj.nfi.metal.Shorthand.whl;
-import static nl.minvenj.nfi.metal.TokenDefinitions.any;
-import static nl.minvenj.nfi.metal.util.EncodingFactory.enc;
-import static nl.minvenj.nfi.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.Shorthand.add;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.currentOffset;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.eqNum;
+import static io.parsingdata.metal.Shorthand.ltNum;
+import static io.parsingdata.metal.Shorthand.offset;
+import static io.parsingdata.metal.Shorthand.pre;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.whl;
+import static io.parsingdata.metal.TokenDefinitions.any;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-import nl.minvenj.nfi.metal.data.Environment;
-import nl.minvenj.nfi.metal.encoding.Encoding;
-import nl.minvenj.nfi.metal.token.Token;
-import nl.minvenj.nfi.metal.util.ParameterizedParse;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.util.ParameterizedParse;
 
 import org.junit.runners.Parameterized.Parameters;
 
