@@ -1,10 +1,10 @@
-*.log
+# Maven
 target/
-**/target/
-build/
-*.class
-*.jar
+
+# Eclipse
 .settings/
 .classpath
 .project
 
+# IntelliJ IDEA
+.idea/
