@@ -2,6 +2,8 @@
 
 A Java library for parsing binary data formats, using declarative descriptions.
 
+[![Build Status](https://travis-ci.org/parsingdata/metal.svg?branch=master)](https://travis-ci.org/parsingdata/metal)
+
 ## License
 
 Copyright 2013-2016 Netherlands Forensic Institute
