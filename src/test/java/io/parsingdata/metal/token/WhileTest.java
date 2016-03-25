@@ -58,10 +58,10 @@ public class WhileTest {
     @Test
     public void whileWithoutExpression() throws IOException {
         // passing null as predicate make this a while(true):
-        final Token trueWhile = seq(VALUES, new While(VALUES, null, enc()));
-        final ParseResult result = trueWhile.parse(stream(0, 9, 0, 8), enc());
+        final Token trueWhile = new While(def("value", 1), null, enc());
+        final ParseResult result = trueWhile.parse(stream(0), enc());
 
-        // parsing fails, see parseFails() above
+        // parsing fails because the nested def fails at the end of the stream
         assertFalse(result.succeeded());
     }
 
