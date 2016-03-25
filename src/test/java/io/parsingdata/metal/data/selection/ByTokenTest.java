@@ -68,21 +68,21 @@ public class ByTokenTest {
 
     @Test
     public void findRootToken() {
-        ParseItem parseItem = ByToken.get(parseResultGraph(), SIMPLE_SEQ);
+        final ParseItem parseItem = ByToken.get(parseResultGraph(), SIMPLE_SEQ);
 
         assertThat(parseItem.getDefinition(), is(equalTo(SIMPLE_SEQ)));
     }
 
     @Test
     public void findNestedToken() {
-        ParseItem parseItem = ByToken.get(parseResultGraph(), DEF1);
+        final ParseItem parseItem = ByToken.get(parseResultGraph(), DEF1);
 
         assertThat(parseItem.getDefinition(), is(equalTo(DEF1)));
     }
 
     @Test
     public void findUnusedToken() {
-        ParseItem parseItem = ByToken.get(parseResultGraph(), UNUSED_DEF);
+        final ParseItem parseItem = ByToken.get(parseResultGraph(), UNUSED_DEF);
 
         assertThat(parseItem, is(nullValue()));
     }
