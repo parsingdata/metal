@@ -22,6 +22,8 @@ import io.parsingdata.metal.token.Token;
 
 public class ByToken {
 
+    private ByToken() {}
+
     public static ParseItem get(final ParseGraph graph, final Token definition) {
         if (definition == null) { throw new IllegalArgumentException("Argument definition may not be null."); }
         if (graph.definition == definition) { return graph; }
@@ -29,7 +31,7 @@ public class ByToken {
         final ParseItem head = graph.head;
         if (head.isValue() && head.asValue().definition == definition) { return head; }
         if (head.isGraph()) {
-            final ParseItem item = head.asGraph().get(definition);
+            final ParseItem item = get(head.asGraph(), definition);
             if (item != null) { return item; }
         }
         return get(graph.tail, definition);
