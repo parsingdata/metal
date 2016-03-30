@@ -1,7 +1,9 @@
 language: java
 sudo: false # faster builds
 
-script: "mvn clean verify"
+install: mvn clean install -DskipTests -Dgpg.skip
+
+script: mvn clean verify -Dgpg.skip
 
 jdk:
   - oraclejdk8
