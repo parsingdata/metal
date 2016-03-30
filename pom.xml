@@ -2,10 +2,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.parsingdata</groupId>
   <artifactId>metal</artifactId>
-  <name>Metal</name>
-  <version>3.0.0-SNAPSHOT</version>
+  <name>${project.groupId}:${project.artifactId}</name>
+  <version>3.0.0</version>
   <packaging>jar</packaging>
   <url>http://parsingdata.io/</url>
+  <description>A Java library for parsing binary data formats, using declarative descriptions.</description>
 
   <licenses>
     <license>
@@ -14,6 +15,27 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
+
+  <developers>
+    <developer>
+      <name>Jeroen van den Bos</name>
+      <email>jeroen@infuse.org</email>
+      <organization>Netherlands Forensic Institute</organization>
+      <organizationUrl>http://www.forensicinstitute.nl/</organizationUrl>
+    </developer>
+    <developer>
+      <name>Roel van Dijk</name>
+      <email>roel@rustradio.org</email>
+      <organization>Netherlands Forensic Institute</organization>
+      <organizationUrl>http://www.forensicinstitute.nl/</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git@github.com:parsingdata/metal.git</connection>
+    <developerConnection>scm:git:git@github.com:parsingdata/metal.git</developerConnection>
+    <url>git@github.com:parsingdata/metal.git</url>
+  </scm>
 
   <distributionManagement>
     <snapshotRepository>
