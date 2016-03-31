@@ -19,6 +19,7 @@ package io.parsingdata.metal;
 import io.parsingdata.metal.token.Token;
 
 public class Util {
+    final private static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
     public static <T>T checkNotNull(final T argument, final String name) {
         if (argument == null) { throw new IllegalArgumentException("Argument " + name + " may not be null."); }
@@ -34,7 +35,7 @@ public class Util {
     }
 
     public static String toString(final Token[] tokens) {
-        if (tokens == null) { throw new RuntimeException("Argument tokens may not be null."); }
+        checkNotNull(tokens, "tokens");
         if (tokens.length == 0) { return ""; }
         final StringBuilder out = new StringBuilder();
         for (int i = 0; i < tokens.length - 1; i++) {
@@ -42,5 +43,17 @@ public class Util {
             out.append(", ");
         }
         return out.append(tokens[tokens.length - 1]).toString();
+    }
+
+    // from: http://stackoverflow.com/questions/9655181/how-to-convert-a-byte-array-to-a-hex-string-in-java
+    public static String hex(final byte[] bytes) {
+        checkNotNull(bytes, "bytes");
+        final char[] hexChars = new char[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++) {
+            final int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+        }
+        return new String(hexChars);
     }
 }
