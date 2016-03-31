@@ -33,10 +33,10 @@ public class Util {
         return argument;
     }
 
-    public static String toString(Token[] tokens) {
+    public static String toString(final Token[] tokens) {
         if (tokens == null) { throw new RuntimeException("Argument tokens may not be null."); }
         if (tokens.length == 0) { return ""; }
-        StringBuilder out = new StringBuilder();
+        final StringBuilder out = new StringBuilder();
         for (int i = 0; i < tokens.length - 1; i++) {
             out.append(tokens[i].toString());
             out.append(", ");
