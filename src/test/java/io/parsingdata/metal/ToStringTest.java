@@ -48,7 +48,10 @@ import static io.parsingdata.metal.Shorthand.str;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.whl;
 import static io.parsingdata.metal.TokenDefinitions.any;
+import static javafx.scene.input.KeyCode.T;
 
+import io.parsingdata.metal.token.Def;
+import io.parsingdata.metal.token.Seq;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -86,6 +89,24 @@ public class ToStringTest {
 
     private ValueExpression v() {
         return neg(add(div(mod(mul(sub(ref(n()), first(n())), con(1)), cat(ref(n()), ref(n()))), add(self, add(offset(n()), currentOffset))), ref(n())));
+    }
+
+    @Test
+    public void tokensWithArrays() {
+        final Token a = def("_name_a_", con(1));
+        final Token b = def("_name_b_", con(2));
+        final Token c = def("_name_c_", con(1));
+        final Token s1 = seq(a, b, c);
+        checkToken(s1);
+        final Token c1 = cho(c, b, a);
+        checkToken(c1);
+    }
+
+    private void checkToken(Token t) {
+        final String s1s = t.toString();
+        Assert.assertTrue(s1s.contains("_name_a_"));
+        Assert.assertTrue(s1s.contains("_name_b_"));
+        Assert.assertTrue(s1s.contains("_name_c_"));
     }
 
 }

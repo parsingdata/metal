@@ -16,14 +16,14 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Util.checkContainsNoNulls;
-
-import java.io.IOException;
-import java.util.Arrays;
-
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
+
+import java.io.IOException;
+
+import static io.parsingdata.metal.Util.checkContainsNoNulls;
 
 public class Cho extends Token {
 
@@ -51,7 +51,7 @@ public class Cho extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + Arrays.toString(_tokens) + ")";
+        return getClass().getSimpleName() + "(" + Util.toString(_tokens) + ")";
     }
 
 }
