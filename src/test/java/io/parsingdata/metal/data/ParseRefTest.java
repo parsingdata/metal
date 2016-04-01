@@ -34,6 +34,11 @@ public class ParseRefTest {
     }
 
     @Test
+    public void toStringTest() {
+        assertThat(_ref.toString(), is("ParseRef(0)"));
+    }
+
+    @Test
     public void refIsARef() {
         assertTrue(_ref.isRef());
         assertThat(_ref.asRef(), is(sameInstance(_ref)));
