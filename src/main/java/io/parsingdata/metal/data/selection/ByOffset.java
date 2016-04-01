@@ -23,7 +23,7 @@ import io.parsingdata.metal.data.ParseValue;
 
 public class ByOffset {
 
-    public static boolean hasGraphAtRef(ParseGraph graph, long ref) {
+    public static boolean hasGraphAtRef(final ParseGraph graph, final long ref) {
         return findRef(ByType.getGraphs(graph), ref) != null;
     }
 
@@ -37,7 +37,7 @@ public class ByOffset {
         return null;
     }
 
-    public static ParseValue getLowestOffsetValue(ParseGraph graph) {
+    public static ParseValue getLowestOffsetValue(final ParseGraph graph) {
         if (!graph.containsValue()) { throw new IllegalStateException("Cannot determine lowest offset if graph does not contain a value."); }
         final ParseItem head = graph.head;
         if (head.isValue()) {
@@ -46,7 +46,7 @@ public class ByOffset {
         return getLowestOffsetValue(graph.tail);
     }
 
-    private static ParseValue getLowestOffsetValue(ParseGraph graph, final ParseValue lowest) {
+    private static ParseValue getLowestOffsetValue(final ParseGraph graph, final ParseValue lowest) {
         if (!graph.containsValue()) { return lowest; }
         final ParseItem head = graph.head;
         if (head.isValue()) {
