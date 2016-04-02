@@ -32,7 +32,7 @@ public class UtilHexTest {
 
     @Test
     public void byteToHex() {
-        assertThat(Util.hex(input), is(equalTo(output)));
+        assertThat(Util.bytesToHexString(input), is(equalTo(output)));
     }
 
 }

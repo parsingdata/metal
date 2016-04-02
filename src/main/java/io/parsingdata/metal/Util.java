@@ -34,7 +34,7 @@ public class Util {
         return argument;
     }
 
-    public static String toString(final Token[] tokens) {
+    public static String tokensToString(final Token[] tokens) {
         checkNotNull(tokens, "tokens");
         if (tokens.length == 0) { return ""; }
         final StringBuilder out = new StringBuilder();
@@ -45,8 +45,7 @@ public class Util {
         return out.append(tokens[tokens.length - 1]).toString();
     }
 
-    // from: http://stackoverflow.com/questions/9655181/how-to-convert-a-byte-array-to-a-hex-string-in-java
-    public static String hex(final byte[] bytes) {
+    public static String bytesToHexString(final byte[] bytes) {
         checkNotNull(bytes, "bytes");
         final char[] hexChars = new char[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {

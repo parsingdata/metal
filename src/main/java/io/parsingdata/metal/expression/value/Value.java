@@ -62,7 +62,7 @@ public class Value {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + Util.hex(_data) + ")";
+        return getClass().getSimpleName() + "(" + Util.bytesToHexString(_data) + ")";
     }
 
 }
