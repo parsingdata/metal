@@ -16,48 +16,17 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.add;
-import static io.parsingdata.metal.Shorthand.and;
-import static io.parsingdata.metal.Shorthand.cat;
-import static io.parsingdata.metal.Shorthand.cho;
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.currentOffset;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.div;
-import static io.parsingdata.metal.Shorthand.eq;
-import static io.parsingdata.metal.Shorthand.eqNum;
-import static io.parsingdata.metal.Shorthand.eqStr;
-import static io.parsingdata.metal.Shorthand.first;
-import static io.parsingdata.metal.Shorthand.gtNum;
-import static io.parsingdata.metal.Shorthand.ltNum;
-import static io.parsingdata.metal.Shorthand.mod;
-import static io.parsingdata.metal.Shorthand.mul;
-import static io.parsingdata.metal.Shorthand.neg;
-import static io.parsingdata.metal.Shorthand.nod;
-import static io.parsingdata.metal.Shorthand.not;
-import static io.parsingdata.metal.Shorthand.offset;
-import static io.parsingdata.metal.Shorthand.opt;
-import static io.parsingdata.metal.Shorthand.or;
-import static io.parsingdata.metal.Shorthand.pre;
-import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.rep;
-import static io.parsingdata.metal.Shorthand.repn;
-import static io.parsingdata.metal.Shorthand.self;
-import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.Shorthand.str;
-import static io.parsingdata.metal.Shorthand.sub;
-import static io.parsingdata.metal.Shorthand.whl;
-import static io.parsingdata.metal.TokenDefinitions.any;
-
+import io.parsingdata.metal.expression.Expression;
+import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.token.Token;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import io.parsingdata.metal.expression.Expression;
-import io.parsingdata.metal.expression.value.ValueExpression;
-import io.parsingdata.metal.token.Token;
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.TokenDefinitions.any;
 
 @RunWith(JUnit4.class)
 public class ToStringTest {
@@ -86,6 +55,24 @@ public class ToStringTest {
 
     private ValueExpression v() {
         return neg(add(div(mod(mul(sub(ref(n()), first(n())), con(1)), cat(ref(n()), ref(n()))), add(self, add(offset(n()), currentOffset))), ref(n())));
+    }
+
+    @Test
+    public void tokensWithArrays() {
+        final Token a = def("_name_a_", con(1));
+        final Token b = def("_name_b_", con(2));
+        final Token c = def("_name_c_", con(1));
+        final Token s1 = seq(a, b, c);
+        checkToken(s1);
+        final Token c1 = cho(c, b, a);
+        checkToken(c1);
+    }
+
+    private void checkToken(Token t) {
+        final String s1s = t.toString();
+        Assert.assertTrue(s1s.contains("_name_a_"));
+        Assert.assertTrue(s1s.contains("_name_b_"));
+        Assert.assertTrue(s1s.contains("_name_c_"));
     }
 
 }

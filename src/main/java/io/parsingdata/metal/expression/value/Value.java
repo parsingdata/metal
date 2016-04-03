@@ -21,8 +21,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import java.math.BigInteger;
 import java.util.BitSet;
 
-import javax.xml.bind.DatatypeConverter;
-
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
 
@@ -63,7 +62,7 @@ public class Value {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + DatatypeConverter.printHexBinary(_data) + ")";
+        return getClass().getSimpleName() + "(" + Util.bytesToHexString(_data) + ")";
     }
 
 }
