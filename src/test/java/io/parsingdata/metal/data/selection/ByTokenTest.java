@@ -74,7 +74,7 @@ public class ByTokenTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void nullCheck() throws IOException {
+    public void nullCheck() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Argument definition may not be null");
 
@@ -82,7 +82,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void findRootToken() throws IOException {
+    public void findRootToken() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2), SIMPLE_SEQ);
         final ParseItem parseItem = ByToken.get(graph, SIMPLE_SEQ);
 
@@ -90,7 +90,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void findNestedToken() throws IOException {
+    public void findNestedToken() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2), SIMPLE_SEQ);
         final ParseItem parseItem = ByToken.get(graph, DEF1);
 
@@ -98,7 +98,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void findUnusedToken() throws IOException {
+    public void findUnusedToken() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2), SIMPLE_SEQ);
         final ParseItem parseItem = ByToken.get(graph, UNUSED_DEF);
 
@@ -106,7 +106,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void getAllNullCheck() throws IOException {
+    public void getAllNullCheck() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Argument definition may not be null");
 
@@ -114,7 +114,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void getAllUnusedToken() throws IOException {
+    public void getAllUnusedToken() {
         final ParseGraph graph = parseResultGraph(stream(0), SEQ_REP);
         final ParseItemList list = ByToken.getAll(graph, UNUSED_DEF);
 
@@ -122,7 +122,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void getAllNonePresent() throws IOException {
+    public void getAllNonePresent() {
         final ParseGraph graph = parseResultGraph(stream(0), SEQ_REP);
         final ParseItemList list = ByToken.getAll(graph, DEF2);
 
@@ -130,7 +130,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void getAllSingleDef() throws IOException {
+    public void getAllSingleDef() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2, 3, 4, 5), SEQ_REP);
         final ParseItemList list = ByToken.getAll(graph, DEF1);
 
@@ -139,7 +139,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void getAllRepDef() throws IOException {
+    public void getAllRepDef() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2, 3, 4, 5), SEQ_REP);
         final ParseItemList list = ByToken.getAll(graph, DEF2);
 
@@ -148,7 +148,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void getAllRepSeq() throws IOException {
+    public void getAllRepSeq() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2, 3, 4, 5), rep(SIMPLE_SEQ));
         final ParseItemList list1 = ByToken.getAll(graph, DEF1);
         final ParseItemList list2 = ByToken.getAll(graph, DEF2);
@@ -164,7 +164,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void getAllSub() throws IOException {
+    public void getAllSub() {
         final ParseGraph graph = parseResultGraph(stream(4, 2, 2, 3, 4, 5), SEQ_SUB);
         final ParseItemList list = ByToken.getAll(graph, TWO_BYTES);
 
@@ -174,7 +174,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void getAllMutualRecursive() throws IOException {
+    public void getAllMutualRecursive() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2, 3, 4, 5), MUT_REC_1);
 
         final ParseItemList repList = ByToken.getAll(graph, REPN_DEF2);
@@ -185,7 +185,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void compareGetAllNameWithToken() throws IOException {
+    public void compareGetAllNameWithToken() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2, 3, 4, 5), SEQ_REP);
 
         ParseValueList valueList = ByName.getAll(graph, "value2");
@@ -199,9 +199,13 @@ public class ByTokenTest {
         }
     }
 
-    private ParseGraph parseResultGraph(final Environment env, final Token def) throws IOException {
-        final ParseResult parseResult = def.parse(env, enc());
-        return parseResult.getEnvironment().order;
+    private ParseGraph parseResultGraph(final Environment env, final Token def) {
+        try {
+            return def.parse(env, enc()).getEnvironment().order;
+        }
+        catch (final IOException e) {
+            throw new AssertionError("Parsing failed", e);
+        }
     }
 
 }
