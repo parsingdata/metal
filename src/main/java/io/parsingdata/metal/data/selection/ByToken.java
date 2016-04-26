@@ -45,7 +45,7 @@ public class ByToken {
 
     private static ParseItemList getAllRecursive(final ParseGraph graph, final Token definition) {
         if (graph.isEmpty()) { return ParseItemList.EMPTY; }
-        final ParseItemList tailResults = getAll(graph.tail, definition);
+        final ParseItemList tailResults = getAllRecursive(graph.tail, definition);
         final ParseItemList results = graph.definition == definition ? tailResults.add(graph) : tailResults;
         final ParseItem head = graph.head;
         if (head.isValue() && head.asValue().definition == definition) { return results.add(head); }
