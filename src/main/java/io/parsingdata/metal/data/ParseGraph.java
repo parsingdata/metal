@@ -20,7 +20,11 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
 
-import io.parsingdata.metal.data.selection.*;
+import io.parsingdata.metal.data.selection.ByItem;
+import io.parsingdata.metal.data.selection.ByName;
+import io.parsingdata.metal.data.selection.ByOffset;
+import io.parsingdata.metal.data.selection.ByToken;
+import io.parsingdata.metal.data.selection.ByType;
 import io.parsingdata.metal.data.transformation.Reversal;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
@@ -34,7 +38,7 @@ public class ParseGraph implements ParseItem {
     public final long size;
 
     public static final Token NONE = new Token(null) {
-        @Override protected ParseResult parseImpl(String scope, Environment env, Encoding enc) throws IOException { throw new IllegalStateException("This placeholder may not be invoked."); }
+        @Override protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException { throw new IllegalStateException("This placeholder may not be invoked."); }
         @Override public String toString() { return "None"; };
     };
 
@@ -137,6 +141,10 @@ public class ParseGraph implements ParseItem {
 
     public ParseValueList getAll(final String name) {
         return ByName.getAll(this, name);
+    }
+
+    public ParseItemList getAll(final Token definition) {
+        return ByToken.getAll(this, definition);
     }
 
     /**

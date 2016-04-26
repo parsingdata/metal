@@ -18,6 +18,7 @@ package io.parsingdata.metal.data.selection;
 
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
+import io.parsingdata.metal.data.ParseItemList;
 import io.parsingdata.metal.token.Token;
 
 public class ByToken {
@@ -35,6 +36,21 @@ public class ByToken {
             if (item != null) { return item; }
         }
         return get(graph.tail, definition);
+    }
+
+    public static ParseItemList getAll(final ParseGraph graph, final Token definition) {
+        if (definition == null) { throw new IllegalArgumentException("Argument definition may not be null."); }
+        return getAllRecursive(graph, definition);
+    }
+
+    private static ParseItemList getAllRecursive(final ParseGraph graph, final Token definition) {
+        if (graph.isEmpty()) { return ParseItemList.EMPTY; }
+        final ParseItemList tailResults = getAllRecursive(graph.tail, definition);
+        final ParseItemList results = graph.definition == definition ? tailResults.add(graph) : tailResults;
+        final ParseItem head = graph.head;
+        if (head.isValue() && head.asValue().definition == definition) { return results.add(head); }
+        if (head.isGraph()) { return results.add(getAllRecursive(head.asGraph(), definition)); }
+        return results;
     }
 
 }
