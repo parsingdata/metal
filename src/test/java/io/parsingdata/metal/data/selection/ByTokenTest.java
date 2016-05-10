@@ -20,6 +20,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNotNull;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
@@ -34,6 +35,7 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,6 +46,7 @@ import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseItemList;
 import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.ParseValueList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
@@ -59,6 +62,8 @@ public class ByTokenTest {
     private static final Token SEQ_REP = seq(DEF1, rep(DEF2));
     private static final Token SEQ_SUB = seq(DEF1, sub(TWO_BYTES, ref("value1")), DEF2, sub(TWO_BYTES, ref("value2")));
     private static final Token REPN_DEF2 = repn(DEF2, con(2));
+    private static final Token TUPLE = str("tuple", SIMPLE_SEQ);
+    private static final Token REPN_SIMPLE_SEQ = repn(TUPLE, con(3));
 
     private static final Token MUT_REC_1 = seq(DEF1, new Token(enc()) {
 
@@ -217,6 +222,27 @@ public class ByTokenTest {
 
             valueList = valueList.tail;
             itemList = itemList.tail;
+        }
+    }
+
+    @Test
+    public void getAllAsList() {
+        final ParseGraph graph = parseResultGraph(stream(0, 1, 2, 3, 4, 5), REPN_SIMPLE_SEQ);
+
+        final ParseItemList repList = ByToken.getAll(graph, TUPLE);
+        assertThat(repList.size, is(equalTo(3L)));
+
+        final List<ParseGraph> seqs = repList.asList();
+        assertThat(seqs.size(), is(equalTo(3)));
+
+        for (final ParseGraph seq : seqs) {
+            final ParseValue value1 = seq.get("value1");
+            assertNotNull(value1);
+            assertThat(value1.asNumeric().intValue() % 2, is(equalTo(0)));
+
+            final ParseValue value2 = seq.get("value2");
+            assertNotNull(value2);
+            assertThat(value2.asNumeric().intValue() % 2, is(equalTo(1)));
         }
     }
 
