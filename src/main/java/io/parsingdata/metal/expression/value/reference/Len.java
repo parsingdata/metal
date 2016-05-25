@@ -20,7 +20,7 @@ public class Len implements ValueExpression {
     @Override
     public OptionalValue eval(final Environment env, final Encoding enc) {
         final ParseValue value = env.order.get(_name);
-        return OptionalValue.of(value == null ? null : ConstantFactory.createFromNumeric(value.getValue().length, new Encoding(true)));
+        return OptionalValue.of(value == null || value.getValue() == null ? null : ConstantFactory.createFromNumeric(value.getValue().length, new Encoding(true)));
     }
 
     @Override
