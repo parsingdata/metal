@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal;
 
+import io.parsingdata.metal.expression.value.reference.Len;
+
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.True;
@@ -120,6 +122,7 @@ public class Shorthand {
     public static ValueExpression con(final Encoding enc, final int... values) { return new Const(new Value(toByteArray(values), enc)); }
     public static ValueExpression con(final int... values) { return con(new Encoding(), values); }
     public static final ValueExpression self = new Self();
+    public static ValueExpression len(final String s) { return new Len(s); }
     public static ValueExpression ref(final String s) { return new Ref(s); }
     public static ValueExpression first(final String s) { return new First(s); }
     public static ValueExpression offset(final String s) { return new Offset(s); }
