@@ -32,7 +32,7 @@ public class ElvisExpressionTest {
     private ValueExpression elvisExpression = elvis(ref("a"), ref("b"));
 
     @Test
-    public void ElvisLeft() throws IOException { // the building
+    public void elvisLeft() throws IOException { // the building
         final ParseResult result = choice.parse(stream(1), enc());
         final OptionalValue eval = elvisExpression.eval(result.getEnvironment(), enc());
 
@@ -41,7 +41,7 @@ public class ElvisExpressionTest {
     }
 
     @Test
-    public void ElvisRight() throws IOException {
+    public void elvisRight() throws IOException {
         final ParseResult result = choice.parse(stream(2), enc());
         final OptionalValue eval = elvisExpression.eval(result.getEnvironment(), enc());
 
@@ -50,7 +50,7 @@ public class ElvisExpressionTest {
     }
 
     @Test
-    public void ElvisNone() throws IOException {
+    public void elvisNone() throws IOException {
         final ParseResult result = choice.parse(stream(3), enc());
         final OptionalValue eval = elvisExpression.eval(result.getEnvironment(), enc());
 
