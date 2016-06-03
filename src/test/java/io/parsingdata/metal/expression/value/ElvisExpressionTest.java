@@ -24,12 +24,12 @@ import io.parsingdata.metal.token.Token;
 
 public class ElvisExpressionTest {
 
-    private Token choice = cho(
+    private final Token choice = cho(
         def("a", 1, eq(con(1))),
         def("b", 1, eq(con(2)))
     );
 
-    private ValueExpression elvisExpression = elvis(ref("a"), ref("b"));
+    private final ValueExpression elvisExpression = elvis(ref("a"), ref("b"));
 
     @Test
     public void elvisLeft() throws IOException { // the building
@@ -55,5 +55,10 @@ public class ElvisExpressionTest {
         final OptionalValue eval = elvisExpression.eval(result.getEnvironment(), enc());
 
         assertFalse(eval.isPresent());
+    }
+
+    @Test
+    public void toStringTest() {
+        assertThat(elvisExpression.toString(), is(equalTo("Elvis(Ref(a),Ref(b))")));
     }
 }

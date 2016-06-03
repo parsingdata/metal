@@ -16,20 +16,25 @@ import io.parsingdata.metal.encoding.Encoding;
  * evaluates to that value, else it evaluates to the value of <code>ref("bar")</code>.
  */
 public class Elvis implements ValueExpression {
-    private final ValueExpression _l;
-    private final ValueExpression _r;
+    private final ValueExpression _lop;
+    private final ValueExpression _rop;
 
-    public Elvis(final ValueExpression l, final ValueExpression r) {
-        _l = l;
-        _r = r;
+    public Elvis(final ValueExpression lop, final ValueExpression rop) {
+        _lop = lop;
+        _rop = rop;
     }
 
     @Override
     public OptionalValue eval(final Environment env, final Encoding enc) {
-        final OptionalValue eval = _l.eval(env, enc);
+        final OptionalValue eval = _lop.eval(env, enc);
         if (eval.isPresent()) {
             return eval;
         }
-        return _r.eval(env, enc);
+        return _rop.eval(env, enc);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _lop + "," + _rop + ")";
     }
 }
