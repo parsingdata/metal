@@ -1,15 +1,20 @@
 package io.parsingdata.metal;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.len;
+import static io.parsingdata.metal.Shorthand.ltNum;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.encoding.ByteOrder.LITTLE_ENDIAN;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 import org.junit.Test;
 
@@ -17,12 +22,13 @@ import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class ByteLengthTest {
+
+    private static final Encoding ENCODING = new Encoding(false, UTF_8, LITTLE_ENDIAN);
 
     // Note that this token does not make sense,
     // but Len will become useful when Let is implemented
@@ -32,15 +38,17 @@ public class ByteLengthTest {
         def("text2", len(ref("text1"))));
     //  let("hasText", con(true), ltNum(len(ref("text1")), con(0))));
 
+    private static final Token NAME =
+        def("name", 4, ltNum(len(ref("no_such_ref")), con(0)));
+
     @Test
-    public void test() throws IOException {
+    public void testLen() throws IOException {
         final byte[] text1 = string("Hello");
-        final byte[] text2 = "Metal".getBytes(StandardCharsets.UTF_8);
+        final byte[] text2 = "Metal".getBytes(UTF_8);
 
         final ByteStream stream = new InMemoryByteStream(concat(text1, text2));
         final Environment env = new Environment(stream);
-        final Encoding enc = new Encoding(false, StandardCharsets.UTF_8, ByteOrder.LITTLE_ENDIAN);
-        final ParseResult result = STRING.parse(env, enc);
+        final ParseResult result = STRING.parse(env, ENCODING);
 
         assertTrue(result.succeeded());
         final ParseGraph graph = result.getEnvironment().order;
@@ -49,8 +57,16 @@ public class ByteLengthTest {
         assertEquals("Metal", graph.get("text2").asString());
     }
 
+    @Test
+    public void testLenNull() throws IOException {
+        final ByteStream stream = new InMemoryByteStream(string("Joe"));
+        final Environment env = new Environment(stream);
+        final ParseResult result = NAME.parse(env, ENCODING);
+        assertFalse(result.succeeded());
+    }
+
     private byte[] string(final String text) {
-        final byte[] data = text.getBytes(StandardCharsets.UTF_8);
+        final byte[] data = text.getBytes(UTF_8);
         final byte[] length = {(byte) data.length};
         return concat(length, data);
     }
