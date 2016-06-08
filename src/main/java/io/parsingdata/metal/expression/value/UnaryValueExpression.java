@@ -23,7 +23,7 @@ import io.parsingdata.metal.encoding.Encoding;
 
 public abstract class UnaryValueExpression implements ValueExpression {
 
-    protected final ValueExpression _op;
+    private final ValueExpression _op;
 
     public UnaryValueExpression(final ValueExpression op) {
         _op = checkNotNull(op, "op");
