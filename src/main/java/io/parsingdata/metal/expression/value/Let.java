@@ -48,7 +48,8 @@ public class Let extends Token {
             return new ParseResult(false, env);
         }
 
-        final Environment newEnv = new Environment(env.order.add(new ParseValue(scope, _name, this, env.offset, value.get().getValue(), enc)), env.input, env.offset);
+        final Value val = value.get();
+        final Environment newEnv = new Environment(env.order.add(new ParseValue(scope, _name, this, env.offset, val.getValue(), val.getEncoding())), env.input, env.offset);
         return _pred.eval(newEnv, enc) ? new ParseResult(true, newEnv) : new ParseResult(false, env);
     }
 
