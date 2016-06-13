@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal;
 
+import io.parsingdata.metal.expression.value.Let;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.True;
@@ -100,6 +101,9 @@ public class Shorthand {
     public static Token opt(final Token t) { return opt(t, null); }
     public static Token nod(final ValueExpression s, final Encoding e) { return new Nod(s, e); }
     public static Token nod(final ValueExpression s) { return new Nod(s, null); }
+    public static Token let(final String n, final ValueExpression value, final Expression pred, final Encoding enc) { return new Let(n, value, pred, enc); }
+    public static Token let(final String n, final ValueExpression value, final Expression pred) { return let(n, value, pred, null); }
+    public static Token let(final String n, final ValueExpression value) { return let(n, value, null); }
 
     public static BinaryValueExpression add(final ValueExpression l, final ValueExpression r) { return new Add(l, r); }
     public static BinaryValueExpression div(final ValueExpression l, final ValueExpression r) { return new Div(l, r); }
