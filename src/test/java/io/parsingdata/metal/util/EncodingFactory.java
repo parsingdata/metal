@@ -33,4 +33,7 @@ public class EncodingFactory {
         return new Encoding(ByteOrder.LITTLE_ENDIAN);
     }
 
+    public static Encoding be() {
+        return new Encoding(ByteOrder.BIG_ENDIAN);
+    }
 }

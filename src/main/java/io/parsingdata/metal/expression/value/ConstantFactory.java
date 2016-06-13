@@ -17,7 +17,10 @@
 package io.parsingdata.metal.expression.value;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.BitSet;
+import java.util.Collections;
+import java.util.List;
 
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
@@ -25,7 +28,9 @@ import io.parsingdata.metal.encoding.Encoding;
 public class ConstantFactory {
 
     public static Value createFromNumeric(final BigInteger value, final Encoding enc) {
-        return new Value(compact(value.toByteArray(), enc.isSigned()), setToBE(enc));
+    	byte[] bytes = compact(value.toByteArray(), enc.isSigned());
+    	bytes = enc.getByteOrder().apply(bytes);
+        return new Value(bytes, enc);
     }
 
     public static Value createFromNumeric(final long value, final Encoding enc) {
@@ -37,14 +42,11 @@ public class ConstantFactory {
     }
 
     public static Value createFromBitSet(final BitSet value, final int minSize, final Encoding enc) {
-        final byte[] bytes = ByteOrder.LITTLE_ENDIAN.apply(value.toByteArray());
+        byte[] bytes = enc.getByteOrder().apply(value.toByteArray());
+        bytes = ByteOrder.LITTLE_ENDIAN.apply(bytes); // force reverse
         final byte[] out = new byte[Math.max(minSize, bytes.length)];
         System.arraycopy(bytes, 0, out, out.length - bytes.length, bytes.length);
-        return new Value(out, setToBE(enc));
-    }
-
-    private static Encoding setToBE(final Encoding enc) {
-        return new Encoding(enc.isSigned(), enc.getCharset(), ByteOrder.BIG_ENDIAN);
+        return new Value(out, enc);
     }
 
     private static byte[] compact(final byte[] in, boolean signed) {
