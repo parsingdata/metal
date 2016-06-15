@@ -55,7 +55,8 @@
 <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 <script>
 var pageOffset = 0;
-var pageSize = 512;
+var pageSize = 1024;
+var columnCount = 0; <!-- generated -->
 
 $(function() {
     var highlightedPosition;
@@ -99,7 +100,7 @@ $(function() {
 });
 
 function getDefinition(position) {
-    var rowIndex = $.inArray(Math.floor(position / 16), locations);
+    var rowIndex = $.inArray(Math.floor(position / columnCount), locations);
     if (rowIndex !== -1) {
         var row = data[rowIndex];
         for (var i = 0; i < row.length; i++) {
@@ -148,22 +149,13 @@ function hsv2rgb(h, s, v) {
     }).join('');
 }
 
-function getColor(definition) {
-    /*var blockSize = 16 * 2; // 2 rows of 16 bytes
-    var bytePos = definition[0] % blockSize;
-    return hsv2rgb(bytePos * (256 / blockSize), 50, 40);*/
-
-    return hsv2rgb(hashCode(definition[2]) % 256, 50, 40);
-}
-
-function hashCode(str) { // java String#hashCode
+function hashCode(str) {
     var hash = 0;
     for (var i = 0; i < str.length; i++) {
        hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
     return hash;
-} 
-
+}
 
 var file;
 function readSingleFile(e) {
@@ -183,7 +175,6 @@ function readPage() {
         $('#asciiview').empty();
 
         for (var row = 0; pagePosition < buffer.length; row++) {
-            var columnCount = 16;
             if (buffer.length - pagePosition < columnCount) {
                 columnCount = buffer.length - position;
             }
@@ -216,7 +207,7 @@ function readPage() {
 
                 var definition = getDefinition(filePosition);
                 if (definition) {
-                    var color = getColor(definition);
+                    var color = hsv2rgb(hashCode(definition[2]) % 256, 50, 40);
                     hexByteWrapper.css('background-color', color);
                     asciiByteWrapper.css('background-color', color);
                 }

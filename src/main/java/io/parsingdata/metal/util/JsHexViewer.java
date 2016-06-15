@@ -18,6 +18,8 @@ import io.parsingdata.metal.token.Def;
 
 public class JsHexViewer {
 
+    private static final int COLUMN_COUNT = 1 << 5;
+
     public static void generate(final ParseGraph graph) throws IOException {
         final Map<Long, LinkedList<Definition>> map = new TreeMap<>();
         step(graph, map);
@@ -39,6 +41,9 @@ public class JsHexViewer {
                         }
                         else if (line.trim().startsWith("var data =")) {
                             writeData(out, map);
+                        }
+                        else if (line.trim().startsWith("var columnCount =")) {
+                            out.write("var columnCount = " + COLUMN_COUNT + ";");
                         }
                     }
                     else {
@@ -78,7 +83,7 @@ public class JsHexViewer {
     }
 
     private static void getList(final Map<Long, LinkedList<Definition>> map, final Definition definition) {
-        final long row = definition._offset / 16;
+        final long row = definition._offset / COLUMN_COUNT;
         LinkedList<Definition> list = map.get(row);
         if (list == null) {
             list = new LinkedList<>();
