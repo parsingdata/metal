@@ -16,10 +16,11 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
+
+import static io.parsingdata.metal.Util.checkNotNull;
 
 public abstract class UnaryValueExpression implements ValueExpression {
 
@@ -30,13 +31,13 @@ public abstract class UnaryValueExpression implements ValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Environment env, final Encoding enc) {
-        final OptionalValue v = _op.eval(env, enc);
-        if (!v.isPresent()) { return v; }
-        return eval(v.get(), env, enc);
+    public OptionalValueList eval(final Environment env, final Encoding enc) {
+        final OptionalValueList vl = _op.eval(env, enc);
+        if (vl != null && !vl.isEmpty()) { return vl; }
+        return eval(vl, env, enc);
     }
 
-    public abstract OptionalValue eval(final Value v, final Environment env, final Encoding enc);
+    public abstract OptionalValueList eval(final OptionalValueList vl, final Environment env, final Encoding enc);
 
     @Override
     public String toString() {

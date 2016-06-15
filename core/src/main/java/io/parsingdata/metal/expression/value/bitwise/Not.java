@@ -16,15 +16,12 @@
 
 package io.parsingdata.metal.expression.value.bitwise;
 
-import java.util.BitSet;
-
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.ConstantFactory;
-import io.parsingdata.metal.expression.value.OptionalValue;
-import io.parsingdata.metal.expression.value.UnaryValueExpression;
-import io.parsingdata.metal.expression.value.Value;
-import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.expression.value.*;
+
+import java.util.BitSet;
 
 public class Not extends UnaryValueExpression {
 
@@ -33,10 +30,15 @@ public class Not extends UnaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value op, final Environment env, final Encoding enc) {
-        final BitSet value = op.asBitSet();
-        value.flip(0, op.getValue().length * 8);
-        return OptionalValue.of(ConstantFactory.createFromBitSet(value, op.getValue().length, enc));
+    public OptionalValueList eval(final OptionalValueList vl, final Environment env, final Encoding enc) {
+        if (!vl.tail.isEmpty()) { return eval(vl.tail, env, enc); }
+        if (!vl.head.isPresent()) {
+            return
+        } else {
+            final BitSet value = vl.head.get().asBitSet();
+            value.flip(0, vl.head.get().getValue().length * 8);
+            return OptionalValue.of(ConstantFactory.createFromBitSet(value, op.getValue().length, enc));
+        }
     }
 
 }
