@@ -86,9 +86,6 @@ $(function() {
         if (definition) {
             $('#name').text(definition[2]);
         }
-        else {
-            $('#name').html('&nbsp;'); // empty will collapse h3
-        }
     }).on('keydown', 'numeric', function(e){-1!==$.inArray(e.keyCode,[46,8,9,27,13,110,190])||/65|67|86|88/.test(e.keyCode)&&(!0===e.ctrlKey||!0===e.metaKey)||35<=e.keyCode&&40>=e.keyCode||(e.shiftKey||48>e.keyCode||57<e.keyCode)&&(96>e.keyCode||105<e.keyCode)&&e.preventDefault()});
 
     $('body').on('mouseleave', '.byte', function(){
@@ -96,6 +93,8 @@ $(function() {
         $('.byte[position=' + position +']').each(function(index, value){
             $(value).removeClass('selected');
         });
+        $('#name').html('&nbsp;')
+        $('#filePosition').html('&nbsp;')
     });
 
     $('#prev').click(function(e) {
@@ -234,13 +233,13 @@ function readPage() {
                 }
 
                 var filePosition = pageOffset + pagePosition;
-                var hexByte = $('<div>').addClass('byte').attr('position', filePosition).text(hex);
-                var hexByteWrapper = $('<div>').addClass('byteWrapper').append(hexByte);
+                var hexByte = $('<span>').addClass('byte').attr('position', filePosition).text(hex);
+                var hexByteWrapper = $('<span>').addClass('byteWrapper').append(hexByte);
                 hexRow.append(hexByteWrapper);
 
                 var character = byte >= 32 && byte <= 126 ? String.fromCharCode(byte) : '\u00B7';
-                var asciiByte = $('<div>').addClass('byte').attr('position', filePosition).text(character);
-                var asciiByteWrapper = $('<div>').addClass('byteWrapper').append(asciiByte);
+                var asciiByte = $('<span>').addClass('byte').attr('position', filePosition).text(character);
+                var asciiByteWrapper = $('<span>').addClass('byteWrapper').append(asciiByte);
                 asciiRow.append(asciiByteWrapper);
 
                 var definition = getDefinition(filePosition);
@@ -263,7 +262,7 @@ function readPage() {
     <input type="text" size="4" id="jumpPage" class="numeric" value="0"><button id="goPage">Jump to page</button>
     <input type="text" size="8" id="jumpOffset" class="numeric" value="0"><button id="goOffset">Jump to offset</button>
     <button id="prev">Previous page</button>
-    <button id="next">Next page</button>
+    <button id="next">Next page</button><br>
     <br>
 
     <span id="filePosition"></span><span id="name">&nbsp;</span><br>
