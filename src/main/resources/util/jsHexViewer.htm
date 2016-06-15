@@ -71,30 +71,26 @@ var pageSize = 1024;
 var columnCount = 0; <!-- generated -->
 
 $(function() {
-    var highlightedPosition;
     $('body').on('mouseenter', '.byte', function(){
         var position = parseInt($(this).attr('position'));
+        $('.byte[position=' + position +']').each(function(index, value) {
+            $(value).addClass('selected');
+        });
 
-        if (highlightedPosition !== position) {
-            if (highlightedPosition) {
-                $('.byte[position=' + highlightedPosition +']').each(function(index, value){
-                    $(value).removeClass('selected');
-                });
-            }
-
-            highlightedPosition = position;
-            $('.byte[position=' + position +']').each(function(index, value) {
-                $(value).addClass('selected');
-            });
-
-            var definition = getDefinition(parseInt(position)); // TODO int != long
-            if (definition) {
-                $('#name').text(definition[2]);
-            }
-            else {
-                $('#name').html('&nbsp;'); // empty will collapse h3
-            }
+        var definition = getDefinition(parseInt(position)); // TODO int != long
+        if (definition) {
+            $('#name').text(definition[2]);
         }
+        else {
+            $('#name').html('&nbsp;'); // empty will collapse h3
+        }
+    });
+
+    $('body').on('mouseleave', '.byte', function(){
+        var position = parseInt($(this).attr('position'));
+        $('.byte[position=' + position +']').each(function(index, value){
+            $(value).removeClass('selected');
+        });
     });
 
     $('#prev').click(function(e) {
