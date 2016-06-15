@@ -5,6 +5,10 @@
         display: table-cell;
     }
 
+    .byteWrapper, .spacer {
+        cursor: none;
+    }
+
     .linenr {
         padding-right: 4px;
         margin-right: 10px;
@@ -21,6 +25,12 @@
         color: white;
     }
 
+    h3 {
+        margin: 0px;
+        padding-top: 2px;
+        padding-bottom: 4px;
+    }
+
     .row {
         font-family: monospace;
         font-size: 14px;
@@ -29,14 +39,17 @@
 
     #hexview, #asciiview {
         display: table;
-        background-color: #dbd6c9;
+        background-color: #e6dfd3;
     }
 
     #hexview {
         float: left;
-        margin-right: 10px;
         padding-right: 10px;
-        border-right: 2px solid black;
+        border-right: 1px solid black;
+    }
+
+    #asciiview {
+        padding-left: 10px;
     }
 </style>
 <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
@@ -188,7 +201,7 @@ function readPage() {
                 var hex = byte.toString(16);
                 hex = (hex.length === 1) ? '0' + hex : hex;
                 if (column % 2 == 0 && column > 0) {
-                    hexRow.append($('<div>').addClass('spacer'));
+                    hexRow.append($('<div>').addClass('spacer').html('&nbsp;'));
                 }
 
                 var filePosition = pageOffset + pagePosition;
