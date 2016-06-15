@@ -94,19 +94,15 @@ $(function() {
     });
 
     $('#prev').click(function(e) {
-        if (page > 0) {
-            page -= 1;
-            $("#jump").val(page);
-            readPage();
-        }
+        page -= 1;
+        $("#jump").val(page);
+        readPage();
     }).attr("disabled", true);
 
     $('#next').click(function(e) {
         page += 1;
+        $("#jump").val(page);
         readPage();
-        if (page > 0) {
-            $('#prev').removeAttr("disabled");
-        }
     });
 
     var prevPage;
@@ -126,7 +122,7 @@ $(function() {
     $("#jump").on('keydown', function(e){-1!==$.inArray(e.keyCode,[46,8,9,27,13,110,190])||/65|67|86|88/.test(e.keyCode)&&(!0===e.ctrlKey||!0===e.metaKey)||35<=e.keyCode&&40>=e.keyCode||(e.shiftKey||48>e.keyCode||57<e.keyCode)&&(96>e.keyCode||105<e.keyCode)&&e.preventDefault()});
 
     $('#go').click(function(e) {
-        page = $('#jump').val();
+        page = parseInt($('#jump').val());
         readPage();
     });
 });
@@ -188,6 +184,13 @@ function readSingleFile(e) {
 
 function readPage() {
     var pageOffset = page * pageSize;
+    if (page > 0) {
+        $('#prev').removeAttr('disabled');
+    }
+    else {
+        $('#prev').attr('disabled', true);
+    }
+
     var reader = new FileReader();
     reader.onload = function(e) {
         var buffer = new Uint8Array(e.target.result);
@@ -244,7 +247,7 @@ function readPage() {
     Select source file:
     <input type="file" id="fileInput" onChange="readSingleFile(this)"/>
     <button id="prev">Previous page</button>
-    <input type="text" size="3" id="jump"><button id="go">Jump to page</button>
+    <input type="text" size="3" id="jump" value="0"><button id="go">Jump to page</button>
     <button id="next">Next page</button>
     <h3 id="name">&nbsp;</h3>
 
