@@ -16,6 +16,11 @@ import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.token.Def;
 
+/**
+ * Generate a HTML page to view the Metal ParseGraph in a hex viewer.
+ *
+ * @author Netherlands Forensic Institute.
+ */
 public class JsHexViewer {
 
     private static final int COLUMN_COUNT = 1 << 5;

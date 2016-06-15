@@ -51,6 +51,18 @@
     #asciiview {
         padding-left: 10px;
     }
+
+    #pagesOfInterest {
+        display: block;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+    }
+
+    #pagesOfInterest button {
+        display: block;
+        width: 140px;
+    }
 </style>
 <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 <script>
@@ -93,9 +105,30 @@ $(function() {
     $('#next').click(function(e) {
         pageOffset += pageSize;
         readPage();
-        if (pageOffset === pageSize) {
+        if (pageOffset >= pageSize) {
             $('#prev').removeAttr("disabled");
         }
+    });
+
+    var prevPage;
+    $.each(locations, function(index, value) {
+        var page = Math.floor(value / (pageSize / columnCount));
+        if (page !== prevPage) {
+            $('#pagesOfInterest').append($('<button>').text('Page ' + page).attr('page', page));
+            prevPage = page;
+        }
+    });
+
+    $('#pagesOfInterest').on('click', 'button', function() {
+        $('#jump').val($(this).attr('page'));
+        $('#go').trigger('click');
+    });
+
+    $("#jump").on('keydown', function(e){-1!==$.inArray(e.keyCode,[46,8,9,27,13,110,190])||/65|67|86|88/.test(e.keyCode)&&(!0===e.ctrlKey||!0===e.metaKey)||35<=e.keyCode&&40>=e.keyCode||(e.shiftKey||48>e.keyCode||57<e.keyCode)&&(96>e.keyCode||105<e.keyCode)&&e.preventDefault()});
+
+    $('#go').click(function(e) {
+        pageOffset = $('#jump').val() * pageSize;
+        readPage();
     });
 });
 
@@ -120,29 +153,17 @@ function hsv2rgb(h, s, v) {
     if (s === 0) {
       rgb = [v,v,v];
     } else {
-      h = h / 60;
-      i = Math.floor(h);
-      data = [v*(1-s), v*(1-s*(h-i)), v*(1-s*(1-(h-i)))];
-      switch(i) {
-        case 0:
-          rgb = [v, data[2], data[0]];
-          break;
-        case 1:
-          rgb = [data[1], v, data[0]];
-          break;
-        case 2:
-          rgb = [data[0], v, data[2]];
-          break;
-        case 3:
-          rgb = [data[0], data[1], v];
-          break;
-        case 4:
-          rgb = [data[2], data[0], v];
-          break;
-        default:
-          rgb = [v, data[0], data[1]];
-          break;
-      }
+        h = h / 60;
+        i = Math.floor(h);
+        data = [v*(1-s), v*(1-s*(h-i)), v*(1-s*(1-(h-i)))];
+        switch(i) {
+            case 0: rgb = [v, data[2], data[0]]; break;
+            case 1: rgb = [data[1], v, data[0]]; break;
+            case 2: rgb = [data[0], v, data[2]]; break;
+            case 3: rgb = [data[0], data[1], v]; break;
+            case 4: rgb = [data[2], data[0], v]; break;
+            default: rgb = [v, data[0], data[1]]; break;
+        }
     }
     return '#' + rgb.map(function(x) {
       return ("0" + Math.round(x * 255).toString(16)).slice(-2);
@@ -220,11 +241,16 @@ function readPage() {
 
 </script>
 <body>
-    Select source file: <input type="file" id="fileInput" onChange="readSingleFile(this)"/><button id="prev">Previous page</button><button id="next">Next page</button>
+    Select source file:
+    <input type="file" id="fileInput" onChange="readSingleFile(this)"/>
+    <button id="prev">Previous page</button>
+    <input type="text" size="3" id="jump"><button id="go">Jump to page</button>
+    <button id="next">Next page</button>
     <h3 id="name">&nbsp;</h3>
 
     <div id="hexview"></div>
     <div id="asciiview"></div>
+    <div id="pagesOfInterest">Pages of interest:</div>
 
     <script>
         var locations = []<!-- generated -->;
