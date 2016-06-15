@@ -25,15 +25,18 @@
         color: white;
     }
 
-    h3 {
-        margin: 0px;
-        padding-top: 2px;
-        padding-bottom: 4px;
+    #filePosition, .row {
+        font-family: monospace;
+        font-size: 14px;
+    }
+
+    #name {
+        padding-left: 12px;
+        font-size: 16px;
+        font-weight: bold;
     }
 
     .row {
-        font-family: monospace;
-        font-size: 14px;
         display: table-row;
     }
 
@@ -77,6 +80,8 @@ $(function() {
             $(value).addClass('selected');
         });
 
+        $('#filePosition').text(toHex(position) + ' / ' + position);
+
         var definition = getDefinition(parseInt(position)); // TODO int != long
         if (definition) {
             $('#name').text(definition[2]);
@@ -84,7 +89,7 @@ $(function() {
         else {
             $('#name').html('&nbsp;'); // empty will collapse h3
         }
-    });
+    }).on('keydown', 'numeric', function(e){-1!==$.inArray(e.keyCode,[46,8,9,27,13,110,190])||/65|67|86|88/.test(e.keyCode)&&(!0===e.ctrlKey||!0===e.metaKey)||35<=e.keyCode&&40>=e.keyCode||(e.shiftKey||48>e.keyCode||57<e.keyCode)&&(96>e.keyCode||105<e.keyCode)&&e.preventDefault()});
 
     $('body').on('mouseleave', '.byte', function(){
         var position = parseInt($(this).attr('position'));
@@ -95,13 +100,11 @@ $(function() {
 
     $('#prev').click(function(e) {
         page -= 1;
-        $("#jump").val(page);
         readPage();
     }).attr("disabled", true);
 
     $('#next').click(function(e) {
         page += 1;
-        $("#jump").val(page);
         readPage();
     });
 
@@ -115,14 +118,18 @@ $(function() {
     });
 
     $('#pagesOfInterest').on('click', 'button', function() {
-        $('#jump').val($(this).attr('page'));
-        $('#go').trigger('click');
+        $('#jumpPage').val($(this).attr('page'));
+        $('#goPage').trigger('click');
     });
 
-    $("#jump").on('keydown', function(e){-1!==$.inArray(e.keyCode,[46,8,9,27,13,110,190])||/65|67|86|88/.test(e.keyCode)&&(!0===e.ctrlKey||!0===e.metaKey)||35<=e.keyCode&&40>=e.keyCode||(e.shiftKey||48>e.keyCode||57<e.keyCode)&&(96>e.keyCode||105<e.keyCode)&&e.preventDefault()});
+    $('#goPage').click(function() {
+        page = parseInt($('#jumpPage').val());
+        readPage();
+    });
 
-    $('#go').click(function(e) {
-        page = parseInt($('#jump').val());
+    $('#goOffset').click(function() {
+        var offset = parseInt($('#jumpOffset').val());
+        page = Math.floor(offset / pageSize);
         readPage();
     });
 });
@@ -182,6 +189,12 @@ function readSingleFile(e) {
     readPage();
 }
 
+function toHex(value) {
+    var hex = value.toString(16);
+    hex = (hex.length === 1) ? '0' + hex : hex;
+    return hex;
+}
+
 function readPage() {
     var pageOffset = page * pageSize;
     if (page > 0) {
@@ -190,6 +203,8 @@ function readPage() {
     else {
         $('#prev').attr('disabled', true);
     }
+    $("#jumpPage").val(page);
+    $("#jumpOffset").val(pageOffset);
 
     var reader = new FileReader();
     reader.onload = function(e) {
@@ -213,8 +228,7 @@ function readPage() {
 
             for (var column = 0; column < columnCount; column++, pagePosition++) {
                 var byte = buffer[pagePosition] & 0xff;
-                var hex = byte.toString(16);
-                hex = (hex.length === 1) ? '0' + hex : hex;
+                var hex = toHex(byte);
                 if (column % 2 == 0 && column > 0) {
                     hexRow.append($('<div>').addClass('spacer').html('&nbsp;'));
                 }
@@ -246,10 +260,13 @@ function readPage() {
 <body>
     Select source file:
     <input type="file" id="fileInput" onChange="readSingleFile(this)"/>
+    <input type="text" size="4" id="jumpPage" class="numeric" value="0"><button id="goPage">Jump to page</button>
+    <input type="text" size="8" id="jumpOffset" class="numeric" value="0"><button id="goOffset">Jump to offset</button>
     <button id="prev">Previous page</button>
-    <input type="text" size="3" id="jump" value="0"><button id="go">Jump to page</button>
     <button id="next">Next page</button>
-    <h3 id="name">&nbsp;</h3>
+    <br>
+
+    <span id="filePosition"></span><span id="name">&nbsp;</span><br>
 
     <div id="hexview"></div>
     <div id="asciiview"></div>
