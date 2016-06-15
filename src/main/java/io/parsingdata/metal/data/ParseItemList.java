@@ -18,6 +18,9 @@ package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ParseItemList {
 
     public final ParseItem head;
@@ -82,4 +85,19 @@ public class ParseItemList {
         return isEmpty() ? "" : ">" + head + tail.toString();
     }
 
+    /**
+     * Return all {@link ParseGraph}s as list by iterating recursively.
+     * @return all {@link ParseGraph}s in <code>this</code> {@link ParseItemList}
+     */
+    public List<ParseGraph> asList() {
+        ParseItemList parseItem = this;
+        final List<ParseGraph> items = new ArrayList<>((int) parseItem.size);
+        while (!parseItem.isEmpty()) {
+            if (parseItem.head.isGraph()) {
+                items.add(parseItem.head.asGraph());
+            }
+            parseItem = parseItem.tail;
+        }
+        return items;
+    }
 }
