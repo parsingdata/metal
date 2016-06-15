@@ -216,7 +216,9 @@ function readPage() {
 
                 var definition = getDefinition(filePosition);
                 if (definition) {
-                    hexByteWrapper.css('background-color', getColor(definition));
+                    var color = getColor(definition);
+                    hexByteWrapper.css('background-color', color);
+                    asciiByteWrapper.css('background-color', color);
                 }
             }
         }
