@@ -34,6 +34,7 @@ import io.parsingdata.metal.expression.value.BinaryValueExpression;
 import io.parsingdata.metal.expression.value.Cat;
 import io.parsingdata.metal.expression.value.Const;
 import io.parsingdata.metal.expression.value.ConstantFactory;
+import io.parsingdata.metal.expression.value.Elvis;
 import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
 import io.parsingdata.metal.expression.value.Reducer;
@@ -125,6 +126,7 @@ public class Shorthand {
     public static ValueExpression offset(final String s) { return new Offset(s); }
     public static final ValueExpression currentOffset = new CurrentOffset();
     public static ValueExpression cat(final ValueExpression l, final ValueExpression r) { return new Cat(l, r); }
+    public static ValueExpression elvis(final ValueExpression l, final ValueExpression r) { return new Elvis(l, r); }
     public static ValueExpression foldLeft(final String name, final Reducer reducer) { return new FoldLeft(name, reducer, null); }
     public static ValueExpression foldLeft(final String name, final Reducer reducer, final ValueExpression i) { return new FoldLeft(name, reducer, i); }
     public static ValueExpression foldRight(final String name, final Reducer reducer) { return new FoldRight(name, reducer, null); }
