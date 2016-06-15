@@ -66,13 +66,13 @@
 </style>
 <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 <script>
-var pageOffset = 0;
+var page = 0;
 var pageSize = 1024;
 var columnCount = 0; <!-- generated -->
 
 $(function() {
     var highlightedPosition;
-    $('body').on('mouseover', '.byte', function(){
+    $('body').on('mouseenter', '.byte', function(){
         var position = parseInt($(this).attr('position'));
 
         if (highlightedPosition !== position) {
@@ -98,14 +98,17 @@ $(function() {
     });
 
     $('#prev').click(function(e) {
-        pageOffset -= pageSize;
-        readPage();
+        if (page > 0) {
+            page -= 1;
+            $("#jump").val(page);
+            readPage();
+        }
     }).attr("disabled", true);
 
     $('#next').click(function(e) {
-        pageOffset += pageSize;
+        page += 1;
         readPage();
-        if (pageOffset >= pageSize) {
+        if (page > 0) {
             $('#prev').removeAttr("disabled");
         }
     });
@@ -127,7 +130,7 @@ $(function() {
     $("#jump").on('keydown', function(e){-1!==$.inArray(e.keyCode,[46,8,9,27,13,110,190])||/65|67|86|88/.test(e.keyCode)&&(!0===e.ctrlKey||!0===e.metaKey)||35<=e.keyCode&&40>=e.keyCode||(e.shiftKey||48>e.keyCode||57<e.keyCode)&&(96>e.keyCode||105<e.keyCode)&&e.preventDefault()});
 
     $('#go').click(function(e) {
-        pageOffset = $('#jump').val() * pageSize;
+        page = $('#jump').val();
         readPage();
     });
 });
@@ -188,6 +191,7 @@ function readSingleFile(e) {
 }
 
 function readPage() {
+    var pageOffset = page * pageSize;
     var reader = new FileReader();
     reader.onload = function(e) {
         var buffer = new Uint8Array(e.target.result);
