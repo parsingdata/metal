@@ -1,0 +1,228 @@
+<html>
+<head>
+<style>
+    .byteWrapper, .linenr {
+        display: table-cell;
+    }
+
+    .linenr {
+        padding-right: 4px;
+        margin-right: 10px;
+        text-align: right;
+        background-color: #bab398;
+    }
+
+    .spacer {
+        width: 4px;
+    }
+
+    .selected {
+        background-color: #2929d0;
+        color: white;
+    }
+
+    .row {
+        font-family: monospace;
+        font-size: 14px;
+        display: table-row;
+    }
+
+    #hexview, #asciiview {
+        display: table;
+        background-color: #dbd6c9;
+    }
+
+    #hexview {
+        float: left;
+        margin-right: 10px;
+        padding-right: 10px;
+        border-right: 2px solid black;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+<script>
+var pageOffset = 0;
+var pageSize = 512;
+
+$(function() {
+    var highlightedPosition;
+    $('body').on('mouseover', '.byte', function(){
+        var position = parseInt($(this).attr('position'));
+
+        if (highlightedPosition !== position) {
+            if (highlightedPosition) {
+                $('.byte[position=' + highlightedPosition +']').each(function(index, value){
+                    $(value).removeClass('selected');
+                });
+            }
+
+            highlightedPosition = position;
+            $('.byte[position=' + position +']').each(function(index, value) {
+                $(value).addClass('selected');
+            });
+
+            var definition = getDefinition(parseInt(position)); // TODO int != long
+            if (definition) {
+                $('#name').text(definition[2]);
+            }
+            else {
+                $('#name').html('&nbsp;'); // empty will collapse h3
+            }
+        }
+    });
+
+    $('#prev').click(function(e) {
+        pageOffset -= pageSize;
+        readPage();
+    }).attr("disabled", true);
+
+    $('#next').click(function(e) {
+        pageOffset += pageSize;
+        readPage();
+        if (pageOffset === pageSize) {
+            $('#prev').removeAttr("disabled");
+        }
+    });
+});
+
+function getDefinition(position) {
+    var rowIndex = $.inArray(Math.floor(position / 16), locations);
+    if (rowIndex !== -1) {
+        var row = data[rowIndex];
+        for (var i = 0; i < row.length; i++) {
+            var definition = row[i];
+            var offset = definition[0];
+            var size = definition[1];
+
+            if (position >= offset && position < offset + size) {
+                return definition;
+            }
+        }
+    }
+}
+
+function hsv2rgb(h, s, v) {
+    var rgb, i, data = [];
+    if (s === 0) {
+      rgb = [v,v,v];
+    } else {
+      h = h / 60;
+      i = Math.floor(h);
+      data = [v*(1-s), v*(1-s*(h-i)), v*(1-s*(1-(h-i)))];
+      switch(i) {
+        case 0:
+          rgb = [v, data[2], data[0]];
+          break;
+        case 1:
+          rgb = [data[1], v, data[0]];
+          break;
+        case 2:
+          rgb = [data[0], v, data[2]];
+          break;
+        case 3:
+          rgb = [data[0], data[1], v];
+          break;
+        case 4:
+          rgb = [data[2], data[0], v];
+          break;
+        default:
+          rgb = [v, data[0], data[1]];
+          break;
+      }
+    }
+    return '#' + rgb.map(function(x) {
+      return ("0" + Math.round(x * 255).toString(16)).slice(-2);
+    }).join('');
+}
+
+function getColor(definition) {
+    /*var blockSize = 16 * 2; // 2 rows of 16 bytes
+    var bytePos = definition[0] % blockSize;
+    return hsv2rgb(bytePos * (256 / blockSize), 50, 40);*/
+
+    return hsv2rgb(hashCode(definition[2]) % 256, 50, 40);
+}
+
+function hashCode(str) { // java String#hashCode
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+       hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return hash;
+} 
+
+
+var file;
+function readSingleFile(e) {
+    file = e.files[0];
+    if (!file) {
+        return;
+    }
+    readPage();
+}
+
+function readPage() {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var buffer = new Uint8Array(e.target.result);
+        var pagePosition = 0;
+        $('#hexview').empty();
+        $('#asciiview').empty();
+
+        for (var row = 0; pagePosition < buffer.length; row++) {
+            var columnCount = 16;
+            if (buffer.length - pagePosition < columnCount) {
+                columnCount = buffer.length - position;
+            }
+
+            var hexNr = (pagePosition + pageOffset).toString(16);
+            var hexRow = $('<div>').addClass('row')
+                .append($('<div>').addClass('linenr').text(hexNr));
+            $('#hexview').append(hexRow);
+
+            var asciiRow = $('<div>').addClass('row');
+            $('#asciiview').append(asciiRow);
+
+            for (var column = 0; column < columnCount; column++, pagePosition++) {
+                var byte = buffer[pagePosition] & 0xff;
+                var hex = byte.toString(16);
+                hex = (hex.length === 1) ? '0' + hex : hex;
+                if (column % 2 == 0 && column > 0) {
+                    hexRow.append($('<div>').addClass('spacer'));
+                }
+
+                var filePosition = pageOffset + pagePosition;
+                var hexByte = $('<div>').addClass('byte').attr('position', filePosition).text(hex);
+                var hexByteWrapper = $('<div>').addClass('byteWrapper').append(hexByte);
+                hexRow.append(hexByteWrapper);
+
+                var character = byte >= 32 && byte <= 126 ? String.fromCharCode(byte) : '\u00B7';
+                var asciiByte = $('<div>').addClass('byte').attr('position', filePosition).text(character);
+                var asciiByteWrapper = $('<div>').addClass('byteWrapper').append(asciiByte);
+                asciiRow.append(asciiByteWrapper);
+
+                var definition = getDefinition(filePosition);
+                if (definition) {
+                    hexByteWrapper.css('background-color', getColor(definition));
+                }
+            }
+        }
+    };
+    var slice = file.slice(pageOffset, pageOffset + pageSize);
+    reader.readAsArrayBuffer(slice);
+}
+
+</script>
+<body>
+    Select source file: <input type="file" id="fileInput" onChange="readSingleFile(this)"/><button id="prev">Previous page</button><button id="next">Next page</button>
+    <h3 id="name">&nbsp;</h3>
+
+    <div id="hexview"></div>
+    <div id="asciiview"></div>
+
+    <script>
+        var locations = []<!-- generated -->;
+        var data = []<!-- generated -->;
+    </script>
+</body>
+</html>
