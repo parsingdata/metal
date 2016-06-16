@@ -51,7 +51,11 @@
         padding-left: 10px;
     }
 
-    #pagesOfInterest {
+    #toolbar #values {
+        font-size: 12px;
+    }
+
+    #toolbar {
         display: block;
         position: absolute;
         top: 0px;
@@ -69,6 +73,18 @@ var page = 0;
 var pageSize = 1024;
 var columnCount = 0; <!-- generated -->
 
+function unpack(buffer, asBigEndian) {
+    if (buffer.length == 1 || buffer.length == 2 || buffer.length == 4 || buffer.length == 6 || buffer.length == 8) {
+         var value = 0;
+         for (var j = 0, i = asBigEndian ? buffer.length - 1 : 0; asBigEndian ? i >= 0 : i < buffer.length; asBigEndian ? i-- : i++, j++) {
+             value |= (buffer[i] & 0xff) << (j * 8);
+         }
+         return value;
+    }
+    return '';
+}
+
+
 $(function() {
     $('body').on('mouseenter', '.byte', function(){
         var position = parseInt($(this).attr('position'));
@@ -81,6 +97,12 @@ $(function() {
         var definition = getDefinition(parseInt(position)); // TODO int != long
         if (definition) {
             $('#name').text(definition[2]);
+
+            getData(definition[0], definition[1], function(buffer) {
+                $('#values #length').text(buffer.length);
+                $('#values #be').text(unpack(buffer, true));
+                $('#values #le').text(unpack(buffer, false));
+            });
         }
     }).on('keydown', 'numeric', function(e){-1!==$.inArray(e.keyCode,[46,8,9,27,13,110,190])||/65|67|86|88/.test(e.keyCode)&&(!0===e.ctrlKey||!0===e.metaKey)||35<=e.keyCode&&40>=e.keyCode||(e.shiftKey||48>e.keyCode||57<e.keyCode)&&(96>e.keyCode||105<e.keyCode)&&e.preventDefault()});
 
@@ -190,6 +212,16 @@ function toHex(value) {
     return hex;
 }
 
+function getData(offset, size, callback) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var buffer = new Uint8Array(e.target.result);
+        callback(buffer);
+    };
+    var slice = file.slice(offset, offset + size);
+    reader.readAsArrayBuffer(slice);
+}
+
 function readPage() {
     var pageOffset = page * pageSize;
     if (page > 0) {
@@ -201,9 +233,7 @@ function readPage() {
     $("#jumpPage").val(page);
     $("#jumpOffset").val(pageOffset);
 
-    var reader = new FileReader();
-    reader.onload = function(e) {
-        var buffer = new Uint8Array(e.target.result);
+    getData(pageOffset, pageSize, function(buffer) {
         var pagePosition = 0;
         $('#hexview').empty();
         $('#asciiview').empty();
@@ -246,9 +276,7 @@ function readPage() {
                 }
             }
         }
-    };
-    var slice = file.slice(pageOffset, pageOffset + pageSize);
-    reader.readAsArrayBuffer(slice);
+    });
 }
 
 </script>
@@ -265,7 +293,14 @@ function readPage() {
 
     <div id="hexview"></div>
     <div id="asciiview"></div>
-    <div id="pagesOfInterest">Pages of interest:</div>
+    <div id="toolbar">
+        <div id="values">
+            Length: <span id="length"></span><br>
+            Big Endian: <span id="be"></span><br>
+            Little Endian: <span id="le"></span>
+        </div>
+        <div id="pagesOfInterest">Pages of interest:</div>
+    </div>
 
     <script>
         var locations = []<!-- generated -->;
