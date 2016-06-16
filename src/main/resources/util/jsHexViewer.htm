@@ -1,7 +1,7 @@
 <html>
 <head>
 <style>
-    .byteWrapper, .linenr {
+    .byteWrapper, .linenr, .spacer {
         display: table-cell;
     }
 
@@ -14,10 +14,6 @@
         margin-right: 10px;
         text-align: right;
         background-color: #bab398;
-    }
-
-    .spacer {
-        width: 4px;
     }
 
     .selected {
@@ -228,8 +224,8 @@ function readPage() {
             for (var column = 0; column < columnCount; column++, pagePosition++) {
                 var byte = buffer[pagePosition] & 0xff;
                 var hex = toHex(byte);
-                if (column % 2 == 0 && column > 0) {
-                    hexRow.append($('<div>').addClass('spacer').html('&nbsp;'));
+                if (column % 2 == 0) {
+                    hexRow.append($('<span>').addClass('spacer').html('&nbsp;'));
                 }
 
                 var filePosition = pageOffset + pagePosition;
