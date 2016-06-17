@@ -9,7 +9,7 @@
         display: table-cell;
     }
 
-    .byteWrapper, .spacer {
+    .byteWrapper, .spacer, .spacerRow {
         cursor: none;
     }
 
@@ -162,20 +162,38 @@ $(function() {
     });
 });
 
+var lastDefinition;
 function getDefinition(position) {
+    if (lastDefinition && inRange(lastDefinition, position)) {
+        // Instead of reading all rows above to check if this is part of a multi-row def,
+        // just cache the previous definition and check again.
+        // Note that this only works for drawing the highlights, not for a mouseover event.
+        return lastDefinition;
+    }
+
     var rowIndex = $.inArray(Math.floor(position / columnCount), locations);
     if (rowIndex !== -1) {
         var row = data[rowIndex];
         for (var i = 0; i < row.length; i++) {
             var definition = row[i];
-            var offset = definition[0];
-            var size = definition[1];
-
-            if (position >= offset && position < offset + size) {
+            if (inRange(definition, position)) {
+                lastDefinition = definition;
                 return definition;
             }
         }
     }
+}
+
+function inRange(definition, position) {
+    var offset = definition[0];
+    var size = definition[1];
+    return position >= offset && position < offset + size;
+}
+
+function isStartOrEnd(definition, position) {
+    var offset = definition[0];
+    var size = definition[1];
+    return position === offset || position === offset + size;
 }
 
 function hsv2rgb(h, s, v) {
@@ -278,9 +296,7 @@ function readPage() {
                 if (column % 2 == 0) {
                     var spacer = $('<span>').addClass('spacer').html('&nbsp;');
                     if (definition) {
-                        var offset = definition[0];
-                        var size = definition[1];
-                        if (filePosition !== offset && filePosition !== offset + size) {
+                        if (!isStartOrEnd(definition, filePosition)) {
                             var rgb = hsv2rgb(getHue(definition[2]) % 360, 80, 100);
                             colorByte(spacer, rgb, filePosition, definition);
                         }
