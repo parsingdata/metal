@@ -201,10 +201,14 @@ function hsv2rgb(h, s, v) {
     return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
 }
 
+var flip = true;
+var lastColor = 0;
 var colors = {};
-function assignedColor(str) {
+function getHue(str) {
     if (!(str in colors)) {
-        colors[str] = Math.floor(Math.random() * 180) * 2; // colorspace == 2
+        lastColor = (lastColor + 12) % 180;
+        colors[str] = flip ? lastColor : 360 - lastColor;
+        flip = !flip;
     }
     return colors[str];
 }
@@ -277,7 +281,7 @@ function readPage() {
                         var offset = definition[0];
                         var size = definition[1];
                         if (filePosition !== offset && filePosition !== offset + size) {
-                            var rgb = hsv2rgb(assignedColor(definition[2]) % 360, 80, 100);
+                            var rgb = hsv2rgb(getHue(definition[2]) % 360, 80, 100);
                             colorByte(spacer, rgb, filePosition, definition);
                         }
                     }
@@ -293,7 +297,7 @@ function readPage() {
                 asciiRow.append(asciiByteWrapper);
 
                 if (definition) {
-                    var rgb = hsv2rgb(assignedColor(definition[2]) % 360, 80, 100);
+                    var rgb = hsv2rgb(getHue(definition[2]) % 360, 80, 100);
                     colorByte(hexByteWrapper, rgb, filePosition, definition);
                     colorByte(asciiByteWrapper, rgb, filePosition, definition);
                 }
