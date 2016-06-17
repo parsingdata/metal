@@ -1,6 +1,10 @@
 <html>
 <head>
 <style>
+    body {
+        font-family: Verdana;
+    }
+
     .byteWrapper, .linenr, .spacer {
         display: table-cell;
     }
@@ -22,8 +26,7 @@
     }
 
     #filePosition, .row {
-        font-family: monospace;
-        font-size: 14px;
+        font-size: 16px;
     }
 
     #name {
@@ -34,6 +37,10 @@
 
     .row {
         display: table-row;
+    }
+
+    .spacerRow {
+        height: 2px;
     }
 
     #hexview, #asciiview {
@@ -83,7 +90,6 @@ function unpack(buffer, asBigEndian) {
     }
     return '';
 }
-
 
 $(function() {
     $('body').on('mouseenter', '.byte', function(){
@@ -173,33 +179,34 @@ function getDefinition(position) {
 }
 
 function hsv2rgb(h, s, v) {
-    var rgb, i, data = [];
-    if (s === 0) {
-      rgb = [v,v,v];
-    } else {
-        h = h / 60;
-        i = Math.floor(h);
-        data = [v*(1-s), v*(1-s*(h-i)), v*(1-s*(1-(h-i)))];
-        switch(i) {
-            case 0: rgb = [v, data[2], data[0]]; break;
-            case 1: rgb = [data[1], v, data[0]]; break;
-            case 2: rgb = [data[0], v, data[2]]; break;
-            case 3: rgb = [data[0], data[1], v]; break;
-            case 4: rgb = [data[2], data[0], v]; break;
-            default: rgb = [v, data[0], data[1]]; break;
-        }
+    var r, g, b;
+    var i;
+    var f, p, q, t;
+    s /= 100;
+    v /= 100;
+    h /= 60;
+    i = Math.floor(h);
+    f = h - i;
+    p = v * (1 - s);
+    q = v * (1 - s * f);
+    t = v * (1 - s * (1 - f));
+    switch(i) {
+        case 0: r = v; g = t; b = p; break;
+        case 1: r = q; g = v; b = p; break;
+        case 2: r = p; g = v; b = t; break;
+        case 3: r = p; g = q; b = v; break;
+        case 4: r = t; g = p; b = v; break;
+        default: r = v; g = p; b = q;
     }
-    return '#' + rgb.map(function(x) {
-      return ("0" + Math.round(x * 255).toString(16)).slice(-2);
-    }).join('');
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
 }
 
-function hashCode(str) {
-    var hash = 0;
-    for (var i = 0; i < str.length; i++) {
-       hash = str.charCodeAt(i) + ((hash << 5) - hash);
+var colors = {};
+function assignedColor(str) {
+    if (!(str in colors)) {
+        colors[str] = Math.floor(Math.random() * 180) * 2; // colorspace == 2
     }
-    return hash;
+    return colors[str];
 }
 
 var file;
@@ -251,19 +258,31 @@ function readPage() {
             var hexNr = (pagePosition + pageOffset).toString(16);
             var hexRow = $('<div>').addClass('row')
                 .append($('<div>').addClass('linenr').text(hexNr));
-            $('#hexview').append(hexRow);
+
+            $('#hexview').append(hexRow).append($('<div>').addClass('spacerRow row'));
 
             var asciiRow = $('<div>').addClass('row');
-            $('#asciiview').append(asciiRow);
+            $('#asciiview').append(asciiRow).append($('<div>').addClass('spacerRow row'));
 
             for (var column = 0; column < columnCount; column++, pagePosition++) {
+                var filePosition = pageOffset + pagePosition;
+                var definition = getDefinition(filePosition);
+
                 var byte = buffer[pagePosition] & 0xff;
                 var hex = toHex(byte);
-                if (column % 2 == 0) {
-                    hexRow.append($('<span>').addClass('spacer').html('&nbsp;'));
-                }
 
-                var filePosition = pageOffset + pagePosition;
+                if (column % 2 == 0) {
+                    var spacer = $('<span>').addClass('spacer').html('&nbsp;');
+                    if (definition) {
+                        var offset = definition[0];
+                        var size = definition[1];
+                        if (filePosition !== offset && filePosition !== offset + size) {
+                            var rgb = hsv2rgb(assignedColor(definition[2]) % 360, 80, 100);
+                            colorByte(spacer, rgb, filePosition, definition);
+                        }
+                    }
+                    hexRow.append(spacer);
+                }
                 var hexByte = $('<span>').addClass('byte').attr('position', filePosition).text(hex);
                 var hexByteWrapper = $('<span>').addClass('byteWrapper').append(hexByte);
                 hexRow.append(hexByteWrapper);
@@ -273,15 +292,31 @@ function readPage() {
                 var asciiByteWrapper = $('<span>').addClass('byteWrapper').append(asciiByte);
                 asciiRow.append(asciiByteWrapper);
 
-                var definition = getDefinition(filePosition);
                 if (definition) {
-                    var color = hsv2rgb(hashCode(definition[2]) % 256, 50, 40);
-                    hexByteWrapper.css('background-color', color);
-                    asciiByteWrapper.css('background-color', color);
+                    var rgb = hsv2rgb(assignedColor(definition[2]) % 360, 80, 100);
+                    colorByte(hexByteWrapper, rgb, filePosition, definition);
+                    colorByte(asciiByteWrapper, rgb, filePosition, definition);
                 }
             }
         }
     });
+}
+
+function colorByte(wrapper, rgb, filePosition, definition) {
+    wrapper.css('background-color', 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ', .5)');
+
+    var offset = definition[0];
+    var size = definition[1];
+    var border = '1px solid rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
+    wrapper.css('border-top', border);
+    wrapper.css('border-bottom', border);
+
+    if (filePosition === offset) {
+        wrapper.css('border-left', border);
+    }
+    if (filePosition === offset + size -1) {
+        wrapper.css('border-right', border);
+    }
 }
 
 </script>
