@@ -1,4 +1,4 @@
-package io.parsingdata.metal.util;
+package io.parsingdata.metal.tools.jshexviewer;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -34,7 +34,7 @@ public class JsHexViewer {
 
             final File file = new File(root, "jsHexViewer.htm");
             try (FileWriter out = new FileWriter(file);
-                 InputStream in = JsHexViewer.class.getResourceAsStream("/util/jsHexViewer.htm");
+                 InputStream in = JsHexViewer.class.getResourceAsStream("/jsHexViewer/jsHexViewer.htm");
                  BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
                 String line;
                 while ((line = br.readLine()) != null) {

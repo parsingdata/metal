@@ -78,7 +78,7 @@
 <script>
 var page = 0;
 var pageSize = 1024;
-var columnCount = 0; <!-- generated -->
+var columnCount = 32;
 
 function unpack(buffer, asBigEndian) {
     if (buffer.length == 1 || buffer.length == 2 || buffer.length == 4 || buffer.length == 6 || buffer.length == 8) {
@@ -274,7 +274,7 @@ function readPage() {
 
         for (var row = 0; pagePosition < buffer.length; row++) {
             if (buffer.length - pagePosition < columnCount) {
-                columnCount = buffer.length - position;
+                columnCount = buffer.length - pagePosition;
             }
 
             var hexNr = (pagePosition + pageOffset).toString(16);
@@ -363,8 +363,8 @@ function colorByte(wrapper, rgb, filePosition, definition) {
     </div>
 
     <script>
-        var locations = []<!-- generated -->;
-        var data = []<!-- generated -->;
+    var locations = [0];
+    var data = [[[0, 1, 'length'], [1, 7, 'text']],[]];
     </script>
 </body>
 </html>
