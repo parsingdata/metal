@@ -33,6 +33,7 @@
 
   <modules>
     <module>core</module>
+    <module>formats</module>
   </modules>
 
   <scm>
