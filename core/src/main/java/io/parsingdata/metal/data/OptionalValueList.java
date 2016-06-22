@@ -55,8 +55,11 @@ public class OptionalValueList {
         return add(list.tail).add(list.head);
     }
 
-    public boolean isEmpty() {
-        return size == 0;
+    public boolean isEmpty() { return size == 0; }
+
+    public boolean containsValue() {
+        if (isEmpty()) { return false; }
+        return this.head.isPresent() || this.tail.containsValue();
     }
 
     public OptionalValueList reverse() {

@@ -33,7 +33,7 @@ public abstract class UnaryValueExpression implements ValueExpression {
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
         final OptionalValueList vl = _op.eval(env, enc);
-        if (vl != null && !vl.isEmpty()) { return vl; }
+        if (vl != null && !vl.containsValue()) { return vl; }
         return eval(vl, env, enc);
     }
 

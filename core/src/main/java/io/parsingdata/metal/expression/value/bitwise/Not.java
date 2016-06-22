@@ -31,14 +31,19 @@ public class Not extends UnaryValueExpression {
 
     @Override
     public OptionalValueList eval(final OptionalValueList vl, final Environment env, final Encoding enc) {
-        if (!vl.tail.isEmpty()) { return eval(vl.tail, env, enc); }
-        if (!vl.head.isPresent()) {
-            return
-        } else {
-            final BitSet value = vl.head.get().asBitSet();
-            value.flip(0, vl.head.get().getValue().length * 8);
-            return OptionalValue.of(ConstantFactory.createFromBitSet(value, op.getValue().length, enc));
-        }
+        return eval(vl, env, enc, OptionalValueList.EMPTY);
+    }
+
+    private OptionalValueList eval(final OptionalValueList vl, final Environment env, final Encoding enc, final OptionalValueList out) {
+        if (vl.isEmpty()) { return out; }
+        return eval(vl.tail, env, enc, out).add(flip(vl.head, enc));
+    }
+
+    private OptionalValue flip(final OptionalValue op, final Encoding enc) {
+        if (!op.isPresent()) { return op; }
+        final BitSet value = op.get().asBitSet();
+        value.flip(0, op.get().getValue().length * 8);
+        return OptionalValue.of(ConstantFactory.createFromBitSet(value, op.get().getValue().length, enc));
     }
 
 }
