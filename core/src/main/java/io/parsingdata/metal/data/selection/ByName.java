@@ -24,8 +24,9 @@ import io.parsingdata.metal.data.ParseValueList;
 public class ByName {
 
     /**
+     * @param graph The graph to search
      * @param name Name of the value
-     * @return The first value (bottom-up) with the provided name in this graph
+     * @return The first value (bottom-up) with the provided name in the provided graph
      */
     public static ParseValue get(final ParseGraph graph, final String name) {
         if (graph.isEmpty()) { return null; }
@@ -39,11 +40,12 @@ public class ByName {
     }
 
     /**
+     * @param graph The graph to search
      * @param name Name of the value
      * @return All values with the provided name in this graph
      */
-    public static ParseValueList getAll(ParseGraph parseGraph, String name) {
-        return getAll(parseGraph, name, ParseValueList.EMPTY);
+    public static ParseValueList getAll(ParseGraph graph, String name) {
+        return getAll(graph, name, ParseValueList.EMPTY);
     }
 
     private static ParseValueList getAll(final ParseGraph graph, final String name, final ParseValueList result) {

@@ -8,6 +8,13 @@
   <artifactId>metal-core</artifactId>
   <name>${project.groupId}:${project.artifactId}</name>
   <packaging>jar</packaging>
+  <description>Core building blocks and API for the Metal library.</description>
+
+  <scm>
+    <connection>scm:git:git@github.com:parsingdata/metal.git</connection>
+    <developerConnection>scm:git:git@github.com:parsingdata/metal.git</developerConnection>
+    <url>https://github.com/parsingdata/metal.git</url>
+  </scm>
 
   <properties>
     <maven-jar-plugin.version>2.6</maven-jar-plugin.version>
