@@ -56,4 +56,5 @@ public class Depth implements ValueExpression {
         }
         return OptionalValue.of(ConstantFactory.createFromNumeric(i, enc));
     }
+
 }

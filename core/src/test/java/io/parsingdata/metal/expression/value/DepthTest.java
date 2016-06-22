@@ -122,7 +122,6 @@ public class DepthTest {
 
         final ParseValueList list = result.getEnvironment().order.getAll("name");
         assertEquals(2, list.size);
-
     }
 
     static class Directory extends Token {
