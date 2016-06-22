@@ -39,41 +39,36 @@ public class JsHexViewer {
 
     private static final int COLUMN_COUNT = 1 << 5;
 
-    public static void generate(final ParseGraph graph) throws IOException {
+    public static void generate(final ParseGraph graph) throws URISyntaxException, IOException {
         final Map<Long, LinkedList<Definition>> map = new TreeMap<>();
         step(graph, map);
 
-        try {
-            final File root = new File(JsHexViewer.class.getResource("/").toURI());
+        final File root = new File(JsHexViewer.class.getResource("/").toURI());
 
-            final File file = new File(root, "jsHexViewer.htm");
-            try (FileWriter out = new FileWriter(file);
-                 InputStream in = JsHexViewer.class.getResourceAsStream("/jsHexViewer/jsHexViewer.htm");
-                 BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-                String line;
-                while ((line = br.readLine()) != null) {
-                    if (line.contains("<!-- generated -->")) {
-                        if (line.trim().startsWith("var locations =")) {
-                            out.write("    var locations = ");
-                            out.write(map.keySet().toString());
-                            out.write(";");
-                        }
-                        else if (line.trim().startsWith("var data =")) {
-                            writeData(out, map);
-                        }
-                        else if (line.trim().startsWith("var columnCount =")) {
-                            out.write("var columnCount = " + COLUMN_COUNT + ";");
-                        }
+        final File file = new File(root, "jsHexViewer.htm");
+        try (FileWriter out = new FileWriter(file);
+             InputStream in = JsHexViewer.class.getResourceAsStream("/jsHexViewer/jsHexViewer.htm");
+             BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.contains("<!-- generated -->")) {
+                    if (line.trim().startsWith("var locations =")) {
+                        out.write("    var locations = ");
+                        out.write(map.keySet().toString());
+                        out.write(";");
                     }
-                    else {
-                        out.write(line);
+                    else if (line.trim().startsWith("var data =")) {
+                        writeData(out, map);
                     }
-                    out.write('\n');
+                    else if (line.trim().startsWith("var columnCount =")) {
+                        out.write("var columnCount = " + COLUMN_COUNT + ";");
+                    }
                 }
+                else {
+                    out.write(line);
+                }
+                out.write('\n');
             }
-        }
-        catch (final URISyntaxException e) {
-            throw new IOException(e);
         }
     }
 
