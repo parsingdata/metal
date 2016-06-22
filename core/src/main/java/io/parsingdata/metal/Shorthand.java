@@ -16,8 +16,6 @@
 
 package io.parsingdata.metal;
 
-import io.parsingdata.metal.expression.value.reference.Len;
-
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.True;
@@ -36,6 +34,7 @@ import io.parsingdata.metal.expression.value.BinaryValueExpression;
 import io.parsingdata.metal.expression.value.Cat;
 import io.parsingdata.metal.expression.value.Const;
 import io.parsingdata.metal.expression.value.ConstantFactory;
+import io.parsingdata.metal.expression.value.Depth;
 import io.parsingdata.metal.expression.value.Elvis;
 import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
@@ -53,6 +52,7 @@ import io.parsingdata.metal.expression.value.bitwise.ShiftLeft;
 import io.parsingdata.metal.expression.value.bitwise.ShiftRight;
 import io.parsingdata.metal.expression.value.reference.CurrentOffset;
 import io.parsingdata.metal.expression.value.reference.First;
+import io.parsingdata.metal.expression.value.reference.Len;
 import io.parsingdata.metal.expression.value.reference.Offset;
 import io.parsingdata.metal.expression.value.reference.Ref;
 import io.parsingdata.metal.expression.value.reference.Self;
@@ -122,6 +122,7 @@ public class Shorthand {
     public static ValueExpression con(final Value v) { return new Const(v); }
     public static ValueExpression con(final Encoding enc, final int... values) { return new Const(new Value(toByteArray(values), enc)); }
     public static ValueExpression con(final int... values) { return con(new Encoding(), values); }
+    public static ValueExpression depth(final String scope) { return new Depth(scope); }
     public static final ValueExpression self = new Self();
     public static ValueExpression len(final ValueExpression v) { return new Len(v); }
     public static ValueExpression ref(final String s) { return new Ref(s); }
