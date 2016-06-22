@@ -23,8 +23,9 @@ import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 
 public class ByItem {
     /**
+     * @param graph The graph to search
      * @param lastHead The first item (bottom-up) to be excluded
-     * @return The subgraph of this graph starting past (bottom-up) the provided lastHead
+     * @return The partial graph of the provided graph starting past (bottom-up) the provided lastHead
      */
     public static ParseGraph getGraphAfter(final ParseGraph graph, final ParseItem lastHead) {
         return getGraphAfter(graph, lastHead, EMPTY);
