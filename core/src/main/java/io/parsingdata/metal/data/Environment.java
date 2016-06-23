@@ -21,19 +21,30 @@ public class Environment {
     public final ParseGraph order;
     public final ByteStream input;
     public final long offset;
+    public final long sequenceId;
 
-    public Environment(final ParseGraph order, final ByteStream input, final long offset) {
+    private Environment(final Environment parent, final ParseGraph order, final ByteStream input, final long offset) {
         this.order = order;
         this.input = input;
         this.offset = offset;
+        if (parent == null) {
+            this.sequenceId = 0;
+        }
+        else {
+            this.sequenceId = parent.sequenceId + 1;
+        }
+    }
+
+    public Environment newEnv(final ParseGraph order, final ByteStream input, final long offset) {
+        return new Environment(this, order, input, offset);
     }
 
     public Environment(final ByteStream input, final long offset) {
-        this(ParseGraph.EMPTY, input, offset);
+        this(null, ParseGraph.EMPTY, input, offset);
     }
 
     public Environment(final ByteStream input) {
-        this(ParseGraph.EMPTY, input, 0L);
+        this(null, ParseGraph.EMPTY, input, 0L);
     }
 
     @Override

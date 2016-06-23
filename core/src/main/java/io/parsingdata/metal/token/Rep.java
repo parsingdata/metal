@@ -35,8 +35,8 @@ public class Rep extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final ParseResult res = iterate(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
-        return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset));
+        final ParseResult res = iterate(scope, env.newEnv(env.order.addBranch(this), env.input, env.offset), enc);
+        return new ParseResult(true, env.newEnv(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset));
     }
 
     private ParseResult iterate(final String scope, final Environment env, final Encoding enc) throws IOException {
