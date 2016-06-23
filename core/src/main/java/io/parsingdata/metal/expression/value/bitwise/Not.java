@@ -17,7 +17,6 @@
 package io.parsingdata.metal.expression.value.bitwise;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.*;
 
@@ -30,20 +29,10 @@ public class Not extends UnaryValueExpression {
     }
 
     @Override
-    public OptionalValueList eval(final OptionalValueList vl, final Environment env, final Encoding enc) {
-        return eval(vl, env, enc, OptionalValueList.EMPTY);
-    }
-
-    private OptionalValueList eval(final OptionalValueList vl, final Environment env, final Encoding enc, final OptionalValueList out) {
-        if (vl.isEmpty()) { return out; }
-        return eval(vl.tail, env, enc, out).add(flip(vl.head, enc));
-    }
-
-    private OptionalValue flip(final OptionalValue op, final Encoding enc) {
-        if (!op.isPresent()) { return op; }
-        final BitSet value = op.get().asBitSet();
-        value.flip(0, op.get().getValue().length * 8);
-        return OptionalValue.of(ConstantFactory.createFromBitSet(value, op.get().getValue().length, enc));
+    public OptionalValue eval(final Value op, final Environment env, final Encoding enc) {
+        final BitSet value = op.asBitSet();
+        value.flip(0, op.getValue().length * 8);
+        return OptionalValue.of(ConstantFactory.createFromBitSet(value, op.getValue().length, enc));
     }
 
 }
