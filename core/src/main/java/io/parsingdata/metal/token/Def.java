@@ -48,7 +48,7 @@ public class Def extends Token {
         if (!size.isPresent()) {
             return new ParseResult(false, env);
         }
-        // TODO: Handle value expression results as BigInteger (METAL-15)
+        // TODO: Handle value expression results as BigInteger
         final int dataSize = size.get().asNumeric().intValue();
         if (dataSize < 0) {
             return new ParseResult(false, env);

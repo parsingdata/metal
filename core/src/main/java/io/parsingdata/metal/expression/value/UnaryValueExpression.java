@@ -33,7 +33,7 @@ public abstract class UnaryValueExpression implements ValueExpression {
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
         final OptionalValueList vl = _op.eval(env, enc);
-        if (vl != null && !vl.containsValue()) { return vl; }
+        if (!vl.containsValue()) { return vl; }
         return eval(vl, env, enc, OptionalValueList.EMPTY);
     }
 
@@ -42,7 +42,7 @@ public abstract class UnaryValueExpression implements ValueExpression {
         return eval(vl.tail, env, enc, out).add(vl.head.isPresent() ? eval(vl.head.get(), env, enc) : vl.head);
     }
 
-    public abstract OptionalValue eval(final Value vl, final Environment env, final Encoding enc);
+    public abstract OptionalValue eval(final Value v, final Environment env, final Encoding enc);
 
     @Override
     public String toString() {

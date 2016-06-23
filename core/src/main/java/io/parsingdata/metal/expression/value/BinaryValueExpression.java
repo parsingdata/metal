@@ -16,10 +16,11 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
+
+import static io.parsingdata.metal.Util.checkNotNull;
 
 public abstract class BinaryValueExpression implements ValueExpression {
 
@@ -32,12 +33,16 @@ public abstract class BinaryValueExpression implements ValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Environment env, final Encoding enc) {
-        final OptionalValue lv = _lop.eval(env, enc);
-        if (!lv.isPresent()) { return lv; }
-        final OptionalValue rv = _rop.eval(env, enc);
-        if (!rv.isPresent()) { return rv; }
-        return eval(lv.get(), rv.get(), env, enc);
+    public OptionalValueList eval(final Environment env, final Encoding enc) {
+        final OptionalValueList lvl = _lop.eval(env, enc);
+        if (!lvl.containsValue()) { return lvl; }
+        final OptionalValueList rvl = _rop.eval(env, enc);
+        if (!rvl.containsValue()) { return rvl; }
+        return eval(lvl, rvl, env, enc, OptionalValueList.EMPTY);
+    }
+
+    private OptionalValueList eval(final OptionalValueList lvl, final OptionalValueList rvl, final Environment env, final Encoding enc, final OptionalValueList out) {
+        return null;
     }
 
     public abstract OptionalValue eval(final Value lv, final Value rv, final Environment env, final Encoding enc);
