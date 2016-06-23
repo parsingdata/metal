@@ -39,11 +39,10 @@ public class RepN extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final long sequenceId = env.sequenceId + 1;
         final OptionalValue count = _n.eval(env, enc);
         if (!count.isPresent()) { return new ParseResult(false, env); }
-        final ParseResult res = iterate(scope, new Environment(env.order.addBranch(this), env.input, env.offset, sequenceId), enc, count.get().asNumeric().longValue());
-        if (res.succeeded()) { return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset, res.getEnvironment().sequenceId)); }
+        final ParseResult res = iterate(scope, env.newEnv(env.order.addBranch(this), env.input, env.offset), enc, count.get().asNumeric().longValue());
+        if (res.succeeded()) { return new ParseResult(true, env.newEnv(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset)); }
         return new ParseResult(false, env);
     }
 

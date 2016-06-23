@@ -57,8 +57,7 @@ public class Def extends Token {
         if (env.input.read(env.offset, data) != data.length) {
             return new ParseResult(false, env);
         }
-        final long sequenceId = env.sequenceId + 1;
-        final Environment newEnv = new Environment(env.order.add(new ParseValue(scope, _name, this, env.offset, data, enc, sequenceId)), env.input, env.offset + size.get().asNumeric().intValue(), sequenceId);
+        final Environment newEnv = env.newEnv(env.order.add(new ParseValue(scope, _name, this, env.offset, data, enc, env.sequenceId + 1)), env.input, env.offset + size.get().asNumeric().intValue());
         return _pred.eval(newEnv, enc) ? new ParseResult(true, newEnv) : new ParseResult(false, env);
     }
 
