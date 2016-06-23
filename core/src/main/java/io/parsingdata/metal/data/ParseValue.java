@@ -17,6 +17,7 @@
 package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
+
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Token;
@@ -29,13 +30,15 @@ public class ParseValue extends Value implements ParseItem {
     public final String name;
     public Token definition;
     public final long offset;
+    public final long sequenceId;
 
-    public ParseValue(final String scope, final String name, final Token definition, final long offset, final byte[] data, final Encoding enc) {
+    public ParseValue(final String scope, final String name, final Token definition, final long offset, final byte[] data, final Encoding enc, final long sequenceId) {
         super(data, enc);
         this.scope = checkNotNull(scope, "scope");
         this.name = checkNotNull(name, "name");
         this.definition = checkNotNull(definition, "definition");
         this.offset = offset;
+        this.sequenceId = sequenceId;
     }
 
     public String getScope() {
@@ -69,6 +72,11 @@ public class ParseValue extends Value implements ParseItem {
     @Override
     public String toString() {
         return "ParseValue(" + getName() + ":" + super.toString() + ")";
+    }
+
+    @Override
+    public long getSequenceId() {
+        return sequenceId;
     }
 
 }

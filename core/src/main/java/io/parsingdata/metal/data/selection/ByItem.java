@@ -16,10 +16,10 @@
 
 package io.parsingdata.metal.data.selection;
 
+import static io.parsingdata.metal.data.ParseGraph.EMPTY;
+
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
-
-import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 
 public class ByItem {
     /**
@@ -35,6 +35,6 @@ public class ByItem {
         final ParseItem head = graph.head;
         if (head == lastHead) { return result; }
         // TODO how can we do this without calling the (previously private) constructor?
-        return new ParseGraph(head, getGraphAfter(graph.tail, lastHead, result), graph.definition);
+        return new ParseGraph(head, getGraphAfter(graph.tail, lastHead, result), graph.definition, head.getSequenceId());
     }
 }

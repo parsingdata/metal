@@ -27,5 +27,5 @@ public interface ParseItem {
     ParseRef asRef();
     ParseGraph asGraph();
     Token getDefinition();
-
+    long getSequenceId();
 }
