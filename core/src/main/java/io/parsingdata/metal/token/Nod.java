@@ -37,8 +37,9 @@ public class Nod extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
+        final long sequenceId = env.sequenceId + 1;
         final OptionalValue ov = _size.eval(env, enc);
-        return ov.isPresent() ? new ParseResult(true, new Environment(env.order, env.input, env.offset + ov.get().asNumeric().longValue())) : new ParseResult(false, env);
+        return ov.isPresent() ? new ParseResult(true, new Environment(env.order, env.input, env.offset + ov.get().asNumeric().longValue(), sequenceId)) : new ParseResult(false, env);
     }
 
     @Override

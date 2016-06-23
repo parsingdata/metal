@@ -1,19 +1,21 @@
 package io.parsingdata.metal.data;
 
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import io.parsingdata.metal.token.Token;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static junit.framework.TestCase.assertFalse;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import io.parsingdata.metal.token.Token;
 
 public class ParseValueTest {
 
@@ -26,7 +28,7 @@ public class ParseValueTest {
     @Before
     public void setUp() {
         _definition = def("value", 1);
-        _value = new ParseValue("scope", "value", _definition, 0, new byte[] { 1 }, enc());
+        _value = new ParseValue("scope", "value", _definition, 0, new byte[]{1}, enc(), 0);
     }
 
     @Test

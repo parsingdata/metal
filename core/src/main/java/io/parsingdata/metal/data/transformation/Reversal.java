@@ -23,7 +23,7 @@ public class Reversal {
 
     public static ParseGraph reverse(final ParseGraph oldGraph, final ParseGraph newGraph) {
         if (oldGraph.isEmpty()) { return newGraph; }
-        return reverse(oldGraph.tail, new ParseGraph(reverseItem(oldGraph.head), newGraph, oldGraph.definition, oldGraph.getSequenceId()));
+        return reverse(oldGraph.tail, new ParseGraph(reverseItem(oldGraph.head), newGraph, oldGraph.definition, oldGraph.sequenceId));
     }
 
     private static ParseItem reverseItem(final ParseItem item) {

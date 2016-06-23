@@ -21,15 +21,16 @@ import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.TokenDefinitions.any;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+
+import org.junit.Assert;
+import org.junit.Test;
+
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseGraphList;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseRef;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.token.Token;
-
-import org.junit.Assert;
-import org.junit.Test;
 
 public class ParseGraphTest {
 
@@ -62,7 +63,7 @@ public class ParseGraphTest {
     }
 
     private static ParseValue makeVal(final char n, final long o) {
-        return new ParseValue("", Character.toString(n), def(Character.toString(n), o), o, new byte[] { (byte) n }, enc());
+        return new ParseValue("", Character.toString(n), def(Character.toString(n), o), o, new byte[]{(byte) n}, enc(), 0);
     }
 
     private ParseGraph makeSimpleGraph() {
@@ -110,7 +111,7 @@ public class ParseGraphTest {
             .add(a)
             .addBranch(t)
             .add(b)
-            .add(new ParseRef(a.getOffset(), sub(any("a"), con(a.getOffset()))))
+            .add(new ParseRef(a.getOffset(), sub(any("a"), con(a.getOffset())), 0))
             .closeBranch();
     }
 

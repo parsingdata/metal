@@ -43,10 +43,11 @@ public class Sub extends Token {
         final OptionalValue ov = _addr.eval(env, enc);
         if (!ov.isPresent()) { return new ParseResult(false, env); }
         final long ref = ov.get().asNumeric().longValue();
-        if (env.order.hasGraphAtRef(ref)) { return new ParseResult(true, new Environment(env.order.add(new ParseRef(ref, this, env.order.getSequenceId() + 1)), env.input, env.offset)); }
-        final ParseResult res = _op.parse(scope, new Environment(env.order.addBranch(this), env.input, ref), enc);
+        final long sequenceId = env.sequenceId + 1;
+        if (env.order.hasGraphAtRef(ref)) { return new ParseResult(true, new Environment(env.order.add(new ParseRef(ref, this, env.order.getSequenceId() + 1)), env.input, env.offset, sequenceId)); }
+        final ParseResult res = _op.parse(scope, new Environment(env.order.addBranch(this), env.input, ref, sequenceId), enc);
         if (res.succeeded()) {
-            return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, env.offset));
+            return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, env.offset, sequenceId));
         }
         return new ParseResult(false, env);
     }

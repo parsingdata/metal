@@ -43,15 +43,15 @@ public class ParseGraph implements ParseItem {
         @Override public String toString() { return "None"; };
     };
 
-    public static final ParseGraph EMPTY = new ParseGraph(NONE, -1);
+    public static final ParseGraph EMPTY = new ParseGraph(NONE, 0);
 
     private ParseGraph(final Token definition, final long sequenceId) {
         head = null;
         tail = null;
         branched = false;
         this.definition = checkNotNull(definition, "definition");
-        size = 0;
         this.sequenceId = sequenceId;
+        size = 0;
     }
 
     private ParseGraph(final ParseItem head, final ParseGraph tail, final Token definition, final boolean branched, final long sequenceId) {
@@ -60,8 +60,8 @@ public class ParseGraph implements ParseItem {
         this.tail = checkNotNull(tail, "tail");
         this.branched = branched;
         this.definition = checkNotNull(definition, "definition");
-        size = tail.size + 1;
         this.sequenceId = sequenceId;
+        size = tail.size + 1;
     }
 
     // TODO see ByItem, this constructor used to be private
@@ -70,32 +70,22 @@ public class ParseGraph implements ParseItem {
     }
 
     public ParseGraph add(final ParseValue head) {
-        final long sequenceId = this.head.getSequenceId() + 1;
-        if (branched) {
-            return new ParseGraph(this.head.asGraph().add(head), tail, this.definition, true, sequenceId);
-        }
+        if (branched) { return new ParseGraph(this.head.asGraph().add(head), tail, this.definition, true, sequenceId); }
         return new ParseGraph(head, this, this.definition, sequenceId);
     }
 
     public ParseGraph add(final ParseRef ref) {
-        final long sequenceId = this.head.getSequenceId() + 1;
-        if (branched) {
-            return new ParseGraph(this.head.asGraph().add(ref), tail, this.definition, true, sequenceId);
-        }
+        if (branched) { return new ParseGraph(this.head.asGraph().add(ref), tail, this.definition, true, sequenceId); }
         return new ParseGraph(ref, this, this.definition, sequenceId);
     }
 
     public ParseGraph addBranch(final Token definition) {
-        final long sequenceId = this.head.getSequenceId() + 1;
-        if (branched) {
-            return new ParseGraph(this.head.asGraph().addBranch(definition), tail, this.definition, true, sequenceId);
-        }
-        return new ParseGraph(new ParseGraph(definition, sequenceId + 1), this, this.definition, true, sequenceId);
+        if (branched) { return new ParseGraph(this.head.asGraph().addBranch(definition), tail, this.definition, true, sequenceId); }
+        return new ParseGraph(new ParseGraph(definition, sequenceId), this, this.definition, true, sequenceId);
     }
 
     public ParseGraph closeBranch() {
         if (!branched) { throw new IllegalStateException("Cannot close branch that is not open."); }
-        final long sequenceId = head.getSequenceId() + 1;
         if (head.asGraph().branched) {
             return new ParseGraph(head.asGraph().closeBranch(), tail, this.definition, true, sequenceId);
         }

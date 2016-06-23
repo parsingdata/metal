@@ -18,15 +18,13 @@ package io.parsingdata.metal;
 
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.data.ParseValueList;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
-@RunWith(JUnit4.class)
+import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.ParseValueList;
+
 public class ParseValueListTest {
 
     private final ParseValueList l1;
@@ -156,7 +154,7 @@ public class ParseValueListTest {
     }
 
     private ParseValue val(final String s, final char c) {
-        return new ParseValue(s, Character.toString(c), def(Character.toString(c), 0L), 0L, new byte[] { (byte) c }, enc());
+        return new ParseValue(s, Character.toString(c), def(Character.toString(c), 0L), 0L, new byte[]{(byte) c}, enc(), 0);
     }
 
 }
