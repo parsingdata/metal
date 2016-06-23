@@ -35,14 +35,25 @@ public abstract class BinaryValueExpression implements ValueExpression {
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
         final OptionalValueList lvl = _lop.eval(env, enc);
-        if (!lvl.containsValue()) { return lvl; }
+        if (lvl.isEmpty()) { return lvl; }
         final OptionalValueList rvl = _rop.eval(env, enc);
-        if (!rvl.containsValue()) { return rvl; }
-        return eval(lvl, rvl, env, enc, OptionalValueList.EMPTY);
+        if (rvl.isEmpty()) { return rvl; }
+        return evalLists(lvl, rvl, env, enc);
     }
 
-    private OptionalValueList eval(final OptionalValueList lvl, final OptionalValueList rvl, final Environment env, final Encoding enc, final OptionalValueList out) {
-        return null;
+    private OptionalValueList evalLists(final OptionalValueList lvl, final OptionalValueList rvl, final Environment env, final Encoding enc) {
+        if (lvl.isEmpty()) { return lvl; }
+        return evalLists(lvl.tail, rvl, env, enc).add(evalLeftHead(lvl.head, rvl, env, enc));
+    }
+
+    private OptionalValueList evalLeftHead(final OptionalValue lhead, final OptionalValueList rvl, final Environment env, final Encoding enc) {
+        if (rvl.isEmpty()) { return rvl; }
+        return evalLeftHead(lhead, rvl.tail, env, enc).add(evalValues(lhead, rvl.head, env, enc));
+    }
+
+    private OptionalValue evalValues(final OptionalValue lhead, final OptionalValue rhead, final Environment env, final Encoding enc) {
+        if (!lhead.isPresent() || !rhead.isPresent()) { return lhead; }
+        return eval(lhead.get(), rhead.get(), env, enc);
     }
 
     public abstract OptionalValue eval(final Value lv, final Value rv, final Environment env, final Encoding enc);
