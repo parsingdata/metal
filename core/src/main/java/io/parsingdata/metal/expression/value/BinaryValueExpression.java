@@ -24,21 +24,17 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 public abstract class BinaryValueExpression implements ValueExpression {
 
-    private final ValueExpression _lop;
-    private final ValueExpression _rop;
+    private final ValueExpression lop;
+    private final ValueExpression rop;
 
     public BinaryValueExpression(final ValueExpression lop, final ValueExpression rop) {
-        _lop = checkNotNull(lop, "lop");
-        _rop = checkNotNull(rop, "rop");
+        this.lop = checkNotNull(lop, "lop");
+        this.rop = checkNotNull(rop, "rop");
     }
 
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
-        final OptionalValueList lvl = _lop.eval(env, enc);
-        if (lvl.isEmpty()) { return lvl; }
-        final OptionalValueList rvl = _rop.eval(env, enc);
-        if (rvl.isEmpty()) { return rvl; }
-        return evalLists(lvl, rvl, env, enc);
+        return evalLists(lop.eval(env, enc), rop.eval(env, enc), env, enc);
     }
 
     private OptionalValueList evalLists(final OptionalValueList lvl, final OptionalValueList rvl, final Environment env, final Encoding enc) {
@@ -60,7 +56,7 @@ public abstract class BinaryValueExpression implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _lop + "," + _rop + ")";
+        return getClass().getSimpleName() + "(" + lop + "," + rop + ")";
     }
 
 }

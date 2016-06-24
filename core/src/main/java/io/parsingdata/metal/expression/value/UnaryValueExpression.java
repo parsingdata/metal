@@ -24,29 +24,27 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 public abstract class UnaryValueExpression implements ValueExpression {
 
-    private final ValueExpression _op;
+    private final ValueExpression op;
 
     public UnaryValueExpression(final ValueExpression op) {
-        _op = checkNotNull(op, "op");
+        this.op = checkNotNull(op, "op");
     }
 
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
-        final OptionalValueList vl = _op.eval(env, enc);
-        if (!vl.containsValue()) { return vl; }
-        return eval(vl, env, enc, OptionalValueList.EMPTY);
+        return eval(op.eval(env, enc), env, enc);
     }
 
-    private OptionalValueList eval(final OptionalValueList vl, final Environment env, final Encoding enc, final OptionalValueList out) {
-        if (vl.isEmpty()) { return out; }
-        return eval(vl.tail, env, enc, out).add(vl.head.isPresent() ? eval(vl.head.get(), env, enc) : vl.head);
+    private OptionalValueList eval(final OptionalValueList vl, final Environment env, final Encoding enc) {
+        if (vl.isEmpty()) { return vl; }
+        return eval(vl.tail, env, enc).add(vl.head.isPresent() ? eval(vl.head.get(), env, enc) : vl.head);
     }
 
     public abstract OptionalValue eval(final Value v, final Environment env, final Encoding enc);
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _op + ")";
+        return getClass().getSimpleName() + "(" + op + ")";
     }
 
 }
