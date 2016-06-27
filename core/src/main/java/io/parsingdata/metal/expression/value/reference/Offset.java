@@ -17,37 +17,20 @@
 package io.parsingdata.metal.expression.value.reference;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.ConstantFactory;
-import io.parsingdata.metal.expression.value.OptionalValue;
-import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.expression.value.*;
 
-import static io.parsingdata.metal.Util.checkNotNull;
+public class Offset extends UnaryValueExpression {
 
-public class Offset implements ValueExpression {
-
-    private final ValueExpression op;
-
-    public Offset(final ValueExpression op) {
-        this.op = checkNotNull(op, "op");
-    }
+    public Offset(final ValueExpression op) { super(op); }
 
     @Override
-    public OptionalValueList eval(final Environment env, final Encoding enc) {
-        final OptionalValueList list = op.eval(env, enc);
-        return eval(list);
-    }
-
-    private OptionalValueList eval(final OptionalValueList in) {
-        if (in.isEmpty()) { return in; }
-        return eval(in.tail).add(in.head.isPresent() && in.head.get() instanceof ParseValue ? OptionalValue.empty() : OptionalValue.of(ConstantFactory.createFromNumeric(((ParseValue)in.head.get()).getOffset(), in.head.get().getEncoding())));
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" + op + ")";
+    public OptionalValue eval(final Value op, final Environment env, final Encoding enc) {
+        if (op instanceof ParseValue) {
+            OptionalValue.of(ConstantFactory.createFromNumeric(((ParseValue)op).getOffset(), op.getEncoding()));
+        }
+        return OptionalValue.empty();
     }
 
 }
