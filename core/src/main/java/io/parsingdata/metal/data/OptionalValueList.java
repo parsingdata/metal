@@ -44,6 +44,12 @@ public class OptionalValueList {
         return EMPTY.add(head);
     }
 
+    public static OptionalValueList create(final ParseValueList list) {
+        checkNotNull(list, "list");
+        if (list.isEmpty()) return OptionalValueList.EMPTY;
+        return create(list.tail).add(OptionalValue.of(list.head));
+    }
+
     public OptionalValueList add(final OptionalValue head) {
         return new OptionalValueList(head, this);
     }

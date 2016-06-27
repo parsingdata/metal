@@ -14,44 +14,32 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.expression.value;
+package io.parsingdata.metal.expression.value.reference;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.ValueExpression;
 
-/**
- * Expression for the 'elvis operator': <pre>?:</pre>.
- * <p>
- * Example:
- *
- * <pre>
- *   elvis(ref("foo"), ref("bar"))
- * </pre>
- *
- * If <code>ref("foo")</code> can be successfully evaluated, this elvis-expression
- * evaluates to that value, else it evaluates to the value of <code>ref("bar")</code>.
- */
-public class Elvis implements ValueExpression {
-    private final ValueExpression _lop;
-    private final ValueExpression _rop;
+import static io.parsingdata.metal.Util.checkNotNull;
 
-    public Elvis(final ValueExpression lop, final ValueExpression rop) {
-        _lop = lop;
-        _rop = rop;
+public class Last implements ValueExpression {
+
+    private final ValueExpression _op;
+
+    public Last(final ValueExpression op) {
+        _op = checkNotNull(op, "op");
     }
 
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
-        final OptionalValueList eval = _lop.eval(env, enc);
-        if (eval.containsValue()) {
-            return eval;
-        }
-        return _rop.eval(env, enc);
+        final OptionalValueList list = _op.eval(env, enc);
+        return list.isEmpty() ? list : OptionalValueList.create(list.head);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _lop + "," + _rop + ")";
+        return getClass().getSimpleName() + "(" + _op + ")";
     }
+
 }
