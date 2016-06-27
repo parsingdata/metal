@@ -17,8 +17,8 @@ package io.parsingdata.metal.util.serialize.process;
 
 import static org.junit.Assert.assertEquals;
 
-import static io.parsingdata.metal.util.Util.range;
-import static io.parsingdata.metal.util.Util.ranges;
+import static io.parsingdata.metal.util.TestUtil.range;
+import static io.parsingdata.metal.util.TestUtil.ranges;
 
 import java.util.List;
 

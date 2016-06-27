@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal;
+package io.parsingdata.metal.format;
 
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
@@ -22,10 +22,6 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import io.parsingdata.metal.format.JPEG;
-import io.parsingdata.metal.format.PNG;
-import io.parsingdata.metal.format.ZIP;
 
 import org.junit.Assert;
 import org.junit.Test;

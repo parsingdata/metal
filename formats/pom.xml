@@ -1,39 +1,55 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>io.parsingdata</groupId>
-    <artifactId>metal-parent</artifactId>
-    <version>3.1.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>metal-formats</artifactId>
-  <name>${project.groupId}:${project.artifactId}</name>
-  <packaging>jar</packaging>
-  <description>A set of Metal format descriptions usable in applications or as examples.</description>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.parsingdata</groupId>
+        <artifactId>metal-parent</artifactId>
+        <version>3.1.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>metal-formats</artifactId>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <packaging>jar</packaging>
+    <description>A set of Metal format descriptions usable in applications or as examples.</description>
 
-  <scm>
-    <connection>scm:git:git@github.com:parsingdata/metal.git</connection>
-    <developerConnection>scm:git:git@github.com:parsingdata/metal.git</developerConnection>
-    <url>https://github.com/parsingdata/metal.git</url>
-  </scm>
+    <scm>
+        <connection>scm:git:git@github.com:parsingdata/metal.git</connection>
+        <developerConnection>scm:git:git@github.com:parsingdata/metal.git</developerConnection>
+        <url>https://github.com/parsingdata/metal.git</url>
+    </scm>
 
-  <dependencies>
-    <dependency>
-      <groupId>io.parsingdata</groupId>
-      <artifactId>metal-core</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.parsingdata</groupId>
-      <artifactId>metal-core</artifactId>
-      <version>${project.version}</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
+    <properties>
+            <version.commons-codec>1.10</version.commons-codec>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.parsingdata</groupId>
+            <artifactId>metal-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.parsingdata</groupId>
+            <artifactId>metal-core</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.parsingdata</groupId>
+            <artifactId>metal-utils</artifactId>
+            <version>${project.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-  </dependencies>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${version.commons-codec}</version>
+        </dependency>
+    </dependencies>
 </project>

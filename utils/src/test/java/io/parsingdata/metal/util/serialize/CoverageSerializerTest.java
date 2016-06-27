@@ -25,8 +25,8 @@ import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
-import static io.parsingdata.metal.util.Util.range;
-import static io.parsingdata.metal.util.Util.ranges;
+import static io.parsingdata.metal.util.TestUtil.range;
+import static io.parsingdata.metal.util.TestUtil.ranges;
 
 import java.io.IOException;
 import java.util.Arrays;

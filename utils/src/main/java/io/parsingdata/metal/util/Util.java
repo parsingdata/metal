@@ -16,10 +16,6 @@
 package io.parsingdata.metal.util;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.commons.lang3.Range;
 
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
@@ -98,14 +94,5 @@ public final class Util {
      */
     public static Token[] tokens(final Token... tokens) {
         return tokens;
-    }
-
-    public static Range<Long> range(final long fromInclusive, final long toInclusive) {
-        return Range.between(fromInclusive, toInclusive);
-    }
-
-    @SafeVarargs
-    public static List<Range<Long>> ranges(final Range<Long>... ranges) {
-        return Arrays.asList(ranges);
     }
 }
