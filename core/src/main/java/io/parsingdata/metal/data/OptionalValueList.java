@@ -68,6 +68,11 @@ public class OptionalValueList {
         return this.head.isPresent() || this.tail.containsValue();
     }
 
+    public boolean containsEmpty() {
+        if (isEmpty()) { return false; }
+        return !this.head.isPresent() || this.tail.containsEmpty();
+    }
+
     public OptionalValueList reverse() {
         if (isEmpty()) { return this; }
         return reverse(tail, create(head));

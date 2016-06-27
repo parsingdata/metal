@@ -91,12 +91,12 @@ public class Shorthand {
     public static final ValueExpression currentOffset = new CurrentOffset();
     public static ValueExpression cat(final ValueExpression l, final ValueExpression r) { return new Cat(l, r); }
     public static ValueExpression elvis(final ValueExpression l, final ValueExpression r) { return new Elvis(l, r); }
-    public static ValueExpression foldLeft(final String name, final Reducer reducer) { return new FoldLeft(name, reducer, null); }
-    public static ValueExpression foldLeft(final String name, final Reducer reducer, final ValueExpression i) { return new FoldLeft(name, reducer, i); }
-    public static ValueExpression foldRight(final String name, final Reducer reducer) { return new FoldRight(name, reducer, null); }
-    public static ValueExpression foldRight(final String name, final Reducer reducer, final ValueExpression i) { return new FoldRight(name, reducer, i); }
-    public static ValueExpression fold(final String name, final Reducer reducer) { return foldRight(name, reducer); }
-    public static ValueExpression fold(final String name, final Reducer reducer, final ValueExpression i) { return foldRight(name, reducer, i); }
+    public static ValueExpression foldLeft(final ValueExpression values, final Reducer reducer) { return new FoldLeft(values, reducer, null); }
+    public static ValueExpression foldLeft(final ValueExpression values, final Reducer reducer, final ValueExpression i) { return new FoldLeft(values, reducer, i); }
+    public static ValueExpression foldRight(final ValueExpression values, final Reducer reducer) { return new FoldRight(values, reducer, null); }
+    public static ValueExpression foldRight(final ValueExpression values, final Reducer reducer, final ValueExpression i) { return new FoldRight(values, reducer, i); }
+    public static ValueExpression fold(final ValueExpression values, final Reducer reducer) { return foldRight(values, reducer); }
+    public static ValueExpression fold(final ValueExpression values, final Reducer reducer, final ValueExpression i) { return foldRight(values, reducer, i); }
 
     public static BinaryLogicalExpression and(final Expression l, final Expression r) { return new And(l, r); }
     public static BinaryLogicalExpression or(final Expression l, final Expression r) { return new Or(l, r); }
