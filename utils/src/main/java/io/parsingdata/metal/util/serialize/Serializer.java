@@ -26,7 +26,6 @@ import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.util.GraphUtil;
-import io.parsingdata.metal.util.ValueUpdater;
 import io.parsingdata.metal.util.serialize.constraint.TransformConstraint;
 import io.parsingdata.metal.util.serialize.process.ParseValueProcessor;
 import io.parsingdata.metal.util.serialize.transform.ConditionalTransformer;
@@ -54,15 +53,16 @@ public final class Serializer {
      * The fieldName determines what value should be transformed.
      * The transformer determines how the value should be transformed.
      *
+     * @param constraint the constraint which must be satisfied before transformation happens
      * @param valueName the name of the value to transform
-     * @param transformer the transformer to transfrom the value with
+     * @param transformer the transformer to transform the value with
      * @return this
      */
-    public Serializer transform(final TransformConstraint constraint, final String fieldName, final ParseValueTransformer transformer) {
+    public Serializer transform(final TransformConstraint constraint, final String valueName, final ParseValueTransformer transformer) {
         final ConditionalTransformer transformModule = new ConditionalTransformer(
-               checkNotNull(constraint, "constraint"),
-               checkNotNull(fieldName, "fieldName"),
-               checkNotNull(transformer, "transformer"));
+            checkNotNull(constraint, "constraint"),
+            checkNotNull(valueName, "valueName"),
+            checkNotNull(transformer, "transformer"));
         _transformers.add(transformModule);
         return this;
     }
@@ -72,7 +72,7 @@ public final class Serializer {
      * {@link TransformConstraint#TRUE} as the constraint.
      *
      * @param valueName the name of the value to transform
-     * @param transformer the transformer to transfrom the value with
+     * @param transformer the transformer to transform the value with
      * @return this
      */
     public Serializer transform(final String valueName, final ParseValueTransformer transformer) {
@@ -145,7 +145,7 @@ public final class Serializer {
 
             if (transformer.isSatisfiedBy(transformerEnvironment)) {
                 newValue = transformer.transform(newValue, transformerEnvironment);
-                currentEnv = ValueUpdater.updateEnv(currentEnv, newValue);
+                currentEnv = new Environment(GraphUtil.updateGraph(newValue, currentEnv.order), currentEnv.input, currentEnv.offset);
             }
         }
         return currentEnv;

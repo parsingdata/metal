@@ -24,11 +24,13 @@ import java.util.Deque;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseItem;
+import io.parsingdata.metal.data.ParseRef;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.token.Token;
 
 /**
- * Utility class used for locating and validating graphs.
+ * Utility methods for {@link ParseGraph}s.
  *
  * @author Netherlands Forensic Institute.
  */
@@ -118,5 +120,35 @@ public final class GraphUtil {
             }
         }
         return locateSubGraph(graph.tail, value, definitions, terminator, resultGraph);
+    }
+
+    /**
+     * Updates a {@link ParseValue} in a {@link ParseGraph}, effectively replacing the value
+     * at the offset of the given value, with this value.
+     *
+     * @param newValue the new value to insert into the graph
+     * @param graph the graph to be updated
+     * @return a graph containing the new value, or an equal graph when there is no value present at the offset of the new value
+     */
+    public static ParseGraph updateGraph(final ParseValue newValue, final ParseGraph graph) {
+        return updateGraph(newValue, graph, ParseGraph.EMPTY).reverse();
+    }
+
+    private static ParseGraph updateGraph(final ParseValue newValue, final ParseGraph graph, final ParseGraph returnGraph) {
+        ParseGraph newGraph = returnGraph;
+        final ParseItem head = graph.head;
+        if (head == null) {
+            return newGraph;
+        }
+        if (head.isGraph()) {
+            newGraph = updateGraph(newValue, head.asGraph(), newGraph.addBranch(head.getDefinition())).closeBranch();
+        }
+        else if (head.isValue()) {
+            newGraph = newGraph.add(head.asValue().getOffset() == newValue.getOffset() ? newValue : head.asValue());
+        }
+        else if (head.isRef()) {
+            newGraph = newGraph.add(new ParseRef(head.asRef().location, head.getDefinition()));
+        }
+        return updateGraph(newValue, graph.tail, newGraph);
     }
 }

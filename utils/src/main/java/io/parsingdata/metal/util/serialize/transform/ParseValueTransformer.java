@@ -43,7 +43,7 @@ public interface ParseValueTransformer {
      * All tokens should be present in the path from root to the value that is being transformed, in order.
      * The environment passed to this transformer is limited by the final token in this array.
      * <p>
-     * Also see {@link GraphUtil#findSubEnvironment(Environment, ParseValue, Token)}.
+     * Also see {@link GraphUtil#findSubGraph(Environment, ParseValue, Token...)}.
      *
      * @return a token representing a scope
      */
