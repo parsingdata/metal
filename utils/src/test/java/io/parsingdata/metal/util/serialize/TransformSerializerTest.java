@@ -136,7 +136,7 @@ public class TransformSerializerTest {
         final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(inputData.length);
 
         _thrown.expect(IllegalArgumentException.class);
-        _thrown.expectMessage("Argument fieldName may not be null.");
+        _thrown.expectMessage("Argument valueName may not be null.");
 
         new Serializer()
             .transform(new TransformConstraint(OUTER, INNER1), null, invertBits(INNER1))
