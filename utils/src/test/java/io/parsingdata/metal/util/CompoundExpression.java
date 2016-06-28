@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.parsingdata.metal;
+package io.parsingdata.metal.util;
 
 import static io.parsingdata.metal.Shorthand.eqNum;
 import static io.parsingdata.metal.Shorthand.expTrue;
@@ -26,13 +26,13 @@ import io.parsingdata.metal.expression.logical.LogicalExpression;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * Utility class containing custom expressions not contained in the Metal library (yet).
+ * Utility class containing useful expressions composed of metal-core expressions.
  *
  * @author Netherlands Forensic Institute.
  */
-public final class CustomExpression {
+public final class CompoundExpression {
 
-    private CustomExpression() {
+    private CompoundExpression() {
     }
 
     public static LogicalExpression gtEqNum(final ValueExpression p) {
