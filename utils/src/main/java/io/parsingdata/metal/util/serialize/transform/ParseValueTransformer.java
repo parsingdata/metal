@@ -27,7 +27,7 @@ import io.parsingdata.metal.util.GraphUtil;
  * will receive the value to transform, and an {@link Environment} that should be based on
  * the {@link #context()} Token.
  * <p>
- * An example: checksum recalculation in a IPv4 header. (See {@link IPv4ChecksumCalculator}.)
+ * An example: checksum recalculation in a IPv4 header.
  * IPv4 headers contain a checksum of that header. If we change a value in the header,
  * we need to recalculate this checksum (for example, when we change an IP address).
  * If the {@link #context()} for such a transformer is the IPv4 header token, the

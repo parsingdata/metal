@@ -33,11 +33,9 @@ import io.parsingdata.metal.util.serialize.transform.ConditionalTransformer;
 import io.parsingdata.metal.util.serialize.transform.ParseValueTransformer;
 
 /**
- * Main serializer.
+ * Main serializer, serializes a Metal parse result to an output token serializer.
  *
- * Serializes a Metal parse result to an output token serializer.
- *
- * Can apply various token transformers sequentially.
+ * Can apply various {@link ParseValueTransformer}s sequentially.
  *
  * @author Netherlands Forensic Institute.
  */
@@ -110,7 +108,7 @@ public final class Serializer {
         if (head == null) {
             return;
         }
-        if (head.isValue()) {
+        else if (head.isValue()) {
             parseValueProcessor.process(head.asValue());
         }
         else if (head.isGraph()) {
@@ -129,10 +127,10 @@ public final class Serializer {
         if (head == null) {
             return newEnvironment;
         }
-        if (head.isValue()) {
+        else if (head.isValue()) {
             newEnvironment = transform(head.asValue(), newEnvironment, transformer);
         }
-        if (head.isGraph()) {
+        else if (head.isGraph()) {
             newEnvironment = updateEnv(head.asGraph(), newEnvironment, transformer);
         }
         return updateEnv(graph.tail, newEnvironment, transformer);
