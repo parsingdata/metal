@@ -32,10 +32,18 @@ public final class ValueUpdater {
     }
 
     public static Environment updateEnv(final Environment originalEnvironment, final ParseValue newValue) {
-        return new Environment(ValueUpdater.updateGraph(newValue, originalEnvironment.order), originalEnvironment.input, originalEnvironment.offset);
+        return new Environment(updateGraph(newValue, originalEnvironment.order), originalEnvironment.input, originalEnvironment.offset);
     }
 
-    static ParseGraph updateGraph(final ParseValue newValue, final ParseGraph graph) {
+    /**
+     * Updates a {@link ParseValue} in a {@link ParseGraph}, effectively replacing the value
+     * at the offset of the given value, with this value.
+     *
+     * @param newValue the new value to insert into the graph
+     * @param graph the graph to be updated
+     * @return a graph containing the new value, or an equal graph when there is no value present at the offset of the new value
+     */
+    public static ParseGraph updateGraph(final ParseValue newValue, final ParseGraph graph) {
         return updateGraph(newValue, graph, ParseGraph.EMPTY).reverse();
     }
 

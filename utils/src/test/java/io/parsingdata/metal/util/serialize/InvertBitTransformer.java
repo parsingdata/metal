@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.parsingdata.metal.util.serialize.transform;
+package io.parsingdata.metal.util.serialize;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.util.serialize.transform.ParseValueTransformer;
 
 /**
  * Used to invert all bits of a value.

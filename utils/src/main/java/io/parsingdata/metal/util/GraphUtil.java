@@ -111,7 +111,7 @@ public final class GraphUtil {
         if (graph.head.isValue() && graph.head.asValue() == value && definitions.isEmpty()) {
             return resultGraph;
         }
-        if (graph.head.isGraph()) {
+        else if (graph.head.isGraph()) {
             final ParseGraph headResult = locateSubGraph(graph.head.asGraph(), value, new ArrayDeque<>(definitions), terminator, resultGraph);
             if (headResult != EMPTY) {
                 return headResult;

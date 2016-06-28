@@ -32,7 +32,6 @@ import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.Util;
 import io.parsingdata.metal.util.serialize.constraint.TransformConstraint;
-import io.parsingdata.metal.util.serialize.transform.InvertBitTransformer;
 import io.parsingdata.metal.util.serialize.transform.ParseValueTransformer;
 
 public class TransformSerializerTest {

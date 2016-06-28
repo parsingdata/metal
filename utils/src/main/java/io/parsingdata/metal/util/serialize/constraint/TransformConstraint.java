@@ -57,7 +57,7 @@ public class TransformConstraint {
      * A transformer constraint demands that a certain context is present.
      * It optionally can also demand a certain expression to be true in this context.
      *
-     * @param expression the expression to evaluate within the given context
+     * @param expression the expression to evaluate within the given context, null if no expression to evaluate
      * @param tokens the context which should be present
      */
     public TransformConstraint(final Expression expression, final Token... tokens) {
@@ -80,6 +80,6 @@ public class TransformConstraint {
     }
 
     private boolean isSatisfiedBy(final Expression expression, final Environment environment) {
-        return expression == null || expression.eval(environment, new Encoding()); // TODO PEF-24 which encoding
+        return expression == null || expression.eval(environment, new Encoding());
     }
 }

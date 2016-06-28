@@ -35,7 +35,6 @@ import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.Util;
-import io.parsingdata.metal.util.serialize.transform.InvertBitTransformer;
 
 @RunWith(Parameterized.class)
 public class InvertBitsCopySerializerTest {
