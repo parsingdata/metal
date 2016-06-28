@@ -15,7 +15,6 @@
  */
 package io.parsingdata.metal.format.network.internet;
 
-import static io.parsingdata.metal.CustomExpression.expFalse;
 import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.and;
 import static io.parsingdata.metal.Shorthand.con;
@@ -34,6 +33,7 @@ import static io.parsingdata.metal.Shorthand.shr;
 import static io.parsingdata.metal.Shorthand.str;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.whl;
+import static io.parsingdata.metal.util.CompoundExpression.expFalse;
 
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.value.ValueExpression;

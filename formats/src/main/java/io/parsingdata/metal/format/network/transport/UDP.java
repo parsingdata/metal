@@ -15,7 +15,6 @@
  */
 package io.parsingdata.metal.format.network.transport;
 
-import static io.parsingdata.metal.CustomExpression.gtEqNum;
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.currentOffset;
@@ -26,6 +25,7 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.str;
 import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.util.CompoundExpression.gtEqNum;
 
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.format.network.application.DNS;
