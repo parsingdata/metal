@@ -18,7 +18,7 @@
     </scm>
 
     <properties>
-            <version.commons-codec>1.10</version.commons-codec>
+        <version.commons-codec>1.10</version.commons-codec>
     </properties>
 
     <dependencies>
@@ -38,7 +38,6 @@
             <groupId>io.parsingdata</groupId>
             <artifactId>metal-utils</artifactId>
             <version>${project.version}</version>
-
         </dependency>
         <dependency>
             <groupId>junit</groupId>

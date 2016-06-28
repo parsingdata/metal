@@ -20,9 +20,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import static io.parsingdata.metal.format.network.Util.hexStringToBytes;
-import static io.parsingdata.metal.format.network.Util.ipStringFromBytes;
-import static io.parsingdata.metal.format.network.Util.ipv4StringFromInt;
+import static io.parsingdata.metal.format.network.TestUtil.hexStringToBytes;
+import static io.parsingdata.metal.format.network.TestUtil.ipStringFromBytes;
+import static io.parsingdata.metal.format.network.TestUtil.ipv4StringFromInt;
 import static io.parsingdata.metal.util.Util.parse;
 
 import java.io.IOException;

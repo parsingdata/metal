@@ -37,6 +37,7 @@ public final class ICMP {
                                            def("icmpcode", 1),
                                            def("icmpchecksum", 2),
                                            def("rest", 4));
+
     /** ICMP data format definition. **/
     public static final Token DATA = cho(
                                          IPv4.FORMAT,

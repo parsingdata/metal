@@ -21,8 +21,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import static io.parsingdata.metal.format.network.Util.hexStringToBytes;
-import static io.parsingdata.metal.format.network.Util.ipStringFromBytes;
+import static io.parsingdata.metal.format.network.TestUtil.hexStringToBytes;
+import static io.parsingdata.metal.format.network.TestUtil.ipStringFromBytes;
 import static io.parsingdata.metal.util.Util.parse;
 
 import java.io.IOException;

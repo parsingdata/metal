@@ -20,17 +20,10 @@ import static io.parsingdata.metal.Shorthand.expTrue;
 import static io.parsingdata.metal.Shorthand.gtNum;
 import static io.parsingdata.metal.Shorthand.not;
 import static io.parsingdata.metal.Shorthand.or;
-import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.io.IOException;
-
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.logical.LogicalExpression;
 import io.parsingdata.metal.expression.value.ValueExpression;
-import io.parsingdata.metal.token.Token;
 
 /**
  * Utility class containing custom expressions not contained in the Metal library (yet).
@@ -52,29 +45,5 @@ public final class CustomExpression {
 
     public static Expression expFalse() {
         return not(expTrue());
-    }
-
-    public static Token enc(final Token t, final Encoding e) {
-        return new EncodedToken(t, e);
-    }
-
-    /**
-     * Token containing a token which should be interpreted with given encoding.
-     *
-     * @author Netherlands Forensic Institute.
-     */
-    public static class EncodedToken extends Token {
-
-        private final Token _op;
-
-        public EncodedToken(final Token op, final Encoding enc) {
-            super(enc);
-            _op = checkNotNull(op, "op");
-        }
-
-        @Override
-        protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-            return _op.parse(scope, env, enc);
-        }
     }
 }

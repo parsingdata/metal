@@ -19,7 +19,7 @@ import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.eqNum;
+import static io.parsingdata.metal.Shorthand.elvis;
 import static io.parsingdata.metal.Shorthand.gtNum;
 import static io.parsingdata.metal.Shorthand.mul;
 import static io.parsingdata.metal.Shorthand.offset;
@@ -32,7 +32,6 @@ import static io.parsingdata.metal.Shorthand.sub;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.comparison.ComparisonExpression;
 import io.parsingdata.metal.expression.value.BinaryValueExpression;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -56,21 +55,13 @@ public final class TCP {
 
     /** Data size in octets. */
     public static final ValueExpression DATA_SIZE = new ValueExpression() {
+        // see issue #26:
         // this new class is needed because of the circular references from TCP to TCP, which breaks with static initialization
         @Override
         public OptionalValue eval(final Environment env, final Encoding enc) {
-            final ComparisonExpression isIPv4 = eqNum(shr(ref("versionihl"), con(4)), con(4));
-            if (isIPv4.eval(env, enc)) {
-                return sub(IPv4.TOTAL_SIZE, add(IPv4.HEADER_SIZE, TCP.HEADER_SIZE)).eval(env, enc);
-            }
-
-            final ComparisonExpression isIPv6 = eqNum(shr(ref("vertraflo"), con(28)), con(6));
-            if (isIPv6.eval(env, enc)) {
-                final ValueExpression ipv6PayloadLeft = sub(IPv6.PAYLOAD_SIZE, sub(TCP.OFFSET, IPv6.PAYLOAD_OFFSET));
-                return sub(ipv6PayloadLeft, TCP.HEADER_SIZE).eval(env, enc);
-            }
-
-            throw new RuntimeException("not IPv4 or IPv6");
+            return elvis(
+                         sub(IPv4.TOTAL_SIZE, add(IPv4.HEADER_SIZE, TCP.HEADER_SIZE)),
+                         sub(sub(IPv6.PAYLOAD_SIZE, sub(TCP.OFFSET, IPv6.PAYLOAD_OFFSET)), TCP.HEADER_SIZE)).eval(env, enc);
         }
     };
 

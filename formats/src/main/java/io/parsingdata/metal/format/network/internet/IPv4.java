@@ -77,10 +77,9 @@ public final class IPv4 {
                                                      con(20)))); // header size > 5 * 4 bytes for options
 
     /** Definition of known protocol is stated in IPv4 header. */
-    public static final Token KNOWN_PROTOCOL = new Token(new Encoding()) {
+    public static final Token KNOWN_PROTOCOL = new Token(null) {
+        // see issue #26:
         // this anonymous token is needed because of the circular references IPv4 -> ICMP -> IPv4
-        // it breaks because the circular reference is in the statically initialized
-        // format definition, whereas the class here gets lazily loaded
         @Override
         protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
             if (eqNum(ref("protocol"), con(Protocol.ICMP)).eval(env, enc)) {

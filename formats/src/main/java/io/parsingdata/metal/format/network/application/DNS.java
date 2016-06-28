@@ -33,11 +33,6 @@ import static io.parsingdata.metal.Shorthand.self;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.str;
 
-import java.io.IOException;
-
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.format.network.internet.Protocol;
 import io.parsingdata.metal.token.Token;
 
@@ -70,19 +65,11 @@ public final class DNS {
     public static final Token TERMINATOR = def("terminator", 1, eq(con(0x00)));
 
     /** DNS qname format definition. */
-    public static final Token QNAME = new Token(null) {
-        // QNAME is defined as an anonymous token, because of the self referencing definition
-        // if defined normally, this would break because it can't reference itself in the static initialization
-        private final Token _pointer = def("pointer", 2, eq(and(con(0xC000), self), con(0xC000)));
-        private final Token _qname = seq(
-                                         rep(QNAME_VALUE),
-                                         cho(_pointer, TERMINATOR));
-
-        @Override
-        protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-            return _qname.parse(scope, env, enc);
-        }
-    };
+    public static final Token QNAME = seq(
+                                          rep(QNAME_VALUE),
+                                          // pointer pointing to a label
+                                          // parsing this referenced label is currently not implemented
+                                          cho(def("pointer", 2, eq(and(con(0xC000), self), con(0xC000))), TERMINATOR));
 
     /** DNS question format definition. **/
     public static final Token QUESTION = str("dnsquestion",

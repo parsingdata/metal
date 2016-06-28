@@ -7,9 +7,9 @@ import java.nio.ByteBuffer;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 
-public final class Util {
+public final class TestUtil {
 
-    private Util() {
+    private TestUtil() {
     }
 
     /**
