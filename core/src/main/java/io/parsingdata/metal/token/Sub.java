@@ -42,21 +42,21 @@ public class Sub extends Token {
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final OptionalValueList addrs = _addr.eval(env, enc);
         if (addrs.isEmpty() || addrs.containsEmpty()) { return new ParseResult(false, env); }
-        final ParseResult res = parseAll(scope, addrs, env, enc);
+        final ParseResult res = iterate(scope, addrs, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
         if (res.succeeded()) {
             return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, env.offset));
         }
         return new ParseResult(false, env);
     }
 
-    private ParseResult parseAll(final String scope, final OptionalValueList addrs, final Environment env, final Encoding enc) throws IOException {
+    private ParseResult iterate(final String scope, final OptionalValueList addrs, final Environment env, final Encoding enc) throws IOException {
         final long ref = addrs.head.get().asNumeric().longValue();
         final ParseResult res = parse(scope, ref, env, enc);
         if (res.succeeded()) {
             if (addrs.tail.isEmpty()) {
                 return res;
             }
-            return parseAll(scope, addrs.tail, res.getEnvironment(), enc);
+            return iterate(scope, addrs.tail, res.getEnvironment(), enc);
         }
         return new ParseResult(false, env);
     }
@@ -65,7 +65,7 @@ public class Sub extends Token {
         if (env.order.hasGraphAtRef(ref)) {
             return new ParseResult(true, new Environment(env.order.add(new ParseRef(ref, this)), env.input, env.offset));
         }
-        return _op.parse(scope, new Environment(env.order.addBranch(this), env.input, ref), enc);
+        return _op.parse(scope, env, enc);
     }
 
     @Override
