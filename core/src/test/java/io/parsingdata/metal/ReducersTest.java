@@ -16,28 +16,6 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.add;
-import static io.parsingdata.metal.Shorthand.cat;
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.eq;
-import static io.parsingdata.metal.Shorthand.eqNum;
-import static io.parsingdata.metal.Shorthand.foldLeft;
-import static io.parsingdata.metal.Shorthand.foldRight;
-import static io.parsingdata.metal.Shorthand.mul;
-import static io.parsingdata.metal.Shorthand.fold;
-import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.Shorthand.sub;
-import static io.parsingdata.metal.TokenDefinitions.any;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EncodingFactory.le;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-
-import java.util.Arrays;
-import java.util.Collection;
-
-import org.junit.runners.Parameterized.Parameters;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
@@ -45,6 +23,16 @@ import io.parsingdata.metal.expression.value.Reducer;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
+import org.junit.runners.Parameterized.Parameters;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.TokenDefinitions.any;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EncodingFactory.le;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 public class ReducersTest extends ParameterizedParse {
 
@@ -83,18 +71,18 @@ public class ReducersTest extends ParameterizedParse {
     private final static Reducer catReducer = new Reducer() { @Override public ValueExpression reduce(final ValueExpression l, final ValueExpression r) { return cat(l, r); } };
     private final static Reducer subReducer = new Reducer() { @Override public ValueExpression reduce(final ValueExpression l, final ValueExpression r) { return sub(l, r); } };
 
-    private final static Token reduceAddA = token(1, eq(fold("a", addReducer)));
-    private final static Token reduceAddAInit0 = token(1, eq(fold("a", addReducer, con(0))));
-    private final static Token reduceAddAInit1 = token(1, eq(fold("a", addReducer, con(1))));
-    private final static Token reduceMulA = token(1, eq(fold("a", mulReducer)));
-    private final static Token reduceAllAplusMulA = token(1, eq(add(fold("a", addReducer), fold("a", mulReducer))));
-    private final static Token reduceCatA = token(3, eq(fold("a", catReducer)));
-    private final static Token reduceCatAToNumBE = token(3, eqNum(fold("a", catReducer)), enc());
-    private final static Token reduceCatAToNumLE = token(3, eqNum(fold("a", catReducer)), le());
-    private final static Token foldLeftSubA = token(1, eq(foldLeft("a", subReducer)));
-    private final static Token foldLeftSubAInit2 = token(1, eq(foldLeft("a", subReducer, con(2))));
-    private final static Token foldRightSubA = token(1, eq(foldRight("a", subReducer)));
-    private final static Token foldRightSubAInit2 = token(1, eq(foldRight("a", subReducer, con(2))));
+    private final static Token reduceAddA = token(1, eq(fold(ref("a"), addReducer)));
+    private final static Token reduceAddAInit0 = token(1, eq(fold(ref("a"), addReducer, con(0))));
+    private final static Token reduceAddAInit1 = token(1, eq(fold(ref("a"), addReducer, con(1))));
+    private final static Token reduceMulA = token(1, eq(fold(ref("a"), mulReducer)));
+    private final static Token reduceAllAplusMulA = token(1, eq(add(fold(ref("a"), addReducer), fold(ref("a"), mulReducer))));
+    private final static Token reduceCatA = token(3, eq(fold(ref("a"), catReducer)));
+    private final static Token reduceCatAToNumBE = token(3, eqNum(fold(ref("a"), catReducer)), enc());
+    private final static Token reduceCatAToNumLE = token(3, eqNum(fold(ref("a"), catReducer)), le());
+    private final static Token foldLeftSubA = token(1, eq(foldLeft(ref("a"), subReducer)));
+    private final static Token foldLeftSubAInit2 = token(1, eq(foldLeft(ref("a"), subReducer, con(2))));
+    private final static Token foldRightSubA = token(1, eq(foldRight(ref("a"), subReducer)));
+    private final static Token foldRightSubAInit2 = token(1, eq(foldRight(ref("a"), subReducer, con(2))));
 
     private static Token token(final long size, final Expression pred, final Encoding enc) {
         return seq(any("a"),
