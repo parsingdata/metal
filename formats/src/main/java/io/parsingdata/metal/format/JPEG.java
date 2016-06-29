@@ -16,21 +16,9 @@
 
 package io.parsingdata.metal.format;
 
-import static io.parsingdata.metal.Shorthand.and;
-import static io.parsingdata.metal.Shorthand.cho;
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.eq;
-import static io.parsingdata.metal.Shorthand.gtNum;
-import static io.parsingdata.metal.Shorthand.ltNum;
-import static io.parsingdata.metal.Shorthand.not;
-import static io.parsingdata.metal.Shorthand.or;
-import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.rep;
-import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.Shorthand.str;
-import static io.parsingdata.metal.Shorthand.sub;
 import io.parsingdata.metal.token.Token;
+
+import static io.parsingdata.metal.Shorthand.*;
 
 /*
  * Since nearly every byte of the scan data is individually matched, this
@@ -53,14 +41,14 @@ public class JPEG {
             seq(def("marker", con(1), eq(con(0xff))),
                 def("identifier", con(1), or(ltNum(con(0xd8)), gtNum(con(0xda)))),
                 def("length", con(2)),
-                def("payload", sub(ref("length"), con(2)))));
+                def("payload", sub(last(ref("length")), con(2)))));
 
     private static final Token SCAN_SEGMENT =
             str("scan segment",
             seq(def("marker", con(1), eq(con(0xff))),
                 def("identifier", con(1), eq(con(0xda))),
                 def("length", con(2)),
-                def("payload", sub(ref("length"), con(2))),
+                def("payload", sub(last(ref("length")), con(2))),
                 rep(cho(def("scandata", con(1), not(eq(con(0xff)))),
                         def("escape", con(2), or(eq(con(0xff00)), and(gtNum(con(0xffcf)), ltNum(con(0xffd8)))))))));
 

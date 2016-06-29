@@ -65,7 +65,7 @@ public class ElvisExpressionTest {
         final OptionalValueList eval = elvisExpression.eval(result.getEnvironment(), enc());
 
         assertNotNull(eval);
-        assertEquals(1, eval.size);
+        assertTrue(eval.isEmpty());
     }
 
     @Test

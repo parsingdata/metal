@@ -16,17 +16,7 @@
 
 package io.parsingdata.metal.format;
 
-import static io.parsingdata.metal.Shorthand.cho;
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.eq;
-import static io.parsingdata.metal.Shorthand.eqNum;
-import static io.parsingdata.metal.Shorthand.expTrue;
-import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.rep;
-import static io.parsingdata.metal.Shorthand.self;
-import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.Shorthand.str;
+import static io.parsingdata.metal.Shorthand.*;
 import static io.parsingdata.metal.format.Callback.crc32;
 import static io.parsingdata.metal.format.Callback.inflate;
 
@@ -55,14 +45,14 @@ public class ZIP {
             def("uncompressedsize", con(4), usp),
             def("filenamesize", con(2)),
             def("extrafieldsize", con(2)),
-            def("filename", ref("filenamesize")),
-            def("extrafield", ref("extrafieldsize")));
+            def("filename", last(ref("filenamesize"))),
+            def("extrafield", last(ref("extrafieldsize"))));
     }
 
     private static final Token LOCAL_DEFLATED_FILE =
         str("file",
             seq(localFileBody(8, expTrue(), expTrue(), expTrue()),
-                def("compresseddata", ref("compressedsize"), eqNum(crc32(inflate(self)), ref("crc32")))));
+                def("compresseddata", last(ref("compressedsize")), eqNum(crc32(inflate(self)), last(ref("crc32"))))));
 
     private static final Token LOCAL_EMPTY_FILE =
         str("file",
@@ -70,8 +60,8 @@ public class ZIP {
 
     private static final Token LOCAL_STORED_FILE =
         str("file",
-            seq(localFileBody(0, expTrue(), expTrue(), eq(ref("compressedsize"))),
-                def("compresseddata", ref("compressedsize"), eqNum(crc32(self), ref("crc32")))));
+            seq(localFileBody(0, expTrue(), expTrue(), eq(last(ref("compressedsize")))),
+                def("compresseddata", last(ref("compressedsize")), eqNum(crc32(self), last(ref("crc32"))))));
 
     private static final Token FILES =
         rep(cho(LOCAL_DEFLATED_FILE,
@@ -97,9 +87,9 @@ public class ZIP {
                 def("intfileattr", con(2)),
                 def("extfileattr", con(4)),
                 def("offset", con(4)),
-                def("filename", ref("filenamesize")),
-                def("extrafield", ref("extrafieldsize")),
-                def("filecomment", ref("filecommentsize"))));
+                def("filename", last(ref("filenamesize"))),
+                def("extrafield", last(ref("extrafieldsize"))),
+                def("filecomment", last(ref("filecommentsize")))));
 
     private static final Token DIRS =
         rep(DIR_ENTRY);
@@ -110,11 +100,11 @@ public class ZIP {
                 def("disknumber", con(2), eqNum(con(0))),
                 def("dirdisk", con(2), eqNum(con(0))),
                 def("numlocaldirs", con(2)),
-                def("numtotaldirs", con(2), eq(ref("numlocaldirs"))),
+                def("numtotaldirs", con(2), eq(last(ref("numlocaldirs")))),
                 def("dirsize", con(4)),
                 def("diroffset", con(4)),
                 def("commentsize", con(2)),
-                def("comment", ref("commentsize"))));
+                def("comment", last(ref("commentsize")))));
 
     public static final Token FORMAT =
         str("ZIP",

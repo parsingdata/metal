@@ -16,16 +16,7 @@
 
 package io.parsingdata.metal.format;
 
-import static io.parsingdata.metal.Shorthand.cat;
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.eq;
-import static io.parsingdata.metal.Shorthand.eqNum;
-import static io.parsingdata.metal.Shorthand.not;
-import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.rep;
-import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.Shorthand.str;
+import static io.parsingdata.metal.Shorthand.*;
 import static io.parsingdata.metal.format.Callback.crc32;
 
 import io.parsingdata.metal.encoding.Encoding;
@@ -49,8 +40,8 @@ public class PNG {
             str("chunk",
             seq(def("length", con(4)),
                 def("chunktype", con(4), not(eq(con("IEND")))),
-                def("chunkdata", ref("length")),
-                def("crc32", con(4), eq(crc32(cat(ref("chunktype"), ref("chunkdata")))))));
+                def("chunkdata", last(ref("length"))),
+                def("crc32", con(4), eq(crc32(cat(last(ref("chunktype")), last(ref("chunkdata"))))))));
 
     public static final Token FORMAT =
             str("PNG",

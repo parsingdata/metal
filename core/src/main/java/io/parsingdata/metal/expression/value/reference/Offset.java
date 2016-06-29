@@ -28,7 +28,7 @@ public class Offset extends UnaryValueExpression {
     @Override
     public OptionalValue eval(final Value op, final Environment env, final Encoding enc) {
         if (op instanceof ParseValue) {
-            OptionalValue.of(ConstantFactory.createFromNumeric(((ParseValue)op).getOffset(), op.getEncoding()));
+            return OptionalValue.of(ConstantFactory.createFromNumeric(((ParseValue)op).getOffset(), op.getEncoding()));
         }
         return OptionalValue.empty();
     }

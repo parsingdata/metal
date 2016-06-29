@@ -33,7 +33,7 @@ import static org.junit.Assert.assertFalse;
 public class NodTest {
 
     private static final Token NOD = nod(con(4));
-    private static final Token NOD_REF_SIZE = nod(ref("size"));
+    private static final Token NOD_REF_SIZE = nod(last(ref("size")));
     private static final Token FOUND_REF = seq(def("size", con(1)), NOD_REF_SIZE);
 
     @Rule
