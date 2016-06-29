@@ -16,13 +16,7 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.eq;
-import static io.parsingdata.metal.Shorthand.opt;
-import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.Shorthand.*;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
@@ -50,7 +44,7 @@ public class SubStructTest {
             struct =
                 seq(def("header", con(1), eq(con(0))),
                     def("next", con(1)),
-                    opt(sub(this, ref("next"))),
+                    opt(sub(this, last(ref("next")))),
                     def("footer", con(1), eq(con(1))));
         }
 

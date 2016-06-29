@@ -16,14 +16,7 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.eq;
-import static io.parsingdata.metal.Shorthand.not;
-import static io.parsingdata.metal.Shorthand.pre;
-import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.Shorthand.*;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
@@ -53,9 +46,9 @@ public class TreeTest {
             return seq(def("head", con(1), eq(con(HEAD))),
                        def("nr", con(1)),
                        def("left", con(1)),
-                       pre(sub(this, ref("left")), not(eq(ref("left"), con(0)))),
+                       pre(sub(this, last(ref("left"))), not(eq(last(ref("left")), con(0)))),
                        def("right", con(1)),
-                       pre(sub(this, ref("right")), not(eq(ref("right"), con(0))))).parse(scope, env, enc);
+                       pre(sub(this, last(ref("right"))), not(eq(last(ref("right")), con(0))))).parse(scope, env, enc);
             }
         };
 
