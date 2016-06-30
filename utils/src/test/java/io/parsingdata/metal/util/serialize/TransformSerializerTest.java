@@ -52,10 +52,10 @@ public class TransformSerializerTest {
 
     @Test
     public void testInvertInner1() throws IOException {
-        final byte[] inputData = {0, 1};
+        final byte[] _input = {0, 1};
 
-        final ParseResult result = Util.parse(inputData, OUTER);
-        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(inputData.length);
+        final ParseResult result = Util.parse(_input, OUTER);
+        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(_input.length);
 
         new Serializer()
             .transform(new TransformConstraint(INNER1), "value", invertBits(INNER1))
@@ -68,10 +68,10 @@ public class TransformSerializerTest {
 
     @Test
     public void testInvertInner2() throws IOException {
-        final byte[] inputData = {0, 1};
+        final byte[] input = {0, 1};
 
-        final ParseResult result = Util.parse(inputData, OUTER);
-        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(inputData.length);
+        final ParseResult result = Util.parse(input, OUTER);
+        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(input.length);
 
         new Serializer()
             .transform(new TransformConstraint(INNER2), "value", invertBits(INNER2))
@@ -84,10 +84,10 @@ public class TransformSerializerTest {
 
     @Test
     public void testInvertOuter() throws IOException {
-        final byte[] inputData = {0, 1};
+        final byte[] input = {0, 1};
 
-        final ParseResult result = Util.parse(inputData, OUTER);
-        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(inputData.length);
+        final ParseResult result = Util.parse(input, OUTER);
+        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(input.length);
 
         new Serializer()
             .transform(new TransformConstraint(OUTER), "value", invertBits(OUTER))
@@ -100,10 +100,10 @@ public class TransformSerializerTest {
 
     @Test
     public void testNothingTransforms() throws IOException {
-        final byte[] inputData = {0, 1};
+        final byte[] input = {0, 1};
 
-        final ParseResult result = Util.parse(inputData, OUTER);
-        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(inputData.length);
+        final ParseResult result = Util.parse(input, OUTER);
+        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(input.length);
 
         new Serializer()
             .transform(new TransformConstraint(OUTER, INNER3), "value", invertBits(INNER3))
@@ -115,10 +115,10 @@ public class TransformSerializerTest {
 
     @Test
     public void nullConstraint() throws IOException {
-        final byte[] inputData = {0, 1};
+        final byte[] input = {0, 1};
 
-        final ParseResult result = Util.parse(inputData, OUTER);
-        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(inputData.length);
+        final ParseResult result = Util.parse(input, OUTER);
+        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(input.length);
 
         _thrown.expect(IllegalArgumentException.class);
         _thrown.expectMessage("Argument constraint may not be null.");
@@ -130,10 +130,10 @@ public class TransformSerializerTest {
 
     @Test
     public void nullFieldName() throws IOException {
-        final byte[] inputData = {0, 1};
+        final byte[] input = {0, 1};
 
-        final ParseResult result = Util.parse(inputData, OUTER);
-        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(inputData.length);
+        final ParseResult result = Util.parse(input, OUTER);
+        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(input.length);
 
         _thrown.expect(IllegalArgumentException.class);
         _thrown.expectMessage("Argument valueName may not be null.");
@@ -145,10 +145,10 @@ public class TransformSerializerTest {
 
     @Test
     public void nullTransformator() throws IOException {
-        final byte[] inputData = {0, 1};
+        final byte[] input = {0, 1};
 
-        final ParseResult result = Util.parse(inputData, OUTER);
-        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(inputData.length);
+        final ParseResult result = Util.parse(input, OUTER);
+        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(input.length);
 
         _thrown.expect(IllegalArgumentException.class);
         _thrown.expectMessage("Argument transformer may not be null.");

@@ -49,7 +49,7 @@ import io.parsingdata.metal.util.serialize.process.CoverageAnalyzer;
 public class CoverageSerializerTest {
 
     @Parameter(0)
-    public byte[] _inputData;
+    public byte[] _input;
 
     @Parameter(1)
     public List<Range<Long>> _expected;
@@ -90,7 +90,7 @@ public class CoverageSerializerTest {
 
     @Test
     public void simple() throws IOException {
-        final ParseResult result = Util.parse(_inputData, _token);
+        final ParseResult result = Util.parse(_input, _token);
 
         final CoverageAnalyzer analyzer = new CoverageAnalyzer();
         new Serializer().serialize(result, analyzer);

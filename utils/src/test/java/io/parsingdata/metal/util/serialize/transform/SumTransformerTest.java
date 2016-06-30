@@ -50,10 +50,10 @@ public class SumTransformerTest {
 
     @Test
     public void testSum() throws IOException {
-        final byte[] inputData = {3, 1, 2, 3, 0};
+        final byte[] input = {3, 1, 2, 3, 0};
 
-        final ParseResult result = Util.parse(inputData, EXPR);
-        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(inputData.length);
+        final ParseResult result = Util.parse(input, EXPR);
+        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(input.length);
 
         new Serializer()
             .transform(new TransformConstraint(SUM), "sum", new SumTransformer())

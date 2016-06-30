@@ -42,7 +42,7 @@ import io.parsingdata.metal.util.Util;
 public class CopySerializerTest {
 
     @Parameter(0)
-    public byte[] _inputData;
+    public byte[] _input;
 
     @Parameter(1)
     public Token _token;
@@ -77,14 +77,14 @@ public class CopySerializerTest {
 
     @Test
     public void simple() throws IOException {
-        final ParseResult result = Util.parse(_inputData, _token);
+        final ParseResult result = Util.parse(_input, _token);
 
-        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(_inputData.length);
+        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(_input.length);
 
         new Serializer().serialize(result, tokenSerializer);
 
         final byte[] outputData = tokenSerializer.outputData();
 
-        assertArrayEquals(_inputData, outputData);
+        assertArrayEquals(_input, outputData);
     }
 }

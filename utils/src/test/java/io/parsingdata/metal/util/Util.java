@@ -39,7 +39,7 @@ public final class Util {
     }
 
     /**
-     * Parses InputData data with given format.
+     * Parses a {@link ByteStream} with given format.
      *
      * @param source the data to parse from
      * @param format the format to parse with
@@ -51,7 +51,7 @@ public final class Util {
     }
 
     /**
-     * Parses InputData data from given offset, with given format.
+     * Parses a {@link ByteStream} from given offset, with given format.
      *
      * @param source the data to parse from
      * @param offset the offset to start parsing from
@@ -76,7 +76,7 @@ public final class Util {
     }
 
     /**
-     * Parses InputData data from given offset, with given format.
+     * Parses a {@link ByteStream} from given offset, with given format in given encoding.
      *
      * @param source the data to parse from
      * @param offset the offset to start parsing from

@@ -40,7 +40,7 @@ import io.parsingdata.metal.util.Util;
 public class InvertBitsCopySerializerTest {
 
     @Parameter(0)
-    public byte[] _inputData;
+    public byte[] _input;
 
     @Parameter(1)
     public Token _token;
@@ -55,23 +55,23 @@ public class InvertBitsCopySerializerTest {
 
     @Test
     public void testInvert() throws IOException {
-        final ParseResult result = Util.parse(_inputData, _token);
+        final ParseResult result = Util.parse(_input, _token);
         final InvertBitTransformer transformer = new InvertBitTransformer(ParseGraph.NONE);
-        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(_inputData.length);
+        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(_input.length);
 
         new Serializer()
             .transform("*", transformer)
             .serialize(result, tokenSerializer);
         final byte[] outputData = tokenSerializer.outputData();
 
-        assertArrayEquals(invertBits(_inputData), outputData);
+        assertArrayEquals(invertBits(_input), outputData);
     }
 
     @Test
     public void testDoubleInvert() throws IOException {
-        final ParseResult result = Util.parse(_inputData, _token);
+        final ParseResult result = Util.parse(_input, _token);
         final InvertBitTransformer transformer = new InvertBitTransformer(ParseGraph.NONE);
-        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(_inputData.length);
+        final CopyTokenSerializer tokenSerializer = new CopyTokenSerializer(_input.length);
 
         new Serializer()
             .transform("*", transformer)
@@ -80,7 +80,7 @@ public class InvertBitsCopySerializerTest {
 
         final byte[] outputData = tokenSerializer.outputData();
 
-        assertArrayEquals(_inputData, outputData);
+        assertArrayEquals(_input, outputData);
     }
 
     private byte[] invertBits(final byte[] input) {
