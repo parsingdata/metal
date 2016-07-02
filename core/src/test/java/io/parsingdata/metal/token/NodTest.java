@@ -29,11 +29,12 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class NodTest {
 
     private static final Token NOD = nod(con(4));
-    private static final Token NOD_REF_SIZE = nod(last(ref("size")));
+    private static final Token NOD_REF_SIZE = nod(ref("size"));
     private static final Token FOUND_REF = seq(def("size", con(1)), NOD_REF_SIZE);
 
     @Rule
@@ -42,6 +43,7 @@ public class NodTest {
     @Test
     public void nodSkipsData() throws IOException {
         ParseResult parseResult = NOD.parse(stream(1, 1, 1, 1), enc());
+        assertTrue(parseResult.succeeded());
         assertThat(parseResult.getEnvironment().offset, is(4L));
     }
 
@@ -49,6 +51,7 @@ public class NodTest {
     public void nodWithRefSize() throws IOException {
         ParseResult parseResult = FOUND_REF.parse(stream(1, 1), enc());
         // 1 byte size, 1 byte nod:
+        assertTrue(parseResult.succeeded());
         assertThat(parseResult.getEnvironment().offset, is(2L));
     }
 
@@ -56,6 +59,16 @@ public class NodTest {
     public void nodWithoutSize() throws IOException {
         ParseResult parseResult = NOD_REF_SIZE.parse(stream(), enc());
         assertFalse(parseResult.succeeded());
+    }
+
+    @Test
+    public void nodWithMultipleSizes() throws IOException {
+        thrown.expect(RuntimeException.class);
+        thrown.expectMessage("A single size value must be provided.");
+        ParseResult parseResult =
+            seq(def("size", con(1)),
+                def("size", con(1)),
+                NOD_REF_SIZE).parse(stream(2, 2, 0, 0), enc());
     }
 
 }
