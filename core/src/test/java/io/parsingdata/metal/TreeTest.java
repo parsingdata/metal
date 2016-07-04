@@ -16,24 +16,19 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-
-import java.io.IOException;
-
+import io.parsingdata.metal.data.*;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseItem;
-import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.data.ParseValueList;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.token.Token;
+import java.io.IOException;
+
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 @RunWith(JUnit4.class)
 public class TreeTest {
@@ -109,10 +104,10 @@ public class TreeTest {
 
     private void checkBranch(final ParseGraph root, final long offset, final ParseItem item) {
         Assert.assertFalse(item.isValue());
-        if (item.isGraph()) {
+        if (item.asGraph().head.isGraph()) {
             checkStruct(root, item.asGraph().head.asGraph(), offset);
-        } else if (item.isRef()) {
-            checkHeader(item.asRef().resolve(root), offset);
+        } else if (item.asGraph().head.isRef()) {
+            checkHeader(item.asGraph().head.asRef().resolve(root), offset);
         }
     }
 

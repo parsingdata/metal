@@ -42,9 +42,9 @@ public class Sub extends Token {
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final OptionalValueList addrs = _addr.eval(env, enc);
         if (addrs.isEmpty() || addrs.containsEmpty()) { return new ParseResult(false, env); }
-        final ParseResult res = iterate(scope, addrs, env, enc);
+        final ParseResult res = iterate(scope, addrs, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
         if (res.succeeded()) {
-            return res;
+            return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, env.offset));
         }
         return new ParseResult(false, env);
     }
@@ -65,9 +65,9 @@ public class Sub extends Token {
         if (env.order.hasGraphAtRef(ref)) {
             return new ParseResult(true, new Environment(env.order.add(new ParseRef(ref, this)), env.input, env.offset));
         }
-        final ParseResult res = _op.parse(scope, new Environment(env.order.addBranch(this), env.input, ref), enc);
+        final ParseResult res = _op.parse(scope, new Environment(env.order, env.input, ref), enc);
         if (res.succeeded()) {
-            return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, env.offset));
+            return res;
         }
         return new ParseResult(false, env);
     }

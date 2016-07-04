@@ -40,8 +40,8 @@ public class SubStructTableTest {
         assertEquals(4, res.getEnvironment().offset);
         final ParseGraph order = res.getEnvironment().order;
         checkStruct(order.head.asGraph().head.asGraph());
-        checkStruct(order.head.asGraph().tail.head.asGraph());
-        checkStruct(order.head.asGraph().tail.tail.head.asGraph());
+        checkStruct(order.head.asGraph().head.asGraph().tail);
+        checkStruct(order.head.asGraph().head.asGraph().tail.tail);
     }
 
     private void checkStruct(final ParseGraph graph) {
