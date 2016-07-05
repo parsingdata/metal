@@ -44,6 +44,28 @@ public class SubStructTableTest {
         checkStruct(order.head.asGraph().head.asGraph().tail.tail);
     }
 
+    @Test
+    public void tableWithDuplicate() throws IOException {
+        final Environment env = stream(4, 7, 5, 5, 10, 42, 84, 42, 84, 0, 42, 84);
+                            /* offset: 0, 1, 2, 3,  4,  5,  6,  7, 8,  9, 10, 11
+                             * count:  ^
+                             * pointers:  ^, ^, ^, ^^
+                             * ref1:      +--------------------^^--^^
+                             * ref2:         +---------^^--^^
+                             * ref3:         +---------^^--^^ duplicate!
+                             * ref4:               ++---------------------^^--^^
+                             */
+        final ParseResult res = table.parse(env, enc());
+        assertTrue(res.succeeded());
+        assertEquals(5, res.getEnvironment().offset);
+        final ParseGraph order = res.getEnvironment().order;
+        checkStruct(order.head.asGraph().head.asGraph());
+        assertTrue(order.head.asGraph().head.asGraph().tail.head.isRef());
+        //checkStruct(order.head.asGraph().head.asGraph().tail.head.asRef().resolve(order));
+        checkStruct(order.head.asGraph().head.asGraph().tail.tail);
+        checkStruct(order.head.asGraph().head.asGraph().tail.tail.tail);
+    }
+
     private void checkStruct(final ParseGraph graph) {
         assertEquals(84, graph.head.asGraph().head.asValue().asNumeric().intValue());
         assertEquals(42, graph.head.asGraph().tail.head.asValue().asNumeric().intValue());
