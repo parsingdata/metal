@@ -48,9 +48,13 @@ public class ParseGraphList {
 
     public ParseGraphList add(final ParseGraphList list) {
         checkNotNull(list, "list");
-        if (list.isEmpty()) { return this; }
-        if (isEmpty()) { return list; }
-        return add(list.tail).add(list.head);
+        ParseGraphList lst = list;
+        ParseGraphList addTo = this;
+        while (lst.head != null) {
+            addTo = addTo.add(lst.head);
+            lst = lst.tail;
+        }
+        return addTo;
     }
 
     public boolean isEmpty() {

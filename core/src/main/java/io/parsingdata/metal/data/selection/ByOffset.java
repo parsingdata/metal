@@ -28,31 +28,33 @@ public class ByOffset {
     }
 
     public static ParseGraph findRef(final ParseGraphList graphs, final long ref) {
-        if (graphs.isEmpty()) { return null; }
-        final ParseGraph res = findRef(graphs.tail, ref);
-        if (res != null) { return res; }
-        if (graphs.head.containsValue() && graphs.head.getLowestOffsetValue().getOffset() == ref) {
-            return graphs.head;
+        ParseGraphList gr = graphs;
+        ParseGraph best = null;
+
+        while (gr.head != null) {
+            if (gr.head.containsValue() && gr.head.getLowestOffsetValue().getOffset() == ref) {
+                best = gr.head;
+            }
+            gr = gr.tail;
         }
-        return null;
+        return best;
     }
 
     public static ParseValue getLowestOffsetValue(final ParseGraph graph) {
-        if (!graph.containsValue()) { throw new IllegalStateException("Cannot determine lowest offset if graph does not contain a value."); }
-        final ParseItem head = graph.head;
-        if (head.isValue()) {
-            return getLowestOffsetValue(graph.tail, head.asValue());
+        if (!graph.containsValue()) {
+            throw new IllegalStateException("Cannot determine lowest offset if graph does not contain a value.");
         }
-        return getLowestOffsetValue(graph.tail);
-    }
 
-    private static ParseValue getLowestOffsetValue(final ParseGraph graph, final ParseValue lowest) {
-        if (!graph.containsValue()) { return lowest; }
-        final ParseItem head = graph.head;
-        if (head.isValue()) {
-            return getLowestOffsetValue(graph.tail, lowest.getOffset() < (head.asValue()).getOffset() ? lowest : head.asValue());
+        ParseGraph gr = graph;
+        ParseValue low = null;
+        while (gr.head != null) {
+            final ParseItem head = gr.head;
+            if (head.isValue()) {
+                low = low != null && low.getOffset() < (head.asValue()).getOffset() ? low : head.asValue();
+            }
+            gr = gr.tail;
         }
-        return getLowestOffsetValue(graph.tail, lowest);
-    }
 
+        return low;
+    }
 }
