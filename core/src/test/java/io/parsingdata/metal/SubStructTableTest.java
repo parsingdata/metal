@@ -39,9 +39,9 @@ public class SubStructTableTest {
         assertTrue(res.succeeded());
         assertEquals(4, res.getEnvironment().offset);
         final ParseGraph order = res.getEnvironment().order;
-        checkStruct(order.head.asGraph().head.asGraph());
-        checkStruct(order.head.asGraph().head.asGraph().tail);
-        checkStruct(order.head.asGraph().head.asGraph().tail.tail);
+        checkStruct(order.head.asGraph().head.asGraph().head.asGraph());
+        checkStruct(order.head.asGraph().head.asGraph().tail.head.asGraph());
+        checkStruct(order.head.asGraph().head.asGraph().tail.tail.head.asGraph());
     }
 
     @Test
@@ -59,16 +59,16 @@ public class SubStructTableTest {
         assertTrue(res.succeeded());
         assertEquals(5, res.getEnvironment().offset);
         final ParseGraph order = res.getEnvironment().order;
-        checkStruct(order.head.asGraph().head.asGraph());
+        checkStruct(order.head.asGraph().head.asGraph().head.asGraph());
         assertTrue(order.head.asGraph().head.asGraph().tail.head.isRef());
-        //checkStruct(order.head.asGraph().head.asGraph().tail.head.asRef().resolve(order));
-        checkStruct(order.head.asGraph().head.asGraph().tail.tail);
-        checkStruct(order.head.asGraph().head.asGraph().tail.tail.tail);
+        checkStruct(order.head.asGraph().head.asGraph().tail.head.asRef().resolve(order));
+        checkStruct(order.head.asGraph().head.asGraph().tail.tail.head.asGraph());
+        checkStruct(order.head.asGraph().head.asGraph().tail.tail.tail.head.asGraph());
     }
 
     private void checkStruct(final ParseGraph graph) {
-        assertEquals(84, graph.head.asGraph().head.asValue().asNumeric().intValue());
-        assertEquals(42, graph.head.asGraph().tail.head.asValue().asNumeric().intValue());
+        assertEquals(84, graph.head.asValue().asNumeric().intValue());
+        assertEquals(42, graph.tail.head.asValue().asNumeric().intValue());
     }
 
 }
