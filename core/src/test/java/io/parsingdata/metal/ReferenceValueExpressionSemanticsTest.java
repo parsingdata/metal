@@ -53,10 +53,17 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
             { "[1, 2, 3] a, a, first(a)", refList("a", "a", first(ref("a"))), stream(1, 2, 3), enc(), false },
             { "[1, 2, 3] a, a, first(b)", refList("a", "a", first(ref("b"))), stream(1, 2, 3), enc(), false },
             { "[1, 2, 3] a, a, ref(b)", refList("a", "a", ref("b")), stream(1, 2, 3), enc(), false },
-            { "[1, 2, 0] a, b, offset(a)", refList("a", "b", offset(last(ref("a")))), stream(1, 2, 0), enc(), true },
-            { "[1, 2, 1] a, a, offset(a)", refList("a", "a", offset(last(ref("a")))), stream(1, 2, 1), enc(), true },
-            { "[1, 2, 2] a, b, offset(z)", refList("a", "b", offset(last(ref("z")))), stream(1, 2, 2), enc(), true },
-            { "[1, 2, 3] a, b, offset(c)", refList("a", "b", offset(last(ref("c")))), stream(1, 2, 3), enc(), false }
+            { "[1, 2, 3] a, a, last(a)", refList("a", "a", last(ref("a"))), stream(1, 2, 2), enc(), true },
+            { "[1, 2, 3] a, a, last(a)", refList("a", "a", last(ref("a"))), stream(1, 2, 1), enc(), false },
+            { "[1, 2, 0] a, b, offset(last(a))", refList("a", "b", offset(last(ref("a")))), stream(1, 2, 0), enc(), true },
+            { "[1, 2, 1] a, a, offset(last(a))", refList("a", "a", offset(last(ref("a")))), stream(1, 2, 1), enc(), true },
+            { "[1, 2, 2] a, b, offset(last(z))", refList("a", "b", offset(last(ref("z")))), stream(1, 2, 2), enc(), true },
+            { "[1, 2, 3] a, b, offset(last(c))", refList("a", "b", offset(last(ref("c")))), stream(1, 2, 3), enc(), false },
+            { "[1, 2, 0] a, b, offset(first(a))", refList("a", "b", offset(first(ref("a")))), stream(1, 2, 0), enc(), true },
+            { "[1, 2, 1] a, a, offset(first(a))", refList("a", "a", offset(first(ref("a")))), stream(1, 2, 1), enc(), false },
+            { "[2, 1, 0] a, a, offset(first(a))", refList("a", "a", offset(first(ref("a")))), stream(2, 1, 0), enc(), true },
+            { "[1, 2, 2] a, b, offset(first(z))", refList("a", "b", offset(first(ref("z")))), stream(1, 2, 2), enc(), true },
+            { "[1, 2, 3] a, b, offset(first(c))", refList("a", "b", offset(first(ref("c")))), stream(1, 2, 3), enc(), false }
         });
     }
 
