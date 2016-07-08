@@ -47,47 +47,49 @@ public final class CompoundExpression {
     }
 
     /**
-     * Greater than equals expression, evaluating to true when current value >= p.
+     * Greater than equals expression, evaluating to true when current value &gt;= p.
      *
      * @param p the value to compare against
-     * @return expression evaluating to true if self >= p
+     * @return expression evaluating to true if self &gt;= p
      */
     public static BinaryLogicalExpression gtEqNum(final ValueExpression p) {
         return or(gtNum(p), eqNum(p));
     }
 
     /**
-     * Greater than equals expression, evaluating to true when c >= p.
+     * Greater than equals expression, evaluating to true when c &gt;= p.
      *
+     * @param c the value to compare
      * @param p the value to compare against
-     * @return expression evaluating to true if c >= p
+     * @return expression evaluating to true if c &gt;= p
      */
     public static BinaryLogicalExpression gtEqNum(final ValueExpression c, final ValueExpression p) {
         return or(gtNum(c, p), eqNum(c, p));
     }
 
     /**
-     * Less than equals expression, evaluating to true when current value <= p.
+     * Less than equals expression, evaluating to true when current value &lt;= p.
      *
      * @param p the value to compare against
-     * @return expression evaluating to true if self <= p
+     * @return expression evaluating to true if self &lt;= p
      */
     public static BinaryLogicalExpression ltEqNum(final ValueExpression p) {
         return or(eqNum(p), ltNum(p));
     }
 
     /**
-     * Less than equals expression, evaluating to true when c <= p.
+     * Less than equals expression, evaluating to true when c &lt;= p.
      *
+     * @param c the value to compare
      * @param p the value to compare against
-     * @return expression evaluating to true if c <= p
+     * @return expression evaluating to true if c &lt;= p
      */
     public static BinaryLogicalExpression ltEqNum(final ValueExpression c, final ValueExpression p) {
         return or(eqNum(c, p), ltNum(c, p));
     }
 
     /**
-     * Implication expression, evaluation to true when l -> r (i.e., !l || r).
+     * Implication expression, evaluation to true when l -&gt; r (i.e., !l || r).
      *
      * @param l the antecedent of the expression
      * @param r the consequent of the expression

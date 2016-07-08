@@ -82,7 +82,7 @@ public final class Serializer {
     }
 
     /**
-     * Transform all parsed values in {@link ParseResult} and serialize them using a {@link TokenSerializer}.
+     * Transform all parsed values in {@link ParseResult} and process them using a {@link ParseValueProcessor}.
      *
      * @param result the result to serialize
      * @param parseValueProcessor the serializer to use
@@ -92,7 +92,7 @@ public final class Serializer {
     }
 
     /**
-     * Transform all parsed values in a {@link ParseResult} and serialize them using a {@link TokenSerializer}.
+     * Transform all parsed values in a {@link Environment} and process them using a {@link ParseValueProcessor}.
      *
      * @param environment the result to serialize
      * @param parseValueProcessor the serializer to use
