@@ -43,11 +43,13 @@ public class Elvis implements ValueExpression {
 
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
-        final OptionalValueList eval = _lop.eval(env, enc);
-        if (eval.containsValue()) {
-            return eval;
-        }
-        return _rop.eval(env, enc);
+        return eval(_lop.eval(env, enc), _rop.eval(env, enc));
+    }
+
+    private OptionalValueList eval(final OptionalValueList llist, final OptionalValueList rlist) {
+        if (llist.isEmpty()) { return rlist; }
+        if (rlist.isEmpty()) { return llist; }
+        return eval(llist.tail, rlist.tail).add(llist.head.isPresent() ? llist.head : rlist.head);
     }
 
     @Override

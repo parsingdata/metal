@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.expression.value;
 
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
@@ -24,6 +25,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.TokenDefinitions.any;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -66,6 +68,54 @@ public class ElvisExpressionTest {
 
         assertNotNull(eval);
         assertTrue(eval.isEmpty());
+    }
+
+    private Token createListToken(final Token left, final Token right) {
+        return
+            seq(left,
+                right
+            );
+    }
+
+    @Test
+    public void elvisList() throws IOException {
+        final ParseResult result = createListToken(seq(any("a"), any("a")), seq(any("b"), any("b"))).parse(stream(1, 2, 3, 4), enc());
+        assertTrue(result.succeeded());
+        final ValueExpression elvis = elvis(ref("a"), ref("b"));
+        final OptionalValueList eval = elvis.eval(result.getEnvironment(), enc());
+        assertEquals(2, eval.size);
+        assertEquals(2, eval.head.get().asNumeric().intValue());
+        assertEquals(1, eval.tail.head.get().asNumeric().intValue());
+    }
+
+    @Test
+    public void elvisListWithEmpty() throws IOException {
+        final ParseResult result = createListToken(seq(any("a"), any("a")), seq(any("b"), any("b"))).parse(stream(1, 2, 3, 4), enc());
+        assertTrue(result.succeeded());
+        final ValueExpression elvis = elvis(ref("c"), ref("b"));
+        final OptionalValueList eval = elvis.eval(result.getEnvironment(), enc());
+        assertEquals(2, eval.size);
+        assertEquals(4, eval.head.get().asNumeric().intValue());
+        assertEquals(3, eval.tail.head.get().asNumeric().intValue());
+    }
+
+    @Test
+    public void elvisListDifferentLengths() throws IOException {
+        final ParseResult result = createListToken(seq(any("a"), any("a")), seq(any("b"), any("b"), any("b"))).parse(stream(1, 2, 3, 4, 5), enc());
+        assertTrue(result.succeeded());
+        final ValueExpression elvis = elvis(ref("a"), ref("b"));
+        final OptionalValueList eval = elvis.eval(result.getEnvironment(), enc());
+        assertEquals(3, eval.size);
+        assertEquals(2, eval.head.get().asNumeric().intValue());
+        assertEquals(1, eval.tail.head.get().asNumeric().intValue());
+        assertEquals(3, eval.tail.tail.head.get().asNumeric().intValue());
+    }
+
+    @Test
+    public void elvisListEmpty() {
+        final ValueExpression elvis = elvis(ref("a"), ref("b"));
+        final OptionalValueList eval = elvis.eval(new Environment(null), enc());
+        assertEquals(0, eval.size);
     }
 
     @Test
