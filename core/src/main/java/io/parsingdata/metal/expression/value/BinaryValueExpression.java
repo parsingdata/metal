@@ -38,18 +38,19 @@ public abstract class BinaryValueExpression implements ValueExpression {
     }
 
     private OptionalValueList evalLists(final OptionalValueList lvl, final OptionalValueList rvl, final Environment env, final Encoding enc) {
-        if (lvl.isEmpty()) { return lvl; }
-        return evalLists(lvl.tail, rvl, env, enc).add(evalLeftHead(lvl.head, rvl, env, enc));
+        if (lvl.isEmpty()) { return makeListWithEmpty(rvl.size); }
+        if (rvl.isEmpty()) { return makeListWithEmpty(lvl.size); }
+        return evalLists(lvl.tail, rvl.tail, env, enc).add(eval(lvl.head, rvl.head, env, enc));
     }
 
-    private OptionalValueList evalLeftHead(final OptionalValue lhead, final OptionalValueList rvl, final Environment env, final Encoding enc) {
-        if (rvl.isEmpty()) { return rvl; }
-        return evalLeftHead(lhead, rvl.tail, env, enc).add(evalValues(lhead, rvl.head, env, enc));
+    private OptionalValueList makeListWithEmpty(final long size) {
+        if (size <= 0) { return OptionalValueList.EMPTY; }
+        return makeListWithEmpty(size - 1).add(OptionalValue.empty());
     }
 
-    private OptionalValue evalValues(final OptionalValue lhead, final OptionalValue rhead, final Environment env, final Encoding enc) {
-        if (!lhead.isPresent() || !rhead.isPresent()) { return lhead; }
-        return eval(lhead.get(), rhead.get(), env, enc);
+    private OptionalValue eval(final OptionalValue left, final OptionalValue right, final Environment env, final Encoding enc) {
+        if (!left.isPresent() || !right.isPresent()) { return OptionalValue.empty(); }
+        return eval(left.get(), right.get(), env, enc);
     }
 
     public abstract OptionalValue eval(final Value lv, final Value rv, final Environment env, final Encoding enc);

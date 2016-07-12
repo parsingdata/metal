@@ -20,6 +20,8 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 /**
  * Expression for the 'elvis operator': <pre>?:</pre>.
  * <p>
@@ -33,17 +35,17 @@ import io.parsingdata.metal.encoding.Encoding;
  * evaluates to that value, else it evaluates to the value of <code>ref("bar")</code>.
  */
 public class Elvis implements ValueExpression {
-    private final ValueExpression _lop;
-    private final ValueExpression _rop;
+    private final ValueExpression lop;
+    private final ValueExpression rop;
 
     public Elvis(final ValueExpression lop, final ValueExpression rop) {
-        _lop = lop;
-        _rop = rop;
+        this.lop = checkNotNull(lop, "lop");
+        this.rop = checkNotNull(rop, "rop");
     }
 
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
-        return eval(_lop.eval(env, enc), _rop.eval(env, enc));
+        return eval(lop.eval(env, enc), rop.eval(env, enc));
     }
 
     private OptionalValueList eval(final OptionalValueList llist, final OptionalValueList rlist) {
@@ -54,6 +56,6 @@ public class Elvis implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _lop + "," + _rop + ")";
+        return getClass().getSimpleName() + "(" + lop + "," + rop + ")";
     }
 }
