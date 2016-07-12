@@ -54,19 +54,7 @@ public class OptionalValueList {
         return new OptionalValueList(head, this);
     }
 
-    public OptionalValueList add(final OptionalValueList list) {
-        checkNotNull(list, "list");
-        if (list.isEmpty()) { return this; }
-        if (isEmpty()) { return list; }
-        return add(list.tail).add(list.head);
-    }
-
     public boolean isEmpty() { return size == 0; }
-
-    public boolean containsValue() {
-        if (isEmpty()) { return false; }
-        return this.head.isPresent() || this.tail.containsValue();
-    }
 
     public boolean containsEmpty() {
         if (isEmpty()) { return false; }

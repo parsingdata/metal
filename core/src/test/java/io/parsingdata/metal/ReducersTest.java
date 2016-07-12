@@ -40,6 +40,7 @@ public class ReducersTest extends ParameterizedParse {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
             { "[1, 2, 3, 6] a, a, a, addAll(a)", reduceAddA, stream(1, 2, 3, 6), enc(), true },
+            { "[1, 2, 3, 3] a, a, a, addAllOffset(a)", reduceAddOffsetA, stream(1, 2, 3, 3), enc(), true },
             { "[1, 2, 3, 6] a, a, a, addAll(a, 0)", reduceAddAInit0, stream(1, 2, 3, 6), enc(), true },
             { "[1, 2, 3, 6] a, a, a, addAll(a, 1)", reduceAddAInit1, stream(1, 2, 3, 6), enc(), false },
             { "[1, 2, 3, 7] a, a, a, addAll(a)", reduceAddA, stream(1, 2, 3, 7), enc(), false },
@@ -72,6 +73,7 @@ public class ReducersTest extends ParameterizedParse {
     private final static Reducer subReducer = new Reducer() { @Override public ValueExpression reduce(final ValueExpression l, final ValueExpression r) { return sub(l, r); } };
 
     private final static Token reduceAddA = token(1, eq(fold(ref("a"), addReducer)));
+    private final static Token reduceAddOffsetA = token(1, eq(fold(offset(ref("a")), addReducer)));
     private final static Token reduceAddAInit0 = token(1, eq(fold(ref("a"), addReducer, con(0))));
     private final static Token reduceAddAInit1 = token(1, eq(fold(ref("a"), addReducer, con(1))));
     private final static Token reduceMulA = token(1, eq(fold(ref("a"), mulReducer)));
