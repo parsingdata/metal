@@ -48,7 +48,7 @@ public class BinaryValueExpressionListSemanticsTest extends ParameterizedParse {
             { "a, a, a, b, b, first(a)+last(b)", pred3(eq(add(first(ref("a")), last(ref("b"))))), stream(1, 2, 3, 4, 5, 6), enc(), true },
             { "a, a, b, b, last(not(a)+not(b))", pred2(eq(last(add(not(ref("a")), not(ref("b")))))), stream(1, 240, 3, 15, -1), enc(), true },
             { "a, a, b, b, first(not(a)+not(b))", pred2(eq(first(add(not(ref("a")), not(ref("b")))))), stream(230, 2, 25, 4, -1), enc(), true },
-            { "a, a, a, b, b, last((not(a)+not(b))", pred3(eq(last(add(not(ref("a")), not(ref("b")))))), stream(1, 2, 200, 4, 55, -1), enc(), true },
+            { "a, a, a, b, b, last(not(a)+not(b))", pred3(eq(last(add(not(ref("a")), not(ref("b")))))), stream(1, 2, 200, 4, 55, -1), enc(), true },
             { "a, a, a, b, b, first(not(a)+not(b))", pred3(eq(first(add(not(ref("a")), not(ref("b")))))), stream(200, 2, 3, 55, 5, -1), enc(), false },
         });
     }
