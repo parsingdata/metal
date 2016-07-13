@@ -76,24 +76,8 @@ public class ParseValueList {
         return t.add(head);
     }
 
-    public ParseValue current() {
-        return head;
-    }
-
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    public ParseValue getFirst() {
-        if (isEmpty()) { return null; }
-        if (tail.isEmpty()) { return head; }
-        return tail.getFirst();
-    }
-
-    public boolean containsOffset(final long offset) {
-        if (isEmpty()) { return false; }
-        if (head.getOffset() == offset) { return true; }
-        return tail.containsOffset(offset);
     }
 
     public ParseValueList reverse() {

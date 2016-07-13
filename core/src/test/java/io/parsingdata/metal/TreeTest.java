@@ -17,6 +17,7 @@
 package io.parsingdata.metal;
 
 import io.parsingdata.metal.data.*;
+import io.parsingdata.metal.data.selection.ByName;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import org.junit.Assert;
@@ -123,7 +124,7 @@ public class TreeTest {
     @Test
     public void checkRegularTreeFlat() {
         Assert.assertTrue(_regular.succeeded());
-        final ParseValueList nrs = _regular.getEnvironment().order.getAll("nr");
+        final ParseValueList nrs = ByName.getAll(_regular.getEnvironment().order, "nr");
         for (int i = 0; i < 7; i++) {
             Assert.assertTrue(contains(nrs, i));
         }

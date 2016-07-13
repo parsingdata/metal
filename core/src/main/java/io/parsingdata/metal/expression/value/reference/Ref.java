@@ -18,8 +18,8 @@ package io.parsingdata.metal.expression.value.reference;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.selection.ByName;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 import static io.parsingdata.metal.Util.checkNotNull;
@@ -34,7 +34,7 @@ public class Ref implements ValueExpression {
 
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
-        return OptionalValueList.create(env.order.getAll(_name));
+        return OptionalValueList.create(ByName.getAll(env.order, _name));
     }
 
     @Override

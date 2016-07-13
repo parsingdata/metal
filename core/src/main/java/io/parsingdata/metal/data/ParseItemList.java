@@ -53,28 +53,8 @@ public class ParseItemList {
         return add(list.tail).add(list.head);
     }
 
-    public ParseItem current() {
-        return head;
-    }
-
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    public ParseItem getFirst() {
-        if (isEmpty()) { return null; }
-        if (tail.isEmpty()) { return head; }
-        return tail.getFirst();
-    }
-
-    public ParseItemList reverse() {
-        if (isEmpty()) { return this; }
-        return reverse(tail, create(head));
-    }
-
-    private ParseItemList reverse(final ParseItemList oldList, final ParseItemList newList) {
-        if (oldList.isEmpty()) { return newList; }
-        return reverse(oldList.tail, newList.add(oldList.head));
     }
 
     @Override
