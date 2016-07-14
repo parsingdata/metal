@@ -45,7 +45,7 @@ public class Def extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final OptionalValueList size = _size.eval(env, enc);
-        if (size.size != 1) { throw new RuntimeException("Size may not evaluate to more than a single value."); }
+        if (size.size != 1) { throw new IllegalStateException("Size may not evaluate to more than a single value."); }
         if (!size.head.isPresent()) {
             return new ParseResult(false, env);
         }

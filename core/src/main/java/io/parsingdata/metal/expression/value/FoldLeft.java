@@ -38,7 +38,7 @@ public class FoldLeft implements ValueExpression {
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
         final OptionalValueList init = _init != null ? _init.eval(env, enc) : OptionalValueList.EMPTY;
-        if (init.size > 1) { throw new RuntimeException("Init may not evaluate to more than a single value."); }
+        if (init.size > 1) { throw new IllegalStateException("Init may not evaluate to more than a single value."); }
         final OptionalValueList values = _values.eval(env, enc).reverse();
         if (values.isEmpty() || values.containsEmpty()) { return init; }
         if (!init.isEmpty()) { return OptionalValueList.create(fold(env, enc, _reducer, init.head, values)); }
@@ -47,7 +47,9 @@ public class FoldLeft implements ValueExpression {
 
     private OptionalValue fold(final Environment env, final Encoding enc, final Reducer reducer, final OptionalValue head, final OptionalValueList tail) {
         if (!head.isPresent() || tail.isEmpty()) { return head; }
-        return fold(env, enc, reducer, reducer.reduce(con(head.get()), con(tail.head.get())).eval(env, enc).head, tail.tail);
+        final OptionalValueList reducedValue = reducer.reduce(con(head.get()), con(tail.head.get())).eval(env, enc);
+        if (reducedValue.size != 1) { throw new IllegalStateException("Reducer must yield a single value."); }
+        return fold(env, enc, reducer, reducedValue.head, tail.tail);
     }
 
 }

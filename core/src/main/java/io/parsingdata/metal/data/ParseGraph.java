@@ -57,7 +57,7 @@ public class ParseGraph implements ParseItem {
         size = tail.size + 1;
     }
 
-    // TODO see ByItem, this constructor used to be private
+    // TODO: see ByItem, this constructor used to be private (#64)
     public ParseGraph(final ParseItem head, final ParseGraph tail, final Token definition) {
         this(head, tail, definition, false);
     }
