@@ -35,7 +35,7 @@ public class ByItem {
         if (graph.isEmpty()) { return EMPTY; }
         final ParseItem head = graph.head;
         if (head == lastHead) { return result; }
-        // TODO how can we do this without calling the (previously private) constructor?
+        // TODO: How can we do this without calling the (previously private) constructor? (#64)
         return new ParseGraph(head, getGraphAfter(graph.tail, lastHead, result), graph.definition);
     }
 }

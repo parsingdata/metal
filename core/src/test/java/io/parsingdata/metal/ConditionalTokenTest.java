@@ -16,31 +16,19 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.add;
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.currentOffset;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.eq;
-import static io.parsingdata.metal.Shorthand.eqNum;
-import static io.parsingdata.metal.Shorthand.ltNum;
-import static io.parsingdata.metal.Shorthand.offset;
-import static io.parsingdata.metal.Shorthand.pre;
-import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.Shorthand.whl;
-import static io.parsingdata.metal.TokenDefinitions.any;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-
-import java.util.Arrays;
-import java.util.Collection;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
-
 import org.junit.runners.Parameterized.Parameters;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.TokenDefinitions.any;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 public class ConditionalTokenTest extends ParameterizedParse {
 
@@ -67,7 +55,7 @@ public class ConditionalTokenTest extends ParameterizedParse {
                                               def("c", con(1), eqNum(con(3))));
     
     private static final Token whileToken = seq(any("size"),
-                                                whl(any("value"), ltNum(currentOffset, add(ref("size"), add(offset("size"), con(1))))),
+                                                whl(any("value"), ltNum(currentOffset, add(ref("size"), add(offset(last(ref("size"))), con(1))))),
                                                 def("footer", con(1), eq(con(0xff))));
 
 }

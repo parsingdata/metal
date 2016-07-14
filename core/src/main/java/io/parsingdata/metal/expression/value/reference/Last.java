@@ -14,14 +14,32 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.expression.value;
+package io.parsingdata.metal.expression.value.reference;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.ValueExpression;
 
-public interface ValueExpression {
+import static io.parsingdata.metal.Util.checkNotNull;
 
-    OptionalValueList eval(final Environment env, final Encoding enc);
+public class Last implements ValueExpression {
+
+    private final ValueExpression _op;
+
+    public Last(final ValueExpression op) {
+        _op = checkNotNull(op, "op");
+    }
+
+    @Override
+    public OptionalValueList eval(final Environment env, final Encoding enc) {
+        final OptionalValueList list = _op.eval(env, enc);
+        return list.isEmpty() ? list : OptionalValueList.create(list.head);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + _op + ")";
+    }
 
 }

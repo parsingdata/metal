@@ -17,6 +17,7 @@
 package io.parsingdata.metal.expression.value;
 
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
 
 public class Const implements ValueExpression {
@@ -28,8 +29,8 @@ public class Const implements ValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Environment env, final Encoding enc) {
-        return OptionalValue.of(_val);
+    public OptionalValueList eval(final Environment env, final Encoding enc) {
+        return OptionalValueList.create(OptionalValue.of(_val));
     }
 
     @Override

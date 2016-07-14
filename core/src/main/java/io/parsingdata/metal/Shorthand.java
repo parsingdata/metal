@@ -16,58 +16,18 @@
 
 package io.parsingdata.metal;
 
-import io.parsingdata.metal.expression.value.reference.Len;
-
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.True;
-import io.parsingdata.metal.expression.comparison.ComparisonExpression;
-import io.parsingdata.metal.expression.comparison.Eq;
-import io.parsingdata.metal.expression.comparison.EqNum;
-import io.parsingdata.metal.expression.comparison.EqStr;
-import io.parsingdata.metal.expression.comparison.GtNum;
-import io.parsingdata.metal.expression.comparison.LtNum;
-import io.parsingdata.metal.expression.logical.And;
-import io.parsingdata.metal.expression.logical.BinaryLogicalExpression;
-import io.parsingdata.metal.expression.logical.Not;
-import io.parsingdata.metal.expression.logical.Or;
-import io.parsingdata.metal.expression.logical.UnaryLogicalExpression;
-import io.parsingdata.metal.expression.value.BinaryValueExpression;
-import io.parsingdata.metal.expression.value.Cat;
-import io.parsingdata.metal.expression.value.Const;
-import io.parsingdata.metal.expression.value.ConstantFactory;
-import io.parsingdata.metal.expression.value.Elvis;
-import io.parsingdata.metal.expression.value.FoldLeft;
-import io.parsingdata.metal.expression.value.FoldRight;
-import io.parsingdata.metal.expression.value.Reducer;
-import io.parsingdata.metal.expression.value.UnaryValueExpression;
-import io.parsingdata.metal.expression.value.Value;
-import io.parsingdata.metal.expression.value.ValueExpression;
-import io.parsingdata.metal.expression.value.arithmetic.Add;
-import io.parsingdata.metal.expression.value.arithmetic.Div;
-import io.parsingdata.metal.expression.value.arithmetic.Mod;
-import io.parsingdata.metal.expression.value.arithmetic.Mul;
-import io.parsingdata.metal.expression.value.arithmetic.Neg;
+import io.parsingdata.metal.expression.comparison.*;
+import io.parsingdata.metal.expression.logical.*;
+import io.parsingdata.metal.expression.value.*;
+import io.parsingdata.metal.expression.value.arithmetic.*;
 import io.parsingdata.metal.expression.value.arithmetic.Sub;
 import io.parsingdata.metal.expression.value.bitwise.ShiftLeft;
 import io.parsingdata.metal.expression.value.bitwise.ShiftRight;
-import io.parsingdata.metal.expression.value.reference.CurrentOffset;
-import io.parsingdata.metal.expression.value.reference.First;
-import io.parsingdata.metal.expression.value.reference.Offset;
-import io.parsingdata.metal.expression.value.reference.Ref;
-import io.parsingdata.metal.expression.value.reference.Self;
-import io.parsingdata.metal.token.Cho;
-import io.parsingdata.metal.token.Def;
-import io.parsingdata.metal.token.Nod;
-import io.parsingdata.metal.token.Opt;
-import io.parsingdata.metal.token.Pre;
-import io.parsingdata.metal.token.Rep;
-import io.parsingdata.metal.token.RepN;
-import io.parsingdata.metal.token.Seq;
-import io.parsingdata.metal.token.Str;
-import io.parsingdata.metal.token.StructSink;
-import io.parsingdata.metal.token.Token;
-import io.parsingdata.metal.token.While;
+import io.parsingdata.metal.expression.value.reference.*;
+import io.parsingdata.metal.token.*;
 
 public class Shorthand {
 
@@ -125,17 +85,18 @@ public class Shorthand {
     public static final ValueExpression self = new Self();
     public static ValueExpression len(final ValueExpression v) { return new Len(v); }
     public static ValueExpression ref(final String s) { return new Ref(s); }
-    public static ValueExpression first(final String s) { return new First(s); }
-    public static ValueExpression offset(final String s) { return new Offset(s); }
+    public static ValueExpression first(final ValueExpression o) { return new First(o); }
+    public static ValueExpression last(final ValueExpression o) { return new Last(o); }
+    public static ValueExpression offset(final ValueExpression o) { return new Offset(o); }
     public static final ValueExpression currentOffset = new CurrentOffset();
     public static ValueExpression cat(final ValueExpression l, final ValueExpression r) { return new Cat(l, r); }
     public static ValueExpression elvis(final ValueExpression l, final ValueExpression r) { return new Elvis(l, r); }
-    public static ValueExpression foldLeft(final String name, final Reducer reducer) { return new FoldLeft(name, reducer, null); }
-    public static ValueExpression foldLeft(final String name, final Reducer reducer, final ValueExpression i) { return new FoldLeft(name, reducer, i); }
-    public static ValueExpression foldRight(final String name, final Reducer reducer) { return new FoldRight(name, reducer, null); }
-    public static ValueExpression foldRight(final String name, final Reducer reducer, final ValueExpression i) { return new FoldRight(name, reducer, i); }
-    public static ValueExpression fold(final String name, final Reducer reducer) { return foldRight(name, reducer); }
-    public static ValueExpression fold(final String name, final Reducer reducer, final ValueExpression i) { return foldRight(name, reducer, i); }
+    public static ValueExpression foldLeft(final ValueExpression values, final Reducer reducer) { return new FoldLeft(values, reducer, null); }
+    public static ValueExpression foldLeft(final ValueExpression values, final Reducer reducer, final ValueExpression i) { return new FoldLeft(values, reducer, i); }
+    public static ValueExpression foldRight(final ValueExpression values, final Reducer reducer) { return new FoldRight(values, reducer, null); }
+    public static ValueExpression foldRight(final ValueExpression values, final Reducer reducer, final ValueExpression i) { return new FoldRight(values, reducer, i); }
+    public static ValueExpression fold(final ValueExpression values, final Reducer reducer) { return foldRight(values, reducer); }
+    public static ValueExpression fold(final ValueExpression values, final Reducer reducer, final ValueExpression i) { return foldRight(values, reducer, i); }
 
     public static BinaryLogicalExpression and(final Expression l, final Expression r) { return new And(l, r); }
     public static BinaryLogicalExpression or(final Expression l, final Expression r) { return new Or(l, r); }

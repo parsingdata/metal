@@ -16,28 +16,17 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.eq;
-import static io.parsingdata.metal.Shorthand.opt;
-import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.Shorthand.sub;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-
-import java.io.IOException;
-
+import io.parsingdata.metal.data.*;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
 import org.junit.Assert;
 import org.junit.Test;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseItem;
-import io.parsingdata.metal.data.ParseRef;
-import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.token.Token;
+import java.io.IOException;
+
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 public class SubStructTest {
 
@@ -50,7 +39,7 @@ public class SubStructTest {
             struct =
                 seq(def("header", con(1), eq(con(0))),
                     def("next", con(1)),
-                    opt(sub(this, ref("next"))),
+                    opt(sub(this, last(ref("next")))),
                     def("footer", con(1), eq(con(1))));
         }
 
@@ -98,7 +87,7 @@ public class SubStructTest {
         final ParseGraph first = out.head.asGraph();
         checkBranch(first, 0, 0);
 
-        final ParseRef ref = first.tail.head.asGraph().head.asRef();
+        final ParseRef ref = first.tail.head.asGraph().head.asGraph().head.asRef();
         checkBranch(ref.resolve(out), 0, 0); // Check cycle
     }
 
@@ -117,7 +106,7 @@ public class SubStructTest {
         final ParseGraph second = first.tail.head.asGraph().head.asGraph().head.asGraph();
         checkBranch(second, 4, 0);
 
-        final ParseRef ref = second.tail.head.asGraph().head.asRef();
+        final ParseRef ref = second.tail.head.asGraph().head.asGraph().head.asRef();
         checkBranch(ref.resolve(out), 0, 4); // Check cycle
     }
 

@@ -16,24 +16,21 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-
-import java.io.IOException;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.io.IOException;
+
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 public class DefinitionTest {
 	
-	// TODO: METAL-41: Add a bunch of additional tests here to check whether all Token types work correctly.
+	// TODO: Add a bunch of additional tests here to check whether all Token types work correctly (#8)
 	
 	@Test
 	public void singleDef() throws IOException {

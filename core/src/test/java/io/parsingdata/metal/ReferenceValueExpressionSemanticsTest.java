@@ -16,28 +16,21 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.eq;
-import static io.parsingdata.metal.Shorthand.first;
-import static io.parsingdata.metal.Shorthand.offset;
-import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.TokenDefinitions.any;
-import static io.parsingdata.metal.TokenDefinitions.eqRef;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-
-import java.util.Arrays;
-import java.util.Collection;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
-
 import org.junit.runners.Parameterized.Parameters;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.TokenDefinitions.any;
+import static io.parsingdata.metal.TokenDefinitions.eqRef;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
 
@@ -56,14 +49,21 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
             { "[2, 1, 2] b == a, c == b", sequenceMatchTransitive3, stream(2, 1, 2), enc(), false },
             { "[1, 2, 2] b == a, c == b", sequenceMatchTransitive3, stream(1, 2, 2), enc(), false },
             { "[1, 2, 3] b == a, c == b", sequenceMatchTransitive3, stream(1, 2, 3), enc(), false },
-            { "[1, 2, 1] a, a, first(a)", refList("a", "a", first("a")), stream(1, 2, 1), enc(), true },
-            { "[1, 2, 3] a, a, first(a)", refList("a", "a", first("a")), stream(1, 2, 3), enc(), false },
-            { "[1, 2, 3] a, a, first(b)", refList("a", "a", first("b")), stream(1, 2, 3), enc(), false },
+            { "[1, 2, 1] a, a, first(a)", refList("a", "a", first(ref("a"))), stream(1, 2, 1), enc(), true },
+            { "[1, 2, 3] a, a, first(a)", refList("a", "a", first(ref("a"))), stream(1, 2, 3), enc(), false },
+            { "[1, 2, 3] a, a, first(b)", refList("a", "a", first(ref("b"))), stream(1, 2, 3), enc(), false },
             { "[1, 2, 3] a, a, ref(b)", refList("a", "a", ref("b")), stream(1, 2, 3), enc(), false },
-            { "[1, 2, 0] a, b, offset(a)", refList("a", "b", offset("a")), stream(1, 2, 0), enc(), true },
-            { "[1, 2, 1] a, a, offset(a)", refList("a", "a", offset("a")), stream(1, 2, 1), enc(), true },
-            { "[1, 2, 2] a, b, offset(z)", refList("a", "b", offset("z")), stream(1, 2, 2), enc(), true },
-            { "[1, 2, 3] a, b, offset(c)", refList("a", "b", offset("c")), stream(1, 2, 3), enc(), false }
+            { "[1, 2, 2] a, a, last(a)", refList("a", "a", last(ref("a"))), stream(1, 2, 2), enc(), true },
+            { "[1, 2, 1] a, a, last(a)", refList("a", "a", last(ref("a"))), stream(1, 2, 1), enc(), false },
+            { "[1, 2, 0] a, b, offset(last(a))", refList("a", "b", offset(last(ref("a")))), stream(1, 2, 0), enc(), true },
+            { "[1, 2, 1] a, a, offset(last(a))", refList("a", "a", offset(last(ref("a")))), stream(1, 2, 1), enc(), true },
+            { "[1, 2, 2] a, b, offset(last(z))", refList("a", "b", offset(last(ref("z")))), stream(1, 2, 2), enc(), true },
+            { "[1, 2, 3] a, b, offset(last(c))", refList("a", "b", offset(last(ref("c")))), stream(1, 2, 3), enc(), false },
+            { "[1, 2, 0] a, b, offset(first(a))", refList("a", "b", offset(first(ref("a")))), stream(1, 2, 0), enc(), true },
+            { "[1, 2, 1] a, a, offset(first(a))", refList("a", "a", offset(first(ref("a")))), stream(1, 2, 1), enc(), false },
+            { "[2, 1, 0] a, a, offset(first(a))", refList("a", "a", offset(first(ref("a")))), stream(2, 1, 0), enc(), true },
+            { "[1, 2, 2] a, b, offset(first(z))", refList("a", "b", offset(first(ref("z")))), stream(1, 2, 2), enc(), true },
+            { "[1, 2, 3] a, b, offset(first(c))", refList("a", "b", offset(first(ref("c")))), stream(1, 2, 3), enc(), false }
         });
     }
 

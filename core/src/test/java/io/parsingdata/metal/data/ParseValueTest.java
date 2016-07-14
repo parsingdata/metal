@@ -1,19 +1,17 @@
 package io.parsingdata.metal.data;
 
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static junit.framework.TestCase.assertFalse;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
 import io.parsingdata.metal.token.Token;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static junit.framework.TestCase.assertFalse;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class ParseValueTest {
 
@@ -53,7 +51,7 @@ public class ParseValueTest {
     public void toStringTest() {
         assertThat(_value.toString(), is("ParseValue(value:ParseValue(01))"));
 
-        // TODO #18 Improve ParseValue toString()
+        // TODO: Improve ParseValue toString() (#18)
         // assertThat(_value.toString(), is("ParseValue(value:01)"));
     }
 

@@ -16,18 +16,14 @@
 
 package io.parsingdata.metal.data;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
-import java.io.IOException;
-
-import io.parsingdata.metal.data.selection.ByItem;
-import io.parsingdata.metal.data.selection.ByName;
-import io.parsingdata.metal.data.selection.ByOffset;
-import io.parsingdata.metal.data.selection.ByToken;
-import io.parsingdata.metal.data.selection.ByType;
+import io.parsingdata.metal.data.selection.*;
 import io.parsingdata.metal.data.transformation.Reversal;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
+
+import java.io.IOException;
+
+import static io.parsingdata.metal.Util.checkNotNull;
 
 public class ParseGraph implements ParseItem {
 
@@ -61,7 +57,7 @@ public class ParseGraph implements ParseItem {
         size = tail.size + 1;
     }
 
-    // TODO see ByItem, this constructor used to be private
+    // TODO: see ByItem, this constructor used to be private (#64)
     public ParseGraph(final ParseItem head, final ParseGraph tail, final Token definition) {
         this(head, tail, definition, false);
     }
@@ -137,14 +133,6 @@ public class ParseGraph implements ParseItem {
             if (val != null) { return val; }
         }
         return tail.current(); // Ignore current if it's a reference (or an empty graph)
-    }
-
-    public ParseValueList getAll(final String name) {
-        return ByName.getAll(this, name);
-    }
-
-    public ParseItemList getAll(final Token definition) {
-        return ByToken.getAll(this, definition);
     }
 
     /**

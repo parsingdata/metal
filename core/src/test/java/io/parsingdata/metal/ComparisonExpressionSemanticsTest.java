@@ -35,6 +35,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collection;
 
+import io.parsingdata.metal.expression.Expression;
 import org.junit.runners.Parameterized.Parameters;
 
 import io.parsingdata.metal.data.Environment;
@@ -61,7 +62,11 @@ public class ComparisonExpressionSemanticsTest extends ParameterizedParse {
             { "1 == 1(eq)", valCom(1, eq(ref("a"))), stream(1, 1), enc(), true },
             { "2 == 1(eq)", valCom(1, eq(ref("a"))), stream(1, 2), enc(), false },
             { "1 == 1 with self", valCom(1, eq(self, ref("a"))), stream(1, 1), enc(), true },
-            { "1 == 2 with self", valCom(1, eq(self, ref("a"))), stream(1, 2), enc(), false }
+            { "1 == 2 with self", valCom(1, eq(self, ref("a"))), stream(1, 2), enc(), false },
+            { "1, 2 == 1", listCom(eq(ref("a"), ref("b")), expTrue()), stream(1, 2, 1, 2), enc(), false },
+            { "1, 2 == 1, 2", listCom(expTrue(), eq(ref("a"), ref("b"))), stream(1, 2, 1, 2), enc(), true },
+            { "1, 2 == 2, 2", listCom(expTrue(), eq(ref("a"), ref("b"))), stream(1, 2, 2, 2), enc(), false },
+            { "1, 2 == 1, 3", listCom(expTrue(), eq(ref("a"), ref("b"))), stream(1, 2, 1, 3), enc(), false }
         });
     }
 
@@ -84,4 +89,10 @@ public class ComparisonExpressionSemanticsTest extends ParameterizedParse {
                    def("b", con(size), comparison));
     }
 
+    private static Token listCom(final Expression first, final Expression second) {
+        return seq(any("a"),
+                   any("a"),
+                   def("b", con(1), first),
+                   def("b", con(1), second));
+    }
 }

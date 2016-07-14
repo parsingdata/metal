@@ -17,7 +17,10 @@
 package io.parsingdata.metal.expression.value;
 
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
+
+import static io.parsingdata.metal.Util.checkNotNull;
 
 /**
  * Expression for the 'elvis operator': <pre>?:</pre>.
@@ -30,27 +33,33 @@ import io.parsingdata.metal.encoding.Encoding;
  *
  * If <code>ref("foo")</code> can be successfully evaluated, this elvis-expression
  * evaluates to that value, else it evaluates to the value of <code>ref("bar")</code>.
+ *
+ * For lists, values with the same index are compared in this manner. If lists are of
+ * unequal length, the shortest list is virtually extended with empty values (i.e.,
+ * the values in the other list are returned at those locations).
  */
 public class Elvis implements ValueExpression {
-    private final ValueExpression _lop;
-    private final ValueExpression _rop;
+    private final ValueExpression lop;
+    private final ValueExpression rop;
 
     public Elvis(final ValueExpression lop, final ValueExpression rop) {
-        _lop = lop;
-        _rop = rop;
+        this.lop = checkNotNull(lop, "lop");
+        this.rop = checkNotNull(rop, "rop");
     }
 
     @Override
-    public OptionalValue eval(final Environment env, final Encoding enc) {
-        final OptionalValue eval = _lop.eval(env, enc);
-        if (eval.isPresent()) {
-            return eval;
-        }
-        return _rop.eval(env, enc);
+    public OptionalValueList eval(final Environment env, final Encoding enc) {
+        return eval(lop.eval(env, enc), rop.eval(env, enc));
+    }
+
+    private OptionalValueList eval(final OptionalValueList llist, final OptionalValueList rlist) {
+        if (llist.isEmpty()) { return rlist; }
+        if (rlist.isEmpty()) { return llist; }
+        return eval(llist.tail, rlist.tail).add(llist.head.isPresent() ? llist.head : rlist.head);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _lop + "," + _rop + ")";
+        return getClass().getSimpleName() + "(" + lop + "," + rop + ")";
     }
 }

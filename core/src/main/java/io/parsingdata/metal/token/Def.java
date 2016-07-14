@@ -16,18 +16,18 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.True;
-import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
+
+import java.io.IOException;
+
+import static io.parsingdata.metal.Util.checkNotNull;
 
 public class Def extends Token {
 
@@ -44,12 +44,13 @@ public class Def extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final OptionalValue size = _size.eval(env, enc);
-        if (!size.isPresent()) {
+        final OptionalValueList size = _size.eval(env, enc);
+        if (size.size != 1) { throw new IllegalStateException("Size may not evaluate to more than a single value."); }
+        if (!size.head.isPresent()) {
             return new ParseResult(false, env);
         }
-        // TODO: Handle value expression results as BigInteger (METAL-15)
-        final int dataSize = size.get().asNumeric().intValue();
+        // TODO: Handle value expression results as BigInteger (#16)
+        final int dataSize = size.head.get().asNumeric().intValue();
         if (dataSize < 0) {
             return new ParseResult(false, env);
         }
@@ -57,7 +58,7 @@ public class Def extends Token {
         if (env.input.read(env.offset, data) != data.length) {
             return new ParseResult(false, env);
         }
-        final Environment newEnv = new Environment(env.order.add(new ParseValue(scope, _name, this, env.offset, data, enc)), env.input, env.offset + size.get().asNumeric().intValue());
+        final Environment newEnv = new Environment(env.order.add(new ParseValue(scope, _name, this, env.offset, data, enc)), env.input, env.offset + dataSize);
         return _pred.eval(newEnv, enc) ? new ParseResult(true, newEnv) : new ParseResult(false, env);
     }
 

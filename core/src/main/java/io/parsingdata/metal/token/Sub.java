@@ -16,16 +16,16 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseRef;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
+
+import java.io.IOException;
+
+import static io.parsingdata.metal.Util.checkNotNull;
 
 public class Sub extends Token {
 
@@ -40,13 +40,34 @@ public class Sub extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final OptionalValue ov = _addr.eval(env, enc);
-        if (!ov.isPresent()) { return new ParseResult(false, env); }
-        final long ref = ov.get().asNumeric().longValue();
-        if (env.order.hasGraphAtRef(ref)) { return new ParseResult(true, new Environment(env.order.add(new ParseRef(ref, this)), env.input, env.offset)); }
-        final ParseResult res = _op.parse(scope, new Environment(env.order.addBranch(this), env.input, ref), enc);
+        final OptionalValueList addrs = _addr.eval(env, enc);
+        if (addrs.isEmpty() || addrs.containsEmpty()) { return new ParseResult(false, env); }
+        final ParseResult res = iterate(scope, addrs, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
         if (res.succeeded()) {
             return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, env.offset));
+        }
+        return new ParseResult(false, env);
+    }
+
+    private ParseResult iterate(final String scope, final OptionalValueList addrs, final Environment env, final Encoding enc) throws IOException {
+        final long ref = addrs.head.get().asNumeric().longValue();
+        final ParseResult res = parse(scope, ref, env, enc);
+        if (res.succeeded()) {
+            if (addrs.tail.isEmpty()) {
+                return res;
+            }
+            return iterate(scope, addrs.tail, res.getEnvironment(), enc);
+        }
+        return new ParseResult(false, env);
+    }
+
+    private ParseResult parse(final String scope, final long ref, final Environment env, final Encoding enc) throws IOException {
+        if (env.order.hasGraphAtRef(ref)) {
+            return new ParseResult(true, new Environment(env.order.add(new ParseRef(ref, this)), env.input, env.offset));
+        }
+        final ParseResult res = _op.parse(scope, new Environment(env.order, env.input, ref), enc);
+        if (res.succeeded()) {
+            return res;
         }
         return new ParseResult(false, env);
     }

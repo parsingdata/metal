@@ -16,9 +16,6 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.TokenDefinitions.any;
-
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
@@ -27,6 +24,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.TokenDefinitions.any;
 
 @RunWith(JUnit4.class)
 public class ToStringTest {
@@ -54,7 +54,7 @@ public class ToStringTest {
     }
 
     private ValueExpression v() {
-        return neg(add(div(mod(mul(sub(ref(n()), first(n())), con(1)), cat(ref(n()), ref(n()))), add(self, add(offset(n()), currentOffset))), elvis(ref(n()), ref(n()))));
+        return neg(add(div(mod(mul(sub(ref(n()), first(ref(n()))), con(1)), cat(ref(n()), ref(n()))), add(self, add(offset(ref(n())), currentOffset))), elvis(ref(n()), ref(n()))));
     }
 
     @Test
