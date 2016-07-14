@@ -51,7 +51,7 @@ public class ParseRefTest {
 
     @Test
     public void toStringTest() {
-        assertThat(_ref.toString(), is("ParseRef(0)"));
+        assertThat(_ref.toString(), is("ref(@0)"));
     }
 
     @Test

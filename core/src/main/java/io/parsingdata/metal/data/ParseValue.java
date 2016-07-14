@@ -68,7 +68,7 @@ public class ParseValue extends Value implements ParseItem {
 
     @Override
     public String toString() {
-        return "ParseValue(" + getName() + ":" + super.toString() + ")";
+        return getName() + "(" + super.toString() + ")";
     }
 
 }
