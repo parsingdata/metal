@@ -21,6 +21,7 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.value.reference.CurrentOffset;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
@@ -72,7 +73,7 @@ public class CurrentOffsetTest {
         // value - offset + 1 should be 0:
         final Token offsetValidation = rep(def("byte", con(1), eqNum(sub(self, sub(currentOffset, con(1))), con(0))));
 
-        final ParseResult parse = offsetValidation.parse(env, new Encoding(false));
+        final ParseResult parse = offsetValidation.parse(env, new Encoding(Sign.UNSIGNED));
         assertTrue(parse.succeeded());
         assertEquals(256, parse.getEnvironment().offset);
     }

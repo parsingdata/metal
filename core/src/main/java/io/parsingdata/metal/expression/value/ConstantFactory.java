@@ -44,7 +44,7 @@ public class ConstantFactory {
     }
 
     private static Encoding setToBE(final Encoding enc) {
-        return new Encoding(enc.isSigned(), enc.getCharset(), ByteOrder.BIG_ENDIAN);
+        return new Encoding(enc.getSign(), enc.getCharset(), ByteOrder.BIG_ENDIAN);
     }
 
     private static byte[] compact(final byte[] in, boolean signed) {
