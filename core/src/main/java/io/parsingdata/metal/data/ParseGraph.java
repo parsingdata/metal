@@ -154,8 +154,8 @@ public class ParseGraph implements ParseItem {
     @Override
     public String toString() {
         if (this == EMPTY) { return "graph(EMPTY)"; }
-        if (head == null && tail == null) { return "graph(terminator:" + definition.getClass().getSimpleName() + ")"; }
-        return "graph(" + (head != null ? head.toString() : "null") + ", " + (tail != null ? tail.toString() : "null") + ", " + branched + ")";
+        if (head == null) { return "graph(terminator:" + definition.getClass().getSimpleName() + ")"; }
+        return "graph(" + head + ", " + tail + ", " + branched + ")";
     }
 
 }
