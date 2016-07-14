@@ -45,7 +45,7 @@ public class ParseRef implements ParseItem {
 
     @Override
     public String toString() {
-        return "ParseRef(" + location + ")";
+        return "ref(@" + location + ")";
     }
 
 }

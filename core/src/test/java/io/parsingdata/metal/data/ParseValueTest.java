@@ -49,10 +49,7 @@ public class ParseValueTest {
 
     @Test
     public void toStringTest() {
-        assertThat(_value.toString(), is("ParseValue(value:ParseValue(01))"));
-
-        // TODO: Improve ParseValue toString() (#18)
-        // assertThat(_value.toString(), is("ParseValue(value:01)"));
+        assertThat(_value.toString(), is("value(0x01)"));
     }
 
     @Test

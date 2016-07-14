@@ -21,6 +21,10 @@ import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.TokenDefinitions.any;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseGraphList;
 import io.parsingdata.metal.data.ParseItem;
@@ -177,6 +181,21 @@ public class ParseGraphTest {
         Assert.assertTrue(subGraph.tail.tail.head.isGraph());
         Assert.assertTrue(subGraph.tail.tail.head.asGraph().head.isValue());
         Assert.assertEquals(f, subGraph.tail.tail.head.asGraph().head);
+    }
+
+    @Test
+    public void testSimpleToString() {
+        assertThat(pg.toString(), is("graph(h(0x68), graph(g(0x67), graph(graph(f(0x66), graph(graph(e(0x65), graph(d(0x64), graph(terminator:Def), false), false), graph(c(0x63), graph(terminator:Def), false), false), false), graph(b(0x62), graph(a(0x61), graph(EMPTY), false), false), false), false), false)"));
+    }
+
+    @Test
+    public void testCycleToString() {
+        assertThat(pgc.toString(), is("graph(graph(ref(@0), graph(b(0x62), graph(terminator:Def), false), false), graph(a(0x61), graph(EMPTY), false), false)"));
+    }
+
+    @Test
+    public void testLongToString() {
+        assertThat(pgl.toString(), is("graph(graph(f(0x66), graph(terminator:Def), false), graph(e(0x65), graph(graph(graph(d(0x64), graph(terminator:Def), false), graph(c(0x63), graph(graph(terminator:Def), graph(graph(b(0x62), graph(terminator:Def), false), graph(terminator:Def), false), false), false), false), graph(a(0x61), graph(EMPTY), false), false), false), false)"));
     }
 
 }

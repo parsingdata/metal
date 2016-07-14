@@ -68,7 +68,7 @@ public class WhileTest {
     @Test
     public void testToString() {
         final Token simpleWhile = whl(def("value", con(1)), eq(con(1)));
-        final String simpleWhileString = "While(Def(\"value\",Const(Value(01)),True,), Eq(Const(Value(01))))";
+        final String simpleWhileString = "While(Def(\"value\",Const(0x01),True,), Eq(Const(0x01)))";
         assertThat(simpleWhile.toString(), is(equalTo(simpleWhileString)));
     }
 
