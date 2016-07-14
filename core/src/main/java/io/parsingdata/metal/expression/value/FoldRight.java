@@ -38,7 +38,7 @@ public class FoldRight implements ValueExpression {
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
         final OptionalValueList init = _init != null ? _init.eval(env, enc) : OptionalValueList.EMPTY;
-        if (init.size > 1) { throw new RuntimeException("Init may not contain more than a single value."); }
+        if (init.size > 1) { throw new RuntimeException("Init may not evaluate to more than a single value."); }
         final OptionalValueList values = _values.eval(env, enc);
         if (values.isEmpty() || values.containsEmpty()) { return init; }
         if (!init.isEmpty()) { return OptionalValueList.create(fold(env, enc, _reducer, init.head, values)); }

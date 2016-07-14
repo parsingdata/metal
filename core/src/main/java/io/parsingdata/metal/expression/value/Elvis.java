@@ -33,6 +33,10 @@ import static io.parsingdata.metal.Util.checkNotNull;
  *
  * If <code>ref("foo")</code> can be successfully evaluated, this elvis-expression
  * evaluates to that value, else it evaluates to the value of <code>ref("bar")</code>.
+ *
+ * For lists, values with the same index are compared in this manner. If lists are of
+ * unequal length, the shortest list is virtually extended with empty values (i.e.,
+ * the values in the other list are returned at those locations).
  */
 public class Elvis implements ValueExpression {
     private final ValueExpression lop;

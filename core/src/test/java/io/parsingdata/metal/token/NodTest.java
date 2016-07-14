@@ -64,7 +64,7 @@ public class NodTest {
     @Test
     public void nodWithMultipleSizes() throws IOException {
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage("A single size value must be provided.");
+        thrown.expectMessage("Size may not evaluate to more than a single value.");
         ParseResult parseResult =
             seq(def("size", con(1)),
                 def("size", con(1)),

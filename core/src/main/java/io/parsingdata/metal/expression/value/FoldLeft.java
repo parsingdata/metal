@@ -16,13 +16,12 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Util.checkNotNull;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
-import io.parsingdata.metal.data.ParseValueList;
 import io.parsingdata.metal.encoding.Encoding;
+
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Util.checkNotNull;
 
 public class FoldLeft implements ValueExpression {
 
@@ -39,7 +38,7 @@ public class FoldLeft implements ValueExpression {
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
         final OptionalValueList init = _init != null ? _init.eval(env, enc) : OptionalValueList.EMPTY;
-        if (init.size > 1) { throw new RuntimeException("Init may not contain more than a single value."); }
+        if (init.size > 1) { throw new RuntimeException("Init may not evaluate to more than a single value."); }
         final OptionalValueList values = _values.eval(env, enc).reverse();
         if (values.isEmpty() || values.containsEmpty()) { return init; }
         if (!init.isEmpty()) { return OptionalValueList.create(fold(env, enc, _reducer, init.head, values)); }

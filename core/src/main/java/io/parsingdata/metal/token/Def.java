@@ -45,11 +45,11 @@ public class Def extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final OptionalValueList size = _size.eval(env, enc);
-        if (size.size != 1) { throw new RuntimeException("Size must yield a single value."); }
+        if (size.size != 1) { throw new RuntimeException("Size may not evaluate to more than a single value."); }
         if (!size.head.isPresent()) {
             return new ParseResult(false, env);
         }
-        // TODO: Handle value expression results as BigInteger
+        // TODO: Handle value expression results as BigInteger (#16)
         final int dataSize = size.head.get().asNumeric().intValue();
         if (dataSize < 0) {
             return new ParseResult(false, env);

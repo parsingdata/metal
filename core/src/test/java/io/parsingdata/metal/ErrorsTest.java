@@ -58,7 +58,7 @@ public class ErrorsTest {
     @Test
     public void multiValueInRepN() throws IOException {
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage("A single size value must be provided.");
+        thrown.expectMessage("N may not evaluate to more than a single value.");
         final Token dummy = any("a");
         final Token multiRepN =
             seq(any("b"),

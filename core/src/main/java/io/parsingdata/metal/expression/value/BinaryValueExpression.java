@@ -22,6 +22,16 @@ import io.parsingdata.metal.encoding.Encoding;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+/**
+ * Base class for ValueExpressions with two operands.
+ *
+ * Subclasses implement behaviour for evaluating two operands and returning a single
+ * value as a result. If one operand evaluates to empty, the result is always empty.
+ *
+ * For lists, values with the same index are evaluated in this manner. If lists are of
+ * unequal length, the result is a list with evaluated values the same size as the
+ * shortest list, appended with empty values to match the size of the longest list.
+ */
 public abstract class BinaryValueExpression implements ValueExpression {
 
     private final ValueExpression lop;
