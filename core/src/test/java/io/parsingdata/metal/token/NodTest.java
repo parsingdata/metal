@@ -63,12 +63,21 @@ public class NodTest {
 
     @Test
     public void nodWithMultipleSizes() throws IOException {
-        thrown.expect(RuntimeException.class);
+        thrown.expect(IllegalStateException.class);
         thrown.expectMessage("Size may not evaluate to more than a single value.");
-        ParseResult parseResult =
-            seq(def("size", con(1)),
-                def("size", con(1)),
-                NOD_REF_SIZE).parse(stream(2, 2, 0, 0), enc());
+
+        seq(def("size", con(1)),
+            def("size", con(1)),
+            NOD_REF_SIZE).parse(stream(2, 2, 0, 0), enc());
+    }
+
+    @Test
+    public void nodWithNegativeSizes() throws IOException {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Size must be larger than 0, but is: -1");
+
+        seq(def("size", con(1)),
+            NOD_REF_SIZE).parse(stream(-1), signed());
     }
 
 }

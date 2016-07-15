@@ -40,7 +40,9 @@ public class Nod extends Token {
         final OptionalValueList ov = _size.eval(env, enc);
         if (ov.isEmpty()) { return new ParseResult(false, env); }
         if (ov.size > 1) { throw new IllegalStateException("Size may not evaluate to more than a single value."); }
-        return ov.head.isPresent() ? new ParseResult(true, new Environment(env.order, env.input, env.offset + ov.head.get().asNumeric().longValue())) : new ParseResult(false, env);
+        final long size = ov.head.get().asNumeric().longValue();
+        if (size <= 0) { throw new IllegalStateException("Size must be larger than 0, but is: " + size); }
+        return ov.head.isPresent() ? new ParseResult(true, new Environment(env.order, env.input, env.offset + size)) : new ParseResult(false, env);
     }
 
     @Override
