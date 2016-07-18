@@ -19,6 +19,7 @@ package io.parsingdata.metal.expression.value.reference;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 import static io.parsingdata.metal.Util.checkNotNull;
@@ -34,7 +35,11 @@ public class First implements ValueExpression {
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
         final OptionalValueList list = _op.eval(env, enc);
-        return list.isEmpty() ? list : OptionalValueList.create(list.reverse().head);
+        return list.isEmpty() ? list : OptionalValueList.create(getFirst(list));
+    }
+
+    private OptionalValue getFirst(final OptionalValueList list) {
+        return list.tail.isEmpty() ? list.head : getFirst(list.tail);
     }
 
     @Override
