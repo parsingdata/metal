@@ -19,6 +19,7 @@ package io.parsingdata.metal.data.selection;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 
+import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 
 public class ByItem {
@@ -28,14 +29,15 @@ public class ByItem {
      * @return The partial graph of the provided graph starting past (bottom-up) the provided lastHead
      */
     public static ParseGraph getGraphAfter(final ParseGraph graph, final ParseItem lastHead) {
-        return getGraphAfter(graph, lastHead, EMPTY);
+        checkNotNull(graph, "graph");
+        return getGraphAfterRecursive(graph, lastHead);
     }
 
-    private static ParseGraph getGraphAfter(final ParseGraph graph, final ParseItem lastHead, final ParseGraph result) {
+    private static ParseGraph getGraphAfterRecursive(final ParseGraph graph, final ParseItem lastHead) {
         if (graph.isEmpty()) { return EMPTY; }
         final ParseItem head = graph.head;
-        if (head == lastHead) { return result; }
+        if (head == lastHead) { return EMPTY; }
         // TODO: How can we do this without calling the (previously private) constructor? (#64)
-        return new ParseGraph(head, getGraphAfter(graph.tail, lastHead, result), graph.definition);
+        return new ParseGraph(head, getGraphAfter(graph.tail, lastHead), graph.definition);
     }
 }

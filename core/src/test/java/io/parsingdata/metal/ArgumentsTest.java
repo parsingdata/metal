@@ -25,10 +25,7 @@ import io.parsingdata.metal.expression.logical.And;
 import io.parsingdata.metal.expression.logical.Not;
 import io.parsingdata.metal.expression.value.*;
 import io.parsingdata.metal.expression.value.arithmetic.Neg;
-import io.parsingdata.metal.expression.value.reference.First;
-import io.parsingdata.metal.expression.value.reference.NameRef;
-import io.parsingdata.metal.expression.value.reference.Offset;
-import io.parsingdata.metal.expression.value.reference.TokenRef;
+import io.parsingdata.metal.expression.value.reference.*;
 import io.parsingdata.metal.token.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -68,11 +65,13 @@ public class ArgumentsTest {
             { Offset.class, new Object[] { null } },
             { NameRef.class, new Object[] { null } },
             { TokenRef.class, new Object[] { null } },
+            { Count.class, new Object[] { null } },
             // Derived from BinaryValueExpression
             { Cat.class, new Object[] { VALID_VE, null } },
             { Cat.class, new Object[] { null, VALID_VE } },
             // Derived from UnaryValueExpression
             { Neg.class, new Object[] { null } },
+            { Len.class, new Object[] { null } },
             // Derived from BinaryLogicalExpression
             { And.class, new Object[] { VALID_E, null } },
             { And.class, new Object[] { null, VALID_E } },

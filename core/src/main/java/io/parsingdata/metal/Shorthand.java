@@ -116,6 +116,11 @@ public class Shorthand {
     public static ComparisonExpression ltNum(final ValueExpression p) { return new LtNum(null, p); }
     public static ComparisonExpression ltNum(final ValueExpression c, final ValueExpression p) { return new LtNum(c, p); }
 
+    public final static Reducer ADD_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression l, final ValueExpression r) { return add(l, r); } };
+    public final static Reducer MUL_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression l, final ValueExpression r) { return mul(l, r); } };
+    public final static Reducer CAT_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression l, final ValueExpression r) { return cat(l, r); } };
+    public final static Reducer SUB_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression l, final ValueExpression r) { return sub(l, r); } };
+
     public static byte[] toByteArray(final int... bytes) {
         final byte[] out = new byte[bytes.length];
         for (int i = 0; i < bytes.length; i++) {

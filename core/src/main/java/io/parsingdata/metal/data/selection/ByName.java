@@ -31,6 +31,8 @@ public class ByName {
      * @return The first value (bottom-up) with the provided name in the provided graph
      */
     public static ParseValue getValue(final ParseGraph graph, final String name) {
+        checkNotNull(graph, "graph");
+        checkNotNull(name, "name");
         if (graph.isEmpty()) { return null; }
         final ParseItem head = graph.head;
         if (head.isValue() && head.asValue().matches(name)) { return head.asValue(); }

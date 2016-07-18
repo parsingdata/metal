@@ -29,6 +29,7 @@ public class ByToken {
     private ByToken() {}
 
     public static ParseItem get(final ParseGraph graph, final Token definition) {
+        checkNotNull(graph, "graph");
         checkNotNull(definition, "definition");
         if (graph.definition == definition) { return graph; }
         if (graph.isEmpty()) { return null; }

@@ -19,7 +19,6 @@ package io.parsingdata.metal;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
-import io.parsingdata.metal.expression.value.Reducer;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
@@ -68,7 +67,7 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
             { "[1, 2, 3] a, b, offset(first(c))", refList("a", "b", offset(first(ref("c")))), stream(1, 2, 3), enc(), false },
             { "[1, 2, 3, 3] a, a, a, last(ref(a.definition))", refMatch(eq(last(ref(refAny)))), stream(1, 2, 3, 3), enc(), true },
             { "[1, 2, 3, 1] a, a, a, first(ref(a.definition))", refMatch(eq(first(ref(refAny)))), stream(1, 2, 3, 1), enc(), true },
-            { "[1, 2, 3, 6] a, a, a, first(ref(a.definition))", refMatch(eq(first(fold(ref(refAny), addReducer)))), stream(1, 2, 3, 6), enc(), true },
+            { "[1, 2, 3, 6] a, a, a, first(fold(ref(a.definition), add))", refMatch(eq(first(fold(ref(refAny), ADD_REDUCER)))), stream(1, 2, 3, 6), enc(), true },
             { "[1, 2, 3, 2] a, a, a, last(ref(a.definition))", refMatch(eq(last(ref(refAny)))), stream(1, 2, 3, 2), enc(), false }
         });
     }
@@ -91,7 +90,6 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
     }
 
     private static final Token refAny = any("a");
-    private final static Reducer addReducer = new Reducer() { @Override public ValueExpression reduce(final ValueExpression l, final ValueExpression r) { return add(l, r); } };
 
     private static Token refMatch(final Expression pred) {
         return
