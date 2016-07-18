@@ -91,6 +91,7 @@ public class Shorthand {
     public static final ValueExpression currentOffset = new CurrentOffset();
     public static ValueExpression cat(final ValueExpression l, final ValueExpression r) { return new Cat(l, r); }
     public static ValueExpression elvis(final ValueExpression l, final ValueExpression r) { return new Elvis(l, r); }
+    public static ValueExpression count(final ValueExpression o) { return new Count(o); }
     public static ValueExpression foldLeft(final ValueExpression values, final Reducer reducer) { return new FoldLeft(values, reducer, null); }
     public static ValueExpression foldLeft(final ValueExpression values, final Reducer reducer, final ValueExpression i) { return new FoldLeft(values, reducer, i); }
     public static ValueExpression foldRight(final ValueExpression values, final Reducer reducer) { return new FoldRight(values, reducer, null); }
