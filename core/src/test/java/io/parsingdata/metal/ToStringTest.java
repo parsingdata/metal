@@ -54,7 +54,7 @@ public class ToStringTest {
     }
 
     private ValueExpression v() {
-        return neg(add(div(mod(mul(sub(ref(n()), first(ref(n()))), con(1)), cat(ref(n()), ref(n()))), add(self, add(offset(ref(n())), currentOffset))), elvis(ref(n()), ref(n()))));
+        return neg(add(div(mod(mul(sub(ref(n()), first(ref(n()))), con(1)), cat(ref(n()), ref(n()))), add(self, add(offset(ref(n())), add(currentOffset, count(ref(n())))))), elvis(ref(n()), ref(n()))));
     }
 
     @Test
