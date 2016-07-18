@@ -29,4 +29,9 @@ public class Count implements ValueExpression {
         return ConstantFactory.createFromNumeric(length, new Encoding(Sign.SIGNED));
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + op + ")";
+    }
+
 }
