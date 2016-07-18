@@ -73,12 +73,10 @@ public class NodTest {
     }
 
     @Test
-    public void nodWithNegativeSizes() throws IOException {
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("Size must be larger than 0, but is: -1");
-
-        seq(def("size", con(1)),
+    public void nodWithNegativeSize() throws IOException {
+        ParseResult parseResult = seq(def("size", con(1)),
             NOD_REF_SIZE).parse(stream(-1), signed());
+        assertFalse(parseResult.succeeded());
     }
 
 }

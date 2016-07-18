@@ -38,11 +38,20 @@ public class Nod extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final OptionalValueList ov = _size.eval(env, enc);
-        if (ov.isEmpty()) { return new ParseResult(false, env); }
-        if (ov.size > 1) { throw new IllegalStateException("Size may not evaluate to more than a single value."); }
+        if (ov.isEmpty()) {
+            return new ParseResult(false, env);
+        }
+        if (ov.size != 1) {
+            throw new IllegalStateException("Size may not evaluate to more than a single value.");
+        }
+        if (!ov.head.isPresent()) {
+            return new ParseResult(false, env);
+        }
         final long size = ov.head.get().asNumeric().longValue();
-        if (size <= 0) { throw new IllegalStateException("Size must be larger than 0, but is: " + size); }
-        return ov.head.isPresent() ? new ParseResult(true, new Environment(env.order, env.input, env.offset + size)) : new ParseResult(false, env);
+        if (size <= 0) {
+            return new ParseResult(false, env);
+        }
+        return new ParseResult(true, new Environment(env.order, env.input, env.offset + size));
     }
 
     @Override
