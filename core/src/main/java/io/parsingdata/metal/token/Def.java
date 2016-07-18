@@ -16,6 +16,10 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
+import java.io.IOException;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseResult;
@@ -24,10 +28,6 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.True;
 import io.parsingdata.metal.expression.value.ValueExpression;
-
-import java.io.IOException;
-
-import static io.parsingdata.metal.Util.checkNotNull;
 
 public class Def extends Token {
 
@@ -44,13 +44,12 @@ public class Def extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final OptionalValueList size = _size.eval(env, enc);
-        if (size.size != 1) { throw new IllegalStateException("Size may not evaluate to more than a single value."); }
-        if (!size.head.isPresent()) {
+        final OptionalValueList sizes = _size.eval(env, enc);
+        if (sizes.size != 1 || !sizes.head.isPresent()) {
             return new ParseResult(false, env);
         }
         // TODO: Handle value expression results as BigInteger (#16)
-        final int dataSize = size.head.get().asNumeric().intValue();
+        final int dataSize = sizes.head.get().asNumeric().intValue();
         if (dataSize < 0) {
             return new ParseResult(false, env);
         }

@@ -16,15 +16,15 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
+import java.io.IOException;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ValueExpression;
-
-import java.io.IOException;
-
-import static io.parsingdata.metal.Util.checkNotNull;
 
 public class RepN extends Token {
 
@@ -39,11 +39,14 @@ public class RepN extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final OptionalValueList count = _n.eval(env, enc);
-        if (count.size != 1) { throw new IllegalStateException("N may not evaluate to more than a single value."); }
-        if (!count.head.isPresent()) { return new ParseResult(false, env); }
-        final ParseResult res = iterate(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc, count.head.get().asNumeric().longValue());
-        if (res.succeeded()) { return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset)); }
+        final OptionalValueList counts = _n.eval(env, enc);
+        if (counts.size != 1 || !counts.head.isPresent()) {
+            return new ParseResult(false, env);
+        }
+        final ParseResult res = iterate(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc, counts.head.get().asNumeric().longValue());
+        if (res.succeeded()) {
+            return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset));
+        }
         return new ParseResult(false, env);
     }
 
