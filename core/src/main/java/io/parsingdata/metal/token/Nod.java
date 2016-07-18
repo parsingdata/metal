@@ -16,15 +16,15 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
+import java.io.IOException;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ValueExpression;
-
-import java.io.IOException;
-
-import static io.parsingdata.metal.Util.checkNotNull;
 
 public class Nod extends Token {
 
@@ -37,21 +37,15 @@ public class Nod extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final OptionalValueList ov = _size.eval(env, enc);
-        if (ov.isEmpty()) {
+        final OptionalValueList sizes = _size.eval(env, enc);
+        if (sizes.size != 1 || !sizes.head.isPresent()) {
             return new ParseResult(false, env);
         }
-        if (ov.size != 1) {
-            throw new IllegalStateException("Size may not evaluate to more than a single value.");
-        }
-        if (!ov.head.isPresent()) {
+        final long skipSize = sizes.head.get().asNumeric().longValue();
+        if (skipSize < 0) {
             return new ParseResult(false, env);
         }
-        final long size = ov.head.get().asNumeric().longValue();
-        if (size <= 0) {
-            return new ParseResult(false, env);
-        }
-        return new ParseResult(true, new Environment(env.order, env.input, env.offset + size));
+        return new ParseResult(true, new Environment(env.order, env.input, env.offset + skipSize));
     }
 
     @Override

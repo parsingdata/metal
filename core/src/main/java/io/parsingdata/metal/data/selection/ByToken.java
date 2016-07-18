@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.data.selection;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseItemList;
@@ -26,7 +28,7 @@ public class ByToken {
     private ByToken() {}
 
     public static ParseItem get(final ParseGraph graph, final Token definition) {
-        if (definition == null) { throw new IllegalArgumentException("Argument definition may not be null."); }
+        checkNotNull(definition, "definition");
         if (graph.definition == definition) { return graph; }
         if (graph.isEmpty()) { return null; }
         final ParseItem head = graph.head;
@@ -39,7 +41,7 @@ public class ByToken {
     }
 
     public static ParseItemList getAll(final ParseGraph graph, final Token definition) {
-        if (definition == null) { throw new IllegalArgumentException("Argument definition may not be null."); }
+        checkNotNull(definition, "definition");
         return getAllRecursive(graph, definition);
     }
 
