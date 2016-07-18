@@ -53,8 +53,10 @@ public class ToStringTest {
         return prefix + count++;
     }
 
+    private Token t() { return any("a"); }
+
     private ValueExpression v() {
-        return neg(add(div(mod(mul(sub(ref(n()), first(ref(n()))), con(1)), cat(ref(n()), ref(n()))), add(self, add(offset(ref(n())), currentOffset))), elvis(ref(n()), ref(n()))));
+        return neg(add(div(mod(mul(sub(ref(n()), first(ref(n()))), con(1)), cat(ref(n()), ref(t()))), add(self, add(offset(ref(n())), currentOffset))), elvis(ref(n()), ref(n()))));
     }
 
     @Test

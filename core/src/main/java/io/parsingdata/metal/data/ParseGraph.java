@@ -115,7 +115,7 @@ public class ParseGraph implements ParseItem {
     }
 
     public ParseValue get(final String name) {
-        return ByName.get(this, name);
+        return ByName.getValue(this, name);
     }
 
     public ParseItem get(final Token definition) {

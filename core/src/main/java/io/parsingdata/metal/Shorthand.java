@@ -84,7 +84,8 @@ public class Shorthand {
     public static ValueExpression con(final int... values) { return con(new Encoding(), values); }
     public static final ValueExpression self = new Self();
     public static ValueExpression len(final ValueExpression v) { return new Len(v); }
-    public static ValueExpression ref(final String s) { return new Ref(s); }
+    public static ValueExpression ref(final String s) { return new NameRef(s); }
+    public static ValueExpression ref(final Token d) { return new TokenRef(d); }
     public static ValueExpression first(final ValueExpression o) { return new First(o); }
     public static ValueExpression last(final ValueExpression o) { return new Last(o); }
     public static ValueExpression offset(final ValueExpression o) { return new Offset(o); }

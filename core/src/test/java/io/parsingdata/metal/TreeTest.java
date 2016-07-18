@@ -124,7 +124,7 @@ public class TreeTest {
     @Test
     public void checkRegularTreeFlat() {
         Assert.assertTrue(_regular.succeeded());
-        final ParseValueList nrs = ByName.getAll(_regular.getEnvironment().order, "nr");
+        final ParseValueList nrs = ByName.getAllValues(_regular.getEnvironment().order, "nr");
         for (int i = 0; i < 7; i++) {
             Assert.assertTrue(contains(nrs, i));
         }

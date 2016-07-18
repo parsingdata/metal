@@ -16,12 +16,13 @@
 
 package io.parsingdata.metal.data.selection;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseItemList;
+import io.parsingdata.metal.data.ParseValueList;
 import io.parsingdata.metal.token.Token;
+
+import static io.parsingdata.metal.Util.checkNotNull;
 
 public class ByToken {
 
@@ -41,6 +42,7 @@ public class ByToken {
     }
 
     public static ParseItemList getAll(final ParseGraph graph, final Token definition) {
+        checkNotNull(graph, "graph");
         checkNotNull(definition, "definition");
         return getAllRecursive(graph, definition);
     }
@@ -51,8 +53,29 @@ public class ByToken {
         final ParseItemList results = graph.definition == definition ? tailResults.add(graph) : tailResults;
         final ParseItem head = graph.head;
         if (head.isValue() && head.asValue().definition == definition) { return results.add(head); }
+        if (head.isRef() && head.asRef().definition == definition) { return results.add(head); }
         if (head.isGraph()) { return results.add(getAllRecursive(head.asGraph(), definition)); }
         return results;
+    }
+
+    /**
+     * @param graph The graph to search
+     * @param definition The token to match the ParseItem's definition field
+     * @return All values with the provided name in this graph
+     */
+    public static ParseValueList getAllValues(final ParseGraph graph, final Token definition) {
+        checkNotNull(graph, "graph");
+        checkNotNull(definition, "definition");
+        return getAllValuesRecursive(graph, definition);
+    }
+
+    private static ParseValueList getAllValuesRecursive(final ParseGraph graph, final Token definition) {
+        if (graph.isEmpty()) { return ParseValueList.EMPTY; }
+        final ParseValueList tailResults = getAllValuesRecursive(graph.tail, definition);
+        final ParseItem head = graph.head;
+        if (head.isValue() && head.asValue().definition == definition) { return tailResults.add(head.asValue()); }
+        if (head.isGraph()) { return tailResults.add(getAllValuesRecursive(head.asGraph(), definition)); }
+        return tailResults;
     }
 
 }
