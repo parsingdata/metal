@@ -31,13 +31,11 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 public class Def extends Token {
 
-    public final String name;
     public final ValueExpression size;
     public final Expression predicate;
 
     public Def(final String name, final ValueExpression size, final Expression predicate, final Encoding enc) {
-        super(enc);
-        this.name = checkNotNull(name, "name");
+        super(name, enc);
         this.size = checkNotNull(size, "size");
         this.predicate = predicate == null ? new True() : predicate;
     }
@@ -57,7 +55,7 @@ public class Def extends Token {
         if (env.input.read(env.offset, data) != data.length) {
             return new ParseResult(false, env);
         }
-        final Environment newEnv = new Environment(env.order.add(new ParseValue(scope, name, this, env.offset, data, enc)), env.input, env.offset + dataSize);
+        final Environment newEnv = new Environment(env.order.add(new ParseValue(scope, this, env.offset, data, enc)), env.input, env.offset + dataSize);
         return predicate.eval(newEnv, enc) ? new ParseResult(true, newEnv) : new ParseResult(false, env);
     }
 

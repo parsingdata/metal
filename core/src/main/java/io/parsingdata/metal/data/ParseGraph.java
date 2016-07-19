@@ -33,7 +33,7 @@ public class ParseGraph implements ParseItem {
     public final Token definition;
     public final long size;
 
-    public static final Token NONE = new Token(null) {
+    public static final Token NONE = new Token("NONE", null) {
         @Override protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException { throw new IllegalStateException("This placeholder may not be invoked."); }
         @Override public String toString() { return "None"; };
     };

@@ -28,8 +28,8 @@ public class Opt extends Token {
 
     public final Token token;
 
-    public Opt(final Token token, final Encoding enc) {
-        super(enc);
+    public Opt(final String name, final Token token, final Encoding enc) {
+        super(name, enc);
         this.token = checkNotNull(token, "token");
     }
 
@@ -42,7 +42,7 @@ public class Opt extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + token + ")";
+        return getClass().getSimpleName() + "(" + (name.length() > 0 ? name + "," : "") + token + ")";
     }
 
 }

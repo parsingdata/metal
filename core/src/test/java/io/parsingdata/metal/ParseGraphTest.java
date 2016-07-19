@@ -16,24 +16,16 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.sub;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseGraphList;
-import io.parsingdata.metal.data.ParseItem;
-import io.parsingdata.metal.data.ParseRef;
-import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.*;
 import io.parsingdata.metal.token.Token;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class ParseGraphTest {
 
@@ -66,7 +58,7 @@ public class ParseGraphTest {
     }
 
     private static ParseValue makeVal(final char n, final long o) {
-        return new ParseValue("", Character.toString(n), def(Character.toString(n), o), o, new byte[] { (byte) n }, enc());
+        return new ParseValue(Character.toString(n), def(Character.toString(n), o), o, new byte[] { (byte) n }, enc());
     }
 
     private ParseGraph makeSimpleGraph() {

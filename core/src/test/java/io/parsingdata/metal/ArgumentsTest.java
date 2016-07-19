@@ -48,7 +48,7 @@ public class ArgumentsTest {
     final private static ValueExpression VALID_VE = con(1);
     final private static Reducer VALID_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return null; }};
     final private static Expression VALID_E = new Expression() { @Override public boolean eval(final Environment env, final Encoding enc) { return false; }};
-    final private static Token VALID_T = new Token(null) { @Override protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException { return null; } };
+    final private static Token VALID_T = new Token("", null) { @Override protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException { return null; } };
 
     private final Class<?> _class;
     private final Object[] _arguments;
@@ -80,23 +80,23 @@ public class ArgumentsTest {
             // Derived from ComparisonExpression
             { Eq.class, new Object[] { VALID_VE, null } },
             // Token implementations
-            { Cho.class, new Object[] { null, new Token[] { VALID_T, null } } },
-            { Cho.class, new Object[] { null, new Token[] { null, VALID_T } } },
-            { Cho.class, new Object[] { null, null } },
+            { Cho.class, new Object[] { VALID_NAME, null, new Token[] { VALID_T, null } } },
+            { Cho.class, new Object[] { VALID_NAME, null, new Token[] { null, VALID_T } } },
+            { Cho.class, new Object[] { VALID_NAME, null, null } },
             { Def.class, new Object[] { VALID_NAME, null, null, null } },
             { Def.class, new Object[] { null, VALID_VE, null, null } },
-            { Nod.class, new Object[] { null, null } },
-            { Opt.class, new Object[] { null, null } },
-            { Pre.class, new Object[] { null, null, null } },
-            { Rep.class, new Object[] { null, null } },
-            { Seq.class, new Object[] { null, new Token[] { VALID_T, null } } },
-            { Seq.class, new Object[] { null, new Token[] { null, VALID_T } } },
-            { Seq.class, new Object[] { null, null } },
+            { Nod.class, new Object[] { VALID_NAME, null, null } },
+            { Opt.class, new Object[] { VALID_NAME, null, null } },
+            { Pre.class, new Object[] { VALID_NAME, null, null, null } },
+            { Rep.class, new Object[] { VALID_NAME, null, null } },
+            { Seq.class, new Object[] { VALID_NAME, null, new Token[] { VALID_T, null } } },
+            { Seq.class, new Object[] { VALID_NAME, null, new Token[] { null, VALID_T } } },
+            { Seq.class, new Object[] { VALID_NAME, null, null } },
             { Str.class, new Object[] { VALID_NAME, null, null, null, null } },
             { Str.class, new Object[] { null, VALID_T, null, null, null } },
-            { Sub.class, new Object[] { VALID_T, null, null } },
-            { Sub.class, new Object[] { null, VALID_VE, null } },
-            { While.class, new Object[] { null, null, null } }
+            { Sub.class, new Object[] { VALID_NAME, VALID_T, null, null } },
+            { Sub.class, new Object[] { VALID_NAME, null, VALID_VE, null } },
+            { While.class, new Object[] { VALID_NAME, null, null, null } }
         });
     }
 

@@ -28,8 +28,8 @@ public class Rep extends Token {
 
     public final Token token;
 
-    public Rep(final Token token, final Encoding enc) {
-        super(enc);
+    public Rep(final String name, final Token token, final Encoding enc) {
+        super(name, enc);
         this.token = checkNotNull(token, "token");
     }
 
@@ -47,7 +47,7 @@ public class Rep extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + token + ")";
+        return getClass().getSimpleName() + "(" + (name.length() > 0 ? name + "," : "") + token + ")";
     }
 
 }

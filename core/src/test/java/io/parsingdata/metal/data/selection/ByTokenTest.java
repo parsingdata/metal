@@ -16,37 +16,20 @@
 
 package io.parsingdata.metal.data.selection;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.opt;
-import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.rep;
-import static io.parsingdata.metal.Shorthand.repn;
-import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.Shorthand.str;
-import static io.parsingdata.metal.Shorthand.sub;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-
-import java.io.IOException;
-
+import io.parsingdata.metal.data.*;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseItem;
-import io.parsingdata.metal.data.ParseItemList;
-import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.data.ParseValueList;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.token.Token;
+import java.io.IOException;
+
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ByTokenTest {
 
@@ -60,7 +43,7 @@ public class ByTokenTest {
     private static final Token SEQ_SUB = seq(DEF1, sub(TWO_BYTES, ref("value1")), DEF2, sub(TWO_BYTES, ref("value2")));
     private static final Token REPN_DEF2 = repn(DEF2, con(2));
 
-    private static final Token MUT_REC_1 = seq(DEF1, new Token(enc()) {
+    private static final Token MUT_REC_1 = seq(DEF1, new Token("", enc()) {
 
         @Override
         protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
@@ -70,7 +53,7 @@ public class ByTokenTest {
 
     private static final Token MUT_REC_2 = seq(REPN_DEF2, opt(MUT_REC_1));
 
-    private static final Token STR_MUT_REC_1 = str("mutrec1", seq(DEF1, new Token(enc()) {
+    private static final Token STR_MUT_REC_1 = str("mutrec1", seq(DEF1, new Token("", enc()) {
 
         @Override
         protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {

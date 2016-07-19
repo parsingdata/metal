@@ -40,14 +40,12 @@ public class ParseValueTest {
     @Before
     public void setUp() {
         _definition = def("value", 1);
-        _value = new ParseValue("scope", "value", _definition, 0, new byte[] { 1 }, enc());
+        _value = new ParseValue("value", _definition, 0, new byte[] { 1 }, enc());
     }
 
     @Test
     public void state() {
-        assertThat(_value.getScope(), is("scope"));
-        assertThat(_value.getName(), is("value"));
-        assertThat(_value.getFullName(), is("scope.value"));
+        assertThat(_value.name, is("value"));
         assertThat(_value.getDefinition(), is(_definition));
         assertThat(_value.getOffset(), is(0L));
         assertThat(_value.getValue(), is(equalTo(new byte[] { 1 })));
@@ -56,7 +54,7 @@ public class ParseValueTest {
     @Test
     public void matching() {
         assertTrue(_value.matches("value"));
-        assertTrue(_value.matches("scope.value"));
+        //assertTrue(_value.matches("scope.value"));
 
         assertFalse(_value.matches("lue"));
         assertFalse(_value.matches(".value"));

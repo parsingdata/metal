@@ -31,8 +31,8 @@ public class Pre extends Token {
     public final Token token;
     public final Expression predicate;
 
-    public Pre(final Token token, final Expression predicate, final Encoding enc) {
-        super(enc);
+    public Pre(final String name, final Token token, final Expression predicate, final Encoding enc) {
+        super(name, enc);
         this.token = checkNotNull(token, "token");
         this.predicate = predicate == null ? expTrue() : predicate;
     }
@@ -47,7 +47,7 @@ public class Pre extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + token + ", " + predicate + ")";
+        return getClass().getSimpleName() + "(" + (name.length() > 0 ? name + "," : "") + token + ", " + predicate + ")";
     }
 
 }

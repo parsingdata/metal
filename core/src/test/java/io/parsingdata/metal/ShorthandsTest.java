@@ -16,24 +16,18 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.cho;
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.eq;
-import static io.parsingdata.metal.Shorthand.gtNum;
-import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-
-import java.io.IOException;
-
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.token.Token;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.token.Token;
+import java.io.IOException;
+
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 @RunWith(JUnit4.class)
 public class ShorthandsTest {
@@ -74,7 +68,7 @@ public class ShorthandsTest {
     private void runChoice(final int data, final String matched) throws IOException {
         final ParseResult res = multiChoice.parse(stream(data), enc());
         Assert.assertTrue(res.succeeded);
-        Assert.assertTrue(res.environment.order.current().getName().equals(matched));
+        Assert.assertTrue(res.environment.order.current().matches(matched));
     }
 
     @Test
