@@ -27,13 +27,13 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class Len extends UnaryValueExpression {
 
-    public Len(final ValueExpression op) {
-        super(op);
+    public Len(final ValueExpression operand) {
+        super(operand);
     }
 
     @Override
-    public OptionalValue eval(final Value v, final Environment env, final Encoding enc) {
-        return OptionalValue.of(num(v.getValue().length));
+    public OptionalValue eval(final Value value, final Environment env, final Encoding enc) {
+        return OptionalValue.of(num(value.getValue().length));
     }
 
     private static Value num(final long length) {

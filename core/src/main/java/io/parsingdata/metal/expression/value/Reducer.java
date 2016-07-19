@@ -18,6 +18,6 @@ package io.parsingdata.metal.expression.value;
 
 public interface Reducer {
 
-    ValueExpression reduce(final ValueExpression l, final ValueExpression r);
+    ValueExpression reduce(final ValueExpression left, final ValueExpression right);
 
 }

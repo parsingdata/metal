@@ -21,14 +21,14 @@ import io.parsingdata.metal.encoding.Encoding;
 
 public class Cat extends BinaryValueExpression {
 
-    public Cat(final ValueExpression lop, final ValueExpression rop) {
-        super(lop, rop);
+    public Cat(final ValueExpression left, final ValueExpression right) {
+        super(left, right);
     }
 
     @Override
-    public OptionalValue eval(final Value lv, final Value rv, final Environment env, final Encoding enc) {
-        final byte[] lb = lv.getValue();
-        final byte[] rb = rv.getValue();
+    public OptionalValue eval(final Value left, final Value right, final Environment env, final Encoding enc) {
+        final byte[] lb = left.getValue();
+        final byte[] rb = right.getValue();
         final byte[] res = new byte[lb.length + rb.length];
         System.arraycopy(lb, 0, res, 0, lb.length);
         System.arraycopy(rb, 0, res, lb.length, rb.length);

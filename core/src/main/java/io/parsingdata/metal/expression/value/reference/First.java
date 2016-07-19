@@ -26,15 +26,15 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 public class First implements ValueExpression {
 
-    private final ValueExpression _op;
+    public final ValueExpression operand;
 
-    public First(final ValueExpression op) {
-        _op = checkNotNull(op, "op");
+    public First(final ValueExpression operand) {
+        this.operand = checkNotNull(operand, "operand");
     }
 
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
-        final OptionalValueList list = _op.eval(env, enc);
+        final OptionalValueList list = operand.eval(env, enc);
         return list.isEmpty() ? list : OptionalValueList.create(getFirst(list));
     }
 
@@ -44,7 +44,7 @@ public class First implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _op + ")";
+        return getClass().getSimpleName() + "(" + operand + ")";
     }
 
 }

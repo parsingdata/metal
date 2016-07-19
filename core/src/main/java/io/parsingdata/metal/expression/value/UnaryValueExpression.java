@@ -24,15 +24,15 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 public abstract class UnaryValueExpression implements ValueExpression {
 
-    private final ValueExpression op;
+    public final ValueExpression operand;
 
-    public UnaryValueExpression(final ValueExpression op) {
-        this.op = checkNotNull(op, "op");
+    public UnaryValueExpression(final ValueExpression operand) {
+        this.operand = checkNotNull(operand, "operand");
     }
 
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
-        return eval(op.eval(env, enc), env, enc);
+        return eval(operand.eval(env, enc), env, enc);
     }
 
     private OptionalValueList eval(final OptionalValueList vl, final Environment env, final Encoding enc) {
@@ -40,11 +40,11 @@ public abstract class UnaryValueExpression implements ValueExpression {
         return eval(vl.tail, env, enc).add(vl.head.isPresent() ? eval(vl.head.get(), env, enc) : vl.head);
     }
 
-    public abstract OptionalValue eval(final Value v, final Environment env, final Encoding enc);
+    public abstract OptionalValue eval(final Value value, final Environment env, final Encoding enc);
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + op + ")";
+        return getClass().getSimpleName() + "(" + operand + ")";
     }
 
 }

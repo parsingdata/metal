@@ -16,26 +16,22 @@
 
 package io.parsingdata.metal.expression.value.bitwise;
 
-import java.util.BitSet;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.BinaryValueExpression;
-import io.parsingdata.metal.expression.value.ConstantFactory;
-import io.parsingdata.metal.expression.value.OptionalValue;
-import io.parsingdata.metal.expression.value.Value;
-import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.expression.value.*;
+
+import java.util.BitSet;
 
 public class ShiftLeft extends BinaryValueExpression {
 
-    public ShiftLeft(final ValueExpression lop, final ValueExpression rop) {
-        super(lop, rop);
+    public ShiftLeft(final ValueExpression operand, final ValueExpression positions) {
+        super(operand, positions);
     }
 
     @Override
-    public OptionalValue eval(final Value lv, final Value rv, final Environment env, final Encoding enc) {
-        final BitSet lbs = lv.asBitSet();
-        final int shiftLeft = rv.asNumeric().intValue();
+    public OptionalValue eval(final Value operand, final Value positions, final Environment env, final Encoding enc) {
+        final BitSet lbs = operand.asBitSet();
+        final int shiftLeft = positions.asNumeric().intValue();
         final int bitCount = lbs.length() + shiftLeft;
         final BitSet out = new BitSet(bitCount);
         for (int i = lbs.nextSetBit(0); i >= 0; i = lbs.nextSetBit(i+1)) {

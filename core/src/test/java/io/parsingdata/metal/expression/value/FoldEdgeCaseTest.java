@@ -44,14 +44,14 @@ public class FoldEdgeCaseTest {
 
     private final static Reducer ADD_REDUCER = new Reducer() {
         @Override
-        public ValueExpression reduce(final ValueExpression l, final ValueExpression r) {
-            return add(l, r);
+        public ValueExpression reduce(final ValueExpression left, final ValueExpression right) {
+            return add(left, right);
         }
     };
 
     private static final Reducer MULTIPLE_VALUE_REDUCER = new Reducer() {
         @Override
-        public ValueExpression reduce(final ValueExpression l, final ValueExpression r) {
+        public ValueExpression reduce(final ValueExpression left, final ValueExpression right) {
             return ref("value");
         }
     };

@@ -29,15 +29,15 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 public class Count implements ValueExpression {
 
-    public final ValueExpression op;
+    public final ValueExpression operand;
 
-    public Count(final ValueExpression op) {
-        this.op = checkNotNull(op, "op");
+    public Count(final ValueExpression operand) {
+        this.operand = checkNotNull(operand, "operand");
     }
 
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
-        final OptionalValueList ovl = this.op.eval(env, enc);
+        final OptionalValueList ovl = this.operand.eval(env, enc);
         return OptionalValueList.create(OptionalValue.of(num(ovl.size)));
     }
 
@@ -47,7 +47,7 @@ public class Count implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + op + ")";
+        return getClass().getSimpleName() + "(" + operand + ")";
     }
 
 }
