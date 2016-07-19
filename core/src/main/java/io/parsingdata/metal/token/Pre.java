@@ -16,38 +16,38 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Shorthand.expTrue;
-import static io.parsingdata.metal.Util.checkNotNull;
-
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 
+import java.io.IOException;
+
+import static io.parsingdata.metal.Shorthand.expTrue;
+import static io.parsingdata.metal.Util.checkNotNull;
+
 public class Pre extends Token {
 
-    private final Token _op;
-    private final Expression _pred;
+    public final Token token;
+    public final Expression pred;
 
-    public Pre(final Token op, final Expression pred, final Encoding enc) {
+    public Pre(final Token token, final Expression pred, final Encoding enc) {
         super(enc);
-        _op = checkNotNull(op, "op");
-        _pred = pred == null ? expTrue() : pred;
+        this.token = checkNotNull(token, "token");
+        this.pred = pred == null ? expTrue() : pred;
     }
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        if (!_pred.eval(env, enc)) { return new ParseResult(true, env); }
-        final ParseResult res = _op.parse(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
+        if (!pred.eval(env, enc)) { return new ParseResult(true, env); }
+        final ParseResult res = token.parse(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
         if (res.succeeded()) { return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset)); }
         return new ParseResult(false, env);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _op + ", " + _pred + ")";
+        return getClass().getSimpleName() + "(" + token + ", " + pred + ")";
     }
 
 }

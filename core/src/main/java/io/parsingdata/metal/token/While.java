@@ -16,25 +16,25 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Shorthand.expTrue;
-import static io.parsingdata.metal.Util.checkNotNull;
-
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 
+import java.io.IOException;
+
+import static io.parsingdata.metal.Shorthand.expTrue;
+import static io.parsingdata.metal.Util.checkNotNull;
+
 public class While extends Token {
 
-    private final Token _op;
-    private final Expression _pred;
+    public final Token token;
+    public final Expression pred;
 
-    public While(final Token op, final Expression pred, final Encoding enc) {
+    public While(final Token token, final Expression pred, final Encoding enc) {
         super(enc);
-        _op = checkNotNull(op, "op");
-        _pred = pred == null ? expTrue() : pred;
+        this.token = checkNotNull(token, "token");
+        this.pred = pred == null ? expTrue() : pred;
     }
 
     @Override
@@ -45,15 +45,15 @@ public class While extends Token {
     }
 
     private ParseResult iterate(final String scope, final Environment env, final Encoding enc) throws IOException {
-        if (!_pred.eval(env, enc)) { return new ParseResult(true, env); }
-        final ParseResult res = _op.parse(scope, env, enc);
+        if (!pred.eval(env, enc)) { return new ParseResult(true, env); }
+        final ParseResult res = token.parse(scope, env, enc);
         if (res.succeeded()) { return iterate(scope, res.getEnvironment(), enc); }
         return new ParseResult(false, env);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _op + ", " + _pred + ")";
+        return getClass().getSimpleName() + "(" + token + ", " + pred + ")";
     }
 
 }

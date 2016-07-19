@@ -27,11 +27,11 @@ import static io.parsingdata.metal.Util.checkContainsNoNulls;
 
 public class Seq extends Token {
 
-    private final Token[] _tokens;
+    public final Token[] tokens;
 
     public Seq(final Encoding enc, final Token... tokens) {
         super(enc);
-        _tokens = checkContainsNoNulls(tokens, "tokens");
+        this.tokens = checkContainsNoNulls(tokens, "tokens");
         if (tokens.length < 2) { throw new IllegalArgumentException("At least two Tokens are required."); }
     }
 
@@ -43,15 +43,15 @@ public class Seq extends Token {
     }
 
     private ParseResult iterate(final String scope, final Environment env, final Encoding enc, final int index) throws IOException {
-        if (index >= _tokens.length) { return new ParseResult(true, env); }
-        final ParseResult res = _tokens[index].parse(scope, env, enc);
+        if (index >= tokens.length) { return new ParseResult(true, env); }
+        final ParseResult res = tokens[index].parse(scope, env, enc);
         if (res.succeeded()) { return iterate(scope, res.getEnvironment(), enc, index + 1); }
         return res;
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + Util.tokensToString(_tokens) + ")";
+        return getClass().getSimpleName() + "(" + Util.tokensToString(tokens) + ")";
     }
 
 }

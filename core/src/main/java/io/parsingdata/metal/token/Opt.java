@@ -16,33 +16,33 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 
+import java.io.IOException;
+
+import static io.parsingdata.metal.Util.checkNotNull;
+
 public class Opt extends Token {
 
-    private final Token _op;
+    public final Token token;
 
-    public Opt(final Token op, final Encoding enc) {
+    public Opt(final Token token, final Encoding enc) {
         super(enc);
-        _op = checkNotNull(op, "op");
+        this.token = checkNotNull(token, "token");
     }
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final ParseResult res = _op.parse(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
+        final ParseResult res = token.parse(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
         if (res.succeeded()) { return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset)); }
         return new ParseResult(true, env);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _op + ")";
+        return getClass().getSimpleName() + "(" + token + ")";
     }
 
 }
