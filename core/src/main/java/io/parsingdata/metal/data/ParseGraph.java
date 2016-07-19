@@ -63,26 +63,26 @@ public class ParseGraph implements ParseItem {
     }
 
     public ParseGraph add(final ParseValue head) {
-        if (branched) { return new ParseGraph(this.head.asGraph().add(head), tail, this.definition, true); }
-        return new ParseGraph(head, this, this.definition);
+        if (branched) { return new ParseGraph(this.head.asGraph().add(head), tail, definition, true); }
+        return new ParseGraph(head, this, definition);
     }
 
     public ParseGraph add(final ParseRef ref) {
-        if (branched) { return new ParseGraph(this.head.asGraph().add(ref), tail, this.definition, true); }
-        return new ParseGraph(ref, this, this.definition);
+        if (branched) { return new ParseGraph(head.asGraph().add(ref), tail, definition, true); }
+        return new ParseGraph(ref, this, definition);
     }
 
     public ParseGraph addBranch(final Token definition) {
-        if (branched) { return new ParseGraph(this.head.asGraph().addBranch(definition), tail, this.definition, true); }
+        if (branched) { return new ParseGraph(head.asGraph().addBranch(definition), tail, this.definition, true); }
         return new ParseGraph(new ParseGraph(definition), this, this.definition, true);
     }
 
     public ParseGraph closeBranch() {
         if (!branched) { throw new IllegalStateException("Cannot close branch that is not open."); }
         if (head.asGraph().branched) {
-            return new ParseGraph(head.asGraph().closeBranch(), tail, this.definition, true);
+            return new ParseGraph(head.asGraph().closeBranch(), tail, definition, true);
         }
-        return new ParseGraph(head, tail, this.definition, false);
+        return new ParseGraph(head, tail, definition, false);
     }
 
     public ParseGraphList getRefs() {

@@ -27,12 +27,16 @@ import static io.parsingdata.metal.Util.checkContainsNoNulls;
 
 public class Cho extends Token {
 
-    public final Token[] tokens;
+    private final Token[] tokens;
 
     public Cho(final Encoding enc, final Token... tokens) {
         super(enc);
         this.tokens = checkContainsNoNulls(tokens, "tokens");
         if (tokens.length < 2) { throw new IllegalArgumentException("At least two Tokens are required."); }
+    }
+
+    public Token[] tokens() {
+        return tokens.clone();
     }
 
     @Override

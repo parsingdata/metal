@@ -37,7 +37,7 @@ public class Count implements ValueExpression {
 
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
-        final OptionalValueList ovl = this.operand.eval(env, enc);
+        final OptionalValueList ovl = operand.eval(env, enc);
         return OptionalValueList.create(OptionalValue.of(num(ovl.size)));
     }
 

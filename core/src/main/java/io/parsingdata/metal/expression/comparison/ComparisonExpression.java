@@ -38,11 +38,11 @@ public abstract class ComparisonExpression implements Expression {
 
     @Override
     public boolean eval(final Environment env, final Encoding enc) {
-        final OptionalValueList ocl = value == null ? OptionalValueList.create(OptionalValue.of(env.order.current())) : value.eval(env, enc);
-        if (ocl.isEmpty()) { return false; }
+        final OptionalValueList ovl = value == null ? OptionalValueList.create(OptionalValue.of(env.order.current())) : value.eval(env, enc);
+        if (ovl.isEmpty()) { return false; }
         final OptionalValueList opl = predicate.eval(env, enc);
-        if (ocl.size != opl.size) { return false; }
-        return compare(ocl, opl);
+        if (ovl.size != opl.size) { return false; }
+        return compare(ovl, opl);
     }
 
     private boolean compare(final OptionalValueList currents, final OptionalValueList predicates) {
