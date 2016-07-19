@@ -39,17 +39,17 @@ import static io.parsingdata.metal.Util.checkNotNull;
  * the values in the other list are returned at those locations).
  */
 public class Elvis implements ValueExpression {
-    private final ValueExpression lop;
-    private final ValueExpression rop;
+    public final ValueExpression left;
+    public final ValueExpression right;
 
-    public Elvis(final ValueExpression lop, final ValueExpression rop) {
-        this.lop = checkNotNull(lop, "lop");
-        this.rop = checkNotNull(rop, "rop");
+    public Elvis(final ValueExpression left, final ValueExpression right) {
+        this.left = checkNotNull(left, "left");
+        this.right = checkNotNull(right, "right");
     }
 
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
-        return eval(lop.eval(env, enc), rop.eval(env, enc));
+        return eval(left.eval(env, enc), right.eval(env, enc));
     }
 
     private OptionalValueList eval(final OptionalValueList llist, final OptionalValueList rlist) {
@@ -60,6 +60,6 @@ public class Elvis implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + lop + "," + rop + ")";
+        return getClass().getSimpleName() + "(" + left + "," + right + ")";
     }
 }

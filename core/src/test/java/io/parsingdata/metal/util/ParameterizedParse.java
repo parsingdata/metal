@@ -46,7 +46,7 @@ public class ParameterizedParse {
 
     @Test
     public void test() throws IOException {
-        Assert.assertEquals(_result, _token.parse(_env, _enc).succeeded());
+        Assert.assertEquals(_result, _token.parse(_env, _enc).succeeded);
     }
 
 }

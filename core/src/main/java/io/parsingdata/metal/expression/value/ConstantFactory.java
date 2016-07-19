@@ -16,11 +16,11 @@
 
 package io.parsingdata.metal.expression.value;
 
-import java.math.BigInteger;
-import java.util.BitSet;
-
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
+
+import java.math.BigInteger;
+import java.util.BitSet;
 
 public class ConstantFactory {
 
@@ -47,14 +47,14 @@ public class ConstantFactory {
         return new Encoding(enc.getSign(), enc.getCharset(), ByteOrder.BIG_ENDIAN);
     }
 
-    private static byte[] compact(final byte[] in, boolean signed) {
-        if (signed) { return in; }
-        if (in.length < 2) { return in; }
+    private static byte[] compact(final byte[] data, boolean signed) {
+        if (signed) { return data; }
+        if (data.length < 2) { return data; }
         // strip leading zero bytes
         int i = 0;
-        for (; i < in.length && in[i] == 0; i++);
-        final byte[] out = new byte[in.length - i];
-        System.arraycopy(in, i, out, 0, out.length);
+        for (; i < data.length && data[i] == 0; i++);
+        final byte[] out = new byte[data.length - i];
+        System.arraycopy(data, i, out, 0, out.length);
         return out;
     }
 

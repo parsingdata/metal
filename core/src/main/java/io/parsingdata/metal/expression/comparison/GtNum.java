@@ -21,13 +21,13 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class GtNum extends ComparisonExpression {
 
-    public GtNum(final ValueExpression current, final ValueExpression predicate) {
-        super(current, predicate);
+    public GtNum(final ValueExpression value, final ValueExpression predicate) {
+        super(value, predicate);
     }
 
     @Override
-    public boolean compare(final Value current, final Value predicate) {
-        return current.asNumeric().compareTo(predicate.asNumeric()) > 0;
+    public boolean compare(final Value left, final Value right) {
+        return left.asNumeric().compareTo(right.asNumeric()) > 0;
     }
 
 }

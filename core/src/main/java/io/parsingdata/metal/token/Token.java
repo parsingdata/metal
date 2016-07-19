@@ -16,24 +16,24 @@
 
 package io.parsingdata.metal.token;
 
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
+
+import java.io.IOException;
 
 public abstract class Token {
 
     public final static String DEFAULT_NAME = "W";
 
-    private final Encoding _enc;
+    public final Encoding enc;
 
     protected Token(final Encoding enc) {
-        _enc = enc;
+        this.enc = enc;
     }
 
     public ParseResult parse(final String scope, final Environment env, final Encoding enc) throws IOException {
-        return _enc == null ? parseImpl(scope, env, enc) : parseImpl(scope, env, _enc);
+        return this.enc == null ? parseImpl(scope, env, enc) : parseImpl(scope, env, this.enc);
     }
 
     public ParseResult parse(final Environment env, final Encoding enc) throws IOException {

@@ -18,8 +18,8 @@ package io.parsingdata.metal;
 
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.TokenDefinitions.eq;
-import static io.parsingdata.metal.TokenDefinitions.notEq;
+import static io.parsingdata.metal.util.TokenDefinitions.eq;
+import static io.parsingdata.metal.util.TokenDefinitions.notEq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
@@ -40,17 +40,17 @@ public class ReadUntilTest {
 
     @Test
     public void readUntilConstant() throws IOException {
-        Assert.assertTrue(_readUntil.parse(stream(1, 2, 3, 4, 42), enc()).succeeded());
+        Assert.assertTrue(_readUntil.parse(stream(1, 2, 3, 4, 42), enc()).succeeded);
     }
 
     @Test
     public void readUntilNoSkipping() throws IOException {
-        Assert.assertTrue(_readUntil.parse(stream(42), enc()).succeeded());
+        Assert.assertTrue(_readUntil.parse(stream(42), enc()).succeeded);
     }
 
     @Test
     public void readUntilErrorNoTerminator() throws IOException {
-        Assert.assertFalse(_readUntil.parse(stream(1, 2, 3, 4), enc()).succeeded());
+        Assert.assertFalse(_readUntil.parse(stream(1, 2, 3, 4), enc()).succeeded);
     }
 
 }

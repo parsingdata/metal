@@ -16,21 +16,21 @@
 
 package io.parsingdata.metal.expression.logical;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
 import io.parsingdata.metal.expression.Expression;
+
+import static io.parsingdata.metal.Util.checkNotNull;
 
 public abstract class UnaryLogicalExpression implements LogicalExpression {
 
-    protected final Expression _op;
+    public final Expression operand;
 
-    public UnaryLogicalExpression(final Expression op) {
-        _op = checkNotNull(op, "op");
+    public UnaryLogicalExpression(final Expression operand) {
+        this.operand = checkNotNull(operand, "operand");
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _op + ")";
+        return getClass().getSimpleName() + "(" + operand + ")";
     }
 
 }

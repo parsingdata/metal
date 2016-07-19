@@ -74,8 +74,8 @@ public class CurrentOffsetTest {
         final Token offsetValidation = rep(def("byte", con(1), eqNum(sub(self, sub(currentOffset, con(1))), con(0))));
 
         final ParseResult parse = offsetValidation.parse(env, new Encoding(Sign.UNSIGNED));
-        assertTrue(parse.succeeded());
-        assertEquals(256, parse.getEnvironment().offset);
+        assertTrue(parse.succeeded);
+        assertEquals(256, parse.environment.offset);
     }
 
 }

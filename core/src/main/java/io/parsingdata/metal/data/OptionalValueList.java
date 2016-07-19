@@ -58,7 +58,7 @@ public class OptionalValueList {
 
     public boolean containsEmpty() {
         if (isEmpty()) { return false; }
-        return !this.head.isPresent() || this.tail.containsEmpty();
+        return !head.isPresent() || tail.containsEmpty();
     }
 
     public OptionalValueList reverse() {

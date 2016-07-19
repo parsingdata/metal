@@ -26,13 +26,13 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class Add extends BinaryValueExpression {
 
-    public Add(final ValueExpression lop, final ValueExpression rop) {
-        super(lop, rop);
+    public Add(final ValueExpression left, final ValueExpression right) {
+        super(left, right);
     }
 
     @Override
-    public OptionalValue eval(final Value lv, final Value rv, final Environment env, final Encoding enc) {
-        return OptionalValue.of(ConstantFactory.createFromNumeric(lv.asNumeric().add(rv.asNumeric()), enc));
+    public OptionalValue eval(final Value left, final Value right, final Environment env, final Encoding enc) {
+        return OptionalValue.of(ConstantFactory.createFromNumeric(left.asNumeric().add(right.asNumeric()), enc));
     }
 
 }

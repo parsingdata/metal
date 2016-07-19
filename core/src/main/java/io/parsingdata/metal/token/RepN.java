@@ -16,50 +16,50 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+import java.io.IOException;
+
+import static io.parsingdata.metal.Util.checkNotNull;
+
 public class RepN extends Token {
 
-    private final Token _op;
-    private final ValueExpression _n;
+    public final Token token;
+    public final ValueExpression n;
 
-    public RepN(final Token op, final ValueExpression n, final Encoding enc) {
+    public RepN(final Token token, final ValueExpression n, final Encoding enc) {
         super(enc);
-        _op = checkNotNull(op, "op");
-        _n = checkNotNull(n, "n");
+        this.token = checkNotNull(token, "token");
+        this.n = checkNotNull(n, "n");
     }
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final OptionalValueList counts = _n.eval(env, enc);
+        final OptionalValueList counts = n.eval(env, enc);
         if (counts.size != 1 || !counts.head.isPresent()) {
             return new ParseResult(false, env);
         }
         final ParseResult res = iterate(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc, counts.head.get().asNumeric().longValue());
-        if (res.succeeded()) {
-            return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset));
+        if (res.succeeded) {
+            return new ParseResult(true, new Environment(res.environment.order.closeBranch(), res.environment.input, res.environment.offset));
         }
         return new ParseResult(false, env);
     }
 
     private ParseResult iterate(final String scope, final Environment env, final Encoding enc, final long count) throws IOException {
         if (count <= 0) { return new ParseResult(true, env); }
-        final ParseResult res = _op.parse(scope, env, enc);
-        if (res.succeeded()) { return iterate(scope, res.getEnvironment(), enc, count - 1); }
+        final ParseResult res = token.parse(scope, env, enc);
+        if (res.succeeded) { return iterate(scope, res.environment, enc, count - 1); }
         return new ParseResult(false, env);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _op + "," + _n + ")";
+        return getClass().getSimpleName() + "(" + token + "," + n + ")";
     }
 
 }

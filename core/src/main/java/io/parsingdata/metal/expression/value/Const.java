@@ -22,20 +22,20 @@ import io.parsingdata.metal.encoding.Encoding;
 
 public class Const implements ValueExpression {
 
-    private final Value _val;
+    public final Value value;
 
-    public Const(final Value val) {
-        _val = val;
+    public Const(final Value value) {
+        this.value = value;
     }
 
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
-        return OptionalValueList.create(OptionalValue.of(_val));
+        return OptionalValueList.create(OptionalValue.of(value));
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _val.toString() + ")";
+        return getClass().getSimpleName() + "(" + value.toString() + ")";
     }
 
 }

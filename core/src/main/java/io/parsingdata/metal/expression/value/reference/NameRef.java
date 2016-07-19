@@ -26,20 +26,20 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 public class NameRef implements ValueExpression {
 
-    private final String _name;
+    public final String name;
 
     public NameRef(final String name) {
-        _name = checkNotNull(name, "name");
+        this.name = checkNotNull(name, "name");
     }
 
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
-        return OptionalValueList.create(ByName.getAllValues(env.order, _name));
+        return OptionalValueList.create(ByName.getAllValues(env.order, name));
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _name + ")";
+        return getClass().getSimpleName() + "(" + name + ")";
     }
 
 }

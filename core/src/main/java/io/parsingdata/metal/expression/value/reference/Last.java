@@ -25,21 +25,21 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 public class Last implements ValueExpression {
 
-    private final ValueExpression _op;
+    public final ValueExpression operand;
 
-    public Last(final ValueExpression op) {
-        _op = checkNotNull(op, "op");
+    public Last(final ValueExpression operand) {
+        this.operand = checkNotNull(operand, "operand");
     }
 
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
-        final OptionalValueList list = _op.eval(env, enc);
+        final OptionalValueList list = operand.eval(env, enc);
         return list.isEmpty() ? list : OptionalValueList.create(list.head);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _op + ")";
+        return getClass().getSimpleName() + "(" + operand + ")";
     }
 
 }

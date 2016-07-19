@@ -27,7 +27,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 public class TokenRef implements ValueExpression {
 
-    private final Token definition;
+    public final Token definition;
 
     public TokenRef(final Token definition) {
         this.definition = checkNotNull(definition, "definition");

@@ -61,8 +61,8 @@ public class SubStructTest {
                              * ref 3:                   +----------------*
                              */
         final ParseResult res = token.parse(env, enc());
-        Assert.assertTrue(res.succeeded());
-        final ParseGraph out = res.getEnvironment().order;
+        Assert.assertTrue(res.succeeded);
+        final ParseGraph out = res.environment.order;
         Assert.assertEquals(0, out.getRefs().size); // No cycles
 
         final ParseGraph first = out.head.asGraph();
@@ -80,8 +80,8 @@ public class SubStructTest {
         final Token token = new LinkedList(enc());
         final Environment env = stream(0, 0, 1);
         final ParseResult res = token.parse(env, enc());
-        Assert.assertTrue(res.succeeded());
-        final ParseGraph out = res.getEnvironment().order;
+        Assert.assertTrue(res.succeeded);
+        final ParseGraph out = res.environment.order;
         Assert.assertEquals(1, out.getRefs().size);
 
         final ParseGraph first = out.head.asGraph();
@@ -96,8 +96,8 @@ public class SubStructTest {
         final Token token = new LinkedList(enc());
         final Environment env = stream(0, 4, 1, 21, 0, 0, 1);
         final ParseResult res = token.parse(env, enc());
-        Assert.assertTrue(res.succeeded());
-        final ParseGraph out = res.getEnvironment().order;
+        Assert.assertTrue(res.succeeded);
+        final ParseGraph out = res.environment.order;
         Assert.assertEquals(1, out.getRefs().size);
 
         final ParseGraph first = out.head.asGraph();

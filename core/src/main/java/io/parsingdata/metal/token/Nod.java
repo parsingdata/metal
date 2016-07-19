@@ -16,28 +16,28 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+import java.io.IOException;
+
+import static io.parsingdata.metal.Util.checkNotNull;
+
 public class Nod extends Token {
 
-    private final ValueExpression _size;
+    public final ValueExpression size;
 
     public Nod(final ValueExpression size, final Encoding enc) {
         super(enc);
-        _size = checkNotNull(size, "size");
+        this.size = checkNotNull(size, "size");
     }
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final OptionalValueList sizes = _size.eval(env, enc);
+        final OptionalValueList sizes = size.eval(env, enc);
         if (sizes.size != 1 || !sizes.head.isPresent()) {
             return new ParseResult(false, env);
         }
@@ -50,7 +50,7 @@ public class Nod extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _size + ")";
+        return getClass().getSimpleName() + "(" + size + ")";
     }
 
 }

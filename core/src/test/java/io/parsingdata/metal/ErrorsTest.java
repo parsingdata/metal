@@ -24,7 +24,7 @@ import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.TokenDefinitions.any;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
@@ -48,7 +48,7 @@ public class ErrorsTest {
     public void noValueForSize() throws IOException {
         thrown = ExpectedException.none();
         final Token t = def("a", div(con(10), con(0)));
-        assertFalse(t.parse(stream(1), enc()).succeeded());
+        assertFalse(t.parse(stream(1), enc()).succeeded);
     }
 
     @Test
@@ -72,7 +72,7 @@ public class ErrorsTest {
                 repn(dummy, ref("b"))
             );
         ParseResult parseResult = multiRepN.parse(stream(2, 2, 2, 2), enc());
-        assertFalse(parseResult.succeeded());
+        assertFalse(parseResult.succeeded);
     }
 
 }

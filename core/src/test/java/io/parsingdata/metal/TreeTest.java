@@ -69,14 +69,14 @@ public class TreeTest {
 
     @Test
     public void checkRegularTree() {
-        Assert.assertTrue(_regular.succeeded());
-        checkStruct(_regular.getEnvironment().order.reverse(), 0);
+        Assert.assertTrue(_regular.succeeded);
+        checkStruct(_regular.environment.order.reverse(), 0);
     }
 
     @Test
     public void checkCyclicTree() {
-        Assert.assertTrue(_cyclic.succeeded());
-        checkStruct(_cyclic.getEnvironment().order.reverse(), 0);
+        Assert.assertTrue(_cyclic.succeeded);
+        checkStruct(_cyclic.environment.order.reverse(), 0);
     }
 
     private void checkStruct(final ParseGraph graph, final long offset) {
@@ -123,8 +123,8 @@ public class TreeTest {
 
     @Test
     public void checkRegularTreeFlat() {
-        Assert.assertTrue(_regular.succeeded());
-        final ParseValueList nrs = ByName.getAllValues(_regular.getEnvironment().order, "nr");
+        Assert.assertTrue(_regular.succeeded);
+        final ParseValueList nrs = ByName.getAllValues(_regular.environment.order, "nr");
         for (int i = 0; i < 7; i++) {
             Assert.assertTrue(contains(nrs, i));
         }

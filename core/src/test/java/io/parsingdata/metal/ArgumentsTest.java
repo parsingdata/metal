@@ -46,7 +46,7 @@ public class ArgumentsTest {
 
     final private static String VALID_NAME = "name";
     final private static ValueExpression VALID_VE = con(1);
-    final private static Reducer VALID_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression l, final ValueExpression r) { return null; }};
+    final private static Reducer VALID_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return null; }};
     final private static Expression VALID_E = new Expression() { @Override public boolean eval(final Environment env, final Encoding enc) { return false; }};
     final private static Token VALID_T = new Token(null) { @Override protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException { return null; } };
 

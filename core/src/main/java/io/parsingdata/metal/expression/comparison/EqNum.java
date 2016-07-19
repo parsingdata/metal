@@ -21,13 +21,13 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class EqNum extends ComparisonExpression {
 
-    public EqNum(final ValueExpression current, final ValueExpression predicate) {
-        super(current, predicate);
+    public EqNum(final ValueExpression value, final ValueExpression predicate) {
+        super(value, predicate);
     }
 
     @Override
-    public boolean compare(final Value current, final Value predicate) {
-        return current.asNumeric().compareTo(predicate.asNumeric()) == 0;
+    public boolean compare(final Value left, final Value right) {
+        return left.asNumeric().compareTo(right.asNumeric()) == 0;
     }
 
 }

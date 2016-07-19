@@ -19,7 +19,7 @@ package io.parsingdata.metal;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.sub;
-import static io.parsingdata.metal.TokenDefinitions.any;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import static org.hamcrest.CoreMatchers.is;

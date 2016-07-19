@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.TokenDefinitions.any;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;

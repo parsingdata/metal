@@ -26,7 +26,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.TokenDefinitions.any;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 @RunWith(JUnit4.class)
 public class ToStringTest {

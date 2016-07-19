@@ -20,10 +20,10 @@ import java.util.NoSuchElementException;
 
 public class OptionalValue {
 
-    private final Value _value;
+    private final Value value;
 
     private OptionalValue(final Value value) {
-        _value = value;
+        this.value = value;
     }
 
     private OptionalValue() {
@@ -39,12 +39,12 @@ public class OptionalValue {
     }
 
     public boolean isPresent() {
-        return _value != null;
+        return value != null;
     }
 
     public Value get() {
         if (isPresent()) {
-            return _value;
+            return value;
         } else {
             throw new NoSuchElementException("OptionalValue instance is empty.");
         }
@@ -52,7 +52,7 @@ public class OptionalValue {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + (!isPresent() ? "empty" : _value) + ")";
+        return getClass().getSimpleName() + "(" + (!isPresent() ? "empty" : value) + ")";
     }
 
 }

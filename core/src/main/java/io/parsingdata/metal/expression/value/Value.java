@@ -16,44 +16,40 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
-import java.math.BigInteger;
-import java.util.BitSet;
-
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
 
+import java.math.BigInteger;
+import java.util.BitSet;
+
+import static io.parsingdata.metal.Util.checkNotNull;
+
 public class Value {
 
-    private final byte[] _data;
-    private final Encoding _enc;
+    private final byte[] data; // Private because array content is mutable.
+    public final Encoding enc;
 
     public Value(final byte[] data, final Encoding enc) {
-        _data = data.clone();
-        _enc = checkNotNull(enc, "enc");
+        this.data = data.clone();
+        this.enc = checkNotNull(enc, "enc");
     }
 
     public byte[] getValue() {
-        return _data.clone();
+        return data.clone();
     }
 
     public BigInteger asNumeric() {
-        return _enc.isSigned() ? new BigInteger(_enc.getByteOrder().apply(_data))
-                               : new BigInteger(1, _enc.getByteOrder().apply(_data));
+        return enc.isSigned() ? new BigInteger(enc.getByteOrder().apply(data))
+                              : new BigInteger(1, enc.getByteOrder().apply(data));
     }
 
     public String asString() {
-        return new String(_data, _enc.getCharset());
+        return new String(data, enc.getCharset());
     }
 
     public BitSet asBitSet() {
-        return BitSet.valueOf(_enc.getByteOrder() == ByteOrder.BIG_ENDIAN ? ByteOrder.LITTLE_ENDIAN.apply(_data) : _data);
-    }
-
-    public Encoding getEncoding() {
-        return _enc;
+        return BitSet.valueOf(enc.getByteOrder() == ByteOrder.BIG_ENDIAN ? ByteOrder.LITTLE_ENDIAN.apply(data) : data);
     }
 
     public OptionalValue operation(final ValueOperation op) {
@@ -62,7 +58,7 @@ public class Value {
 
     @Override
     public String toString() {
-        return "0x" + Util.bytesToHexString(_data);
+        return "0x" + Util.bytesToHexString(data);
     }
 
 }

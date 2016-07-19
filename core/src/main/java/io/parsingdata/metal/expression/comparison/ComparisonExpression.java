@@ -16,8 +16,6 @@
 
 package io.parsingdata.metal.expression.comparison;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
@@ -26,23 +24,25 @@ import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 public abstract class ComparisonExpression implements Expression {
 
-    private final ValueExpression _current;
-    private final ValueExpression _predicate;
+    public final ValueExpression value;
+    public final ValueExpression predicate;
 
-    public ComparisonExpression(final ValueExpression current, final ValueExpression predicate) {
-        _current = current;
-        _predicate = checkNotNull(predicate, "predicate");
+    public ComparisonExpression(final ValueExpression value, final ValueExpression predicate) {
+        this.value = value;
+        this.predicate = checkNotNull(predicate, "predicate");
     }
 
     @Override
     public boolean eval(final Environment env, final Encoding enc) {
-        final OptionalValueList ocl = _current == null ? OptionalValueList.create(OptionalValue.of(env.order.current())) : _current.eval(env, enc);
-        if (ocl.isEmpty()) { return false; }
-        final OptionalValueList opl = _predicate.eval(env, enc);
-        if (ocl.size != opl.size) { return false; }
-        return compare(ocl, opl);
+        final OptionalValueList ovl = value == null ? OptionalValueList.create(OptionalValue.of(env.order.current())) : value.eval(env, enc);
+        if (ovl.isEmpty()) { return false; }
+        final OptionalValueList opl = predicate.eval(env, enc);
+        if (ovl.size != opl.size) { return false; }
+        return compare(ovl, opl);
     }
 
     private boolean compare(final OptionalValueList currents, final OptionalValueList predicates) {
@@ -52,11 +52,11 @@ public abstract class ComparisonExpression implements Expression {
         return compare(currents.tail, predicates.tail);
     }
 
-    public abstract boolean compare(final Value current, final Value predicate);
+    public abstract boolean compare(final Value left, final Value right);
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + (_current == null ? "" : _current + ",") + _predicate + ")";
+        return getClass().getSimpleName() + "(" + (value == null ? "" : value + ",") + predicate + ")";
     }
 
 }

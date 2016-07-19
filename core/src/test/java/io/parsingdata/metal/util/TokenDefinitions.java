@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal;
+package io.parsingdata.metal.util;
 
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.expTrue;
-import static io.parsingdata.metal.Shorthand.not;
-import static io.parsingdata.metal.Shorthand.ref;
+import io.parsingdata.metal.Shorthand;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
+
+import static io.parsingdata.metal.Shorthand.*;
 
 public class TokenDefinitions {
 
@@ -37,7 +35,7 @@ public class TokenDefinitions {
     }
 
     public static Token eq(final String name, final int value) {
-        return def(name, con(1), Shorthand.eq(con(value)));
+        return Shorthand.def(name, con(1), Shorthand.eq(con(value)));
     }
 
     public static Token notEq(final String name, final int value) {

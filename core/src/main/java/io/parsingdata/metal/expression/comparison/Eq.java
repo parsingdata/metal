@@ -21,14 +21,14 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class Eq extends ComparisonExpression {
 
-    public Eq(final ValueExpression current, final ValueExpression predicate) {
-        super(current, predicate);
+    public Eq(final ValueExpression value, final ValueExpression predicate) {
+        super(value, predicate);
     }
 
     @Override
-    public boolean compare(final Value current, final Value predicate) {
-        final byte[] l = current.getValue();
-        final byte[] r = predicate.getValue();
+    public boolean compare(final Value left, final Value right) {
+        final byte[] l = left.getValue();
+        final byte[] r = right.getValue();
         if (l.length != r.length) { return false; }
         for (int i = 0; i < l.length; i++) {
             if (l[i] != r[i]) { return false; }
