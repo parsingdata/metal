@@ -22,7 +22,7 @@ import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.TokenDefinitions.any;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 

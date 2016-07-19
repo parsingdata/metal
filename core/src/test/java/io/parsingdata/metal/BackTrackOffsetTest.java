@@ -19,8 +19,8 @@ package io.parsingdata.metal;
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.TokenDefinitions.any;
-import static io.parsingdata.metal.TokenDefinitions.eq;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
+import static io.parsingdata.metal.util.TokenDefinitions.eq;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 

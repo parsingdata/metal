@@ -57,7 +57,7 @@ public class WhileTest {
 
     @Test
     public void whileWithoutExpression() throws IOException {
-        // passing null as predicate make this a while(true):
+        // passing null as pred make this a while(true):
         final Token trueWhile = new While(def("value", 1), null, enc());
         final ParseResult result = trueWhile.parse(stream(0), enc());
 
