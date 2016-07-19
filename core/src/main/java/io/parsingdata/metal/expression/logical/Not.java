@@ -22,13 +22,13 @@ import io.parsingdata.metal.expression.Expression;
 
 public class Not extends UnaryLogicalExpression {
 
-    public Not(final Expression op) {
-        super(op);
+    public Not(final Expression operand) {
+        super(operand);
     }
 
     @Override
     public boolean eval(final Environment env, final Encoding enc) {
-        return !_op.eval(env, enc);
+        return !operand.eval(env, enc);
     }
 
 }

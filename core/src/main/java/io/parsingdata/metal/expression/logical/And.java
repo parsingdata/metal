@@ -22,13 +22,13 @@ import io.parsingdata.metal.expression.Expression;
 
 public class And extends BinaryLogicalExpression {
 
-    public And(final Expression lop, final Expression rop) {
-        super(lop, rop);
+    public And(final Expression left, final Expression right) {
+        super(left, right);
     }
 
     @Override
     public boolean eval(final Environment env, final Encoding enc) {
-        return _lop.eval(env, enc) && _rop.eval(env, enc);
+        return left.eval(env, enc) && right.eval(env, enc);
     }
 
 }
