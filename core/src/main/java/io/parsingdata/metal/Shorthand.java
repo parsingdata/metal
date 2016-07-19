@@ -84,7 +84,8 @@ public class Shorthand {
     public static ValueExpression con(final int... values) { return con(new Encoding(), values); }
     public static final ValueExpression self = new Self();
     public static ValueExpression len(final ValueExpression v) { return new Len(v); }
-    public static ValueExpression ref(final String s) { return new Ref(s); }
+    public static ValueExpression ref(final String s) { return new NameRef(s); }
+    public static ValueExpression ref(final Token d) { return new TokenRef(d); }
     public static ValueExpression first(final ValueExpression o) { return new First(o); }
     public static ValueExpression last(final ValueExpression o) { return new Last(o); }
     public static ValueExpression offset(final ValueExpression o) { return new Offset(o); }
@@ -114,6 +115,11 @@ public class Shorthand {
     public static ComparisonExpression gtNum(final ValueExpression c, final ValueExpression p) { return new GtNum(c, p); }
     public static ComparisonExpression ltNum(final ValueExpression p) { return new LtNum(null, p); }
     public static ComparisonExpression ltNum(final ValueExpression c, final ValueExpression p) { return new LtNum(c, p); }
+
+    public final static Reducer ADD_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression l, final ValueExpression r) { return add(l, r); } };
+    public final static Reducer MUL_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression l, final ValueExpression r) { return mul(l, r); } };
+    public final static Reducer CAT_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression l, final ValueExpression r) { return cat(l, r); } };
+    public final static Reducer SUB_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression l, final ValueExpression r) { return sub(l, r); } };
 
     public static byte[] toByteArray(final int... bytes) {
         final byte[] out = new byte[bytes.length];

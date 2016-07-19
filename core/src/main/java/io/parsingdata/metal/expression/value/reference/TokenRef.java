@@ -18,28 +18,29 @@ package io.parsingdata.metal.expression.value.reference;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
-import io.parsingdata.metal.data.selection.ByName;
+import io.parsingdata.metal.data.selection.ByToken;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.token.Token;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-public class Ref implements ValueExpression {
+public class TokenRef implements ValueExpression {
 
-    private final String _name;
+    private final Token definition;
 
-    public Ref(final String name) {
-        _name = checkNotNull(name, "name");
+    public TokenRef(final Token definition) {
+        this.definition = checkNotNull(definition, "definition");
     }
 
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
-        return OptionalValueList.create(ByName.getAll(env.order, _name));
+        return OptionalValueList.create(ByToken.getAllValues(env.order, definition));
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _name + ")";
+        return getClass().getSimpleName() + "(" + definition + ")";
     }
 
 }

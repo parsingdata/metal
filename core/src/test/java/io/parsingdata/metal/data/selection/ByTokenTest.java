@@ -209,7 +209,7 @@ public class ByTokenTest {
     public void compareGetAllNameWithGetAllToken() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2, 3, 4, 5), SEQ_REP);
 
-        ParseValueList valueList = ByName.getAll(graph, "value2");
+        ParseValueList valueList = ByName.getAllValues(graph, "value2");
         ParseItemList itemList = ByToken.getAll(graph, DEF2);
 
         while (valueList.head != null) {

@@ -20,9 +20,12 @@ import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseGraphList;
 import io.parsingdata.metal.data.ParseItem;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 public class ByType {
 
     public static ParseGraphList getRefs(final ParseGraph graph) {
+        checkNotNull(graph, "graph");
         return getRefs(graph, graph);
     }
 
@@ -34,6 +37,7 @@ public class ByType {
     }
 
     public static ParseGraphList getGraphs(final ParseGraph graph) {
+        checkNotNull(graph, "graph");
         return getNestedGraphs(graph).add(graph);
     }
 
