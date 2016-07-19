@@ -40,14 +40,14 @@ public class While extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final ParseResult res = iterate(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
-        if (res.succeeded()) { return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset)); }
+        if (res.succeeded) { return new ParseResult(true, new Environment(res.environment.order.closeBranch(), res.environment.input, res.environment.offset)); }
         return new ParseResult(false, env);
     }
 
     private ParseResult iterate(final String scope, final Environment env, final Encoding enc) throws IOException {
         if (!predicate.eval(env, enc)) { return new ParseResult(true, env); }
         final ParseResult res = token.parse(scope, env, enc);
-        if (res.succeeded()) { return iterate(scope, res.getEnvironment(), enc); }
+        if (res.succeeded) { return iterate(scope, res.environment, enc); }
         return new ParseResult(false, env);
     }
 

@@ -44,12 +44,12 @@ public class ValueExpressionSemanticsTest {
 
     @Test
     public void Cat() throws IOException {
-        Assert.assertTrue(cat.parse(stream(1, 2, 1, 2), enc()).succeeded());
+        Assert.assertTrue(cat.parse(stream(1, 2, 1, 2), enc()).succeeded);
     }
 
     @Test
     public void CatNoMatch() throws IOException {
-        Assert.assertFalse(cat.parse(stream(1, 2, 12, 12), enc()).succeeded());
+        Assert.assertFalse(cat.parse(stream(1, 2, 12, 12), enc()).succeeded);
     }
 
 }

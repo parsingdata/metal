@@ -48,12 +48,12 @@ public class ShorthandsTest {
 
     @Test
     public void sequenceMultiMatch() throws IOException {
-        Assert.assertTrue(multiSequence.parse(stream(1, 2, 3), enc()).succeeded());
+        Assert.assertTrue(multiSequence.parse(stream(1, 2, 3), enc()).succeeded);
     }
 
     @Test
     public void sequenceMultiNoMatch() throws IOException {
-        Assert.assertFalse(multiSequence.parse(stream(1, 2, 2), enc()).succeeded());
+        Assert.assertFalse(multiSequence.parse(stream(1, 2, 2), enc()).succeeded);
     }
 
     @Test
@@ -73,13 +73,13 @@ public class ShorthandsTest {
 
     private void runChoice(final int data, final String matched) throws IOException {
         final ParseResult res = multiChoice.parse(stream(data), enc());
-        Assert.assertTrue(res.succeeded());
-        Assert.assertTrue(res.getEnvironment().order.current().getName().equals(matched));
+        Assert.assertTrue(res.succeeded);
+        Assert.assertTrue(res.environment.order.current().getName().equals(matched));
     }
 
     @Test
     public void choiceMultiNoMatch() throws IOException {
-        Assert.assertFalse(multiChoice.parse(stream(0), enc()).succeeded());
+        Assert.assertFalse(multiChoice.parse(stream(0), enc()).succeeded);
     }
 
 }

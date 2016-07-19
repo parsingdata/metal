@@ -52,9 +52,9 @@ public class SubStructTableTest {
                              * ref3:            +---------------------^^--^^
                              */
         final ParseResult res = table.parse(env, enc());
-        assertTrue(res.succeeded());
-        assertEquals(4, res.getEnvironment().offset);
-        final ParseGraph order = res.getEnvironment().order;
+        assertTrue(res.succeeded);
+        assertEquals(4, res.environment.offset);
+        final ParseGraph order = res.environment.order;
         checkStruct(order.head.asGraph().head.asGraph().head.asGraph());
         checkStruct(order.head.asGraph().head.asGraph().tail.head.asGraph());
         checkStruct(order.head.asGraph().head.asGraph().tail.tail.head.asGraph());
@@ -72,9 +72,9 @@ public class SubStructTableTest {
                              * ref4:               ++---------------------^^--^^
                              */
         final ParseResult res = table.parse(env, enc());
-        assertTrue(res.succeeded());
-        assertEquals(5, res.getEnvironment().offset);
-        final ParseGraph order = res.getEnvironment().order;
+        assertTrue(res.succeeded);
+        assertEquals(5, res.environment.offset);
+        final ParseGraph order = res.environment.order;
         checkStruct(order.head.asGraph().head.asGraph().head.asGraph());
         assertTrue(order.head.asGraph().head.asGraph().tail.head.isRef());
         checkStruct(order.head.asGraph().head.asGraph().tail.head.asRef().resolve(order));

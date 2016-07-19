@@ -18,25 +18,17 @@ package io.parsingdata.metal.data;
 
 public class ParseResult {
 
-    private final boolean _succeeded;
-    private final Environment _environment;
+    public final boolean succeeded;
+    public final Environment environment;
 
     public ParseResult(final boolean succeeded, final Environment environment) {
-        _succeeded = succeeded;
-        _environment = environment;
-    }
-
-    public boolean succeeded() {
-        return _succeeded;
-    }
-
-    public Environment getEnvironment() {
-        return _environment;
+        this.succeeded = succeeded;
+        this.environment = environment;
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _succeeded + ", " + _environment + ")";
+        return getClass().getSimpleName() + "(" + succeeded + ", " + environment + ")";
     }
 
 }

@@ -41,25 +41,25 @@ public class SimpleTest {
     @Test
     public void correct() throws IOException {
         final Token t = buildSimpleToken("r1", 1, 1);
-        Assert.assertTrue(t.parse(stream(1, 2, 3, 4), enc()).succeeded());
+        Assert.assertTrue(t.parse(stream(1, 2, 3, 4), enc()).succeeded);
     }
 
     @Test
     public void sizeError() throws IOException {
         final Token t = buildSimpleToken("r1", 2, 1);
-        Assert.assertFalse(t.parse(stream(1, 2, 3, 4), enc()).succeeded());
+        Assert.assertFalse(t.parse(stream(1, 2, 3, 4), enc()).succeeded);
     }
 
     @Test
     public void predicateError() throws IOException {
         final Token t = buildSimpleToken("r1", 1, 2);
-        Assert.assertFalse(t.parse(stream(1, 2, 3, 4), enc()).succeeded());
+        Assert.assertFalse(t.parse(stream(1, 2, 3, 4), enc()).succeeded);
     }
 
     @Test
     public void sourceError() throws IOException {
         final Token t = buildSimpleToken("r1", 1, 1);
-        Assert.assertFalse(t.parse(stream(2, 2, 2, 2), enc()).succeeded());
+        Assert.assertFalse(t.parse(stream(2, 2, 2, 2), enc()).succeeded);
     }
 
 }

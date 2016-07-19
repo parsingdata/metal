@@ -44,7 +44,7 @@ public class WhileTest {
         // the while stops because the second 'value' is >= 1
         final ParseResult result = WHILE.parse(stream(0, 9, 1, 10, 2, 11), enc());
 
-        assertThat(result.getEnvironment().offset, is(4L));
+        assertThat(result.environment.offset, is(4L));
     }
 
     @Test
@@ -52,7 +52,7 @@ public class WhileTest {
         final ParseResult result = WHILE.parse(stream(0, 9, 0, 8), enc());
 
         // parsing fails because the nested token couldn't be parsed ('value2' <= 9)
-        assertFalse(result.succeeded());
+        assertFalse(result.succeeded);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class WhileTest {
         final ParseResult result = trueWhile.parse(stream(0), enc());
 
         // parsing fails because the nested def fails at the end of the stream
-        assertFalse(result.succeeded());
+        assertFalse(result.succeeded);
     }
 
     @Test

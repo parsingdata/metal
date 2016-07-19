@@ -49,10 +49,10 @@ public class DefSizeTest {
         });
         final ParseResult result = FORMAT.parse(new Environment(stream), new Encoding());
 
-        Assert.assertTrue(result.succeeded());
+        Assert.assertTrue(result.succeeded);
         Assert.assertArrayEquals(
             new byte[]{0x04, 0x08},
-            result.getEnvironment().order.get("data").getValue()
+            result.environment.order.get("data").getValue()
         );
     }
 
@@ -64,8 +64,8 @@ public class DefSizeTest {
         });
         final ParseResult result = FORMAT.parse(new Environment(stream), new Encoding());
 
-        Assert.assertFalse(result.succeeded());
+        Assert.assertFalse(result.succeeded);
         // The top-level Token (Seq) has failed, so no values are recorded in the ParseGraph.
-        Assert.assertEquals(ParseGraph.EMPTY, result.getEnvironment().order);
+        Assert.assertEquals(ParseGraph.EMPTY, result.environment.order);
     }
 }

@@ -47,22 +47,22 @@ public class BackTrackNameBindTest {
 
     @Test
     public void choiceRefLeft() throws IOException {
-        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 2), enc()).succeeded());
+        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 2), enc()).succeeded);
     }
 
     @Test
     public void choiceRefRight() throws IOException {
-        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 3), enc()).succeeded());
+        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 3), enc()).succeeded);
     }
 
     @Test
     public void choiceRefNone() throws IOException {
-        Assert.assertFalse(_choiceRef.parse(stream(1, 1, 2), enc()).succeeded());
+        Assert.assertFalse(_choiceRef.parse(stream(1, 1, 2), enc()).succeeded);
     }
 
     @Test
     public void repeatRef() throws IOException {
-        Assert.assertTrue(_repeatRef.parse(stream(42, 42, 42, 21, 21, 21), enc()).succeeded());
+        Assert.assertTrue(_repeatRef.parse(stream(42, 42, 42, 21, 21, 21), enc()).succeeded);
     }
 
 }

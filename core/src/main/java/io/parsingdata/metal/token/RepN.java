@@ -44,8 +44,8 @@ public class RepN extends Token {
             return new ParseResult(false, env);
         }
         final ParseResult res = iterate(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc, counts.head.get().asNumeric().longValue());
-        if (res.succeeded()) {
-            return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset));
+        if (res.succeeded) {
+            return new ParseResult(true, new Environment(res.environment.order.closeBranch(), res.environment.input, res.environment.offset));
         }
         return new ParseResult(false, env);
     }
@@ -53,7 +53,7 @@ public class RepN extends Token {
     private ParseResult iterate(final String scope, final Environment env, final Encoding enc, final long count) throws IOException {
         if (count <= 0) { return new ParseResult(true, env); }
         final ParseResult res = token.parse(scope, env, enc);
-        if (res.succeeded()) { return iterate(scope, res.getEnvironment(), enc, count - 1); }
+        if (res.succeeded) { return iterate(scope, res.environment, enc, count - 1); }
         return new ParseResult(false, env);
     }
 

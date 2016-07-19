@@ -38,14 +38,14 @@ public class Cho extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final ParseResult res = iterate(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc, 0);
-        if (res.succeeded()) { return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset)); }
+        if (res.succeeded) { return new ParseResult(true, new Environment(res.environment.order.closeBranch(), res.environment.input, res.environment.offset)); }
         return new ParseResult(false, env);
     }
 
     private ParseResult iterate(final String scope, final Environment env, final Encoding enc, final int index) throws IOException {
         if (index >= tokens.length) { return new ParseResult(false, env); }
         final ParseResult res = tokens[index].parse(scope, env, enc);
-        if (res.succeeded()) { return res; }
+        if (res.succeeded) { return res; }
         return iterate(scope, env, enc, index + 1);
     }
 

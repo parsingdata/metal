@@ -57,42 +57,42 @@ public class BackTrackOffsetTest {
 
     @Test
     public void choiceLeft() throws IOException {
-        Assert.assertTrue(_backTrackChoice.parse(stream(1, 2), enc()).succeeded());
+        Assert.assertTrue(_backTrackChoice.parse(stream(1, 2), enc()).succeeded);
     }
 
     @Test
     public void choiceRight() throws IOException {
-        Assert.assertTrue(_backTrackChoice.parse(stream(1, 3), enc()).succeeded());
+        Assert.assertTrue(_backTrackChoice.parse(stream(1, 3), enc()).succeeded);
     }
 
     @Test
     public void choiceNone() throws IOException {
-        Assert.assertFalse(_backTrackChoice.parse(stream(1, 4), enc()).succeeded());
+        Assert.assertFalse(_backTrackChoice.parse(stream(1, 4), enc()).succeeded);
     }
 
     @Test
     public void repeatZero() throws IOException {
-        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 3), enc()).succeeded());
+        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 3), enc()).succeeded);
     }
 
     @Test
     public void repeatOnce() throws IOException {
-        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 3), enc()).succeeded());
+        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 3), enc()).succeeded);
     }
 
     @Test
     public void repeatTwice() throws IOException {
-        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 2, 1, 3), enc()).succeeded());
+        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 2, 1, 3), enc()).succeeded);
     }
 
     @Test
     public void repeatNone() throws IOException {
-        Assert.assertFalse(_backTrackRepeat.parse(stream(1, 4), enc()).succeeded());
+        Assert.assertFalse(_backTrackRepeat.parse(stream(1, 4), enc()).succeeded);
     }
 
     @Test
     public void deepMatch() throws IOException {
-        Assert.assertTrue(_backTrackDeep.parse(stream(1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 84), enc()).succeeded());
+        Assert.assertTrue(_backTrackDeep.parse(stream(1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 84), enc()).succeeded);
     }
 
 }

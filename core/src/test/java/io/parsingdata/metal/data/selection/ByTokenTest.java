@@ -222,7 +222,7 @@ public class ByTokenTest {
 
     private ParseGraph parseResultGraph(final Environment env, final Token def) {
         try {
-            return def.parse(env, enc()).getEnvironment().order;
+            return def.parse(env, enc()).environment.order;
         }
         catch (final IOException e) {
             throw new AssertionError("Parsing failed", e);

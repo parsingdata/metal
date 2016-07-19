@@ -36,10 +36,10 @@ public class DefinitionTest {
 	public void singleDef() throws IOException {
 		final Token singleDef = def("a", con(1));
 		final ParseResult res = singleDef.parse(stream(1), enc());
-		Assert.assertTrue(res.succeeded());
-		Assert.assertTrue(res.getEnvironment().order.getDefinition() == ParseGraph.NONE);
-		Assert.assertTrue(res.getEnvironment().order.head.getDefinition() == singleDef);
-		Assert.assertTrue(res.getEnvironment().order.tail.getDefinition() == ParseGraph.NONE);
+		Assert.assertTrue(res.succeeded);
+		Assert.assertTrue(res.environment.order.getDefinition() == ParseGraph.NONE);
+		Assert.assertTrue(res.environment.order.head.getDefinition() == singleDef);
+		Assert.assertTrue(res.environment.order.tail.getDefinition() == ParseGraph.NONE);
 	}
 
 	@Test
@@ -48,14 +48,14 @@ public class DefinitionTest {
 		Token defB = def("b", con(1));
 		final Token smallSeq = seq(defA, defB);
 		final ParseResult res = smallSeq.parse(stream(1, 2), enc());
-		Assert.assertTrue(res.succeeded());
-		Assert.assertTrue(res.getEnvironment().order.getDefinition() == ParseGraph.NONE);
-		Assert.assertTrue(res.getEnvironment().order.head.getDefinition() == smallSeq);
-		Assert.assertTrue(res.getEnvironment().order.head.asGraph().head.getDefinition() == defB);
-		Assert.assertTrue(res.getEnvironment().order.head.asGraph().tail.getDefinition() == smallSeq);
-		Assert.assertTrue(res.getEnvironment().order.head.asGraph().tail.head.getDefinition() == defA);
-		Assert.assertTrue(res.getEnvironment().order.head.asGraph().tail.tail.getDefinition() == smallSeq);
-		Assert.assertTrue(res.getEnvironment().order.tail.getDefinition() == ParseGraph.NONE);
+		Assert.assertTrue(res.succeeded);
+		Assert.assertTrue(res.environment.order.getDefinition() == ParseGraph.NONE);
+		Assert.assertTrue(res.environment.order.head.getDefinition() == smallSeq);
+		Assert.assertTrue(res.environment.order.head.asGraph().head.getDefinition() == defB);
+		Assert.assertTrue(res.environment.order.head.asGraph().tail.getDefinition() == smallSeq);
+		Assert.assertTrue(res.environment.order.head.asGraph().tail.head.getDefinition() == defA);
+		Assert.assertTrue(res.environment.order.head.asGraph().tail.tail.getDefinition() == smallSeq);
+		Assert.assertTrue(res.environment.order.tail.getDefinition() == ParseGraph.NONE);
 	}
 
 }

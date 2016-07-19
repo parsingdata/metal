@@ -73,7 +73,7 @@ public class FoldEdgeCaseTest {
                 )
             ).parse(stream(1, 2, 1, 2, 3), enc());
 
-        assertFalse(parseResult.succeeded());
+        assertFalse(parseResult.succeeded);
     }
 
     @Test
@@ -84,7 +84,7 @@ public class FoldEdgeCaseTest {
                 def("folded", 1, eq(foldRight(ref("toFold"), ADD_REDUCER)))
             ).parse(stream(1), enc());
 
-        assertFalse(parseResult.succeeded());
+        assertFalse(parseResult.succeeded);
     }
 
     @Test
