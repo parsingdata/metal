@@ -31,14 +31,14 @@ public class Str extends Token {
     public final String scope;
     public final Token token;
     public final StructSink sink;
-    public final Expression pred;
+    public final Expression predicate;
 
-    public Str(final String scope, final Token token, final Encoding enc, final StructSink sink, final Expression pred) {
+    public Str(final String scope, final Token token, final Encoding enc, final StructSink sink, final Expression predicate) {
         super(enc);
         this.scope = checkNotNull(scope, "scope");
         this.token = checkNotNull(token, "token");
         this.sink = sink;
-        this.pred = pred == null ? new True() : pred;
+        this.predicate = predicate == null ? new True() : predicate;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class Str extends Token {
         final ParseResult res = token.parse(outerScope + "." + scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
         if (!res.succeeded()) { return new ParseResult(false, env); }
         final ParseResult closedResult = new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset));
-        if (sink != null && pred.eval(closedResult.getEnvironment(), enc)) {
+        if (sink != null && predicate.eval(closedResult.getEnvironment(), enc)) {
             sink.handleStruct(outerScope, closedResult.getEnvironment(), enc, closedResult.getEnvironment().order.get(this).asGraph());
         }
         return closedResult;

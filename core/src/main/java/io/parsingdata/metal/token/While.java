@@ -29,12 +29,12 @@ import static io.parsingdata.metal.Util.checkNotNull;
 public class While extends Token {
 
     public final Token token;
-    public final Expression pred;
+    public final Expression predicate;
 
-    public While(final Token token, final Expression pred, final Encoding enc) {
+    public While(final Token token, final Expression predicate, final Encoding enc) {
         super(enc);
         this.token = checkNotNull(token, "token");
-        this.pred = pred == null ? expTrue() : pred;
+        this.predicate = predicate == null ? expTrue() : predicate;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class While extends Token {
     }
 
     private ParseResult iterate(final String scope, final Environment env, final Encoding enc) throws IOException {
-        if (!pred.eval(env, enc)) { return new ParseResult(true, env); }
+        if (!predicate.eval(env, enc)) { return new ParseResult(true, env); }
         final ParseResult res = token.parse(scope, env, enc);
         if (res.succeeded()) { return iterate(scope, res.getEnvironment(), enc); }
         return new ParseResult(false, env);
@@ -53,7 +53,7 @@ public class While extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + token + ", " + pred + ")";
+        return getClass().getSimpleName() + "(" + token + ", " + predicate + ")";
     }
 
 }

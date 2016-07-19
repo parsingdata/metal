@@ -29,17 +29,17 @@ import static io.parsingdata.metal.Util.checkNotNull;
 public class Pre extends Token {
 
     public final Token token;
-    public final Expression pred;
+    public final Expression predicate;
 
-    public Pre(final Token token, final Expression pred, final Encoding enc) {
+    public Pre(final Token token, final Expression predicate, final Encoding enc) {
         super(enc);
         this.token = checkNotNull(token, "token");
-        this.pred = pred == null ? expTrue() : pred;
+        this.predicate = predicate == null ? expTrue() : predicate;
     }
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        if (!pred.eval(env, enc)) { return new ParseResult(true, env); }
+        if (!predicate.eval(env, enc)) { return new ParseResult(true, env); }
         final ParseResult res = token.parse(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
         if (res.succeeded()) { return new ParseResult(true, new Environment(res.getEnvironment().order.closeBranch(), res.getEnvironment().input, res.getEnvironment().offset)); }
         return new ParseResult(false, env);
@@ -47,7 +47,7 @@ public class Pre extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + token + ", " + pred + ")";
+        return getClass().getSimpleName() + "(" + token + ", " + predicate + ")";
     }
 
 }

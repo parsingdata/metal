@@ -33,13 +33,13 @@ public class Def extends Token {
 
     public final String name;
     public final ValueExpression size;
-    public final Expression pred;
+    public final Expression predicate;
 
-    public Def(final String name, final ValueExpression size, final Expression pred, final Encoding enc) {
+    public Def(final String name, final ValueExpression size, final Expression predicate, final Encoding enc) {
         super(enc);
         this.name = checkNotNull(name, "name");
         this.size = checkNotNull(size, "size");
-        this.pred = pred == null ? new True() : pred;
+        this.predicate = predicate == null ? new True() : predicate;
     }
 
     @Override
@@ -58,12 +58,12 @@ public class Def extends Token {
             return new ParseResult(false, env);
         }
         final Environment newEnv = new Environment(env.order.add(new ParseValue(scope, name, this, env.offset, data, enc)), env.input, env.offset + dataSize);
-        return pred.eval(newEnv, enc) ? new ParseResult(true, newEnv) : new ParseResult(false, env);
+        return predicate.eval(newEnv, enc) ? new ParseResult(true, newEnv) : new ParseResult(false, env);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(\"" + name + "\"," + size + "," + pred + ",)";
+        return getClass().getSimpleName() + "(\"" + name + "\"," + size + "," + predicate + ",)";
     }
 
 }
