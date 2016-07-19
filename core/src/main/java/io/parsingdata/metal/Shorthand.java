@@ -31,90 +31,90 @@ import io.parsingdata.metal.token.*;
 
 public class Shorthand {
 
-    public static Token def(final String name, final ValueExpression size, final Expression pred, final Encoding encoding) { return new Def(name, size, pred, encoding); }
-    public static Token def(final String name, final ValueExpression size, final Expression pred) { return def(name, size, pred, null); }
-    public static Token def(final String name, final ValueExpression size, final Encoding enc) { return def(name, size, null, enc); }
+    public static Token def(final String name, final ValueExpression size, final Expression predicate, final Encoding encoding) { return new Def(name, size, predicate, encoding); }
+    public static Token def(final String name, final ValueExpression size, final Expression predicate) { return def(name, size, predicate, null); }
+    public static Token def(final String name, final ValueExpression size, final Encoding encoding) { return def(name, size, null, encoding); }
     public static Token def(final String name, final ValueExpression size) { return def(name, size, null, null); }
-    public static Token def(final String name, final long size, final Expression pred, final Encoding encoding) { return def(name, con(size), pred, encoding); }
-    public static Token def(final String name, final long size, final Expression pred) { return def(name, size, pred, null); }
-    public static Token def(final String name, final long size, final Encoding enc) { return def(name, size, null, enc); }
+    public static Token def(final String name, final long size, final Expression predicate, final Encoding encoding) { return def(name, con(size), predicate, encoding); }
+    public static Token def(final String name, final long size, final Expression predicate) { return def(name, size, predicate, null); }
+    public static Token def(final String name, final long size, final Encoding encoding) { return def(name, size, null, encoding); }
     public static Token def(final String name, final long size) { return def(name, size, null, null); }
-    public static Token cho(final Encoding e, final Token... tokens) { return new Cho(e, tokens); }
+    public static Token cho(final Encoding encoding, final Token... tokens) { return new Cho(encoding, tokens); }
     public static Token cho(final Token... tokens) { return cho(null, tokens); }
-    public static Token rep(final Token t, final Encoding e) { return new Rep(t, e); }
-    public static Token rep(final Token t) { return new Rep(t, null); }
-    public static Token repn(final Token t, final ValueExpression n, final Encoding e) { return new RepN(t, n, e); }
-    public static Token repn(final Token t, final ValueExpression n) { return new RepN(t, n, null); }
-    public static Token seq(final Encoding e, final Token... tokens) { return new Seq(e, tokens); }
+    public static Token rep(final Token token, final Encoding encoding) { return new Rep(token, encoding); }
+    public static Token rep(final Token token) { return new Rep(token, null); }
+    public static Token repn(final Token token, final ValueExpression n, final Encoding encoding) { return new RepN(token, n, encoding); }
+    public static Token repn(final Token token, final ValueExpression n) { return new RepN(token, n, null); }
+    public static Token seq(final Encoding encoding, final Token... tokens) { return new Seq(encoding, tokens); }
     public static Token seq(final Token... tokens) { return seq(null, tokens); }
-    public static Token str(final String n, final Token t, final Encoding e) { return str(n, t, e, null, null); }
-    public static Token str(final String n, final Token t) { return str(n, t, null, null, null); }
-    public static Token str(final String n, final Token t, final Encoding e, final StructSink s) { return new Str(n, t, e, s, null); }
-    public static Token str(final String n, final Token t, final StructSink s) { return str(n, t, null, s, null); }
-    public static Token str(final String n, final Token t, final Encoding e, final StructSink s, final Expression p) { return new Str(n, t, e, s, p); }
-    public static Token str(final String n, final Token t, final StructSink s, final Expression p) { return str(n, t, null, s, p); }
-    public static Token sub(final Token t, final ValueExpression a, final Encoding e) { return new io.parsingdata.metal.token.Sub(t, a, e); }
-    public static Token sub(final Token t, final ValueExpression a) { return sub(t, a, null); }
-    public static Token pre(final Token t, final Expression p, final Encoding e) { return new Pre(t, p, e); }
-    public static Token pre(final Token t, final Expression p) { return pre(t, p, null); }
-    public static Token whl(final Token t, final Expression p, final Encoding e) { return new While(t, p, e); }
-    public static Token whl(final Token t, final Expression p) { return whl(t, p, null); }
-    public static Token opt(final Token t, final Encoding e) { return new Opt(t, e); }
-    public static Token opt(final Token t) { return opt(t, null); }
-    public static Token nod(final ValueExpression s, final Encoding e) { return new Nod(s, e); }
-    public static Token nod(final ValueExpression s) { return new Nod(s, null); }
+    public static Token str(final String scope, final Token token, final Encoding encoding) { return str(scope, token, encoding, null, null); }
+    public static Token str(final String scope, final Token token) { return str(scope, token, null, null, null); }
+    public static Token str(final String scope, final Token token, final Encoding encoding, final StructSink sink) { return new Str(scope, token, encoding, sink, null); }
+    public static Token str(final String scope, final Token token, final StructSink sink) { return str(scope, token, null, sink, null); }
+    public static Token str(final String scope, final Token token, final Encoding encoding, final StructSink sink, final Expression predicate) { return new Str(scope, token, encoding, sink, predicate); }
+    public static Token str(final String scope, final Token token, final StructSink sink, final Expression predicate) { return str(scope, token, null, sink, predicate); }
+    public static Token sub(final Token token, final ValueExpression address, final Encoding encoding) { return new io.parsingdata.metal.token.Sub(token, address, encoding); }
+    public static Token sub(final Token token, final ValueExpression address) { return sub(token, address, null); }
+    public static Token pre(final Token token, final Expression predicate, final Encoding encoding) { return new Pre(token, predicate, encoding); }
+    public static Token pre(final Token token, final Expression predicate) { return pre(token, predicate, null); }
+    public static Token whl(final Token token, final Expression predicate, final Encoding encoding) { return new While(token, predicate, encoding); }
+    public static Token whl(final Token token, final Expression predicate) { return whl(token, predicate, null); }
+    public static Token opt(final Token token, final Encoding encoding) { return new Opt(token, encoding); }
+    public static Token opt(final Token token) { return opt(token, null); }
+    public static Token nod(final ValueExpression size, final Encoding encoding) { return new Nod(size, encoding); }
+    public static Token nod(final ValueExpression size) { return new Nod(size, null); }
 
-    public static BinaryValueExpression add(final ValueExpression l, final ValueExpression r) { return new Add(l, r); }
-    public static BinaryValueExpression div(final ValueExpression l, final ValueExpression r) { return new Div(l, r); }
-    public static BinaryValueExpression mul(final ValueExpression l, final ValueExpression r) { return new Mul(l, r); }
-    public static BinaryValueExpression sub(final ValueExpression l, final ValueExpression r) { return new Sub(l, r); }
-    public static BinaryValueExpression mod(final ValueExpression l, final ValueExpression r) { return new Mod(l, r); }
-    public static UnaryValueExpression neg(final ValueExpression v) { return new Neg(v); }
-    public static BinaryValueExpression and(final ValueExpression l, final ValueExpression r) { return new io.parsingdata.metal.expression.value.bitwise.And(l, r); }
-    public static BinaryValueExpression or(final ValueExpression l, final ValueExpression r) { return new io.parsingdata.metal.expression.value.bitwise.Or(l, r); }
-    public static UnaryValueExpression not(final ValueExpression v) { return new io.parsingdata.metal.expression.value.bitwise.Not(v); }
-    public static BinaryValueExpression shl(final ValueExpression l, final ValueExpression r) { return new ShiftLeft(l, r); }
-    public static BinaryValueExpression shr(final ValueExpression l, final ValueExpression r) { return new ShiftRight(l, r); }
-    public static ValueExpression con(final long v) { return con(v, new Encoding()); }
-    public static ValueExpression con(final long v, final Encoding encoding) { return con(ConstantFactory.createFromNumeric(v, encoding)); }
-    public static ValueExpression con(final String s) { return con(s, new Encoding()); }
-    public static ValueExpression con(final String s, final Encoding encoding) { return con(ConstantFactory.createFromString(s, encoding)); }
-    public static ValueExpression con(final Value v) { return new Const(v); }
-    public static ValueExpression con(final Encoding enc, final int... values) { return new Const(new Value(toByteArray(values), enc)); }
+    public static BinaryValueExpression add(final ValueExpression left, final ValueExpression right) { return new Add(left, right); }
+    public static BinaryValueExpression div(final ValueExpression left, final ValueExpression right) { return new Div(left, right); }
+    public static BinaryValueExpression mul(final ValueExpression left, final ValueExpression right) { return new Mul(left, right); }
+    public static BinaryValueExpression sub(final ValueExpression left, final ValueExpression right) { return new Sub(left, right); }
+    public static BinaryValueExpression mod(final ValueExpression left, final ValueExpression right) { return new Mod(left, right); }
+    public static UnaryValueExpression neg(final ValueExpression operand) { return new Neg(operand); }
+    public static BinaryValueExpression and(final ValueExpression left, final ValueExpression right) { return new io.parsingdata.metal.expression.value.bitwise.And(left, right); }
+    public static BinaryValueExpression or(final ValueExpression left, final ValueExpression right) { return new io.parsingdata.metal.expression.value.bitwise.Or(left, right); }
+    public static UnaryValueExpression not(final ValueExpression operand) { return new io.parsingdata.metal.expression.value.bitwise.Not(operand); }
+    public static BinaryValueExpression shl(final ValueExpression left, final ValueExpression right) { return new ShiftLeft(left, right); }
+    public static BinaryValueExpression shr(final ValueExpression left, final ValueExpression right) { return new ShiftRight(left, right); }
+    public static ValueExpression con(final long value) { return con(value, new Encoding()); }
+    public static ValueExpression con(final long value, final Encoding encoding) { return con(ConstantFactory.createFromNumeric(value, encoding)); }
+    public static ValueExpression con(final String value) { return con(value, new Encoding()); }
+    public static ValueExpression con(final String value, final Encoding encoding) { return con(ConstantFactory.createFromString(value, encoding)); }
+    public static ValueExpression con(final Value value) { return new Const(value); }
+    public static ValueExpression con(final Encoding encoding, final int... values) { return new Const(new Value(toByteArray(values), encoding)); }
     public static ValueExpression con(final int... values) { return con(new Encoding(), values); }
     public static final ValueExpression self = new Self();
-    public static ValueExpression len(final ValueExpression v) { return new Len(v); }
-    public static ValueExpression ref(final String s) { return new NameRef(s); }
-    public static ValueExpression ref(final Token d) { return new TokenRef(d); }
-    public static ValueExpression first(final ValueExpression o) { return new First(o); }
-    public static ValueExpression last(final ValueExpression o) { return new Last(o); }
-    public static ValueExpression offset(final ValueExpression o) { return new Offset(o); }
+    public static ValueExpression len(final ValueExpression operand) { return new Len(operand); }
+    public static ValueExpression ref(final String name) { return new NameRef(name); }
+    public static ValueExpression ref(final Token definition) { return new TokenRef(definition); }
+    public static ValueExpression first(final ValueExpression operand) { return new First(operand); }
+    public static ValueExpression last(final ValueExpression operand) { return new Last(operand); }
+    public static ValueExpression offset(final ValueExpression operand) { return new Offset(operand); }
     public static final ValueExpression currentOffset = new CurrentOffset();
-    public static ValueExpression cat(final ValueExpression l, final ValueExpression r) { return new Cat(l, r); }
-    public static ValueExpression elvis(final ValueExpression l, final ValueExpression r) { return new Elvis(l, r); }
-    public static ValueExpression count(final ValueExpression o) { return new Count(o); }
+    public static ValueExpression cat(final ValueExpression left, final ValueExpression right) { return new Cat(left, right); }
+    public static ValueExpression elvis(final ValueExpression left, final ValueExpression right) { return new Elvis(left, right); }
+    public static ValueExpression count(final ValueExpression operand) { return new Count(operand); }
     public static ValueExpression foldLeft(final ValueExpression values, final Reducer reducer) { return new FoldLeft(values, reducer, null); }
-    public static ValueExpression foldLeft(final ValueExpression values, final Reducer reducer, final ValueExpression i) { return new FoldLeft(values, reducer, i); }
+    public static ValueExpression foldLeft(final ValueExpression values, final Reducer reducer, final ValueExpression initial) { return new FoldLeft(values, reducer, initial); }
     public static ValueExpression foldRight(final ValueExpression values, final Reducer reducer) { return new FoldRight(values, reducer, null); }
-    public static ValueExpression foldRight(final ValueExpression values, final Reducer reducer, final ValueExpression i) { return new FoldRight(values, reducer, i); }
+    public static ValueExpression foldRight(final ValueExpression values, final Reducer reducer, final ValueExpression initial) { return new FoldRight(values, reducer, initial); }
     public static ValueExpression fold(final ValueExpression values, final Reducer reducer) { return foldRight(values, reducer); }
-    public static ValueExpression fold(final ValueExpression values, final Reducer reducer, final ValueExpression i) { return foldRight(values, reducer, i); }
+    public static ValueExpression fold(final ValueExpression values, final Reducer reducer, final ValueExpression initial) { return foldRight(values, reducer, initial); }
 
-    public static BinaryLogicalExpression and(final Expression l, final Expression r) { return new And(l, r); }
-    public static BinaryLogicalExpression or(final Expression l, final Expression r) { return new Or(l, r); }
-    public static UnaryLogicalExpression not(final Expression e) { return new Not(e); }
+    public static BinaryLogicalExpression and(final Expression left, final Expression right) { return new And(left, right); }
+    public static BinaryLogicalExpression or(final Expression left, final Expression right) { return new Or(left, right); }
+    public static UnaryLogicalExpression not(final Expression operand) { return new Not(operand); }
     public static Expression expTrue() { return new True(); }
 
-    public static ComparisonExpression eq(final ValueExpression p) { return new Eq(null, p); }
-    public static ComparisonExpression eq(final ValueExpression c, final ValueExpression p) { return new Eq(c, p); }
-    public static ComparisonExpression eqStr(final ValueExpression p) { return new EqStr(null, p); }
-    public static ComparisonExpression eqStr(final ValueExpression c, final ValueExpression p) { return new EqStr(c, p); }
-    public static ComparisonExpression eqNum(final ValueExpression p) { return new EqNum(null, p); }
-    public static ComparisonExpression eqNum(final ValueExpression c, final ValueExpression p) { return new EqNum(c, p); }
-    public static ComparisonExpression gtNum(final ValueExpression p) { return new GtNum(null, p); }
-    public static ComparisonExpression gtNum(final ValueExpression c, final ValueExpression p) { return new GtNum(c, p); }
-    public static ComparisonExpression ltNum(final ValueExpression p) { return new LtNum(null, p); }
-    public static ComparisonExpression ltNum(final ValueExpression c, final ValueExpression p) { return new LtNum(c, p); }
+    public static ComparisonExpression eq(final ValueExpression predicate) { return new Eq(null, predicate); }
+    public static ComparisonExpression eq(final ValueExpression value, final ValueExpression predicate) { return new Eq(value, predicate); }
+    public static ComparisonExpression eqStr(final ValueExpression predicate) { return new EqStr(null, predicate); }
+    public static ComparisonExpression eqStr(final ValueExpression value, final ValueExpression predicate) { return new EqStr(value, predicate); }
+    public static ComparisonExpression eqNum(final ValueExpression predicate) { return new EqNum(null, predicate); }
+    public static ComparisonExpression eqNum(final ValueExpression value, final ValueExpression predicate) { return new EqNum(value, predicate); }
+    public static ComparisonExpression gtNum(final ValueExpression predicate) { return new GtNum(null, predicate); }
+    public static ComparisonExpression gtNum(final ValueExpression value, final ValueExpression predicate) { return new GtNum(value, predicate); }
+    public static ComparisonExpression ltNum(final ValueExpression predicate) { return new LtNum(null, predicate); }
+    public static ComparisonExpression ltNum(final ValueExpression value, final ValueExpression predicate) { return new LtNum(value, predicate); }
 
     public final static Reducer ADD_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return add(left, right); } };
     public final static Reducer MUL_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return mul(left, right); } };
