@@ -80,22 +80,33 @@ public class ArgumentsTest {
             // Derived from ComparisonExpression
             { Eq.class, new Object[] { VALID_VE, null } },
             // Token implementations
+            { Cho.class, new Object[] { null, null, new Token[] { VALID_T, VALID_T } } },
             { Cho.class, new Object[] { VALID_NAME, null, new Token[] { VALID_T, null } } },
             { Cho.class, new Object[] { VALID_NAME, null, new Token[] { null, VALID_T } } },
             { Cho.class, new Object[] { VALID_NAME, null, null } },
             { Def.class, new Object[] { VALID_NAME, null, null, null } },
             { Def.class, new Object[] { null, VALID_VE, null, null } },
+            { Nod.class, new Object[] { null, VALID_VE, null } },
             { Nod.class, new Object[] { VALID_NAME, null, null } },
+            { Opt.class, new Object[] { null, VALID_T, null } },
             { Opt.class, new Object[] { VALID_NAME, null, null } },
+            { Pre.class, new Object[] { null, VALID_T, null, null } },
             { Pre.class, new Object[] { VALID_NAME, null, null, null } },
+            { Rep.class, new Object[] { null, VALID_T, null } },
             { Rep.class, new Object[] { VALID_NAME, null, null } },
+            { RepN.class, new Object[] { null, VALID_T, VALID_VE, null } },
+            { RepN.class, new Object[] { VALID_NAME, null, VALID_VE, null } },
+            { RepN.class, new Object[] { VALID_NAME, VALID_T, null, null } },
+            { Seq.class, new Object[] { null, null, new Token[] { VALID_T, VALID_T } } },
             { Seq.class, new Object[] { VALID_NAME, null, new Token[] { VALID_T, null } } },
             { Seq.class, new Object[] { VALID_NAME, null, new Token[] { null, VALID_T } } },
             { Seq.class, new Object[] { VALID_NAME, null, null } },
             { Str.class, new Object[] { VALID_NAME, null, null, null, null } },
             { Str.class, new Object[] { null, VALID_T, null, null, null } },
+            { Sub.class, new Object[] { null, VALID_T, VALID_VE, null } },
             { Sub.class, new Object[] { VALID_NAME, VALID_T, null, null } },
             { Sub.class, new Object[] { VALID_NAME, null, VALID_VE, null } },
+            { While.class, new Object[] { null, VALID_T, null, null } },
             { While.class, new Object[] { VALID_NAME, null, null, null } }
         });
     }
