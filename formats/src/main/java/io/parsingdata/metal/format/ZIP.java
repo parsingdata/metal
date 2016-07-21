@@ -101,10 +101,10 @@ public class ZIP {
             def("endofdirsignature", con(4), eq(con(0x50, 0x4b, 0x05, 0x06))),
             def("disknumber", con(2), eqNum(con(0))),
             def("dirdisk", con(2), eqNum(con(0))),
-            def("numlocaldirs", con(2)),
-            def("numtotaldirs", con(2), eq(last(ref("numlocaldirs")))),
-            def("dirsize", con(4)),
-            def("diroffset", con(4)),
+            def("numlocaldirs", con(2), eqNum(count(ref("dirsignature")))),
+            def("numtotaldirs", con(2), eqNum(last(ref("numlocaldirs")))),
+            def("dirsize", con(4), eqNum(sub(offset(last(ref("endofdirsignature"))), offset(first(ref("dirsignature")))))),
+            def("diroffset", con(4), eqNum(offset(first(ref("dirsignature"))))),
             def("commentsize", con(2)),
             def("comment", last(ref("commentsize"))));
 
