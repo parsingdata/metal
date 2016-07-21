@@ -18,7 +18,6 @@ package io.parsingdata.metal;
 
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -28,27 +27,30 @@ import java.io.IOException;
 import static io.parsingdata.metal.Shorthand.*;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
+import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnit4.class)
 public class ShorthandsTest {
 
-    private final Token multiSequence = seq(def("a", con(1), eq(con(1))),
+    private static final Token multiSequence = seq(def("a", con(1), eq(con(1))),
                                             def("b", con(1), eq(con(2))),
                                             def("c", con(1), eq(con(3))));
 
-    private final Token multiChoice = cho(def("a", con(1), gtNum(con(2))),
-                                          def("b", con(1), gtNum(con(1))),
-                                          def("c", con(1), gtNum(con(0))));
-
     @Test
     public void sequenceMultiMatch() throws IOException {
-        Assert.assertTrue(multiSequence.parse(stream(1, 2, 3), enc()).succeeded);
+        assertTrue(multiSequence.parse(stream(1, 2, 3), enc()).succeeded);
     }
 
     @Test
     public void sequenceMultiNoMatch() throws IOException {
-        Assert.assertFalse(multiSequence.parse(stream(1, 2, 2), enc()).succeeded);
+        assertFalse(multiSequence.parse(stream(1, 2, 2), enc()).succeeded);
     }
+
+    private static final Token multiChoice = cho(def("a", con(1), gtNum(con(2))),
+        def("b", con(1), gtNum(con(1))),
+        def("c", con(1), gtNum(con(0))));
 
     @Test
     public void choiceMultiMatchA() throws IOException {
@@ -67,13 +69,25 @@ public class ShorthandsTest {
 
     private void runChoice(final int data, final String matched) throws IOException {
         final ParseResult res = multiChoice.parse(stream(data), enc());
-        Assert.assertTrue(res.succeeded);
-        Assert.assertTrue(res.environment.order.current().matches(matched));
+        assertTrue(res.succeeded);
+        assertTrue(res.environment.order.current().matches(matched));
     }
 
     @Test
     public void choiceMultiNoMatch() throws IOException {
-        Assert.assertFalse(multiChoice.parse(stream(0), enc()).succeeded);
+        assertFalse(multiChoice.parse(stream(0), enc()).succeeded);
+    }
+
+    private static final Token nonLocalCompare =
+        seq(any("a"),
+            def("b", con(3)),
+            def("c", con(1), gtNum(last(ref("a")), con(0))),
+            def("d", con(1), eqStr(last(ref("b")), con("abc")))
+        );
+
+    @Test
+    public void nonLocalCompare() throws IOException {
+        assertTrue(nonLocalCompare.parse(stream(1, 'a', 'b', 'c', 0, 0), enc()).succeeded);
     }
 
 }
