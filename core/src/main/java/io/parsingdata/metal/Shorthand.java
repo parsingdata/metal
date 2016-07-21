@@ -34,53 +34,51 @@ public class Shorthand {
     public static Token def(final String name, final ValueExpression size, final Expression predicate, final Encoding encoding) { return new Def(name, size, predicate, encoding); }
     public static Token def(final String name, final ValueExpression size, final Expression predicate) { return def(name, size, predicate, null); }
     public static Token def(final String name, final ValueExpression size, final Encoding encoding) { return def(name, size, null, encoding); }
-    public static Token def(final String name, final ValueExpression size) { return def(name, size, null, null); }
+    public static Token def(final String name, final ValueExpression size) { return def(name, size, (Encoding)null); }
     public static Token def(final String name, final long size, final Expression predicate, final Encoding encoding) { return def(name, con(size), predicate, encoding); }
     public static Token def(final String name, final long size, final Expression predicate) { return def(name, size, predicate, null); }
     public static Token def(final String name, final long size, final Encoding encoding) { return def(name, size, null, encoding); }
-    public static Token def(final String name, final long size) { return def(name, size, null, null); }
+    public static Token def(final String name, final long size) { return def(name, size, (Encoding)null); }
     public static Token cho(final String name, final Encoding encoding, final Token... tokens) { return new Cho(name, encoding, tokens); }
     public static Token cho(final String name, final Token... tokens) { return cho(name, null, tokens); }
     public static Token cho(final Encoding encoding, final Token... tokens) { return cho("", encoding, tokens); }
-    public static Token cho(final Token... tokens) { return cho("", null, tokens); }
+    public static Token cho(final Token... tokens) { return cho((Encoding)null, tokens); }
     public static Token rep(final String name, final Token token, final Encoding encoding) { return new Rep(name, token, encoding); }
     public static Token rep(final String name, final Token token) { return rep(name, token, null); }
     public static Token rep(final Token token, final Encoding encoding) { return rep("", token, encoding); }
-    public static Token rep(final Token token) { return rep("", token, null); }
+    public static Token rep(final Token token) { return rep(token, null); }
     public static Token repn(final String name, final Token token, final ValueExpression n, final Encoding encoding) { return new RepN(name, token, n, encoding); }
     public static Token repn(final String name, final Token token, final ValueExpression n) { return repn(name, token, n, null); }
     public static Token repn(final Token token, final ValueExpression n, final Encoding encoding) { return repn("", token, n, encoding); }
-    public static Token repn(final Token token, final ValueExpression n) { return repn("", token, n, null); }
+    public static Token repn(final Token token, final ValueExpression n) { return repn(token, n, null); }
     public static Token seq(final String name, final Encoding encoding, final Token... tokens) { return new Seq(name, encoding, tokens); }
     public static Token seq(final String name, final Token... tokens) { return seq(name, null, tokens); }
     public static Token seq(final Encoding encoding, final Token... tokens) { return seq("", encoding, tokens); }
-    public static Token seq(final Token... tokens) { return seq("", null, tokens); }
+    public static Token seq(final Token... tokens) { return seq((Encoding)null, tokens); }
     public static Token str(final String scope, final Token token, final Encoding encoding, final StructSink sink, final Expression predicate) { return new Str(scope, token, encoding, sink, predicate); }
     public static Token str(final String scope, final Token token, final Encoding encoding, final StructSink sink) { return str(scope, token, encoding, sink, null); }
-    public static Token str(final String scope, final Token token, final Encoding encoding) { return str(scope, token, encoding, null, null); }
+    public static Token str(final String scope, final Token token, final Encoding encoding) { return str(scope, token, encoding, null); }
     public static Token str(final String scope, final Token token, final StructSink sink, final Expression predicate) { return str(scope, token, null, sink, predicate); }
-    public static Token str(final String scope, final Token token, final StructSink sink) { return str(scope, token, null, sink, null); }
-    public static Token str(final String scope, final Token token) { return str(scope, token, null, null, null); }
+    public static Token str(final String scope, final Token token, final StructSink sink) { return str(scope, token, null, sink); }
+    public static Token str(final String scope, final Token token) { return str(scope, token, (Encoding)null); }
     public static Token sub(final String name, final Token token, final ValueExpression address, final Encoding encoding) { return new io.parsingdata.metal.token.Sub(name, token, address, encoding); }
     public static Token sub(final String name, final Token token, final ValueExpression address) { return sub(name, token, address, null); }
     public static Token sub(final Token token, final ValueExpression address, final Encoding encoding) { return sub("", token, address, encoding); }
-    public static Token sub(final Token token, final ValueExpression address) { return sub("", token, address, null); }
+    public static Token sub(final Token token, final ValueExpression address) { return sub(token, address, null); }
     public static Token pre(final String name, final Token token, final Expression predicate, final Encoding encoding) { return new Pre(name, token, predicate, encoding); }
     public static Token pre(final String name, final Token token, final Expression predicate) { return pre(name, token, predicate, null); }
     public static Token pre(final Token token, final Expression predicate, final Encoding encoding) { return pre("", token, predicate, encoding); }
-    public static Token pre(final Token token, final Expression predicate) { return pre("", token, predicate, null); }
+    public static Token pre(final Token token, final Expression predicate) { return pre(token, predicate, null); }
     public static Token whl(final String name, final Token token, final Expression predicate, final Encoding encoding) { return new While(name, token, predicate, encoding); }
     public static Token whl(final String name, final Token token, final Expression predicate) { return whl(name, token, predicate, null); }
     public static Token whl(final Token token, final Expression predicate, final Encoding encoding) { return whl("", token, predicate, encoding); }
-    public static Token whl(final Token token, final Expression predicate) { return whl("", token, predicate, null); }
+    public static Token whl(final Token token, final Expression predicate) { return whl("", token, predicate); }
     public static Token opt(final String name, final Token token, final Encoding encoding) { return new Opt(name, token, encoding); }
     public static Token opt(final String name, final Token token) { return opt(name, token, null); }
     public static Token opt(final Token token, final Encoding encoding) { return opt("", token, encoding); }
-    public static Token opt(final Token token) { return opt("", token, null); }
-    public static Token nod(final String name, final ValueExpression size, final Encoding encoding) { return new Nod(name, size, encoding); }
-    public static Token nod(final String name, final ValueExpression size) { return nod(name, size, null); }
-    public static Token nod(final ValueExpression size, final Encoding encoding) { return nod("", size, encoding); }
-    public static Token nod(final ValueExpression size) { return nod("", size, null); }
+    public static Token opt(final Token token) { return opt(token, null); }
+    public static Token nod(final String name, final ValueExpression size) { return new Nod(name, size, null); }
+    public static Token nod(final ValueExpression size) { return nod("", size); }
 
     public static BinaryValueExpression add(final ValueExpression left, final ValueExpression right) { return new Add(left, right); }
     public static BinaryValueExpression div(final ValueExpression left, final ValueExpression right) { return new Div(left, right); }
