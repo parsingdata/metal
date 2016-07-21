@@ -50,7 +50,7 @@ public class Nod extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + (name.length() > 0 ? name + "," : "") + size + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + size + ")";
     }
 
 }

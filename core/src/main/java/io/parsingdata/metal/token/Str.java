@@ -52,7 +52,7 @@ public class Str extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(\"" + name + "\"," + token + (sink != null ? "," + sink : "") + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + token + (sink != null ? "," + sink : "") + ")";
     }
 
 }

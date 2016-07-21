@@ -42,7 +42,7 @@ public class Opt extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + (name.length() > 0 ? name + "," : "") + token + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + token + ")";
     }
 
 }

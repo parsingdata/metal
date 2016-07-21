@@ -55,7 +55,7 @@ public class Cho extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + (name.length() > 0 ? name + "," : "") + Util.tokensToString(tokens) + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + Util.tokensToString(tokens) + ")";
     }
 
 }

@@ -50,4 +50,8 @@ public abstract class Token {
         return scope + (scope.length() > 0 && name.length() > 0 ? SEPARATOR : "") + name;
     }
 
+    protected String makeNameFragment() {
+        return name.length() > 0 ? name + "," : "";
+    }
+
 }

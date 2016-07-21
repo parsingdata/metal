@@ -47,7 +47,7 @@ public class Pre extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + (name.length() > 0 ? name + "," : "") + token + ", " + predicate + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + token + ", " + predicate + ")";
     }
 
 }
