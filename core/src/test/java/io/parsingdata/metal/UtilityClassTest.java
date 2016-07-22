@@ -16,17 +16,22 @@
 
 package io.parsingdata.metal;
 
+import io.parsingdata.metal.data.transformation.Reversal;
+import io.parsingdata.metal.token.Token;
 import org.junit.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import static io.parsingdata.metal.Util.tokensToString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class UtilityClassTest {
 
+    // Check that a class is final, has a single private constructor and that all
+    // its declared methods are static.
     private void checkUtilityClass(Class<?> c) throws ReflectiveOperationException {
         assertTrue(Modifier.isFinal(c.getModifiers()));
         final Constructor<?>[] cons = c.getDeclaredConstructors();
@@ -47,6 +52,19 @@ public class UtilityClassTest {
     @Test
     public void util() throws ReflectiveOperationException {
         checkUtilityClass(Util.class);
+    }
+
+    @Test
+    public void reversal() throws ReflectiveOperationException {
+        checkUtilityClass(Reversal.class);
+    }
+
+    // The method is used to print tokens for composing Tokens' toString()
+    // implementation. Since they all require a non-zero amount of tokens, this
+    // method must be explicitly tested.
+    @Test
+    public void zeroTokensToString() {
+        assertEquals("", tokensToString(new Token[] {}));
     }
 
 }
