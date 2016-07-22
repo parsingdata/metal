@@ -29,7 +29,9 @@ import io.parsingdata.metal.expression.value.bitwise.ShiftRight;
 import io.parsingdata.metal.expression.value.reference.*;
 import io.parsingdata.metal.token.*;
 
-public class Shorthand {
+public final class Shorthand {
+
+    private Shorthand() {}
 
     public static Token def(final String name, final ValueExpression size, final Expression predicate, final Encoding encoding) { return new Def(name, size, predicate, encoding); }
     public static Token def(final String name, final ValueExpression size, final Expression predicate) { return def(name, size, predicate, null); }
