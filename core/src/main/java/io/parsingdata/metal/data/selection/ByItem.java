@@ -22,7 +22,10 @@ import io.parsingdata.metal.data.ParseItem;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 
-public class ByItem {
+public final class ByItem {
+
+    private ByItem() {}
+    
     /**
      * @param graph The graph to search
      * @param lastHead The first item (bottom-up) to be excluded

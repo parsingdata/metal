@@ -23,7 +23,9 @@ import io.parsingdata.metal.data.ParseValueList;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-public class ByName {
+public final class ByName {
+
+    private ByName() {}
 
     /**
      * @param graph The graph to search

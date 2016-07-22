@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal;
 
+import io.parsingdata.metal.data.selection.*;
 import io.parsingdata.metal.data.transformation.Reversal;
 import io.parsingdata.metal.token.Token;
 import org.junit.Test;
@@ -45,18 +46,15 @@ public class UtilityClassTest {
     }
 
     @Test
-    public void shorthand() throws ReflectiveOperationException {
+    public void utilityClasses() throws ReflectiveOperationException {
         checkUtilityClass(Shorthand.class);
-    }
-
-    @Test
-    public void util() throws ReflectiveOperationException {
         checkUtilityClass(Util.class);
-    }
-
-    @Test
-    public void reversal() throws ReflectiveOperationException {
         checkUtilityClass(Reversal.class);
+        checkUtilityClass(ByItem.class);
+        checkUtilityClass(ByName.class);
+        checkUtilityClass(ByOffset.class);
+        checkUtilityClass(ByToken.class);
+        checkUtilityClass(ByType.class);
     }
 
     // The method is used to print tokens for composing Tokens' toString()

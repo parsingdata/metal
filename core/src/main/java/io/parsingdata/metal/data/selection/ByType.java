@@ -22,7 +22,9 @@ import io.parsingdata.metal.data.ParseItem;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-public class ByType {
+public final class ByType {
+
+    private ByType() {}
 
     public static ParseGraphList getRefs(final ParseGraph graph) {
         checkNotNull(graph, "graph");

@@ -24,7 +24,7 @@ import io.parsingdata.metal.token.Token;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-public class ByToken {
+public final class ByToken {
 
     private ByToken() {}
 
