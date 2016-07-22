@@ -18,6 +18,8 @@ package io.parsingdata.metal;
 
 import io.parsingdata.metal.data.selection.*;
 import io.parsingdata.metal.data.transformation.Reversal;
+import io.parsingdata.metal.encoding.ByteOrder;
+import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.token.Token;
 import org.junit.Test;
 
@@ -63,6 +65,18 @@ public class UtilityClassTest {
     @Test
     public void zeroTokensToString() {
         assertEquals("", tokensToString(new Token[] {}));
+    }
+
+    // Metal uses enums to prevent the use of difficult to understand boolean arguments.
+    // However, enums come with some inherited methods that are not of use internally.
+    @Test
+    public void inheritedEnumMethods() {
+        assertEquals(2, Sign.values().length);
+        assertEquals(Sign.SIGNED, Sign.valueOf("SIGNED"));
+        assertEquals(Sign.UNSIGNED, Sign.valueOf("UNSIGNED"));
+        assertEquals(2, ByteOrder.values().length);
+        assertEquals(ByteOrder.BIG_ENDIAN, ByteOrder.valueOf("BIG_ENDIAN"));
+        assertEquals(ByteOrder.LITTLE_ENDIAN, ByteOrder.valueOf("LITTLE_ENDIAN"));
     }
 
 }
