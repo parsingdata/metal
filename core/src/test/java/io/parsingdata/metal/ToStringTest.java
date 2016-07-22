@@ -41,7 +41,7 @@ public class ToStringTest {
 
     @Test
     public void validateToStringImplementation() {
-        final Expression e = not(and(eq(v()), or(eqNum(v()), and(eqStr(v()), or(gtNum(v()), ltNum(v()))))));
+        final Expression e = not(and(eq(v(), v()), or(eqNum(v()), and(eqStr(v()), or(gtNum(v()), ltNum(v()))))));
         final Token t = repn(sub(opt(pre(str("str", rep(cho(any(n()), seq(nod(v()), whl(def(n(), con(1), e), e))))), e)), v()), v());
         final String output = t.toString();
         for (int i = 0; i < count; i++) {
@@ -56,7 +56,7 @@ public class ToStringTest {
     private Token t() { return any("a"); }
 
     private ValueExpression v() {
-        return neg(add(div(mod(mul(sub(ref(n()), first(ref(n()))), con(1)), cat(ref(n()), ref(t()))), add(self, add(offset(ref(n())), add(currentOffset, count(ref(n())))))), elvis(ref(n()), ref(n()))));
+        return neg(add(div(mod(mul(sub(last(ref(n())), first(ref(n()))), con(1)), cat(ref(n()), ref(t()))), add(self, add(offset(ref(n())), add(currentOffset, count(ref(n())))))), elvis(ref(n()), ref(n()))));
     }
 
     @Test
