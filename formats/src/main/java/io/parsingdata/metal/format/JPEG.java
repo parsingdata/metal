@@ -24,7 +24,9 @@ import static io.parsingdata.metal.Shorthand.*;
  * Since nearly every byte of the scan data is individually matched, this
  * approach will lead to stack overflow on files of realistic size.
  */
-public class JPEG {
+public final class JPEG {
+
+    private JPEG() {}
 
     private static final Token HEADER =
             seq("start of image",

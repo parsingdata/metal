@@ -16,21 +16,19 @@
 
 package io.parsingdata.metal.format;
 
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.*;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.zip.CRC32;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterOutputStream;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.OptionalValue;
-import io.parsingdata.metal.expression.value.UnaryValueExpression;
-import io.parsingdata.metal.expression.value.Value;
-import io.parsingdata.metal.expression.value.ValueExpression;
-import io.parsingdata.metal.expression.value.ValueOperation;
+public final class Callback {
 
-public class Callback {
+    private Callback() {}
 
     public static ValueExpression crc32(final ValueExpression target) {
         return new UnaryValueExpression(target) {

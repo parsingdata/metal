@@ -30,7 +30,9 @@ import static io.parsingdata.metal.format.Callback.inflate;
  * - Only single-part files.
  * - Only Store and Deflate compression schemes.
  */
-public class ZIP {
+public final class ZIP {
+
+    private ZIP() {}
 
     private static Token localFileBody(final String name, final int cm, final Expression crc, final Expression cs, final Expression usp) {
         return

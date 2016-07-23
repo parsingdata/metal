@@ -35,7 +35,7 @@ public class UtilityClassTest {
 
     // Check that a class is final, has a single private constructor and that all
     // its declared methods are static.
-    private void checkUtilityClass(Class<?> c) throws ReflectiveOperationException {
+    public static void checkUtilityClass(Class<?> c) throws ReflectiveOperationException {
         assertTrue(Modifier.isFinal(c.getModifiers()));
         final Constructor<?>[] cons = c.getDeclaredConstructors();
         assertEquals(1, cons.length);
