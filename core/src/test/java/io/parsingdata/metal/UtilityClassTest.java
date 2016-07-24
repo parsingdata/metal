@@ -23,30 +23,13 @@ import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.token.Token;
 import org.junit.Test;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-
 import static io.parsingdata.metal.Util.tokensToString;
+import static io.parsingdata.metal.util.ClassDefinition.checkUtilityClass;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class UtilityClassTest {
 
-    // Check that a class is final, has a single private constructor and that all
-    // its declared methods are static.
-    public static void checkUtilityClass(Class<?> c) throws ReflectiveOperationException {
-        assertTrue(Modifier.isFinal(c.getModifiers()));
-        final Constructor<?>[] cons = c.getDeclaredConstructors();
-        assertEquals(1, cons.length);
-        assertTrue(Modifier.isPrivate(cons[0].getModifiers()));
-        cons[0].setAccessible(true);
-        cons[0].newInstance();
-        for (Method m : c.getDeclaredMethods()) {
-            assertTrue(Modifier.isStatic(m.getModifiers()));
-        }
-    }
-
+    // Check that utility classes are well-formed.
     @Test
     public void utilityClasses() throws ReflectiveOperationException {
         checkUtilityClass(Shorthand.class);

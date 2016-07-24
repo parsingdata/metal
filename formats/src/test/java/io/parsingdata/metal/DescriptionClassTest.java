@@ -22,10 +22,11 @@ import io.parsingdata.metal.format.PNG;
 import io.parsingdata.metal.format.ZIP;
 import org.junit.Test;
 
-import static io.parsingdata.metal.UtilityClassTest.checkUtilityClass;
+import static io.parsingdata.metal.util.ClassDefinition.checkUtilityClass;
 
 public class DescriptionClassTest {
 
+    // Check that description and callback classes are well-formed.
     @Test
     public void utilityClasses() throws ReflectiveOperationException {
         checkUtilityClass(Callback.class);

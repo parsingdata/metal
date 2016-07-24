@@ -33,7 +33,6 @@
             <configuration>
               <includes>
                 <include>**/util/**</include>
-                <include>**/UtilityClassTest.class</include>
               </includes>
             </configuration>
           </execution>
