@@ -54,11 +54,9 @@ public class ParseValueTest {
     @Test
     public void matching() {
         assertTrue(_value.matches("value"));
-        //assertTrue(_value.matches("scope.value"));
 
         assertFalse(_value.matches("lue"));
         assertFalse(_value.matches(".value"));
-        assertFalse(_value.matches("cope.value"));
     }
 
     @Test

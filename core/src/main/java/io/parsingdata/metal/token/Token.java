@@ -47,11 +47,11 @@ public abstract class Token {
     protected abstract ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException;
 
     private String makeScope(final String scope) {
-        return scope + (scope.length() > 0 && name.length() > 0 ? SEPARATOR : "") + name;
+        return scope + (scope.isEmpty() || name.isEmpty() ? "" : SEPARATOR) + name;
     }
 
     protected String makeNameFragment() {
-        return name.length() > 0 ? name + "," : "";
+        return name.isEmpty() ? "" : name + ",";
     }
 
 }
