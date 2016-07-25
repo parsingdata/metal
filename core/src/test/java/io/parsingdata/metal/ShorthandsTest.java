@@ -19,12 +19,8 @@ package io.parsingdata.metal;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.expression.value.OptionalValue;
-import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import java.io.IOException;
 
@@ -38,9 +34,10 @@ import static org.junit.Assert.assertTrue;
 
 public class ShorthandsTest {
 
-    private static final Token multiSequence = seq(def("a", con(1), eq(con(1))),
-                                            def("b", con(1), eq(con(2))),
-                                            def("c", con(1), eq(con(3))));
+    private static final Token multiSequence =
+        seq(def("a", con(1), eq(con(1))),
+            def("b", con(1), eq(con(2))),
+            def("c", con(1), eq(con(3))));
 
     @Test
     public void sequenceMultiMatch() throws IOException {
@@ -52,9 +49,10 @@ public class ShorthandsTest {
         assertFalse(multiSequence.parse(stream(1, 2, 2), enc()).succeeded);
     }
 
-    private static final Token multiChoice = cho(def("a", con(1), gtNum(con(2))),
-        def("b", con(1), gtNum(con(1))),
-        def("c", con(1), gtNum(con(0))));
+    private static final Token multiChoice =
+        cho(def("a", con(1), gtNum(con(2))),
+            def("b", con(1), gtNum(con(1))),
+            def("c", con(1), gtNum(con(0))));
 
     @Test
     public void choiceMultiMatchA() throws IOException {
