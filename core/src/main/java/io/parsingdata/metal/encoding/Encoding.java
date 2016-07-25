@@ -17,11 +17,12 @@
 package io.parsingdata.metal.encoding;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class Encoding {
 
     private static final Sign DEFAULT_SIGNED = Sign.UNSIGNED;
-    private static final Charset DEFAULT_CHARSET = Charset.forName("ISO646-US");
+    private static final Charset DEFAULT_CHARSET = StandardCharsets.US_ASCII;
     private static final ByteOrder DEFAULT_BYTE_ORDER = ByteOrder.BIG_ENDIAN;
 
     private final Sign _sign;

@@ -223,6 +223,7 @@ public class ByTokenTest {
         final ParseResult result = composition.parse(stream(0), enc());
         assertTrue(result.succeeded);
         final ParseItemList refs = ByToken.getAll(result.environment.order, smallSub1);
+        // should return the ParseGraph created by the Sub and the ParseRef that refers to the existing ParseItem
         assertEquals(2, refs.size);
         assertTrue(refs.head.isRef());
         assertTrue(refs.tail.head.isGraph());

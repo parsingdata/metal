@@ -34,7 +34,7 @@ public class ClassDefinition {
         assertTrue(Modifier.isPrivate(cons[0].getModifiers()));
         cons[0].setAccessible(true);
         cons[0].newInstance();
-        for (Method m : c.getDeclaredMethods()) {
+        for (final Method m : c.getDeclaredMethods()) {
             assertTrue(Modifier.isStatic(m.getModifiers()));
         }
     }

@@ -64,7 +64,7 @@ public final class Callback {
                             try {
                                 final int processed = inf.inflate(dataReceiver);
                                 out.write(dataReceiver, 0, processed);
-                            } catch (DataFormatException e) {
+                            } catch (final DataFormatException e) {
                                 return OptionalValue.empty();
                             }
                         }

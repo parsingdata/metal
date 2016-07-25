@@ -24,7 +24,6 @@ import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
 import org.junit.runners.Parameterized.Parameters;
 
-import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -32,10 +31,9 @@ import static io.parsingdata.metal.Shorthand.*;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
+import static java.nio.charset.StandardCharsets.US_ASCII;
 
 public class ComparisonExpressionSemanticsTest extends ParameterizedParse {
-
-    public static final Charset ASCII = Charset.forName("ISO646-US");
 
     @Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
@@ -48,8 +46,8 @@ public class ComparisonExpressionSemanticsTest extends ParameterizedParse {
             { "1 < 1", numCom(1, ltNum(ref("a"))), stream(1, 1), enc(), false },
             { "2 < 1", numCom(1, ltNum(ref("a"))), stream(1, 2), enc(), false },
             { "1 < 2", numCom(1, ltNum(ref("a"))), stream(2, 1), enc(), true },
-            { "\"abc\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabc", ASCII), new Encoding(ASCII), true },
-            { "\"abd\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabd", ASCII), new Encoding(ASCII), false },
+            { "\"abc\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabc", US_ASCII), new Encoding(US_ASCII), true },
+            { "\"abd\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabd", US_ASCII), new Encoding(US_ASCII), false },
             { "1 == 1(eq)", valCom(1, eq(ref("a"))), stream(1, 1), enc(), true },
             { "2 == 1(eq)", valCom(1, eq(ref("a"))), stream(1, 2), enc(), false },
             { "1 == 1 with self", valCom(1, eq(self, ref("a"))), stream(1, 1), enc(), true },

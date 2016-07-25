@@ -37,6 +37,14 @@ public class CallbackTest {
     }
 
     @Test
+    public void inflateGood() {
+        final OptionalValueList result = inflate(con(0xcb, 0x4d, 0x2d, 0x49, 0xcc, 0x01, 0x00)).eval(stream(), enc());
+        assertEquals(1, result.size);
+        assertTrue(result.head.isPresent());
+        assertEquals("metal", result.head.get().asString());
+    }
+
+    @Test
     public void inflateDataFormatError() {
         final OptionalValueList result = inflate(con(0xffffffff)).eval(stream(), enc());
         assertEquals(1, result.size);
