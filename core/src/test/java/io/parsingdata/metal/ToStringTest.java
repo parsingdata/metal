@@ -17,11 +17,15 @@
 package io.parsingdata.metal;
 
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.Expression;
+import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.StructSink;
 import io.parsingdata.metal.token.Token;
@@ -32,6 +36,10 @@ import org.junit.Test;
 import java.nio.charset.Charset;
 
 import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.data.OptionalValueList.EMPTY;
+import static io.parsingdata.metal.data.ParseGraph.NONE;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static org.junit.Assert.assertEquals;
 
@@ -95,6 +103,14 @@ public class ToStringTest {
         assertEquals("Encoding(SIGNED,US-ASCII,BIG_ENDIAN)", new Encoding(Sign.SIGNED).toString());
         assertEquals("Encoding(UNSIGNED,UTF-8,BIG_ENDIAN)", new Encoding(Charset.forName("UTF-8")).toString());
         assertEquals("Encoding(UNSIGNED,US-ASCII,LITTLE_ENDIAN)", new Encoding(ByteOrder.LITTLE_ENDIAN).toString());
+    }
+
+    @Test
+    public void data() {
+        assertEquals("stream: InMemoryByteStream(2); offset: 0; order: graph(EMPTY)", stream(1, 2).toString());
+        final OptionalValue ov1 = OptionalValue.of(new ParseValue("name", NONE, 0, new byte[] { 1, 2 }, enc()));
+        final OptionalValue ov2 = OptionalValue.of(new Value(new byte[] { 3 }, enc()));
+        assertEquals(">OptionalValue(0x03)>OptionalValue(name(0x0102))", EMPTY.add(ov1).add(ov2).toString());
     }
 
 }
