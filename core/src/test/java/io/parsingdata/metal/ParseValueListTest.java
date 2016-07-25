@@ -16,15 +16,15 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.ParseValueList;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 @RunWith(JUnit4.class)
 public class ParseValueListTest {
@@ -41,15 +41,15 @@ public class ParseValueListTest {
     private final ParseValue v5;
 
     public ParseValueListTest() {
-        v1 = val("s1", 'a');
+        v1 = val('a');
         l1 = ParseValueList.create(v1);
-        v2 = val("s1", 'b');
+        v2 = val('b');
         l2 = l1.add(v2);
-        v3 = val("s2", 'a');
+        v3 = val('a');
         l3 = l2.add(v3);
-        v4 = val("s1", 'd');
+        v4 = val('d');
         l4 = l3.add(v4);
-        v5 = val("s1", 'e');
+        v5 = val('e');
         l5 = l4.add(v5);
     }
 
@@ -155,8 +155,8 @@ public class ParseValueListTest {
         Assert.assertEquals(0, ParseValueList.EMPTY.size);
     }
 
-    private ParseValue val(final String s, final char c) {
-        return new ParseValue(s, Character.toString(c), def(Character.toString(c), 0L), 0L, new byte[] { (byte) c }, enc());
+    private ParseValue val(final char c) {
+        return new ParseValue(Character.toString(c), def(Character.toString(c), 0L), 0L, new byte[] { (byte) c }, enc());
     }
 
 }

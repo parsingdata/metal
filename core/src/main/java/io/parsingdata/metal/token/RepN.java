@@ -31,8 +31,8 @@ public class RepN extends Token {
     public final Token token;
     public final ValueExpression n;
 
-    public RepN(final Token token, final ValueExpression n, final Encoding enc) {
-        super(enc);
+    public RepN(final String name, final Token token, final ValueExpression n, final Encoding enc) {
+        super(name, enc);
         this.token = checkNotNull(token, "token");
         this.n = checkNotNull(n, "n");
     }
@@ -59,7 +59,7 @@ public class RepN extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + token + "," + n + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + token + "," + n + ")";
     }
 
 }

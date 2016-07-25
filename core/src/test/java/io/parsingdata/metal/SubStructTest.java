@@ -35,7 +35,7 @@ public class SubStructTest {
         private final Token struct;
 
         public LinkedList(final Encoding enc) {
-            super(enc);
+            super("", enc);
             struct =
                 seq(def("header", con(1), eq(con(0))),
                     def("next", con(1)),

@@ -30,8 +30,8 @@ public class Nod extends Token {
 
     public final ValueExpression size;
 
-    public Nod(final ValueExpression size, final Encoding enc) {
-        super(enc);
+    public Nod(final String name, final ValueExpression size, final Encoding enc) {
+        super(name, enc);
         this.size = checkNotNull(size, "size");
     }
 
@@ -50,7 +50,7 @@ public class Nod extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + size + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + size + ")";
     }
 
 }

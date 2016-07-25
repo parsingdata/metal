@@ -36,7 +36,7 @@ public class TreeTest {
 
     private static final int HEAD = 9;
     private static final Token TREE =
-        new Token(null) {
+        new Token("", null) {
             @Override
             protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
             return seq(def("head", con(1), eq(con(HEAD))),

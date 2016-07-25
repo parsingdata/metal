@@ -29,8 +29,8 @@ public class Seq extends Token {
 
     private final Token[] tokens;
 
-    public Seq(final Encoding enc, final Token... tokens) {
-        super(enc);
+    public Seq(final String name, final Encoding enc, final Token... tokens) {
+        super(name, enc);
         this.tokens = checkContainsNoNulls(tokens, "tokens");
         if (tokens.length < 2) { throw new IllegalArgumentException("At least two Tokens are required."); }
     }
@@ -55,7 +55,7 @@ public class Seq extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + Util.tokensToString(tokens) + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + Util.tokensToString(tokens) + ")";
     }
 
 }

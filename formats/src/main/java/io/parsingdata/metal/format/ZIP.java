@@ -16,14 +16,14 @@
 
 package io.parsingdata.metal.format;
 
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.format.Callback.crc32;
-import static io.parsingdata.metal.format.Callback.inflate;
-
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.token.Token;
+
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.format.Callback.crc32;
+import static io.parsingdata.metal.format.Callback.inflate;
 
 /*
  * Implements limited subset of ZIP file format:
@@ -32,9 +32,10 @@ import io.parsingdata.metal.token.Token;
  */
 public class ZIP {
 
-    private static Token localFileBody(final int cm, final Expression crc, final Expression cs, final Expression usp) {
+    private static Token localFileBody(final String name, final int cm, final Expression crc, final Expression cs, final Expression usp) {
         return
-        seq(def("filesignature", con(4), eq(con(0x50, 0x4b, 0x03, 0x04))),
+        seq(name,
+            def("filesignature", con(4), eq(con(0x50, 0x4b, 0x03, 0x04))),
             def("extractversion", con(2)),
             def("bitflag", con(2)),
             def("compressionmethod", con(2), eqNum(con(cm))),
@@ -50,66 +51,67 @@ public class ZIP {
     }
 
     private static final Token LOCAL_DEFLATED_FILE =
-        str("file",
-            seq(localFileBody(8, expTrue(), expTrue(), expTrue()),
-                def("compresseddata", last(ref("compressedsize")), eqNum(crc32(inflate(self)), last(ref("crc32"))))));
+        seq("localdeflatedfile",
+            localFileBody("", 8, expTrue(), expTrue(), expTrue()),
+            def("compresseddata", last(ref("compressedsize")), eqNum(crc32(inflate(self)), last(ref("crc32")))));
 
     private static final Token LOCAL_EMPTY_FILE =
-        str("file",
-            localFileBody(0, eqNum(con(0)), eqNum(con(0)), eqNum(con(0))));
+        localFileBody("localemptyfile", 0, eqNum(con(0)), eqNum(con(0)), eqNum(con(0)));
 
     private static final Token LOCAL_STORED_FILE =
-        str("file",
-            seq(localFileBody(0, expTrue(), expTrue(), eq(last(ref("compressedsize")))),
-                def("compresseddata", last(ref("compressedsize")), eqNum(crc32(self), last(ref("crc32"))))));
+        seq("localstoredfile",
+            localFileBody("", 0, expTrue(), expTrue(), eq(last(ref("compressedsize")))),
+            def("compresseddata", last(ref("compressedsize")), eqNum(crc32(self), last(ref("crc32")))));
 
     private static final Token FILES =
-        rep(cho(LOCAL_DEFLATED_FILE,
-                cho(LOCAL_EMPTY_FILE,
-                    LOCAL_STORED_FILE)));
+        rep("files",
+            cho(LOCAL_DEFLATED_FILE,
+                LOCAL_EMPTY_FILE,
+                LOCAL_STORED_FILE));
 
     private static final Token DIR_ENTRY =
-        str("dir",
-            seq(def("dirsignature", con(4), eq(con(0x50, 0x4b, 0x01, 0x02))),
-                def("makeversion", con(2)),
-                def("extractversion", con(2)),
-                def("bitflag", con(2)),
-                def("compressionmethod", con(2)),
-                def("lastmodtime", con(2)),
-                def("lastmoddate", con(2)),
-                def("crc32", con(4)),
-                def("compressedsize", con(4)),
-                def("uncompressedsize", con(4)),
-                def("filenamesize", con(2)),
-                def("extrafieldsize", con(2)),
-                def("filecommentsize", con(2)),
-                def("filedisk", con(2), eqNum(con(0))),
-                def("intfileattr", con(2)),
-                def("extfileattr", con(4)),
-                def("offset", con(4)),
-                def("filename", last(ref("filenamesize"))),
-                def("extrafield", last(ref("extrafieldsize"))),
-                def("filecomment", last(ref("filecommentsize")))));
+        seq("direntry",
+            def("dirsignature", con(4), eq(con(0x50, 0x4b, 0x01, 0x02))),
+            def("makeversion", con(2)),
+            def("extractversion", con(2)),
+            def("bitflag", con(2)),
+            def("compressionmethod", con(2)),
+            def("lastmodtime", con(2)),
+            def("lastmoddate", con(2)),
+            def("crc32", con(4)),
+            def("compressedsize", con(4)),
+            def("uncompressedsize", con(4)),
+            def("filenamesize", con(2)),
+            def("extrafieldsize", con(2)),
+            def("filecommentsize", con(2)),
+            def("filedisk", con(2), eqNum(con(0))),
+            def("intfileattr", con(2)),
+            def("extfileattr", con(4)),
+            def("offset", con(4)),
+            def("filename", last(ref("filenamesize"))),
+            def("extrafield", last(ref("extrafieldsize"))),
+            def("filecomment", last(ref("filecommentsize"))));
 
     private static final Token DIRS =
-        rep(DIR_ENTRY);
+        rep("direntries",
+            DIR_ENTRY);
 
     private static final Token END_OF_DIR =
-        str("endofdir",
-            seq(def("endofdirsignature", con(4), eq(con(0x50, 0x4b, 0x05, 0x06))),
-                def("disknumber", con(2), eqNum(con(0))),
-                def("dirdisk", con(2), eqNum(con(0))),
-                def("numlocaldirs", con(2)),
-                def("numtotaldirs", con(2), eq(last(ref("numlocaldirs")))),
-                def("dirsize", con(4)),
-                def("diroffset", con(4)),
-                def("commentsize", con(2)),
-                def("comment", last(ref("commentsize")))));
+        seq("endofdir",
+            def("endofdirsignature", con(4), eq(con(0x50, 0x4b, 0x05, 0x06))),
+            def("disknumber", con(2), eqNum(con(0))),
+            def("dirdisk", con(2), eqNum(con(0))),
+            def("numlocaldirs", con(2), eqNum(count(ref("dirsignature")))),
+            def("numtotaldirs", con(2), eqNum(last(ref("numlocaldirs")))),
+            def("dirsize", con(4), eqNum(sub(offset(last(ref("endofdirsignature"))), offset(first(ref("dirsignature")))))),
+            def("diroffset", con(4), eqNum(offset(first(ref("dirsignature"))))),
+            def("commentsize", con(2)),
+            def("comment", last(ref("commentsize"))));
 
     public static final Token FORMAT =
-        str("ZIP",
-            seq(FILES,
+            seq("ZIP", new Encoding(ByteOrder.LITTLE_ENDIAN),
+                FILES,
                 DIRS,
-                END_OF_DIR), new Encoding(ByteOrder.LITTLE_ENDIAN));
+                END_OF_DIR);
 
 }

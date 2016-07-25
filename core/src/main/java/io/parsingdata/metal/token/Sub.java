@@ -32,8 +32,8 @@ public class Sub extends Token {
     public final Token token;
     public final ValueExpression address;
 
-    public Sub(final Token token, final ValueExpression address, final Encoding enc) {
-        super(enc);
+    public Sub(final String name, final Token token, final ValueExpression address, final Encoding enc) {
+        super(name, enc);
         this.token = checkNotNull(token, "token");
         this.address = checkNotNull(address, "address");
     }
@@ -74,7 +74,7 @@ public class Sub extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + token + ", " + address + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + token + ", " + address + ")";
     }
 
 }

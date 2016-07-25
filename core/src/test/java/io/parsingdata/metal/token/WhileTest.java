@@ -28,7 +28,6 @@ import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public class WhileTest {
 
@@ -58,7 +57,7 @@ public class WhileTest {
     @Test
     public void whileWithoutExpression() throws IOException {
         // passing null as predicate make this a while(true):
-        final Token trueWhile = new While(def("value", 1), null, enc());
+        final Token trueWhile = whl(def("value", 1), null, enc());
         final ParseResult result = trueWhile.parse(stream(0), enc());
 
         // parsing fails because the nested def fails at the end of the stream
@@ -68,7 +67,7 @@ public class WhileTest {
     @Test
     public void testToString() {
         final Token simpleWhile = whl(def("value", con(1)), eq(con(1)));
-        final String simpleWhileString = "While(Def(\"value\",Const(0x01),True,), Eq(Const(0x01)))";
+        final String simpleWhileString = "While(Def(value,Const(0x01),True,), Eq(Const(0x01)))";
         assertThat(simpleWhile.toString(), is(equalTo(simpleWhileString)));
     }
 

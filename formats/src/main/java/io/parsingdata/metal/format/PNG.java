@@ -16,37 +16,37 @@
 
 package io.parsingdata.metal.format;
 
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.format.Callback.crc32;
-
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
+
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.format.Callback.crc32;
 
 public class PNG {
 
     private static final Token HEADER =
-            str("signature",
-            seq(def("highbit", con(1), eq(con(0x89))),
+            seq("signature",
+                def("highbit", con(1), eq(con(0x89))),
                 def("PNG", con(3), eq(con("PNG"))),
-                def("controlchars", con(4), eq(con(0x0d, 0x0a, 0x1a, 0x0a)))));
+                def("controlchars", con(4), eq(con(0x0d, 0x0a, 0x1a, 0x0a))));
 
     private static final Token FOOTER =
-            str("footer",
-            seq(def("footerlength", con(4), eqNum(con(0))),
+            seq("footer",
+                def("footerlength", con(4), eqNum(con(0))),
                 def("footertype", con(4), eq(con("IEND"))),
-                def("footercrc32", con(4), eq(con(0xae, 0x42, 0x60, 0x82)))));
+                def("footercrc32", con(4), eq(con(0xae, 0x42, 0x60, 0x82))));
 
     private static final Token STRUCT =
-            str("chunk",
-            seq(def("length", con(4)),
+            seq("chunk",
+                def("length", con(4)),
                 def("chunktype", con(4), not(eq(con("IEND")))),
                 def("chunkdata", last(ref("length"))),
-                def("crc32", con(4), eq(crc32(cat(last(ref("chunktype")), last(ref("chunkdata"))))))));
+                def("crc32", con(4), eq(crc32(cat(last(ref("chunktype")), last(ref("chunkdata")))))));
 
     public static final Token FORMAT =
-            str("PNG",
-            seq(HEADER,
+            seq("PNG", new Encoding(),
+                HEADER,
                 rep(STRUCT),
-                FOOTER), new Encoding());
+                FOOTER);
 
 }
