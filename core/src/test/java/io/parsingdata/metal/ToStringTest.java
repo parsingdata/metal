@@ -16,19 +16,22 @@
 
 package io.parsingdata.metal;
 
+import io.parsingdata.metal.encoding.ByteOrder;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+
+import java.nio.charset.Charset;
 
 import static io.parsingdata.metal.Shorthand.*;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
+import static org.junit.Assert.assertEquals;
 
-@RunWith(JUnit4.class)
 public class ToStringTest {
 
     private static final String prefix = "prefix";
@@ -75,6 +78,14 @@ public class ToStringTest {
         Assert.assertTrue(s1s.contains("_name_a_"));
         Assert.assertTrue(s1s.contains("_name_b_"));
         Assert.assertTrue(s1s.contains("_name_c_"));
+    }
+
+    @Test
+    public void encoding() {
+        assertEquals("Encoding(UNSIGNED,US-ASCII,BIG_ENDIAN)", new Encoding().toString());
+        assertEquals("Encoding(SIGNED,US-ASCII,BIG_ENDIAN)", new Encoding(Sign.SIGNED).toString());
+        assertEquals("Encoding(UNSIGNED,UTF-8,BIG_ENDIAN)", new Encoding(Charset.forName("UTF-8")).toString());
+        assertEquals("Encoding(UNSIGNED,US-ASCII,LITTLE_ENDIAN)", new Encoding(ByteOrder.LITTLE_ENDIAN).toString());
     }
 
 }
