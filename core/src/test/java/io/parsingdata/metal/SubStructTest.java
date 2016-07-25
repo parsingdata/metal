@@ -27,6 +27,9 @@ import java.io.IOException;
 import static io.parsingdata.metal.Shorthand.*;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
+import static junit.framework.TestCase.assertFalse;
 
 public class SubStructTest {
 
@@ -126,6 +129,16 @@ public class SubStructTest {
         Assert.assertTrue(item.isValue());
         Assert.assertEquals(value, item.asValue().asNumeric().intValue());
         Assert.assertEquals(offset, item.asValue().getOffset());
+    }
+
+    @Test
+    public void errorEmptyAddressList() throws IOException {
+        assertFalse(sub(any("a"), ref("b")).parse(stream(1, 2, 3, 4), enc()).succeeded);
+    }
+
+    @Test
+    public void errorEmptyAddressInList() throws IOException {
+        assertFalse(sub(any("a"), cat(con(0), EMPTY_VE)).parse(stream(1, 2, 3, 4), enc()).succeeded);
     }
 
 }
