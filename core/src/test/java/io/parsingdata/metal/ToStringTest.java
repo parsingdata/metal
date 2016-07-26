@@ -16,10 +16,7 @@
 
 package io.parsingdata.metal;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
-import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.*;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
@@ -33,7 +30,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import static io.parsingdata.metal.Shorthand.*;
 import static io.parsingdata.metal.data.OptionalValueList.EMPTY;
@@ -101,16 +98,26 @@ public class ToStringTest {
     public void encoding() {
         assertEquals("Encoding(UNSIGNED,US-ASCII,BIG_ENDIAN)", new Encoding().toString());
         assertEquals("Encoding(SIGNED,US-ASCII,BIG_ENDIAN)", new Encoding(Sign.SIGNED).toString());
-        assertEquals("Encoding(UNSIGNED,UTF-8,BIG_ENDIAN)", new Encoding(Charset.forName("UTF-8")).toString());
+        assertEquals("Encoding(UNSIGNED,UTF-8,BIG_ENDIAN)", new Encoding(StandardCharsets.UTF_8).toString());
         assertEquals("Encoding(UNSIGNED,US-ASCII,LITTLE_ENDIAN)", new Encoding(ByteOrder.LITTLE_ENDIAN).toString());
     }
 
     @Test
     public void data() {
-        assertEquals("stream: InMemoryByteStream(2); offset: 0; order: graph(EMPTY)", stream(1, 2).toString());
-        final OptionalValue ov1 = OptionalValue.of(new ParseValue("name", NONE, 0, new byte[] { 1, 2 }, enc()));
+        final Environment environment = stream(1, 2);
+        final String envString = "stream: InMemoryByteStream(2); offset: 0; order: graph(EMPTY)";
+        assertEquals(envString, environment.toString());
+        final ParseResult result = new ParseResult(true, environment);
+        assertEquals("ParseResult(true, " + environment + ")", result.toString());
+        final ParseValue pv1 = new ParseValue("name", NONE, 0, new byte[] { 1, 2 }, enc());
+        final String pv1String = "name(0x0102)";
+        final OptionalValue ov1 = OptionalValue.of(pv1);
         final OptionalValue ov2 = OptionalValue.of(new Value(new byte[] { 3 }, enc()));
-        assertEquals(">OptionalValue(0x03)>OptionalValue(name(0x0102))", EMPTY.add(ov1).add(ov2).toString());
+        assertEquals(">OptionalValue(0x03)>OptionalValue(" + pv1String + ")", EMPTY.add(ov1).add(ov2).toString());
+        final ParseValue pv2 = new ParseValue("two", NONE, 0, new byte[] { 3, 4 }, enc());
+        final String pv2String = "two(0x0304)";
+        assertEquals(">" + pv2String + ">" + pv1String, ParseItemList.create(pv1).add(pv2).toString());
+        assertEquals(">" + pv2String + ">" + pv1String, ParseValueList.create(pv1).add(pv2).toString());
     }
 
 }

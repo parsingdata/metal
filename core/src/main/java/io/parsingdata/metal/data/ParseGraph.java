@@ -50,7 +50,6 @@ public class ParseGraph implements ParseItem {
 
     private ParseGraph(final ParseItem head, final ParseGraph tail, final Token definition, final boolean branched) {
         this.head = checkNotNull(head, "head");
-        if (head.isValue() && branched) { throw new IllegalArgumentException("Argument branch cannot be true when head contains a ParseValue."); }
         this.tail = checkNotNull(tail, "tail");
         this.branched = branched;
         this.definition = checkNotNull(definition, "definition");
