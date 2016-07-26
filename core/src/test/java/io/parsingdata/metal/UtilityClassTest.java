@@ -20,6 +20,7 @@ import io.parsingdata.metal.data.selection.*;
 import io.parsingdata.metal.data.transformation.Reversal;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Sign;
+import io.parsingdata.metal.expression.value.ConstantFactory;
 import io.parsingdata.metal.token.Token;
 import org.junit.Test;
 
@@ -40,6 +41,7 @@ public class UtilityClassTest {
         checkUtilityClass(ByOffset.class);
         checkUtilityClass(ByToken.class);
         checkUtilityClass(ByType.class);
+        checkUtilityClass(ConstantFactory.class);
     }
 
     // The method is used to print tokens for composing Tokens' toString()

@@ -22,7 +22,9 @@ import io.parsingdata.metal.encoding.Encoding;
 import java.math.BigInteger;
 import java.util.BitSet;
 
-public class ConstantFactory {
+public final class ConstantFactory {
+
+    private ConstantFactory() {}
 
     public static Value createFromNumeric(final BigInteger value, final Encoding enc) {
         return new Value(compact(value.toByteArray(), enc.isSigned()), setToBE(enc));

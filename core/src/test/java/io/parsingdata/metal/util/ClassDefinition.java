@@ -16,26 +16,34 @@
 
 package io.parsingdata.metal.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 public class ClassDefinition {
 
-    // Check that a class is final, has a single private constructor and that all
-    // its declared methods are static.
     public static void checkUtilityClass(Class<?> c) throws ReflectiveOperationException {
-        assertTrue(Modifier.isFinal(c.getModifiers()));
+        final String simpleName = c.getSimpleName();
+        // class is final
+        assertTrue(simpleName + " should be final", Modifier.isFinal(c.getModifiers()));
+
+        // has one constructor
         final Constructor<?>[] cons = c.getDeclaredConstructors();
-        assertEquals(1, cons.length);
-        assertTrue(Modifier.isPrivate(cons[0].getModifiers()));
+        assertEquals(simpleName + " should have exactly 1 constructor", 1, cons.length);
+
+        // which is private
+        assertTrue(simpleName + " should have a private constructor", Modifier.isPrivate(cons[0].getModifiers()));
+
+        // call it for coverage
         cons[0].setAccessible(true);
         cons[0].newInstance();
+
+        // check that all declared methods are static
         for (final Method m : c.getDeclaredMethods()) {
-            assertTrue(Modifier.isStatic(m.getModifiers()));
+            assertTrue("method '" + m.getName()  + "' in " + simpleName + " should be static", Modifier.isStatic(m.getModifiers()));
         }
     }
 
