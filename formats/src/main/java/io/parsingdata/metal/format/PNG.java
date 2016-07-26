@@ -22,7 +22,9 @@ import io.parsingdata.metal.token.Token;
 import static io.parsingdata.metal.Shorthand.*;
 import static io.parsingdata.metal.format.Callback.crc32;
 
-public class PNG {
+public final class PNG {
+
+    private PNG() {}
 
     private static final Token HEADER =
             seq("signature",

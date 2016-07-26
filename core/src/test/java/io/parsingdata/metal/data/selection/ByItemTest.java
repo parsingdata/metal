@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.data.transformation;
+package io.parsingdata.metal.data.selection;
 
 import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseItem;
+import org.junit.Test;
 
-public final class Reversal {
+import static org.junit.Assert.assertTrue;
 
-    private Reversal() {}
+public class ByItemTest {
 
-    public static ParseGraph reverse(ParseGraph oldGraph, ParseGraph newGraph) {
-        if (oldGraph.isEmpty()) { return newGraph; }
-        return reverse(oldGraph.tail, new ParseGraph(reverseItem(oldGraph.head), newGraph, oldGraph.definition));
-    }
-
-    private static ParseItem reverseItem(final ParseItem item) {
-        return item.isGraph() ? item.asGraph().reverse() : item;
+    @Test
+    public void empty() {
+        assertTrue(ByItem.getGraphAfter(ParseGraph.EMPTY, null).isEmpty());
     }
 
 }

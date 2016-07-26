@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.data.transformation;
+package io.parsingdata.metal.data.selection;
 
-import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseItem;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-public final class Reversal {
+import static io.parsingdata.metal.data.ParseGraph.EMPTY;
+import static io.parsingdata.metal.data.selection.ByOffset.getLowestOffsetValue;
 
-    private Reversal() {}
+public class ByOffsetTest {
 
-    public static ParseGraph reverse(ParseGraph oldGraph, ParseGraph newGraph) {
-        if (oldGraph.isEmpty()) { return newGraph; }
-        return reverse(oldGraph.tail, new ParseGraph(reverseItem(oldGraph.head), newGraph, oldGraph.definition));
-    }
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
-    private static ParseItem reverseItem(final ParseItem item) {
-        return item.isGraph() ? item.asGraph().reverse() : item;
+    @Test
+    public void getLowestOffsetWithoutValue() {
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("Cannot determine lowest offset if graph does not contain a value.");
+        getLowestOffsetValue(EMPTY);
     }
 
 }

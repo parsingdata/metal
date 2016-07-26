@@ -18,7 +18,10 @@ package io.parsingdata.metal;
 
 import io.parsingdata.metal.token.Token;
 
-public class Util {
+public final class Util {
+
+    private Util() {}
+
     final private static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
 
     public static <T>T checkNotNull(final T argument, final String name) {

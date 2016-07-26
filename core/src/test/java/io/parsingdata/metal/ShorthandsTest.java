@@ -19,8 +19,12 @@ package io.parsingdata.metal;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.token.Cho;
+import io.parsingdata.metal.token.Seq;
 import io.parsingdata.metal.token.Token;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 
@@ -124,6 +128,59 @@ public class ShorthandsTest {
         assertFalse(refList.isEmpty());
         assertEquals(1, refList.size);
         assertEquals(value, refList.head.get().asNumeric().intValue());
+    }
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @Test
+    public void choSingle() {
+        setUpArgumentException();
+        cho(any("a"));
+    }
+
+    @Test
+    public void choEmpty() {
+        setUpArgumentException();
+        cho();
+    }
+
+    @Test
+    public void seqSingle() {
+        setUpArgumentException();
+        seq(any("a"));
+    }
+
+    @Test
+    public void seqEmpty() {
+        setUpArgumentException();
+        seq();
+    }
+
+    private void setUpArgumentException() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("At least two Tokens are required.");
+    }
+
+    public static final Token DEFA = any("a");
+    public static final Token DEFB = any("b");
+
+    @Test
+    public void checkChoTokens() {
+        final Token choToken = cho(DEFA, DEFB);
+        final Cho cho = (Cho)choToken;
+        assertEquals(2, cho.tokens().length);
+        assertEquals(DEFA, cho.tokens()[0]);
+        assertEquals(DEFB, cho.tokens()[1]);
+    }
+
+    @Test
+    public void checkSeqTokens() {
+        final Token seqToken = seq(DEFA, DEFB);
+        final Seq seq = (Seq)seqToken;
+        assertEquals(2, seq.tokens().length);
+        assertEquals(DEFA, seq.tokens()[0]);
+        assertEquals(DEFB, seq.tokens()[1]);
     }
 
 }

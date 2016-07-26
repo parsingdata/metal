@@ -18,6 +18,7 @@ package io.parsingdata.metal.util;
 
 import io.parsingdata.metal.Shorthand;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 
 import static io.parsingdata.metal.Shorthand.*;
@@ -25,6 +26,8 @@ import static io.parsingdata.metal.Shorthand.*;
 public class TokenDefinitions {
 
     private TokenDefinitions() {}
+
+    public static final ValueExpression EMPTY_VE = div(con(1), con(0)); // division by zero to create empty value
 
     public static Token any(final String name) {
         return def(name, con(1));

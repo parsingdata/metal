@@ -23,7 +23,9 @@ import io.parsingdata.metal.data.ParseValue;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-public class ByOffset {
+public final class ByOffset {
+
+    private ByOffset() {}
 
     public static boolean hasGraphAtRef(final ParseGraph graph, final long ref) {
         return findRef(ByType.getGraphs(graph), ref) != null;

@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.data.transformation;
+package io.parsingdata.metal.data.selection;
 
 import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseItem;
+import org.junit.Test;
 
-public final class Reversal {
+import static junit.framework.TestCase.assertNull;
 
-    private Reversal() {}
+public class ByNameTest {
 
-    public static ParseGraph reverse(ParseGraph oldGraph, ParseGraph newGraph) {
-        if (oldGraph.isEmpty()) { return newGraph; }
-        return reverse(oldGraph.tail, new ParseGraph(reverseItem(oldGraph.head), newGraph, oldGraph.definition));
+    @Test
+    public void getValueOnEmpty() {
+        assertNull(ByName.getValue(ParseGraph.EMPTY, "name"));
     }
 
-    private static ParseItem reverseItem(final ParseItem item) {
-        return item.isGraph() ? item.asGraph().reverse() : item;
+    @Test
+    public void getValueOnBranchedEmpty() {
+        assertNull(ByName.getValue(ParseGraph.EMPTY.addBranch(ParseGraph.NONE), "name"));
     }
 
 }

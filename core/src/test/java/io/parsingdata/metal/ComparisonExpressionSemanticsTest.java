@@ -16,33 +16,22 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.eq;
-import static io.parsingdata.metal.Shorthand.eqNum;
-import static io.parsingdata.metal.Shorthand.eqStr;
-import static io.parsingdata.metal.Shorthand.expTrue;
-import static io.parsingdata.metal.Shorthand.gtNum;
-import static io.parsingdata.metal.Shorthand.ltNum;
-import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.self;
-import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-
-import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.Collection;
-
-import io.parsingdata.metal.expression.Expression;
-import org.junit.runners.Parameterized.Parameters;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.comparison.ComparisonExpression;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
+import org.junit.runners.Parameterized.Parameters;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
+import static java.nio.charset.StandardCharsets.US_ASCII;
 
 public class ComparisonExpressionSemanticsTest extends ParameterizedParse {
 
@@ -57,8 +46,8 @@ public class ComparisonExpressionSemanticsTest extends ParameterizedParse {
             { "1 < 1", numCom(1, ltNum(ref("a"))), stream(1, 1), enc(), false },
             { "2 < 1", numCom(1, ltNum(ref("a"))), stream(1, 2), enc(), false },
             { "1 < 2", numCom(1, ltNum(ref("a"))), stream(2, 1), enc(), true },
-            { "\"abc\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabc", Charset.forName("ISO646-US")), enc(), true },
-            { "\"abd\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabd", Charset.forName("ISO646-US")), enc(), false },
+            { "\"abc\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabc", US_ASCII), new Encoding(US_ASCII), true },
+            { "\"abd\" == \"abc\"", strCom(3, eqStr(ref("a"))), stream("abcabd", US_ASCII), new Encoding(US_ASCII), false },
             { "1 == 1(eq)", valCom(1, eq(ref("a"))), stream(1, 1), enc(), true },
             { "2 == 1(eq)", valCom(1, eq(ref("a"))), stream(1, 2), enc(), false },
             { "1 == 1 with self", valCom(1, eq(self, ref("a"))), stream(1, 1), enc(), true },
@@ -66,7 +55,9 @@ public class ComparisonExpressionSemanticsTest extends ParameterizedParse {
             { "1, 2 == 1", listCom(eq(ref("a"), ref("b")), expTrue()), stream(1, 2, 1, 2), enc(), false },
             { "1, 2 == 1, 2", listCom(expTrue(), eq(ref("a"), ref("b"))), stream(1, 2, 1, 2), enc(), true },
             { "1, 2 == 2, 2", listCom(expTrue(), eq(ref("a"), ref("b"))), stream(1, 2, 2, 2), enc(), false },
-            { "1, 2 == 1, 3", listCom(expTrue(), eq(ref("a"), ref("b"))), stream(1, 2, 1, 3), enc(), false }
+            { "1, 2 == 1, 3", listCom(expTrue(), eq(ref("a"), ref("b"))), stream(1, 2, 1, 3), enc(), false },
+            { "1, 2, 1 != 1/0", valCom(1, eqNum(con(1), div(con(1), con(0)))), stream(1, 2), enc(), false },
+            { "1, 2, 1/0 != 1", valCom(1, eqNum(div(con(1), con(0)), con(1))), stream(1, 2), enc(), false }
         });
     }
 
