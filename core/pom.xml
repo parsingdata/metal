@@ -17,8 +17,18 @@
   </scm>
 
   <properties>
+    <junit.version>4.12</junit.version>
     <maven-jar-plugin.version>2.6</maven-jar-plugin.version>
   </properties>
+  
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
   <build>
     <plugins>
