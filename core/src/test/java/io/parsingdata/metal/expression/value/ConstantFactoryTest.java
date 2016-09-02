@@ -17,32 +17,32 @@ public class ConstantFactoryTest {
 
     public static final BigInteger TWOS_DIFF = BigInteger.valueOf(2).add(BigInteger.valueOf(Long.MAX_VALUE)).add(BigInteger.valueOf(Long.MAX_VALUE));
 
-    @Property(trials = 1000000)
-    public void longConstant(final long input) {
+    @Test public void longConstant0() { checkLongConstant(0L); }
+    @Property public void longConstant8(@InRange(min = "-128", max = "127") final long input) { checkLongConstant(input); }
+    @Property public void longConstant16(@InRange(min = "-32768", max = "32767") final long input) { checkLongConstant(input); }
+    @Property public void longConstant24(@InRange(min = "-8388608", max = "8388607") final long input) { checkLongConstant(input); }
+    @Property public void longConstant32(@InRange(min = "-2147483648", max = "2147483647") final long input) { checkLongConstant(input); }
+    @Property public void longConstant40(@InRange(min = "-549755813888", max = "549755813887") final long input) { checkLongConstant(input); }
+    @Property public void longConstant48(@InRange(min = "-140737488355328", max = "140737488355327") final long input) { checkLongConstant(input); }
+    @Property public void longConstant56(@InRange(min = "-36028797018963968", max = "36028797018963967") final long input) { checkLongConstant(input); }
+    @Property public void longConstant64(@InRange(min = "-9223372036854775808", max = "9223372036854775807") final long input) { checkLongConstant(input); }
+
+    private void checkLongConstant(final long input) {
         assertEquals(input, ConstantFactory.createFromNumeric(input, signed()).asNumeric().longValue());
         if (input >= 0) {
-            //System.out.println("pos");
             assertEquals(input, ConstantFactory.createFromNumeric(input, enc()).asNumeric().longValue());
         } else {
             assertEquals(0, calculateUnsignedValue(input).compareTo(ConstantFactory.createFromNumeric(input, enc()).asNumeric()));
         }
     }
 
-    @Test
-    public void wo() {
-        final long input = -39337942513L;
-        assertEquals(0, calculateUnsignedValue(input).compareTo(ConstantFactory.createFromNumeric(input, enc()).asNumeric()));
-    }
-
     private BigInteger calculateUnsignedValue(final long input) {
         for (int i = 8; i < 64; i+=8) {
             final long maxValue = BigInteger.valueOf(2).pow(i-1).longValue();
             if ((maxValue + input) >= 0) {
-                System.out.print(i/8);
-                return BigInteger.valueOf(input).add(BigInteger.valueOf(maxValue)).add(BigInteger.valueOf(maxValue));
+                return BigInteger.valueOf(input).add(BigInteger.valueOf(2*maxValue));
             }
         }
-        //System.out.print(8);
         return BigInteger.valueOf(input).add(TWOS_DIFF);
     }
 
