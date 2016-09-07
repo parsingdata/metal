@@ -16,29 +16,83 @@
 
 package io.parsingdata.metal.data;
 
+import io.parsingdata.metal.data.callback.TokenCallbackList;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
+
+import static io.parsingdata.metal.Util.checkNotNull;
+
 public class Environment {
 
     public final ParseGraph order;
     public final ByteStream input;
     public final long offset;
+    public final TokenCallbackList callbacks;
+
+    public Environment(final ParseGraph order, final ByteStream input, final long offset, final TokenCallbackList callbacks) {
+        this.order = checkNotNull(order, "order");
+        this.input = checkNotNull(input, "input");
+        this.offset = offset;
+        this.callbacks = checkNotNull(callbacks, "callbacks");
+    }
 
     public Environment(final ParseGraph order, final ByteStream input, final long offset) {
-        this.order = order;
-        this.input = input;
-        this.offset = offset;
+        this(order, input, offset, TokenCallbackList.EMPTY);
+    }
+
+    public Environment(final ByteStream input, final long offset, final TokenCallbackList callbacks) {
+        this(ParseGraph.EMPTY, input, offset, callbacks);
     }
 
     public Environment(final ByteStream input, final long offset) {
-        this(ParseGraph.EMPTY, input, offset);
+        this(ParseGraph.EMPTY, input, offset, TokenCallbackList.EMPTY);
+    }
+
+    public Environment(final ByteStream input, final TokenCallbackList callbacks) {
+        this(ParseGraph.EMPTY, input, 0L, callbacks);
     }
 
     public Environment(final ByteStream input) {
-        this(ParseGraph.EMPTY, input, 0L);
+        this(ParseGraph.EMPTY, input, 0L, TokenCallbackList.EMPTY);
+    }
+
+    public void handleCallbacks(final Token token, final Environment environment, final Encoding encoding, final ParseItem item) {
+        handleCallbacks(callbacks, token, environment, encoding, item);
+    }
+
+    private void handleCallbacks(final TokenCallbackList callbacks, final Token token, final Environment environment, final Encoding encoding, final ParseItem item) {
+        if (callbacks.isEmpty()) {
+            return;
+        }
+        if (callbacks.head.token == token) {
+            callbacks.head.callback.handle(environment, encoding, item);
+        }
+        handleCallbacks(callbacks.tail, token, environment, encoding, item);
+    }
+
+    public Environment addBranch(final Token token) {
+        return new Environment(order.addBranch(token), input, offset, callbacks);
+    }
+
+    public Environment closeBranch() {
+        return new Environment(order.closeBranch(), input, offset, callbacks);
+    }
+
+    public Environment add(final ParseValue parseValue) {
+        return new Environment(order.add(parseValue), input, offset, callbacks);
+    }
+
+    public Environment seek(final long newOffset) {
+        return new Environment(order, input, newOffset, callbacks);
+    }
+
+    public Environment add(final ParseRef parseRef) {
+        return new Environment(order.add(parseRef), input, offset, callbacks);
     }
 
     @Override
     public String toString() {
-        return "stream: " + input + "; offset: " + offset + "; order: " + order;
+        return "stream: " + input + "; offset: " + offset + "; order: " + order + "; callbacks: " + callbacks;
     }
 
 }

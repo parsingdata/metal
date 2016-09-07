@@ -55,7 +55,7 @@ public class Def extends Token {
         if (env.input.read(env.offset, data) != data.length) {
             return new ParseResult(false, env);
         }
-        final Environment newEnv = new Environment(env.order.add(new ParseValue(scope, this, env.offset, data, enc)), env.input, env.offset + dataSize);
+        final Environment newEnv = env.add(new ParseValue(scope, this, env.offset, data, enc)).seek(env.offset + dataSize);
         return predicate.eval(newEnv, enc) ? new ParseResult(true, newEnv) : new ParseResult(false, env);
     }
 

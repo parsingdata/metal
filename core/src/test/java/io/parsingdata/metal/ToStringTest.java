@@ -105,7 +105,7 @@ public class ToStringTest {
     @Test
     public void data() {
         final Environment environment = stream(1, 2);
-        final String envString = "stream: InMemoryByteStream(2); offset: 0; order: graph(EMPTY)";
+        final String envString = "stream: InMemoryByteStream(2); offset: 0; order: graph(EMPTY); callbacks: ";
         assertEquals(envString, environment.toString());
         final ParseResult result = new ParseResult(true, environment);
         assertEquals("ParseResult(true, " + environment + ")", result.toString());

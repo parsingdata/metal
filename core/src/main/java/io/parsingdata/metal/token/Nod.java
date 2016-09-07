@@ -45,7 +45,7 @@ public class Nod extends Token {
         if (skipSize < 0) {
             return new ParseResult(false, env);
         }
-        return new ParseResult(true, new Environment(env.order, env.input, env.offset + skipSize));
+        return new ParseResult(true, env.seek(env.offset + skipSize));
     }
 
     @Override

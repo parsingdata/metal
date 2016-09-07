@@ -39,8 +39,8 @@ public class While extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final ParseResult res = iterate(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
-        if (res.succeeded) { return new ParseResult(true, new Environment(res.environment.order.closeBranch(), res.environment.input, res.environment.offset)); }
+        final ParseResult res = iterate(scope, env.addBranch(this), enc);
+        if (res.succeeded) { return new ParseResult(true, res.environment.closeBranch()); }
         return new ParseResult(false, env);
     }
 

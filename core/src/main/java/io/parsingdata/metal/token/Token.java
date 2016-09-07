@@ -16,13 +16,13 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
+
+import java.io.IOException;
+
+import static io.parsingdata.metal.Util.checkNotNull;
 
 public abstract class Token {
 
@@ -37,7 +37,12 @@ public abstract class Token {
     }
 
     public ParseResult parse(final String scope, final Environment env, final Encoding enc) throws IOException {
-        return parseImpl(makeScope(scope), env, this.enc != null ? this.enc : enc);
+        final Encoding encoding = this.enc != null ? this.enc : enc;
+        final ParseResult result = parseImpl(makeScope(scope), env, encoding);
+        if (result.succeeded) {
+            result.environment.handleCallbacks(this, result.environment, encoding, result.environment.order.get(this));
+        }
+        return result;
     }
 
     public ParseResult parse(final Environment env, final Encoding enc) throws IOException {

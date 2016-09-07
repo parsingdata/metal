@@ -16,7 +16,6 @@
 
 package io.parsingdata.metal.expression.value;
 
-import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
@@ -25,9 +24,9 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -107,7 +106,7 @@ public class ElvisExpressionTest {
     @Test
     public void elvisListEmpty() {
         final ValueExpression elvis = elvis(ref("a"), ref("b"));
-        final OptionalValueList eval = elvis.eval(new Environment(null), enc());
+        final OptionalValueList eval = elvis.eval(stream(0), enc());
         assertEquals(0, eval.size);
     }
 

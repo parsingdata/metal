@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.data.selection;
+package io.parsingdata.metal.data;
 
-import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.selection.ByName;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertNull;
@@ -25,7 +26,7 @@ public class ByNameTest {
 
     @Test
     public void getValueOnEmpty() {
-        assertNull(ByName.getValue(ParseGraph.EMPTY, "name"));
+        TestCase.assertNull(ByName.getValue(ParseGraph.EMPTY, "name"));
     }
 
     @Test

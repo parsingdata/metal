@@ -43,9 +43,9 @@ public class RepN extends Token {
         if (counts.size != 1 || !counts.head.isPresent()) {
             return new ParseResult(false, env);
         }
-        final ParseResult res = iterate(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc, counts.head.get().asNumeric().longValue());
+        final ParseResult res = iterate(scope, env.addBranch(this), enc, counts.head.get().asNumeric().longValue());
         if (res.succeeded) {
-            return new ParseResult(true, new Environment(res.environment.order.closeBranch(), res.environment.input, res.environment.offset));
+            return new ParseResult(true, res.environment.closeBranch());
         }
         return new ParseResult(false, env);
     }
