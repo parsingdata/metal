@@ -56,18 +56,18 @@ public class Environment {
         this(ParseGraph.EMPTY, input, 0L, TokenCallbackList.EMPTY);
     }
 
-    public void handleCallbacks(final Token token, final Environment environment, final Encoding encoding, final ParseItem item) {
-        handleCallbacks(callbacks, token, environment, encoding, item);
+    public void handleCallbacks(final Token token, final ParseResult result, final Encoding encoding) {
+        handleCallbacks(callbacks, token, result, encoding);
     }
 
-    private void handleCallbacks(final TokenCallbackList callbacks, final Token token, final Environment environment, final Encoding encoding, final ParseItem item) {
+    private void handleCallbacks(final TokenCallbackList callbacks, final Token token, final ParseResult result, final Encoding encoding) {
         if (callbacks.isEmpty()) {
             return;
         }
         if (callbacks.head.token == token) {
-            callbacks.head.callback.handle(environment, encoding, item);
+            callbacks.head.callback.handle(token, result, encoding);
         }
-        handleCallbacks(callbacks.tail, token, environment, encoding, item);
+        handleCallbacks(callbacks.tail, token, result, encoding);
     }
 
     public Environment addBranch(final Token token) {

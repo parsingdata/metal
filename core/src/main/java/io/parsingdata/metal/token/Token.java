@@ -40,7 +40,7 @@ public abstract class Token {
         final Encoding encoding = this.enc != null ? this.enc : enc;
         final ParseResult result = parseImpl(makeScope(scope), env, encoding);
         if (result.succeeded) {
-            result.environment.handleCallbacks(this, result.environment, encoding, result.environment.order.get(this));
+            result.environment.handleCallbacks(this, result, encoding);
         }
         return result;
     }
