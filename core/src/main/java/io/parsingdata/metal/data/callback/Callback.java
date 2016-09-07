@@ -17,11 +17,10 @@
 package io.parsingdata.metal.data.callback;
 
 import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
 public interface Callback {
 
-    void handle(final Token token, final ParseResult result, final Encoding enc);
+    void handle(final Token token, final ParseResult result);
 
 }

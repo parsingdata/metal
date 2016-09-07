@@ -17,7 +17,6 @@
 package io.parsingdata.metal.data;
 
 import io.parsingdata.metal.data.callback.TokenCallbackList;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
 import static io.parsingdata.metal.Util.checkNotNull;
@@ -54,20 +53,6 @@ public class Environment {
 
     public Environment(final ByteStream input) {
         this(ParseGraph.EMPTY, input, 0L, TokenCallbackList.EMPTY);
-    }
-
-    public void handleCallbacks(final Token token, final ParseResult result, final Encoding encoding) {
-        handleCallbacks(callbacks, token, result, encoding);
-    }
-
-    private void handleCallbacks(final TokenCallbackList callbacks, final Token token, final ParseResult result, final Encoding encoding) {
-        if (callbacks.isEmpty()) {
-            return;
-        }
-        if (callbacks.head.token == token) {
-            callbacks.head.callback.handle(token, result, encoding);
-        }
-        handleCallbacks(callbacks.tail, token, result, encoding);
     }
 
     public Environment addBranch(final Token token) {

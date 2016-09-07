@@ -39,9 +39,7 @@ public abstract class Token {
     public ParseResult parse(final String scope, final Environment env, final Encoding enc) throws IOException {
         final Encoding encoding = this.enc != null ? this.enc : enc;
         final ParseResult result = parseImpl(makeScope(scope), env, encoding);
-        if (result.succeeded) {
-            result.environment.handleCallbacks(this, result, encoding);
-        }
+        result.handleCallbacks(this);
         return result;
     }
 

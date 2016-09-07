@@ -19,7 +19,6 @@ package io.parsingdata.metal.data.callback;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
 import org.junit.Test;
@@ -39,7 +38,7 @@ public class CallbackTest {
         final Token sequence = seq(token, token);
         final Callback callback = new Callback() {
             @Override
-            public void handle(final Token token, final ParseResult result, final Encoding enc) {
+            public void handle(final Token token, final ParseResult result) {
                 System.out.print("Handled: ");
                 final ParseItem item = result.environment.order.get(token);
                 if (item.isGraph()) {
