@@ -19,7 +19,9 @@ package io.parsingdata.metal.data.transformation;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 
-public class Reversal {
+public final class Reversal {
+
+    private Reversal() {}
 
     public static ParseGraph reverse(ParseGraph oldGraph, ParseGraph newGraph) {
         if (oldGraph.isEmpty()) { return newGraph; }

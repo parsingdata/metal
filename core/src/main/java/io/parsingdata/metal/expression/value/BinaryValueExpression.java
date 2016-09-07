@@ -16,35 +16,58 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
+/**
+ * Base class for ValueExpressions with two operands.
+ *
+ * Subclasses implement behaviour for evaluating two operands and returning a single
+ * value as a result. If one operand evaluates to empty, the result is always empty.
+ *
+ * For lists, values with the same index are evaluated in this manner. If lists are of
+ * unequal length, the result is a list with evaluated values the same size as the
+ * shortest list, appended with empty values to match the size of the longest list.
+ */
 public abstract class BinaryValueExpression implements ValueExpression {
 
-    private final ValueExpression _lop;
-    private final ValueExpression _rop;
+    public final ValueExpression left;
+    public final ValueExpression right;
 
-    public BinaryValueExpression(final ValueExpression lop, final ValueExpression rop) {
-        _lop = checkNotNull(lop, "lop");
-        _rop = checkNotNull(rop, "rop");
+    public BinaryValueExpression(final ValueExpression left, final ValueExpression right) {
+        this.left = checkNotNull(left, "left");
+        this.right = checkNotNull(right, "right");
     }
 
     @Override
-    public OptionalValue eval(final Environment env, final Encoding enc) {
-        final OptionalValue lv = _lop.eval(env, enc);
-        if (!lv.isPresent()) { return lv; }
-        final OptionalValue rv = _rop.eval(env, enc);
-        if (!rv.isPresent()) { return rv; }
-        return eval(lv.get(), rv.get(), env, enc);
+    public OptionalValueList eval(final Environment env, final Encoding enc) {
+        return evalLists(left.eval(env, enc), right.eval(env, enc), env, enc);
     }
 
-    public abstract OptionalValue eval(final Value lv, final Value rv, final Environment env, final Encoding enc);
+    private OptionalValueList evalLists(final OptionalValueList lvl, final OptionalValueList rvl, final Environment env, final Encoding enc) {
+        if (lvl.isEmpty()) { return makeListWithEmpty(rvl.size); }
+        if (rvl.isEmpty()) { return makeListWithEmpty(lvl.size); }
+        return evalLists(lvl.tail, rvl.tail, env, enc).add(eval(lvl.head, rvl.head, env, enc));
+    }
+
+    private OptionalValueList makeListWithEmpty(final long size) {
+        if (size <= 0) { return OptionalValueList.EMPTY; }
+        return makeListWithEmpty(size - 1).add(OptionalValue.empty());
+    }
+
+    private OptionalValue eval(final OptionalValue left, final OptionalValue right, final Environment env, final Encoding enc) {
+        if (!left.isPresent() || !right.isPresent()) { return OptionalValue.empty(); }
+        return eval(left.get(), right.get(), env, enc);
+    }
+
+    public abstract OptionalValue eval(final Value left, final Value right, final Environment env, final Encoding enc);
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _lop + "," + _rop + ")";
+        return getClass().getSimpleName() + "(" + left + "," + right + ")";
     }
 
 }

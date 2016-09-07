@@ -16,26 +16,22 @@
 
 package io.parsingdata.metal.expression.value.arithmetic;
 
-import java.math.BigInteger;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.BinaryValueExpression;
-import io.parsingdata.metal.expression.value.ConstantFactory;
-import io.parsingdata.metal.expression.value.OptionalValue;
-import io.parsingdata.metal.expression.value.Value;
-import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.expression.value.*;
+
+import java.math.BigInteger;
 
 public class Div extends BinaryValueExpression {
 
-    public Div(final ValueExpression lop, final ValueExpression rop) {
-        super(lop, rop);
+    public Div(final ValueExpression left, final ValueExpression right) {
+        super(left, right);
     }
 
     @Override
-    public OptionalValue eval(final Value lv, final Value rv, final Environment env, final Encoding enc) {
-        if (rv.asNumeric().equals(BigInteger.ZERO)) { return OptionalValue.empty(); }
-        return OptionalValue.of(ConstantFactory.createFromNumeric(lv.asNumeric().divide(rv.asNumeric()), enc));
+    public OptionalValue eval(final Value left, final Value right, final Environment env, final Encoding enc) {
+        if (right.asNumeric().equals(BigInteger.ZERO)) { return OptionalValue.empty(); }
+        return OptionalValue.of(ConstantFactory.createFromNumeric(left.asNumeric().divide(right.asNumeric()), enc));
     }
 
 }

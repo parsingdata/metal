@@ -29,6 +29,7 @@ import static io.parsingdata.metal.Shorthand.ltNum;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.encoding.ByteOrder.LITTLE_ENDIAN;
+import static io.parsingdata.metal.encoding.Sign.UNSIGNED;
 
 import java.io.IOException;
 
@@ -44,7 +45,7 @@ import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class ByteLengthTest {
 
-    private static final Encoding ENCODING = new Encoding(false, UTF_8, LITTLE_ENDIAN);
+    private static final Encoding ENCODING = new Encoding(UNSIGNED, UTF_8, LITTLE_ENDIAN);
 
     // Note that this token does not make sense,
     // but Len will become useful when Let is implemented
@@ -66,8 +67,8 @@ public class ByteLengthTest {
         final Environment env = new Environment(stream);
         final ParseResult result = STRING.parse(env, ENCODING);
 
-        assertTrue(result.succeeded());
-        final ParseGraph graph = result.getEnvironment().order;
+        assertTrue(result.succeeded);
+        final ParseGraph graph = result.environment.order;
         assertEquals(5, graph.get("length").asNumeric().byteValue());
         assertEquals("Hello", graph.get("text1").asString());
         assertEquals("Metal", graph.get("text2").asString());
@@ -78,7 +79,7 @@ public class ByteLengthTest {
         final ByteStream stream = new InMemoryByteStream(string("Joe"));
         final Environment env = new Environment(stream);
         final ParseResult result = NAME.parse(env, ENCODING);
-        assertFalse(result.succeeded());
+        assertFalse(result.succeeded);
     }
 
     private byte[] string(final String text) {

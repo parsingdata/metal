@@ -16,32 +16,26 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.eqNum;
-import static io.parsingdata.metal.Shorthand.not;
-import static io.parsingdata.metal.Shorthand.rep;
-import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.Shorthand.str;
-import static io.parsingdata.metal.TokenDefinitions.any;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-
-import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Str;
 import io.parsingdata.metal.token.StructSink;
 import io.parsingdata.metal.token.Token;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Deque;
+
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 @RunWith(JUnit4.class)
 public class StructSinksTest {
@@ -66,15 +60,15 @@ public class StructSinksTest {
             public void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParseGraph struct) {
                 // Check top-level is the Str this handleStruct is in.
                 Assert.assertTrue(struct.definition instanceof Str);
-                Assert.assertEquals(((Str)struct.definition).scope, OUTER_NAME);
+                Assert.assertEquals(((Str)struct.definition).name, OUTER_NAME);
 
                 // Check whether it contains the first nested Str
                 Assert.assertTrue(struct.head.asGraph().head.getDefinition() instanceof Str);
-                Assert.assertEquals(((Str)struct.head.asGraph().head.getDefinition()).scope, INNER_NAME);
+                Assert.assertEquals(((Str)struct.head.asGraph().head.getDefinition()).name, INNER_NAME);
 
                 // And the second one
                 Assert.assertTrue(struct.head.asGraph().tail.head.getDefinition() instanceof Str);
-                Assert.assertEquals(((Str)struct.head.asGraph().tail.head.getDefinition()).scope, INNER_NAME);
+                Assert.assertEquals(((Str)struct.head.asGraph().tail.head.getDefinition()).name, INNER_NAME);
             }
         }).parse(stream(1, 2, 3, 4), enc());
     }
@@ -87,13 +81,13 @@ public class StructSinksTest {
             public void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParseGraph struct) {
                 // Check top-level is the Str this handleStruct is in.
                 Assert.assertTrue(struct.definition instanceof Str);
-                Assert.assertEquals(((Str)struct.definition).scope, INNER_NAME);
+                Assert.assertEquals(((Str)struct.definition).name, INNER_NAME);
 
                 // Test for correct offsets and names of values
                 Assert.assertEquals(offsetDeque.pop().longValue(), struct.head.asGraph().tail.head.asValue().getOffset());
                 Assert.assertTrue(struct.head.asGraph().tail.tail.isEmpty());
-                Assert.assertTrue(struct.head.asGraph().tail.head.asValue().getName().equals("a"));
-                Assert.assertTrue(struct.head.asGraph().head.asValue().getName().equals("b"));
+                Assert.assertTrue(struct.head.asGraph().tail.head.asValue().matches("a"));
+                Assert.assertTrue(struct.head.asGraph().head.asValue().matches("b"));
             }
         });
     }

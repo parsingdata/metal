@@ -16,16 +16,6 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.seq;
-
-import java.io.IOException;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
@@ -33,6 +23,17 @@ import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.io.IOException;
+
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
+import static org.junit.Assert.assertFalse;
 
 public class DefSizeTest {
     public static final Token FORMAT =
@@ -49,10 +50,10 @@ public class DefSizeTest {
         });
         final ParseResult result = FORMAT.parse(new Environment(stream), new Encoding());
 
-        Assert.assertTrue(result.succeeded());
+        Assert.assertTrue(result.succeeded);
         Assert.assertArrayEquals(
             new byte[]{0x04, 0x08},
-            result.getEnvironment().order.get("data").getValue()
+            result.environment.order.get("data").getValue()
         );
     }
 
@@ -64,8 +65,16 @@ public class DefSizeTest {
         });
         final ParseResult result = FORMAT.parse(new Environment(stream), new Encoding());
 
-        Assert.assertFalse(result.succeeded());
+        Assert.assertFalse(result.succeeded);
         // The top-level Token (Seq) has failed, so no values are recorded in the ParseGraph.
-        Assert.assertEquals(ParseGraph.EMPTY, result.getEnvironment().order);
+        Assert.assertEquals(ParseGraph.EMPTY, result.environment.order);
     }
+
+    @Test
+    public void testEmptyLengthInList() throws IOException {
+        assertFalse(def("a", EMPTY_VE).parse(stream(1, 2, 3, 4), enc()).succeeded);
+        final Token aList = seq(any("a"), any("a"));
+        assertFalse(seq(aList, def("b", ref("a"))).parse(stream(1, 2, 3, 4), enc()).succeeded);
+    }
+
 }

@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 import java.io.IOException;
 
 import io.parsingdata.metal.data.Environment;
@@ -24,22 +26,32 @@ import io.parsingdata.metal.encoding.Encoding;
 
 public abstract class Token {
 
-    public final static String DEFAULT_NAME = "W";
+    public static final String SEPARATOR = ".";
 
-    private final Encoding _enc;
+    public final String name;
+    public final Encoding enc;
 
-    protected Token(final Encoding enc) {
-        _enc = enc;
+    protected Token(final String name, final Encoding enc) {
+        this.name = checkNotNull(name, "name");
+        this.enc = enc;
     }
 
     public ParseResult parse(final String scope, final Environment env, final Encoding enc) throws IOException {
-        return _enc == null ? parseImpl(scope, env, enc) : parseImpl(scope, env, _enc);
+        return parseImpl(makeScope(scope), env, this.enc != null ? this.enc : enc);
     }
 
     public ParseResult parse(final Environment env, final Encoding enc) throws IOException {
-        return parse(DEFAULT_NAME, env, enc);
+        return parse(name, env, enc);
     }
 
     protected abstract ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException;
+
+    private String makeScope(final String scope) {
+        return scope + (scope.isEmpty() || name.isEmpty() ? "" : SEPARATOR) + name;
+    }
+
+    protected String makeNameFragment() {
+        return name.isEmpty() ? "" : name + ",";
+    }
 
 }

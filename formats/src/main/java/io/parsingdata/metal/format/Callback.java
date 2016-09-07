@@ -16,21 +16,18 @@
 
 package io.parsingdata.metal.format;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.zip.CRC32;
-import java.util.zip.Inflater;
-import java.util.zip.InflaterOutputStream;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.OptionalValue;
-import io.parsingdata.metal.expression.value.UnaryValueExpression;
-import io.parsingdata.metal.expression.value.Value;
-import io.parsingdata.metal.expression.value.ValueExpression;
-import io.parsingdata.metal.expression.value.ValueOperation;
+import io.parsingdata.metal.expression.value.*;
 
-public class Callback {
+import java.io.ByteArrayOutputStream;
+import java.util.zip.CRC32;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
+
+public final class Callback {
+
+    private Callback() {}
 
     public static ValueExpression crc32(final ValueExpression target) {
         return new UnaryValueExpression(target) {
@@ -60,15 +57,18 @@ public class Callback {
                     @Override
                     public OptionalValue execute(final Value value) {
                         final Inflater inf = new Inflater(true);
-                        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                        final InflaterOutputStream ios = new InflaterOutputStream(bos, inf);
-                        try {
-                            ios.write(value.getValue());
-                            ios.close();
-                            return OptionalValue.of(new Value(bos.toByteArray(), enc));
-                        } catch (final IOException e) {
-                            return OptionalValue.empty();
+                        inf.setInput(value.getValue());
+                        final byte[] dataReceiver = new byte[512];
+                        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        while(!inf.finished()) {
+                            try {
+                                final int processed = inf.inflate(dataReceiver);
+                                out.write(dataReceiver, 0, processed);
+                            } catch (final DataFormatException e) {
+                                return OptionalValue.empty();
+                            }
                         }
+                        return OptionalValue.of(new Value(out.toByteArray(), enc));
                     }
                 });
             }

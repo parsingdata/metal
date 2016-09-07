@@ -16,32 +16,21 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.ConstantFactory;
-import io.parsingdata.metal.expression.value.OptionalValue;
-import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.expression.value.*;
 
-public class Offset implements ValueExpression {
+public class Offset extends UnaryValueExpression {
 
-    private final String _name;
-
-    public Offset(final String name) {
-        _name = checkNotNull(name, "name");
-    }
+    public Offset(final ValueExpression operand) { super(operand); }
 
     @Override
-    public OptionalValue eval(final Environment env, final Encoding enc) {
-        final ParseValue ref = env.order.get(_name);
-        return ref != null ? OptionalValue.of(ConstantFactory.createFromNumeric(ref.getOffset(), ref.getEncoding())) : OptionalValue.empty();
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" + _name + ")";
+    public OptionalValue eval(final Value value, final Environment env, final Encoding enc) {
+        if (value instanceof ParseValue) {
+            return OptionalValue.of(ConstantFactory.createFromNumeric(((ParseValue) value).getOffset(), value.enc));
+        }
+        return OptionalValue.empty();
     }
 
 }

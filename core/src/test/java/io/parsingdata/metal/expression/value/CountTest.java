@@ -1,0 +1,54 @@
+/*
+ * Copyright 2013-2016 Netherlands Forensic Institute
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.parsingdata.metal.expression.value;
+
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.util.ParameterizedParse;
+import org.junit.runners.Parameterized.Parameters;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+
+public class CountTest extends ParameterizedParse {
+
+    private static final Token COUNT = seq(
+        rep(def("a", 1, eq(con(3)))),
+        def("count", 1, eq(count(ref("a"))))
+    );
+
+    @Parameters(name="{0} ({4})")
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][]{
+            {"[] = count(0)", COUNT, stream(0), enc(), true},
+            {"[3] = count(1)", COUNT, stream(3, 1), enc(), true},
+            {"[3,3] = count(2)", COUNT, stream(3, 3, 2), enc(), true},
+            {"[3,3,3] = fail", COUNT, stream(3, 3, 3, 3), enc(), false}, // fails because the rep 'eats' the 4th '3'
+            {"[3,3,3,3] = count(4)", COUNT, stream(3, 3, 3, 3, 4), enc(), true},
+        });
+    }
+
+    public CountTest(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
+        super(token, env, enc, result);
+    }
+
+}

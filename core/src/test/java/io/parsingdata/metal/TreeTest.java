@@ -16,46 +16,35 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.eq;
-import static io.parsingdata.metal.Shorthand.not;
-import static io.parsingdata.metal.Shorthand.pre;
-import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.Shorthand.sub;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-
-import java.io.IOException;
-
+import io.parsingdata.metal.data.*;
+import io.parsingdata.metal.data.selection.ByName;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseItem;
-import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.data.ParseValueList;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.token.Token;
+import java.io.IOException;
+
+import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 @RunWith(JUnit4.class)
 public class TreeTest {
 
     private static final int HEAD = 9;
     private static final Token TREE =
-        new Token(null) {
+        new Token("", null) {
             @Override
             protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
             return seq(def("head", con(1), eq(con(HEAD))),
                        def("nr", con(1)),
                        def("left", con(1)),
-                       pre(sub(this, ref("left")), not(eq(ref("left"), con(0)))),
+                       pre(sub(this, last(ref("left"))), not(eq(last(ref("left")), con(0)))),
                        def("right", con(1)),
-                       pre(sub(this, ref("right")), not(eq(ref("right"), con(0))))).parse(scope, env, enc);
+                       pre(sub(this, last(ref("right"))), not(eq(last(ref("right")), con(0))))).parse(scope, env, enc);
             }
         };
 
@@ -80,14 +69,14 @@ public class TreeTest {
 
     @Test
     public void checkRegularTree() {
-        Assert.assertTrue(_regular.succeeded());
-        checkStruct(_regular.getEnvironment().order.reverse(), 0);
+        Assert.assertTrue(_regular.succeeded);
+        checkStruct(_regular.environment.order.reverse(), 0);
     }
 
     @Test
     public void checkCyclicTree() {
-        Assert.assertTrue(_cyclic.succeeded());
-        checkStruct(_cyclic.getEnvironment().order.reverse(), 0);
+        Assert.assertTrue(_cyclic.succeeded);
+        checkStruct(_cyclic.environment.order.reverse(), 0);
     }
 
     private void checkStruct(final ParseGraph graph, final long offset) {
@@ -116,10 +105,10 @@ public class TreeTest {
 
     private void checkBranch(final ParseGraph root, final long offset, final ParseItem item) {
         Assert.assertFalse(item.isValue());
-        if (item.isGraph()) {
+        if (item.asGraph().head.isGraph()) {
             checkStruct(root, item.asGraph().head.asGraph(), offset);
-        } else if (item.isRef()) {
-            checkHeader(item.asRef().resolve(root), offset);
+        } else if (item.asGraph().head.isRef()) {
+            checkHeader(item.asGraph().head.asRef().resolve(root), offset);
         }
     }
 
@@ -134,8 +123,8 @@ public class TreeTest {
 
     @Test
     public void checkRegularTreeFlat() {
-        Assert.assertTrue(_regular.succeeded());
-        final ParseValueList nrs = _regular.getEnvironment().order.getAll("nr");
+        Assert.assertTrue(_regular.succeeded);
+        final ParseValueList nrs = ByName.getAllValues(_regular.environment.order, "nr");
         for (int i = 0; i < 7; i++) {
             Assert.assertTrue(contains(nrs, i));
         }

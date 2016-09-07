@@ -16,21 +16,26 @@
 
 package io.parsingdata.metal.data.selection;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseGraphList;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
 
-public class ByOffset {
+public final class ByOffset {
+
+    private ByOffset() {}
 
     public static boolean hasGraphAtRef(final ParseGraph graph, final long ref) {
         return findRef(ByType.getGraphs(graph), ref) != null;
     }
 
     public static ParseGraph findRef(final ParseGraphList graphs, final long ref) {
+        checkNotNull(graphs, "graphs");
+        if (graphs.isEmpty()) { return null; }
         ParseGraphList gr = graphs;
         ParseGraph best = null;
-
         while (gr.head != null) {
             if (gr.head.containsValue() && gr.head.getLowestOffsetValue().getOffset() == ref) {
                 best = gr.head;
@@ -41,10 +46,8 @@ public class ByOffset {
     }
 
     public static ParseValue getLowestOffsetValue(final ParseGraph graph) {
-        if (!graph.containsValue()) {
-            throw new IllegalStateException("Cannot determine lowest offset if graph does not contain a value.");
-        }
-
+        checkNotNull(graph, "graph");
+        if (!graph.containsValue()) { throw new IllegalStateException("Cannot determine lowest offset if graph does not contain a value."); }
         ParseGraph gr = graph;
         ParseValue low = null;
         while (gr.head != null) {
@@ -54,7 +57,6 @@ public class ByOffset {
             }
             gr = gr.tail;
         }
-
         return low;
     }
 }

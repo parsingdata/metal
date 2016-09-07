@@ -19,10 +19,10 @@ package io.parsingdata.metal;
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.TokenDefinitions.any;
-import static io.parsingdata.metal.TokenDefinitions.eq;
-import static io.parsingdata.metal.TokenDefinitions.eqRef;
-import static io.parsingdata.metal.TokenDefinitions.notEqRef;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
+import static io.parsingdata.metal.util.TokenDefinitions.eq;
+import static io.parsingdata.metal.util.TokenDefinitions.eqRef;
+import static io.parsingdata.metal.util.TokenDefinitions.notEqRef;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
@@ -47,22 +47,22 @@ public class BackTrackNameBindTest {
 
     @Test
     public void choiceRefLeft() throws IOException {
-        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 2), enc()).succeeded());
+        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 2), enc()).succeeded);
     }
 
     @Test
     public void choiceRefRight() throws IOException {
-        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 3), enc()).succeeded());
+        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 3), enc()).succeeded);
     }
 
     @Test
     public void choiceRefNone() throws IOException {
-        Assert.assertFalse(_choiceRef.parse(stream(1, 1, 2), enc()).succeeded());
+        Assert.assertFalse(_choiceRef.parse(stream(1, 1, 2), enc()).succeeded);
     }
 
     @Test
     public void repeatRef() throws IOException {
-        Assert.assertTrue(_repeatRef.parse(stream(42, 42, 42, 21, 21, 21), enc()).succeeded());
+        Assert.assertTrue(_repeatRef.parse(stream(42, 42, 42, 21, 21, 21), enc()).succeeded);
     }
 
 }

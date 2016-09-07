@@ -17,14 +17,15 @@
 package io.parsingdata.metal.encoding;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class Encoding {
 
-    private static final boolean DEFAULT_SIGNED = false;
-    private static final Charset DEFAULT_CHARSET = Charset.forName("ISO646-US");
+    private static final Sign DEFAULT_SIGNED = Sign.UNSIGNED;
+    private static final Charset DEFAULT_CHARSET = StandardCharsets.US_ASCII;
     private static final ByteOrder DEFAULT_BYTE_ORDER = ByteOrder.BIG_ENDIAN;
 
-    private final boolean _signed;
+    private final Sign _sign;
     private final Charset _charset;
     private final ByteOrder _byteOrder;
 
@@ -32,7 +33,7 @@ public class Encoding {
         this(DEFAULT_SIGNED, DEFAULT_CHARSET, DEFAULT_BYTE_ORDER);
     }
 
-    public Encoding(final boolean signed) {
+    public Encoding(final Sign signed) {
         this(signed, DEFAULT_CHARSET, DEFAULT_BYTE_ORDER);
     }
 
@@ -44,14 +45,18 @@ public class Encoding {
         this(DEFAULT_SIGNED, DEFAULT_CHARSET, byteOrder);
     }
 
-    public Encoding(final boolean signed, final Charset charset, final ByteOrder byteOrder) {
-        _signed = signed;
+    public Encoding(final Sign sign, final Charset charset, final ByteOrder byteOrder) {
+        _sign = sign;
         _charset = charset;
         _byteOrder = byteOrder;
     }
 
+    public Sign getSign() {
+        return _sign;
+    }
+
     public boolean isSigned() {
-        return _signed;
+        return _sign == Sign.SIGNED;
     }
 
     public Charset getCharset() {
@@ -64,7 +69,6 @@ public class Encoding {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + (_signed ? "SIGNED" : "UNSIGNED") + "," + _charset + "," + _byteOrder + ")";
+        return getClass().getSimpleName() + "(" + _sign + "," + _charset + "," + _byteOrder + ")";
     }
-
 }

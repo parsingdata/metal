@@ -16,42 +16,27 @@
 
 package io.parsingdata.metal.data;
 
-import static io.parsingdata.metal.Util.checkNotNull;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Token;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 public class ParseValue extends Value implements ParseItem {
 
-    public static final String SEPARATOR = ".";
-
-    public final String scope;
     public final String name;
     public Token definition;
     public final long offset;
 
-    public ParseValue(final String scope, final String name, final Token definition, final long offset, final byte[] data, final Encoding enc) {
+    public ParseValue(final String name, final Token definition, final long offset, final byte[] data, final Encoding enc) {
         super(data, enc);
-        this.scope = checkNotNull(scope, "scope");
         this.name = checkNotNull(name, "name");
         this.definition = checkNotNull(definition, "definition");
         this.offset = offset;
     }
 
-    public String getScope() {
-        return scope;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getFullName() {
-        return getScope() + SEPARATOR + getName();
-    }
-
     public boolean matches(final String name) {
-        return getFullName().equals(name) || getFullName().endsWith(SEPARATOR + name);
+        return this.name.equals(name) || this.name.endsWith(Token.SEPARATOR + name);
     }
 
     public long getOffset() {
@@ -68,7 +53,7 @@ public class ParseValue extends Value implements ParseItem {
 
     @Override
     public String toString() {
-        return "ParseValue(" + getName() + ":" + super.toString() + ")";
+        return name + "(" + super.toString() + ")";
     }
 
 }

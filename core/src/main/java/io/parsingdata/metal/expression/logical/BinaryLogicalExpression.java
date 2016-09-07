@@ -16,23 +16,23 @@
 
 package io.parsingdata.metal.expression.logical;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
 import io.parsingdata.metal.expression.Expression;
+
+import static io.parsingdata.metal.Util.checkNotNull;
 
 public abstract class BinaryLogicalExpression implements LogicalExpression {
 
-    protected final Expression _lop;
-    protected final Expression _rop;
+    public final Expression left;
+    public final Expression right;
 
-    public BinaryLogicalExpression(final Expression lop, final Expression rop) {
-        _lop = checkNotNull(lop, "lop");
-        _rop = checkNotNull(rop, "rop");
+    public BinaryLogicalExpression(final Expression left, final Expression right) {
+        this.left = checkNotNull(left, "left");
+        this.right = checkNotNull(right, "right");
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _lop + "," + _rop + ")";
+        return getClass().getSimpleName() + "(" + left + "," + right + ")";
     }
 
 }

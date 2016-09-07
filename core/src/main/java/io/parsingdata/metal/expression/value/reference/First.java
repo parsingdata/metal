@@ -16,35 +16,35 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseValueList;
+import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 public class First implements ValueExpression {
 
-    private final String _name;
+    public final ValueExpression operand;
 
-    public First(final String name) {
-        _name = checkNotNull(name, "name");
+    public First(final ValueExpression operand) {
+        this.operand = checkNotNull(operand, "operand");
     }
 
     @Override
-    public OptionalValue eval(final Environment env, final Encoding enc) {
-        final ParseValueList all = env.order.getAll(_name);
-        if (all.isEmpty()) {
-            return OptionalValue.empty();
-        } else {
-            return OptionalValue.of(all.getFirst());
-        }
+    public OptionalValueList eval(final Environment env, final Encoding enc) {
+        final OptionalValueList list = operand.eval(env, enc);
+        return list.isEmpty() ? list : OptionalValueList.create(getFirst(list));
+    }
+
+    private OptionalValue getFirst(final OptionalValueList list) {
+        return list.tail.isEmpty() ? list.head : getFirst(list.tail);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _name + ")";
+        return getClass().getSimpleName() + "(" + operand + ")";
     }
 
 }

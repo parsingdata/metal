@@ -16,40 +16,38 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.True;
-import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
+
+import java.io.IOException;
+
+import static io.parsingdata.metal.Util.checkNotNull;
 
 public class Def extends Token {
 
-    private final String _name;
-    private final ValueExpression _size;
-    private final Expression _pred;
+    public final ValueExpression size;
+    public final Expression predicate;
 
-    public Def(final String name, final ValueExpression size, final Expression pred, final Encoding enc) {
-        super(enc);
-        _name = checkNotNull(name, "name");
-        _size = checkNotNull(size, "size");
-        _pred = pred == null ? new True() : pred;
+    public Def(final String name, final ValueExpression size, final Expression predicate, final Encoding enc) {
+        super(name, enc);
+        this.size = checkNotNull(size, "size");
+        this.predicate = predicate == null ? new True() : predicate;
     }
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final OptionalValue size = _size.eval(env, enc);
-        if (!size.isPresent()) {
+        final OptionalValueList sizes = size.eval(env, enc);
+        if (sizes.size != 1 || !sizes.head.isPresent()) {
             return new ParseResult(false, env);
         }
-        // TODO: Handle value expression results as BigInteger (METAL-15)
-        final int dataSize = size.get().asNumeric().intValue();
+        // TODO: Handle value expression results as BigInteger (#16)
+        final int dataSize = sizes.head.get().asNumeric().intValue();
         if (dataSize < 0) {
             return new ParseResult(false, env);
         }
@@ -57,13 +55,13 @@ public class Def extends Token {
         if (env.input.read(env.offset, data) != data.length) {
             return new ParseResult(false, env);
         }
-        final Environment newEnv = new Environment(env.order.add(new ParseValue(scope, _name, this, env.offset, data, enc)), env.input, env.offset + size.get().asNumeric().intValue());
-        return _pred.eval(newEnv, enc) ? new ParseResult(true, newEnv) : new ParseResult(false, env);
+        final Environment newEnv = new Environment(env.order.add(new ParseValue(scope, this, env.offset, data, enc)), env.input, env.offset + dataSize);
+        return predicate.eval(newEnv, enc) ? new ParseResult(true, newEnv) : new ParseResult(false, env);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(\"" + _name + "\"," + _size + "," + _pred + ",)";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + size + "," + predicate + ",)";
     }
 
 }

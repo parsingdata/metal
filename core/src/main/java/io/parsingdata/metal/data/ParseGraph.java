@@ -16,18 +16,14 @@
 
 package io.parsingdata.metal.data;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
-import java.io.IOException;
-
-import io.parsingdata.metal.data.selection.ByItem;
-import io.parsingdata.metal.data.selection.ByName;
-import io.parsingdata.metal.data.selection.ByOffset;
-import io.parsingdata.metal.data.selection.ByToken;
-import io.parsingdata.metal.data.selection.ByType;
+import io.parsingdata.metal.data.selection.*;
 import io.parsingdata.metal.data.transformation.Reversal;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
+
+import java.io.IOException;
+
+import static io.parsingdata.metal.Util.checkNotNull;
 
 public class ParseGraph implements ParseItem {
 
@@ -37,7 +33,7 @@ public class ParseGraph implements ParseItem {
     public final Token definition;
     public final long size;
 
-    public static final Token NONE = new Token(null) {
+    public static final Token NONE = new Token("NONE", null) {
         @Override protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException { throw new IllegalStateException("This placeholder may not be invoked."); }
         @Override public String toString() { return "None"; };
     };
@@ -54,39 +50,38 @@ public class ParseGraph implements ParseItem {
 
     private ParseGraph(final ParseItem head, final ParseGraph tail, final Token definition, final boolean branched) {
         this.head = checkNotNull(head, "head");
-        if (head.isValue() && branched) { throw new IllegalArgumentException("Argument branch cannot be true when head contains a ParseValue."); }
         this.tail = checkNotNull(tail, "tail");
         this.branched = branched;
         this.definition = checkNotNull(definition, "definition");
         size = tail.size + 1;
     }
 
-    // TODO see ByItem, this constructor used to be private
+    // TODO: see ByItem, this constructor used to be private (#64)
     public ParseGraph(final ParseItem head, final ParseGraph tail, final Token definition) {
         this(head, tail, definition, false);
     }
 
     public ParseGraph add(final ParseValue head) {
-        if (branched) { return new ParseGraph(this.head.asGraph().add(head), tail, this.definition, true); }
-        return new ParseGraph(head, this, this.definition);
+        if (branched) { return new ParseGraph(this.head.asGraph().add(head), tail, definition, true); }
+        return new ParseGraph(head, this, definition);
     }
 
     public ParseGraph add(final ParseRef ref) {
-        if (branched) { return new ParseGraph(this.head.asGraph().add(ref), tail, this.definition, true); }
-        return new ParseGraph(ref, this, this.definition);
+        if (branched) { return new ParseGraph(head.asGraph().add(ref), tail, definition, true); }
+        return new ParseGraph(ref, this, definition);
     }
 
     public ParseGraph addBranch(final Token definition) {
-        if (branched) { return new ParseGraph(this.head.asGraph().addBranch(definition), tail, this.definition, true); }
+        if (branched) { return new ParseGraph(head.asGraph().addBranch(definition), tail, this.definition, true); }
         return new ParseGraph(new ParseGraph(definition), this, this.definition, true);
     }
 
     public ParseGraph closeBranch() {
         if (!branched) { throw new IllegalStateException("Cannot close branch that is not open."); }
         if (head.asGraph().branched) {
-            return new ParseGraph(head.asGraph().closeBranch(), tail, this.definition, true);
+            return new ParseGraph(head.asGraph().closeBranch(), tail, definition, true);
         }
-        return new ParseGraph(head, tail, this.definition, false);
+        return new ParseGraph(head, tail, definition, false);
     }
 
     public ParseGraphList getRefs() {
@@ -119,7 +114,7 @@ public class ParseGraph implements ParseItem {
     }
 
     public ParseValue get(final String name) {
-        return ByName.get(this, name);
+        return ByName.getValue(this, name);
     }
 
     public ParseItem get(final Token definition) {
@@ -137,14 +132,6 @@ public class ParseGraph implements ParseItem {
             if (val != null) { return val; }
         }
         return tail.current(); // Ignore current if it's a reference (or an empty graph)
-    }
-
-    public ParseValueList getAll(final String name) {
-        return ByName.getAll(this, name);
-    }
-
-    public ParseItemList getAll(final Token definition) {
-        return ByToken.getAll(this, definition);
     }
 
     /**
@@ -165,7 +152,9 @@ public class ParseGraph implements ParseItem {
 
     @Override
     public String toString() {
-        return "ParseGraph(" + (head != null ? head.toString() : "null") + ", " + (tail != null ? tail.toString() : "null") + ", " + branched + ")";
+        if (this == EMPTY) { return "graph(EMPTY)"; }
+        if (head == null) { return "graph(terminator:" + definition.getClass().getSimpleName() + ")"; }
+        return "graph(" + head + ", " + tail + ", " + branched + ")";
     }
 
 }

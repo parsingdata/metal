@@ -17,7 +17,9 @@
 package io.parsingdata.metal.expression.value.reference;
 
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.value.ConstantFactory;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -28,8 +30,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 public class CurrentOffset implements ValueExpression {
 
     @Override
-    public OptionalValue eval(final Environment env, final Encoding enc) {
-        return OptionalValue.of(ConstantFactory.createFromNumeric(env.offset, new Encoding(true)));
+    public OptionalValueList eval(final Environment env, final Encoding enc) {
+        return OptionalValueList.create(OptionalValue.of(ConstantFactory.createFromNumeric(env.offset, new Encoding(Sign.SIGNED))));
     }
 
     @Override

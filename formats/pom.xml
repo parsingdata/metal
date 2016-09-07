@@ -3,11 +3,18 @@
   <parent>
     <groupId>io.parsingdata</groupId>
     <artifactId>metal-parent</artifactId>
-    <version>3.1.0</version>
+    <version>4.0.1</version>
   </parent>
   <artifactId>metal-formats</artifactId>
   <name>${project.groupId}:${project.artifactId}</name>
   <packaging>jar</packaging>
+  <description>A set of Metal format descriptions usable in applications or as examples.</description>
+
+  <scm>
+    <connection>scm:git:git@github.com:parsingdata/metal.git</connection>
+    <developerConnection>scm:git:git@github.com:parsingdata/metal.git</developerConnection>
+    <url>https://github.com/parsingdata/metal.git</url>
+  </scm>
 
   <dependencies>
     <dependency>

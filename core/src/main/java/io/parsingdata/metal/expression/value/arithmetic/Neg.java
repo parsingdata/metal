@@ -26,13 +26,13 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class Neg extends UnaryValueExpression {
 
-    public Neg(final ValueExpression op) {
-        super(op);
+    public Neg(final ValueExpression operand) {
+        super(operand);
     }
 
     @Override
-    public OptionalValue eval(final Value v, final Environment env, final Encoding enc) {
-        return OptionalValue.of(ConstantFactory.createFromNumeric(v.asNumeric().negate(), enc));
+    public OptionalValue eval(final Value value, final Environment env, final Encoding enc) {
+        return OptionalValue.of(ConstantFactory.createFromNumeric(value.asNumeric().negate(), enc));
     }
 
 }

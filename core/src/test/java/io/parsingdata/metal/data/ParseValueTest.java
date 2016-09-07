@@ -1,19 +1,33 @@
-package io.parsingdata.metal.data;
+/*
+ * Copyright 2013-2016 Netherlands Forensic Institute
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static junit.framework.TestCase.assertFalse;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+package io.parsingdata.metal.data;
 
 import io.parsingdata.metal.token.Token;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static junit.framework.TestCase.assertFalse;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class ParseValueTest {
 
@@ -26,14 +40,12 @@ public class ParseValueTest {
     @Before
     public void setUp() {
         _definition = def("value", 1);
-        _value = new ParseValue("scope", "value", _definition, 0, new byte[] { 1 }, enc());
+        _value = new ParseValue("value", _definition, 0, new byte[] { 1 }, enc());
     }
 
     @Test
     public void state() {
-        assertThat(_value.getScope(), is("scope"));
-        assertThat(_value.getName(), is("value"));
-        assertThat(_value.getFullName(), is("scope.value"));
+        assertThat(_value.name, is("value"));
         assertThat(_value.getDefinition(), is(_definition));
         assertThat(_value.getOffset(), is(0L));
         assertThat(_value.getValue(), is(equalTo(new byte[] { 1 })));
@@ -42,19 +54,14 @@ public class ParseValueTest {
     @Test
     public void matching() {
         assertTrue(_value.matches("value"));
-        assertTrue(_value.matches("scope.value"));
 
         assertFalse(_value.matches("lue"));
         assertFalse(_value.matches(".value"));
-        assertFalse(_value.matches("cope.value"));
     }
 
     @Test
     public void toStringTest() {
-        assertThat(_value.toString(), is("ParseValue(value:ParseValue(01))"));
-
-        // TODO #18 Improve ParseValue toString()
-        // assertThat(_value.toString(), is("ParseValue(value:01)"));
+        assertThat(_value.toString(), is("value(0x01)"));
     }
 
     @Test

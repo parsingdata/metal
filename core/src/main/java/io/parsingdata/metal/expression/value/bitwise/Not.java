@@ -16,27 +16,23 @@
 
 package io.parsingdata.metal.expression.value.bitwise;
 
-import java.util.BitSet;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.ConstantFactory;
-import io.parsingdata.metal.expression.value.OptionalValue;
-import io.parsingdata.metal.expression.value.UnaryValueExpression;
-import io.parsingdata.metal.expression.value.Value;
-import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.expression.value.*;
+
+import java.util.BitSet;
 
 public class Not extends UnaryValueExpression {
 
-    public Not(final ValueExpression op) {
-        super(op);
+    public Not(final ValueExpression operand) {
+        super(operand);
     }
 
     @Override
-    public OptionalValue eval(final Value op, final Environment env, final Encoding enc) {
-        final BitSet value = op.asBitSet();
-        value.flip(0, op.getValue().length * 8);
-        return OptionalValue.of(ConstantFactory.createFromBitSet(value, op.getValue().length, enc));
+    public OptionalValue eval(final Value value, final Environment env, final Encoding enc) {
+        final BitSet bits = value.asBitSet();
+        bits.flip(0, value.getValue().length * 8);
+        return OptionalValue.of(ConstantFactory.createFromBitSet(bits, value.getValue().length, enc));
     }
 
 }

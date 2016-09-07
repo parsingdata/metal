@@ -16,31 +16,35 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
+
+import static io.parsingdata.metal.Util.checkNotNull;
 
 public abstract class UnaryValueExpression implements ValueExpression {
 
-    private final ValueExpression _op;
+    public final ValueExpression operand;
 
-    public UnaryValueExpression(final ValueExpression op) {
-        _op = checkNotNull(op, "op");
+    public UnaryValueExpression(final ValueExpression operand) {
+        this.operand = checkNotNull(operand, "operand");
     }
 
     @Override
-    public OptionalValue eval(final Environment env, final Encoding enc) {
-        final OptionalValue v = _op.eval(env, enc);
-        if (!v.isPresent()) { return v; }
-        return eval(v.get(), env, enc);
+    public OptionalValueList eval(final Environment env, final Encoding enc) {
+        return eval(operand.eval(env, enc), env, enc);
     }
 
-    public abstract OptionalValue eval(final Value v, final Environment env, final Encoding enc);
+    private OptionalValueList eval(final OptionalValueList vl, final Environment env, final Encoding enc) {
+        if (vl.isEmpty()) { return vl; }
+        return eval(vl.tail, env, enc).add(vl.head.isPresent() ? eval(vl.head.get(), env, enc) : vl.head);
+    }
+
+    public abstract OptionalValue eval(final Value value, final Environment env, final Encoding enc);
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _op + ")";
+        return getClass().getSimpleName() + "(" + operand + ")";
     }
 
 }

@@ -38,7 +38,7 @@ public class PreTest {
         final ParseResult result = SEQUENCE.parse(stream(1, 1), enc());
 
         // precondition is true, token is parsed
-        assertThat(result.getEnvironment().offset, is(2L));
+        assertThat(result.environment.offset, is(2L));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class PreTest {
         final ParseResult result = SEQUENCE.parse(stream(0, 1), enc());
 
         // precondition is false, token is not parsed
-        assertThat(result.getEnvironment().offset, is(1L));
+        assertThat(result.environment.offset, is(1L));
     }
 
     @Test
@@ -54,7 +54,7 @@ public class PreTest {
         final ParseResult result = SEQUENCE.parse(stream(1, 2), enc());
 
         // precondition is true, but token can't be parsed
-        assertFalse(result.succeeded());
+        assertFalse(result.succeeded);
     }
 
     @Test
@@ -63,13 +63,13 @@ public class PreTest {
         final ParseResult result = noPrecondition.parse(stream(0), enc());
 
         // precondition null, always parse
-        assertThat(result.getEnvironment().offset, is(1L));
+        assertThat(result.environment.offset, is(1L));
     }
 
     @Test
     public void testToString() {
         final Token simpleWhile = pre(def("value", con(1)), eq(con(1)));
-        final String simpleWhileString = "Pre(Def(\"value\",Const(Value(01)),True,), Eq(Const(Value(01))))";
+        final String simpleWhileString = "Pre(Def(value,Const(0x01),True,), Eq(Const(0x01)))";
         assertThat(simpleWhile.toString(), is(equalTo(simpleWhileString)));
     }
 

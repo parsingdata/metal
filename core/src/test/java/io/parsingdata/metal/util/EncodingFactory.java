@@ -18,6 +18,7 @@ package io.parsingdata.metal.util;
 
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.encoding.Sign;
 
 public class EncodingFactory {
 
@@ -26,7 +27,7 @@ public class EncodingFactory {
     }
 
     public static Encoding signed() {
-        return new Encoding(true);
+        return new Encoding(Sign.SIGNED);
     }
 
     public static Encoding le() {
