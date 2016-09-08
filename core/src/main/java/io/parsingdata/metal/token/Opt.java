@@ -23,6 +23,7 @@ import io.parsingdata.metal.encoding.Encoding;
 import java.io.IOException;
 
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.ParseResult.success;
 
 public class Opt extends Token {
 
@@ -36,8 +37,8 @@ public class Opt extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final ParseResult res = token.parse(scope, env.addBranch(this), enc);
-        if (res.succeeded) { return new ParseResult(true, res.environment.closeBranch()); }
-        return new ParseResult(true, env);
+        if (res.succeeded) { return success(res.environment.closeBranch()); }
+        return success(env);
     }
 
     @Override

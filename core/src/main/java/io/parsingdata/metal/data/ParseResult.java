@@ -17,7 +17,6 @@
 package io.parsingdata.metal.data;
 
 import io.parsingdata.metal.data.callback.TokenCallbackList;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
 public class ParseResult {
@@ -42,6 +41,14 @@ public class ParseResult {
             callbacks.head.callback.handle(token, this);
         }
         handleCallbacks(callbacks.tail, token);
+    }
+
+    public static ParseResult success(final Environment environment) {
+        return new ParseResult(true, environment);
+    }
+
+    public static ParseResult fail(final Environment environment) {
+        return new ParseResult(false, environment);
     }
 
     @Override
