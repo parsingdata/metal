@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 
 public class Encoding {
 
-    private static final Sign DEFAULT_SIGNED = Sign.UNSIGNED;
+    private static final Sign DEFAULT_SIGN = Sign.UNSIGNED;
     private static final Charset DEFAULT_CHARSET = StandardCharsets.US_ASCII;
     private static final ByteOrder DEFAULT_BYTE_ORDER = ByteOrder.BIG_ENDIAN;
 
@@ -30,7 +30,7 @@ public class Encoding {
     private final ByteOrder _byteOrder;
 
     public Encoding() {
-        this(DEFAULT_SIGNED, DEFAULT_CHARSET, DEFAULT_BYTE_ORDER);
+        this(DEFAULT_SIGN, DEFAULT_CHARSET, DEFAULT_BYTE_ORDER);
     }
 
     public Encoding(final Sign signed) {
@@ -38,11 +38,11 @@ public class Encoding {
     }
 
     public Encoding(final Charset charset) {
-        this(DEFAULT_SIGNED, charset, DEFAULT_BYTE_ORDER);
+        this(DEFAULT_SIGN, charset, DEFAULT_BYTE_ORDER);
     }
 
     public Encoding(final ByteOrder byteOrder) {
-        this(DEFAULT_SIGNED, DEFAULT_CHARSET, byteOrder);
+        this(DEFAULT_SIGN, DEFAULT_CHARSET, byteOrder);
     }
 
     public Encoding(final Sign sign, final Charset charset, final ByteOrder byteOrder) {
