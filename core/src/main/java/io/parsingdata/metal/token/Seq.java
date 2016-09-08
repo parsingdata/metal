@@ -41,13 +41,6 @@ public class Seq extends Token {
         return tokens.clone();
     }
 
-    /**
-     * @param scope
-     * @param env
-     * @param enc
-     * @return
-     * @throws IOException
-     */
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final ParseResult res = iterate(scope, env.addBranch(this), enc, 0);
