@@ -47,7 +47,7 @@ public class ParseResult {
         return new ParseResult(true, environment);
     }
 
-    public static ParseResult fail(final Environment environment) {
+    public static ParseResult failure(final Environment environment) {
         return new ParseResult(false, environment);
     }
 

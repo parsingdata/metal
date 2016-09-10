@@ -26,7 +26,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 import java.io.IOException;
 
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.ParseResult.fail;
+import static io.parsingdata.metal.data.ParseResult.failure;
 import static io.parsingdata.metal.data.ParseResult.success;
 
 public class Sub extends Token {
@@ -43,12 +43,12 @@ public class Sub extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final OptionalValueList addrs = address.eval(env, enc);
-        if (addrs.isEmpty() || addrs.containsEmpty()) { return fail(env); }
+        if (addrs.isEmpty() || addrs.containsEmpty()) { return failure(env); }
         final ParseResult res = iterate(scope, addrs, env.addBranch(this), enc);
         if (res.succeeded) {
             return success(res.environment.closeBranch().seek(env.offset));
         }
-        return fail(env);
+        return failure(env);
     }
 
     private ParseResult iterate(final String scope, final OptionalValueList addrs, final Environment env, final Encoding enc) throws IOException {
@@ -60,7 +60,7 @@ public class Sub extends Token {
             }
             return iterate(scope, addrs.tail, res.environment, enc);
         }
-        return fail(env);
+        return failure(env);
     }
 
     private ParseResult parse(final String scope, final long ref, final Environment env, final Encoding enc) throws IOException {
@@ -71,7 +71,7 @@ public class Sub extends Token {
         if (res.succeeded) {
             return res;
         }
-        return fail(env);
+        return failure(env);
     }
 
     @Override

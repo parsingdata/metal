@@ -25,7 +25,7 @@ import java.io.IOException;
 
 import static io.parsingdata.metal.Shorthand.expTrue;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.ParseResult.fail;
+import static io.parsingdata.metal.data.ParseResult.failure;
 import static io.parsingdata.metal.data.ParseResult.success;
 
 public class While extends Token {
@@ -43,14 +43,14 @@ public class While extends Token {
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final ParseResult res = iterate(scope, env.addBranch(this), enc);
         if (res.succeeded) { return success(res.environment.closeBranch()); }
-        return fail(env);
+        return failure(env);
     }
 
     private ParseResult iterate(final String scope, final Environment env, final Encoding enc) throws IOException {
         if (!predicate.eval(env, enc)) { return success(env); }
         final ParseResult res = token.parse(scope, env, enc);
         if (res.succeeded) { return iterate(scope, res.environment, enc); }
-        return fail(env);
+        return failure(env);
     }
 
     @Override
