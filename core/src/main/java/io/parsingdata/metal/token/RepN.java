@@ -25,6 +25,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 import java.io.IOException;
 
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.ParseResult.failure;
+import static io.parsingdata.metal.data.ParseResult.success;
 
 public class RepN extends Token {
 
@@ -41,20 +43,20 @@ public class RepN extends Token {
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final OptionalValueList counts = n.eval(env, enc);
         if (counts.size != 1 || !counts.head.isPresent()) {
-            return new ParseResult(false, env);
+            return failure(env);
         }
         final ParseResult res = iterate(scope, env.addBranch(this), enc, counts.head.get().asNumeric().longValue());
         if (res.succeeded) {
-            return new ParseResult(true, res.environment.closeBranch());
+            return success(res.environment.closeBranch());
         }
-        return new ParseResult(false, env);
+        return failure(env);
     }
 
     private ParseResult iterate(final String scope, final Environment env, final Encoding enc, final long count) throws IOException {
-        if (count <= 0) { return new ParseResult(true, env); }
+        if (count <= 0) { return success(env); }
         final ParseResult res = token.parse(scope, env, enc);
         if (res.succeeded) { return iterate(scope, res.environment, enc, count - 1); }
-        return new ParseResult(false, env);
+        return failure(env);
     }
 
     @Override

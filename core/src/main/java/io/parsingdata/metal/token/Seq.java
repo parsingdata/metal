@@ -24,6 +24,8 @@ import io.parsingdata.metal.encoding.Encoding;
 import java.io.IOException;
 
 import static io.parsingdata.metal.Util.checkContainsNoNulls;
+import static io.parsingdata.metal.data.ParseResult.failure;
+import static io.parsingdata.metal.data.ParseResult.success;
 
 public class Seq extends Token {
 
@@ -42,12 +44,12 @@ public class Seq extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final ParseResult res = iterate(scope, env.addBranch(this), enc, 0);
-        if (res.succeeded) { return new ParseResult(true, res.environment.closeBranch()); }
-        return new ParseResult(false, env);
+        if (res.succeeded) { return success(res.environment.closeBranch()); }
+        return failure(env);
     }
 
     private ParseResult iterate(final String scope, final Environment env, final Encoding enc, final int index) throws IOException {
-        if (index >= tokens.length) { return new ParseResult(true, env); }
+        if (index >= tokens.length) { return success(env); }
         final ParseResult res = tokens[index].parse(scope, env, enc);
         if (res.succeeded) { return iterate(scope, res.environment, enc, index + 1); }
         return res;
