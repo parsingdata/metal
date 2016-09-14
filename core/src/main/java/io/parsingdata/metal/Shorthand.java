@@ -57,11 +57,11 @@ public final class Shorthand {
     public static Token seq(final String name, final Token... tokens) { return seq(name, null, tokens); }
     public static Token seq(final Encoding encoding, final Token... tokens) { return seq("", encoding, tokens); }
     public static Token seq(final Token... tokens) { return seq((Encoding)null, tokens); }
-    public static Token str(final String scope, final Token token, final Encoding encoding, final StructSink sink, final Expression predicate) { return new Str(scope, token, encoding, sink, predicate); }
-    public static Token str(final String scope, final Token token, final Encoding encoding, final StructSink sink) { return str(scope, token, encoding, sink, null); }
+    @Deprecated public static Token str(final String scope, final Token token, final Encoding encoding, final StructSink sink, final Expression predicate) { return new Str(scope, token, encoding, sink, predicate); }
+    @Deprecated public static Token str(final String scope, final Token token, final Encoding encoding, final StructSink sink) { return str(scope, token, encoding, sink, null); }
     public static Token str(final String scope, final Token token, final Encoding encoding) { return str(scope, token, encoding, null); }
-    public static Token str(final String scope, final Token token, final StructSink sink, final Expression predicate) { return str(scope, token, null, sink, predicate); }
-    public static Token str(final String scope, final Token token, final StructSink sink) { return str(scope, token, null, sink); }
+    @Deprecated public static Token str(final String scope, final Token token, final StructSink sink, final Expression predicate) { return str(scope, token, null, sink, predicate); }
+    @Deprecated public static Token str(final String scope, final Token token, final StructSink sink) { return str(scope, token, null, sink); }
     public static Token str(final String scope, final Token token) { return str(scope, token, (Encoding)null); }
     public static Token sub(final String name, final Token token, final ValueExpression address, final Encoding encoding) { return new io.parsingdata.metal.token.Sub(name, token, address, encoding); }
     public static Token sub(final String name, final Token token, final ValueExpression address) { return sub(name, token, address, null); }

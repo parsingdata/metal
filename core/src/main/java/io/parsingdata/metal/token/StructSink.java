@@ -20,6 +20,7 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 
+@Deprecated
 public interface StructSink {
 
     void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParseGraph struct);
