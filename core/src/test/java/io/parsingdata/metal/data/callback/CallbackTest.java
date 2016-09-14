@@ -16,43 +16,65 @@
 
 package io.parsingdata.metal.data.callback;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseItem;
-import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.token.Token;
-import io.parsingdata.metal.util.InMemoryByteStream;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import static io.parsingdata.metal.Shorthand.cho;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import java.io.IOException;
 
-import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
-import static org.junit.Assert.assertTrue;
+import org.junit.Test;
+
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class CallbackTest {
 
+    private int successCount = 0;
+    private int failureCount = 0;
+
+    private void incrementSuccess() {
+        successCount++;
+    }
+
+    private void incrementFailure() {
+        failureCount++;
+    }
+
     @Test
     public void testHandleCallback() throws IOException {
-        final Token token = any("a");
-        final Token sequence = seq(token, token);
-        final Callback callback = new Callback() {
+        final Token one = def("one", 1, eq(con(1)));
+        final Token two = def("two", 1, eq(con(2)));
+        final Token cho = cho("cho", one, two);
+        final Token sequence = seq("seq", cho, one);
+        final Callback callback = new BaseCallback() {
+
             @Override
-            public void handle(final Token token, final ParseResult result) {
-                System.out.print("Handled: ");
-                final ParseItem item = result.environment.order.get(token);
-                if (item.isGraph()) {
-                    System.out.println("Graph: " + item.asGraph());
-                } else if (item.isRef()) {
-                    System.out.println("Ref: " + item.asRef());
-                } else if (item.isValue()) {
-                    System.out.println("Value: " + item.asValue());
-                }
+            public void handleSuccess(final Token token, final Environment environment) {
+                incrementSuccess();
             }
+
+            @Override
+            protected void handleFailure(Token token, Environment environment) {
+                incrementFailure();
+            }
+
         };
-        final TokenCallbackList callbacks = TokenCallbackList.create(new TokenCallback(token, callback)).add(new TokenCallback(sequence, callback));
-        final Environment env = new Environment(new InMemoryByteStream(new byte[] { 0, 0 }), callbacks);
+        final TokenCallbackList callbacks = TokenCallbackList
+            .create(new TokenCallback(one, callback))
+            .add(new TokenCallback(two, callback))
+            .add(new TokenCallback(cho, callback))
+            .add(new TokenCallback(sequence, callback));
+        final Environment env = new Environment(new InMemoryByteStream(new byte[] { 2, 1 }), callbacks);
         assertTrue(sequence.parse(env, enc()).succeeded);
+        assertEquals(4, successCount);
+        assertEquals(1, failureCount);
     }
 
 }
