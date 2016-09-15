@@ -46,13 +46,6 @@ public class TokenCallbackList {
         return new TokenCallbackList(checkNotNull(head, "head"), this);
     }
 
-    public TokenCallbackList add(final TokenCallbackList list) {
-        checkNotNull(list, "list");
-        if (list.isEmpty()) { return this; }
-        if (isEmpty()) { return list; }
-        return add(list.tail).add(list.head);
-    }
-
     public boolean isEmpty() {
         return size == 0;
     }
