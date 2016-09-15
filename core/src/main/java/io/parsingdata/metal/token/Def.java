@@ -63,7 +63,7 @@ public class Def extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + makeNameFragment() + size + "," + predicate + ",)";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + size + "," + predicate + ")";
     }
 
 }

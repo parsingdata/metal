@@ -30,4 +30,9 @@ public class TokenCallback {
         this.callback = checkNotNull(callback, "callback");
     }
 
+    @Override
+    public String toString() {
+        return token + "->" + callback;
+    }
+
 }
