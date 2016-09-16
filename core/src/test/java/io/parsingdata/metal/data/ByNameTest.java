@@ -16,27 +16,22 @@
 
 package io.parsingdata.metal.data;
 
-public class ParseResult {
+import static org.junit.Assert.assertNull;
 
-    public final boolean succeeded;
-    public final Environment environment;
+import org.junit.Test;
 
-    public ParseResult(final boolean succeeded, final Environment environment) {
-        this.succeeded = succeeded;
-        this.environment = environment;
+import io.parsingdata.metal.data.selection.ByName;
+
+public class ByNameTest {
+
+    @Test
+    public void getValueOnEmpty() {
+        assertNull(ByName.getValue(ParseGraph.EMPTY, "name"));
     }
 
-    public static ParseResult success(final Environment environment) {
-        return new ParseResult(true, environment);
-    }
-
-    public static ParseResult failure(final Environment environment) {
-        return new ParseResult(false, environment);
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" + succeeded + ", " + environment + ")";
+    @Test
+    public void getValueOnBranchedEmpty() {
+        assertNull(ByName.getValue(ParseGraph.EMPTY.addBranch(ParseGraph.NONE), "name"));
     }
 
 }

@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.callback.TokenCallbackList;
 import io.parsingdata.metal.encoding.Encoding;
 
 public abstract class Token {
@@ -37,7 +38,10 @@ public abstract class Token {
     }
 
     public ParseResult parse(final String scope, final Environment env, final Encoding enc) throws IOException {
-        return parseImpl(makeScope(scope), env, this.enc != null ? this.enc : enc);
+        final Encoding encoding = this.enc != null ? this.enc : enc;
+        final ParseResult result = parseImpl(makeScope(scope), env, encoding);
+        handleCallbacks(result.environment.callbacks, result);
+        return result;
     }
 
     public ParseResult parse(final Environment env, final Encoding enc) throws IOException {
@@ -48,6 +52,16 @@ public abstract class Token {
 
     private String makeScope(final String scope) {
         return scope + (scope.isEmpty() || name.isEmpty() ? "" : SEPARATOR) + name;
+    }
+
+    private void handleCallbacks(final TokenCallbackList callbacks, final ParseResult result) {
+        if (callbacks.isEmpty()) {
+            return;
+        }
+        if (callbacks.head.token == this) {
+            callbacks.head.callback.handle(this, result);
+        }
+        handleCallbacks(callbacks.tail, result);
     }
 
     protected String makeNameFragment() {

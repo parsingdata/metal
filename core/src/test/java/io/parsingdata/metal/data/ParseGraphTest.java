@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal;
+package io.parsingdata.metal.data;
 
-import io.parsingdata.metal.data.*;
 import io.parsingdata.metal.token.Token;
 import org.junit.Assert;
 import org.junit.Rule;

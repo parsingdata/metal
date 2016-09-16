@@ -71,12 +71,12 @@ public class ParseGraph implements ParseItem {
         return new ParseGraph(ref, this, definition);
     }
 
-    public ParseGraph addBranch(final Token definition) {
+    ParseGraph addBranch(final Token definition) {
         if (branched) { return new ParseGraph(head.asGraph().addBranch(definition), tail, this.definition, true); }
         return new ParseGraph(new ParseGraph(definition), this, this.definition, true);
     }
 
-    public ParseGraph closeBranch() {
+    ParseGraph closeBranch() {
         if (!branched) { throw new IllegalStateException("Cannot close branch that is not open."); }
         if (head.asGraph().branched) {
             return new ParseGraph(head.asGraph().closeBranch(), tail, definition, true);

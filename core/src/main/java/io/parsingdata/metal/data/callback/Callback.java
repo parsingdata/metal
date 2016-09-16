@@ -14,23 +14,13 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.data.selection;
+package io.parsingdata.metal.data.callback;
 
-import io.parsingdata.metal.data.ParseGraph;
-import org.junit.Test;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.token.Token;
 
-import static junit.framework.TestCase.assertNull;
+public interface Callback {
 
-public class ByNameTest {
-
-    @Test
-    public void getValueOnEmpty() {
-        assertNull(ByName.getValue(ParseGraph.EMPTY, "name"));
-    }
-
-    @Test
-    public void getValueOnBranchedEmpty() {
-        assertNull(ByName.getValue(ParseGraph.EMPTY.addBranch(ParseGraph.NONE), "name"));
-    }
+    void handle(final Token token, final ParseResult result);
 
 }

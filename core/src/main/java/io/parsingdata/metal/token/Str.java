@@ -25,6 +25,8 @@ import io.parsingdata.metal.expression.True;
 import java.io.IOException;
 
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.ParseResult.failure;
+import static io.parsingdata.metal.data.ParseResult.success;
 
 public class Str extends Token {
 
@@ -41,9 +43,9 @@ public class Str extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final ParseResult res = token.parse(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
-        if (!res.succeeded) { return new ParseResult(false, env); }
-        final ParseResult closedResult = new ParseResult(true, new Environment(res.environment.order.closeBranch(), res.environment.input, res.environment.offset));
+        final ParseResult res = token.parse(scope, env.addBranch(this), enc);
+        if (!res.succeeded) { return failure(env); }
+        final ParseResult closedResult = success(res.environment.closeBranch());
         if (sink != null && predicate.eval(closedResult.environment, enc)) {
             sink.handleStruct(scope, closedResult.environment, enc, closedResult.environment.order.get(this).asGraph());
         }

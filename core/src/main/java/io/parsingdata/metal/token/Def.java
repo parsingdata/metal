@@ -28,6 +28,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 import java.io.IOException;
 
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.ParseResult.failure;
+import static io.parsingdata.metal.data.ParseResult.success;
 
 public class Def extends Token {
 
@@ -44,24 +46,24 @@ public class Def extends Token {
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
         final OptionalValueList sizes = size.eval(env, enc);
         if (sizes.size != 1 || !sizes.head.isPresent()) {
-            return new ParseResult(false, env);
+            return failure(env);
         }
         // TODO: Handle value expression results as BigInteger (#16)
         final int dataSize = sizes.head.get().asNumeric().intValue();
         if (dataSize < 0) {
-            return new ParseResult(false, env);
+            return failure(env);
         }
         final byte[] data = new byte[dataSize];
         if (env.input.read(env.offset, data) != data.length) {
-            return new ParseResult(false, env);
+            return failure(env);
         }
-        final Environment newEnv = new Environment(env.order.add(new ParseValue(scope, this, env.offset, data, enc)), env.input, env.offset + dataSize);
-        return predicate.eval(newEnv, enc) ? new ParseResult(true, newEnv) : new ParseResult(false, env);
+        final Environment newEnv = env.add(new ParseValue(scope, this, env.offset, data, enc)).seek(env.offset + dataSize);
+        return predicate.eval(newEnv, enc) ? success(newEnv) : failure(env);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + makeNameFragment() + size + "," + predicate + ",)";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + size + "," + predicate + ")";
     }
 
 }

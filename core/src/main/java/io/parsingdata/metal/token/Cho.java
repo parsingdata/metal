@@ -24,6 +24,8 @@ import io.parsingdata.metal.encoding.Encoding;
 import java.io.IOException;
 
 import static io.parsingdata.metal.Util.checkContainsNoNulls;
+import static io.parsingdata.metal.data.ParseResult.failure;
+import static io.parsingdata.metal.data.ParseResult.success;
 
 public class Cho extends Token {
 
@@ -41,13 +43,13 @@ public class Cho extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final ParseResult res = iterate(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc, 0);
-        if (res.succeeded) { return new ParseResult(true, new Environment(res.environment.order.closeBranch(), res.environment.input, res.environment.offset)); }
-        return new ParseResult(false, env);
+        final ParseResult res = iterate(scope, env.addBranch(this), enc, 0);
+        if (res.succeeded) { return success(res.environment.closeBranch()); }
+        return failure(env);
     }
 
     private ParseResult iterate(final String scope, final Environment env, final Encoding enc, final int index) throws IOException {
-        if (index >= tokens.length) { return new ParseResult(false, env); }
+        if (index >= tokens.length) { return failure(env); }
         final ParseResult res = tokens[index].parse(scope, env, enc);
         if (res.succeeded) { return res; }
         return iterate(scope, env, enc, index + 1);

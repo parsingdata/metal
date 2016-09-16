@@ -25,6 +25,8 @@ import java.io.IOException;
 
 import static io.parsingdata.metal.Shorthand.expTrue;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.ParseResult.failure;
+import static io.parsingdata.metal.data.ParseResult.success;
 
 public class Pre extends Token {
 
@@ -39,10 +41,10 @@ public class Pre extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        if (!predicate.eval(env, enc)) { return new ParseResult(true, env); }
-        final ParseResult res = token.parse(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
-        if (res.succeeded) { return new ParseResult(true, new Environment(res.environment.order.closeBranch(), res.environment.input, res.environment.offset)); }
-        return new ParseResult(false, env);
+        if (!predicate.eval(env, enc)) { return success(env); }
+        final ParseResult res = token.parse(scope, env.addBranch(this), enc);
+        if (res.succeeded) { return success(res.environment.closeBranch()); }
+        return failure(env);
     }
 
     @Override

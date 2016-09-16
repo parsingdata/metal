@@ -14,29 +14,25 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.data;
+package io.parsingdata.metal.data.callback;
 
-public class ParseResult {
+import io.parsingdata.metal.token.Token;
 
-    public final boolean succeeded;
-    public final Environment environment;
+import static io.parsingdata.metal.Util.checkNotNull;
 
-    public ParseResult(final boolean succeeded, final Environment environment) {
-        this.succeeded = succeeded;
-        this.environment = environment;
-    }
+public class TokenCallback {
 
-    public static ParseResult success(final Environment environment) {
-        return new ParseResult(true, environment);
-    }
+    public final Token token;
+    public final Callback callback;
 
-    public static ParseResult failure(final Environment environment) {
-        return new ParseResult(false, environment);
+    public TokenCallback(final Token token, final Callback callback) {
+        this.token = checkNotNull(token, "token");
+        this.callback = checkNotNull(callback, "callback");
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + succeeded + ", " + environment + ")";
+        return token + "->" + callback;
     }
 
 }
