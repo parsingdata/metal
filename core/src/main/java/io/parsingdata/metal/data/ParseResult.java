@@ -16,9 +16,6 @@
 
 package io.parsingdata.metal.data;
 
-import io.parsingdata.metal.data.callback.TokenCallbackList;
-import io.parsingdata.metal.token.Token;
-
 public class ParseResult {
 
     public final boolean succeeded;
@@ -27,20 +24,6 @@ public class ParseResult {
     public ParseResult(final boolean succeeded, final Environment environment) {
         this.succeeded = succeeded;
         this.environment = environment;
-    }
-
-    public void handleCallbacks(final Token token) {
-        handleCallbacks(environment.callbacks, token);
-    }
-
-    private void handleCallbacks(final TokenCallbackList callbacks, final Token token) {
-        if (callbacks.isEmpty()) {
-            return;
-        }
-        if (callbacks.head.token == token) {
-            callbacks.head.callback.handle(token, this);
-        }
-        handleCallbacks(callbacks.tail, token);
     }
 
     public static ParseResult success(final Environment environment) {

@@ -16,13 +16,14 @@
 
 package io.parsingdata.metal.token;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.encoding.Encoding;
+import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
 
-import static io.parsingdata.metal.Util.checkNotNull;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.callback.TokenCallbackList;
+import io.parsingdata.metal.encoding.Encoding;
 
 public abstract class Token {
 
@@ -39,7 +40,7 @@ public abstract class Token {
     public ParseResult parse(final String scope, final Environment env, final Encoding enc) throws IOException {
         final Encoding encoding = this.enc != null ? this.enc : enc;
         final ParseResult result = parseImpl(makeScope(scope), env, encoding);
-        result.handleCallbacks(this);
+        handleCallbacks(result.environment.callbacks, result);
         return result;
     }
 
@@ -51,6 +52,16 @@ public abstract class Token {
 
     private String makeScope(final String scope) {
         return scope + (scope.isEmpty() || name.isEmpty() ? "" : SEPARATOR) + name;
+    }
+
+    private void handleCallbacks(final TokenCallbackList callbacks, final ParseResult result) {
+        if (callbacks.isEmpty()) {
+            return;
+        }
+        if (callbacks.head.token == this) {
+            callbacks.head.callback.handle(this, result);
+        }
+        handleCallbacks(callbacks.tail, result);
     }
 
     protected String makeNameFragment() {
