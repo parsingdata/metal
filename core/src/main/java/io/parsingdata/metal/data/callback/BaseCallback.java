@@ -20,7 +20,7 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 
-public class BaseCallback implements Callback {
+public abstract class BaseCallback implements Callback {
 
     @Override
     public void handle(final Token token, final ParseResult result) {
@@ -31,8 +31,7 @@ public class BaseCallback implements Callback {
         }
     }
 
-    protected void handleSuccess(Token token, Environment environment) {}
-
-    protected void handleFailure(Token token, Environment environment) {}
+    protected abstract void handleSuccess(Token token, Environment environment);
+    protected abstract void handleFailure(Token token, Environment environment);
 
 }

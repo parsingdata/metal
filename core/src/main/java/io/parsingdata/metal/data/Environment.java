@@ -16,10 +16,10 @@
 
 package io.parsingdata.metal.data;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 import io.parsingdata.metal.data.callback.TokenCallbackList;
 import io.parsingdata.metal.token.Token;
-
-import static io.parsingdata.metal.Util.checkNotNull;
 
 public class Environment {
 
@@ -35,24 +35,20 @@ public class Environment {
         this.callbacks = checkNotNull(callbacks, "callbacks");
     }
 
-    public Environment(final ParseGraph order, final ByteStream input, final long offset) {
-        this(order, input, offset, TokenCallbackList.EMPTY);
-    }
-
     public Environment(final ByteStream input, final long offset, final TokenCallbackList callbacks) {
         this(ParseGraph.EMPTY, input, offset, callbacks);
     }
 
     public Environment(final ByteStream input, final long offset) {
-        this(ParseGraph.EMPTY, input, offset, TokenCallbackList.EMPTY);
+        this(input, offset, TokenCallbackList.EMPTY);
     }
 
     public Environment(final ByteStream input, final TokenCallbackList callbacks) {
-        this(ParseGraph.EMPTY, input, 0L, callbacks);
+        this(input, 0L, callbacks);
     }
 
     public Environment(final ByteStream input) {
-        this(ParseGraph.EMPTY, input, 0L, TokenCallbackList.EMPTY);
+        this(input, 0L);
     }
 
     public Environment addBranch(final Token token) {
