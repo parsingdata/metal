@@ -16,17 +16,17 @@
 
 package io.parsingdata.metal.data;
 
-import io.parsingdata.metal.data.selection.ByName;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertNull;
+
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertNull;
+import io.parsingdata.metal.data.selection.ByName;
 
 public class ByNameTest {
 
     @Test
     public void getValueOnEmpty() {
-        TestCase.assertNull(ByName.getValue(ParseGraph.EMPTY, "name"));
+        assertNull(ByName.getValue(ParseGraph.EMPTY, "name"));
     }
 
     @Test
