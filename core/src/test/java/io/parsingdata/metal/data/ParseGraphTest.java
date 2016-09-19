@@ -16,24 +16,31 @@
 
 package io.parsingdata.metal.data;
 
-import io.parsingdata.metal.token.Token;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
-import java.io.IOException;
-
-import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.nod;
+import static io.parsingdata.metal.Shorthand.repn;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static junit.framework.TestCase.assertNull;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+
+import java.io.IOException;
+
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import io.parsingdata.metal.token.Token;
 
 public class ParseGraphTest {
 
@@ -165,6 +172,19 @@ public class ParseGraphTest {
         assertEquals(a, pg.getLowestOffsetValue());
         assertEquals(c, pg.tail.tail.head.asGraph().getLowestOffsetValue());
         assertEquals(d, pg.tail.tail.head.asGraph().tail.head.asGraph().getLowestOffsetValue());
+    }
+
+    @Test
+    public void testHeadContainsLowestOffsetValue() throws IOException {
+        final Environment stream = stream(0, 0, 0);
+        final Token token = seq(
+            repn(
+                 def("zero", 1),
+                 con(2)),
+            nod(con(1)));
+        // creates a ParseGraph with as head a ParseGraph containing values, and as tail an empty graph
+        final ParseResult result = token.parse(stream, enc());
+        Assert.assertTrue(result.environment.order.containsValue());
     }
 
     @Test
