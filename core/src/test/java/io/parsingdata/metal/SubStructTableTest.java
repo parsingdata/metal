@@ -16,19 +16,27 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.repn;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+
+import java.io.IOException;
+
+import org.junit.Test;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
-import org.junit.Test;
-
-import java.io.IOException;
-
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class SubStructTableTest {
 
@@ -77,7 +85,7 @@ public class SubStructTableTest {
         final ParseGraph order = res.environment.order;
         checkStruct(order.head.asGraph().head.asGraph().head.asGraph());
         assertTrue(order.head.asGraph().head.asGraph().tail.head.isRef());
-        checkStruct(order.head.asGraph().head.asGraph().tail.head.asRef().resolve(order));
+        checkStruct(order.head.asGraph().head.asGraph().tail.head.asRef().resolve(order).head.asGraph());
         checkStruct(order.head.asGraph().head.asGraph().tail.tail.head.asGraph());
         checkStruct(order.head.asGraph().head.asGraph().tail.tail.tail.head.asGraph());
     }

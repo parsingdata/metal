@@ -16,12 +16,12 @@
 
 package io.parsingdata.metal.data.selection;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseGraphList;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
-
-import static io.parsingdata.metal.Util.checkNotNull;
 
 public final class ByOffset {
 
@@ -44,19 +44,34 @@ public final class ByOffset {
 
     public static ParseValue getLowestOffsetValue(final ParseGraph graph) {
         checkNotNull(graph, "graph");
-        if (!graph.containsValue()) { throw new IllegalStateException("Cannot determine lowest offset if graph does not contain a value."); }
+        if (!graph.containsValue()) {
+            throw new IllegalStateException("Cannot determine lowest offset if graph does not contain a value.");
+        }
+        return getLowestOffsetValueRecursive(graph);
+    }
+
+    private static ParseValue getLowestOffsetValueRecursive(final ParseGraph graph) {
         final ParseItem head = graph.head;
         if (head.isValue()) {
             return getLowestOffsetValue(graph.tail, head.asValue());
         }
-        return getLowestOffsetValue(graph.tail);
+        if (head.isGraph()) {
+            if (head.asGraph().containsValue()) {
+                return getLowestOffsetValue(graph.tail, getLowestOffsetValueRecursive(head.asGraph()));
+            }
+            return getLowestOffsetValue(head.asGraph(), getLowestOffsetValueRecursive(graph.tail));
+        }
+        return getLowestOffsetValueRecursive(graph.tail);
     }
 
     private static ParseValue getLowestOffsetValue(final ParseGraph graph, final ParseValue lowest) {
         if (!graph.containsValue()) { return lowest; }
         final ParseItem head = graph.head;
         if (head.isValue()) {
-            return getLowestOffsetValue(graph.tail, lowest.getOffset() < (head.asValue()).getOffset() ? lowest : head.asValue());
+            return getLowestOffsetValue(graph.tail, lowest.getOffset() < head.asValue().getOffset() ? lowest : head.asValue());
+        }
+        if (head.isGraph()) {
+            return getLowestOffsetValue(graph.tail, getLowestOffsetValue(head.asGraph(), lowest));
         }
         return getLowestOffsetValue(graph.tail, lowest);
     }

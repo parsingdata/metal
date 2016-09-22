@@ -16,14 +16,18 @@
 
 package io.parsingdata.metal.data;
 
-import io.parsingdata.metal.data.selection.*;
-import io.parsingdata.metal.data.transformation.Reversal;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.token.Token;
+import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
 
-import static io.parsingdata.metal.Util.checkNotNull;
+import io.parsingdata.metal.data.selection.ByItem;
+import io.parsingdata.metal.data.selection.ByName;
+import io.parsingdata.metal.data.selection.ByOffset;
+import io.parsingdata.metal.data.selection.ByToken;
+import io.parsingdata.metal.data.selection.ByType;
+import io.parsingdata.metal.data.transformation.Reversal;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
 
 public class ParseGraph implements ParseItem {
 
@@ -94,6 +98,9 @@ public class ParseGraph implements ParseItem {
 
     public boolean containsValue() {
         if (isEmpty()) { return false; }
+        if (head.isGraph()) {
+            return head.asGraph().containsValue() || tail.containsValue();
+        }
         return head.isValue() || tail.containsValue();
     }
 

@@ -16,20 +16,33 @@
 
 package io.parsingdata.metal;
 
-import io.parsingdata.metal.data.*;
-import io.parsingdata.metal.data.selection.ByName;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.token.Token;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.not;
+import static io.parsingdata.metal.Shorthand.pre;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+
+import java.io.IOException;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.io.IOException;
-
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseItem;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.ParseValueList;
+import io.parsingdata.metal.data.selection.ByName;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
 
 @RunWith(JUnit4.class)
 public class TreeTest {
@@ -108,7 +121,7 @@ public class TreeTest {
         if (item.asGraph().head.isGraph()) {
             checkStruct(root, item.asGraph().head.asGraph(), offset);
         } else if (item.asGraph().head.isRef()) {
-            checkHeader(item.asGraph().head.asRef().resolve(root), offset);
+            checkHeader(item.asGraph().head.asRef().resolve(root).head.asGraph().head.asGraph(), offset);
         }
     }
 

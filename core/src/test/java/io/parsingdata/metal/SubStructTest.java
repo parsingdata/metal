@@ -16,20 +16,33 @@
 
 package io.parsingdata.metal;
 
-import io.parsingdata.metal.data.*;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.token.Token;
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.io.IOException;
-
-import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.Shorthand.cat;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.opt;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static junit.framework.TestCase.assertFalse;
+
+import java.io.IOException;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseItem;
+import io.parsingdata.metal.data.ParseRef;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
 
 public class SubStructTest {
 
@@ -91,7 +104,7 @@ public class SubStructTest {
         checkBranch(first, 0, 0);
 
         final ParseRef ref = first.tail.head.asGraph().head.asGraph().head.asRef();
-        checkBranch(ref.resolve(out), 0, 0); // Check cycle
+        checkBranch(ref.resolve(out).head.asGraph(), 0, 0); // Check cycle
     }
 
     @Test
@@ -110,7 +123,7 @@ public class SubStructTest {
         checkBranch(second, 4, 0);
 
         final ParseRef ref = second.tail.head.asGraph().head.asGraph().head.asRef();
-        checkBranch(ref.resolve(out), 0, 4); // Check cycle
+        checkBranch(ref.resolve(out).head.asGraph(), 0, 4); // Check cycle
     }
 
     private void checkBranch(final ParseGraph graph, final int graphOffset, final int nextOffset) {
