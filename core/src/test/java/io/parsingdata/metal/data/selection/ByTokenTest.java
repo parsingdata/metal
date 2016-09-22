@@ -16,23 +16,29 @@
 
 package io.parsingdata.metal.data.selection;
 
-import io.parsingdata.metal.data.*;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.token.Token;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.io.IOException;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.*;
 import static io.parsingdata.metal.data.selection.ByToken.getAll;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
+
+import java.io.IOException;
+
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import io.parsingdata.metal.data.*;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
 
 public class ByTokenTest {
 
@@ -227,6 +233,18 @@ public class ByTokenTest {
         assertEquals(2, refs.size);
         assertTrue(refs.head.isRef());
         assertTrue(refs.tail.head.isGraph());
+    }
+
+    @Ignore
+    @Test
+    public void getAllRootsSingle() throws IOException {
+        final Token b = any("b");
+        final Token token = seq(any("a"), b);
+        final ParseResult result = token.parse(stream(1, 2), enc());
+        assertTrue(result.succeeded);
+        final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, token);
+        assertEquals(1, seqs.size);
+        assertEquals(b, seqs.head.getDefinition());
     }
 
 }

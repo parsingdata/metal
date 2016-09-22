@@ -78,5 +78,10 @@ public final class ByToken {
         if (head.isGraph()) { return tailResults.add(getAllValuesRecursive(head.asGraph(), definition)); }
         return tailResults;
     }
-
+    
+    public static ParseItemList getAllRoots(ParseGraph graph, Token definition) {
+        checkNotNull(graph, "graph");
+        checkNotNull(definition, "definition");
+        return null;
+    }
 }
