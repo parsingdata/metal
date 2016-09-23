@@ -21,9 +21,19 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.opt;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.rep;
+import static io.parsingdata.metal.Shorthand.repn;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.str;
+import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.data.selection.ByToken.getAll;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
@@ -36,7 +46,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.parsingdata.metal.data.*;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseItem;
+import io.parsingdata.metal.data.ParseItemList;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.ParseValueList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
@@ -235,16 +250,33 @@ public class ByTokenTest {
         assertTrue(refs.tail.head.isGraph());
     }
 
+    private final Token subSeq = seq(any("b"), any("c"));
+
     @Ignore
     @Test
     public void getAllRootsSingle() throws IOException {
-        final Token b = any("b");
-        final Token token = seq(any("a"), b);
-        final ParseResult result = token.parse(stream(1, 2), enc());
+        final Token topSeq = seq(any("a"), subSeq);
+        final ParseResult result = topSeq.parse(stream(1, 2, 3), enc());
         assertTrue(result.succeeded);
-        final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, token);
-        assertEquals(1, seqs.size);
-        assertEquals(b, seqs.head.getDefinition());
+        final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, subSeq);
+        assertEquals(2, seqs.size);
+        assertEquals(subSeq, seqs.head.getDefinition());
+        assertEquals(3, seqs.head.asGraph().head.asValue().asNumeric().intValue());
+    }
+
+    @Ignore
+    @Test
+    public void getALlRootsMulti() throws IOException {
+        final Token topSeq = seq(any("a"), subSeq, subSeq);
+        final ParseResult result = topSeq.parse(stream(1, 2, 3, 2, 3), enc());
+        assertTrue(result.succeeded);
+        final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, subSeq);
+        assertEquals(2, seqs.size);
+        assertEquals(subSeq, seqs.head.getDefinition());
+        assertEquals(subSeq, seqs.tail.head.getDefinition());
+        assertEquals(3, seqs.head.asGraph().head.asValue().asNumeric().intValue());
+        assertEquals(3, seqs.tail.head.asGraph().head.asValue().asNumeric().intValue());
+        assertNotEquals(seqs.head.asGraph().head, seqs.tail.head.asGraph().head);
     }
 
 }

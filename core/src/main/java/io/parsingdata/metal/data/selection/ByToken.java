@@ -16,13 +16,13 @@
 
 package io.parsingdata.metal.data.selection;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseItemList;
 import io.parsingdata.metal.data.ParseValueList;
 import io.parsingdata.metal.token.Token;
-
-import static io.parsingdata.metal.Util.checkNotNull;
 
 public final class ByToken {
 
@@ -79,9 +79,13 @@ public final class ByToken {
         return tailResults;
     }
     
-    public static ParseItemList getAllRoots(ParseGraph graph, Token definition) {
+    public static ParseItemList getAllRoots(final ParseGraph graph, final Token definition) {
         checkNotNull(graph, "graph");
         checkNotNull(definition, "definition");
+        return getAllRootsRecursive(graph, definition);
+    }
+
+    private static ParseItemList getAllRootsRecursive(final ParseGraph graph, final Token definition) {
         return null;
     }
 }
