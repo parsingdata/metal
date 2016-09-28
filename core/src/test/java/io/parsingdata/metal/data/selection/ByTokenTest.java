@@ -266,7 +266,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void getALlRootsMulti() throws IOException {
+    public void getAllRootsMulti() throws IOException {
         final Token topSeq = seq(any("a"), subSeq, subSeq);
         final ParseResult result = topSeq.parse(stream(1, 2, 3, 2, 3), enc());
         assertTrue(result.succeeded);
