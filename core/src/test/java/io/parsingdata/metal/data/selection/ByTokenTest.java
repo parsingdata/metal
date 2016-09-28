@@ -41,7 +41,6 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -51,6 +50,7 @@ import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseItemList;
 import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.ParseValueList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
@@ -252,19 +252,19 @@ public class ByTokenTest {
 
     private final Token subSeq = seq(any("b"), any("c"));
 
-    @Ignore
     @Test
     public void getAllRootsSingle() throws IOException {
         final Token topSeq = seq(any("a"), subSeq);
         final ParseResult result = topSeq.parse(stream(1, 2, 3), enc());
         assertTrue(result.succeeded);
         final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, subSeq);
-        assertEquals(2, seqs.size);
+        assertEquals(1, seqs.size);
         assertEquals(subSeq, seqs.head.getDefinition());
-        assertEquals(3, seqs.head.asGraph().head.asValue().asNumeric().intValue());
+        final ParseValue c = seqs.head.asGraph().head.asValue();
+        assertEquals(3, c.asNumeric().intValue());
+        assertEquals(2, c.getOffset());
     }
 
-    @Ignore
     @Test
     public void getALlRootsMulti() throws IOException {
         final Token topSeq = seq(any("a"), subSeq, subSeq);
@@ -274,8 +274,10 @@ public class ByTokenTest {
         assertEquals(2, seqs.size);
         assertEquals(subSeq, seqs.head.getDefinition());
         assertEquals(subSeq, seqs.tail.head.getDefinition());
-        assertEquals(3, seqs.head.asGraph().head.asValue().asNumeric().intValue());
-        assertEquals(3, seqs.tail.head.asGraph().head.asValue().asNumeric().intValue());
+        final ParseValue c1 = seqs.head.asGraph().head.asValue();
+        assertEquals(3, c1.asNumeric().intValue());
+        final ParseValue c2 = seqs.tail.head.asGraph().head.asValue();
+        assertEquals(3, c2.asNumeric().intValue());
         assertNotEquals(seqs.head.asGraph().head, seqs.tail.head.asGraph().head);
     }
 

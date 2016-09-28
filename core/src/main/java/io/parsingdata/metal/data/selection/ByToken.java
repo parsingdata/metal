@@ -85,7 +85,11 @@ public final class ByToken {
         return getAllRootsRecursive(graph, definition);
     }
 
-    private static ParseItemList getAllRootsRecursive(final ParseGraph graph, final Token definition) {
-        return null;
+    private static ParseItemList getAllRootsRecursive(final ParseItem item, final Token definition) {
+        if (item.getDefinition() == definition) { return ParseItemList.create(item); }
+        if (item.isGraph() && !item.asGraph().isEmpty()) {
+            return getAllRootsRecursive(item.asGraph().head, definition).add(getAllRootsRecursive(item.asGraph().tail, definition));
+        }
+        return ParseItemList.EMPTY;
     }
 }
