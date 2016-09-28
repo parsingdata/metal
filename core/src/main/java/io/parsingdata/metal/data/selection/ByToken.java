@@ -82,14 +82,18 @@ public final class ByToken {
     public static ParseItemList getAllRoots(final ParseGraph graph, final Token definition) {
         checkNotNull(graph, "graph");
         checkNotNull(definition, "definition");
-        return getAllRootsRecursive(graph, definition);
+        return (graph.getDefinition() == definition && !graph.isEmpty() ? ParseItemList.create(graph) : ParseItemList.EMPTY)
+            .add(getAllRootsRecursive(graph.head, graph, definition))
+            .add(getAllRootsRecursive(graph.tail, graph, definition));
     }
 
-    private static ParseItemList getAllRootsRecursive(final ParseItem item, final Token definition) {
-        if (item.getDefinition() == definition) { return ParseItemList.create(item); }
+    private static ParseItemList getAllRootsRecursive(final ParseItem item, final ParseGraph parent, final Token definition) {
+        final ParseItemList result = (item.getDefinition() == definition && parent.getDefinition() != definition ? ParseItemList.create(item) : ParseItemList.EMPTY);
         if (item.isGraph() && !item.asGraph().isEmpty()) {
-            return getAllRootsRecursive(item.asGraph().head, definition).add(getAllRootsRecursive(item.asGraph().tail, definition));
+            return result.add(getAllRootsRecursive(item.asGraph().head, item.asGraph(), definition))
+                .add(getAllRootsRecursive(item.asGraph().tail, item.asGraph(), definition));
         }
-        return ParseItemList.EMPTY;
+        return result;
     }
+
 }
