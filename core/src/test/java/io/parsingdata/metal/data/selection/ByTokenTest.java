@@ -25,6 +25,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.currentOffset;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.opt;
@@ -40,6 +41,7 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
+import java.util.HashSet;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -250,16 +252,16 @@ public class ByTokenTest {
         assertTrue(refs.tail.head.isGraph());
     }
 
-    private final Token subSeq = seq(any("b"), any("c"));
+    private final Token smallSeq = seq(any("b"), any("c"));
 
     @Test
     public void getAllRootsSingle() throws IOException {
-        final Token topSeq = seq(any("a"), subSeq);
+        final Token topSeq = seq(any("a"), smallSeq);
         final ParseResult result = topSeq.parse(stream(1, 2, 3), enc());
         assertTrue(result.succeeded);
-        final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, subSeq);
+        final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, smallSeq);
         assertEquals(1, seqs.size);
-        assertEquals(subSeq, seqs.head.getDefinition());
+        assertEquals(smallSeq, seqs.head.getDefinition());
         final ParseValue c = seqs.head.asGraph().head.asValue();
         assertEquals(3, c.asNumeric().intValue());
         assertEquals(2, c.getOffset());
@@ -267,18 +269,37 @@ public class ByTokenTest {
 
     @Test
     public void getAllRootsMulti() throws IOException {
-        final Token topSeq = seq(any("a"), subSeq, subSeq);
+        final Token topSeq = seq(any("a"), smallSeq, smallSeq);
         final ParseResult result = topSeq.parse(stream(1, 2, 3, 2, 3), enc());
         assertTrue(result.succeeded);
-        final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, subSeq);
+        final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, smallSeq);
         assertEquals(2, seqs.size);
-        assertEquals(subSeq, seqs.head.getDefinition());
-        assertEquals(subSeq, seqs.tail.head.getDefinition());
+        assertEquals(smallSeq, seqs.head.getDefinition());
+        assertEquals(smallSeq, seqs.tail.head.getDefinition());
         final ParseValue c1 = seqs.head.asGraph().head.asValue();
         assertEquals(3, c1.asNumeric().intValue());
         final ParseValue c2 = seqs.tail.head.asGraph().head.asValue();
         assertEquals(3, c2.asNumeric().intValue());
         assertNotEquals(seqs.head.asGraph().head, seqs.tail.head.asGraph().head);
+    }
+
+    @Test
+    public void getAllRootsMultiSub() throws IOException {
+        final ParseResult result = rep(seq(smallSeq, sub(smallSeq, currentOffset))).parse(stream(1, 2, 1, 2, 1, 2, 1, 2), enc());
+                                                                                           /* 1: +--------+
+                                                                                           /* 2:       +--------+
+                                                                                           /* 3:             +--------+ */
+        assertTrue(result.succeeded);
+        final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, smallSeq);
+        assertEquals(6, seqs.size);
+        final HashSet<ParseItem> items = new HashSet<ParseItem>();
+        items.add(seqs.head);
+        items.add(seqs.tail.head);
+        items.add(seqs.tail.tail.head);
+        items.add(seqs.tail.tail.tail.head);
+        items.add(seqs.tail.tail.tail.tail.head);
+        items.add(seqs.tail.tail.tail.tail.tail.head);
+        assertEquals(6, items.size());
     }
 
 }
