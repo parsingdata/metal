@@ -291,15 +291,46 @@ public class ByTokenTest {
                                                                                            /* 3:             +--------+ */
         assertTrue(result.succeeded);
         final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, smallSeq);
-        assertEquals(6, seqs.size);
-        final HashSet<ParseItem> items = new HashSet<ParseItem>();
-        items.add(seqs.head);
-        items.add(seqs.tail.head);
-        items.add(seqs.tail.tail.head);
-        items.add(seqs.tail.tail.tail.head);
-        items.add(seqs.tail.tail.tail.tail.head);
-        items.add(seqs.tail.tail.tail.tail.tail.head);
-        assertEquals(6, items.size());
+        assertEquals(6, seqs.size); // Three regular and three subs.
+        final HashSet<ParseItem> items = new HashSet<>();
+        for (ParseItemList current = seqs; current != null && !current.isEmpty(); current = current.tail) {
+            items.add(current.head);
+        }
+        assertEquals(seqs.size, items.size()); // Check that there are no duplicate results.
+        for (ParseItem item : items) {
+            assertTrue(item.isGraph());
+            assertEquals(2, item.asGraph().size);
+            assertEquals(2, item.asGraph().head.asValue().asNumeric().intValue());
+        }
+    }
+
+    private class CustomToken extends Token {
+
+        public final Token token;
+
+        public CustomToken() {
+            super("", enc());
+            token = seq(any("a"), opt(this));
+        }
+
+        @Override
+        protected ParseResult parseImpl(String scope, Environment env, Encoding enc) throws IOException {
+            return token.parse(scope, env, enc);
+        }
+    }
+
+    @Test
+    public void getAllRootsMultiSelf() throws IOException {
+        final CustomToken customToken = new CustomToken();
+        final ParseResult result = customToken.parse(stream(1, 2, 3), enc());
+        assertTrue(result.succeeded);
+        final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, customToken.token);
+        assertEquals(3, seqs.size);
+        final HashSet<ParseItem> items = new HashSet<>();
+        for (ParseItemList current = seqs; current != null && !current.isEmpty(); current = current.tail) {
+            items.add(current.head);
+        }
+        assertEquals(seqs.size, items.size()); // Check that there are no duplicate results.
     }
 
 }
