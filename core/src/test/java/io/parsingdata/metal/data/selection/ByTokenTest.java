@@ -283,6 +283,14 @@ public class ByTokenTest {
         assertNotEquals(seqs.head.asGraph().head, seqs.tail.head.asGraph().head);
     }
 
+    private HashSet<ParseItem> makeSet(ParseItemList seqs) {
+        final HashSet<ParseItem> items = new HashSet<>();
+        for (ParseItemList current = seqs; current != null && !current.isEmpty(); current = current.tail) {
+            items.add(current.head);
+        }
+        return items;
+    }
+
     @Test
     public void getAllRootsMultiSub() throws IOException {
         final ParseResult result = rep(seq(smallSeq, sub(smallSeq, currentOffset))).parse(stream(1, 2, 1, 2, 1, 2, 1, 2), enc());
@@ -292,10 +300,7 @@ public class ByTokenTest {
         assertTrue(result.succeeded);
         final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, smallSeq);
         assertEquals(6, seqs.size); // Three regular and three subs.
-        final HashSet<ParseItem> items = new HashSet<>();
-        for (ParseItemList current = seqs; current != null && !current.isEmpty(); current = current.tail) {
-            items.add(current.head);
-        }
+        final HashSet<ParseItem> items = makeSet(seqs);
         assertEquals(seqs.size, items.size()); // Check that there are no duplicate results.
         for (ParseItem item : items) {
             assertTrue(item.isGraph());
@@ -326,11 +331,14 @@ public class ByTokenTest {
         assertTrue(result.succeeded);
         final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, customToken.token);
         assertEquals(3, seqs.size);
-        final HashSet<ParseItem> items = new HashSet<>();
-        for (ParseItemList current = seqs; current != null && !current.isEmpty(); current = current.tail) {
-            items.add(current.head);
-        }
+        final HashSet<ParseItem> items = makeSet(seqs);
         assertEquals(seqs.size, items.size()); // Check that there are no duplicate results.
+    }
+
+    @Test
+    public void getAllRootsEmpty() {
+        assertEquals(0, ByToken.getAllRoots(ParseGraph.EMPTY, any("a")).size);
+        assertEquals(1, ByToken.getAllRoots(ParseGraph.EMPTY, ParseGraph.NONE).size);
     }
 
 }

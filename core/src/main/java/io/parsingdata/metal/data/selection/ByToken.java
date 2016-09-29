@@ -77,9 +77,10 @@ public final class ByToken {
     public static ParseItemList getAllRoots(final ParseGraph graph, final Token definition) {
         checkNotNull(graph, "graph");
         checkNotNull(definition, "definition");
-        return (graph.getDefinition() == definition && !graph.isEmpty() ? ParseItemList.create(graph) : ParseItemList.EMPTY)
-            .add(getAllRootsRecursive(graph.head, graph, definition))
-            .add(getAllRootsRecursive(graph.tail, graph, definition));
+        final ParseItemList result = graph.getDefinition() == definition ? ParseItemList.create(graph) : ParseItemList.EMPTY;
+        if (graph.isEmpty()) { return result; }
+        return result.add(getAllRootsRecursive(graph.head, graph, definition))
+                     .add(getAllRootsRecursive(graph.tail, graph, definition));
     }
 
     private static ParseItemList getAllRootsRecursive(final ParseItem item, final ParseGraph parent, final Token definition) {
