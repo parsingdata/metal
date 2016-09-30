@@ -55,11 +55,8 @@ public final class ByOffset {
         if (head.isValue()) {
             return getLowestOffsetValue(graph.tail, head.asValue());
         }
-        if (head.isGraph()) {
-            if (head.asGraph().containsValue()) {
-                return getLowestOffsetValue(graph.tail, getLowestOffsetValueRecursive(head.asGraph()));
-            }
-            return getLowestOffsetValue(head.asGraph(), getLowestOffsetValueRecursive(graph.tail));
+        if (head.isGraph() && head.asGraph().containsValue()) {
+            return getLowestOffsetValue(graph.tail, getLowestOffsetValueRecursive(head.asGraph()));
         }
         return getLowestOffsetValueRecursive(graph.tail);
     }
