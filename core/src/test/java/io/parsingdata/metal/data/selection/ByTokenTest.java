@@ -42,6 +42,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -283,8 +284,8 @@ public class ByTokenTest {
         assertNotEquals(seqs.head.asGraph().head, seqs.tail.head.asGraph().head);
     }
 
-    private HashSet<ParseItem> makeSet(ParseItemList seqs) {
-        final HashSet<ParseItem> items = new HashSet<>();
+    private Set<ParseItem> makeSet(final ParseItemList seqs) {
+        final Set<ParseItem> items = new HashSet<>();
         for (ParseItemList current = seqs; current != null && !current.isEmpty(); current = current.tail) {
             items.add(current.head);
         }
@@ -300,9 +301,9 @@ public class ByTokenTest {
         assertTrue(result.succeeded);
         final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, smallSeq);
         assertEquals(6, seqs.size); // Three regular and three subs.
-        final HashSet<ParseItem> items = makeSet(seqs);
+        final Set<ParseItem> items = makeSet(seqs);
         assertEquals(seqs.size, items.size()); // Check that there are no duplicate results.
-        for (ParseItem item : items) {
+        for (final ParseItem item : items) {
             assertTrue(item.isGraph());
             assertEquals(2, item.asGraph().size);
             assertEquals(2, item.asGraph().head.asValue().asNumeric().intValue());
@@ -331,7 +332,7 @@ public class ByTokenTest {
         assertTrue(result.succeeded);
         final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, customToken.token);
         assertEquals(3, seqs.size);
-        final HashSet<ParseItem> items = makeSet(seqs);
+        final Set<ParseItem> items = makeSet(seqs);
         assertEquals(seqs.size, items.size()); // Check that there are no duplicate results.
     }
 
