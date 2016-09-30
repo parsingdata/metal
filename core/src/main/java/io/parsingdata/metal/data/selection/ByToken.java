@@ -16,13 +16,13 @@
 
 package io.parsingdata.metal.data.selection;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseItemList;
 import io.parsingdata.metal.data.ParseValueList;
 import io.parsingdata.metal.token.Token;
-
-import static io.parsingdata.metal.Util.checkNotNull;
 
 public final class ByToken {
 
@@ -59,11 +59,6 @@ public final class ByToken {
         return results;
     }
 
-    /**
-     * @param graph The graph to search
-     * @param definition The token to match the ParseItem's definition field
-     * @return All values with the provided name in this graph
-     */
     public static ParseValueList getAllValues(final ParseGraph graph, final Token definition) {
         checkNotNull(graph, "graph");
         checkNotNull(definition, "definition");
@@ -77,6 +72,24 @@ public final class ByToken {
         if (head.isValue() && head.asValue().definition == definition) { return tailResults.add(head.asValue()); }
         if (head.isGraph()) { return tailResults.add(getAllValuesRecursive(head.asGraph(), definition)); }
         return tailResults;
+    }
+    
+    public static ParseItemList getAllRoots(final ParseGraph graph, final Token definition) {
+        checkNotNull(graph, "graph");
+        checkNotNull(definition, "definition");
+        final ParseItemList result = graph.getDefinition() == definition ? ParseItemList.create(graph) : ParseItemList.EMPTY;
+        if (graph.isEmpty()) { return result; }
+        return result.add(getAllRootsRecursive(graph.head, graph, definition))
+                     .add(getAllRootsRecursive(graph.tail, graph, definition));
+    }
+
+    private static ParseItemList getAllRootsRecursive(final ParseItem item, final ParseGraph parent, final Token definition) {
+        final ParseItemList result = (item.getDefinition() == definition && parent.getDefinition() != definition ? ParseItemList.create(item) : ParseItemList.EMPTY);
+        if (item.isGraph() && !item.asGraph().isEmpty()) {
+            return result.add(getAllRootsRecursive(item.asGraph().head, item.asGraph(), definition))
+                         .add(getAllRootsRecursive(item.asGraph().tail, item.asGraph(), definition));
+        }
+        return result;
     }
 
 }
