@@ -27,15 +27,17 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import io.parsingdata.metal.data.selection.ByName;
+
 public class DefTest {
 
     @Test
     public void testScopeWithoutEncoding() throws IOException {
-        assertEquals(1, def("a", 1).parse("scope", stream(1), enc()).environment.order.get("scope.a").asNumeric().intValue());
+        assertEquals(1, ByName.getValue(def("a", 1).parse("scope", stream(1), enc()).environment.order, "scope.a").asNumeric().intValue());
     }
 
     @Test
     public void testScopeWithEncoding() throws IOException {
-        assertEquals(1, def("a", 1, signed()).parse("scope", stream(1), enc()).environment.order.get("scope.a").asNumeric().intValue());
+        assertEquals(1, ByName.getValue(def("a", 1, signed()).parse("scope", stream(1), enc()).environment.order, "scope.a").asNumeric().intValue());
     }
 }

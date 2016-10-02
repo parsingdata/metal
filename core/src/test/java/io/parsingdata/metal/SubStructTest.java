@@ -41,6 +41,7 @@ import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseRef;
 import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.selection.ByType;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
@@ -79,7 +80,7 @@ public class SubStructTest {
         final ParseResult res = token.parse(env, enc());
         Assert.assertTrue(res.succeeded);
         final ParseGraph out = res.environment.order;
-        Assert.assertEquals(0, out.getRefs().size); // No cycles
+        Assert.assertEquals(0, ByType.getRefs(out).size); // No cycles
 
         final ParseGraph first = out.head.asGraph();
         checkBranch(first, 0, 8);
@@ -98,7 +99,7 @@ public class SubStructTest {
         final ParseResult res = token.parse(env, enc());
         Assert.assertTrue(res.succeeded);
         final ParseGraph out = res.environment.order;
-        Assert.assertEquals(1, out.getRefs().size);
+        Assert.assertEquals(1, ByType.getRefs(out).size);
 
         final ParseGraph first = out.head.asGraph();
         checkBranch(first, 0, 0);
@@ -114,7 +115,7 @@ public class SubStructTest {
         final ParseResult res = token.parse(env, enc());
         Assert.assertTrue(res.succeeded);
         final ParseGraph out = res.environment.order;
-        Assert.assertEquals(1, out.getRefs().size);
+        Assert.assertEquals(1, ByType.getRefs(out).size);
 
         final ParseGraph first = out.head.asGraph();
         checkBranch(first, 0, 4);

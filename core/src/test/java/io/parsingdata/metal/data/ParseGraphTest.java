@@ -40,6 +40,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import io.parsingdata.metal.data.selection.ByItem;
+import io.parsingdata.metal.data.selection.ByOffset;
+import io.parsingdata.metal.data.selection.ByType;
 import io.parsingdata.metal.token.Token;
 
 public class ParseGraphTest {
@@ -160,18 +163,18 @@ public class ParseGraphTest {
 
     @Test
     public void listGraphs() {
-        final ParseGraphList list = pgl.getGraphs();
+        final ParseGraphList list = ByType.getGraphs(pgl);
         assertEquals(6, list.size);
     }
 
     @Test
     public void firstValue() {
         Assert.assertTrue(pgl.containsValue());
-        assertEquals(a, pgl.getLowestOffsetValue());
-        assertEquals(f, pgl.head.asGraph().getLowestOffsetValue());
-        assertEquals(a, pg.getLowestOffsetValue());
-        assertEquals(c, pg.tail.tail.head.asGraph().getLowestOffsetValue());
-        assertEquals(d, pg.tail.tail.head.asGraph().tail.head.asGraph().getLowestOffsetValue());
+        assertEquals(a, ByOffset.getLowestOffsetValue(pgl));
+        assertEquals(f, ByOffset.getLowestOffsetValue(pgl.head.asGraph()));
+        assertEquals(a, ByOffset.getLowestOffsetValue(pg));
+        assertEquals(c, ByOffset.getLowestOffsetValue(pg.tail.tail.head.asGraph()));
+        assertEquals(d, ByOffset.getLowestOffsetValue(pg.tail.tail.head.asGraph().tail.head.asGraph()));
     }
 
     @Test
@@ -193,7 +196,7 @@ public class ParseGraphTest {
         final ParseItem itemB = graph.tail.tail.tail.head;
         Assert.assertTrue(itemB.isValue());
         assertEquals(b, itemB);
-        final ParseGraph subGraph = graph.getGraphAfter(itemB);
+        final ParseGraph subGraph = ByItem.getGraphAfter(graph, itemB);
         Assert.assertTrue(subGraph.head.isValue());
         assertEquals(h, subGraph.head);
         Assert.assertTrue(subGraph.tail.head.isValue());

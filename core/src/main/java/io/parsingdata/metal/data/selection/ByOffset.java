@@ -36,7 +36,7 @@ public final class ByOffset {
         if (graphs.isEmpty()) { return null; }
         final ParseGraph res = findRef(graphs.tail, ref);
         if (res != null) { return res; }
-        if (graphs.head.containsValue() && graphs.head.getLowestOffsetValue().getOffset() == ref) {
+        if (graphs.head.containsValue() && ByOffset.getLowestOffsetValue(graphs.head).getOffset() == ref) {
             return graphs.head;
         }
         return null;

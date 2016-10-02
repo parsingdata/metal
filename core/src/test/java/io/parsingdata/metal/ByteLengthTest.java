@@ -39,6 +39,7 @@ import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.selection.ByName;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
@@ -69,9 +70,9 @@ public class ByteLengthTest {
 
         assertTrue(result.succeeded);
         final ParseGraph graph = result.environment.order;
-        assertEquals(5, graph.get("length").asNumeric().byteValue());
-        assertEquals("Hello", graph.get("text1").asString());
-        assertEquals("Metal", graph.get("text2").asString());
+        assertEquals(5, ByName.getValue(graph, "length").asNumeric().byteValue());
+        assertEquals("Hello", ByName.getValue(graph, "text1").asString());
+        assertEquals("Metal", ByName.getValue(graph, "text2").asString());
     }
 
     @Test

@@ -41,6 +41,7 @@ import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.ParseValueList;
 import io.parsingdata.metal.data.selection.ByName;
+import io.parsingdata.metal.data.transformation.Reversal;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
@@ -83,13 +84,13 @@ public class TreeTest {
     @Test
     public void checkRegularTree() {
         Assert.assertTrue(_regular.succeeded);
-        checkStruct(_regular.environment.order.reverse(), 0);
+        checkStruct(Reversal.reverse(_regular.environment.order), 0);
     }
 
     @Test
     public void checkCyclicTree() {
         Assert.assertTrue(_cyclic.succeeded);
-        checkStruct(_cyclic.environment.order.reverse(), 0);
+        checkStruct(Reversal.reverse(_cyclic.environment.order), 0);
     }
 
     private void checkStruct(final ParseGraph graph, final long offset) {

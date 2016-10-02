@@ -20,6 +20,7 @@ import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.selection.ByName;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
@@ -53,7 +54,7 @@ public class DefSizeTest {
         Assert.assertTrue(result.succeeded);
         Assert.assertArrayEquals(
             new byte[]{0x04, 0x08},
-            result.environment.order.get("data").getValue()
+            ByName.getValue(result.environment.order, "data").getValue()
         );
     }
 
