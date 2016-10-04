@@ -63,9 +63,9 @@ public class SubStructTableTest {
         assertTrue(res.succeeded);
         assertEquals(4, res.environment.offset);
         final ParseGraph order = res.environment.order;
-        checkStruct(order.head.asGraph().head.asGraph().head.asGraph());
-        checkStruct(order.head.asGraph().head.asGraph().tail.head.asGraph());
-        checkStruct(order.head.asGraph().head.asGraph().tail.tail.head.asGraph());
+        checkStruct(order.head.asGraph().head.asGraph().head.asGraph(), 6);
+        checkStruct(order.head.asGraph().head.asGraph().tail.head.asGraph(), 4);
+        checkStruct(order.head.asGraph().head.asGraph().tail.tail.head.asGraph(), 9);
     }
 
     @Test
@@ -83,16 +83,18 @@ public class SubStructTableTest {
         assertTrue(res.succeeded);
         assertEquals(5, res.environment.offset);
         final ParseGraph order = res.environment.order;
-        checkStruct(order.head.asGraph().head.asGraph().head.asGraph());
+        checkStruct(order.head.asGraph().head.asGraph().head.asGraph(), 7);
         assertTrue(order.head.asGraph().head.asGraph().tail.head.isRef());
-        checkStruct(order.head.asGraph().head.asGraph().tail.head.asRef().resolve(order).head.asGraph());
-        checkStruct(order.head.asGraph().head.asGraph().tail.tail.head.asGraph());
-        checkStruct(order.head.asGraph().head.asGraph().tail.tail.tail.head.asGraph());
+//        checkStruct(order.head.asGraph().head.asGraph().tail.head.asRef().resolve(order), 5); instead of:
+        checkStruct(order.head.asGraph().head.asGraph().tail.head.asRef().resolve(order).tail.tail.head.asGraph(), 5);
+        checkStruct(order.head.asGraph().head.asGraph().tail.tail.head.asGraph(), 5);
+        checkStruct(order.head.asGraph().head.asGraph().tail.tail.tail.head.asGraph(), 10);
     }
 
-    private void checkStruct(final ParseGraph graph) {
+    private void checkStruct(final ParseGraph graph, final int offsetHeader) {
         assertEquals(84, graph.head.asValue().asNumeric().intValue());
         assertEquals(42, graph.tail.head.asValue().asNumeric().intValue());
+        assertEquals(offsetHeader, graph.tail.head.asValue().getOffset());
     }
 
 }

@@ -122,6 +122,7 @@ public class TreeTest {
         if (item.asGraph().head.isGraph()) {
             checkStruct(root, item.asGraph().head.asGraph(), offset);
         } else if (item.asGraph().head.isRef()) {
+//            checkHeader(item.asGraph().head.asRef().resolve(root), offset); instead of:
             checkHeader(item.asGraph().head.asRef().resolve(root).head.asGraph().head.asGraph(), offset);
         }
     }
