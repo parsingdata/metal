@@ -16,18 +16,22 @@
 
 package io.parsingdata.metal.expression.value;
 
-import io.parsingdata.metal.encoding.ByteOrder;
-import io.parsingdata.metal.encoding.Encoding;
-
 import java.math.BigInteger;
 import java.util.BitSet;
+
+import io.parsingdata.metal.encoding.ByteOrder;
+import io.parsingdata.metal.encoding.Encoding;
 
 public final class ConstantFactory {
 
     private ConstantFactory() {}
 
+    public static Value createFromBytes(final byte[] value, final Encoding enc) {
+        return new Value(value, enc);
+    }
+
     public static Value createFromNumeric(final BigInteger value, final Encoding enc) {
-        return new Value(compact(value.toByteArray(), enc.isSigned()), setToBE(enc));
+        return createFromBytes(compact(value.toByteArray(), enc.isSigned()), setToBE(enc));
     }
 
     public static Value createFromNumeric(final long value, final Encoding enc) {
@@ -49,7 +53,7 @@ public final class ConstantFactory {
         return new Encoding(enc.getSign(), enc.getCharset(), ByteOrder.BIG_ENDIAN);
     }
 
-    private static byte[] compact(final byte[] data, boolean signed) {
+    private static byte[] compact(final byte[] data, final boolean signed) {
         if (signed) { return data; }
         if (data.length < 2) { return data; }
         // strip leading zero bytes

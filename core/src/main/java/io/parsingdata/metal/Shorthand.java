@@ -100,6 +100,8 @@ public final class Shorthand {
     public static ValueExpression con(final Value value) { return new Const(value); }
     public static ValueExpression con(final Encoding encoding, final int... values) { return new Const(new Value(toByteArray(values), encoding)); }
     public static ValueExpression con(final int... values) { return con(new Encoding(), values); }
+    public static ValueExpression con(final byte[] value) { return con(value, new Encoding()); }
+    public static ValueExpression con(final byte[] value, final Encoding encoding) { return con(ConstantFactory.createFromBytes(value, encoding)); }
     public static final ValueExpression self = new Self();
     public static ValueExpression len(final ValueExpression operand) { return new Len(operand); }
     public static ValueExpression ref(final String name) { return new NameRef(name); }
