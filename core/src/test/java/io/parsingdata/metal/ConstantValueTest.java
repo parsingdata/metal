@@ -59,7 +59,9 @@ public class ConstantValueTest extends ParameterizedParse {
             { "2 bytes, Eq(0x81, 0x23), Unsigned", single(2, eq(con(0x81, 0x23))), stream(0x81, 0x23), enc(), true },
             { "2 bytes, Eq(0x81, 0x23), Unsigned", single(2, eq(con(new byte[]{(byte) 0x81, (byte) 0x23}))), stream(0x81, 0x23), enc(), true },
             { "2 bytes, Eq(0x81, 0x23), Unsigned", single(2, eq(con(new byte[]{(byte) 0x81, (byte) 0x23}, enc()))), stream(0x81, 0x23), le(), true },
-            { "2 bytes, Eq(0x81, 0x23), Unsigned", single(2, eq(con(new byte[]{(byte) 0x81, (byte) 0x23}, le()))), stream(0x81, 0x23), le(), true },
+            { "2 bytes, Eq(0x81, 0x23), Unsigned", single(2, eqNum(con(new byte[]{(byte) 0x81, (byte) 0x23}, enc()))), stream(0x81, 0x23), le(), false },
+            { "2 bytes, Eq(0x81, 0x23), Unsigned", single(2, eqNum(con(new byte[]{(byte) 0x81, (byte) 0x23}, enc()))), stream(0x23, 0x81), le(), true },
+            { "2 bytes, Eq(0x81, 0x23), Unsigned", single(2, eqNum(con(new byte[]{(byte) 0x81, (byte) 0x23}, le()))), stream(0x81, 0x23), le(), true },
         });
     }
 
