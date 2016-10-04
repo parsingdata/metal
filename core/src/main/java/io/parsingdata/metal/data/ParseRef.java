@@ -19,7 +19,7 @@ package io.parsingdata.metal.data;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import io.parsingdata.metal.data.selection.ByOffset;
-import io.parsingdata.metal.data.selection.ByType;
+import io.parsingdata.metal.data.selection.ByToken;
 import io.parsingdata.metal.token.Token;
 
 public class ParseRef implements ParseItem {
@@ -33,7 +33,7 @@ public class ParseRef implements ParseItem {
     }
 
     public ParseGraph resolve(final ParseGraph root) {
-        return ByOffset.findRef(ByType.getGraphs(root), location);
+        return ByOffset.findRef(ByToken.getAllRootGraphs(root, definition), location);
     }
 
     @Override public boolean isValue() { return false; }

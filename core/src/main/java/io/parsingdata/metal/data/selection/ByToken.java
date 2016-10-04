@@ -19,6 +19,7 @@ package io.parsingdata.metal.data.selection;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseGraphList;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseItemList;
 import io.parsingdata.metal.data.ParseValueList;
@@ -73,7 +74,15 @@ public final class ByToken {
         if (head.isGraph()) { return tailResults.add(getAllValuesRecursive(head.asGraph(), definition)); }
         return tailResults;
     }
-    
+
+    public static ParseGraphList getAllRootGraphs(final ParseGraph graph, final Token definition) {
+        return toParseGraphList(getAllRoots(graph, definition), ParseGraphList.EMPTY);
+    }
+
+    private static ParseGraphList toParseGraphList(final ParseItemList itemList, final ParseGraphList graphList) {
+        return itemList.isEmpty() ? graphList : toParseGraphList(itemList.tail, itemList.head.isGraph() ? graphList.add(itemList.head.asGraph()) : graphList);
+    }
+
     public static ParseItemList getAllRoots(final ParseGraph graph, final Token definition) {
         checkNotNull(graph, "graph");
         checkNotNull(definition, "definition");

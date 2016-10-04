@@ -22,13 +22,14 @@ import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseGraphList;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.token.Token;
 
 public final class ByOffset {
 
     private ByOffset() {}
 
-    public static boolean hasGraphAtRef(final ParseGraph graph, final long ref) {
-        return findRef(ByType.getGraphs(graph), ref) != null;
+    public static boolean hasGraphAtRef(final ParseGraph graph, final Token definition, final long ref) {
+        return findRef(ByToken.getAllRootGraphs(graph, definition), ref) != null;
     }
 
     public static ParseGraph findRef(final ParseGraphList graphs, final long ref) {
