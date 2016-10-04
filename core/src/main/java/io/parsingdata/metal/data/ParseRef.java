@@ -33,7 +33,7 @@ public class ParseRef implements ParseItem {
     }
 
     public ParseGraph resolve(final ParseGraph root) {
-        return ByOffset.findRef(ParseGraphList.create(root).add(ByType.getGraphs(root)), location);
+        return ByOffset.findRef(ByType.getGraphs(root), location);
     }
 
     @Override public boolean isValue() { return false; }

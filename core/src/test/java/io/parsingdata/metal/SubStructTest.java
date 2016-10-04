@@ -105,8 +105,7 @@ public class SubStructTest {
         checkBranch(first, 0, 0);
 
         final ParseRef ref = first.tail.head.asGraph().head.asGraph().head.asRef();
-//        checkBranch(ref.resolve(out), 0, 0); instead of:
-        checkBranch(ref.resolve(out).head.asGraph(), 0, 0); // Check cycle
+        checkBranch(ref.resolve(out), 0, 0); // Check cycle
     }
 
     @Test
@@ -125,8 +124,7 @@ public class SubStructTest {
         checkBranch(second, 4, 0);
 
         final ParseRef ref = second.tail.head.asGraph().head.asGraph().head.asRef();
-//        checkBranch(ref.resolve(out), 0, 4); instead of:
-        checkBranch(ref.resolve(out).head.asGraph(), 0, 4); // Check cycle
+        checkBranch(ref.resolve(out), 0, 4); // Check cycle
     }
 
     private void checkBranch(final ParseGraph graph, final int graphOffset, final int nextOffset) {
