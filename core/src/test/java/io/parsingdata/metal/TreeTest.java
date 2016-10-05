@@ -25,6 +25,8 @@ import static io.parsingdata.metal.Shorthand.pre;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.data.ParseResult.failure;
+import static io.parsingdata.metal.data.ParseResult.success;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
@@ -53,12 +55,16 @@ public class TreeTest {
         new Token("", null) {
             @Override
             protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-            return seq(def("head", con(1), eq(con(HEAD))),
-                       def("nr", con(1)),
-                       def("left", con(1)),
-                       pre(sub(this, last(ref("left"))), not(eq(last(ref("left")), con(0)))),
-                       def("right", con(1)),
-                       pre(sub(this, last(ref("right"))), not(eq(last(ref("right")), con(0))))).parse(scope, env, enc);
+                final ParseResult result =
+                    seq(def("head", con(1), eq(con(HEAD))),
+                        def("nr", con(1)),
+                        def("left", con(1)),
+                        pre(sub(this, last(ref("left"))), not(eq(last(ref("left")), con(0)))),
+                        def("right", con(1)),
+                        pre(sub(this, last(ref("right"))), not(eq(last(ref("right")), con(0))))
+                    ).parse(scope, env.addBranch(this), enc);
+                if (result.succeeded) { return success(result.environment.closeBranch()); }
+                return failure(env);
             }
         };
 
@@ -84,13 +90,13 @@ public class TreeTest {
     @Test
     public void checkRegularTree() {
         Assert.assertTrue(_regular.succeeded);
-        checkStruct(Reversal.reverse(_regular.environment.order), 0);
+        checkStruct(Reversal.reverse(_regular.environment.order).head.asGraph(), 0);
     }
 
     @Test
     public void checkCyclicTree() {
         Assert.assertTrue(_cyclic.succeeded);
-        checkStruct(Reversal.reverse(_cyclic.environment.order), 0);
+        checkStruct(Reversal.reverse(_cyclic.environment.order).head.asGraph(), 0);
     }
 
     private void checkStruct(final ParseGraph graph, final long offset) {
@@ -120,10 +126,9 @@ public class TreeTest {
     private void checkBranch(final ParseGraph root, final long offset, final ParseItem item) {
         Assert.assertFalse(item.isValue());
         if (item.asGraph().head.isGraph()) {
-            checkStruct(root, item.asGraph().head.asGraph(), offset);
+            checkStruct(root, item.asGraph().head.asGraph().head.asGraph(), offset);
         } else if (item.asGraph().head.isRef()) {
-//            checkHeader(item.asGraph().head.asRef().resolve(root), offset); instead of:
-            checkHeader(item.asGraph().head.asRef().resolve(root).head.asGraph().head.asGraph(), offset);
+            checkHeader(item.asGraph().head.asRef().resolve(root).head.asGraph(), offset);
         }
     }
 
