@@ -85,8 +85,7 @@ public class SubStructTableTest {
         final ParseGraph order = res.environment.order;
         checkStruct(order.head.asGraph().head.asGraph().head.asGraph(), 7);
         assertTrue(order.head.asGraph().head.asGraph().tail.head.isRef());
-//        checkStruct(order.head.asGraph().head.asGraph().tail.head.asRef().resolve(order), 5); instead of:
-        checkStruct(order.head.asGraph().head.asGraph().tail.head.asRef().resolve(order).tail.tail.head.asGraph(), 5);
+        checkStruct(order.head.asGraph().head.asGraph().tail.head.asRef().resolve(order), 5);
         checkStruct(order.head.asGraph().head.asGraph().tail.tail.head.asGraph(), 5);
         checkStruct(order.head.asGraph().head.asGraph().tail.tail.tail.head.asGraph(), 10);
     }
