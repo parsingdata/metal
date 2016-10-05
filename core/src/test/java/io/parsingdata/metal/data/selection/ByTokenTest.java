@@ -241,16 +241,15 @@ public class ByTokenTest {
 
     @Test
     public void getSubRef() throws IOException {
-        final Token smallSub1 = sub(DEF2, last(ref("value1")));
-        final Token smallSub2 = sub(DEF2, last(ref("value1")));
-        final Token composition = seq(DEF1, smallSub1, smallSub2);
+        final Token smallSub = sub(DEF2, last(ref("value1")));
+        final Token composition = seq(DEF1, smallSub, smallSub);
         final ParseResult result = composition.parse(stream(0), enc());
         assertTrue(result.succeeded);
-        final ParseItemList refs = ByToken.getAll(result.environment.order, smallSub1);
+        final ParseItemList items = ByToken.getAll(result.environment.order, DEF2);
         // should return the ParseGraph created by the Sub and the ParseRef that refers to the existing ParseItem
-        assertEquals(2, refs.size);
-        assertTrue(refs.head.isRef());
-        assertTrue(refs.tail.head.isGraph());
+        assertEquals(2, items.size);
+        assertTrue(items.head.isRef());
+        assertTrue(items.tail.head.isValue());
     }
 
     private final Token smallSeq = seq(any("b"), any("c"));

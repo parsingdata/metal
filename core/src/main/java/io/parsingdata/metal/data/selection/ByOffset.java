@@ -19,8 +19,8 @@ package io.parsingdata.metal.data.selection;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseGraphList;
 import io.parsingdata.metal.data.ParseItem;
+import io.parsingdata.metal.data.ParseItemList;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.token.Token;
 
@@ -28,17 +28,20 @@ public final class ByOffset {
 
     private ByOffset() {}
 
-    public static boolean hasGraphAtRef(final ParseGraph graph, final Token definition, final long ref) {
-        return findRef(ByToken.getAllRootGraphs(graph, definition), ref) != null;
+    public static boolean hasRootAtRef(final ParseGraph graph, final Token definition, final long ref) {
+        return findRef(ByToken.getAllRoots(graph, definition), ref) != null;
     }
 
-    public static ParseGraph findRef(final ParseGraphList graphs, final long ref) {
-        checkNotNull(graphs, "graphs");
-        if (graphs.isEmpty()) { return null; }
-        if (graphs.head.containsValue() && ByOffset.getLowestOffsetValue(graphs.head).getOffset() == ref) {
-            return graphs.head;
+    public static ParseItem findRef(final ParseItemList items, final long ref) {
+        checkNotNull(items, "graphs");
+        if (items.isEmpty()) { return null; }
+        if (items.head.isValue() && items.head.asValue().getOffset() == ref) {
+            return items.head;
         }
-        return findRef(graphs.tail, ref);
+        if (items.head.isGraph() && items.head.asGraph().containsValue() && ByOffset.getLowestOffsetValue(items.head.asGraph()).getOffset() == ref) {
+            return items.head;
+        }
+        return findRef(items.tail, ref);
     }
 
     public static ParseValue getLowestOffsetValue(final ParseGraph graph) {

@@ -25,7 +25,6 @@ import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.nod;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
@@ -52,6 +51,7 @@ public class ParseGraphTest {
     private final ParseGraph pg;
     private final ParseGraph pgc;
     private final ParseGraph pgl;
+    private final Token aDef;
     private final ParseValue a;
     private final ParseValue b;
     private final ParseValue c;
@@ -62,7 +62,8 @@ public class ParseGraphTest {
     private final ParseValue h;
 
     public ParseGraphTest() {
-        a = makeVal('a', 0L);
+        aDef = any("a");
+        a = makeValWithDef('a', aDef, 0L);
         b = makeVal('b', 2L);
         c = makeVal('c', 4L);
         d = makeVal('d', 6L);
@@ -75,8 +76,12 @@ public class ParseGraphTest {
         pgl = makeLongGraph();
     }
 
+    private static ParseValue makeValWithDef(final char n, final Token t, final long o) {
+        return new ParseValue(Character.toString(n), t, o, new byte[] { (byte) n }, enc());
+    }
+
     private static ParseValue makeVal(final char n, final long o) {
-        return new ParseValue(Character.toString(n), def(Character.toString(n), o), o, new byte[] { (byte) n }, enc());
+        return makeValWithDef(n, def(Character.toString(n), o), o);
     }
 
     private ParseGraph makeSimpleGraph() {
@@ -124,7 +129,7 @@ public class ParseGraphTest {
             .add(a)
             .addBranch(t)
             .add(b)
-            .add(new ParseRef(a.getOffset(), sub(any("a"), con(a.getOffset()))))
+            .add(new ParseRef(a.getOffset(), aDef))
             .closeBranch();
     }
 
@@ -133,7 +138,7 @@ public class ParseGraphTest {
         assertEquals(2, pgc.size);
         Assert.assertTrue(pgc.head.isGraph());
         Assert.assertTrue(pgc.head.asGraph().head.isRef());
-        assertEquals(pgc, pgc.head.asGraph().head.asRef().resolve(pgc));
+        assertEquals(a, pgc.head.asGraph().head.asRef().resolve(pgc));
         Assert.assertTrue(pgc.head.asGraph().tail.head.isValue());
         assertEquals(b, pgc.head.asGraph().tail.head);
         Assert.assertTrue(pgc.tail.head.isValue());

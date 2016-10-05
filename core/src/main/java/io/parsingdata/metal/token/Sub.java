@@ -65,7 +65,7 @@ public class Sub extends Token {
     }
 
     private ParseResult parse(final String scope, final long ref, final Environment env, final Encoding enc) throws IOException {
-        if (ByOffset.hasGraphAtRef(env.order, token, ref)) {
+        if (ByOffset.hasRootAtRef(env.order, token, ref)) {
             return success(env.add(new ParseRef(ref, token)));
         }
         final ParseResult res = token.parse(scope, env.seek(ref), enc);

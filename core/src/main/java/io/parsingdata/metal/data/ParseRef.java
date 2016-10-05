@@ -32,8 +32,8 @@ public class ParseRef implements ParseItem {
         this.definition = checkNotNull(definition, "definition");
     }
 
-    public ParseGraph resolve(final ParseGraph root) {
-        return ByOffset.findRef(ByToken.getAllRootGraphs(root, definition), location);
+    public ParseItem resolve(final ParseGraph root) {
+        return ByOffset.findRef(ByToken.getAllRoots(root, definition), location);
     }
 
     @Override public boolean isValue() { return false; }
