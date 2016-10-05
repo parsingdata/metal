@@ -35,12 +35,10 @@ public final class ByOffset {
     public static ParseGraph findRef(final ParseGraphList graphs, final long ref) {
         checkNotNull(graphs, "graphs");
         if (graphs.isEmpty()) { return null; }
-        final ParseGraph res = findRef(graphs.tail, ref);
-        if (res != null) { return res; }
         if (graphs.head.containsValue() && ByOffset.getLowestOffsetValue(graphs.head).getOffset() == ref) {
             return graphs.head;
         }
-        return null;
+        return findRef(graphs.tail, ref);
     }
 
     public static ParseValue getLowestOffsetValue(final ParseGraph graph) {

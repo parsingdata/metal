@@ -25,6 +25,8 @@ import static io.parsingdata.metal.Shorthand.opt;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.data.ParseResult.failure;
+import static io.parsingdata.metal.data.ParseResult.success;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
@@ -62,7 +64,9 @@ public class SubStructTest {
 
         @Override
         protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-            return struct.parse(scope, env, enc);
+            final ParseResult result = struct.parse(scope, env.addBranch(this), enc);
+            if (result.succeeded) { return success(result.environment.closeBranch()); }
+            return failure(env);
         }
 
     }
@@ -85,10 +89,10 @@ public class SubStructTest {
         final ParseGraph first = out.head.asGraph();
         checkBranch(first, 0, 8);
 
-        final ParseGraph second = first.tail.head.asGraph().head.asGraph().head.asGraph();
+        final ParseGraph second = first.head.asGraph().tail.head.asGraph().head.asGraph().head.asGraph();
         checkBranch(second, 8, 4);
 
-        final ParseGraph third = second.tail.head.asGraph().head.asGraph().head.asGraph();
+        final ParseGraph third = second.head.asGraph().tail.head.asGraph().head.asGraph().head.asGraph().head.asGraph();
         checkLeaf(third, 4, 12);
     }
 
@@ -104,7 +108,7 @@ public class SubStructTest {
         final ParseGraph first = out.head.asGraph();
         checkBranch(first, 0, 0);
 
-        final ParseRef ref = first.tail.head.asGraph().head.asGraph().head.asRef();
+        final ParseRef ref = first.head.asGraph().tail.head.asGraph().head.asGraph().head.asRef();
         checkBranch(ref.resolve(out), 0, 0); // Check cycle
     }
 
@@ -120,17 +124,17 @@ public class SubStructTest {
         final ParseGraph first = out.head.asGraph();
         checkBranch(first, 0, 4);
 
-        final ParseGraph second = first.tail.head.asGraph().head.asGraph().head.asGraph();
+        final ParseGraph second = first.head.asGraph().tail.head.asGraph().head.asGraph().head.asGraph();
         checkBranch(second, 4, 0);
 
-        final ParseRef ref = second.tail.head.asGraph().head.asGraph().head.asRef();
+        final ParseRef ref = second.head.asGraph().tail.head.asGraph().head.asGraph().head.asRef();
         checkBranch(ref.resolve(out), 0, 4); // Check cycle
     }
 
     private void checkBranch(final ParseGraph graph, final int graphOffset, final int nextOffset) {
-        checkValue(graph.head, 1, graphOffset + 2); // footer
-        checkValue(graph.tail.tail.head, nextOffset, graphOffset + 1); // next
-        checkValue(graph.tail.tail.tail.head, 0, graphOffset); // header
+        checkValue(graph.head.asGraph().head, 1, graphOffset + 2); // footer
+        checkValue(graph.head.asGraph().tail.tail.head, nextOffset, graphOffset + 1); // next
+        checkValue(graph.head.asGraph().tail.tail.tail.head, 0, graphOffset); // header
     }
 
     private void checkLeaf(final ParseGraph graph, final int graphOffset, final int nextOffset) {
