@@ -28,6 +28,7 @@ import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.data.ParseResult.failure;
 import static io.parsingdata.metal.data.ParseResult.success;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.seek;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -112,23 +113,41 @@ public class SubStructTest {
         checkBranch(ref.resolve(out).asGraph(), 0, 0); // Check cycle
     }
 
-    @Test
-    public void linkedListWithCycle() throws IOException {
+    private ParseResult startCycle(final int offset) throws IOException {
         final Token token = new LinkedList(enc());
-        final Environment env = stream(0, 4, 1, 21, 0, 0, 1);
+        final Environment env = seek(stream(0, 4, 1, 21, 0, 0, 1), offset);
         final ParseResult res = token.parse(env, enc());
         Assert.assertTrue(res.succeeded);
-        final ParseGraph out = res.environment.order;
-        Assert.assertEquals(1, ByType.getRefs(out).size);
+        Assert.assertEquals(1, ByType.getRefs(res.environment.order).size);
+        return res;
+    }
 
-        final ParseGraph first = out.head.asGraph();
+    @Test
+    public void linkedListWithCycle() throws IOException {
+        final ParseResult res = startCycle(0);
+
+        final ParseGraph first = res.environment.order.head.asGraph();
         checkBranch(first, 0, 4);
 
         final ParseGraph second = first.head.asGraph().tail.head.asGraph().head.asGraph().head.asGraph();
         checkBranch(second, 4, 0);
 
         final ParseRef ref = second.head.asGraph().tail.head.asGraph().head.asGraph().head.asRef();
-        checkBranch(ref.resolve(out).asGraph(), 0, 4); // Check cycle
+        checkBranch(ref.resolve(res.environment.order).asGraph(), 0, 4); // Check cycle
+    }
+
+    @Test
+    public void linkedListWithCycleToLowerOffset() throws IOException {
+        final ParseResult res = startCycle(4);
+
+        final ParseGraph first = res.environment.order.head.asGraph();
+        checkBranch(first, 4, 0);
+
+        final ParseGraph second = first.head.asGraph().tail.head.asGraph().head.asGraph().head.asGraph();
+        checkBranch(second, 0, 4);
+
+        final ParseRef ref = second.head.asGraph().tail.head.asGraph().head.asGraph().head.asRef();
+        checkBranch(ref.resolve(res.environment.order).asGraph(), 4, 0); // Check cycle
     }
 
     private void checkBranch(final ParseGraph graph, final int graphOffset, final int nextOffset) {
