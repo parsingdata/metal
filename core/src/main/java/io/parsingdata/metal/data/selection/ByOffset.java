@@ -22,6 +22,7 @@ import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseItemList;
 import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.token.Sub;
 import io.parsingdata.metal.token.Token;
 
 public final class ByOffset {
@@ -38,7 +39,7 @@ public final class ByOffset {
         if (items.head.isValue() && items.head.asValue().getOffset() == ref) {
             return items.head;
         }
-        if (items.head.isGraph() && items.head.asGraph().containsValue() && ByOffset.getLowestOffsetValue(items.head.asGraph()).getOffset() == ref) {
+        if (items.head.isGraph() && containsLocalValue(items.head.asGraph()) && ByOffset.getLowestOffsetValue(items.head.asGraph()).getOffset() == ref) {
             return items.head;
         }
         return findRef(items.tail, ref);
@@ -46,10 +47,18 @@ public final class ByOffset {
 
     public static ParseValue getLowestOffsetValue(final ParseGraph graph) {
         checkNotNull(graph, "graph");
-        if (!graph.containsValue()) {
+        if (!containsLocalValue(graph)) {
             throw new IllegalStateException("Cannot determine lowest offset if graph does not contain a value.");
         }
         return getLowestOffsetValueRecursive(graph);
+    }
+
+    private static boolean containsLocalValue(final ParseGraph graph) {
+        if (graph.isEmpty() || graph.getDefinition() instanceof Sub) { return false; }
+        if (graph.head.isGraph()) {
+            return containsLocalValue(graph.head.asGraph()) || containsLocalValue(graph.tail);
+        }
+        return graph.head.isValue() || containsLocalValue(graph.tail);
     }
 
     private static ParseValue getLowestOffsetValueRecursive(final ParseGraph graph) {
@@ -57,14 +66,14 @@ public final class ByOffset {
         if (head.isValue()) {
             return getLowestOffsetValue(graph.tail, head.asValue());
         }
-        if (head.isGraph() && head.asGraph().containsValue()) {
+        if (head.isGraph() && containsLocalValue(head.asGraph())) {
             return getLowestOffsetValue(graph.tail, getLowestOffsetValueRecursive(head.asGraph()));
         }
         return getLowestOffsetValueRecursive(graph.tail);
     }
 
     private static ParseValue getLowestOffsetValue(final ParseGraph graph, final ParseValue lowest) {
-        if (!graph.containsValue()) { return lowest; }
+        if (!containsLocalValue(graph)) { return lowest; }
         final ParseItem head = graph.head;
         if (head.isValue()) {
             return getLowestOffsetValue(graph.tail, lowest.getOffset() < head.asValue().getOffset() ? lowest : head.asValue());
