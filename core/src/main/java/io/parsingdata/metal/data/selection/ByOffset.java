@@ -22,7 +22,6 @@ import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseItemList;
 import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.token.Sub;
 import io.parsingdata.metal.token.Token;
 
 public final class ByOffset {
@@ -54,7 +53,7 @@ public final class ByOffset {
     }
 
     private static boolean containsLocalValue(final ParseGraph graph) {
-        if (graph.isEmpty() || graph.getDefinition() instanceof Sub) { return false; }
+        if (graph.isEmpty() || !graph.getDefinition().isLocal()) { return false; }
         if (graph.head.isGraph()) {
             return containsLocalValue(graph.head.asGraph()) || containsLocalValue(graph.tail);
         }
