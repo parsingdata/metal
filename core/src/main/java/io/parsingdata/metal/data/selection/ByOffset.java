@@ -28,20 +28,21 @@ public final class ByOffset {
 
     private ByOffset() {}
 
-    public static boolean hasRootAtRef(final ParseGraph graph, final Token definition, final long ref) {
-        return findRef(ByToken.getAllRoots(graph, definition), ref) != null;
+    public static boolean hasRootAtOffset(final ParseGraph graph, final Token definition, final long ref) {
+        return findItemAtOffset(ByToken.getAllRoots(graph, definition), ref) != null;
     }
 
-    public static ParseItem findRef(final ParseItemList items, final long ref) {
-        checkNotNull(items, "graphs");
+    public static ParseItem findItemAtOffset(final ParseItemList items, final long ref) {
+        checkNotNull(items, "items");
         if (items.isEmpty()) { return null; }
-        if (items.head.isValue() && items.head.asValue().getOffset() == ref) {
-            return items.head;
+        final ParseItem head = items.head;
+        if (head.isValue() && head.asValue().getOffset() == ref) {
+            return head;
         }
-        if (items.head.isGraph() && containsLocalValue(items.head.asGraph()) && ByOffset.getLowestOffsetValue(items.head.asGraph()).getOffset() == ref) {
-            return items.head;
+        if (head.isGraph() && containsLocalValue(head.asGraph()) && getLowestOffsetValue(head.asGraph()).getOffset() == ref) {
+            return head;
         }
-        return findRef(items.tail, ref);
+        return findItemAtOffset(items.tail, ref);
     }
 
     public static ParseValue getLowestOffsetValue(final ParseGraph graph) {
