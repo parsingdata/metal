@@ -82,14 +82,6 @@ public class ParseGraph implements ParseItem {
         return new ParseGraph(head, tail, definition, false);
     }
 
-    public boolean containsValue() {
-        if (isEmpty()) { return false; }
-        if (head.isGraph()) {
-            return head.asGraph().containsValue() || tail.containsValue();
-        }
-        return head.isValue() || tail.containsValue();
-    }
-
     public boolean isEmpty() {
         return size == 0;
     }

@@ -174,7 +174,6 @@ public class ParseGraphTest {
 
     @Test
     public void firstValue() {
-        Assert.assertTrue(pgl.containsValue());
         assertEquals(a, ByOffset.getLowestOffsetValue(pgl));
         assertEquals(f, ByOffset.getLowestOffsetValue(pgl.head.asGraph()));
         assertEquals(a, ByOffset.getLowestOffsetValue(pg));
@@ -190,9 +189,9 @@ public class ParseGraphTest {
                  def("zero", 1),
                  con(2)),
             nod(con(1)));
-        // creates a ParseGraph with as head a ParseGraph containing values, and as tail an empty graph
+        // creates a ParseGraph with values in the head, and an empty graph as tail
         final ParseResult result = token.parse(stream, enc());
-        Assert.assertTrue(result.environment.order.containsValue());
+        Assert.assertTrue(result.environment.order.head.asGraph().head.asGraph().head.isValue());
     }
 
     @Test
