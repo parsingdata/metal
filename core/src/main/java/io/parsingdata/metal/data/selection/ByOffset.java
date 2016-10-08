@@ -46,7 +46,7 @@ public final class ByOffset {
         return findItemAtOffset(items.tail, ref);
     }
 
-    public static ParseValue getLowestOffsetValue(final ParseGraph graph) {
+    private static ParseValue getLowestOffsetValue(final ParseGraph graph) {
         checkNotNull(graph, "graph");
         if (!containsLocalValue(graph)) {
             throw new IllegalStateException("Cannot determine lowest offset if graph does not contain a value.");

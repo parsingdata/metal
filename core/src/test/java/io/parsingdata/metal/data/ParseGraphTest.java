@@ -27,6 +27,8 @@ import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
+import static io.parsingdata.metal.data.selection.ByItem.getGraphAfter;
+import static io.parsingdata.metal.data.selection.ByOffset.findItemAtOffset;
 import static io.parsingdata.metal.data.selection.ByType.getGraphs;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
@@ -40,8 +42,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.parsingdata.metal.data.selection.ByItem;
-import io.parsingdata.metal.data.selection.ByOffset;
 import io.parsingdata.metal.token.Token;
 
 public class ParseGraphTest {
@@ -174,11 +174,11 @@ public class ParseGraphTest {
 
     @Test
     public void firstValue() {
-        assertEquals(a, ByOffset.getLowestOffsetValue(pgl));
-        assertEquals(f, ByOffset.getLowestOffsetValue(pgl.head.asGraph()));
-        assertEquals(a, ByOffset.getLowestOffsetValue(pg));
-        assertEquals(c, ByOffset.getLowestOffsetValue(pg.tail.tail.head.asGraph()));
-        assertEquals(d, ByOffset.getLowestOffsetValue(pg.tail.tail.head.asGraph().tail.head.asGraph()));
+        assertEquals(pgl, findItemAtOffset(ParseItemList.create(pgl), a.getOffset()));
+        assertEquals(pgl.head.asGraph(), findItemAtOffset(ParseItemList.create(pgl.head.asGraph()), f.getOffset()));
+        assertEquals(pg, findItemAtOffset(ParseItemList.create(pg), a.getOffset()));
+        assertEquals(pg.tail.tail.head.asGraph(), findItemAtOffset(ParseItemList.create(pg.tail.tail.head.asGraph()), c.getOffset()));
+        assertEquals(pg.tail.tail.head.asGraph().tail.head.asGraph(), findItemAtOffset(ParseItemList.create(pg.tail.tail.head.asGraph().tail.head.asGraph()), d.getOffset()));
     }
 
     @Test
@@ -200,7 +200,7 @@ public class ParseGraphTest {
         final ParseItem itemB = graph.tail.tail.tail.head;
         Assert.assertTrue(itemB.isValue());
         assertEquals(b, itemB);
-        final ParseGraph subGraph = ByItem.getGraphAfter(graph, itemB);
+        final ParseGraph subGraph = getGraphAfter(graph, itemB);
         Assert.assertTrue(subGraph.head.isValue());
         assertEquals(h, subGraph.head);
         Assert.assertTrue(subGraph.tail.head.isValue());
