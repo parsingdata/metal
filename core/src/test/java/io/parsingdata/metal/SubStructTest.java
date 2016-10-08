@@ -27,6 +27,7 @@ import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.data.ParseResult.failure;
 import static io.parsingdata.metal.data.ParseResult.success;
+import static io.parsingdata.metal.data.selection.ByType.getRefs;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.seek;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
@@ -44,7 +45,6 @@ import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseRef;
 import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.data.selection.ByType;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
@@ -85,7 +85,7 @@ public class SubStructTest {
         final ParseResult res = token.parse(env, enc());
         Assert.assertTrue(res.succeeded);
         final ParseGraph out = res.environment.order;
-        Assert.assertEquals(0, ByType.getRefs(out).size); // No cycles
+        Assert.assertEquals(0, getRefs(out).size); // No cycles
 
         final ParseGraph first = out.head.asGraph();
         checkBranch(first, 0, 8);
@@ -104,7 +104,7 @@ public class SubStructTest {
         final ParseResult res = token.parse(env, enc());
         Assert.assertTrue(res.succeeded);
         final ParseGraph out = res.environment.order;
-        Assert.assertEquals(1, ByType.getRefs(out).size);
+        Assert.assertEquals(1, getRefs(out).size);
 
         final ParseGraph first = out.head.asGraph();
         checkBranch(first, 0, 0);
@@ -118,7 +118,7 @@ public class SubStructTest {
         final Environment env = seek(stream(0, 4, 1, 21, 0, 0, 1), offset);
         final ParseResult res = token.parse(env, enc());
         Assert.assertTrue(res.succeeded);
-        Assert.assertEquals(1, ByType.getRefs(res.environment.order).size);
+        Assert.assertEquals(1, getRefs(res.environment.order).size);
         return res.environment.order;
     }
 

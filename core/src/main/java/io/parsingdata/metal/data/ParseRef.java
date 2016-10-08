@@ -18,9 +18,8 @@ package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.selection.ByOffset.findItemAtOffset;
+import static io.parsingdata.metal.data.selection.ByToken.getAllRoots;
 
-import io.parsingdata.metal.data.selection.ByOffset;
-import io.parsingdata.metal.data.selection.ByToken;
 import io.parsingdata.metal.token.Token;
 
 public class ParseRef implements ParseItem {
@@ -34,7 +33,7 @@ public class ParseRef implements ParseItem {
     }
 
     public ParseItem resolve(final ParseGraph root) {
-        return findItemAtOffset(ByToken.getAllRoots(root, definition), location);
+        return findItemAtOffset(getAllRoots(root, definition), location);
     }
 
     @Override public boolean isValue() { return false; }

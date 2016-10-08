@@ -18,20 +18,20 @@ package io.parsingdata.metal.data;
 
 import static org.junit.Assert.assertNull;
 
-import org.junit.Test;
+import static io.parsingdata.metal.data.selection.ByName.getValue;
 
-import io.parsingdata.metal.data.selection.ByName;
+import org.junit.Test;
 
 public class ByNameTest {
 
     @Test
     public void getValueOnEmpty() {
-        assertNull(ByName.getValue(ParseGraph.EMPTY, "name"));
+        assertNull(getValue(ParseGraph.EMPTY, "name"));
     }
 
     @Test
     public void getValueOnBranchedEmpty() {
-        assertNull(ByName.getValue(ParseGraph.EMPTY.addBranch(ParseGraph.NONE), "name"));
+        assertNull(getValue(ParseGraph.EMPTY.addBranch(ParseGraph.NONE), "name"));
     }
 
 }

@@ -27,6 +27,7 @@ import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.data.ParseResult.failure;
 import static io.parsingdata.metal.data.ParseResult.success;
+import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
@@ -42,7 +43,6 @@ import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.ParseValueList;
-import io.parsingdata.metal.data.selection.ByName;
 import io.parsingdata.metal.data.transformation.Reversal;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
@@ -144,7 +144,7 @@ public class TreeTest {
     @Test
     public void checkRegularTreeFlat() {
         Assert.assertTrue(_regular.succeeded);
-        final ParseValueList nrs = ByName.getAllValues(_regular.environment.order, "nr");
+        final ParseValueList nrs = getAllValues(_regular.environment.order, "nr");
         for (int i = 0; i < 7; i++) {
             Assert.assertTrue(contains(nrs, i));
         }

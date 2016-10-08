@@ -27,7 +27,6 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseRef;
 import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.data.selection.ByOffset;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ValueExpression;
 

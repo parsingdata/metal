@@ -17,6 +17,7 @@
 package io.parsingdata.metal.data.selection;
 
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.selection.ByToken.getAllRoots;
 
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
@@ -29,7 +30,7 @@ public final class ByOffset {
     private ByOffset() {}
 
     public static boolean hasRootAtOffset(final ParseGraph graph, final Token definition, final long ref) {
-        return findItemAtOffset(ByToken.getAllRoots(graph, definition), ref) != null;
+        return findItemAtOffset(getAllRoots(graph, definition), ref) != null;
     }
 
     public static ParseItem findItemAtOffset(final ParseItemList items, final long ref) {

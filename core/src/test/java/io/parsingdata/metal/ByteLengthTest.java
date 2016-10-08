@@ -28,6 +28,7 @@ import static io.parsingdata.metal.Shorthand.len;
 import static io.parsingdata.metal.Shorthand.ltNum;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.encoding.ByteOrder.LITTLE_ENDIAN;
 import static io.parsingdata.metal.encoding.Sign.UNSIGNED;
 
@@ -70,9 +71,9 @@ public class ByteLengthTest {
 
         assertTrue(result.succeeded);
         final ParseGraph graph = result.environment.order;
-        assertEquals(5, ByName.getValue(graph, "length").asNumeric().byteValue());
-        assertEquals("Hello", ByName.getValue(graph, "text1").asString());
-        assertEquals("Metal", ByName.getValue(graph, "text2").asString());
+        assertEquals(5, getValue(graph, "length").asNumeric().byteValue());
+        assertEquals("Hello", getValue(graph, "text1").asString());
+        assertEquals("Metal", getValue(graph, "text2").asString());
     }
 
     @Test

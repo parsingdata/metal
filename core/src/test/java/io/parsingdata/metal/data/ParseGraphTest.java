@@ -27,6 +27,7 @@ import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
+import static io.parsingdata.metal.data.selection.ByType.getGraphs;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -41,7 +42,6 @@ import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.data.selection.ByItem;
 import io.parsingdata.metal.data.selection.ByOffset;
-import io.parsingdata.metal.data.selection.ByType;
 import io.parsingdata.metal.token.Token;
 
 public class ParseGraphTest {
@@ -168,7 +168,7 @@ public class ParseGraphTest {
 
     @Test
     public void listGraphs() {
-        final ParseGraphList list = ByType.getGraphs(pgl);
+        final ParseGraphList list = getGraphs(pgl);
         assertEquals(6, list.size);
     }
 
