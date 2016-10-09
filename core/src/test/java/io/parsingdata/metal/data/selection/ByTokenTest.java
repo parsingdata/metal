@@ -245,7 +245,8 @@ public class ByTokenTest {
     @Test
     public void getSubRef() throws IOException {
         final Token smallSub = sub(DEF2, last(ref("value1")));
-        final Token composition = seq(DEF1, smallSub, smallSub);
+        final Token extraSub = sub(any("x"), last(ref("value1")));
+        final Token composition = seq(DEF1, smallSub, extraSub, smallSub, extraSub);
         final ParseResult result = composition.parse(stream(0), enc());
         assertTrue(result.succeeded);
         final ParseItemList items = getAll(result.environment.order, DEF2);

@@ -19,7 +19,6 @@ package io.parsingdata.metal.data.selection;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseGraphList;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseItemList;
 
@@ -37,19 +36,6 @@ public final class ByType {
         final ParseItem head = graph.head;
         if (head.isRef() && head.asRef().resolve(root) == null) { throw new IllegalStateException("A ref must point to an existing graph."); }
         return getRefs(graph.tail, root).add(head.isGraph() ? getRefs(head.asGraph(), root) : (head.isRef() ? ParseItemList.EMPTY.add(head.asRef().resolve(root)) : ParseItemList.EMPTY));
-    }
-
-    public static ParseGraphList getGraphs(final ParseGraph graph) {
-        checkNotNull(graph, "graph");
-        return getNestedGraphs(graph).add(graph);
-    }
-
-    private static ParseGraphList getNestedGraphs(final ParseGraph graph) {
-        if (graph.isEmpty()) { return ParseGraphList.EMPTY; }
-        final ParseGraphList tailGraphs = getNestedGraphs(graph.tail);
-        final ParseItem head = graph.head;
-        if (head.isGraph()) { return tailGraphs.add(head.asGraph()).add(getNestedGraphs(head.asGraph())); }
-        return tailGraphs;
     }
 
 }
