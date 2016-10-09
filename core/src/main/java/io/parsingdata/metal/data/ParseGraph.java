@@ -20,12 +20,6 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
 
-import io.parsingdata.metal.data.selection.ByItem;
-import io.parsingdata.metal.data.selection.ByName;
-import io.parsingdata.metal.data.selection.ByOffset;
-import io.parsingdata.metal.data.selection.ByToken;
-import io.parsingdata.metal.data.selection.ByType;
-import io.parsingdata.metal.data.transformation.Reversal;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
@@ -88,44 +82,8 @@ public class ParseGraph implements ParseItem {
         return new ParseGraph(head, tail, definition, false);
     }
 
-    public ParseGraphList getRefs() {
-        return ByType.getRefs(this);
-    }
-
-    public ParseGraphList getGraphs() {
-        return ByType.getGraphs(this);
-    }
-
-    public boolean containsValue() {
-        if (isEmpty()) { return false; }
-        if (head.isGraph()) {
-            return head.asGraph().containsValue() || tail.containsValue();
-        }
-        return head.isValue() || tail.containsValue();
-    }
-
-    public ParseValue getLowestOffsetValue() {
-        return ByOffset.getLowestOffsetValue(this);
-    }
-
-    public boolean hasGraphAtRef(final long ref) {
-        return ByOffset.hasGraphAtRef(this, ref);
-    }
-
     public boolean isEmpty() {
         return size == 0;
-    }
-
-    public ParseGraph reverse() {
-        return Reversal.reverse(this, EMPTY);
-    }
-
-    public ParseValue get(final String name) {
-        return ByName.getValue(this, name);
-    }
-
-    public ParseItem get(final Token definition) {
-        return ByToken.get(this, definition);
     }
 
     /**
@@ -139,14 +97,6 @@ public class ParseGraph implements ParseItem {
             if (val != null) { return val; }
         }
         return tail.current(); // Ignore current if it's a reference (or an empty graph)
-    }
-
-    /**
-     * @param lastHead The first item (bottom-up) to be excluded
-     * @return The subgraph of this graph starting past (bottom-up) the provided lastHead
-     */
-    public ParseGraph getGraphAfter(final ParseItem lastHead) {
-        return ByItem.getGraphAfter(this, lastHead);
     }
 
     @Override public boolean isValue() { return false; }

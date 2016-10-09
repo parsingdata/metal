@@ -19,15 +19,16 @@ package io.parsingdata.metal.data;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.nod;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
+import static io.parsingdata.metal.data.selection.ByItem.getGraphAfter;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -35,7 +36,6 @@ import static junit.framework.TestCase.assertNull;
 
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -49,6 +49,7 @@ public class ParseGraphTest {
     private final ParseGraph pg;
     private final ParseGraph pgc;
     private final ParseGraph pgl;
+    private final Token aDef;
     private final ParseValue a;
     private final ParseValue b;
     private final ParseValue c;
@@ -59,7 +60,8 @@ public class ParseGraphTest {
     private final ParseValue h;
 
     public ParseGraphTest() {
-        a = makeVal('a', 0L);
+        aDef = any("a");
+        a = makeValWithDef('a', aDef, 0L);
         b = makeVal('b', 2L);
         c = makeVal('c', 4L);
         d = makeVal('d', 6L);
@@ -72,8 +74,12 @@ public class ParseGraphTest {
         pgl = makeLongGraph();
     }
 
+    private static ParseValue makeValWithDef(final char n, final Token t, final long o) {
+        return new ParseValue(Character.toString(n), t, o, new byte[] { (byte) n }, enc());
+    }
+
     private static ParseValue makeVal(final char n, final long o) {
-        return new ParseValue(Character.toString(n), def(Character.toString(n), o), o, new byte[] { (byte) n }, enc());
+        return makeValWithDef(n, def(Character.toString(n), o), o);
     }
 
     private ParseGraph makeSimpleGraph() {
@@ -95,23 +101,23 @@ public class ParseGraphTest {
 
     @Test
     public void simple() {
-        Assert.assertTrue(pg.head.isValue());
+        assertTrue(pg.head.isValue());
         assertEquals(h, pg.head);
-        Assert.assertTrue(pg.tail.head.isValue());
+        assertTrue(pg.tail.head.isValue());
         assertEquals(g, pg.tail.head);
-        Assert.assertTrue(pg.tail.tail.head.isGraph());
-        Assert.assertTrue(pg.tail.tail.head.asGraph().head.isValue());
+        assertTrue(pg.tail.tail.head.isGraph());
+        assertTrue(pg.tail.tail.head.asGraph().head.isValue());
         assertEquals(f, pg.tail.tail.head.asGraph().head);
-        Assert.assertTrue(pg.tail.tail.head.asGraph().tail.head.isGraph());
-        Assert.assertTrue(pg.tail.tail.head.asGraph().tail.head.asGraph().head.isValue());
+        assertTrue(pg.tail.tail.head.asGraph().tail.head.isGraph());
+        assertTrue(pg.tail.tail.head.asGraph().tail.head.asGraph().head.isValue());
         assertEquals(e, pg.tail.tail.head.asGraph().tail.head.asGraph().head);
-        Assert.assertTrue(pg.tail.tail.head.asGraph().tail.head.asGraph().tail.head.isValue());
+        assertTrue(pg.tail.tail.head.asGraph().tail.head.asGraph().tail.head.isValue());
         assertEquals(d, pg.tail.tail.head.asGraph().tail.head.asGraph().tail.head);
-        Assert.assertTrue(pg.tail.tail.head.asGraph().tail.tail.head.isValue());
+        assertTrue(pg.tail.tail.head.asGraph().tail.tail.head.isValue());
         assertEquals(c, pg.tail.tail.head.asGraph().tail.tail.head);
-        Assert.assertTrue(pg.tail.tail.tail.head.isValue());
+        assertTrue(pg.tail.tail.tail.head.isValue());
         assertEquals(b, pg.tail.tail.tail.head);
-        Assert.assertTrue(pg.tail.tail.tail.tail.head.isValue());
+        assertTrue(pg.tail.tail.tail.tail.head.isValue());
         assertEquals(a, pg.tail.tail.tail.tail.head);
     }
 
@@ -121,19 +127,19 @@ public class ParseGraphTest {
             .add(a)
             .addBranch(t)
             .add(b)
-            .add(new ParseRef(a.getOffset(), sub(any("a"), con(a.getOffset()))))
+            .add(new ParseRef(a.getOffset(), aDef))
             .closeBranch();
     }
 
     @Test
     public void cycle() {
         assertEquals(2, pgc.size);
-        Assert.assertTrue(pgc.head.isGraph());
-        Assert.assertTrue(pgc.head.asGraph().head.isRef());
-        assertEquals(pgc, pgc.head.asGraph().head.asRef().resolve(pgc));
-        Assert.assertTrue(pgc.head.asGraph().tail.head.isValue());
+        assertTrue(pgc.head.isGraph());
+        assertTrue(pgc.head.asGraph().head.isRef());
+        assertEquals(a, pgc.head.asGraph().head.asRef().resolve(pgc));
+        assertTrue(pgc.head.asGraph().tail.head.isValue());
         assertEquals(b, pgc.head.asGraph().tail.head);
-        Assert.assertTrue(pgc.tail.head.isValue());
+        assertTrue(pgc.tail.head.isValue());
         assertEquals(a, pgc.tail.head);
     }
 
@@ -159,19 +165,26 @@ public class ParseGraphTest {
     }
 
     @Test
-    public void listGraphs() {
-        final ParseGraphList list = pgl.getGraphs();
-        assertEquals(6, list.size);
-    }
-
-    @Test
-    public void firstValue() {
-        Assert.assertTrue(pgl.containsValue());
-        assertEquals(a, pgl.getLowestOffsetValue());
-        assertEquals(f, pgl.head.asGraph().getLowestOffsetValue());
-        assertEquals(a, pg.getLowestOffsetValue());
-        assertEquals(c, pg.tail.tail.head.asGraph().getLowestOffsetValue());
-        assertEquals(d, pg.tail.tail.head.asGraph().tail.head.asGraph().getLowestOffsetValue());
+    public void testLong() {
+        assertTrue(pgl.head.isGraph());
+        assertTrue(pgl.head.asGraph().head.isValue());
+        assertEquals(f, pgl.head.asGraph().head.asValue());
+        assertTrue(pgl.tail.head.isValue());
+        assertEquals(e, pgl.tail.head.asValue());
+        assertTrue(pgl.tail.tail.head.isGraph());
+        assertTrue(pgl.tail.tail.head.asGraph().head.isGraph());
+        assertTrue(pgl.tail.tail.head.asGraph().head.asGraph().head.isValue());
+        assertEquals(d, pgl.tail.tail.head.asGraph().head.asGraph().head.asValue());
+        assertTrue(pgl.tail.tail.head.asGraph().tail.isGraph());
+        assertTrue(pgl.tail.tail.head.asGraph().tail.asGraph().head.isValue());
+        assertEquals(c, pgl.tail.tail.head.asGraph().tail.asGraph().head.asValue());
+        assertTrue(pgl.tail.tail.head.asGraph().tail.tail.head.isGraph());
+        assertTrue(pgl.tail.tail.head.asGraph().tail.tail.head.asGraph().isEmpty());
+        assertTrue(pgl.tail.tail.head.asGraph().tail.tail.tail.head.isGraph());
+        assertTrue(pgl.tail.tail.head.asGraph().tail.tail.tail.head.asGraph().head.isValue());
+        assertEquals(b, pgl.tail.tail.head.asGraph().tail.tail.tail.head.asGraph().head.asValue());
+        assertTrue(pgl.tail.tail.tail.head.isValue());
+        assertEquals(a, pgl.tail.tail.tail.head.asValue());
     }
 
     @Test
@@ -182,24 +195,24 @@ public class ParseGraphTest {
                  def("zero", 1),
                  con(2)),
             nod(con(1)));
-        // creates a ParseGraph with as head a ParseGraph containing values, and as tail an empty graph
+        // creates a ParseGraph with values in the head, and an empty graph as tail
         final ParseResult result = token.parse(stream, enc());
-        Assert.assertTrue(result.environment.order.containsValue());
+        assertTrue(result.environment.order.head.asGraph().head.asGraph().head.isValue());
     }
 
     @Test
     public void testSimpleGetGraphAfter() {
         final ParseGraph graph = makeSimpleGraph();
         final ParseItem itemB = graph.tail.tail.tail.head;
-        Assert.assertTrue(itemB.isValue());
+        assertTrue(itemB.isValue());
         assertEquals(b, itemB);
-        final ParseGraph subGraph = graph.getGraphAfter(itemB);
-        Assert.assertTrue(subGraph.head.isValue());
+        final ParseGraph subGraph = getGraphAfter(graph, itemB);
+        assertTrue(subGraph.head.isValue());
         assertEquals(h, subGraph.head);
-        Assert.assertTrue(subGraph.tail.head.isValue());
+        assertTrue(subGraph.tail.head.isValue());
         assertEquals(g, subGraph.tail.head);
-        Assert.assertTrue(subGraph.tail.tail.head.isGraph());
-        Assert.assertTrue(subGraph.tail.tail.head.asGraph().head.isValue());
+        assertTrue(subGraph.tail.tail.head.isGraph());
+        assertTrue(subGraph.tail.tail.head.asGraph().head.isValue());
         assertEquals(f, subGraph.tail.tail.head.asGraph().head);
     }
 

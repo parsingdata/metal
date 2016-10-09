@@ -16,17 +16,18 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.ParseResult.failure;
+import static io.parsingdata.metal.data.ParseResult.success;
+import static io.parsingdata.metal.data.selection.ByToken.get;
+
+import java.io.IOException;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.True;
-
-import java.io.IOException;
-
-import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.ParseResult.failure;
-import static io.parsingdata.metal.data.ParseResult.success;
 
 public class Str extends Token {
 
@@ -47,7 +48,7 @@ public class Str extends Token {
         if (!res.succeeded) { return failure(env); }
         final ParseResult closedResult = success(res.environment.closeBranch());
         if (sink != null && predicate.eval(closedResult.environment, enc)) {
-            sink.handleStruct(scope, closedResult.environment, enc, closedResult.environment.order.get(this).asGraph());
+            sink.handleStruct(scope, closedResult.environment, enc, get(closedResult.environment.order, this).asGraph());
         }
         return closedResult;
     }

@@ -16,6 +16,23 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertFalse;
+
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.data.selection.ByName.getValue;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
+
+import java.io.IOException;
+
+import org.junit.Assert;
+import org.junit.Test;
+
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
@@ -23,17 +40,6 @@ import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.io.IOException;
-
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
-import static org.junit.Assert.assertFalse;
 
 public class DefSizeTest {
     public static final Token FORMAT =
@@ -53,7 +59,7 @@ public class DefSizeTest {
         Assert.assertTrue(result.succeeded);
         Assert.assertArrayEquals(
             new byte[]{0x04, 0x08},
-            result.environment.order.get("data").getValue()
+            getValue(result.environment.order, "data").getValue()
         );
     }
 

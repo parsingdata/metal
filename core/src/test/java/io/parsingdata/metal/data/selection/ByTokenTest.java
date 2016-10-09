@@ -35,7 +35,10 @@ import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.str;
 import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.data.selection.ByName.getAllValues;
+import static io.parsingdata.metal.data.selection.ByToken.get;
 import static io.parsingdata.metal.data.selection.ByToken.getAll;
+import static io.parsingdata.metal.data.selection.ByToken.getAllRoots;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -98,13 +101,13 @@ public class ByTokenTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Argument definition may not be null");
 
-        ByToken.get(parseResultGraph(stream(0, 1, 2), SIMPLE_SEQ), null);
+        get(parseResultGraph(stream(0, 1, 2), SIMPLE_SEQ), null);
     }
 
     @Test
     public void findRootToken() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2), SIMPLE_SEQ);
-        final ParseItem parseItem = ByToken.get(graph, SIMPLE_SEQ);
+        final ParseItem parseItem = get(graph, SIMPLE_SEQ);
 
         assertThat(parseItem.getDefinition(), is(equalTo(SIMPLE_SEQ)));
     }
@@ -112,7 +115,7 @@ public class ByTokenTest {
     @Test
     public void findNestedToken() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2), SIMPLE_SEQ);
-        final ParseItem parseItem = ByToken.get(graph, DEF1);
+        final ParseItem parseItem = get(graph, DEF1);
 
         assertThat(parseItem.getDefinition(), is(equalTo(DEF1)));
     }
@@ -120,7 +123,7 @@ public class ByTokenTest {
     @Test
     public void findUnusedToken() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2), SIMPLE_SEQ);
-        final ParseItem parseItem = ByToken.get(graph, UNUSED_DEF);
+        final ParseItem parseItem = get(graph, UNUSED_DEF);
 
         assertThat(parseItem, is(nullValue()));
     }
@@ -219,7 +222,7 @@ public class ByTokenTest {
     public void compareGetAllNameWithGetAllToken() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2, 3, 4, 5), SEQ_REP);
 
-        ParseValueList valueList = ByName.getAllValues(graph, "value2");
+        ParseValueList valueList = getAllValues(graph, "value2");
         ParseItemList itemList = getAll(graph, DEF2);
 
         while (valueList.head != null) {
@@ -241,16 +244,16 @@ public class ByTokenTest {
 
     @Test
     public void getSubRef() throws IOException {
-        final Token smallSub1 = sub(DEF2, last(ref("value1")));
-        final Token smallSub2 = sub(DEF2, last(ref("value1")));
-        final Token composition = seq(DEF1, smallSub1, smallSub2);
+        final Token smallSub = sub(DEF2, last(ref("value1")));
+        final Token extraSub = sub(any("x"), last(ref("value1")));
+        final Token composition = seq(DEF1, smallSub, extraSub, smallSub, extraSub);
         final ParseResult result = composition.parse(stream(0), enc());
         assertTrue(result.succeeded);
-        final ParseItemList refs = ByToken.getAll(result.environment.order, smallSub1);
+        final ParseItemList items = getAll(result.environment.order, DEF2);
         // should return the ParseGraph created by the Sub and the ParseRef that refers to the existing ParseItem
-        assertEquals(2, refs.size);
-        assertTrue(refs.head.isRef());
-        assertTrue(refs.tail.head.isGraph());
+        assertEquals(2, items.size);
+        assertTrue(items.head.isRef());
+        assertTrue(items.tail.head.isValue());
     }
 
     private final Token smallSeq = seq(any("b"), any("c"));
@@ -260,7 +263,7 @@ public class ByTokenTest {
         final Token topSeq = seq(any("a"), smallSeq);
         final ParseResult result = topSeq.parse(stream(1, 2, 3), enc());
         assertTrue(result.succeeded);
-        final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, smallSeq);
+        final ParseItemList seqs = getAllRoots(result.environment.order, smallSeq);
         assertEquals(1, seqs.size);
         assertEquals(smallSeq, seqs.head.getDefinition());
         final ParseValue c = seqs.head.asGraph().head.asValue();
@@ -273,7 +276,7 @@ public class ByTokenTest {
         final Token topSeq = seq(any("a"), smallSeq, smallSeq);
         final ParseResult result = topSeq.parse(stream(1, 2, 3, 2, 3), enc());
         assertTrue(result.succeeded);
-        final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, smallSeq);
+        final ParseItemList seqs = getAllRoots(result.environment.order, smallSeq);
         assertEquals(2, seqs.size);
         assertEquals(smallSeq, seqs.head.getDefinition());
         assertEquals(smallSeq, seqs.tail.head.getDefinition());
@@ -299,7 +302,7 @@ public class ByTokenTest {
                                                                                            /* 2:       +--------+
                                                                                            /* 3:             +--------+ */
         assertTrue(result.succeeded);
-        final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, smallSeq);
+        final ParseItemList seqs = getAllRoots(result.environment.order, smallSeq);
         assertEquals(6, seqs.size); // Three regular and three subs.
         final Set<ParseItem> items = makeSet(seqs);
         assertEquals(seqs.size, items.size()); // Check that there are no duplicate results.
@@ -330,7 +333,7 @@ public class ByTokenTest {
         final CustomToken customToken = new CustomToken();
         final ParseResult result = customToken.parse(stream(1, 2, 3), enc());
         assertTrue(result.succeeded);
-        final ParseItemList seqs = ByToken.getAllRoots(result.environment.order, customToken.token);
+        final ParseItemList seqs = getAllRoots(result.environment.order, customToken.token);
         assertEquals(3, seqs.size);
         final Set<ParseItem> items = makeSet(seqs);
         assertEquals(seqs.size, items.size()); // Check that there are no duplicate results.
@@ -338,8 +341,8 @@ public class ByTokenTest {
 
     @Test
     public void getAllRootsEmpty() {
-        assertEquals(0, ByToken.getAllRoots(ParseGraph.EMPTY, any("a")).size);
-        assertEquals(1, ByToken.getAllRoots(ParseGraph.EMPTY, ParseGraph.NONE).size);
+        assertEquals(0, getAllRoots(ParseGraph.EMPTY, any("a")).size);
+        assertEquals(1, getAllRoots(ParseGraph.EMPTY, ParseGraph.NONE).size);
     }
 
 }

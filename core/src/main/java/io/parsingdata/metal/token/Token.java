@@ -64,6 +64,10 @@ public abstract class Token {
         handleCallbacks(callbacks.tail, result);
     }
 
+    public boolean isLocal() {
+        return true;
+    }
+
     protected String makeNameFragment() {
         return name.isEmpty() ? "" : name + ",";
     }

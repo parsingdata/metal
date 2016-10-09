@@ -23,13 +23,17 @@ public final class Reversal {
 
     private Reversal() {}
 
-    public static ParseGraph reverse(ParseGraph oldGraph, ParseGraph newGraph) {
+    public static ParseGraph reverse(final ParseGraph graph) {
+        return reverse(graph, ParseGraph.EMPTY);
+    }
+
+    private static ParseGraph reverse(final ParseGraph oldGraph, final ParseGraph newGraph) {
         if (oldGraph.isEmpty()) { return newGraph; }
         return reverse(oldGraph.tail, new ParseGraph(reverseItem(oldGraph.head), newGraph, oldGraph.definition));
     }
 
     private static ParseItem reverseItem(final ParseItem item) {
-        return item.isGraph() ? item.asGraph().reverse() : item;
+        return item.isGraph() ? Reversal.reverse(item.asGraph(), ParseGraph.EMPTY) : item;
     }
 
 }

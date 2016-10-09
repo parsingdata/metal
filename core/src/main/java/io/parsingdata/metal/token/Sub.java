@@ -16,18 +16,19 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.ParseResult.failure;
+import static io.parsingdata.metal.data.ParseResult.success;
+import static io.parsingdata.metal.data.selection.ByOffset.hasRootAtOffset;
+
+import java.io.IOException;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseRef;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ValueExpression;
-
-import java.io.IOException;
-
-import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.ParseResult.failure;
-import static io.parsingdata.metal.data.ParseResult.success;
 
 public class Sub extends Token {
 
@@ -64,14 +65,19 @@ public class Sub extends Token {
     }
 
     private ParseResult parse(final String scope, final long ref, final Environment env, final Encoding enc) throws IOException {
-        if (env.order.hasGraphAtRef(ref)) {
-            return success(env.add(new ParseRef(ref, this)));
+        if (hasRootAtOffset(env.order, token, ref)) {
+            return success(env.add(new ParseRef(ref, token)));
         }
         final ParseResult res = token.parse(scope, env.seek(ref), enc);
         if (res.succeeded) {
             return res;
         }
         return failure(env);
+    }
+
+    @Override
+    public boolean isLocal() {
+        return false;
     }
 
     @Override
