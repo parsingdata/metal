@@ -33,7 +33,6 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.Shorthand.str;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.data.selection.ByToken.get;
@@ -82,16 +81,6 @@ public class ByTokenTest {
     });
 
     private static final Token MUT_REC_2 = seq(REPN_DEF2, opt(MUT_REC_1));
-
-    private static final Token STR_MUT_REC_1 = str("mutrec1", seq(DEF1, new Token("", enc()) {
-
-        @Override
-        protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-            return STR_MUT_REC_2.parse(scope, env, enc);
-        }
-    }));
-
-    private static final Token STR_MUT_REC_2 = seq(REPN_DEF2, opt(STR_MUT_REC_1));
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -203,19 +192,14 @@ public class ByTokenTest {
         final ParseItemList repList = getAll(graph, REPN_DEF2);
         assertThat(repList.size, is(equalTo(4L)));
 
+        final ParseItemList repRootList = getAllRoots(graph, REPN_DEF2);
+        assertThat(repRootList.size, is(equalTo(2L)));
+
         final ParseItemList recList = getAll(graph, MUT_REC_1);
         assertThat(recList.size, is(equalTo(4L)));
-    }
 
-    @Test
-    public void getAllMutualRecursiveWithStruct() {
-        final ParseGraph graph = parseResultGraph(stream(0, 1, 2, 3, 4, 5), STR_MUT_REC_1);
-
-        final ParseItemList repList = getAll(graph, REPN_DEF2);
-        assertThat(repList.size, is(equalTo(4L)));
-
-        final ParseItemList recList = getAll(graph, STR_MUT_REC_1);
-        assertThat(recList.size, is(equalTo(2L)));
+        final ParseItemList recRootList = getAllRoots(graph, MUT_REC_1);
+        assertThat(recRootList.size, is(equalTo(2L)));
     }
 
     @Test

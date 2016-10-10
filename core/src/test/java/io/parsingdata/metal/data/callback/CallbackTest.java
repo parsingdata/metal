@@ -23,14 +23,18 @@ import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.data.selection.ByToken.getAllRoots;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
 
 import org.junit.Test;
 
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseItemList;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
@@ -75,6 +79,43 @@ public class CallbackTest {
         assertTrue(sequence.parse(env, enc()).succeeded);
         assertEquals(4, successCount);
         assertEquals(1, failureCount);
+    }
+
+    private Token simpleSeq = seq(any("a"), any("b"));
+
+    private Callback createCallback(final long... offsets) {
+        return new BaseCallback() {
+
+            private int count = 0;
+
+            @Override
+            protected void handleSuccess(Token token, Environment environment) {
+                final ParseItemList roots = reverse(getAllRoots(environment.order, token), ParseItemList.EMPTY);
+                assertEquals(offsets[count++], roots.head.asGraph().tail.head.asValue().getOffset());
+            }
+
+            @Override
+            protected void handleFailure(Token token, Environment environment) {}
+        };
+    }
+
+    private ParseItemList reverse(final ParseItemList oldList, final ParseItemList newList) {
+        if (oldList.isEmpty()) { return newList; }
+        return reverse(oldList.tail, newList.add(oldList.head));
+    }
+
+    @Test
+    public void testSimpleCallback() throws IOException {
+        final TokenCallbackList callbacks = TokenCallbackList.create(new TokenCallback(simpleSeq, createCallback(0L)));
+        final Environment env = new Environment(new InMemoryByteStream(new byte[] { 1, 2 }), callbacks);
+        assertTrue(simpleSeq.parse(env, enc()).succeeded);
+    }
+
+    @Test
+    public void testRepSimpleCallback() throws IOException {
+        final TokenCallbackList callbacks = TokenCallbackList.create(new TokenCallback(simpleSeq, createCallback(0L, 2L)));
+        final Environment env = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }), callbacks);
+        assertTrue(rep(simpleSeq).parse(env, enc()).succeeded);
     }
 
 }

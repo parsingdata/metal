@@ -49,7 +49,6 @@ import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.self;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.Shorthand.str;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.whl;
 import static io.parsingdata.metal.data.OptionalValueList.EMPTY;
@@ -66,7 +65,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItemList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.ParseValue;
@@ -81,7 +79,6 @@ import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
-import io.parsingdata.metal.token.StructSink;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
@@ -89,12 +86,6 @@ public class ToStringTest {
 
     private static final String prefix = "prefix";
     private int count;
-
-    private static final StructSink sink = new StructSink() {
-        @Override
-        public void handleStruct(String scopeName, Environment env, Encoding enc, ParseGraph struct) {
-        }
-    };
 
     @Before
     public void before() {
@@ -104,7 +95,7 @@ public class ToStringTest {
     @Test
     public void validateToStringImplementation() {
         final Expression e = not(and(eq(v(), v()), or(eqNum(v()), and(eqStr(v()), or(gtNum(v()), ltNum(v()))))));
-        final Token t = repn(sub(opt(pre(str("str", rep(cho(str("str", any(n())), seq(nod(v()), whl(def(n(), con(1), e), e)))), sink), e)), v()), v());
+        final Token t = repn(sub(opt(pre(rep(cho(any(n()), seq(nod(v()), whl(def(n(), con(1), e), e)))), e)), v()), v());
         final String output = t.toString();
         for (int i = 0; i < count; i++) {
             Assert.assertTrue(output.contains(prefix + i));

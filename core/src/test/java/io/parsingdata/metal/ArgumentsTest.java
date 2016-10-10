@@ -16,22 +16,7 @@
 
 package io.parsingdata.metal;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.Expression;
-import io.parsingdata.metal.expression.comparison.Eq;
-import io.parsingdata.metal.expression.logical.And;
-import io.parsingdata.metal.expression.logical.Not;
-import io.parsingdata.metal.expression.value.*;
-import io.parsingdata.metal.expression.value.arithmetic.Neg;
-import io.parsingdata.metal.expression.value.reference.*;
-import io.parsingdata.metal.token.*;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import static io.parsingdata.metal.Shorthand.con;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -39,7 +24,42 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static io.parsingdata.metal.Shorthand.con;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.Expression;
+import io.parsingdata.metal.expression.comparison.Eq;
+import io.parsingdata.metal.expression.logical.And;
+import io.parsingdata.metal.expression.logical.Not;
+import io.parsingdata.metal.expression.value.Cat;
+import io.parsingdata.metal.expression.value.FoldLeft;
+import io.parsingdata.metal.expression.value.FoldRight;
+import io.parsingdata.metal.expression.value.Reducer;
+import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.expression.value.arithmetic.Neg;
+import io.parsingdata.metal.expression.value.reference.Count;
+import io.parsingdata.metal.expression.value.reference.First;
+import io.parsingdata.metal.expression.value.reference.Len;
+import io.parsingdata.metal.expression.value.reference.NameRef;
+import io.parsingdata.metal.expression.value.reference.Offset;
+import io.parsingdata.metal.expression.value.reference.TokenRef;
+import io.parsingdata.metal.token.Cho;
+import io.parsingdata.metal.token.Def;
+import io.parsingdata.metal.token.Nod;
+import io.parsingdata.metal.token.Opt;
+import io.parsingdata.metal.token.Pre;
+import io.parsingdata.metal.token.Rep;
+import io.parsingdata.metal.token.RepN;
+import io.parsingdata.metal.token.Seq;
+import io.parsingdata.metal.token.Sub;
+import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.token.While;
 
 @RunWith(Parameterized.class)
 public class ArgumentsTest {
@@ -101,8 +121,6 @@ public class ArgumentsTest {
             { Seq.class, new Object[] { VALID_NAME, null, new Token[] { VALID_T, null } } },
             { Seq.class, new Object[] { VALID_NAME, null, new Token[] { null, VALID_T } } },
             { Seq.class, new Object[] { VALID_NAME, null, null } },
-            { Str.class, new Object[] { VALID_NAME, null, null, null, null } },
-            { Str.class, new Object[] { null, VALID_T, null, null, null } },
             { Sub.class, new Object[] { null, VALID_T, VALID_VE, null } },
             { Sub.class, new Object[] { VALID_NAME, VALID_T, null, null } },
             { Sub.class, new Object[] { VALID_NAME, null, VALID_VE, null } },
