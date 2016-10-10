@@ -38,8 +38,12 @@ public class Bits extends Token {
         if (env.input.read(env.offset, data) != data.length) {
             return new ParseResult(false, env);
         }
-        final Environment newEnv = env;
+        Environment newEnv = env;
         final BitSet all = BitSet.valueOf(data);
+
+        for (int i = 0; i <= all.length(); i++) {
+            System.out.println((60 - i) + ": " + all.get(i));
+        }
 
         for (int offset = 0, bit = 0; bit < _bits.length; bit++) {
             final OptionalValueList bitSizes = _bits[bit].size.eval(env, enc);
@@ -49,10 +53,17 @@ public class Bits extends Token {
             final int bitSize = bitSizes.head.get().asNumeric().intValue();
 
             final ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-            final long val = convert(all.get(all.length() - bitSize - offset, all.length() - offset));
+
+
+            final int start = all.length() - bitSize - offset + 1;
+            final int end = all.length() - offset + 1;
+            System.out.println("start: " + (60 - start) + " end: " + (60 - end));
+
+            final BitSet part = all.get(Math.max(0, start), end);
+            final long val = convert(part);
             buffer.putLong(val);
             System.out.println(val);
-            add(_bits[bit].name, newEnv, enc, buffer.array());
+            newEnv = add(_bits[bit].name, newEnv, enc, buffer.array());
             offset += bitSize;
         }
         return new ParseResult(true, newEnv);

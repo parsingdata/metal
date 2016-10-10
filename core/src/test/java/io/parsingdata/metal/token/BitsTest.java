@@ -38,6 +38,6 @@ public class BitsTest {
         final ParseGraph graph = result.environment.order;
 
         assertEquals(6, ByName.getValue(graph, "State"));
-        assertEquals(0x400000, ByName.getValue(graph, "Offset"));
+        assertEquals(4, ByName.getValue(graph, "Offset"));
     }
 }
