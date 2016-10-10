@@ -90,7 +90,7 @@ public class CallbackTest {
 
             @Override
             protected void handleSuccess(Token token, Environment environment) {
-                final ParseItemList roots = reverse(getAllRoots(environment.order, token), ParseItemList.EMPTY);
+                final ParseItemList roots = getAllRoots(environment.order, token);
                 assertEquals(offsets[count++], roots.head.asGraph().tail.head.asValue().getOffset());
             }
 
