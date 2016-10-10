@@ -8,7 +8,7 @@ import static io.parsingdata.metal.Shorthand.bits;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.eqNum;
 import static io.parsingdata.metal.Shorthand.expTrue;
-import static io.parsingdata.metal.util.EncodingFactory.le;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -33,11 +33,11 @@ public class BitsTest {
             bit("Reserved", con(17), eqNum(con(0))),
             bit("Offset", con(44), expTrue()));
 
-        final ParseResult result = bits.parse(env, le());
+        final ParseResult result = bits.parse(env, enc());
         assertTrue(result.succeeded);
         final ParseGraph graph = result.environment.order;
 
-        assertEquals(6, ByName.getValue(graph, "State"));
-        assertEquals(4, ByName.getValue(graph, "Offset"));
+        assertEquals(6, ByName.getValue(graph, "State").asNumeric().longValue());
+        assertEquals(4, ByName.getValue(graph, "Offset").asNumeric().intValue());
     }
 }
