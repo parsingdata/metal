@@ -50,11 +50,11 @@ public final class ByOffset {
     }
 
     private static ParseValue getLowestOffsetValue(final ParseGraph graph, final ParseValue lowest) {
-        if (graph.isEmpty()) { return lowest; }
+        if (graph.isEmpty() || !graph.getDefinition().isLocal()) { return lowest; }
         if (graph.head.isValue()) {
             return getLowestOffsetValue(graph.tail, lowest == null || lowest.getOffset() > graph.head.asValue().getOffset() ? graph.head.asValue() : lowest);
         }
-        if (graph.head.isGraph() && graph.head.asGraph().getDefinition().isLocal()) {
+        if (graph.head.isGraph()) {
             return getLowestOffsetValue(graph.tail, getLowestOffsetValue(graph.head.asGraph(), lowest));
         }
         return getLowestOffsetValue(graph.tail, lowest);
