@@ -57,4 +57,8 @@ public class RefT extends Token {
         return defName.equals(refName) || defName.endsWith(SEPARATOR + refName);
     }
 
+    @Override
+    public Token getDefinition(Environment env) {
+        return findToken(env.order, refName);
+    }
 }
