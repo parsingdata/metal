@@ -50,7 +50,7 @@ import io.parsingdata.metal.token.Token;
 
 public class SubStructTest {
 
-    private static class LinkedList extends Token {
+    public static final class LinkedList extends Token {
 
         private final Token struct;
 

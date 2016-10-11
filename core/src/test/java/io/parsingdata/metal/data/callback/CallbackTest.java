@@ -34,6 +34,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import io.parsingdata.metal.SubStructTest;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseItemList;
 import io.parsingdata.metal.token.Token;
@@ -43,14 +44,7 @@ public class CallbackTest {
 
     private int successCount = 0;
     private int failureCount = 0;
-
-    private void incrementSuccess() {
-        successCount++;
-    }
-
-    private void incrementFailure() {
-        failureCount++;
-    }
+    private int linkedListCount = 0;
 
     @Test
     public void testHandleCallback() throws IOException {
@@ -62,12 +56,12 @@ public class CallbackTest {
 
             @Override
             public void handleSuccess(final Token token, final Environment environment) {
-                incrementSuccess();
+                successCount++;
             }
 
             @Override
             protected void handleFailure(Token token, Environment environment) {
-                incrementFailure();
+                failureCount++;
             }
 
         };
@@ -143,6 +137,24 @@ public class CallbackTest {
                 }));
         final Environment env = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }), callbacks);
         assertTrue(repeatingSeq.parse(env, enc()).succeeded);
+    }
+
+    @Test
+    public void refInCallback() throws IOException {
+        final Token token = new SubStructTest.LinkedList(enc());
+        TokenCallbackList callbacks = TokenCallbackList.create(new TokenCallback(token, new BaseCallback() {
+            @Override
+            protected void handleSuccess(Token token, Environment environment) {
+                linkedListCount++;
+            }
+
+            @Override
+            protected void handleFailure(Token token, Environment environment) {}
+        }));
+        final Environment env = new Environment(new InMemoryByteStream(new byte[] { 0, 3, 1, 0, 0, 1 }), callbacks);
+        assertTrue(token.parse(env, enc()).succeeded);
+        // The ParseRef does not trigger the callback:
+        assertEquals(2, linkedListCount);
     }
 
 }
