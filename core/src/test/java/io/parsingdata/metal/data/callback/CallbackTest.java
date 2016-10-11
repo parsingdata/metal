@@ -136,8 +136,7 @@ public class CallbackTest {
 
     @Test
     public void refInCallback() throws IOException {
-        final Token token = new SubStructTest.LinkedList(enc());
-        TokenCallbackList callbacks = TokenCallbackList.create(new TokenCallback(token, new BaseCallback() {
+        TokenCallbackList callbacks = TokenCallbackList.create(new TokenCallback(SubStructTest.linkedList, new BaseCallback() {
             @Override
             protected void handleSuccess(Token token, Environment environment) {
                 linkedListCount++;
@@ -147,7 +146,7 @@ public class CallbackTest {
             protected void handleFailure(Token token, Environment environment) {}
         }));
         final Environment env = new Environment(new InMemoryByteStream(new byte[] { 0, 3, 1, 0, 0, 1 }), callbacks);
-        assertTrue(token.parse(env, enc()).succeeded);
+        assertTrue(SubStructTest.linkedList.parse(env, enc()).succeeded);
         // The ParseRef does not trigger the callback:
         assertEquals(2, linkedListCount);
     }
