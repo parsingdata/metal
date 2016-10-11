@@ -94,11 +94,6 @@ public class CallbackTest {
         }));
     }
 
-    private ParseItemList reverse(final ParseItemList oldList, final ParseItemList newList) {
-        if (oldList.isEmpty()) { return newList; }
-        return reverse(oldList.tail, newList.add(oldList.head));
-    }
-
     @Test
     public void testSimpleCallback() throws IOException {
         final TokenCallbackList callbacks = createCallbackList(SIMPLE_SEQ, 0L);
