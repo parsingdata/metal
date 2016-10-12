@@ -45,7 +45,7 @@ public abstract class Token {
     }
 
     public ParseResult parse(final Environment env, final Encoding enc) throws IOException {
-        return parse(name, env, enc);
+        return parse("", env, enc);
     }
 
     protected abstract ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException;
