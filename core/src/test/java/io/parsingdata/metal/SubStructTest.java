@@ -23,9 +23,9 @@ import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.opt;
 import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.reft;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.data.selection.ByType.getRefs;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.seek;
@@ -52,7 +52,7 @@ public class SubStructTest {
         seq("linkedlist",
             def("header", con(1), eq(con(0))),
             def("next", con(1)),
-            opt(sub(reft("linkedlist"), last(ref("next")))),
+            opt(sub(token("linkedlist"), last(ref("next")))),
             def("footer", con(1), eq(con(1)))
         );
 

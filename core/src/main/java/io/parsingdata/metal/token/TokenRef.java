@@ -26,14 +26,14 @@ import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 
-public class RefT extends Token {
+public class TokenRef extends Token {
 
     public final String refName;
 
-    public RefT(String name, Encoding enc, String refName) {
+    public TokenRef(String name, String refName, Encoding enc) {
         super(name, enc);
         this.refName = checkNotNull(refName, "refName");
-        if (refName.isEmpty()) { throw new IllegalArgumentException("Argument refName may not be an empty String."); }
+        if (refName.isEmpty()) { throw new IllegalArgumentException("Argument refName may not be empty."); }
     }
 
     @Override
@@ -44,17 +44,13 @@ public class RefT extends Token {
     }
 
     private Token findToken(final ParseItem item, final String refName) {
-        if (matches(item.getDefinition().name, refName)) { return item.getDefinition(); }
+        if (item.getDefinition().name.equals(refName)) { return item.getDefinition(); }
         if (item.isGraph() && !item.asGraph().isEmpty()) {
             final Token headResult = findToken(item.asGraph().head, refName);
             if (headResult != null) { return headResult; }
             return findToken(item.asGraph().tail, refName);
         }
         return null;
-    }
-
-    private boolean matches(String defName, String refName) {
-        return defName.equals(refName) || defName.endsWith(SEPARATOR + refName);
     }
 
     @Override

@@ -57,13 +57,12 @@ import io.parsingdata.metal.expression.value.reference.Len;
 import io.parsingdata.metal.expression.value.reference.NameRef;
 import io.parsingdata.metal.expression.value.reference.Offset;
 import io.parsingdata.metal.expression.value.reference.Self;
-import io.parsingdata.metal.expression.value.reference.TokenRef;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Def;
 import io.parsingdata.metal.token.Nod;
 import io.parsingdata.metal.token.Opt;
 import io.parsingdata.metal.token.Pre;
-import io.parsingdata.metal.token.RefT;
+import io.parsingdata.metal.token.TokenRef;
 import io.parsingdata.metal.token.Rep;
 import io.parsingdata.metal.token.RepN;
 import io.parsingdata.metal.token.Seq;
@@ -116,10 +115,7 @@ public final class Shorthand {
     public static Token opt(final Token token) { return opt(token, null); }
     public static Token nod(final String name, final ValueExpression size) { return new Nod(name, size, null); }
     public static Token nod(final ValueExpression size) { return nod("", size); }
-    public static Token reft(final String name, final Encoding enc, final String refName) { return new RefT(name, enc, refName); }
-    public static Token reft(final String name, final String refName) { return reft(name, null, refName); }
-    public static Token reft(final Encoding enc, final String refName) { return reft("", enc, refName); }
-    public static Token reft(final String refName) { return reft("", refName); }
+    public static Token token(final String tokenName) { return new TokenRef("", tokenName, null); }
 
     public static BinaryValueExpression add(final ValueExpression left, final ValueExpression right) { return new Add(left, right); }
     public static BinaryValueExpression div(final ValueExpression left, final ValueExpression right) { return new Div(left, right); }
@@ -144,7 +140,7 @@ public final class Shorthand {
     public static final ValueExpression self = new Self();
     public static ValueExpression len(final ValueExpression operand) { return new Len(operand); }
     public static ValueExpression ref(final String name) { return new NameRef(name); }
-    public static ValueExpression ref(final Token definition) { return new TokenRef(definition); }
+    public static ValueExpression ref(final Token definition) { return new io.parsingdata.metal.expression.value.reference.TokenRef(definition); }
     public static ValueExpression first(final ValueExpression operand) { return new First(operand); }
     public static ValueExpression last(final ValueExpression operand) { return new Last(operand); }
     public static ValueExpression offset(final ValueExpression operand) { return new Offset(operand); }
