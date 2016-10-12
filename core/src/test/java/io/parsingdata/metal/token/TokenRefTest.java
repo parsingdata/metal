@@ -43,11 +43,18 @@ public class TokenRefTest {
 
     @Test
     public void findRightDefinition() throws IOException {
+        // Clearly reference the second:
         assertTrue(createNamedTokens("out", "in", "in").parse(stream(21, 42), enc()).succeeded);
         assertTrue(createNamedTokens("out", "in", "in").parse(stream(21, 21, 42), enc()).succeeded);
         assertTrue(createNamedTokens("out", "in", "in").parse(stream(21, 21, 21, 42), enc()).succeeded);
+        // Clearly reference the first:
         assertTrue(createNamedTokens("in", "out", "in").parse(stream(21, 42), enc()).succeeded);
         assertTrue(createNamedTokens("in", "out", "in").parse(stream(21, 42, 21, 42), enc()).succeeded);
+        // Reference the first:
+        assertTrue(createNamedTokens("in", "in", "in").parse(stream(21, 42), enc()).succeeded);
+        assertTrue(createNamedTokens("in", "in", "in").parse(stream(21, 42, 21, 42), enc()).succeeded);
+        // So that this will fail:
+        assertFalse(createNamedTokens("in", "in", "in").parse(stream(21, 21, 42), enc()).succeeded);
     }
 
     private Token createNamedTokens(String firstSeq, String secondSeq, String refName) {
