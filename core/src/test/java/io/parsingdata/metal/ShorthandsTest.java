@@ -16,7 +16,10 @@
 
 package io.parsingdata.metal;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.cho;
@@ -48,6 +51,8 @@ import org.junit.rules.ExpectedException;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Seq;
 import io.parsingdata.metal.token.Token;
@@ -142,6 +147,13 @@ public class ShorthandsTest {
         assertFalse(refList.isEmpty());
         assertEquals(1, refList.size);
         assertEquals(value, refList.head.get().asNumeric().intValue());
+
+        while (!refList.isEmpty()) {
+            final Value current = refList.head.get();
+            assertThat(current, is(instanceOf(ParseValue.class)));
+            assertEquals(name, ((ParseValue)refList.head.get()).name);
+            refList = refList.tail;
+        }
     }
 
     @Rule
