@@ -25,8 +25,7 @@ import static io.parsingdata.metal.Shorthand.opt;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
-import static io.parsingdata.metal.data.ParseResult.failure;
-import static io.parsingdata.metal.data.ParseResult.success;
+import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.data.selection.ByType.getRefs;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.seek;
@@ -45,36 +44,20 @@ import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseRef;
 import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
 public class SubStructTest {
 
-    public static final class LinkedList extends Token {
-
-        private final Token struct;
-
-        public LinkedList(final Encoding enc) {
-            super("", enc);
-            struct =
-                seq(def("header", con(1), eq(con(0))),
-                    def("next", con(1)),
-                    opt(sub(this, last(ref("next")))),
-                    def("footer", con(1), eq(con(1))));
-        }
-
-        @Override
-        protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-            final ParseResult result = struct.parse(scope, env.addBranch(this), enc);
-            if (result.succeeded) { return success(result.environment.closeBranch()); }
-            return failure(env);
-        }
-
-    }
+    public static final Token LINKED_LIST =
+        seq("linkedlist",
+            def("header", con(1), eq(con(0))),
+            def("next", con(1)),
+            opt(sub(token("linkedlist"), last(ref("next")))),
+            def("footer", con(1), eq(con(1)))
+        );
 
     @Test
     public void linkedList() throws IOException {
-        final Token token = new LinkedList(enc());
         final Environment env = stream(0, 8, 1, 42, 0, 12, 1, 84, 0, 4, 1);
                             /* offset: 0, 1, 2,  3, 4,  5, 6,  7, 8, 9,10
                              * struct: -------      --------      -------
@@ -82,7 +65,7 @@ public class SubStructTest {
                              * ref 2:               ^----------------+
                              * ref 3:                   +----------------*
                              */
-        final ParseResult res = token.parse(env, enc());
+        final ParseResult res = LINKED_LIST.parse(env, enc());
         Assert.assertTrue(res.succeeded);
         final ParseGraph out = res.environment.order;
         Assert.assertEquals(0, getRefs(out).size); // No cycles
@@ -90,18 +73,17 @@ public class SubStructTest {
         final ParseGraph first = out.head.asGraph();
         checkBranch(first, 0, 8);
 
-        final ParseGraph second = first.head.asGraph().tail.head.asGraph().head.asGraph().head.asGraph();
+        final ParseGraph second = first.tail.head.asGraph().head.asGraph().head.asGraph();
         checkBranch(second, 8, 4);
 
-        final ParseGraph third = second.head.asGraph().tail.head.asGraph().head.asGraph().head.asGraph().head.asGraph();
+        final ParseGraph third = second.tail.head.asGraph().head.asGraph().head.asGraph();
         checkLeaf(third, 4, 12);
     }
 
     @Test
     public void linkedListWithSelfReference() throws IOException {
-        final Token token = new LinkedList(enc());
         final Environment env = stream(0, 0, 1);
-        final ParseResult res = token.parse(env, enc());
+        final ParseResult res = LINKED_LIST.parse(env, enc());
         Assert.assertTrue(res.succeeded);
         final ParseGraph out = res.environment.order;
         Assert.assertEquals(1, getRefs(out).size);
@@ -109,14 +91,13 @@ public class SubStructTest {
         final ParseGraph first = out.head.asGraph();
         checkBranch(first, 0, 0);
 
-        final ParseRef ref = first.head.asGraph().tail.head.asGraph().head.asGraph().head.asRef();
+        final ParseRef ref = first.tail.head.asGraph().head.asGraph().head.asRef();
         checkBranch(ref.resolve(out).asGraph(), 0, 0); // Check cycle
     }
 
     private ParseGraph startCycle(final int offset) throws IOException {
-        final Token token = new LinkedList(enc());
         final Environment env = seek(stream(0, 4, 1, 21, 0, 0, 1), offset);
-        final ParseResult res = token.parse(env, enc());
+        final ParseResult res = LINKED_LIST.parse(env, enc());
         Assert.assertTrue(res.succeeded);
         Assert.assertEquals(1, getRefs(res.environment.order).size);
         return res.environment.order;
@@ -129,10 +110,10 @@ public class SubStructTest {
         final ParseGraph first = graph.head.asGraph();
         checkBranch(first, 0, 4);
 
-        final ParseGraph second = first.head.asGraph().tail.head.asGraph().head.asGraph().head.asGraph();
+        final ParseGraph second = first.tail.head.asGraph().head.asGraph().head.asGraph();
         checkBranch(second, 4, 0);
 
-        final ParseRef ref = second.head.asGraph().tail.head.asGraph().head.asGraph().head.asRef();
+        final ParseRef ref = second.tail.head.asGraph().head.asGraph().head.asRef();
         checkBranch(ref.resolve(graph).asGraph(), 0, 4); // Check cycle
     }
 
@@ -143,17 +124,17 @@ public class SubStructTest {
         final ParseGraph first = graph.head.asGraph();
         checkBranch(first, 4, 0);
 
-        final ParseGraph second = first.head.asGraph().tail.head.asGraph().head.asGraph().head.asGraph();
+        final ParseGraph second = first.tail.head.asGraph().head.asGraph().head.asGraph();
         checkBranch(second, 0, 4);
 
-        final ParseRef ref = second.head.asGraph().tail.head.asGraph().head.asGraph().head.asRef();
+        final ParseRef ref = second.tail.head.asGraph().head.asGraph().head.asRef();
         checkBranch(ref.resolve(graph).asGraph(), 4, 0); // Check cycle
     }
 
     private void checkBranch(final ParseGraph graph, final int graphOffset, final int nextOffset) {
-        checkValue(graph.head.asGraph().head, 1, graphOffset + 2); // footer
-        checkValue(graph.head.asGraph().tail.tail.head, nextOffset, graphOffset + 1); // next
-        checkValue(graph.head.asGraph().tail.tail.tail.head, 0, graphOffset); // header
+        checkValue(graph.head, 1, graphOffset + 2); // footer
+        checkValue(graph.tail.tail.head, nextOffset, graphOffset + 1); // next
+        checkValue(graph.tail.tail.tail.head, 0, graphOffset); // header
     }
 
     private void checkLeaf(final ParseGraph graph, final int graphOffset, final int nextOffset) {

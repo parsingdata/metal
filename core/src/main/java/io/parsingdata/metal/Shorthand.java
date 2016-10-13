@@ -58,7 +58,6 @@ import io.parsingdata.metal.expression.value.reference.NameRef;
 import io.parsingdata.metal.expression.value.reference.Nth;
 import io.parsingdata.metal.expression.value.reference.Offset;
 import io.parsingdata.metal.expression.value.reference.Self;
-import io.parsingdata.metal.expression.value.reference.TokenRef;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Def;
 import io.parsingdata.metal.token.Nod;
@@ -68,6 +67,7 @@ import io.parsingdata.metal.token.Rep;
 import io.parsingdata.metal.token.RepN;
 import io.parsingdata.metal.token.Seq;
 import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.token.TokenRef;
 import io.parsingdata.metal.token.While;
 
 public final class Shorthand {
@@ -116,6 +116,7 @@ public final class Shorthand {
     public static Token opt(final Token token) { return opt(token, null); }
     public static Token nod(final String name, final ValueExpression size) { return new Nod(name, size, null); }
     public static Token nod(final ValueExpression size) { return nod("", size); }
+    public static Token token(final String tokenName) { return new TokenRef("", tokenName, null); }
 
     public static BinaryValueExpression add(final ValueExpression left, final ValueExpression right) { return new Add(left, right); }
     public static BinaryValueExpression div(final ValueExpression left, final ValueExpression right) { return new Div(left, right); }
@@ -140,7 +141,7 @@ public final class Shorthand {
     public static final ValueExpression self = new Self();
     public static ValueExpression len(final ValueExpression operand) { return new Len(operand); }
     public static ValueExpression ref(final String name) { return new NameRef(name); }
-    public static ValueExpression ref(final Token definition) { return new TokenRef(definition); }
+    public static ValueExpression ref(final Token definition) { return new io.parsingdata.metal.expression.value.reference.TokenRef(definition); }
     public static ValueExpression first(final ValueExpression operand) { return new First(operand); }
     public static ValueExpression last(final ValueExpression operand) { return new Last(operand); }
     public static ValueExpression nth(final ValueExpression values, final ValueExpression indices) { return new Nth(values, indices); }
