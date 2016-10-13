@@ -65,6 +65,7 @@ import io.parsingdata.metal.token.While;
 public class ArgumentsTest {
 
     final private static String VALID_NAME = "name";
+    final private static String EMPTY_NAME = "";
     final private static ValueExpression VALID_VE = con(1);
     final private static Reducer VALID_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return null; }};
     final private static Expression VALID_E = new Expression() { @Override public boolean eval(final Environment env, final Encoding enc) { return false; }};
@@ -125,7 +126,11 @@ public class ArgumentsTest {
             { Sub.class, new Object[] { VALID_NAME, VALID_T, null, null } },
             { Sub.class, new Object[] { VALID_NAME, null, VALID_VE, null } },
             { While.class, new Object[] { null, VALID_T, null, null } },
-            { While.class, new Object[] { VALID_NAME, null, null, null } }
+            { While.class, new Object[] { VALID_NAME, null, null, null } },
+            { io.parsingdata.metal.token.TokenRef.class, new Object[] { VALID_NAME, null, null } },
+            { io.parsingdata.metal.token.TokenRef.class, new Object[] { null, VALID_NAME, null } },
+            { io.parsingdata.metal.token.TokenRef.class, new Object[] { null, null, null } },
+            { io.parsingdata.metal.token.TokenRef.class, new Object[] { VALID_NAME, EMPTY_NAME, null } }
         });
     }
 
@@ -144,7 +149,8 @@ public class ArgumentsTest {
         }
         catch (final InvocationTargetException e) {
             Assert.assertEquals(IllegalArgumentException.class, e.getCause().getClass());
-            Assert.assertTrue(e.getCause().getMessage().endsWith("may not be null."));
+            final String message = e.getCause().getMessage();
+            Assert.assertTrue(message.endsWith("may not be null.") || message.endsWith("may not be empty."));
         }
     }
 
