@@ -38,7 +38,7 @@ public class Nth implements ValueExpression {
 
     @Override
     public OptionalValueList eval(final Environment env, final Encoding enc) {
-        return eval(values.eval(env, enc).reverse(), indices.eval(env, enc));
+        return eval(values.eval(env, enc), indices.eval(env, enc));
     }
 
     private OptionalValueList eval(final OptionalValueList values, final OptionalValueList indices) {
@@ -47,15 +47,16 @@ public class Nth implements ValueExpression {
         }
         if (indices.head.isPresent()) {
             final BigInteger index = indices.head.get().asNumeric();
-            if (index.compareTo(BigInteger.valueOf(values.size)) < 0 && index.compareTo(BigInteger.ZERO) >= 0) {
-                return eval(values, indices.tail).add(nth(values, index));
+            final BigInteger valueCount = BigInteger.valueOf(values.size);
+            if (index.compareTo(valueCount) < 0 && index.compareTo(BigInteger.ZERO) >= 0) {
+                return eval(values, indices.tail).add(nth(values, valueCount.subtract(index).subtract(BigInteger.ONE)));
             }
         }
         return eval(values, indices.tail).add(OptionalValue.empty());
     }
 
     private OptionalValue nth(final OptionalValueList values, final BigInteger index) {
-        if (index.compareTo(BigInteger.ZERO) == 0) {
+        if (index.equals(BigInteger.ZERO)) {
             return values.head;
         }
         return nth(values.tail, index.subtract(BigInteger.ONE));
