@@ -16,6 +16,12 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.div;
+import static io.parsingdata.metal.Shorthand.nth;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.repn;
+import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -26,13 +32,6 @@ import static org.junit.Assert.assertThat;
 import java.io.IOException;
 
 import org.junit.Test;
-
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.div;
-import static io.parsingdata.metal.Shorthand.nth;
-import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.repn;
-import static io.parsingdata.metal.Shorthand.seq;
 
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseResult;
@@ -55,7 +54,7 @@ public class NthExpressionTest {
 
     @Test
     public void testEmtpyIndices() throws IOException {
-        // 5 values = [1, 2, 3, 4, 5], 0 indices = []
+        // 5 values = [1, 2, 3, 4, 5], 0 indices = [], result = []
         final ParseResult result = format.parse(stream(5, 1, 2, 3, 4, 5, 0), enc());
         final OptionalValueList list = nth.eval(result.environment, enc());
         assertThat(list.size, is(equalTo(0L)));
@@ -63,7 +62,7 @@ public class NthExpressionTest {
 
     @Test
     public void testNanIndex() throws IOException {
-        // 5 values = [1, 2, 3, 4, 5], 1 indices = [Nan]
+        // 5 values = [1, 2, 3, 4, 5], 1 indices = [Nan], result = [Nan]
         final ParseResult result = format.parse(stream(5, 1, 2, 3, 4, 5, 0), enc());
         final OptionalValueList list = nth(ref("value"), div(con(0), con(0))).eval(result.environment, enc());
         assertThat(list.size, is(equalTo(1L)));
@@ -72,7 +71,7 @@ public class NthExpressionTest {
 
     @Test
     public void testEmptyValuesSingleIndex() throws IOException {
-        // 0 values = [], 1 index = [0]
+        // 0 values = [], 1 index = [0], result = [Nan]
         final ParseResult result = format.parse(stream(0, 1, 0), enc());
         final OptionalValueList list = nth.eval(result.environment, enc());
         assertThat(list.size, is(equalTo(1L)));
@@ -81,7 +80,7 @@ public class NthExpressionTest {
 
     @Test
     public void testNonExistingValueAtIndex() throws IOException {
-        // 5 values = [1, 2, 3, 4, 5], 1 index = [42]
+        // 5 values = [1, 2, 3, 4, 5], 1 index = [42], result = [Nan]
         final ParseResult result = format.parse(stream(5, 1, 2, 3, 4, 5, 1, 42), enc());
         final OptionalValueList list = nth.eval(result.environment, enc());
         assertThat(list.size, is(equalTo(1L)));
@@ -90,7 +89,7 @@ public class NthExpressionTest {
 
     @Test
     public void testNegativeIndex() throws IOException {
-        // 5 values = [1, 2, 3, 4, 5], 1 index = [-42]
+        // 5 values = [1, 2, 3, 4, 5], 1 index = [-42], result = [Nan]
         final ParseResult result = format.parse(stream(5, 1, 2, 3, 4, 5, 1, -42), enc());
         final OptionalValueList list = nth.eval(result.environment, enc());
         assertThat(list.size, is(equalTo(1L)));
@@ -99,7 +98,7 @@ public class NthExpressionTest {
 
     @Test
     public void testSingleIndex() throws IOException {
-        // 5 values = [1, 2, 3, 4, 5], 1 index = [0]
+        // 5 values = [1, 2, 3, 4, 5], 1 index = [0], result = [1]
         final ParseResult result = format.parse(stream(5, 1, 2, 3, 4, 5, 1, 0), enc());
         final OptionalValueList list = nth.eval(result.environment, enc());
         assertThat(list.size, is(equalTo(1L)));
@@ -108,7 +107,7 @@ public class NthExpressionTest {
 
     @Test
     public void testMultipleIndices() throws IOException {
-        // 5 values = [1, 2, 3, 4, 5], 2 indices = [0, 2]
+        // 5 values = [1, 2, 3, 4, 5], 2 indices = [0, 2], result = [1, 3]
         final ParseResult result = format.parse(stream(5, 1, 2, 3, 4, 5, 2, 0, 2), enc());
         final OptionalValueList list = nth.eval(result.environment, enc());
         assertThat(list.size, is(equalTo(2L)));
@@ -118,7 +117,7 @@ public class NthExpressionTest {
 
     @Test
     public void testMultipleIndicesMixedOrder() throws IOException {
-        // 5 values = [5, 6, 7, 8, 9], 4 indices = [3, 2, 0, 4]
+        // 5 values = [5, 6, 7, 8, 9], 4 indices = [3, 2, 0, 4], result = [8, 7, 5, 9]
         final ParseResult result = format.parse(stream(5, 5, 6, 7, 8, 9, 4, 3, 2, 0, 4), enc());
         final OptionalValueList list = nth.eval(result.environment, enc());
         assertThat(list.size, is(equalTo(4L)));
@@ -130,7 +129,7 @@ public class NthExpressionTest {
 
     @Test
     public void testMixedExistingNonExistingIndices() throws IOException {
-        // 5 values = [1, 2, 3, 4, 5], 3 indices = [0, 42, 2]
+        // 5 values = [1, 2, 3, 4, 5], 3 indices = [0, 42, 2], result = [1, Nan, 3]
         final ParseResult result = format.parse(stream(5, 1, 2, 3, 4, 5, 3, 0, 42, 2), enc());
         final OptionalValueList list = nth.eval(result.environment, enc());
         assertThat(list.size, is(equalTo(3L)));
@@ -141,10 +140,19 @@ public class NthExpressionTest {
 
     @Test
     public void testResultLengthEqualsIndicesLength() throws IOException {
-        // 1 value = [1], 8 indices = [1, 2, 3, 4, 5, 6, 7, 8]
-        final ParseResult result = format.parse(stream(1, 1, 8, 1, 2, 3, 4, 5, 6, 7, 8), enc());
+        // 1 value = [1], 8 indices = [1, 2, 3, 4, 5, 6, 7, 8], result = [Nan, Nan, Nan, Nan, Nan]
+        final ParseResult result = format.parse(stream(1, 1, 5, 1, 2, 3, 4, 5), enc());
         final OptionalValueList list = nth.eval(result.environment, enc());
-        assertThat(list.size, is(equalTo(8L)));
+        assertThat(list.size, is(equalTo(5L)));
+        assertNonePresent(list);
+    }
+
+    private void assertNonePresent(final OptionalValueList list) {
+        OptionalValueList l = list;
+        while (!l.isEmpty()) {
+            assertThat(l.head.isPresent(), is(equalTo(false)));
+            l = l.tail;
+        }
     }
 
 }
