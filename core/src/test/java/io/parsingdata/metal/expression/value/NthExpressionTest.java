@@ -23,6 +23,7 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -90,7 +91,7 @@ public class NthExpressionTest {
     @Test
     public void testNegativeIndex() throws IOException {
         // 5 values = [1, 2, 3, 4, 5], 1 index = [-42], result = [Nan]
-        final ParseResult result = format.parse(stream(5, 1, 2, 3, 4, 5, 1, -42), enc());
+        final ParseResult result = format.parse(stream(5, 1, 2, 3, 4, 5, 1, -42), signed());
         final OptionalValueList list = nth.eval(result.environment, enc());
         assertThat(list.size, is(equalTo(1L)));
         assertThat(list.head.isPresent(), is(equalTo(false)));
