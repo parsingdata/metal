@@ -26,6 +26,22 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * Expression for the 'nth operator':
+ * <p>
+ * Example:
+ *
+ * <pre>
+ *   nth(ref("value"), ref("index"))
+ * </pre>
+ *
+ * Nth takes as arguments two lists, a list of values and a list of indices. The result
+ * of the expression is a new list, where for each index <tt>i</tt> in the list of indices,
+ * the value at index <tt>i</tt> is taken from the list of values.
+ * <p>
+ * Should an index be invalid, an empty value is added instead. The resulting list is
+ * therefore always of the same size as the list of indices.
+ */
 public class Nth implements ValueExpression {
 
     private final ValueExpression values;
