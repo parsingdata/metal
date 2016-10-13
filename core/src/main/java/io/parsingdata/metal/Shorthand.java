@@ -55,6 +55,7 @@ import io.parsingdata.metal.expression.value.reference.First;
 import io.parsingdata.metal.expression.value.reference.Last;
 import io.parsingdata.metal.expression.value.reference.Len;
 import io.parsingdata.metal.expression.value.reference.NameRef;
+import io.parsingdata.metal.expression.value.reference.Nth;
 import io.parsingdata.metal.expression.value.reference.Offset;
 import io.parsingdata.metal.expression.value.reference.Self;
 import io.parsingdata.metal.token.Cho;
@@ -62,11 +63,11 @@ import io.parsingdata.metal.token.Def;
 import io.parsingdata.metal.token.Nod;
 import io.parsingdata.metal.token.Opt;
 import io.parsingdata.metal.token.Pre;
-import io.parsingdata.metal.token.TokenRef;
 import io.parsingdata.metal.token.Rep;
 import io.parsingdata.metal.token.RepN;
 import io.parsingdata.metal.token.Seq;
 import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.token.TokenRef;
 import io.parsingdata.metal.token.While;
 
 public final class Shorthand {
@@ -143,6 +144,7 @@ public final class Shorthand {
     public static ValueExpression ref(final Token definition) { return new io.parsingdata.metal.expression.value.reference.TokenRef(definition); }
     public static ValueExpression first(final ValueExpression operand) { return new First(operand); }
     public static ValueExpression last(final ValueExpression operand) { return new Last(operand); }
+    public static ValueExpression nth(final ValueExpression values, final ValueExpression indices) { return new Nth(values, indices); }
     public static ValueExpression offset(final ValueExpression operand) { return new Offset(operand); }
     public static final ValueExpression currentOffset = new CurrentOffset();
     public static ValueExpression cat(final ValueExpression left, final ValueExpression right) { return new Cat(left, right); }
