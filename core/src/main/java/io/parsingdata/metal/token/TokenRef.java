@@ -28,6 +28,13 @@ import io.parsingdata.metal.encoding.Encoding;
 
 public class TokenRef extends Token {
 
+    private static final Token LOOKUP_FAILED = new Token("LOOKUP_FAILED", null) {
+        @Override
+        protected ParseResult parseImpl(String scope, Environment env, Encoding enc) throws IOException {
+            return failure(env);
+        }
+    };
+
     public final String refName;
 
     public TokenRef(String name, String refName, Encoding enc) {
@@ -38,23 +45,19 @@ public class TokenRef extends Token {
 
     @Override
     protected ParseResult parseImpl(String scope, Environment env, Encoding enc) throws IOException {
-        final Token referenced = findToken(env.order, refName);
-        if (referenced == null) { return failure(env); }
-        return referenced.parse(scope, env, enc);
+        return lookup(env.order, refName).parse(scope, env, enc);
     }
 
-    private Token findToken(final ParseItem item, final String refName) {
+    private Token lookup(final ParseItem item, final String refName) {
         if (item.getDefinition().name.equals(refName)) { return item.getDefinition(); }
-        if (item.isGraph() && !item.asGraph().isEmpty()) {
-            final Token headResult = findToken(item.asGraph().head, refName);
-            if (headResult != null) { return headResult; }
-            return findToken(item.asGraph().tail, refName);
-        }
-        return null;
+        if (!item.isGraph() || item.asGraph().isEmpty()) { return LOOKUP_FAILED; }
+        final Token headResult = lookup(item.asGraph().head, refName);
+        if (headResult != LOOKUP_FAILED) { return headResult; }
+        return lookup(item.asGraph().tail, refName);
     }
 
     @Override
-    public Token getDefinition(Environment env) {
-        return findToken(env.order, refName);
+    public Token getCanonical(Environment env) {
+        return lookup(env.order, refName);
     }
 }

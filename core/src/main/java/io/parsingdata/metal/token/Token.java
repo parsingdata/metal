@@ -68,7 +68,7 @@ public abstract class Token {
         return true;
     }
 
-    public Token getDefinition(final Environment env) { return this; }
+    public Token getCanonical(final Environment env) { return this; }
 
     protected String makeNameFragment() {
         return name.isEmpty() ? "" : name + ",";

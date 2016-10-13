@@ -24,6 +24,7 @@ import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.opt;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
@@ -39,6 +40,7 @@ public class TokenRefTest {
     public void nonExistingRefToken() throws IOException {
         assertFalse(token("a").parse(stream(0), enc()).succeeded);
         assertFalse(seq("a", any("b"), token("c")).parse(stream(0), enc()).succeeded);
+        assertFalse(sub(token("a"), con(0)).parse(stream(0), enc()).succeeded);
     }
 
     @Test
