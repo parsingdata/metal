@@ -17,6 +17,8 @@
 package io.parsingdata.metal.expression.value.reference;
 
 import static io.parsingdata.metal.Util.checkNotNull;
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
 
 import java.math.BigInteger;
 
@@ -64,18 +66,23 @@ public class Nth implements ValueExpression {
         if (indices.head.isPresent()) {
             final BigInteger index = indices.head.get().asNumeric();
             final BigInteger valueCount = BigInteger.valueOf(values.size);
-            if (index.compareTo(valueCount) < 0 && index.compareTo(BigInteger.ZERO) >= 0) {
-                return eval(values, indices.tail).add(nth(values, valueCount.subtract(index).subtract(BigInteger.ONE)));
+            if (index.compareTo(valueCount) < 0 && index.compareTo(ZERO) >= 0) {
+                return eval(values, indices.tail).add(nth(values, valueCount.subtract(index).subtract(ONE)));
             }
         }
         return eval(values, indices.tail).add(OptionalValue.empty());
     }
 
     private OptionalValue nth(final OptionalValueList values, final BigInteger index) {
-        if (index.equals(BigInteger.ZERO)) {
+        if (index.equals(ZERO)) {
             return values.head;
         }
-        return nth(values.tail, index.subtract(BigInteger.ONE));
+        return nth(values.tail, index.subtract(ONE));
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + values + "," + indices + ")";
     }
 
 }

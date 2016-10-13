@@ -45,8 +45,10 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.expression.value.arithmetic.Neg;
 import io.parsingdata.metal.expression.value.reference.Count;
 import io.parsingdata.metal.expression.value.reference.First;
+import io.parsingdata.metal.expression.value.reference.Last;
 import io.parsingdata.metal.expression.value.reference.Len;
 import io.parsingdata.metal.expression.value.reference.NameRef;
+import io.parsingdata.metal.expression.value.reference.Nth;
 import io.parsingdata.metal.expression.value.reference.Offset;
 import io.parsingdata.metal.expression.value.reference.TokenRef;
 import io.parsingdata.metal.token.Cho;
@@ -83,6 +85,9 @@ public class ArgumentsTest {
             { FoldRight.class, new Object[] { VALID_VE, null, VALID_VE } },
             { FoldRight.class, new Object[] { null, VALID_REDUCER, VALID_VE } },
             { First.class, new Object[] { null } },
+            { Last.class, new Object[] { null } },
+            { Nth.class, new Object[] { VALID_VE, null } },
+            { Nth.class, new Object[] { null, VALID_VE } },
             { Offset.class, new Object[] { null } },
             { NameRef.class, new Object[] { null } },
             { TokenRef.class, new Object[] { null } },

@@ -16,8 +16,6 @@
 
 package io.parsingdata.metal;
 
-import static org.junit.Assert.assertEquals;
-
 import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.and;
 import static io.parsingdata.metal.Shorthand.cat;
@@ -40,6 +38,7 @@ import static io.parsingdata.metal.Shorthand.mul;
 import static io.parsingdata.metal.Shorthand.neg;
 import static io.parsingdata.metal.Shorthand.nod;
 import static io.parsingdata.metal.Shorthand.not;
+import static io.parsingdata.metal.Shorthand.nth;
 import static io.parsingdata.metal.Shorthand.offset;
 import static io.parsingdata.metal.Shorthand.opt;
 import static io.parsingdata.metal.Shorthand.or;
@@ -56,6 +55,10 @@ import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -157,6 +160,13 @@ public class ToStringTest {
     }
 
     @Test
+    public void expression() {
+        final ValueExpression nth = nth(ref("value"), ref("index"));
+        assertThat(nth.toString(), is(equalTo("Nth(NameRef(value),NameRef(index))")));
+    }
+
+
+    @Test
     public void callback() {
         final String emptyStreamName = "InMemoryByteStream(0)";
         final String emptyGraphName = "graph(EMPTY)";
@@ -177,14 +187,14 @@ public class ToStringTest {
 
     private Token makeToken(final String name) {
         return new Token(name, enc()) {
-            @Override protected ParseResult parseImpl(String scope, Environment env, Encoding enc) throws IOException { return null; }
+            @Override protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException { return null; }
             @Override public String toString() { return name; }
         };
     }
 
     private Callback makeCallback(final String name) {
         return new Callback() {
-            @Override public void handle(Token token, ParseResult result) {}
+            @Override public void handle(final Token token, final ParseResult result) {}
             @Override public String toString() { return name; }
         };
     }
