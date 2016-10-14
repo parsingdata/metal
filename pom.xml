@@ -67,6 +67,23 @@
     <source-plugin.version>2.2.1</source-plugin.version>
   </properties>
 
+  <profiles>
+    <profile>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <gpg.skip>true</gpg.skip>
+      </properties>
+    </profile>
+    <profile>
+      <id>release</id>
+      <properties>
+        <gpg.skip>false</gpg.skip>
+      </properties>
+    </profile>
+  </profiles>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
