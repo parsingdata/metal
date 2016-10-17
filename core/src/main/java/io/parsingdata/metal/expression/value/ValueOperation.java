@@ -18,6 +18,6 @@ package io.parsingdata.metal.expression.value;
 
 public interface ValueOperation {
 
-    OptionalValue execute(final Value value);
+    OptionalValue execute(Value value);
 
 }

@@ -22,6 +22,6 @@ import io.parsingdata.metal.encoding.Encoding;
 
 public interface ValueExpression {
 
-    OptionalValueList eval(final Environment env, final Encoding enc);
+    OptionalValueList eval(Environment env, Encoding enc);
 
 }
