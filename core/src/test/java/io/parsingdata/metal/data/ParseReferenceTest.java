@@ -59,13 +59,13 @@ public class ParseReferenceTest {
     }
 
     @Test
-    public void refIsARef() {
+    public void referenceIsAReference() {
         assertTrue(reference.isReference());
         assertThat(reference.asReference(), is(sameInstance(reference)));
     }
 
     @Test
-    public void refIsNotAValue() {
+    public void referenceIsNotAValue() {
         assertFalse(reference.isValue());
 
         thrown.expect(UnsupportedOperationException.class);
@@ -74,7 +74,7 @@ public class ParseReferenceTest {
     }
 
     @Test
-    public void refIsNotAGraph() {
+    public void referenceIsNotAGraph() {
         assertFalse(reference.isGraph());
 
         thrown.expect(UnsupportedOperationException.class);
