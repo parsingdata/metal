@@ -16,23 +16,23 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Util.checkContainsNoNulls;
+import static io.parsingdata.metal.data.ParseResult.failure;
+import static io.parsingdata.metal.data.ParseResult.success;
+
+import java.io.IOException;
+
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 
-import java.io.IOException;
-
-import static io.parsingdata.metal.Util.checkContainsNoNulls;
-import static io.parsingdata.metal.data.ParseResult.failure;
-import static io.parsingdata.metal.data.ParseResult.success;
-
 public class Cho extends Token {
 
     private final Token[] tokens;
 
-    public Cho(final String name, final Encoding enc, final Token... tokens) {
-        super(name, enc);
+    public Cho(final String name, final Encoding encoding, final Token... tokens) {
+        super(name, encoding);
         this.tokens = checkContainsNoNulls(tokens, "tokens");
         if (tokens.length < 2) { throw new IllegalArgumentException("At least two Tokens are required."); }
     }
@@ -42,17 +42,17 @@ public class Cho extends Token {
     }
 
     @Override
-    protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final ParseResult res = iterate(scope, env.addBranch(this), enc, 0);
-        if (res.succeeded) { return success(res.environment.closeBranch()); }
-        return failure(env);
+    protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        final ParseResult result = iterate(scope, environment.addBranch(this), encoding, 0);
+        if (result.succeeded) { return success(result.environment.closeBranch()); }
+        return failure(environment);
     }
 
-    private ParseResult iterate(final String scope, final Environment env, final Encoding enc, final int index) throws IOException {
-        if (index >= tokens.length) { return failure(env); }
-        final ParseResult res = tokens[index].parse(scope, env, enc);
-        if (res.succeeded) { return res; }
-        return iterate(scope, env, enc, index + 1);
+    private ParseResult iterate(final String scope, final Environment environment, final Encoding encoding, final int index) throws IOException {
+        if (index >= tokens.length) { return failure(environment); }
+        final ParseResult result = tokens[index].parse(scope, environment, encoding);
+        if (result.succeeded) { return result; }
+        return iterate(scope, environment, encoding, index + 1);
     }
 
     @Override

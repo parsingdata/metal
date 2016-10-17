@@ -32,8 +32,8 @@ public class ParseGraph implements ParseItem {
     public final long size;
 
     public static final Token NONE = new Token("NONE", null) {
-        @Override protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException { throw new IllegalStateException("This placeholder may not be invoked."); }
-        @Override public String toString() { return "None"; };
+        @Override protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { throw new IllegalStateException("This placeholder may not be invoked."); }
+        @Override public String toString() { return "None"; }
     };
 
     public static final ParseGraph EMPTY = new ParseGraph(NONE);
@@ -64,7 +64,7 @@ public class ParseGraph implements ParseItem {
         return new ParseGraph(head, this, definition);
     }
 
-    public ParseGraph add(final ParseRef ref) {
+    public ParseGraph add(final ParseReference ref) {
         if (branched) { return new ParseGraph(head.asGraph().add(ref), tail, definition, true); }
         return new ParseGraph(ref, this, definition);
     }
@@ -93,18 +93,18 @@ public class ParseGraph implements ParseItem {
         if (isEmpty()) { return null; }
         if (head.isValue()) { return head.asValue(); }
         if (head.isGraph()) {
-            final ParseValue val = head.asGraph().current();
-            if (val != null) { return val; }
+            final ParseValue value = head.asGraph().current();
+            if (value != null) { return value; }
         }
         return tail.current(); // Ignore current if it's a reference (or an empty graph)
     }
 
     @Override public boolean isValue() { return false; }
     @Override public boolean isGraph() { return true; }
-    @Override public boolean isRef() { return false; }
+    @Override public boolean isReference() { return false; }
     @Override public ParseValue asValue() { throw new UnsupportedOperationException("Cannot convert ParseGraph to ParseValue."); }
     @Override public ParseGraph asGraph() { return this; }
-    @Override public ParseRef asRef() { throw new UnsupportedOperationException("Cannot convert ParseGraph to ParseRef."); }
+    @Override public ParseReference asReference() { throw new UnsupportedOperationException("Cannot convert ParseGraph to ParseReference."); }
     @Override public Token getDefinition() { return definition; }
 
     @Override

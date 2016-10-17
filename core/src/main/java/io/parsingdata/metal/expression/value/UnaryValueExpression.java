@@ -16,11 +16,11 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
-
-import static io.parsingdata.metal.Util.checkNotNull;
 
 public abstract class UnaryValueExpression implements ValueExpression {
 
@@ -31,16 +31,16 @@ public abstract class UnaryValueExpression implements ValueExpression {
     }
 
     @Override
-    public OptionalValueList eval(final Environment env, final Encoding enc) {
-        return eval(operand.eval(env, enc), env, enc);
+    public OptionalValueList eval(final Environment environment, final Encoding encoding) {
+        return eval(operand.eval(environment, encoding), environment, encoding);
     }
 
-    private OptionalValueList eval(final OptionalValueList vl, final Environment env, final Encoding enc) {
-        if (vl.isEmpty()) { return vl; }
-        return eval(vl.tail, env, enc).add(vl.head.isPresent() ? eval(vl.head.get(), env, enc) : vl.head);
+    private OptionalValueList eval(final OptionalValueList values, final Environment environment, final Encoding encoding) {
+        if (values.isEmpty()) { return values; }
+        return eval(values.tail, environment, encoding).add(values.head.isPresent() ? eval(values.head.get(), environment, encoding) : values.head);
     }
 
-    public abstract OptionalValue eval(final Value value, final Environment env, final Encoding enc);
+    public abstract OptionalValue eval(final Value value, final Environment environment, final Encoding encoding);
 
     @Override
     public String toString() {

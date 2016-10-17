@@ -16,20 +16,30 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static io.parsingdata.metal.Shorthand.add;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.first;
+import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.not;
+import static io.parsingdata.metal.Shorthand.offset;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import org.junit.runners.Parameterized;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
-import org.junit.runners.Parameterized;
-
-import java.util.Arrays;
-import java.util.Collection;
-
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
-import static io.parsingdata.metal.util.EncodingFactory.*;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 public class BinaryValueExpressionListSemanticsTest extends ParameterizedParse {
 
@@ -53,27 +63,27 @@ public class BinaryValueExpressionListSemanticsTest extends ParameterizedParse {
         });
     }
 
-    public BinaryValueExpressionListSemanticsTest(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
-        super(token, env, enc, result);
+    public BinaryValueExpressionListSemanticsTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
+        super(token, environment, encoding, result);
     }
 
-    private static Token pred2(Expression pred) {
+    private static Token pred2(Expression predicate) {
         return
             seq(any("a"),
                 any("a"),
                 any("b"),
                 any("b"),
-                def("c", con(1), pred));
+                def("c", con(1), predicate));
     }
 
-    private static Token pred3(Expression pred) {
+    private static Token pred3(Expression predicate) {
         return
             seq(any("a"),
                 any("a"),
                 any("a"),
                 any("b"),
                 any("b"),
-                def("c", con(1), pred));
+                def("c", con(1), predicate));
     }
 
 }

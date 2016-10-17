@@ -21,6 +21,6 @@ import io.parsingdata.metal.encoding.Encoding;
 
 public interface Expression {
 
-    boolean eval(Environment env, Encoding enc);
+    boolean eval(Environment environment, Encoding encoding);
 
 }

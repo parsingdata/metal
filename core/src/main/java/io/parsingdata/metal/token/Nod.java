@@ -16,38 +16,38 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.ParseResult.failure;
+import static io.parsingdata.metal.data.ParseResult.success;
+
+import java.io.IOException;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
-import java.io.IOException;
-
-import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.ParseResult.failure;
-import static io.parsingdata.metal.data.ParseResult.success;
-
 public class Nod extends Token {
 
     public final ValueExpression size;
 
-    public Nod(final String name, final ValueExpression size, final Encoding enc) {
-        super(name, enc);
+    public Nod(final String name, final ValueExpression size, final Encoding encoding) {
+        super(name, encoding);
         this.size = checkNotNull(size, "size");
     }
 
     @Override
-    protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final OptionalValueList sizes = size.eval(env, enc);
+    protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        final OptionalValueList sizes = size.eval(environment, encoding);
         if (sizes.size != 1 || !sizes.head.isPresent()) {
-            return failure(env);
+            return failure(environment);
         }
         final long skipSize = sizes.head.get().asNumeric().longValue();
         if (skipSize < 0) {
-            return failure(env);
+            return failure(environment);
         }
-        return success(env.seek(env.offset + skipSize));
+        return success(environment.seek(environment.offset + skipSize));
     }
 
     @Override

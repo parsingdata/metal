@@ -16,14 +16,15 @@
 
 package io.parsingdata.metal.data.selection;
 
-import io.parsingdata.metal.data.ParseRef;
+import static io.parsingdata.metal.data.ParseGraph.EMPTY;
+import static io.parsingdata.metal.data.ParseGraph.NONE;
+import static io.parsingdata.metal.data.selection.ByType.getReferences;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static io.parsingdata.metal.data.ParseGraph.EMPTY;
-import static io.parsingdata.metal.data.ParseGraph.NONE;
-import static io.parsingdata.metal.data.selection.ByType.getRefs;
+import io.parsingdata.metal.data.ParseReference;
 
 public class ByTypeTest {
 
@@ -34,7 +35,7 @@ public class ByTypeTest {
     public void unresolvableRef() {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("A ref must point to an existing graph.");
-        getRefs(EMPTY.add(new ParseRef(0, NONE)));
+        getReferences(EMPTY.add(new ParseReference(0, NONE)));
     }
 
 }

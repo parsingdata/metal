@@ -16,14 +16,13 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
-import io.parsingdata.metal.data.selection.ByName;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.ValueExpression;
-
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
+
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class NameRef implements ValueExpression {
 
@@ -34,8 +33,8 @@ public class NameRef implements ValueExpression {
     }
 
     @Override
-    public OptionalValueList eval(final Environment env, final Encoding enc) {
-        return OptionalValueList.create(getAllValues(env.order, name));
+    public OptionalValueList eval(final Environment environment, final Encoding encoding) {
+        return OptionalValueList.create(getAllValues(environment.order, name));
     }
 
     @Override

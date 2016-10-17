@@ -70,8 +70,8 @@ public class CallbackTest {
             .add(new TokenCallback(two, callback))
             .add(new TokenCallback(cho, callback))
             .add(new TokenCallback(sequence, callback));
-        final Environment env = new Environment(new InMemoryByteStream(new byte[] { 2, 1 }), callbacks);
-        assertTrue(sequence.parse(env, enc()).succeeded);
+        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 2, 1 }), callbacks);
+        assertTrue(sequence.parse(environment, enc()).succeeded);
         assertEquals(4, successCount);
         assertEquals(1, failureCount);
     }
@@ -97,15 +97,15 @@ public class CallbackTest {
     @Test
     public void testSimpleCallback() throws IOException {
         final TokenCallbackList callbacks = createCallbackList(SIMPLE_SEQ, 0L);
-        final Environment env = new Environment(new InMemoryByteStream(new byte[] { 1, 2 }), callbacks);
-        assertTrue(SIMPLE_SEQ.parse(env, enc()).succeeded);
+        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2 }), callbacks);
+        assertTrue(SIMPLE_SEQ.parse(environment, enc()).succeeded);
     }
 
     @Test
     public void testRepSimpleCallback() throws IOException {
         final TokenCallbackList callbacks = createCallbackList(SIMPLE_SEQ, 0L, 2L);
-        final Environment env = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }), callbacks);
-        assertTrue(rep(SIMPLE_SEQ).parse(env, enc()).succeeded);
+        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }), callbacks);
+        assertTrue(rep(SIMPLE_SEQ).parse(environment, enc()).succeeded);
     }
 
     @Test
@@ -130,8 +130,8 @@ public class CallbackTest {
                     @Override
                     protected void handleFailure(Token token, Environment environment) {}
                 }));
-        final Environment env = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }), callbacks);
-        assertTrue(repeatingSeq.parse(env, enc()).succeeded);
+        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }), callbacks);
+        assertTrue(repeatingSeq.parse(environment, enc()).succeeded);
     }
 
     @Test
@@ -145,9 +145,9 @@ public class CallbackTest {
             @Override
             protected void handleFailure(Token token, Environment environment) {}
         }));
-        final Environment env = new Environment(new InMemoryByteStream(new byte[] { 0, 3, 1, 0, 0, 1 }), callbacks);
-        assertTrue(SubStructTest.LINKED_LIST.parse(env, enc()).succeeded);
-        // The ParseRef does not trigger the callback:
+        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 0, 3, 1, 0, 0, 1 }), callbacks);
+        assertTrue(SubStructTest.LINKED_LIST.parse(environment, enc()).succeeded);
+        // The ParseReference does not trigger the callback:
         assertEquals(2, linkedListCount);
     }
 

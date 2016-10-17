@@ -58,42 +58,42 @@ public class TreeTest {
             pre(sub(token("tree"), last(ref("right"))), not(eq(last(ref("right")), con(0))))
         );
 
-    private final ParseResult _regular;
-    private final ParseResult _cyclic;
+    private final ParseResult regular;
+    private final ParseResult cyclic;
 
     public TreeTest() throws IOException {
-        _regular = TREE.parse(stream(HEAD, 0, 6, 10, 8, 8, HEAD, 1, 16, 20, HEAD, 2, 24, 28, 8, 8, HEAD, 3, 0, 0, HEAD, 4, 0, 0, HEAD, 5, 0, 0, HEAD, 6, 0, 0), enc());
-                                  /* *--------+---+        *---------+---+  *---------+---+        *--------*--*  *--------*--*  *--------*--*  *--------*--*
-                                   *          \---|--------/         \---|--|---------|---|--------/              |              |              |
-                                   *              \----------------------|--/         \---|-----------------------|--------------/              |
-                                   *                                     \----------------|-----------------------/                             |
-                                   *                                                      \-----------------------------------------------------/
-                                   */
-        _cyclic = TREE.parse(stream(HEAD, 0, 4, 8, HEAD, 1, 8, 0, HEAD, 2, 4, 0), enc());
-                                 /* *--------+--+  *--------+--*  *--------+--*
-                                  *          \--|--/        \-----/        |
-                                  *             \--|--------------/        |
-                                  *                \-----------------------/
+        regular = TREE.parse(stream(HEAD, 0, 6, 10, 8, 8, HEAD, 1, 16, 20, HEAD, 2, 24, 28, 8, 8, HEAD, 3, 0, 0, HEAD, 4, 0, 0, HEAD, 5, 0, 0, HEAD, 6, 0, 0), enc());
+                                 /* *--------+---+        *---------+---+  *---------+---+        *--------*--*  *--------*--*  *--------*--*  *--------*--*
+                                  *          \---|--------/         \---|--|---------|---|--------/              |              |              |
+                                  *              \----------------------|--/         \---|-----------------------|--------------/              |
+                                  *                                     \----------------|-----------------------/                             |
+                                  *                                                      \-----------------------------------------------------/
                                   */
+        cyclic = TREE.parse(stream(HEAD, 0, 4, 8, HEAD, 1, 8, 0, HEAD, 2, 4, 0), enc());
+                                /* *--------+--+  *--------+--*  *--------+--*
+                                 *          \--|--/        \-----/        |
+                                 *             \--|--------------/        |
+                                 *                \-----------------------/
+                                 */
     }
 
     @Test
     public void checkRegularTree() {
-        Assert.assertTrue(_regular.succeeded);
-        checkStruct(Reversal.reverse(_regular.environment.order).head.asGraph(), 0);
+        Assert.assertTrue(regular.succeeded);
+        checkStructure(Reversal.reverse(regular.environment.order).head.asGraph(), 0);
     }
 
     @Test
     public void checkCyclicTree() {
-        Assert.assertTrue(_cyclic.succeeded);
-        checkStruct(Reversal.reverse(_cyclic.environment.order).head.asGraph(), 0);
+        Assert.assertTrue(cyclic.succeeded);
+        checkStructure(Reversal.reverse(cyclic.environment.order).head.asGraph(), 0);
     }
 
-    private void checkStruct(final ParseGraph graph, final long offset) {
-        checkStruct(graph, graph, offset);
+    private void checkStructure(final ParseGraph graph, final long offset) {
+        checkStructure(graph, graph, offset);
     }
 
-    private void checkStruct(final ParseGraph root, final ParseGraph graph, final long offset) {
+    private void checkStructure(final ParseGraph root, final ParseGraph graph, final long offset) {
         checkHeader(graph, offset);
         final ParseItem left = graph.tail.tail.head;
         Assert.assertTrue(left.isValue());
@@ -116,9 +116,9 @@ public class TreeTest {
     private void checkBranch(final ParseGraph root, final long offset, final ParseItem item) {
         Assert.assertFalse(item.isValue());
         if (item.asGraph().head.isGraph()) {
-            checkStruct(root, item.asGraph().head.asGraph(), offset);
-        } else if (item.asGraph().head.isRef()) {
-            checkHeader(item.asGraph().head.asRef().resolve(root).asGraph(), offset);
+            checkStructure(root, item.asGraph().head.asGraph(), offset);
+        } else if (item.asGraph().head.isReference()) {
+            checkHeader(item.asGraph().head.asReference().resolve(root).asGraph(), offset);
         }
     }
 
@@ -133,8 +133,8 @@ public class TreeTest {
 
     @Test
     public void checkRegularTreeFlat() {
-        Assert.assertTrue(_regular.succeeded);
-        final ParseValueList nrs = getAllValues(_regular.environment.order, "nr");
+        Assert.assertTrue(regular.succeeded);
+        final ParseValueList nrs = getAllValues(regular.environment.order, "nr");
         for (int i = 0; i < 7; i++) {
             Assert.assertTrue(contains(nrs, i));
         }

@@ -16,11 +16,11 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
-
-import static io.parsingdata.metal.Util.checkNotNull;
 
 /**
  * Base class for ValueExpressions with two operands.
@@ -43,14 +43,14 @@ public abstract class BinaryValueExpression implements ValueExpression {
     }
 
     @Override
-    public OptionalValueList eval(final Environment env, final Encoding enc) {
-        return evalLists(left.eval(env, enc), right.eval(env, enc), env, enc);
+    public OptionalValueList eval(final Environment environment, final Encoding encoding) {
+        return evalLists(left.eval(environment, encoding), right.eval(environment, encoding), environment, encoding);
     }
 
-    private OptionalValueList evalLists(final OptionalValueList lvl, final OptionalValueList rvl, final Environment env, final Encoding enc) {
-        if (lvl.isEmpty()) { return makeListWithEmpty(rvl.size); }
-        if (rvl.isEmpty()) { return makeListWithEmpty(lvl.size); }
-        return evalLists(lvl.tail, rvl.tail, env, enc).add(eval(lvl.head, rvl.head, env, enc));
+    private OptionalValueList evalLists(final OptionalValueList leftValues, final OptionalValueList rightValues, final Environment environment, final Encoding encoding) {
+        if (leftValues.isEmpty()) { return makeListWithEmpty(rightValues.size); }
+        if (rightValues.isEmpty()) { return makeListWithEmpty(leftValues.size); }
+        return evalLists(leftValues.tail, rightValues.tail, environment, encoding).add(eval(leftValues.head, rightValues.head, environment, encoding));
     }
 
     private OptionalValueList makeListWithEmpty(final long size) {
@@ -58,12 +58,12 @@ public abstract class BinaryValueExpression implements ValueExpression {
         return makeListWithEmpty(size - 1).add(OptionalValue.empty());
     }
 
-    private OptionalValue eval(final OptionalValue left, final OptionalValue right, final Environment env, final Encoding enc) {
+    private OptionalValue eval(final OptionalValue left, final OptionalValue right, final Environment environment, final Encoding encoding) {
         if (!left.isPresent() || !right.isPresent()) { return OptionalValue.empty(); }
-        return eval(left.get(), right.get(), env, enc);
+        return eval(left.get(), right.get(), environment, encoding);
     }
 
-    public abstract OptionalValue eval(final Value left, final Value right, final Environment env, final Encoding enc);
+    public abstract OptionalValue eval(final Value left, final Value right, final Environment environment, final Encoding encoding);
 
     @Override
     public String toString() {

@@ -18,35 +18,35 @@ package io.parsingdata.metal.util;
 
 import java.io.IOException;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.token.Token;
-
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
+
 @Ignore
 @RunWith(Parameterized.class)
 public class ParameterizedParse {
 
-    private final Token _token;
-    private final Environment _env;
-    private final Encoding _enc;
-    private final boolean _result;
+    private final Token token;
+    private final Environment environment;
+    private final Encoding encoding;
+    private final boolean result;
 
-    public ParameterizedParse(final Token token, final Environment env, final Encoding enc, final boolean result) {
-        _token = token;
-        _env = env;
-        _enc = enc;
-        _result = result;
+    public ParameterizedParse(final Token token, final Environment environment, final Encoding encoding, final boolean result) {
+        this.token = token;
+        this.environment = environment;
+        this.encoding = encoding;
+        this.result = result;
     }
 
     @Test
     public void test() throws IOException {
-        Assert.assertEquals(_result, _token.parse(_env, _enc).succeeded);
+        Assert.assertEquals(result, token.parse(environment, encoding).succeeded);
     }
 
 }

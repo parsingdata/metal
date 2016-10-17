@@ -16,17 +16,20 @@
 
 package io.parsingdata.metal;
 
-import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.token.Token;
-import org.junit.Assert;
-import org.junit.Test;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import org.junit.Assert;
+import org.junit.Test;
+
+import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.token.Token;
 
 public class DefinitionTest {
 	
@@ -35,11 +38,11 @@ public class DefinitionTest {
 	@Test
 	public void singleDef() throws IOException {
 		final Token singleDef = def("a", con(1));
-		final ParseResult res = singleDef.parse(stream(1), enc());
-		Assert.assertTrue(res.succeeded);
-		Assert.assertTrue(res.environment.order.getDefinition() == ParseGraph.NONE);
-		Assert.assertTrue(res.environment.order.head.getDefinition() == singleDef);
-		Assert.assertTrue(res.environment.order.tail.getDefinition() == ParseGraph.NONE);
+		final ParseResult result = singleDef.parse(stream(1), enc());
+		Assert.assertTrue(result.succeeded);
+		Assert.assertTrue(result.environment.order.getDefinition() == ParseGraph.NONE);
+		Assert.assertTrue(result.environment.order.head.getDefinition() == singleDef);
+		Assert.assertTrue(result.environment.order.tail.getDefinition() == ParseGraph.NONE);
 	}
 
 	@Test
@@ -47,15 +50,15 @@ public class DefinitionTest {
 		Token defA = def("a", con(1));
 		Token defB = def("b", con(1));
 		final Token smallSeq = seq(defA, defB);
-		final ParseResult res = smallSeq.parse(stream(1, 2), enc());
-		Assert.assertTrue(res.succeeded);
-		Assert.assertTrue(res.environment.order.getDefinition() == ParseGraph.NONE);
-		Assert.assertTrue(res.environment.order.head.getDefinition() == smallSeq);
-		Assert.assertTrue(res.environment.order.head.asGraph().head.getDefinition() == defB);
-		Assert.assertTrue(res.environment.order.head.asGraph().tail.getDefinition() == smallSeq);
-		Assert.assertTrue(res.environment.order.head.asGraph().tail.head.getDefinition() == defA);
-		Assert.assertTrue(res.environment.order.head.asGraph().tail.tail.getDefinition() == smallSeq);
-		Assert.assertTrue(res.environment.order.tail.getDefinition() == ParseGraph.NONE);
+		final ParseResult result = smallSeq.parse(stream(1, 2), enc());
+		Assert.assertTrue(result.succeeded);
+		Assert.assertTrue(result.environment.order.getDefinition() == ParseGraph.NONE);
+		Assert.assertTrue(result.environment.order.head.getDefinition() == smallSeq);
+		Assert.assertTrue(result.environment.order.head.asGraph().head.getDefinition() == defB);
+		Assert.assertTrue(result.environment.order.head.asGraph().tail.getDefinition() == smallSeq);
+		Assert.assertTrue(result.environment.order.head.asGraph().tail.head.getDefinition() == defA);
+		Assert.assertTrue(result.environment.order.head.asGraph().tail.tail.getDefinition() == smallSeq);
+		Assert.assertTrue(result.environment.order.tail.getDefinition() == ParseGraph.NONE);
 	}
 
 }

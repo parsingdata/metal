@@ -25,25 +25,25 @@ import java.lang.reflect.Modifier;
 
 public class ClassDefinition {
 
-    public static void checkUtilityClass(Class<?> c) throws ReflectiveOperationException {
-        final String simpleName = c.getSimpleName();
+    public static void checkUtilityClass(Class<?> utilityClass) throws ReflectiveOperationException {
+        final String simpleName = utilityClass.getSimpleName();
         // class is final
-        assertTrue(simpleName + " should be final", Modifier.isFinal(c.getModifiers()));
+        assertTrue(simpleName + " should be final", Modifier.isFinal(utilityClass.getModifiers()));
 
         // has one constructor
-        final Constructor<?>[] cons = c.getDeclaredConstructors();
-        assertEquals(simpleName + " should have exactly 1 constructor", 1, cons.length);
+        final Constructor<?>[] constructors = utilityClass.getDeclaredConstructors();
+        assertEquals(simpleName + " should have exactly 1 constructor", 1, constructors.length);
 
         // which is private
-        assertTrue(simpleName + " should have a private constructor", Modifier.isPrivate(cons[0].getModifiers()));
+        assertTrue(simpleName + " should have a private constructor", Modifier.isPrivate(constructors[0].getModifiers()));
 
         // call it for coverage
-        cons[0].setAccessible(true);
-        cons[0].newInstance();
+        constructors[0].setAccessible(true);
+        constructors[0].newInstance();
 
         // check that all declared methods are static
-        for (final Method m : c.getDeclaredMethods()) {
-            assertTrue("method '" + m.getName()  + "' in " + simpleName + " should be static", Modifier.isStatic(m.getModifiers()));
+        for (final Method method : utilityClass.getDeclaredMethods()) {
+            assertTrue("method '" + method.getName()  + "' in " + simpleName + " should be static", Modifier.isStatic(method.getModifiers()));
         }
     }
 

@@ -22,22 +22,22 @@ import io.parsingdata.metal.data.ByteStream;
 
 public class InMemoryByteStream implements ByteStream {
 
-    private final byte[] _data;
+    private final byte[] data;
 
     public InMemoryByteStream(final byte[] data) {
-        _data = data;
+        this.data = data;
     }
 
     public int read(final long offset, final byte[] data) throws IOException {
-        if (offset >= _data.length) { return 0; }
-        final int toCopy = (int)offset + data.length > _data.length ? _data.length - (int)offset : data.length;
-        System.arraycopy(_data, (int)offset, data, 0, toCopy);
+        if (offset >= this.data.length) { return 0; }
+        final int toCopy = (int)offset + data.length > this.data.length ? this.data.length - (int)offset : data.length;
+        System.arraycopy(this.data, (int)offset, data, 0, toCopy);
         return toCopy;
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + _data.length + ")";
+        return getClass().getSimpleName() + "(" + data.length + ")";
     }
 
 }

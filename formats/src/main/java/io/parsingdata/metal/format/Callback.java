@@ -32,17 +32,17 @@ public final class Callback {
     public static ValueExpression crc32(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public OptionalValue eval(final Value v, final Environment env, final Encoding enc) {
+            public OptionalValue eval(final Value v, final Environment environment, final Encoding encoding) {
                 return v.operation(new ValueOperation() {
                     @Override
                     public OptionalValue execute(final Value value) {
                         final CRC32 crc = new CRC32();
                         crc.update(value.getValue());
                         final long crcValue = crc.getValue();
-                        return OptionalValue.of(new Value(enc.getByteOrder().apply(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
+                        return OptionalValue.of(new Value(encoding.getByteOrder().apply(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
                                                                                                 (byte)((crcValue & 0xff0000) >> 16),
                                                                                                 (byte)((crcValue & 0xff00) >> 8),
-                                                                                                (byte)(crcValue & 0xff) }), enc));
+                                                                                                (byte)(crcValue & 0xff) }), encoding));
                     }
                 });
             }
@@ -52,7 +52,7 @@ public final class Callback {
     public static ValueExpression inflate(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public OptionalValue eval(final Value v, final Environment env, final Encoding enc) {
+            public OptionalValue eval(final Value v, final Environment environment, final Encoding encoding) {
                 return v.operation(new ValueOperation() {
                     @Override
                     public OptionalValue execute(final Value value) {
@@ -68,7 +68,7 @@ public final class Callback {
                                 return OptionalValue.empty();
                             }
                         }
-                        return OptionalValue.of(new Value(out.toByteArray(), enc));
+                        return OptionalValue.of(new Value(out.toByteArray(), encoding));
                     }
                 });
             }

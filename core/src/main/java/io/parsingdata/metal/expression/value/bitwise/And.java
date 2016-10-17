@@ -16,11 +16,15 @@
 
 package io.parsingdata.metal.expression.value.bitwise;
 
+import java.util.BitSet;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.*;
-
-import java.util.BitSet;
+import io.parsingdata.metal.expression.value.BinaryValueExpression;
+import io.parsingdata.metal.expression.value.ConstantFactory;
+import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.Value;
+import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class And extends BinaryValueExpression {
 
@@ -29,10 +33,10 @@ public class And extends BinaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value left, final Value right, final Environment env, final Encoding enc) {
-        final BitSet lbs = left.asBitSet();
-        lbs.and(right.asBitSet());
-        return OptionalValue.of(ConstantFactory.createFromBitSet(lbs, left.getValue().length, enc));
+    public OptionalValue eval(final Value left, final Value right, final Environment environment, final Encoding encoding) {
+        final BitSet leftBits = left.asBitSet();
+        leftBits.and(right.asBitSet());
+        return OptionalValue.of(ConstantFactory.createFromBitSet(leftBits, left.getValue().length, encoding));
     }
 
 }

@@ -19,17 +19,17 @@ package io.parsingdata.metal;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
-
-import io.parsingdata.metal.token.Token;
 
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import io.parsingdata.metal.token.Token;
 
 @RunWith(JUnit4.class)
 public class SimpleTest {
@@ -40,26 +40,26 @@ public class SimpleTest {
 
     @Test
     public void correct() throws IOException {
-        final Token t = buildSimpleToken("r1", 1, 1);
-        Assert.assertTrue(t.parse(stream(1, 2, 3, 4), enc()).succeeded);
+        final Token token = buildSimpleToken("r1", 1, 1);
+        Assert.assertTrue(token.parse(stream(1, 2, 3, 4), enc()).succeeded);
     }
 
     @Test
     public void sizeError() throws IOException {
-        final Token t = buildSimpleToken("r1", 2, 1);
-        Assert.assertFalse(t.parse(stream(1, 2, 3, 4), enc()).succeeded);
+        final Token token = buildSimpleToken("r1", 2, 1);
+        Assert.assertFalse(token.parse(stream(1, 2, 3, 4), enc()).succeeded);
     }
 
     @Test
     public void predicateError() throws IOException {
-        final Token t = buildSimpleToken("r1", 1, 2);
-        Assert.assertFalse(t.parse(stream(1, 2, 3, 4), enc()).succeeded);
+        final Token token = buildSimpleToken("r1", 1, 2);
+        Assert.assertFalse(token.parse(stream(1, 2, 3, 4), enc()).succeeded);
     }
 
     @Test
     public void sourceError() throws IOException {
-        final Token t = buildSimpleToken("r1", 1, 1);
-        Assert.assertFalse(t.parse(stream(2, 2, 2, 2), enc()).succeeded);
+        final Token token = buildSimpleToken("r1", 1, 1);
+        Assert.assertFalse(token.parse(stream(2, 2, 2, 2), enc()).succeeded);
     }
 
 }

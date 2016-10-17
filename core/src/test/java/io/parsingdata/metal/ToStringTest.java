@@ -16,6 +16,11 @@
 
 package io.parsingdata.metal;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
 import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.and;
 import static io.parsingdata.metal.Shorthand.cat;
@@ -55,10 +60,6 @@ import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -187,7 +188,7 @@ public class ToStringTest {
 
     private Token makeToken(final String name) {
         return new Token(name, enc()) {
-            @Override protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException { return null; }
+            @Override protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; }
             @Override public String toString() { return name; }
         };
     }

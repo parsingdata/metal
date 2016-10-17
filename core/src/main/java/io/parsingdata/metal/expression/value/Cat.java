@@ -26,13 +26,13 @@ public class Cat extends BinaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value left, final Value right, final Environment env, final Encoding enc) {
-        final byte[] lb = left.getValue();
-        final byte[] rb = right.getValue();
-        final byte[] res = new byte[lb.length + rb.length];
-        System.arraycopy(lb, 0, res, 0, lb.length);
-        System.arraycopy(rb, 0, res, lb.length, rb.length);
-        return OptionalValue.of(new Value(res, enc));
+    public OptionalValue eval(final Value left, final Value right, final Environment environment, final Encoding encoding) {
+        final byte[] leftBytes = left.getValue();
+        final byte[] rightBytes = right.getValue();
+        final byte[] concatenatedBytes = new byte[leftBytes.length + rightBytes.length];
+        System.arraycopy(leftBytes, 0, concatenatedBytes, 0, leftBytes.length);
+        System.arraycopy(rightBytes, 0, concatenatedBytes, leftBytes.length, rightBytes.length);
+        return OptionalValue.of(new Value(concatenatedBytes, encoding));
     }
 
 }

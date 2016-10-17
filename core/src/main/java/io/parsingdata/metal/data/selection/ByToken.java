@@ -54,7 +54,7 @@ public final class ByToken {
         final ParseItemList results = graph.definition == definition ? tailResults.add(graph) : tailResults;
         final ParseItem head = graph.head;
         if (head.isValue() && head.asValue().definition == definition) { return results.add(head); }
-        if (head.isRef() && head.asRef().definition == definition) { return results.add(head); }
+        if (head.isReference() && head.asReference().definition == definition) { return results.add(head); }
         if (head.isGraph()) { return results.add(getAllRecursive(head.asGraph(), definition)); }
         return results;
     }

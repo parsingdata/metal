@@ -34,8 +34,8 @@ public class TokenRef implements ValueExpression {
     }
 
     @Override
-    public OptionalValueList eval(final Environment env, final Encoding enc) {
-        return OptionalValueList.create(getAllValues(env.order, definition));
+    public OptionalValueList eval(final Environment environment, final Encoding encoding) {
+        return OptionalValueList.create(getAllValues(environment.order, definition));
     }
 
     @Override

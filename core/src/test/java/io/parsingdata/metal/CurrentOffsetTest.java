@@ -16,6 +16,22 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.currentOffset;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eqNum;
+import static io.parsingdata.metal.Shorthand.rep;
+import static io.parsingdata.metal.Shorthand.self;
+import static io.parsingdata.metal.Shorthand.sub;
+
+import java.io.IOException;
+
+import org.junit.Test;
+
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
@@ -25,12 +41,6 @@ import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.value.reference.CurrentOffset;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
-import org.junit.Test;
-
-import java.io.IOException;
-
-import static io.parsingdata.metal.Shorthand.*;
-import static org.junit.Assert.*;
 
 public class CurrentOffsetTest {
 
@@ -41,9 +51,9 @@ public class CurrentOffsetTest {
 
     @Test
     public void currentOffset() {
-        final Environment env = new Environment(NO_BYTES, 42);
+        final Environment environment = new Environment(NO_BYTES, 42);
 
-        final OptionalValueList currentOffset = CURRENT_OFFSET.eval(env, ENCODING);
+        final OptionalValueList currentOffset = CURRENT_OFFSET.eval(environment, ENCODING);
 
         assertNotNull(currentOffset);
         assertEquals(1, currentOffset.size);
@@ -53,9 +63,9 @@ public class CurrentOffsetTest {
     @Test
     public void currentOffsetLarger() {
         // offset would flip signed bit if interpreted as signed integer:
-        final Environment env = new Environment(NO_BYTES, 128);
+        final Environment environment = new Environment(NO_BYTES, 128);
 
-        final OptionalValueList currentOffset = CURRENT_OFFSET.eval(env, ENCODING);
+        final OptionalValueList currentOffset = CURRENT_OFFSET.eval(environment, ENCODING);
 
         assertNotNull(currentOffset);
         assertEquals(1, currentOffset.size);
@@ -68,14 +78,14 @@ public class CurrentOffsetTest {
         for (int i = 0; i < stream.length; i++) {
             stream[i] = (byte) i;
         }
-        final Environment env = new Environment(new InMemoryByteStream(stream));
+        final Environment environment = new Environment(new InMemoryByteStream(stream));
 
         // value - offset + 1 should be 0:
         final Token offsetValidation = rep(def("byte", con(1), eqNum(sub(self, sub(currentOffset, con(1))), con(0))));
 
-        final ParseResult parse = offsetValidation.parse(env, new Encoding(Sign.UNSIGNED));
-        assertTrue(parse.succeeded);
-        assertEquals(256, parse.environment.offset);
+        final ParseResult result = offsetValidation.parse(environment, new Encoding(Sign.UNSIGNED));
+        assertTrue(result.succeeded);
+        assertEquals(256, result.environment.offset);
     }
 
 }
