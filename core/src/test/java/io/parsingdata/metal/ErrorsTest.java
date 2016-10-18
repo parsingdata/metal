@@ -19,9 +19,11 @@ package io.parsingdata.metal;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.div;
+import static io.parsingdata.metal.Shorthand.neg;
 import static io.parsingdata.metal.Shorthand.offset;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.repn;
@@ -50,8 +52,18 @@ public class ErrorsTest {
     @Test
     public void noValueForSize() throws IOException {
         thrown = ExpectedException.none();
-        final Token token = def("a", div(con(10), con(0)));
+        // Basic division by zero.
+        final Token token = def("a", div(con(1), con(0)));
         assertFalse(token.parse(stream(1), enc()).succeeded);
+        // Try to negate division by zero.
+        final Token token2 = def("a", neg(div(con(1), con(0))));
+        assertFalse(token2.parse(stream(1), enc()).succeeded);
+        // Add one to division by zero.
+        final Token token3 = def("a", add(div(con(1), con(0)), con(1)));
+        assertFalse(token3.parse(stream(1), enc()).succeeded);
+        // Add division by zero to one.
+        final Token token4 = def("a", add(con(1), div(con(1), con(0))));
+        assertFalse(token4.parse(stream(1), enc()).succeeded);
     }
 
     @Test
