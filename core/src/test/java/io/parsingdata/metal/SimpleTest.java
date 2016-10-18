@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertFalse;
+
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
@@ -47,19 +49,19 @@ public class SimpleTest {
     @Test
     public void sizeError() throws IOException {
         final Token token = buildSimpleToken("r1", 2, 1);
-        Assert.assertFalse(token.parse(stream(1, 2, 3, 4), enc()).succeeded);
+        assertFalse(token.parse(stream(1, 2, 3, 4), enc()).succeeded);
     }
 
     @Test
     public void predicateError() throws IOException {
         final Token token = buildSimpleToken("r1", 1, 2);
-        Assert.assertFalse(token.parse(stream(1, 2, 3, 4), enc()).succeeded);
+        assertFalse(token.parse(stream(1, 2, 3, 4), enc()).succeeded);
     }
 
     @Test
     public void sourceError() throws IOException {
         final Token token = buildSimpleToken("r1", 1, 1);
-        Assert.assertFalse(token.parse(stream(2, 2, 2, 2), enc()).succeeded);
+        assertFalse(token.parse(stream(2, 2, 2, 2), enc()).succeeded);
     }
 
 }
