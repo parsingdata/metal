@@ -56,12 +56,13 @@ public final class ConstantFactory {
     private static byte[] compact(final byte[] data, final boolean signed) {
         if (signed) { return data; }
         if (data.length < 2) { return data; }
-        // strip leading zero bytes
-        int zeroCount = 0;
-        for (; zeroCount < data.length && data[zeroCount] == 0; zeroCount++);
-        final byte[] outBytes = new byte[data.length - zeroCount];
-        System.arraycopy(data, zeroCount, outBytes, 0, outBytes.length);
-        return outBytes;
+        // Strip possible leading zero byte.
+        if (data[0] == 0) {
+            final byte[] outBytes = new byte[data.length - 1];
+            System.arraycopy(data, 1, outBytes, 0, outBytes.length);
+            return outBytes;
+        }
+        return data;
     }
 
 }
