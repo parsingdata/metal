@@ -25,7 +25,6 @@ import java.util.UUID;
 
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ConstantFactory;
-import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
@@ -58,7 +57,7 @@ public final class UID {
         buffer.putShort(6, Short.reverseBytes((short) Integer.parseInt(parts[2], 16)));
         buffer.putLong(8, Long.parseLong(parts[4], 16));
         buffer.putShort(8, (short) Integer.parseInt(parts[3], 16));
-        return con(new Value(buffer.array(), ENC));
+        return con(ConstantFactory.createFromBytes(buffer.array(), ENC));
     }
 
     /**
