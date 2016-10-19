@@ -18,12 +18,15 @@ package io.parsingdata.metal.format;
 
 import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.encoding.ByteOrder.BIG_ENDIAN;
 import static io.parsingdata.metal.encoding.ByteOrder.LITTLE_ENDIAN;
 
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.ConstantFactory;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
@@ -68,6 +71,15 @@ public final class UID {
      */
     public static ValueExpression uuid(final String uuid) {
         final UUID value = UUID.fromString(uuid);
-        return cat(con(value.getMostSignificantBits()), con(value.getLeastSignificantBits()));
+        return cat(exactLong(value.getMostSignificantBits()), exactLong(value.getLeastSignificantBits()));
+    }
+
+    /**
+     * Create {@link ValueExpression} without compacting the bytes.
+     * @param bits Long to convert to {@link ValueExpression}
+     * @return {@link ValueExpression} of the bits
+     */
+    public static ValueExpression exactLong(final long bits) {
+        return con(ConstantFactory.createFromBytes(BigInteger.valueOf(bits).toByteArray(), new Encoding(BIG_ENDIAN)));
     }
 }
