@@ -45,7 +45,7 @@ public class UID {
             throw new IllegalArgumentException("Invalid GUID string: " + guid);
         }
 
-        // Note that UID bytes differ from UUID bytes, as the first 3 parts are reversed
+        // Note that GUID bytes differ from UUID bytes, as the first 3 parts are reversed
         // Use ByteBuffer instead of long to make sure no leading zeroes are omitted
         final ByteBuffer buffer = ByteBuffer.allocate(16);
         buffer.putInt(0, Integer.reverseBytes((int) Long.parseLong(parts[0], 16)));
