@@ -32,7 +32,11 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  *
  * @author Netherlands Forensic Institute.
  */
-public class UID {
+public final class UID {
+
+    private UID() {
+    }
+
     /**
      * Use a String representation of a GUID as predicate.
      * {@code eq(guid("caa16737-fa36-4d43-b3b6-33f0aa44e76b"))}
