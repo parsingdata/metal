@@ -36,6 +36,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 public final class UID {
     private static final Encoding ENC = new Encoding();
 
+    private UID() {}
+
     /**
      * Use a String representation of a GUID as predicate.
      * {@code eq(guid("caa16737-fa36-4d43-b3b6-33f0aa44e76b"))}
