@@ -18,8 +18,6 @@ package io.parsingdata.metal.format;
 
 import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.encoding.ByteOrder.BIG_ENDIAN;
-import static io.parsingdata.metal.encoding.ByteOrder.LITTLE_ENDIAN;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
@@ -36,9 +34,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * @author Netherlands Forensic Institute.
  */
 public final class UID {
-
-    private UID() {
-    }
+    private static final Encoding ENC = new Encoding();
 
     /**
      * Use a String representation of a GUID as predicate.
@@ -60,7 +56,7 @@ public final class UID {
         buffer.putShort(6, Short.reverseBytes((short) Integer.parseInt(parts[2], 16)));
         buffer.putLong(8, Long.parseLong(parts[4], 16));
         buffer.putShort(8, (short) Integer.parseInt(parts[3], 16));
-        return con(new Value(buffer.array(), new Encoding(LITTLE_ENDIAN)));
+        return con(new Value(buffer.array(), ENC));
     }
 
     /**
@@ -80,6 +76,6 @@ public final class UID {
      * @return {@link ValueExpression} of the bits
      */
     public static ValueExpression exactLong(final long bits) {
-        return con(ConstantFactory.createFromBytes(BigInteger.valueOf(bits).toByteArray(), new Encoding(BIG_ENDIAN)));
+        return con(ConstantFactory.createFromBytes(BigInteger.valueOf(bits).toByteArray(), ENC));
     }
 }
