@@ -1,3 +1,19 @@
+/*
+ * Copyright 2013-2016 Netherlands Forensic Institute
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.parsingdata.metal.format;
 
 import static io.parsingdata.metal.Shorthand.cat;
@@ -12,6 +28,11 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.value.Value;
 
+/**
+ * Predicates for Microsoft GUID and Java UUID.
+ *
+ * @author Netherlands Forensic Institute.
+ */
 public class UID {
     /**
      * Use a String representation of a GUID as predicate.
@@ -21,7 +42,7 @@ public class UID {
     public static Expression guid(final String guid) {
         final String[] parts = guid.split("-");
         if (parts.length != 5) {
-            throw new IllegalArgumentException("Invalid UID string: " + guid);
+            throw new IllegalArgumentException("Invalid GUID string: " + guid);
         }
 
         // Note that UID bytes differ from UUID bytes, as the first 3 parts are reversed
