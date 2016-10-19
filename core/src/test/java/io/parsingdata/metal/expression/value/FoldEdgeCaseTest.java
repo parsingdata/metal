@@ -20,6 +20,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.ADD_REDUCER;
+import static io.parsingdata.metal.Shorthand.DIV_REDUCER;
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
@@ -28,9 +29,11 @@ import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.foldLeft;
 import static io.parsingdata.metal.Shorthand.foldRight;
 import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
 
@@ -38,6 +41,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 
 /**
@@ -59,6 +63,13 @@ public class FoldEdgeCaseTest {
     public void valuesContainsEmpty() {
         assertTrue(foldLeft(div(con(1), con(0)), ADD_REDUCER).eval(stream(0), enc()).isEmpty());
         assertTrue(foldRight(div(con(1), con(0)), ADD_REDUCER).eval(stream(0), enc()).isEmpty());
+    }
+
+    @Test
+    public void foldToEmpty() throws IOException {
+        final Environment environment = rep(any("value")).parse(stream(1, 0), enc()).environment;
+        assertFalse(foldLeft(ref("value"), DIV_REDUCER).eval(environment, enc()).head.isPresent());
+        assertFalse(foldRight(ref("value"), DIV_REDUCER).eval(environment, enc()).head.isPresent());
     }
 
     @Test
