@@ -16,15 +16,30 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.count;
+import static io.parsingdata.metal.Shorthand.currentOffset;
 import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.eqNum;
+import static io.parsingdata.metal.Shorthand.opt;
+import static io.parsingdata.metal.Shorthand.pre;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.rep;
+import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.Shorthand.whl;
+import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.ParseGraph;
@@ -32,33 +47,45 @@ import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 
 public class DefinitionTest {
-	
-	// TODO: Add a bunch of additional tests here to check whether all Token types work correctly (#8)
-	
-	@Test
-	public void singleDef() throws IOException {
-		final Token singleDef = def("a", con(1));
-		final ParseResult result = singleDef.parse(stream(1), enc());
-		Assert.assertTrue(result.succeeded);
-		Assert.assertTrue(result.environment.order.getDefinition() == ParseGraph.NONE);
-		Assert.assertTrue(result.environment.order.head.getDefinition() == singleDef);
-		Assert.assertTrue(result.environment.order.tail.getDefinition() == ParseGraph.NONE);
-	}
 
-	@Test
-	public void smallSeq() throws IOException {
-		Token defA = def("a", con(1));
-		Token defB = def("b", con(1));
-		final Token smallSeq = seq(defA, defB);
-		final ParseResult result = smallSeq.parse(stream(1, 2), enc());
-		Assert.assertTrue(result.succeeded);
-		Assert.assertTrue(result.environment.order.getDefinition() == ParseGraph.NONE);
-		Assert.assertTrue(result.environment.order.head.getDefinition() == smallSeq);
-		Assert.assertTrue(result.environment.order.head.asGraph().head.getDefinition() == defB);
-		Assert.assertTrue(result.environment.order.head.asGraph().tail.getDefinition() == smallSeq);
-		Assert.assertTrue(result.environment.order.head.asGraph().tail.head.getDefinition() == defA);
-		Assert.assertTrue(result.environment.order.head.asGraph().tail.tail.getDefinition() == smallSeq);
-		Assert.assertTrue(result.environment.order.tail.getDefinition() == ParseGraph.NONE);
-	}
+    public static final Token DEF_ONE = def("one", 1, eq(con(1)));
+    public static final Token DEF_TWO = def("two", 1, eq(con(2)));
+    public static final Token CHO_12 = cho(DEF_ONE, DEF_TWO);
+    public static final Token REP_1 = rep(DEF_ONE);
+    public static final Token OPT_2 = opt(DEF_TWO);
+    public static final Token PRE_1 = pre(DEF_ONE, eq(con(0), con(0)));
+    public static final Token REPN_1 = repn(DEF_ONE, con(1));
+    public static final Token SUB_2 = sub(DEF_TWO, currentOffset);
+    public static final Token WHL_1 = whl(DEF_ONE, eqNum(con(0), count(ref("one"))));
+    public static final Token COMPOSED = seq(WHL_1, REPN_1, REP_1, CHO_12, OPT_2, PRE_1, SUB_2);
+
+    @Test
+    public void composed() throws IOException {
+        final ParseResult result = COMPOSED.parse(stream(1, 1, 1, 2, 2, 1, 2), enc());
+        assertTrue(result.succeeded);
+        final ParseGraph graph = result.environment.order;
+        assertEquals(NONE, graph.getDefinition());
+        assertEquals(COMPOSED, graph.head.getDefinition());
+        assertEquals(SUB_2, graph.head.asGraph().head.getDefinition());
+        assertEquals(DEF_TWO, graph.head.asGraph().head.asGraph().head.getDefinition());
+        assertEquals(COMPOSED, graph.head.asGraph().tail.getDefinition());
+        assertEquals(PRE_1, graph.head.asGraph().tail.head.getDefinition());
+        assertEquals(DEF_ONE, graph.head.asGraph().tail.head.asGraph().head.getDefinition());
+        assertEquals(COMPOSED, graph.head.asGraph().tail.tail.getDefinition());
+        assertEquals(OPT_2, graph.head.asGraph().tail.tail.head.getDefinition());
+        assertEquals(DEF_TWO, graph.head.asGraph().tail.tail.head.asGraph().head.getDefinition());
+        assertEquals(COMPOSED, graph.head.asGraph().tail.tail.tail.getDefinition());
+        assertEquals(CHO_12, graph.head.asGraph().tail.tail.tail.head.getDefinition());
+        assertEquals(DEF_TWO, graph.head.asGraph().tail.tail.tail.head.asGraph().head.getDefinition());
+        assertEquals(COMPOSED, graph.head.asGraph().tail.tail.tail.tail.getDefinition());
+        assertEquals(REP_1, graph.head.asGraph().tail.tail.tail.tail.head.getDefinition());
+        assertEquals(DEF_ONE, graph.head.asGraph().tail.tail.tail.tail.head.asGraph().head.getDefinition());
+        assertEquals(COMPOSED, graph.head.asGraph().tail.tail.tail.tail.tail.getDefinition());
+        assertEquals(REPN_1, graph.head.asGraph().tail.tail.tail.tail.tail.head.getDefinition());
+        assertEquals(DEF_ONE, graph.head.asGraph().tail.tail.tail.tail.tail.head.asGraph().head.getDefinition());
+        assertEquals(COMPOSED, graph.head.asGraph().tail.tail.tail.tail.tail.tail.getDefinition());
+        assertEquals(WHL_1, graph.head.asGraph().tail.tail.tail.tail.tail.tail.head.getDefinition());
+        assertEquals(DEF_ONE, graph.head.asGraph().tail.tail.tail.tail.tail.tail.head.asGraph().head.getDefinition());
+    }
 
 }
