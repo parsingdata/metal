@@ -36,6 +36,7 @@ import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.format.JPEG;
 import io.parsingdata.metal.format.PNG;
+import io.parsingdata.metal.format.UID;
 import io.parsingdata.metal.format.ZIP;
 import io.parsingdata.metal.token.Token;
 
@@ -78,6 +79,7 @@ public class FormatTest {
         _exception.expect(IllegalArgumentException.class);
         _exception.expectMessage("Invalid GUID string: test");
         guid("test");
+        new UID(); // test coverage check
     }
 
     @Test
