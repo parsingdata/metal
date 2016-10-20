@@ -24,6 +24,7 @@ import java.util.BitSet;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.encoding.Sign;
 
 public class Value {
 
@@ -40,8 +41,8 @@ public class Value {
     }
 
     public BigInteger asNumeric() {
-        return encoding.isSigned() ? new BigInteger(encoding.byteOrder.apply(data))
-                                   : new BigInteger(1, encoding.byteOrder.apply(data));
+        return encoding.sign == Sign.SIGNED ? new BigInteger(encoding.byteOrder.apply(data))
+                                            : new BigInteger(1, encoding.byteOrder.apply(data));
     }
 
     public String asString() {

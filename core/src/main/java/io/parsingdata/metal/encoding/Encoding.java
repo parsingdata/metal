@@ -51,10 +51,6 @@ public class Encoding {
         this.byteOrder = byteOrder;
     }
 
-    public boolean isSigned() {
-        return sign == Sign.SIGNED;
-    }
-
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + sign + "," + charset + "," + byteOrder + ")";

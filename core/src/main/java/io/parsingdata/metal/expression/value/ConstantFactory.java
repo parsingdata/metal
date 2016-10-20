@@ -21,6 +21,7 @@ import java.util.BitSet;
 
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.encoding.Sign;
 
 public final class ConstantFactory {
 
@@ -31,7 +32,7 @@ public final class ConstantFactory {
     }
 
     public static Value createFromNumeric(final BigInteger value, final Encoding encoding) {
-        return createFromBytes(compact(value.toByteArray(), encoding.isSigned()), setToBigEndian(encoding));
+        return createFromBytes(compact(value.toByteArray(), encoding.sign == Sign.SIGNED), setToBigEndian(encoding));
     }
 
     public static Value createFromNumeric(final long value, final Encoding encoding) {
