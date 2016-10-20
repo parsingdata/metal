@@ -39,7 +39,7 @@ public final class ConstantFactory {
     }
 
     public static Value createFromString(final String value, final Encoding encoding) {
-        return new Value(value.getBytes(encoding.getCharset()), encoding);
+        return new Value(value.getBytes(encoding.charset), encoding);
     }
 
     public static Value createFromBitSet(final BitSet value, final int minSize, final Encoding encoding) {
@@ -50,7 +50,7 @@ public final class ConstantFactory {
     }
 
     private static Encoding setToBigEndian(final Encoding encoding) {
-        return new Encoding(encoding.getSign(), encoding.getCharset(), ByteOrder.BIG_ENDIAN);
+        return new Encoding(encoding.sign, encoding.charset, ByteOrder.BIG_ENDIAN);
     }
 
     private static byte[] compact(final byte[] data, final boolean signed) {

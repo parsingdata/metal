@@ -21,13 +21,13 @@ import java.nio.charset.StandardCharsets;
 
 public class Encoding {
 
-    private static final Sign DEFAULT_SIGNED = Sign.UNSIGNED;
-    private static final Charset DEFAULT_CHARSET = StandardCharsets.US_ASCII;
-    private static final ByteOrder DEFAULT_BYTE_ORDER = ByteOrder.BIG_ENDIAN;
+    public static final Sign DEFAULT_SIGNED = Sign.UNSIGNED;
+    public static final Charset DEFAULT_CHARSET = StandardCharsets.US_ASCII;
+    public static final ByteOrder DEFAULT_BYTE_ORDER = ByteOrder.BIG_ENDIAN;
 
-    private final Sign sign;
-    private final Charset charset;
-    private final ByteOrder byteOrder;
+    public final Sign sign;
+    public final Charset charset;
+    public final ByteOrder byteOrder;
 
     public Encoding() {
         this(DEFAULT_SIGNED, DEFAULT_CHARSET, DEFAULT_BYTE_ORDER);
@@ -51,20 +51,8 @@ public class Encoding {
         this.byteOrder = byteOrder;
     }
 
-    public Sign getSign() {
-        return sign;
-    }
-
     public boolean isSigned() {
         return sign == Sign.SIGNED;
-    }
-
-    public Charset getCharset() {
-        return charset;
-    }
-
-    public ByteOrder getByteOrder() {
-        return byteOrder;
     }
 
     @Override

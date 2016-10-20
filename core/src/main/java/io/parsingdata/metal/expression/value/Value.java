@@ -27,7 +27,7 @@ import io.parsingdata.metal.encoding.Encoding;
 
 public class Value {
 
-    private final byte[] data; // Private because array content is mutable.
+    private final byte[] data; // Private because array contents is mutable.
     public final Encoding encoding;
 
     public Value(final byte[] data, final Encoding encoding) {
@@ -40,16 +40,16 @@ public class Value {
     }
 
     public BigInteger asNumeric() {
-        return encoding.isSigned() ? new BigInteger(encoding.getByteOrder().apply(data))
-                                   : new BigInteger(1, encoding.getByteOrder().apply(data));
+        return encoding.isSigned() ? new BigInteger(encoding.byteOrder.apply(data))
+                                   : new BigInteger(1, encoding.byteOrder.apply(data));
     }
 
     public String asString() {
-        return new String(data, encoding.getCharset());
+        return new String(data, encoding.charset);
     }
 
     public BitSet asBitSet() {
-        return BitSet.valueOf(encoding.getByteOrder() == ByteOrder.BIG_ENDIAN ? ByteOrder.LITTLE_ENDIAN.apply(data) : data);
+        return BitSet.valueOf(encoding.byteOrder == ByteOrder.BIG_ENDIAN ? ByteOrder.LITTLE_ENDIAN.apply(data) : data);
     }
 
     public OptionalValue operation(final ValueOperation operation) {

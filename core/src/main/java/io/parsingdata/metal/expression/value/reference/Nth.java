@@ -47,8 +47,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  */
 public class Nth implements ValueExpression {
 
-    private final ValueExpression values;
-    private final ValueExpression indices;
+    public final ValueExpression values;
+    public final ValueExpression indices;
 
     public Nth(final ValueExpression values, final ValueExpression indices) {
         this.values = checkNotNull(values, "values");

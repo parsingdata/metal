@@ -22,7 +22,7 @@ public final class Util {
 
     private Util() {}
 
-    final private static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+    final private static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray(); // Private because array contents is mutable.
 
     public static <T>T checkNotNull(final T argument, final String name) {
         if (argument == null) { throw new IllegalArgumentException("Argument " + name + " may not be null."); }
