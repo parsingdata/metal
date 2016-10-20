@@ -32,10 +32,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  *
  * @author Netherlands Forensic Institute.
  */
-public final class UID {
+public class UID {
     private static final Encoding ENC = new Encoding();
-
-    private UID() {}
 
     /**
      * Use a String representation of a GUID as predicate.
