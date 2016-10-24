@@ -22,30 +22,30 @@ public final class Util {
 
     private Util() {}
 
-    final private static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+    final private static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray(); // Private because array contents is mutable.
 
     public static <T>T checkNotNull(final T argument, final String name) {
         if (argument == null) { throw new IllegalArgumentException("Argument " + name + " may not be null."); }
         return argument;
     }
 
-    public static <T>T[] checkContainsNoNulls(final T[] argument, final String name) {
-        checkNotNull(argument, name);
-        for (final T arg : argument) {
-            if (arg == null) { throw new IllegalArgumentException("Value in array " + name + " may not be null."); }
+    public static <T>T[] checkContainsNoNulls(final T[] arguments, final String name) {
+        checkNotNull(arguments, name);
+        for (final T argument : arguments) {
+            if (argument == null) { throw new IllegalArgumentException("Value in array " + name + " may not be null."); }
         }
-        return argument;
+        return arguments;
     }
 
     public static String tokensToString(final Token[] tokens) {
         checkNotNull(tokens, "tokens");
         if (tokens.length == 0) { return ""; }
-        final StringBuilder out = new StringBuilder();
+        final StringBuilder outString = new StringBuilder();
         for (int i = 0; i < tokens.length - 1; i++) {
-            out.append(tokens[i].toString());
-            out.append(", ");
+            outString.append(tokens[i].toString());
+            outString.append(", ");
         }
-        return out.append(tokens[tokens.length - 1]).toString();
+        return outString.append(tokens[tokens.length - 1]).toString();
     }
 
     public static String bytesToHexString(final byte[] bytes) {

@@ -30,34 +30,34 @@ public class TokenRef extends Token {
 
     private static final Token LOOKUP_FAILED = new Token("LOOKUP_FAILED", null) {
         @Override
-        protected ParseResult parseImpl(String scope, Environment env, Encoding enc) throws IOException {
-            return failure(env);
+        protected ParseResult parseImpl(String scope, Environment environment, Encoding encoding) throws IOException {
+            return failure(environment);
         }
     };
 
-    public final String refName;
+    public final String referenceName;
 
-    public TokenRef(String name, String refName, Encoding enc) {
-        super(name, enc);
-        this.refName = checkNotNull(refName, "refName");
-        if (refName.isEmpty()) { throw new IllegalArgumentException("Argument refName may not be empty."); }
+    public TokenRef(String name, String referenceName, Encoding encoding) {
+        super(name, encoding);
+        this.referenceName = checkNotNull(referenceName, "referenceName");
+        if (referenceName.isEmpty()) { throw new IllegalArgumentException("Argument referenceName may not be empty."); }
     }
 
     @Override
-    protected ParseResult parseImpl(String scope, Environment env, Encoding enc) throws IOException {
-        return lookup(env.order, refName).parse(scope, env, enc);
+    protected ParseResult parseImpl(String scope, Environment environment, Encoding encoding) throws IOException {
+        return lookup(environment.order, referenceName).parse(scope, environment, encoding);
     }
 
-    private Token lookup(final ParseItem item, final String refName) {
-        if (item.getDefinition().name.equals(refName)) { return item.getDefinition(); }
+    private Token lookup(final ParseItem item, final String referenceName) {
+        if (item.getDefinition().name.equals(referenceName)) { return item.getDefinition(); }
         if (!item.isGraph() || item.asGraph().isEmpty()) { return LOOKUP_FAILED; }
-        final Token headResult = lookup(item.asGraph().head, refName);
+        final Token headResult = lookup(item.asGraph().head, referenceName);
         if (headResult != LOOKUP_FAILED) { return headResult; }
-        return lookup(item.asGraph().tail, refName);
+        return lookup(item.asGraph().tail, referenceName);
     }
 
     @Override
-    public Token getCanonical(Environment env) {
-        return lookup(env.order, refName);
+    public Token getCanonical(Environment environment) {
+        return lookup(environment.order, referenceName);
     }
 }

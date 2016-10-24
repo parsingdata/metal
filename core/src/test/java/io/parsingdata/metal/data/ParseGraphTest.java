@@ -74,12 +74,12 @@ public class ParseGraphTest {
         pgl = makeLongGraph();
     }
 
-    private static ParseValue makeValWithDef(final char n, final Token t, final long o) {
-        return new ParseValue(Character.toString(n), t, o, new byte[] { (byte) n }, enc());
+    private static ParseValue makeValWithDef(final char name, final Token token, final long offset) {
+        return new ParseValue(Character.toString(name), token, offset, new byte[] { (byte) name }, enc());
     }
 
-    private static ParseValue makeVal(final char n, final long o) {
-        return makeValWithDef(n, def(Character.toString(n), o), o);
+    private static ParseValue makeVal(final char name, final long offset) {
+        return makeValWithDef(name, def(Character.toString(name), offset), offset);
     }
 
     private ParseGraph makeSimpleGraph() {
@@ -127,7 +127,7 @@ public class ParseGraphTest {
             .add(a)
             .addBranch(t)
             .add(b)
-            .add(new ParseRef(a.getOffset(), aDef))
+            .add(new ParseReference(a.getOffset(), aDef))
             .closeBranch();
     }
 
@@ -135,8 +135,8 @@ public class ParseGraphTest {
     public void cycle() {
         assertEquals(2, pgc.size);
         assertTrue(pgc.head.isGraph());
-        assertTrue(pgc.head.asGraph().head.isRef());
-        assertEquals(a, pgc.head.asGraph().head.asRef().resolve(pgc));
+        assertTrue(pgc.head.asGraph().head.isReference());
+        assertEquals(a, pgc.head.asGraph().head.asReference().resolve(pgc));
         assertTrue(pgc.head.asGraph().tail.head.isValue());
         assertEquals(b, pgc.head.asGraph().tail.head);
         assertTrue(pgc.tail.head.isValue());
@@ -189,14 +189,14 @@ public class ParseGraphTest {
 
     @Test
     public void testHeadContainsLowestOffsetValue() throws IOException {
-        final Environment stream = stream(0, 0, 0);
+        final Environment environment = stream(0, 0, 0);
         final Token token = seq(
             repn(
                  def("zero", 1),
                  con(2)),
             nod(con(1)));
         // creates a ParseGraph with values in the head, and an empty graph as tail
-        final ParseResult result = token.parse(stream, enc());
+        final ParseResult result = token.parse(environment, enc());
         assertTrue(result.environment.order.head.asGraph().head.asGraph().head.isValue());
     }
 
@@ -259,14 +259,14 @@ public class ParseGraphTest {
     @Test
     public void testAsRef() {
         thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Cannot convert ParseGraph to ParseRef.");
-        EMPTY.asRef();
+        thrown.expectMessage("Cannot convert ParseGraph to ParseReference.");
+        EMPTY.asReference();
     }
 
     @Test
     public void testCurrent() {
         assertNull(EMPTY.current());
-        assertNull(EMPTY.add(new ParseRef(0, NONE)).current());
+        assertNull(EMPTY.add(new ParseReference(0, NONE)).current());
         assertNull(EMPTY.addBranch(NONE).current());
     }
 

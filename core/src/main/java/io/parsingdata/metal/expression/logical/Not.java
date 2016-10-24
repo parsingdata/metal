@@ -27,8 +27,8 @@ public class Not extends UnaryLogicalExpression {
     }
 
     @Override
-    public boolean eval(final Environment env, final Encoding enc) {
-        return !operand.eval(env, enc);
+    public boolean eval(final Environment environment, final Encoding encoding) {
+        return !operand.eval(environment, encoding);
     }
 
 }

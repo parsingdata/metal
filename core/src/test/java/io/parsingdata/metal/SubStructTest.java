@@ -16,6 +16,9 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
@@ -26,7 +29,7 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.token;
-import static io.parsingdata.metal.data.selection.ByType.getRefs;
+import static io.parsingdata.metal.data.selection.ByType.getReferences;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.seek;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
@@ -36,13 +39,12 @@ import static junit.framework.TestCase.assertFalse;
 
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
-import io.parsingdata.metal.data.ParseRef;
+import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 
@@ -58,19 +60,19 @@ public class SubStructTest {
 
     @Test
     public void linkedList() throws IOException {
-        final Environment env = stream(0, 8, 1, 42, 0, 12, 1, 84, 0, 4, 1);
-                            /* offset: 0, 1, 2,  3, 4,  5, 6,  7, 8, 9,10
-                             * struct: -------      --------      -------
-                             * ref 1:     +-----------------------^
-                             * ref 2:               ^----------------+
-                             * ref 3:                   +----------------*
-                             */
-        final ParseResult res = LINKED_LIST.parse(env, enc());
-        Assert.assertTrue(res.succeeded);
-        final ParseGraph out = res.environment.order;
-        Assert.assertEquals(0, getRefs(out).size); // No cycles
+        final Environment environment = stream(0, 8, 1, 42, 0, 12, 1, 84, 0, 4, 1);
+                                    /* offset: 0, 1, 2,  3, 4,  5, 6,  7, 8, 9,10
+                                     * struct: -------      --------      -------
+                                     * ref 1:     +-----------------------^
+                                     * ref 2:               ^----------------+
+                                     * ref 3:                   +----------------*
+                                     */
+        final ParseResult result = LINKED_LIST.parse(environment, enc());
+        assertTrue(result.succeeded);
+        final ParseGraph graph = result.environment.order;
+        assertEquals(0, getReferences(graph).size); // No cycles
 
-        final ParseGraph first = out.head.asGraph();
+        final ParseGraph first = graph.head.asGraph();
         checkBranch(first, 0, 8);
 
         final ParseGraph second = first.tail.head.asGraph().head.asGraph().head.asGraph();
@@ -82,25 +84,25 @@ public class SubStructTest {
 
     @Test
     public void linkedListWithSelfReference() throws IOException {
-        final Environment env = stream(0, 0, 1);
-        final ParseResult res = LINKED_LIST.parse(env, enc());
-        Assert.assertTrue(res.succeeded);
-        final ParseGraph out = res.environment.order;
-        Assert.assertEquals(1, getRefs(out).size);
+        final Environment environment = stream(0, 0, 1);
+        final ParseResult result = LINKED_LIST.parse(environment, enc());
+        assertTrue(result.succeeded);
+        final ParseGraph graph = result.environment.order;
+        assertEquals(1, getReferences(graph).size);
 
-        final ParseGraph first = out.head.asGraph();
+        final ParseGraph first = graph.head.asGraph();
         checkBranch(first, 0, 0);
 
-        final ParseRef ref = first.tail.head.asGraph().head.asGraph().head.asRef();
-        checkBranch(ref.resolve(out).asGraph(), 0, 0); // Check cycle
+        final ParseReference reference = first.tail.head.asGraph().head.asGraph().head.asReference();
+        checkBranch(reference.resolve(graph).asGraph(), 0, 0); // Check cycle
     }
 
     private ParseGraph startCycle(final int offset) throws IOException {
-        final Environment env = seek(stream(0, 4, 1, 21, 0, 0, 1), offset);
-        final ParseResult res = LINKED_LIST.parse(env, enc());
-        Assert.assertTrue(res.succeeded);
-        Assert.assertEquals(1, getRefs(res.environment.order).size);
-        return res.environment.order;
+        final Environment environment = seek(stream(0, 4, 1, 21, 0, 0, 1), offset);
+        final ParseResult result = LINKED_LIST.parse(environment, enc());
+        assertTrue(result.succeeded);
+        assertEquals(1, getReferences(result.environment.order).size);
+        return result.environment.order;
     }
 
     @Test
@@ -113,8 +115,8 @@ public class SubStructTest {
         final ParseGraph second = first.tail.head.asGraph().head.asGraph().head.asGraph();
         checkBranch(second, 4, 0);
 
-        final ParseRef ref = second.tail.head.asGraph().head.asGraph().head.asRef();
-        checkBranch(ref.resolve(graph).asGraph(), 0, 4); // Check cycle
+        final ParseReference reference = second.tail.head.asGraph().head.asGraph().head.asReference();
+        checkBranch(reference.resolve(graph).asGraph(), 0, 4); // Check cycle
     }
 
     @Test
@@ -127,8 +129,8 @@ public class SubStructTest {
         final ParseGraph second = first.tail.head.asGraph().head.asGraph().head.asGraph();
         checkBranch(second, 0, 4);
 
-        final ParseRef ref = second.tail.head.asGraph().head.asGraph().head.asRef();
-        checkBranch(ref.resolve(graph).asGraph(), 4, 0); // Check cycle
+        final ParseReference reference = second.tail.head.asGraph().head.asGraph().head.asReference();
+        checkBranch(reference.resolve(graph).asGraph(), 4, 0); // Check cycle
     }
 
     private void checkBranch(final ParseGraph graph, final int graphOffset, final int nextOffset) {
@@ -144,9 +146,9 @@ public class SubStructTest {
     }
 
     private void checkValue(final ParseItem item, final int value, final int offset) {
-        Assert.assertTrue(item.isValue());
-        Assert.assertEquals(value, item.asValue().asNumeric().intValue());
-        Assert.assertEquals(offset, item.asValue().getOffset());
+        assertTrue(item.isValue());
+        assertEquals(value, item.asValue().asNumeric().intValue());
+        assertEquals(offset, item.asValue().getOffset());
     }
 
     @Test

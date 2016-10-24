@@ -16,18 +16,25 @@
 
 package io.parsingdata.metal.expression.value;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.token.Token;
-import io.parsingdata.metal.util.ParameterizedParse;
-import org.junit.runners.Parameterized.Parameters;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.count;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.rep;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import org.junit.runners.Parameterized.Parameters;
+
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.util.ParameterizedParse;
 
 public class CountTest extends ParameterizedParse {
 
@@ -47,8 +54,8 @@ public class CountTest extends ParameterizedParse {
         });
     }
 
-    public CountTest(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
-        super(token, env, enc, result);
+    public CountTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
+        super(token, environment, encoding, result);
     }
 
 }

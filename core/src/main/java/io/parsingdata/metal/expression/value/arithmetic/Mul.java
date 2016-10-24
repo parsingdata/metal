@@ -31,8 +31,8 @@ public class Mul extends BinaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value left, final Value right, final Environment env, final Encoding enc) {
-        return OptionalValue.of(ConstantFactory.createFromNumeric(left.asNumeric().multiply(right.asNumeric()), enc));
+    public OptionalValue eval(final Value left, final Value right, final Environment environment, final Encoding encoding) {
+        return OptionalValue.of(ConstantFactory.createFromNumeric(left.asNumeric().multiply(right.asNumeric()), encoding));
     }
 
 }

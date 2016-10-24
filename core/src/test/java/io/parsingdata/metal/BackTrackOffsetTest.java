@@ -16,22 +16,24 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static io.parsingdata.metal.util.TokenDefinitions.eq;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import java.io.IOException;
 
-import io.parsingdata.metal.token.Token;
-
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import io.parsingdata.metal.token.Token;
 
 @RunWith(JUnit4.class)
 public class BackTrackOffsetTest {
@@ -57,42 +59,42 @@ public class BackTrackOffsetTest {
 
     @Test
     public void choiceLeft() throws IOException {
-        Assert.assertTrue(_backTrackChoice.parse(stream(1, 2), enc()).succeeded);
+        assertTrue(_backTrackChoice.parse(stream(1, 2), enc()).succeeded);
     }
 
     @Test
     public void choiceRight() throws IOException {
-        Assert.assertTrue(_backTrackChoice.parse(stream(1, 3), enc()).succeeded);
+        assertTrue(_backTrackChoice.parse(stream(1, 3), enc()).succeeded);
     }
 
     @Test
     public void choiceNone() throws IOException {
-        Assert.assertFalse(_backTrackChoice.parse(stream(1, 4), enc()).succeeded);
+        assertFalse(_backTrackChoice.parse(stream(1, 4), enc()).succeeded);
     }
 
     @Test
     public void repeatZero() throws IOException {
-        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 3), enc()).succeeded);
+        assertTrue(_backTrackRepeat.parse(stream(1, 3), enc()).succeeded);
     }
 
     @Test
     public void repeatOnce() throws IOException {
-        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 3), enc()).succeeded);
+        assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 3), enc()).succeeded);
     }
 
     @Test
     public void repeatTwice() throws IOException {
-        Assert.assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 2, 1, 3), enc()).succeeded);
+        assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 2, 1, 3), enc()).succeeded);
     }
 
     @Test
     public void repeatNone() throws IOException {
-        Assert.assertFalse(_backTrackRepeat.parse(stream(1, 4), enc()).succeeded);
+        assertFalse(_backTrackRepeat.parse(stream(1, 4), enc()).succeeded);
     }
 
     @Test
     public void deepMatch() throws IOException {
-        Assert.assertTrue(_backTrackDeep.parse(stream(1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 84), enc()).succeeded);
+        assertTrue(_backTrackDeep.parse(stream(1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 84), enc()).succeeded);
     }
 
 }

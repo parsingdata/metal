@@ -26,16 +26,16 @@ public final class ByType {
 
     private ByType() {}
 
-    public static ParseItemList getRefs(final ParseGraph graph) {
+    public static ParseItemList getReferences(final ParseGraph graph) {
         checkNotNull(graph, "graph");
-        return getRefs(graph, graph);
+        return getReferences(graph, graph);
     }
 
-    private static ParseItemList getRefs(final ParseGraph graph, final ParseGraph root) {
+    private static ParseItemList getReferences(final ParseGraph graph, final ParseGraph root) {
         if (graph.isEmpty()) { return ParseItemList.EMPTY; }
         final ParseItem head = graph.head;
-        if (head.isRef() && head.asRef().resolve(root) == null) { throw new IllegalStateException("A ref must point to an existing graph."); }
-        return getRefs(graph.tail, root).add(head.isGraph() ? getRefs(head.asGraph(), root) : (head.isRef() ? ParseItemList.EMPTY.add(head.asRef().resolve(root)) : ParseItemList.EMPTY));
+        if (head.isReference() && head.asReference().resolve(root) == null) { throw new IllegalStateException("A ref must point to an existing graph."); }
+        return getReferences(graph.tail, root).add(head.isGraph() ? getReferences(head.asGraph(), root) : (head.isReference() ? ParseItemList.EMPTY.add(head.asReference().resolve(root)) : ParseItemList.EMPTY));
     }
 
 }

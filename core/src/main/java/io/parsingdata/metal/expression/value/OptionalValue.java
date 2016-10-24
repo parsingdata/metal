@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 
 public class OptionalValue {
 
-    private final Value value;
+    private final Value value; // Private because access is explicitly guarded.
 
     private OptionalValue(final Value value) {
         this.value = value;

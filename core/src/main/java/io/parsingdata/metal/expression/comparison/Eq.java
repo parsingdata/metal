@@ -27,11 +27,11 @@ public class Eq extends ComparisonExpression {
 
     @Override
     public boolean compare(final Value left, final Value right) {
-        final byte[] l = left.getValue();
-        final byte[] r = right.getValue();
-        if (l.length != r.length) { return false; }
-        for (int i = 0; i < l.length; i++) {
-            if (l[i] != r[i]) { return false; }
+        final byte[] leftBytes = left.getValue();
+        final byte[] rightBytes = right.getValue();
+        if (leftBytes.length != rightBytes.length) { return false; }
+        for (int i = 0; i < leftBytes.length; i++) {
+            if (leftBytes[i] != rightBytes[i]) { return false; }
         }
         return true;
     }

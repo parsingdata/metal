@@ -64,16 +64,16 @@ public class ParseValueList {
 
     public ParseValueList getAll(final String name) {
         if (isEmpty()) { return this; }
-        final ParseValueList t = tail.getAll(name);
-        if (head.matches(name)) { return t.add(head); }
-        else { return t; }
+        final ParseValueList tailList = tail.getAll(name);
+        if (head.matches(name)) { return tailList.add(head); }
+        else { return tailList; }
     }
 
     public ParseValueList getValuesSincePrefix(final ParseValue prefix) {
         if (isEmpty()) { return this; }
         if (head == prefix) { return EMPTY; }
-        final ParseValueList t = tail.getValuesSincePrefix(prefix);
-        return t.add(head);
+        final ParseValueList tailList = tail.getValuesSincePrefix(prefix);
+        return tailList.add(head);
     }
 
     public boolean isEmpty() {

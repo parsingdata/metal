@@ -16,21 +16,36 @@
 
 package io.parsingdata.metal;
 
+import static io.parsingdata.metal.Shorthand.ADD_REDUCER;
+import static io.parsingdata.metal.Shorthand.CAT_REDUCER;
+import static io.parsingdata.metal.Shorthand.MUL_REDUCER;
+import static io.parsingdata.metal.Shorthand.SUB_REDUCER;
+import static io.parsingdata.metal.Shorthand.add;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.eqNum;
+import static io.parsingdata.metal.Shorthand.fold;
+import static io.parsingdata.metal.Shorthand.foldLeft;
+import static io.parsingdata.metal.Shorthand.foldRight;
+import static io.parsingdata.metal.Shorthand.offset;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EncodingFactory.le;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import org.junit.runners.Parameterized.Parameters;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
-import org.junit.runners.Parameterized.Parameters;
-
-import java.util.Arrays;
-import java.util.Collection;
-
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EncodingFactory.le;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 public class ReducersTest extends ParameterizedParse {
 
@@ -61,8 +76,8 @@ public class ReducersTest extends ParameterizedParse {
         });
     }
 
-    public ReducersTest(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
-        super(token, env, enc, result);
+    public ReducersTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
+        super(token, environment, encoding, result);
     }
 
     private final static Token reduceAddA = token(1, eq(fold(ref("a"), ADD_REDUCER)));

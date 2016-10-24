@@ -16,23 +16,33 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
+import static io.parsingdata.metal.Shorthand.add;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.div;
+import static io.parsingdata.metal.Shorthand.neg;
+import static io.parsingdata.metal.Shorthand.offset;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.repn;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
+
+import java.io.IOException;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.io.IOException;
-
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 public class ErrorsTest {
 
@@ -42,20 +52,30 @@ public class ErrorsTest {
     @Test
     public void noValueForSize() throws IOException {
         thrown = ExpectedException.none();
-        final Token t = def("a", div(con(10), con(0)));
-        assertFalse(t.parse(stream(1), enc()).succeeded);
+        // Basic division by zero.
+        final Token token = def("a", div(con(1), con(0)));
+        assertFalse(token.parse(stream(1), enc()).succeeded);
+        // Try to negate division by zero.
+        final Token token2 = def("a", neg(div(con(1), con(0))));
+        assertFalse(token2.parse(stream(1), enc()).succeeded);
+        // Add one to division by zero.
+        final Token token3 = def("a", add(div(con(1), con(0)), con(1)));
+        assertFalse(token3.parse(stream(1), enc()).succeeded);
+        // Add division by zero to one.
+        final Token token4 = def("a", add(con(1), div(con(1), con(0))));
+        assertFalse(token4.parse(stream(1), enc()).succeeded);
     }
 
     @Test
     public void ioError() throws IOException {
         thrown.expect(IOException.class);
-        final Token t = any("a");
+        final Token token = any("a");
         final ByteStream stream = new ByteStream() {
             @Override
             public int read(final long offset, final byte[] data) throws IOException { throw new IOException(); }
         };
-        final Environment env = new Environment(stream);
-        t.parse(env, enc());
+        final Environment environment = new Environment(stream);
+        token.parse(environment, enc());
     }
 
     @Test
@@ -66,8 +86,8 @@ public class ErrorsTest {
                 any("b"),
                 repn(dummy, ref("b"))
             );
-        ParseResult parseResult = multiRepN.parse(stream(2, 2, 2, 2), enc());
-        assertFalse(parseResult.succeeded);
+        ParseResult result = multiRepN.parse(stream(2, 2, 2, 2), enc());
+        assertFalse(result.succeeded);
     }
 
     @Test

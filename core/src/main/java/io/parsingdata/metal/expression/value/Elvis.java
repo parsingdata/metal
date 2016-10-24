@@ -16,11 +16,11 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
-
-import static io.parsingdata.metal.Util.checkNotNull;
 
 /**
  * Expression for the 'elvis operator': <pre>?:</pre>.
@@ -48,14 +48,14 @@ public class Elvis implements ValueExpression {
     }
 
     @Override
-    public OptionalValueList eval(final Environment env, final Encoding enc) {
-        return eval(left.eval(env, enc), right.eval(env, enc));
+    public OptionalValueList eval(final Environment environment, final Encoding encoding) {
+        return eval(left.eval(environment, encoding), right.eval(environment, encoding));
     }
 
-    private OptionalValueList eval(final OptionalValueList llist, final OptionalValueList rlist) {
-        if (llist.isEmpty()) { return rlist; }
-        if (rlist.isEmpty()) { return llist; }
-        return eval(llist.tail, rlist.tail).add(llist.head.isPresent() ? llist.head : rlist.head);
+    private OptionalValueList eval(final OptionalValueList leftValues, final OptionalValueList rightValues) {
+        if (leftValues.isEmpty()) { return rightValues; }
+        if (rightValues.isEmpty()) { return leftValues; }
+        return eval(leftValues.tail, rightValues.tail).add(leftValues.head.isPresent() ? leftValues.head : rightValues.head);
     }
 
     @Override

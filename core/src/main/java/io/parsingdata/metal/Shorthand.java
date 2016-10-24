@@ -179,13 +179,14 @@ public final class Shorthand {
     public final static Reducer MUL_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return mul(left, right); } };
     public final static Reducer CAT_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return cat(left, right); } };
     public final static Reducer SUB_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return sub(left, right); } };
+    public final static Reducer DIV_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return div(left, right); } };
 
     public static byte[] toByteArray(final int... bytes) {
-        final byte[] out = new byte[bytes.length];
+        final byte[] outBytes = new byte[bytes.length];
         for (int i = 0; i < bytes.length; i++) {
-            out[i] = (byte) bytes[i];
+            outBytes[i] = (byte) bytes[i];
         }
-        return out;
+        return outBytes;
     }
 
 }

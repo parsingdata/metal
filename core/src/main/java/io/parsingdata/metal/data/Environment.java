@@ -67,8 +67,8 @@ public class Environment {
         return new Environment(order, input, newOffset, callbacks);
     }
 
-    public Environment add(final ParseRef parseRef) {
-        return new Environment(order.add(parseRef), input, offset, callbacks);
+    public Environment add(final ParseReference parseReference) {
+        return new Environment(order.add(parseReference), input, offset, callbacks);
     }
 
     @Override

@@ -27,14 +27,16 @@ import static io.parsingdata.metal.Shorthand.neg;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.util.Arrays;
 import java.util.Collection;
+
+import org.junit.runners.Parameterized.Parameters;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
@@ -43,8 +45,6 @@ import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
-
-import org.junit.runners.Parameterized.Parameters;
 
 public class ArithmeticValueExpressionSemanticsTest extends ParameterizedParse {
 
@@ -97,8 +97,8 @@ public class ArithmeticValueExpressionSemanticsTest extends ParameterizedParse {
         });
     }
 
-    public ArithmeticValueExpressionSemanticsTest(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
-        super(token, env, enc, result);
+    public ArithmeticValueExpressionSemanticsTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
+        super(token, environment, encoding, result);
     }
 
     private static Token add = binaryValueExpressionToken(add(ref("a"), ref("b")), 1);
@@ -109,18 +109,18 @@ public class ArithmeticValueExpressionSemanticsTest extends ParameterizedParse {
     private static Token mod = binaryValueExpressionToken(mod(ref("a"), ref("b")), 1);
     private static Token neg = unaryValueExpressionToken(neg(ref("a")));
 
-    private static Token singleToken(final String firstName, final String secondName, final int resultSize, final ValueExpression ve) {
+    private static Token singleToken(final String firstName, final String secondName, final int resultSize, final ValueExpression valueExpression) {
         return seq(any(firstName),
-                   def(secondName, con(resultSize), eqNum(ve)));
+                   def(secondName, con(resultSize), eqNum(valueExpression)));
     }
 
-    private static Token binaryValueExpressionToken(final BinaryValueExpression bve, final int resultSize) {
+    private static Token binaryValueExpressionToken(final BinaryValueExpression binaryValueExpression, final int resultSize) {
         return seq(any("a"),
-                   singleToken("b", "c", resultSize, bve));
+                   singleToken("b", "c", resultSize, binaryValueExpression));
     }
 
-    private static Token unaryValueExpressionToken(final UnaryValueExpression uve) {
-        return singleToken("a", "b", 1, uve);
+    private static Token unaryValueExpressionToken(final UnaryValueExpression unaryValueExpression) {
+        return singleToken("a", "b", 1, unaryValueExpression);
     }
 
 }

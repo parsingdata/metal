@@ -16,76 +16,80 @@
 
 package io.parsingdata.metal.data;
 
-import io.parsingdata.metal.token.Token;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static junit.framework.TestCase.assertFalse;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static junit.framework.TestCase.assertFalse;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import io.parsingdata.metal.token.Token;
 
 public class ParseValueTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private Token _definition;
-    private ParseValue _value;
+    private Token definition;
+    private ParseValue value;
 
     @Before
     public void setUp() {
-        _definition = def("value", 1);
-        _value = new ParseValue("value", _definition, 0, new byte[] { 1 }, enc());
+        definition = def("value", 1);
+        value = new ParseValue("value", definition, 0, new byte[] { 1 }, enc());
     }
 
     @Test
     public void state() {
-        assertThat(_value.name, is("value"));
-        assertThat(_value.getDefinition(), is(_definition));
-        assertThat(_value.getOffset(), is(0L));
-        assertThat(_value.getValue(), is(equalTo(new byte[] { 1 })));
+        assertThat(value.name, is("value"));
+        assertThat(value.getDefinition(), is(definition));
+        assertThat(value.getOffset(), is(0L));
+        assertThat(value.getValue(), is(equalTo(new byte[] { 1 })));
     }
 
     @Test
     public void matching() {
-        assertTrue(_value.matches("value"));
+        assertTrue(value.matches("value"));
 
-        assertFalse(_value.matches("lue"));
-        assertFalse(_value.matches(".value"));
+        assertFalse(value.matches("lue"));
+        assertFalse(value.matches(".value"));
     }
 
     @Test
     public void toStringTest() {
-        assertThat(_value.toString(), is("value(0x01)"));
+        assertThat(value.toString(), is("value(0x01)"));
     }
 
     @Test
     public void valueIsAValue() {
-        assertTrue(_value.isValue());
-        assertThat(_value.asValue(), is(sameInstance(_value)));
+        assertTrue(value.isValue());
+        assertThat(value.asValue(), is(sameInstance(value)));
     }
 
     @Test
     public void valueIsNotARef() {
-        assertFalse(_value.isRef());
+        assertFalse(value.isReference());
 
         thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Cannot convert ParseValue to ParseRef");
-        _value.asRef();
+        thrown.expectMessage("Cannot convert ParseValue to ParseReference");
+        value.asReference();
     }
 
     @Test
     public void valueIsNotAGraph() {
-        assertFalse(_value.isGraph());
+        assertFalse(value.isGraph());
 
         thrown.expect(UnsupportedOperationException.class);
         thrown.expectMessage("Cannot convert ParseValue to ParseGraph");
-        _value.asGraph();
+        value.asGraph();
     }
 
 }

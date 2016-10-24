@@ -16,9 +16,10 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
-import static io.parsingdata.metal.Util.checkNotNull;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
+
+import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
 
@@ -46,8 +47,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  */
 public class Nth implements ValueExpression {
 
-    private final ValueExpression values;
-    private final ValueExpression indices;
+    public final ValueExpression values;
+    public final ValueExpression indices;
 
     public Nth(final ValueExpression values, final ValueExpression indices) {
         this.values = checkNotNull(values, "values");
@@ -55,8 +56,8 @@ public class Nth implements ValueExpression {
     }
 
     @Override
-    public OptionalValueList eval(final Environment env, final Encoding enc) {
-        return eval(values.eval(env, enc), indices.eval(env, enc));
+    public OptionalValueList eval(final Environment environment, final Encoding encoding) {
+        return eval(values.eval(environment, encoding), indices.eval(environment, encoding));
     }
 
     private OptionalValueList eval(final OptionalValueList values, final OptionalValueList indices) {
