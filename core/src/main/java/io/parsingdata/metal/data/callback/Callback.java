@@ -21,6 +21,6 @@ import io.parsingdata.metal.token.Token;
 
 public interface Callback {
 
-    void handle(final Token token, final ParseResult result);
+    void handle(Token token, ParseResult result);
 
 }

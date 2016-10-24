@@ -16,7 +16,10 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
@@ -30,7 +33,6 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.ByteStream;
@@ -56,8 +58,8 @@ public class DefSizeTest {
         });
         final ParseResult result = FORMAT.parse(new Environment(stream), new Encoding());
 
-        Assert.assertTrue(result.succeeded);
-        Assert.assertArrayEquals(
+        assertTrue(result.succeeded);
+        assertArrayEquals(
             new byte[]{0x04, 0x08},
             getValue(result.environment.order, "data").getValue()
         );
@@ -71,9 +73,9 @@ public class DefSizeTest {
         });
         final ParseResult result = FORMAT.parse(new Environment(stream), new Encoding());
 
-        Assert.assertFalse(result.succeeded);
+        assertFalse(result.succeeded);
         // The top-level Token (Seq) has failed, so no values are recorded in the ParseGraph.
-        Assert.assertEquals(ParseGraph.EMPTY, result.environment.order);
+        assertEquals(ParseGraph.EMPTY, result.environment.order);
     }
 
     @Test

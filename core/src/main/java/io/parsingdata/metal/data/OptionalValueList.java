@@ -16,9 +16,9 @@
 
 package io.parsingdata.metal.data;
 
-import io.parsingdata.metal.expression.value.OptionalValue;
-
 import static io.parsingdata.metal.Util.checkNotNull;
+
+import io.parsingdata.metal.expression.value.OptionalValue;
 
 public class OptionalValueList {
 
@@ -46,7 +46,7 @@ public class OptionalValueList {
 
     public static OptionalValueList create(final ParseValueList list) {
         checkNotNull(list, "list");
-        if (list.isEmpty()) return OptionalValueList.EMPTY;
+        if (list.isEmpty()) { return OptionalValueList.EMPTY; }
         return create(list.tail).add(OptionalValue.of(list.head));
     }
 

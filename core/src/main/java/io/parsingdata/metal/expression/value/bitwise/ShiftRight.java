@@ -16,11 +16,15 @@
 
 package io.parsingdata.metal.expression.value.bitwise;
 
+import java.util.BitSet;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.*;
-
-import java.util.BitSet;
+import io.parsingdata.metal.expression.value.BinaryValueExpression;
+import io.parsingdata.metal.expression.value.ConstantFactory;
+import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.Value;
+import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class ShiftRight extends BinaryValueExpression {
 
@@ -29,10 +33,10 @@ public class ShiftRight extends BinaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value operand, final Value positions, final Environment env, final Encoding enc) {
-        final BitSet lbs = operand.asBitSet();
+    public OptionalValue eval(final Value operand, final Value positions, final Environment environment, final Encoding encoding) {
+        final BitSet leftBits = operand.asBitSet();
         final int shift = positions.asNumeric().intValue();
-        return OptionalValue.of(ConstantFactory.createFromBitSet(lbs.get(shift, Math.max(shift, lbs.length())), operand.getValue().length, enc));
+        return OptionalValue.of(ConstantFactory.createFromBitSet(leftBits.get(shift, Math.max(shift, leftBits.length())), operand.getValue().length, encoding));
     }
 
 }

@@ -16,23 +16,24 @@
 
 package io.parsingdata.metal.expression.value;
 
-import io.parsingdata.metal.Util;
-import io.parsingdata.metal.encoding.ByteOrder;
-import io.parsingdata.metal.encoding.Encoding;
+import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
 import java.util.BitSet;
 
-import static io.parsingdata.metal.Util.checkNotNull;
+import io.parsingdata.metal.Util;
+import io.parsingdata.metal.encoding.ByteOrder;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.encoding.Sign;
 
 public class Value {
 
-    private final byte[] data; // Private because array content is mutable.
-    public final Encoding enc;
+    private final byte[] data; // Private because array contents is mutable.
+    public final Encoding encoding;
 
-    public Value(final byte[] data, final Encoding enc) {
+    public Value(final byte[] data, final Encoding encoding) {
         this.data = data.clone();
-        this.enc = checkNotNull(enc, "enc");
+        this.encoding = checkNotNull(encoding, "encoding");
     }
 
     public byte[] getValue() {
@@ -40,20 +41,20 @@ public class Value {
     }
 
     public BigInteger asNumeric() {
-        return enc.isSigned() ? new BigInteger(enc.getByteOrder().apply(data))
-                              : new BigInteger(1, enc.getByteOrder().apply(data));
+        return encoding.sign == Sign.SIGNED ? new BigInteger(encoding.byteOrder.apply(data))
+                                            : new BigInteger(1, encoding.byteOrder.apply(data));
     }
 
     public String asString() {
-        return new String(data, enc.getCharset());
+        return new String(data, encoding.charset);
     }
 
     public BitSet asBitSet() {
-        return BitSet.valueOf(enc.getByteOrder() == ByteOrder.BIG_ENDIAN ? ByteOrder.LITTLE_ENDIAN.apply(data) : data);
+        return BitSet.valueOf(encoding.byteOrder == ByteOrder.BIG_ENDIAN ? ByteOrder.LITTLE_ENDIAN.apply(data) : data);
     }
 
-    public OptionalValue operation(final ValueOperation op) {
-        return op.execute(this);
+    public OptionalValue operation(final ValueOperation operation) {
+        return operation.execute(this);
     }
 
     @Override

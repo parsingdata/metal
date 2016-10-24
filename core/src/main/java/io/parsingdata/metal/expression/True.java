@@ -22,7 +22,7 @@ import io.parsingdata.metal.encoding.Encoding;
 public class True implements Expression {
 
     @Override
-    public boolean eval(final Environment env, final Encoding enc) {
+    public boolean eval(final Environment environment, final Encoding encoding) {
         return true;
     }
 

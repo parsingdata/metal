@@ -65,8 +65,8 @@ public class ConstantValueTest extends ParameterizedParse {
         });
     }
 
-    public ConstantValueTest(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
-        super(token, env, enc, result);
+    public ConstantValueTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
+        super(token, environment, encoding, result);
     }
 
     private static Token single(final int size, final Expression predicate) {

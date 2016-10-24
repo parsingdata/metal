@@ -21,47 +21,49 @@ import java.util.BitSet;
 
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.encoding.Sign;
 
 public final class ConstantFactory {
 
     private ConstantFactory() {}
 
-    public static Value createFromBytes(final byte[] value, final Encoding enc) {
-        return new Value(value, enc);
+    public static Value createFromBytes(final byte[] value, final Encoding encoding) {
+        return new Value(value, encoding);
     }
 
-    public static Value createFromNumeric(final BigInteger value, final Encoding enc) {
-        return createFromBytes(compact(value.toByteArray(), enc.isSigned()), setToBE(enc));
+    public static Value createFromNumeric(final BigInteger value, final Encoding encoding) {
+        return createFromBytes(compact(value.toByteArray(), encoding.sign == Sign.SIGNED), setToBigEndian(encoding));
     }
 
-    public static Value createFromNumeric(final long value, final Encoding enc) {
-        return createFromNumeric(BigInteger.valueOf(value), enc);
+    public static Value createFromNumeric(final long value, final Encoding encoding) {
+        return createFromNumeric(BigInteger.valueOf(value), encoding);
     }
 
-    public static Value createFromString(final String value, final Encoding enc) {
-        return new Value(value.getBytes(enc.getCharset()), enc);
+    public static Value createFromString(final String value, final Encoding encoding) {
+        return new Value(value.getBytes(encoding.charset), encoding);
     }
 
-    public static Value createFromBitSet(final BitSet value, final int minSize, final Encoding enc) {
+    public static Value createFromBitSet(final BitSet value, final int minSize, final Encoding encoding) {
         final byte[] bytes = ByteOrder.LITTLE_ENDIAN.apply(value.toByteArray());
-        final byte[] out = new byte[Math.max(minSize, bytes.length)];
-        System.arraycopy(bytes, 0, out, out.length - bytes.length, bytes.length);
-        return new Value(out, setToBE(enc));
+        final byte[] outBytes = new byte[Math.max(minSize, bytes.length)];
+        System.arraycopy(bytes, 0, outBytes, outBytes.length - bytes.length, bytes.length);
+        return new Value(outBytes, setToBigEndian(encoding));
     }
 
-    private static Encoding setToBE(final Encoding enc) {
-        return new Encoding(enc.getSign(), enc.getCharset(), ByteOrder.BIG_ENDIAN);
+    private static Encoding setToBigEndian(final Encoding encoding) {
+        return new Encoding(encoding.sign, encoding.charset, ByteOrder.BIG_ENDIAN);
     }
 
     private static byte[] compact(final byte[] data, final boolean signed) {
         if (signed) { return data; }
         if (data.length < 2) { return data; }
-        // strip leading zero bytes
-        int i = 0;
-        for (; i < data.length && data[i] == 0; i++);
-        final byte[] out = new byte[data.length - i];
-        System.arraycopy(data, i, out, 0, out.length);
-        return out;
+        // Strip possible leading zero byte.
+        if (data[0] == 0) {
+            final byte[] outBytes = new byte[data.length - 1];
+            System.arraycopy(data, 1, outBytes, 0, outBytes.length);
+            return outBytes;
+        }
+        return data;
     }
 
 }

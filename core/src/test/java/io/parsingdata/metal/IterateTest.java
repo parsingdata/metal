@@ -55,8 +55,8 @@ public class IterateTest extends ParameterizedParse {
         });
     }
 
-    public IterateTest(final String name, final Token token, final Environment env, final Encoding enc, final boolean result) {
-        super(token, env, enc, result);
+    public IterateTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
+        super(token, environment, encoding, result);
     }
 
     private static final Token repNToken =

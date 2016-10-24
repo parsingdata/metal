@@ -16,24 +16,26 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static io.parsingdata.metal.util.TokenDefinitions.eq;
 import static io.parsingdata.metal.util.TokenDefinitions.eqRef;
 import static io.parsingdata.metal.util.TokenDefinitions.notEqRef;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import java.io.IOException;
 
-import io.parsingdata.metal.token.Token;
-
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import io.parsingdata.metal.token.Token;
 
 @RunWith(JUnit4.class)
 public class BackTrackNameBindTest {
@@ -47,22 +49,22 @@ public class BackTrackNameBindTest {
 
     @Test
     public void choiceRefLeft() throws IOException {
-        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 2), enc()).succeeded);
+        assertTrue(_choiceRef.parse(stream(1, 2, 2), enc()).succeeded);
     }
 
     @Test
     public void choiceRefRight() throws IOException {
-        Assert.assertTrue(_choiceRef.parse(stream(1, 2, 3), enc()).succeeded);
+        assertTrue(_choiceRef.parse(stream(1, 2, 3), enc()).succeeded);
     }
 
     @Test
     public void choiceRefNone() throws IOException {
-        Assert.assertFalse(_choiceRef.parse(stream(1, 1, 2), enc()).succeeded);
+        assertFalse(_choiceRef.parse(stream(1, 1, 2), enc()).succeeded);
     }
 
     @Test
     public void repeatRef() throws IOException {
-        Assert.assertTrue(_repeatRef.parse(stream(42, 42, 42, 21, 21, 21), enc()).succeeded);
+        assertTrue(_repeatRef.parse(stream(42, 42, 42, 21, 21, 21), enc()).succeeded);
     }
 
 }

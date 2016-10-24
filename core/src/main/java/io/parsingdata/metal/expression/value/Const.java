@@ -29,7 +29,7 @@ public class Const implements ValueExpression {
     }
 
     @Override
-    public OptionalValueList eval(final Environment env, final Encoding enc) {
+    public OptionalValueList eval(final Environment environment, final Encoding encoding) {
         return OptionalValueList.create(OptionalValue.of(value));
     }
 

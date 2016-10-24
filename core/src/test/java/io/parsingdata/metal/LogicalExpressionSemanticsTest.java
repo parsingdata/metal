@@ -26,20 +26,20 @@ import static io.parsingdata.metal.Shorthand.not;
 import static io.parsingdata.metal.Shorthand.or;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.util.Arrays;
 import java.util.Collection;
+
+import org.junit.runners.Parameterized.Parameters;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.logical.LogicalExpression;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
-
-import org.junit.runners.Parameterized.Parameters;
 
 public class LogicalExpressionSemanticsTest extends ParameterizedParse {
 
@@ -59,8 +59,8 @@ public class LogicalExpressionSemanticsTest extends ParameterizedParse {
         });
     }
 
-    public LogicalExpressionSemanticsTest(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
-        super(token, env, enc, result);
+    public LogicalExpressionSemanticsTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
+        super(token, environment, encoding, result);
     }
 
     private static final Token andEqGt = logicalExp(and(eqNum(ref("a")), gtNum(ref("b"))));
