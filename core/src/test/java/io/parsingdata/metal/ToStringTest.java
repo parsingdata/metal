@@ -16,6 +16,12 @@
 
 package io.parsingdata.metal;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.and;
 import static io.parsingdata.metal.Shorthand.cat;
@@ -55,15 +61,10 @@ import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -101,7 +102,7 @@ public class ToStringTest {
         final Token t = repn(sub(opt(pre(rep(cho(any(n()), seq(nod(v()), whl(def(n(), con(1), e), e)))), e)), v()), v());
         final String output = t.toString();
         for (int i = 0; i < count; i++) {
-            Assert.assertTrue(output.contains(prefix + i));
+            assertTrue(output.contains(prefix + i));
         }
     }
 
@@ -128,9 +129,9 @@ public class ToStringTest {
 
     private void checkToken(final Token t) {
         final String s1s = t.toString();
-        Assert.assertTrue(s1s.contains("_name_a_"));
-        Assert.assertTrue(s1s.contains("_name_b_"));
-        Assert.assertTrue(s1s.contains("_name_c_"));
+        assertTrue(s1s.contains("_name_a_"));
+        assertTrue(s1s.contains("_name_b_"));
+        assertTrue(s1s.contains("_name_c_"));
     }
 
     @Test
@@ -187,7 +188,7 @@ public class ToStringTest {
 
     private Token makeToken(final String name) {
         return new Token(name, enc()) {
-            @Override protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException { return null; }
+            @Override protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; }
             @Override public String toString() { return name; }
         };
     }

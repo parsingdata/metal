@@ -16,6 +16,10 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import static io.parsingdata.metal.Shorthand.con;
 
 import java.io.IOException;
@@ -24,7 +28,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -70,8 +73,8 @@ public class ArgumentsTest {
     final private static String EMPTY_NAME = "";
     final private static ValueExpression VALID_VE = con(1);
     final private static Reducer VALID_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return null; }};
-    final private static Expression VALID_E = new Expression() { @Override public boolean eval(final Environment env, final Encoding enc) { return false; }};
-    final private static Token VALID_T = new Token("", null) { @Override protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException { return null; } };
+    final private static Expression VALID_E = new Expression() { @Override public boolean eval(final Environment environment, final Encoding encoding) { return false; }};
+    final private static Token VALID_T = new Token("", null) { @Override protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; } };
 
     private final Class<?> _class;
     private final Object[] _arguments;
@@ -139,23 +142,23 @@ public class ArgumentsTest {
         });
     }
 
-    public ArgumentsTest(final Class<?> theClass, final Object[] arguments) {
-        _class = theClass;
+    public ArgumentsTest(final Class<?> argumentsClass, final Object[] arguments) {
+        _class = argumentsClass;
         _arguments = arguments;
     }
 
     @Test
     public void runConstructor() throws Throwable {
         final Constructor<?>[] constructors = _class.getConstructors();
-        Assert.assertEquals(1, constructors.length);
+        assertEquals(1, constructors.length);
         try {
             constructors[0].newInstance(_arguments);
-            Assert.fail("Should have thrown an IllegalArgumentException.");
+            fail("Should have thrown an IllegalArgumentException.");
         }
         catch (final InvocationTargetException e) {
-            Assert.assertEquals(IllegalArgumentException.class, e.getCause().getClass());
+            assertEquals(IllegalArgumentException.class, e.getCause().getClass());
             final String message = e.getCause().getMessage();
-            Assert.assertTrue(message.endsWith("may not be null.") || message.endsWith("may not be empty."));
+            assertTrue(message.endsWith("may not be null.") || message.endsWith("may not be empty."));
         }
     }
 

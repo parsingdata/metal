@@ -30,8 +30,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 public class CurrentOffset implements ValueExpression {
 
     @Override
-    public OptionalValueList eval(final Environment env, final Encoding enc) {
-        return OptionalValueList.create(OptionalValue.of(ConstantFactory.createFromNumeric(env.offset, new Encoding(Sign.SIGNED))));
+    public OptionalValueList eval(final Environment environment, final Encoding encoding) {
+        return OptionalValueList.create(OptionalValue.of(ConstantFactory.createFromNumeric(environment.offset, new Encoding(Sign.SIGNED))));
     }
 
     @Override

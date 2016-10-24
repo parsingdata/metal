@@ -40,7 +40,6 @@ import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.data.selection.ByName;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
@@ -66,8 +65,8 @@ public class ByteLengthTest {
         final byte[] text2 = "Metal".getBytes(UTF_8);
 
         final ByteStream stream = new InMemoryByteStream(concat(text1, text2));
-        final Environment env = new Environment(stream);
-        final ParseResult result = STRING.parse(env, ENCODING);
+        final Environment environment = new Environment(stream);
+        final ParseResult result = STRING.parse(environment, ENCODING);
 
         assertTrue(result.succeeded);
         final ParseGraph graph = result.environment.order;
@@ -79,8 +78,8 @@ public class ByteLengthTest {
     @Test
     public void testLenNull() throws IOException {
         final ByteStream stream = new InMemoryByteStream(string("Joe"));
-        final Environment env = new Environment(stream);
-        final ParseResult result = NAME.parse(env, ENCODING);
+        final Environment environment = new Environment(stream);
+        final ParseResult result = NAME.parse(environment, ENCODING);
         assertFalse(result.succeeded);
     }
 

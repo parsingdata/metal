@@ -97,9 +97,9 @@ public class ShorthandsTest {
     }
 
     private void runChoice(final int data, final String matched) throws IOException {
-        final ParseResult res = multiChoice.parse(stream(data), enc());
-        assertTrue(res.succeeded);
-        assertTrue(res.environment.order.current().matches(matched));
+        final ParseResult result = multiChoice.parse(stream(data), enc());
+        assertTrue(result.succeeded);
+        assertTrue(result.environment.order.current().matches(matched));
     }
 
     @Test
@@ -145,16 +145,16 @@ public class ShorthandsTest {
     }
 
     private void checkNameAndValue(final String name, final int value, final Environment env) {
-        OptionalValueList refList = ref(name).eval(env, enc());
-        assertFalse(refList.isEmpty());
-        assertEquals(1, refList.size);
-        assertEquals(value, refList.head.get().asNumeric().intValue());
+        OptionalValueList values = ref(name).eval(env, enc());
+        assertFalse(values.isEmpty());
+        assertEquals(1, values.size);
+        assertEquals(value, values.head.get().asNumeric().intValue());
 
-        while (!refList.isEmpty()) {
-            final Value current = refList.head.get();
+        while (!values.isEmpty()) {
+            final Value current = values.head.get();
             assertThat(current, is(instanceOf(ParseValue.class)));
-            assertEquals(name, ((ParseValue)refList.head.get()).name);
-            refList = refList.tail;
+            assertEquals(name, ((ParseValue)values.head.get()).name);
+            values = values.tail;
         }
     }
 

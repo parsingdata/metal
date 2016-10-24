@@ -16,29 +16,29 @@
 
 package io.parsingdata.metal.token;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.encoding.Encoding;
+import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.ParseResult.success;
 
 import java.io.IOException;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.ParseResult.success;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.encoding.Encoding;
 
 public class Opt extends Token {
 
     public final Token token;
 
-    public Opt(final String name, final Token token, final Encoding enc) {
-        super(name, enc);
+    public Opt(final String name, final Token token, final Encoding encoding) {
+        super(name, encoding);
         this.token = checkNotNull(token, "token");
     }
 
     @Override
-    protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final ParseResult res = token.parse(scope, env.addBranch(this), enc);
-        if (res.succeeded) { return success(res.environment.closeBranch()); }
-        return success(env);
+    protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        final ParseResult result = token.parse(scope, environment.addBranch(this), encoding);
+        if (result.succeeded) { return success(result.environment.closeBranch()); }
+        return success(environment);
     }
 
     @Override

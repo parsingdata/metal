@@ -29,24 +29,24 @@ public final class ByOffset {
 
     private ByOffset() {}
 
-    public static boolean hasRootAtOffset(final ParseGraph graph, final Token definition, final long ref) {
-        return findItemAtOffset(getAllRoots(graph, definition), ref) != null;
+    public static boolean hasRootAtOffset(final ParseGraph graph, final Token definition, final long offset) {
+        return findItemAtOffset(getAllRoots(graph, definition), offset) != null;
     }
 
-    public static ParseItem findItemAtOffset(final ParseItemList items, final long ref) {
+    public static ParseItem findItemAtOffset(final ParseItemList items, final long offset) {
         checkNotNull(items, "items");
         if (items.isEmpty()) { return null; }
         final ParseItem head = items.head;
-        if (head.isValue() && head.asValue().getOffset() == ref) {
+        if (head.isValue() && head.asValue().getOffset() == offset) {
             return head;
         }
         if (head.isGraph()) {
-            final ParseValue val = getLowestOffsetValue(head.asGraph(), null);
-            if (val != null && val.getOffset() == ref) {
+            final ParseValue value = getLowestOffsetValue(head.asGraph(), null);
+            if (value != null && value.getOffset() == offset) {
                 return head;
             }
         }
-        return findItemAtOffset(items.tail, ref);
+        return findItemAtOffset(items.tail, offset);
     }
 
     private static ParseValue getLowestOffsetValue(final ParseGraph graph, final ParseValue lowest) {

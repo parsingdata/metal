@@ -16,41 +16,41 @@
 
 package io.parsingdata.metal.token;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.Expression;
-
-import java.io.IOException;
-
 import static io.parsingdata.metal.Shorthand.expTrue;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.ParseResult.failure;
 import static io.parsingdata.metal.data.ParseResult.success;
+
+import java.io.IOException;
+
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.Expression;
 
 public class While extends Token {
 
     public final Token token;
     public final Expression predicate;
 
-    public While(final String name, final Token token, final Expression predicate, final Encoding enc) {
-        super(name, enc);
+    public While(final String name, final Token token, final Expression predicate, final Encoding encoding) {
+        super(name, encoding);
         this.token = checkNotNull(token, "token");
         this.predicate = predicate == null ? expTrue() : predicate;
     }
 
     @Override
-    protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final ParseResult res = iterate(scope, env.addBranch(this), enc);
-        if (res.succeeded) { return success(res.environment.closeBranch()); }
-        return failure(env);
+    protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        final ParseResult result = iterate(scope, environment.addBranch(this), encoding);
+        if (result.succeeded) { return success(result.environment.closeBranch()); }
+        return failure(environment);
     }
 
-    private ParseResult iterate(final String scope, final Environment env, final Encoding enc) throws IOException {
-        if (!predicate.eval(env, enc)) { return success(env); }
-        final ParseResult res = token.parse(scope, env, enc);
-        if (res.succeeded) { return iterate(scope, res.environment, enc); }
-        return failure(env);
+    private ParseResult iterate(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        if (!predicate.eval(environment, encoding)) { return success(environment); }
+        final ParseResult result = token.parse(scope, environment, encoding);
+        if (result.succeeded) { return iterate(scope, result.environment, encoding); }
+        return failure(environment);
     }
 
     @Override

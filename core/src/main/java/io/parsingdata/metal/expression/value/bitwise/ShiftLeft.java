@@ -16,11 +16,15 @@
 
 package io.parsingdata.metal.expression.value.bitwise;
 
+import java.util.BitSet;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.*;
-
-import java.util.BitSet;
+import io.parsingdata.metal.expression.value.BinaryValueExpression;
+import io.parsingdata.metal.expression.value.ConstantFactory;
+import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.Value;
+import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class ShiftLeft extends BinaryValueExpression {
 
@@ -29,16 +33,16 @@ public class ShiftLeft extends BinaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value operand, final Value positions, final Environment env, final Encoding enc) {
-        final BitSet lbs = operand.asBitSet();
+    public OptionalValue eval(final Value operand, final Value positions, final Environment environment, final Encoding encoding) {
+        final BitSet leftBits = operand.asBitSet();
         final int shiftLeft = positions.asNumeric().intValue();
-        final int bitCount = lbs.length() + shiftLeft;
+        final int bitCount = leftBits.length() + shiftLeft;
         final BitSet out = new BitSet(bitCount);
-        for (int i = lbs.nextSetBit(0); i >= 0; i = lbs.nextSetBit(i+1)) {
+        for (int i = leftBits.nextSetBit(0); i >= 0; i = leftBits.nextSetBit(i+1)) {
             out.set(i + shiftLeft);
         }
         final int minSize = (bitCount + 7) / 8;
-        return OptionalValue.of(ConstantFactory.createFromBitSet(out, minSize, enc));
+        return OptionalValue.of(ConstantFactory.createFromBitSet(out, minSize, encoding));
     }
 
 }
