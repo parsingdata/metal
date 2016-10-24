@@ -36,8 +36,8 @@ public final class Callback {
     public static ValueExpression crc32(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public OptionalValue eval(final Value v, final Environment environment, final Encoding encoding) {
-                return v.operation(new ValueOperation() {
+            public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) {
+                return value.operation(new ValueOperation() {
                     @Override
                     public OptionalValue execute(final Value value) {
                         final CRC32 crc = new CRC32();
@@ -56,8 +56,8 @@ public final class Callback {
     public static ValueExpression inflate(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public OptionalValue eval(final Value v, final Environment environment, final Encoding encoding) {
-                return v.operation(new ValueOperation() {
+            public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) {
+                return value.operation(new ValueOperation() {
                     @Override
                     public OptionalValue execute(final Value value) {
                         final Inflater inf = new Inflater(true);
