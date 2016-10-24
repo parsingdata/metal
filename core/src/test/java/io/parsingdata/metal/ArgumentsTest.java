@@ -16,6 +16,10 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import static io.parsingdata.metal.Shorthand.con;
 
 import java.io.IOException;
@@ -24,7 +28,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -147,15 +150,15 @@ public class ArgumentsTest {
     @Test
     public void runConstructor() throws Throwable {
         final Constructor<?>[] constructors = _class.getConstructors();
-        Assert.assertEquals(1, constructors.length);
+        assertEquals(1, constructors.length);
         try {
             constructors[0].newInstance(_arguments);
-            Assert.fail("Should have thrown an IllegalArgumentException.");
+            fail("Should have thrown an IllegalArgumentException.");
         }
         catch (final InvocationTargetException e) {
-            Assert.assertEquals(IllegalArgumentException.class, e.getCause().getClass());
+            assertEquals(IllegalArgumentException.class, e.getCause().getClass());
             final String message = e.getCause().getMessage();
-            Assert.assertTrue(message.endsWith("may not be null.") || message.endsWith("may not be empty."));
+            assertTrue(message.endsWith("may not be null.") || message.endsWith("may not be empty."));
         }
     }
 

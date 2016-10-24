@@ -16,6 +16,9 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
@@ -36,7 +39,6 @@ import static junit.framework.TestCase.assertFalse;
 
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.Environment;
@@ -66,9 +68,9 @@ public class SubStructTest {
                                      * ref 3:                   +----------------*
                                      */
         final ParseResult result = LINKED_LIST.parse(environment, enc());
-        Assert.assertTrue(result.succeeded);
+        assertTrue(result.succeeded);
         final ParseGraph graph = result.environment.order;
-        Assert.assertEquals(0, getReferences(graph).size); // No cycles
+        assertEquals(0, getReferences(graph).size); // No cycles
 
         final ParseGraph first = graph.head.asGraph();
         checkBranch(first, 0, 8);
@@ -84,9 +86,9 @@ public class SubStructTest {
     public void linkedListWithSelfReference() throws IOException {
         final Environment environment = stream(0, 0, 1);
         final ParseResult result = LINKED_LIST.parse(environment, enc());
-        Assert.assertTrue(result.succeeded);
+        assertTrue(result.succeeded);
         final ParseGraph graph = result.environment.order;
-        Assert.assertEquals(1, getReferences(graph).size);
+        assertEquals(1, getReferences(graph).size);
 
         final ParseGraph first = graph.head.asGraph();
         checkBranch(first, 0, 0);
@@ -98,8 +100,8 @@ public class SubStructTest {
     private ParseGraph startCycle(final int offset) throws IOException {
         final Environment environment = seek(stream(0, 4, 1, 21, 0, 0, 1), offset);
         final ParseResult result = LINKED_LIST.parse(environment, enc());
-        Assert.assertTrue(result.succeeded);
-        Assert.assertEquals(1, getReferences(result.environment.order).size);
+        assertTrue(result.succeeded);
+        assertEquals(1, getReferences(result.environment.order).size);
         return result.environment.order;
     }
 
@@ -144,9 +146,9 @@ public class SubStructTest {
     }
 
     private void checkValue(final ParseItem item, final int value, final int offset) {
-        Assert.assertTrue(item.isValue());
-        Assert.assertEquals(value, item.asValue().asNumeric().intValue());
-        Assert.assertEquals(offset, item.asValue().getOffset());
+        assertTrue(item.isValue());
+        assertEquals(value, item.asValue().asNumeric().intValue());
+        assertEquals(offset, item.asValue().getOffset());
     }
 
     @Test

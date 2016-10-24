@@ -16,9 +16,10 @@
 
 package io.parsingdata.metal.util;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,7 +47,7 @@ public class ParameterizedParse {
 
     @Test
     public void test() throws IOException {
-        Assert.assertEquals(result, token.parse(environment, encoding).succeeded);
+        assertEquals(result, token.parse(environment, encoding).succeeded);
     }
 
 }

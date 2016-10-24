@@ -16,21 +16,23 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.util.TokenDefinitions.eq;
-import static io.parsingdata.metal.util.TokenDefinitions.notEq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.eq;
+import static io.parsingdata.metal.util.TokenDefinitions.notEq;
 
 import java.io.IOException;
 
-import io.parsingdata.metal.token.Token;
-
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import io.parsingdata.metal.token.Token;
 
 @RunWith(JUnit4.class)
 public class ReadUntilTest {
@@ -40,17 +42,17 @@ public class ReadUntilTest {
 
     @Test
     public void readUntilConstant() throws IOException {
-        Assert.assertTrue(_readUntil.parse(stream(1, 2, 3, 4, 42), enc()).succeeded);
+        assertTrue(_readUntil.parse(stream(1, 2, 3, 4, 42), enc()).succeeded);
     }
 
     @Test
     public void readUntilNoSkipping() throws IOException {
-        Assert.assertTrue(_readUntil.parse(stream(42), enc()).succeeded);
+        assertTrue(_readUntil.parse(stream(42), enc()).succeeded);
     }
 
     @Test
     public void readUntilErrorNoTerminator() throws IOException {
-        Assert.assertFalse(_readUntil.parse(stream(1, 2, 3, 4), enc()).succeeded);
+        assertFalse(_readUntil.parse(stream(1, 2, 3, 4), enc()).succeeded);
     }
 
 }

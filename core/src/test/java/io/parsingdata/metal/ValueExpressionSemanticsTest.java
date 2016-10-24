@@ -16,6 +16,9 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
@@ -28,7 +31,6 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -50,12 +52,12 @@ public class ValueExpressionSemanticsTest {
 
     @Test
     public void Cat() throws IOException {
-        Assert.assertTrue(cat.parse(stream(1, 2, 1, 2), enc()).succeeded);
+        assertTrue(cat.parse(stream(1, 2, 1, 2), enc()).succeeded);
     }
 
     @Test
     public void CatNoMatch() throws IOException {
-        Assert.assertFalse(cat.parse(stream(1, 2, 12, 12), enc()).succeeded);
+        assertFalse(cat.parse(stream(1, 2, 12, 12), enc()).succeeded);
     }
 
     @Test

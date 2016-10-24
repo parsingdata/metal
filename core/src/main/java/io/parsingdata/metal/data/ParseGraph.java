@@ -64,9 +64,9 @@ public class ParseGraph implements ParseItem {
         return new ParseGraph(head, this, definition);
     }
 
-    public ParseGraph add(final ParseReference ref) {
-        if (branched) { return new ParseGraph(head.asGraph().add(ref), tail, definition, true); }
-        return new ParseGraph(ref, this, definition);
+    public ParseGraph add(final ParseReference parseReference) {
+        if (branched) { return new ParseGraph(head.asGraph().add(parseReference), tail, definition, true); }
+        return new ParseGraph(parseReference, this, definition);
     }
 
     ParseGraph addBranch(final Token definition) {

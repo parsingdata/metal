@@ -17,6 +17,7 @@
 package io.parsingdata.metal;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
@@ -26,7 +27,6 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -43,7 +43,7 @@ public class SimpleTest {
     @Test
     public void correct() throws IOException {
         final Token token = buildSimpleToken("r1", 1, 1);
-        Assert.assertTrue(token.parse(stream(1, 2, 3, 4), enc()).succeeded);
+        assertTrue(token.parse(stream(1, 2, 3, 4), enc()).succeeded);
     }
 
     @Test
