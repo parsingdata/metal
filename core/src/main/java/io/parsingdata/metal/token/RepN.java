@@ -53,9 +53,13 @@ public class RepN extends Token {
     }
 
     private ParseResult iterate(final String scope, final Environment environment, final Encoding encoding, final long count) throws IOException {
-        if (count <= 0) { return success(environment); }
+        if (count <= 0) {
+            return success(environment);
+        }
         final ParseResult result = token.parse(scope, environment, encoding);
-        if (result.succeeded) { return iterate(scope, result.environment, encoding, count - 1); }
+        if (result.succeeded) {
+            return iterate(scope, result.environment, encoding, count - 1);
+        }
         return failure(environment);
     }
 

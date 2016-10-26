@@ -55,9 +55,8 @@ public class ParseValueList {
 
     public ParseValue get(final String name) {
         if (isEmpty()) { return null; }
-        if (head.matches(name)) {
-            return head;
-        } else {
+        if (head.matches(name)) { return head; }
+        else {
             return tail.get(name);
         }
     }
@@ -65,8 +64,9 @@ public class ParseValueList {
     public ParseValueList getAll(final String name) {
         if (isEmpty()) { return this; }
         final ParseValueList tailList = tail.getAll(name);
-        if (head.matches(name)) { return tailList.add(head); }
-        else { return tailList; }
+        if (head.matches(name)) {
+            return tailList.add(head);
+        } else { return tailList; }
     }
 
     public ParseValueList getValuesSincePrefix(final ParseValue prefix) {

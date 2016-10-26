@@ -27,6 +27,7 @@ import io.parsingdata.metal.encoding.Encoding;
 
 public abstract class Token {
 
+    public static final String NO_NAME = "";
     public static final String SEPARATOR = ".";
 
     public final String name;
@@ -45,33 +46,29 @@ public abstract class Token {
     }
 
     public ParseResult parse(final Environment environment, final Encoding encoding) throws IOException {
-        return parse("", environment, encoding);
+        return parse(NO_NAME, environment, encoding);
     }
 
     protected abstract ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException;
 
     private String makeScope(final String scope) {
-        return scope + (scope.isEmpty() || name.isEmpty() ? "" : SEPARATOR) + name;
+        return scope + (scope.isEmpty() || name.isEmpty() ? NO_NAME : SEPARATOR) + name;
     }
 
     private void handleCallbacks(final TokenCallbackList callbacks, final ParseResult result) {
-        if (callbacks.isEmpty()) {
-            return;
-        }
+        if (callbacks.isEmpty()) { return; }
         if (callbacks.head.token == this) {
             callbacks.head.callback.handle(this, result);
         }
         handleCallbacks(callbacks.tail, result);
     }
 
-    public boolean isLocal() {
-        return true;
-    }
+    public boolean isLocal() { return true; }
 
     public Token getCanonical(final Environment environment) { return this; }
 
     protected String makeNameFragment() {
-        return name.isEmpty() ? "" : name + ",";
+        return name.isEmpty() ? NO_NAME : name + ",";
     }
 
 }
