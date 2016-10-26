@@ -55,18 +55,14 @@ public abstract class Token {
     }
 
     private void handleCallbacks(final TokenCallbackList callbacks, final ParseResult result) {
-        if (callbacks.isEmpty()) {
-            return;
-        }
+        if (callbacks.isEmpty()) { return; }
         if (callbacks.head.token == this) {
             callbacks.head.callback.handle(this, result);
         }
         handleCallbacks(callbacks.tail, result);
     }
 
-    public boolean isLocal() {
-        return true;
-    }
+    public boolean isLocal() { return true; }
 
     public Token getCanonical(final Environment environment) { return this; }
 

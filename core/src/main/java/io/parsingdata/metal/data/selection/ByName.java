@@ -17,6 +17,7 @@
 package io.parsingdata.metal.data.selection;
 
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.ParseValueList.EMPTY;
 
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
@@ -37,7 +38,9 @@ public final class ByName {
         checkNotNull(name, "name");
         if (graph.isEmpty()) { return null; }
         final ParseItem head = graph.head;
-        if (head.isValue() && head.asValue().matches(name)) { return head.asValue(); }
+        if (head.isValue() && head.asValue().matches(name)) {
+            return head.asValue();
+        }
         if (head.isGraph()) {
             final ParseValue value = getValue(head.asGraph(), name);
             if (value != null) { return value; }
@@ -57,11 +60,15 @@ public final class ByName {
     }
 
     private static ParseValueList getAllValuesRecursive(final ParseGraph graph, final String name) {
-        if (graph.isEmpty()) { return ParseValueList.EMPTY; }
+        if (graph.isEmpty()) { return EMPTY; }
         final ParseValueList tailResults = getAllValuesRecursive(graph.tail, name);
         final ParseItem head = graph.head;
-        if (head.isValue() && head.asValue().matches(name)) { return tailResults.add(head.asValue()); }
-        if (head.isGraph()) { return tailResults.add(getAllValuesRecursive(head.asGraph(), name)); }
+        if (head.isValue() && head.asValue().matches(name)) {
+            return tailResults.add(head.asValue());
+        }
+        if (head.isGraph()) {
+            return tailResults.add(getAllValuesRecursive(head.asGraph(), name));
+        }
         return tailResults;
     }
 

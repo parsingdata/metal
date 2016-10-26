@@ -42,7 +42,9 @@ public class Rep extends Token {
 
     private ParseResult iterate(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         final ParseResult result = token.parse(scope, environment, encoding);
-        if (result.succeeded) { return iterate(scope, result.environment, encoding); }
+        if (result.succeeded) {
+            return iterate(scope, result.environment, encoding);
+        }
         return success(environment);
     }
 

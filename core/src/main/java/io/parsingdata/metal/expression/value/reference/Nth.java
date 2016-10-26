@@ -20,6 +20,7 @@ import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.OptionalValueList.EMPTY;
 
 import java.math.BigInteger;
 
@@ -61,9 +62,7 @@ public class Nth implements ValueExpression {
     }
 
     private OptionalValueList eval(final OptionalValueList values, final OptionalValueList indices) {
-        if (indices.isEmpty()) {
-            return OptionalValueList.EMPTY;
-        }
+        if (indices.isEmpty()) { return EMPTY; }
         if (indices.head.isPresent()) {
             final BigInteger index = indices.head.get().asNumeric();
             final BigInteger valueCount = BigInteger.valueOf(values.size);

@@ -42,14 +42,20 @@ public class While extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         final ParseResult result = iterate(scope, environment.addBranch(this), encoding);
-        if (result.succeeded) { return success(result.environment.closeBranch()); }
+        if (result.succeeded) {
+            return success(result.environment.closeBranch());
+        }
         return failure(environment);
     }
 
     private ParseResult iterate(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        if (!predicate.eval(environment, encoding)) { return success(environment); }
+        if (!predicate.eval(environment, encoding)) {
+            return success(environment);
+        }
         final ParseResult result = token.parse(scope, environment, encoding);
-        if (result.succeeded) { return iterate(scope, result.environment, encoding); }
+        if (result.succeeded) {
+            return iterate(scope, result.environment, encoding);
+        }
         return failure(environment);
     }
 

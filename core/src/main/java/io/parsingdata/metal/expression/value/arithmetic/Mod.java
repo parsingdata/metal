@@ -34,7 +34,9 @@ public class Mod extends BinaryValueExpression {
 
     @Override
     public OptionalValue eval(final Value left, final Value right, final Environment environment, final Encoding encoding) {
-        if (right.asNumeric().compareTo(BigInteger.ZERO) < 0) { return OptionalValue.empty(); }
+        if (right.asNumeric().compareTo(BigInteger.ZERO) < 0) {
+            return OptionalValue.empty();
+        }
         return OptionalValue.of(ConstantFactory.createFromNumeric(left.asNumeric().mod(right.asNumeric()), encoding));
     }
 
