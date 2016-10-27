@@ -16,7 +16,10 @@
 
 package io.parsingdata.metal.data.callback;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.cho;
@@ -31,49 +34,46 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Deque;
 
 import org.junit.Test;
 
 import io.parsingdata.metal.SubStructTest;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseItemList;
+import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class CallbackTest {
 
-    private int successCount = 0;
-    private int failureCount = 0;
-    private int linkedListCount = 0;
+    private static final Token ONE = def("one", 1, eq(con(1)));
+    private static final Token TWO = def("two", 1, eq(con(2)));
+    private static final Token THREE = def("three", 1, eq(con(3)));
+    private static final Token FOUR = def("four", 1, eq(con(4)));
+    private static final Token SEQ123 = seq(ONE, TWO, THREE);
+    private static final Token SEQ124 = seq(ONE, TWO, FOUR);
+    private static final Token CHOICE = cho(SEQ123, SEQ124);
+
+    private long linkedListCount = 0;
 
     @Test
     public void testHandleCallback() throws IOException {
-        final Token one = def("one", 1, eq(con(1)));
-        final Token two = def("two", 1, eq(con(2)));
-        final Token cho = cho("cho", one, two);
-        final Token sequence = seq("seq", cho, one);
-        final Callback callback = new BaseCallback() {
+        final CountingCallback countingCallback = new CountingCallback();
 
-            @Override
-            public void handleSuccess(final Token token, final Environment environment) {
-                successCount++;
-            }
-
-            @Override
-            protected void handleFailure(Token token, Environment environment) {
-                failureCount++;
-            }
-
-        };
+        final Token cho = cho("cho", ONE, TWO);
+        final Token sequence = seq("seq", cho, ONE);
         final TokenCallbackList callbacks = TokenCallbackList
-            .create(new TokenCallback(one, callback))
-            .add(new TokenCallback(two, callback))
-            .add(new TokenCallback(cho, callback))
-            .add(new TokenCallback(sequence, callback));
-        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 2, 1 }), callbacks);
+            .create(new TokenCallback(ONE, countingCallback))
+            .add(new TokenCallback(TWO, countingCallback))
+            .add(new TokenCallback(cho, countingCallback))
+            .add(new TokenCallback(sequence, countingCallback));
+        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 2, 1 }), new Callbacks(callbacks));
         assertTrue(sequence.parse(environment, enc()).succeeded);
-        assertEquals(4, successCount);
-        assertEquals(1, failureCount);
+        countingCallback.assertCounts(4, 1);
     }
 
     private static final Token SIMPLE_SEQ = seq(any("a"), any("b"));
@@ -97,14 +97,14 @@ public class CallbackTest {
     @Test
     public void testSimpleCallback() throws IOException {
         final TokenCallbackList callbacks = createCallbackList(SIMPLE_SEQ, 0L);
-        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2 }), callbacks);
+        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2 }), new Callbacks(callbacks));
         assertTrue(SIMPLE_SEQ.parse(environment, enc()).succeeded);
     }
 
     @Test
     public void testRepSimpleCallback() throws IOException {
         final TokenCallbackList callbacks = createCallbackList(SIMPLE_SEQ, 0L, 2L);
-        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }), callbacks);
+        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }), new Callbacks(callbacks));
         assertTrue(rep(SIMPLE_SEQ).parse(environment, enc()).succeeded);
     }
 
@@ -130,7 +130,7 @@ public class CallbackTest {
                     @Override
                     protected void handleFailure(Token token, Environment environment) {}
                 }));
-        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }), callbacks);
+        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }), new Callbacks(callbacks));
         assertTrue(repeatingSeq.parse(environment, enc()).succeeded);
     }
 
@@ -145,10 +145,103 @@ public class CallbackTest {
             @Override
             protected void handleFailure(Token token, Environment environment) {}
         }));
-        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 0, 3, 1, 0, 0, 1 }), callbacks);
+        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 0, 3, 1, 0, 0, 1 }), new Callbacks(callbacks));
         assertTrue(SubStructTest.LINKED_LIST.parse(environment, enc()).succeeded);
         // The ParseReference does not trigger the callback:
         assertEquals(2, linkedListCount);
     }
 
+    @Test
+    public void genericCallback() throws IOException {
+        final Deque<Token> expectedSuccessDefinitions = new ArrayDeque<>(Arrays.asList(ONE, TWO, ONE, TWO, FOUR, SEQ124, CHOICE));
+        final Deque<Long> expectedSuccessOffsets = new ArrayDeque<>(Arrays.asList(1L, 2L, 1L, 2L, 3L, 3L, 3L));
+        final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(Arrays.asList(THREE, SEQ123));
+        final Deque<Long> expectedFailureOffsets = new ArrayDeque<>(Arrays.asList(2L, 0L));
+
+        final Callback genericCallback = new OffsetDefinitionCallback(
+                expectedSuccessOffsets,
+                expectedSuccessDefinitions,
+                expectedFailureOffsets,
+                expectedFailureDefinitions
+        );
+
+        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 4 }), new Callbacks(genericCallback));
+        final ParseResult parse = CHOICE.parse(environment, enc());
+        assertTrue(parse.succeeded);
+    }
+
+    @Test
+    public void tokenAndGenericCallbacks() throws IOException {
+        final CountingCallback countingCallback = new CountingCallback();
+
+        final Token cho = cho(ONE, TWO);
+        final TokenCallbackList tokenCallbacks = TokenCallbackList
+                .create(new TokenCallback(ONE, countingCallback))
+                .add(new TokenCallback(TWO, countingCallback))
+                .add(new TokenCallback(cho, countingCallback));
+
+        final Deque<Token> expectedSuccessDefinitions = new ArrayDeque<>(Arrays.asList(TWO, cho));
+        final Deque<Long> expectedSuccessOffsets = new ArrayDeque<>(Arrays.asList(1L, 1L));
+        final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(Collections.singletonList(ONE));
+        final Deque<Long> expectedFailureOffsets = new ArrayDeque<>(Collections.singletonList(0L));
+
+        final Callback genericCallback = new OffsetDefinitionCallback(
+                expectedSuccessOffsets,
+                expectedSuccessDefinitions,
+                expectedFailureOffsets,
+                expectedFailureDefinitions
+        );
+
+        final long expectedSuccessCount = expectedSuccessDefinitions.size();
+        final long expectedFailureCount = expectedFailureDefinitions.size();
+        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 2 }), new Callbacks(genericCallback, tokenCallbacks));
+        assertTrue(cho.parse(environment, enc()).succeeded);
+        countingCallback.assertCounts(expectedSuccessCount, expectedFailureCount);
+    }
+
+    private static class OffsetDefinitionCallback extends BaseCallback {
+        private final Deque<Long> expectedSuccessOffsets;
+        private final Deque<Token> expectedSuccessDefinitions;
+        private final Deque<Long> expectedFailureOffsets;
+        private final Deque<Token> expectedFailureDefinitions;
+
+        OffsetDefinitionCallback(Deque<Long> expectedSuccessOffsets, Deque<Token> expectedSuccessDefinitions, Deque<Long> expectedFailureOffsets, Deque<Token> expectedFailureDefinitions) {
+            this.expectedSuccessOffsets = expectedSuccessOffsets;
+            this.expectedSuccessDefinitions = expectedSuccessDefinitions;
+            this.expectedFailureOffsets = expectedFailureOffsets;
+            this.expectedFailureDefinitions = expectedFailureDefinitions;
+        }
+
+        @Override
+        protected void handleSuccess(Token token, Environment environment) {
+            assertThat(environment.offset, is(equalTo(expectedSuccessOffsets.pop())));
+            assertThat(token, is(equalTo(expectedSuccessDefinitions.pop())));
+        }
+
+        @Override
+        protected void handleFailure(Token token, Environment environment) {
+            assertThat(environment.offset, is(equalTo(expectedFailureOffsets.pop())));
+            assertThat(token, is(equalTo(expectedFailureDefinitions.pop())));
+        }
+    }
+
+    private class CountingCallback extends BaseCallback {
+        private int successCount = 0;
+        private int failureCount = 0;
+
+        @Override
+        public void handleSuccess(final Token token, final Environment environment) {
+            successCount++;
+        }
+
+        @Override
+        protected void handleFailure(Token token, Environment environment) {
+            failureCount++;
+        }
+
+        void assertCounts(final long expectedSuccessCount, final long expectedFailureCount) {
+            assertEquals(expectedSuccessCount, successCount);
+            assertEquals(expectedFailureCount, failureCount);
+        }
+    }
 }
