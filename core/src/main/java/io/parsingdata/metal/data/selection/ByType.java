@@ -17,6 +17,7 @@
 package io.parsingdata.metal.data.selection;
 
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.ParseItemList.EMPTY;
 
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
@@ -32,10 +33,10 @@ public final class ByType {
     }
 
     private static ParseItemList getReferences(final ParseGraph graph, final ParseGraph root) {
-        if (graph.isEmpty()) { return ParseItemList.EMPTY; }
+        if (graph.isEmpty()) { return EMPTY; }
         final ParseItem head = graph.head;
-        if (head.isReference() && head.asReference().resolve(root) == null) { throw new IllegalStateException("A ref must point to an existing graph."); }
-        return getReferences(graph.tail, root).add(head.isGraph() ? getReferences(head.asGraph(), root) : (head.isReference() ? ParseItemList.EMPTY.add(head.asReference().resolve(root)) : ParseItemList.EMPTY));
+        if (head.isReference() && head.asReference().resolve(root) == null) { throw new IllegalStateException("A ParseReference must point to an existing graph."); }
+        return getReferences(graph.tail, root).add(head.isGraph() ? getReferences(head.asGraph(), root) : (head.isReference() ? EMPTY.add(head.asReference().resolve(root)) : EMPTY));
     }
 
 }

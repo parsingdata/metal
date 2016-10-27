@@ -44,12 +44,16 @@ public class Cho extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         final ParseResult result = iterate(scope, environment.addBranch(this), encoding, 0);
-        if (result.succeeded) { return success(result.environment.closeBranch()); }
+        if (result.succeeded) {
+            return success(result.environment.closeBranch());
+        }
         return failure(environment);
     }
 
     private ParseResult iterate(final String scope, final Environment environment, final Encoding encoding, final int index) throws IOException {
-        if (index >= tokens.length) { return failure(environment); }
+        if (index >= tokens.length) {
+            return failure(environment);
+        }
         final ParseResult result = tokens[index].parse(scope, environment, encoding);
         if (result.succeeded) { return result; }
         return iterate(scope, environment, encoding, index + 1);

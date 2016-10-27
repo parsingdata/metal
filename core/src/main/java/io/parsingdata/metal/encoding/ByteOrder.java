@@ -18,7 +18,9 @@ package io.parsingdata.metal.encoding;
 
 public enum ByteOrder {
 
-    BIG_ENDIAN { public byte[] apply(final byte[] bytes) { return bytes.clone(); } },
+    BIG_ENDIAN { public byte[] apply(final byte[] bytes) {
+        return bytes.clone();
+    } },
     LITTLE_ENDIAN { public byte[] apply(final byte[] bytes) {
         final byte[] output = bytes.clone();
         for (int i = 0; i < bytes.length; i++) {

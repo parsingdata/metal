@@ -49,7 +49,9 @@ public class TokenRef extends Token {
     }
 
     private Token lookup(final ParseItem item, final String referenceName) {
-        if (item.getDefinition().name.equals(referenceName)) { return item.getDefinition(); }
+        if (item.getDefinition().name.equals(referenceName)) {
+            return item.getDefinition();
+        }
         if (!item.isGraph() || item.asGraph().isEmpty()) { return LOOKUP_FAILED; }
         final Token headResult = lookup(item.asGraph().head, referenceName);
         if (headResult != LOOKUP_FAILED) { return headResult; }

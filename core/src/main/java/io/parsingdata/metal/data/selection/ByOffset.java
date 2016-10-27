@@ -37,14 +37,10 @@ public final class ByOffset {
         checkNotNull(items, "items");
         if (items.isEmpty()) { return null; }
         final ParseItem head = items.head;
-        if (head.isValue() && head.asValue().getOffset() == offset) {
-            return head;
-        }
+        if (head.isValue() && head.asValue().getOffset() == offset) { return head; }
         if (head.isGraph()) {
             final ParseValue value = getLowestOffsetValue(head.asGraph(), null);
-            if (value != null && value.getOffset() == offset) {
-                return head;
-            }
+            if (value != null && value.getOffset() == offset) { return head; }
         }
         return findItemAtOffset(items.tail, offset);
     }

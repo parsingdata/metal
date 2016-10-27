@@ -46,9 +46,7 @@ public class TokenCallbackList {
         return new TokenCallbackList(checkNotNull(head, "head"), this);
     }
 
-    public boolean isEmpty() {
-        return size == 0;
-    }
+    public boolean isEmpty() { return size == 0; }
 
     @Override
     public String toString() {

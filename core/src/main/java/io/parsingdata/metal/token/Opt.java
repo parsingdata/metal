@@ -37,7 +37,9 @@ public class Opt extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         final ParseResult result = token.parse(scope, environment.addBranch(this), encoding);
-        if (result.succeeded) { return success(result.environment.closeBranch()); }
+        if (result.succeeded) {
+            return success(result.environment.closeBranch());
+        }
         return success(environment);
     }
 

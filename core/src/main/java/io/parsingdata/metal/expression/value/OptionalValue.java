@@ -43,11 +43,8 @@ public class OptionalValue {
     }
 
     public Value get() {
-        if (isPresent()) {
-            return value;
-        } else {
-            throw new NoSuchElementException("OptionalValue instance is empty.");
-        }
+        if (isPresent()) { return value; }
+        else { throw new NoSuchElementException("OptionalValue instance is empty."); }
     }
 
     @Override

@@ -53,9 +53,15 @@ public final class ByToken {
         final ParseItemList tailResults = getAllRecursive(graph.tail, definition);
         final ParseItemList results = graph.definition == definition ? tailResults.add(graph) : tailResults;
         final ParseItem head = graph.head;
-        if (head.isValue() && head.asValue().definition == definition) { return results.add(head); }
-        if (head.isReference() && head.asReference().definition == definition) { return results.add(head); }
-        if (head.isGraph()) { return results.add(getAllRecursive(head.asGraph(), definition)); }
+        if (head.isValue() && head.asValue().definition == definition) {
+            return results.add(head);
+        }
+        if (head.isReference() && head.asReference().definition == definition) {
+            return results.add(head);
+        }
+        if (head.isGraph()) {
+            return results.add(getAllRecursive(head.asGraph(), definition));
+        }
         return results;
     }
 
@@ -69,8 +75,12 @@ public final class ByToken {
         if (graph.isEmpty()) { return ParseValueList.EMPTY; }
         final ParseValueList tailResults = getAllValuesRecursive(graph.tail, definition);
         final ParseItem head = graph.head;
-        if (head.isValue() && head.asValue().definition == definition) { return tailResults.add(head.asValue()); }
-        if (head.isGraph()) { return tailResults.add(getAllValuesRecursive(head.asGraph(), definition)); }
+        if (head.isValue() && head.asValue().definition == definition) {
+            return tailResults.add(head.asValue());
+        }
+        if (head.isGraph()) {
+            return tailResults.add(getAllValuesRecursive(head.asGraph(), definition));
+        }
         return tailResults;
     }
 
