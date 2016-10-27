@@ -175,15 +175,18 @@ public class ToStringTest {
         final InMemoryByteStream emptyStream = new InMemoryByteStream(new byte[] {});
         final Environment empty = new Environment(emptyStream);
         final String prefix = "stream: " + emptyStreamName + "; offset: 0; order: " + emptyGraphName + "; callbacks: ";
+        final String genericPrefix = "generic: ";
+        final String tokenPrefix = "token: ";
         assertEquals(prefix, empty.toString());
         final TokenCallbackList singleList = TokenCallbackList.create(new TokenCallback(makeToken("a"), makeCallback("first")));
-        final Environment one = new Environment(emptyStream, new Callbacks(singleList));
+        final String genericCallbackName = "genericName";
+        final Environment one = new Environment(emptyStream, new Callbacks(makeCallback(genericCallbackName), singleList));
         final String tokenCallback1Name = ">a->first";
-        final String oneName = prefix + tokenCallback1Name;
+        final String oneName = prefix + genericPrefix + genericCallbackName + "; " + tokenPrefix + tokenCallback1Name;
         assertEquals(oneName, one.toString());
         final Environment two = new Environment(emptyStream, new Callbacks(singleList.add(new TokenCallback(makeToken("b"), makeCallback("second")))));
         final String tokenCallback2Name = ">b->second";
-        final String twoName = prefix + tokenCallback2Name + tokenCallback1Name;
+        final String twoName = prefix + tokenPrefix + tokenCallback2Name + tokenCallback1Name;
         assertEquals(twoName, two.toString());
     }
 

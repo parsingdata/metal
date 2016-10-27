@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.data.callback;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 
@@ -23,13 +25,26 @@ public class Callbacks {
 
     public static final Callbacks NONE = new Callbacks(TokenCallbackList.EMPTY);
 
+    public final Callback genericCallback;
     public final TokenCallbackList tokenCallbacks;
 
+    public Callbacks(final Callback genericCallback, final TokenCallbackList tokenCallbacks) {
+        this.genericCallback = genericCallback;
+        this.tokenCallbacks = checkNotNull(tokenCallbacks, "tokenCallbacks");
+    }
+
+    public Callbacks(final Callback genericCallback) {
+        this(genericCallback, TokenCallbackList.EMPTY);
+    }
+
     public Callbacks(final TokenCallbackList tokenCallbacks) {
-        this.tokenCallbacks = tokenCallbacks;
+        this(null, tokenCallbacks);
     }
 
     public void handle(final Token token, final ParseResult result) {
+        if (genericCallback != null) {
+            genericCallback.handle(token, result);
+        }
         handleCallbacks(tokenCallbacks, token, result);
     }
 
@@ -43,7 +58,8 @@ public class Callbacks {
 
     @Override
     public String toString() {
-        return tokenCallbacks.toString();
+        return (genericCallback == null ? "" : "generic: " + genericCallback.toString() + "; ") +
+                (tokenCallbacks.isEmpty() ? "" : "token: " + tokenCallbacks.toString());
     }
 
 }
