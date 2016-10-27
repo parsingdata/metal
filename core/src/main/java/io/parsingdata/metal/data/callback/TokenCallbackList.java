@@ -38,10 +38,6 @@ public class TokenCallbackList {
         size = tail.size + 1;
     }
 
-    public static TokenCallbackList create(final TokenCallback head) {
-        return EMPTY.add(checkNotNull(head, "head"));
-    }
-
     public TokenCallbackList add(final TokenCallback head) {
         return new TokenCallbackList(checkNotNull(head, "head"), this);
     }
