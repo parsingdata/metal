@@ -72,23 +72,23 @@ public class UID {
     }
 
     private static ValueExpression in(final String part, final Encoding encoding) {
-        return encode(allocate(Integer.BYTES)
+        return encode(allocate(4)
             .putInt(0, (int) parseLong(part, 16))
             .array(), encoding);
     }
 
     private static ValueExpression sh(final String part, final Encoding encoding) {
-        return encode(allocate(Short.BYTES)
+        return encode(allocate(2)
             .putShort(0, (short) parseInt(part, 16))
             .array(), encoding);
     }
 
     private static ValueExpression ln(final String part, final Encoding encoding) {
         return encode(Arrays.copyOfRange(
-            allocate(Long.BYTES)
+            allocate(8)
                 .putLong(0, Long.parseLong(part, 16))
                 .array(),
-            2, Long.BYTES), encoding);
+            2, 8), encoding);
     }
 
     private static ValueExpression encode(final byte[] bytes, final Encoding encoding) {
