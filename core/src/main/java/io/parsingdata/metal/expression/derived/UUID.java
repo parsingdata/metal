@@ -41,7 +41,7 @@ public class UUID {
      * @return expression to use as predicate
      */
     public static ValueExpression uuid(final String uuid) {
-        final java.util.UUID value = java.util.UUID.fromString(checkNotNull("uuid", uuid));
+        final java.util.UUID value = java.util.UUID.fromString(checkNotNull(uuid, "uuid"));
         return cat(exactLong(value.getMostSignificantBits()), exactLong(value.getLeastSignificantBits()));
     }
 
