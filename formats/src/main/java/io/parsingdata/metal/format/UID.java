@@ -16,13 +16,19 @@
 
 package io.parsingdata.metal.format;
 
+import static java.lang.Integer.parseInt;
+import static java.lang.Long.parseLong;
+import static java.nio.ByteBuffer.allocate;
+
 import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.con;
 
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.UUID;
 
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ConstantFactory;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -33,11 +39,12 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * @author Netherlands Forensic Institute.
  */
 public class UID {
-    private static final Encoding ENC = new Encoding();
+    private static final Encoding BIG_ENDIAN = new Encoding();
 
     /**
      * Use a String representation of a GUID as predicate.
      * {@code eq(guid("caa16737-fa36-4d43-b3b6-33f0aa44e76b"))}
+     * Note that the byte order in the encoding matters for the output.
      * @param guid GUID, for example "caa16737-fa36-4d43-b3b6-33f0aa44e76b"
      * @return expression to use as predicate
      */
@@ -46,16 +53,46 @@ public class UID {
         if (parts.length != 5) {
             throw new IllegalArgumentException("Invalid GUID string: " + guid);
         }
+        return new ValueExpression() {
 
-        // Note that GUID bytes differ from UUID bytes, as the first 3 parts are reversed
-        // Use ByteBuffer instead of long to make sure no leading zeroes are omitted
-        final ByteBuffer buffer = ByteBuffer.allocate(16);
-        buffer.putInt(0, Integer.reverseBytes((int) Long.parseLong(parts[0], 16)));
-        buffer.putShort(4, Short.reverseBytes((short) Integer.parseInt(parts[1], 16)));
-        buffer.putShort(6, Short.reverseBytes((short) Integer.parseInt(parts[2], 16)));
-        buffer.putLong(8, Long.parseLong(parts[4], 16));
-        buffer.putShort(8, (short) Integer.parseInt(parts[3], 16));
-        return con(ConstantFactory.createFromBytes(buffer.array(), ENC));
+            @Override
+            public OptionalValueList eval(final Environment environment, final Encoding encoding) {
+                // Note that GUID bytes differ from UUID bytes, as the first 3 parts can be reversed
+                return cat(
+                    cat(
+                        cat(
+                            in(parts[0], encoding),
+                            sh(parts[1], encoding)),
+                        sh(parts[2], encoding)),
+                    cat(
+                        sh(parts[3], BIG_ENDIAN),
+                        ln(parts[4], BIG_ENDIAN))).eval(environment, encoding);
+            }
+        };
+    }
+
+    private static ValueExpression in(final String part, final Encoding encoding) {
+        return encode(allocate(Integer.BYTES)
+            .putInt(0, (int) parseLong(part, 16))
+            .array(), encoding);
+    }
+
+    private static ValueExpression sh(final String part, final Encoding encoding) {
+        return encode(allocate(Short.BYTES)
+            .putShort(0, (short) parseInt(part, 16))
+            .array(), encoding);
+    }
+
+    private static ValueExpression ln(final String part, final Encoding encoding) {
+        return encode(Arrays.copyOfRange(
+            allocate(Long.BYTES)
+                .putLong(0, Long.parseLong(part, 16))
+                .array(),
+            2, Long.BYTES), encoding);
+    }
+
+    private static ValueExpression encode(final byte[] bytes, final Encoding encoding) {
+        return con(ConstantFactory.createFromBytes(encoding.byteOrder.apply(bytes), encoding));
     }
 
     /**
@@ -75,6 +112,6 @@ public class UID {
      * @return {@link ValueExpression} of the bits
      */
     public static ValueExpression exactLong(final long bits) {
-        return con(ConstantFactory.createFromBytes(BigInteger.valueOf(bits).toByteArray(), ENC));
+        return con(ConstantFactory.createFromBytes(BigInteger.valueOf(bits).toByteArray(), BIG_ENDIAN));
     }
 }

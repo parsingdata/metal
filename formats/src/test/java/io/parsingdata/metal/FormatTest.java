@@ -24,6 +24,7 @@ import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.format.UID.guid;
 import static io.parsingdata.metal.format.UID.uuid;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
@@ -73,8 +74,8 @@ public class FormatTest {
     @Test
     public void parseGUID() throws IOException, URISyntaxException {
         final Token guid = def("guid", 16, eq(guid("00c27766-f623-4200-9d64-115e9bfd4a08")));
-        assertFalse(guid.parse(stream(0x00, 0xc2, 0x77, 0x66, 0xf6, 0x23, 0x42, 0x00, 0x9d, 0x64, 0x11, 0x5e, 0x9b, 0xfd, 0x4a, 0x08), enc()).succeeded);
-        assertTrue(guid.parse(stream(0x66, 0x77, 0xc2, 0x00, 0x23, 0xf6, 0x00, 0x42, 0x9d, 0x64, 0x11, 0x5e, 0x9b, 0xfd, 0x4a, 0x08), enc()).succeeded);
+        assertTrue("be", guid.parse(stream(0x00, 0xc2, 0x77, 0x66, 0xf6, 0x23, 0x42, 0x00, 0x9d, 0x64, 0x11, 0x5e, 0x9b, 0xfd, 0x4a, 0x08), enc()).succeeded);
+        assertTrue("le", guid.parse(stream(0x66, 0x77, 0xc2, 0x00, 0x23, 0xf6, 0x00, 0x42, 0x9d, 0x64, 0x11, 0x5e, 0x9b, 0xfd, 0x4a, 0x08), le()).succeeded);
 
         _exception.expect(IllegalArgumentException.class);
         _exception.expectMessage("Invalid GUID string: test");
