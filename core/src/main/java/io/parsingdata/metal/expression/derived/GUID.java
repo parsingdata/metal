@@ -22,6 +22,7 @@ import static java.nio.ByteBuffer.allocate;
 
 import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Arrays;
 
@@ -47,7 +48,7 @@ public class GUID {
      * @return expression to use as predicate
      */
     public static ValueExpression guid(final String guid) {
-        final String[] parts = guid.split("-");
+        final String[] parts = checkNotNull("guid", guid).split("-");
         if (parts.length != 5) {
             throw new IllegalArgumentException("Invalid GUID string: " + guid);
         }

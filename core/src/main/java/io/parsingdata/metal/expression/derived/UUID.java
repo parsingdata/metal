@@ -18,6 +18,7 @@ package io.parsingdata.metal.expression.derived;
 
 import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
 
@@ -40,7 +41,7 @@ public class UUID {
      * @return expression to use as predicate
      */
     public static ValueExpression uuid(final String uuid) {
-        final java.util.UUID value = java.util.UUID.fromString(uuid);
+        final java.util.UUID value = java.util.UUID.fromString(checkNotNull("uuid", uuid));
         return cat(exactLong(value.getMostSignificantBits()), exactLong(value.getLeastSignificantBits()));
     }
 
