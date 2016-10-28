@@ -34,7 +34,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 public final class UUID {
     private static final Encoding BIG_ENDIAN = new Encoding();
 
-    private UUID() {}
+    UUID() {}
 
     /**
      * Use a String representation of a UUID as predicate.
