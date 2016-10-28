@@ -23,22 +23,24 @@ import io.parsingdata.metal.token.Token;
 
 public class Callbacks {
 
-    public static final Callbacks NONE = new Callbacks(TokenCallbackList.EMPTY);
+    public static final Callbacks NONE = new Callbacks(null, TokenCallbackList.EMPTY);
 
     public final Callback genericCallback;
     public final TokenCallbackList tokenCallbacks;
 
-    public Callbacks(final Callback genericCallback, final TokenCallbackList tokenCallbacks) {
+    private Callbacks(final Callback genericCallback, final TokenCallbackList tokenCallbacks) {
         this.genericCallback = genericCallback;
         this.tokenCallbacks = checkNotNull(tokenCallbacks, "tokenCallbacks");
     }
 
-    public Callbacks(final Callback genericCallback) {
-        this(genericCallback, TokenCallbackList.EMPTY);
+    public static Callbacks create() { return NONE; }
+
+    public Callbacks add(final Callback genericCallback) {
+        return new Callbacks(genericCallback, tokenCallbacks);
     }
 
-    public Callbacks(final TokenCallbackList tokenCallbacks) {
-        this(null, tokenCallbacks);
+    public Callbacks add(final Token token, final Callback callback) {
+        return new Callbacks(genericCallback, tokenCallbacks.add(new TokenCallback(token, callback)));
     }
 
     public void handle(final Token token, final ParseResult result) {
