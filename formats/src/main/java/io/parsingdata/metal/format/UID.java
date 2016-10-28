@@ -61,29 +61,29 @@ public class UID {
                 return cat(
                     cat(
                         cat(
-                            in(parts[0], encoding),
-                            sh(parts[1], encoding)),
-                        sh(parts[2], encoding)),
+                            four(parts[0], encoding),
+                            two(parts[1], encoding)),
+                        two(parts[2], encoding)),
                     cat(
-                        sh(parts[3], BIG_ENDIAN),
-                        ln(parts[4], BIG_ENDIAN))).eval(environment, encoding);
+                        two(parts[3], BIG_ENDIAN),
+                        six(parts[4], BIG_ENDIAN))).eval(environment, encoding);
             }
         };
     }
 
-    private static ValueExpression in(final String part, final Encoding encoding) {
+    private static ValueExpression four(final String part, final Encoding encoding) {
         return encode(allocate(4)
             .putInt(0, (int) parseLong(part, 16))
             .array(), encoding);
     }
 
-    private static ValueExpression sh(final String part, final Encoding encoding) {
+    private static ValueExpression two(final String part, final Encoding encoding) {
         return encode(allocate(2)
             .putShort(0, (short) parseInt(part, 16))
             .array(), encoding);
     }
 
-    private static ValueExpression ln(final String part, final Encoding encoding) {
+    private static ValueExpression six(final String part, final Encoding encoding) {
         return encode(Arrays.copyOfRange(
             allocate(8)
                 .putLong(0, Long.parseLong(part, 16))
