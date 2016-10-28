@@ -157,17 +157,17 @@ public class CallbackTest {
         final Deque<Long> expectedSuccessOffsets = new ArrayDeque<>(Arrays.asList(1L, 2L, 1L, 2L, 3L, 3L, 3L));
         final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(Arrays.asList(THREE, SEQ123));
         final Deque<Long> expectedFailureOffsets = new ArrayDeque<>(Arrays.asList(2L, 0L));
+        final OffsetDefinitionCallback genericCallback = new OffsetDefinitionCallback(
+            expectedSuccessOffsets,
+            expectedSuccessDefinitions,
+            expectedFailureOffsets,
+            expectedFailureDefinitions);
 
-        final Callbacks callbacks = Callbacks.create().add(new OffsetDefinitionCallback(
-                expectedSuccessOffsets,
-                expectedSuccessDefinitions,
-                expectedFailureOffsets,
-                expectedFailureDefinitions
-        ));
-
+        final Callbacks callbacks = Callbacks.create().add(genericCallback);
         final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 4 }), callbacks);
         final ParseResult parse = CHOICE.parse(environment, enc());
         assertTrue(parse.succeeded);
+        genericCallback.assertAllHandled();
     }
 
     @Test
@@ -180,20 +180,22 @@ public class CallbackTest {
         final Deque<Long> expectedSuccessOffsets = new ArrayDeque<>(Arrays.asList(1L, 1L));
         final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(Collections.singletonList(ONE));
         final Deque<Long> expectedFailureOffsets = new ArrayDeque<>(Collections.singletonList(0L));
+        final OffsetDefinitionCallback genericCallback = new OffsetDefinitionCallback(
+            expectedSuccessOffsets,
+            expectedSuccessDefinitions,
+            expectedFailureOffsets,
+            expectedFailureDefinitions);
 
-        final Callbacks callbacks = Callbacks.create().add(new OffsetDefinitionCallback(
-                expectedSuccessOffsets,
-                expectedSuccessDefinitions,
-                expectedFailureOffsets,
-                expectedFailureDefinitions))
+        final Callbacks callbacks = Callbacks.create()
+            .add(genericCallback)
             .add(ONE, countingCallback)
             .add(TWO, countingCallback)
             .add(cho, countingCallback);
-
         final long expectedSuccessCount = expectedSuccessDefinitions.size();
         final long expectedFailureCount = expectedFailureDefinitions.size();
         final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 2 }), callbacks);
         assertTrue(cho.parse(environment, enc()).succeeded);
+        genericCallback.assertAllHandled();
         countingCallback.assertCounts(expectedSuccessCount, expectedFailureCount);
     }
 
@@ -220,6 +222,13 @@ public class CallbackTest {
         protected void handleFailure(Token token, Environment environment) {
             assertThat(environment.offset, is(equalTo(expectedFailureOffsets.pop())));
             assertThat(token, is(equalTo(expectedFailureDefinitions.pop())));
+        }
+
+        void assertAllHandled() {
+            assertTrue(expectedSuccessOffsets.isEmpty());
+            assertTrue(expectedSuccessDefinitions.isEmpty());
+            assertTrue(expectedFailureOffsets.isEmpty());
+            assertTrue(expectedFailureDefinitions.isEmpty());
         }
     }
 
