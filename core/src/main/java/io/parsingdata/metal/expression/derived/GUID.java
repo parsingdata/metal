@@ -37,8 +37,10 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  *
  * @author Netherlands Forensic Institute.
  */
-public class GUID {
+public final class GUID {
     private static final Encoding BIG_ENDIAN = new Encoding();
+
+    private GUID() {}
 
     /**
      * Use a String representation of a GUID as predicate.
