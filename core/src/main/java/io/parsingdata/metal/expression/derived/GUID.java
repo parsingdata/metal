@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.format;
+package io.parsingdata.metal.expression.derived;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
@@ -23,9 +23,7 @@ import static java.nio.ByteBuffer.allocate;
 import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.con;
 
-import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.UUID;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
@@ -34,11 +32,11 @@ import io.parsingdata.metal.expression.value.ConstantFactory;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * Constants for Microsoft GUID and Java UUID.
+ * {@link GUID#guid(String)} creates a ValueExpression to be used as predicate for 16 byte definitions;
  *
  * @author Netherlands Forensic Institute.
  */
-public class UID {
+public class GUID {
     private static final Encoding BIG_ENDIAN = new Encoding();
 
     /**
@@ -93,25 +91,5 @@ public class UID {
 
     private static ValueExpression encode(final byte[] bytes, final Encoding encoding) {
         return con(ConstantFactory.createFromBytes(encoding.byteOrder.apply(bytes), encoding));
-    }
-
-    /**
-     * Use a String representation of a UUID as predicate.
-     * {@code eq(uuid("caa16737-fa36-4d43-b3b6-33f0aa44e76b"))}
-     * @param uuid UUID, for example "c79577f6-2ff6-4b48-a252-1c88d4416cd8"
-     * @return expression to use as predicate
-     */
-    public static ValueExpression uuid(final String uuid) {
-        final UUID value = UUID.fromString(uuid);
-        return cat(exactLong(value.getMostSignificantBits()), exactLong(value.getLeastSignificantBits()));
-    }
-
-    /**
-     * Create {@link ValueExpression} without compacting the bytes.
-     * @param bits Long to convert to {@link ValueExpression}
-     * @return {@link ValueExpression} of the bits
-     */
-    public static ValueExpression exactLong(final long bits) {
-        return con(ConstantFactory.createFromBytes(BigInteger.valueOf(bits).toByteArray(), BIG_ENDIAN));
     }
 }
