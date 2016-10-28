@@ -33,6 +33,8 @@ public class Callbacks {
         this.tokenCallbacks = checkNotNull(tokenCallbacks, "tokenCallbacks");
     }
 
+    public static Callbacks create() { return NONE; }
+
     public Callbacks add(final Callback genericCallback) {
         return new Callbacks(genericCallback, tokenCallbacks);
     }

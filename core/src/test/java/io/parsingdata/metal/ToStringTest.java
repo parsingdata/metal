@@ -177,12 +177,12 @@ public class ToStringTest {
         final String tokenPrefix = "token: ";
         assertEquals(prefix, empty.toString());
         final String genericCallbackName = "genericName";
-        final Callbacks singleCallbacks = Callbacks.NONE.add(makeToken("a"), makeCallback("first")).add(makeCallback(genericCallbackName));
+        final Callbacks singleCallbacks = Callbacks.create().add(makeToken("a"), makeCallback("first")).add(makeCallback(genericCallbackName));
         final Environment one = new Environment(emptyStream, singleCallbacks);
         final String tokenCallback1Name = ">a->first";
         final String oneName = prefix + genericPrefix + genericCallbackName + "; " + tokenPrefix + tokenCallback1Name;
         assertEquals(oneName, one.toString());
-        final Callbacks doubleCallbacks = Callbacks.NONE.add(makeToken("a"), makeCallback("first")).add(makeToken("b"), makeCallback("second"));
+        final Callbacks doubleCallbacks = Callbacks.create().add(makeToken("a"), makeCallback("first")).add(makeToken("b"), makeCallback("second"));
         final Environment two = new Environment(emptyStream, doubleCallbacks);
         final String tokenCallback2Name = ">b->second";
         final String twoName = prefix + tokenPrefix + tokenCallback2Name + tokenCallback1Name;

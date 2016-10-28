@@ -28,7 +28,6 @@ import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.data.callback.Callbacks.NONE;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.data.selection.ByToken.getAllRoots;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
@@ -67,8 +66,8 @@ public class CallbackTest {
 
         final Token cho = cho("cho", ONE, TWO);
         final Token sequence = seq("seq", cho, ONE);
-        final Callbacks callbacks =
-            NONE.add(ONE, countingCallback)
+        final Callbacks callbacks = Callbacks.create()
+                .add(ONE, countingCallback)
                 .add(TWO, countingCallback)
                 .add(cho, countingCallback)
                 .add(sequence, countingCallback);
@@ -80,7 +79,7 @@ public class CallbackTest {
     private static final Token SIMPLE_SEQ = seq(any("a"), any("b"));
 
     private Callbacks createCallbackList(Token token, final long... offsets) {
-        return NONE.add(token, new BaseCallback() {
+        return Callbacks.create().add(token, new BaseCallback() {
 
             private int count = 0;
 
@@ -137,7 +136,7 @@ public class CallbackTest {
 
     @Test
     public void refInCallback() throws IOException {
-        final Callbacks callbacks = NONE.add(SubStructTest.LINKED_LIST, new BaseCallback() {
+        final Callbacks callbacks = Callbacks.create().add(SubStructTest.LINKED_LIST, new BaseCallback() {
             @Override
             protected void handleSuccess(Token token, Environment environment) {
                 linkedListCount++;
@@ -159,7 +158,7 @@ public class CallbackTest {
         final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(Arrays.asList(THREE, SEQ123));
         final Deque<Long> expectedFailureOffsets = new ArrayDeque<>(Arrays.asList(2L, 0L));
 
-        final Callbacks callbacks = NONE.add(new OffsetDefinitionCallback(
+        final Callbacks callbacks = Callbacks.create().add(new OffsetDefinitionCallback(
                 expectedSuccessOffsets,
                 expectedSuccessDefinitions,
                 expectedFailureOffsets,
@@ -182,7 +181,7 @@ public class CallbackTest {
         final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(Collections.singletonList(ONE));
         final Deque<Long> expectedFailureOffsets = new ArrayDeque<>(Collections.singletonList(0L));
 
-        final Callbacks callbacks = NONE.add(new OffsetDefinitionCallback(
+        final Callbacks callbacks = Callbacks.create().add(new OffsetDefinitionCallback(
                 expectedSuccessOffsets,
                 expectedSuccessDefinitions,
                 expectedFailureOffsets,
