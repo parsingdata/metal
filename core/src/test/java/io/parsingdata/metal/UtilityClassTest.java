@@ -16,9 +16,12 @@
 
 package io.parsingdata.metal;
 
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.selection.*;
 import io.parsingdata.metal.data.transformation.Reversal;
 import io.parsingdata.metal.encoding.ByteOrder;
+import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.value.ConstantFactory;
 import io.parsingdata.metal.token.Token;
@@ -27,6 +30,8 @@ import org.junit.Test;
 import static io.parsingdata.metal.Util.tokensToString;
 import static io.parsingdata.metal.util.ClassDefinition.checkUtilityClass;
 import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
 
 public class UtilityClassTest {
 
@@ -50,6 +55,23 @@ public class UtilityClassTest {
     @Test
     public void zeroTokensToString() {
         assertEquals("", tokensToString(new Token[] {}));
+    }
+
+    // Check whether all names are actually returned, to make sure there are no
+    // off-by-one errors or similar.
+    @Test
+    public void checkAllTokensPrinted() {
+        class NameToken extends Token {
+            NameToken(final String name) { super(name, null); }
+            @Override protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; }
+            @Override public String toString() { return name; }
+        }
+        final NameToken aToken = new NameToken("a");
+        final NameToken bToken = new NameToken("b");
+        final NameToken cToken = new NameToken("c");
+        assertEquals("a", tokensToString(new Token[] { aToken }));
+        assertEquals("a, b", tokensToString(new Token[] { aToken, bToken }));
+        assertEquals("a, b, c", tokensToString(new Token[] { aToken, bToken, cToken }));
     }
 
     // Metal uses enums to prevent the use of difficult to understand boolean arguments.
