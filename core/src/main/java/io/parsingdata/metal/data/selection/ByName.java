@@ -16,12 +16,12 @@
 
 package io.parsingdata.metal.data.selection;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.ParseValueList;
-
-import static io.parsingdata.metal.Util.checkNotNull;
 
 public final class ByName {
 
@@ -39,8 +39,8 @@ public final class ByName {
         final ParseItem head = graph.head;
         if (head.isValue() && head.asValue().matches(name)) { return head.asValue(); }
         if (head.isGraph()) {
-            final ParseValue val = getValue(head.asGraph(), name);
-            if (val != null) { return val; }
+            final ParseValue value = getValue(head.asGraph(), name);
+            if (value != null) { return value; }
         }
         return getValue(graph.tail, name);
     }

@@ -16,7 +16,66 @@
 
 package io.parsingdata.metal;
 
-import io.parsingdata.metal.data.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import static io.parsingdata.metal.Shorthand.add;
+import static io.parsingdata.metal.Shorthand.and;
+import static io.parsingdata.metal.Shorthand.cat;
+import static io.parsingdata.metal.Shorthand.cho;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.count;
+import static io.parsingdata.metal.Shorthand.currentOffset;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.div;
+import static io.parsingdata.metal.Shorthand.elvis;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.eqNum;
+import static io.parsingdata.metal.Shorthand.eqStr;
+import static io.parsingdata.metal.Shorthand.first;
+import static io.parsingdata.metal.Shorthand.gtNum;
+import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.ltNum;
+import static io.parsingdata.metal.Shorthand.mod;
+import static io.parsingdata.metal.Shorthand.mul;
+import static io.parsingdata.metal.Shorthand.neg;
+import static io.parsingdata.metal.Shorthand.nod;
+import static io.parsingdata.metal.Shorthand.not;
+import static io.parsingdata.metal.Shorthand.nth;
+import static io.parsingdata.metal.Shorthand.offset;
+import static io.parsingdata.metal.Shorthand.opt;
+import static io.parsingdata.metal.Shorthand.or;
+import static io.parsingdata.metal.Shorthand.pre;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.rep;
+import static io.parsingdata.metal.Shorthand.repn;
+import static io.parsingdata.metal.Shorthand.self;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.Shorthand.whl;
+import static io.parsingdata.metal.data.OptionalValueList.EMPTY;
+import static io.parsingdata.metal.data.ParseGraph.NONE;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseItemList;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.ParseValueList;
+import io.parsingdata.metal.data.callback.Callback;
+import io.parsingdata.metal.data.callback.TokenCallback;
+import io.parsingdata.metal.data.callback.TokenCallbackList;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
@@ -24,32 +83,13 @@ import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
-import io.parsingdata.metal.token.StructSink;
 import io.parsingdata.metal.token.Token;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.nio.charset.StandardCharsets;
-
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.data.OptionalValueList.EMPTY;
-import static io.parsingdata.metal.data.ParseGraph.NONE;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
-import static org.junit.Assert.assertEquals;
+import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class ToStringTest {
 
     private static final String prefix = "prefix";
     private int count;
-
-    private static final StructSink sink = new StructSink() {
-        @Override
-        public void handleStruct(String scopeName, Environment env, Encoding enc, ParseGraph struct) {
-        }
-    };
 
     @Before
     public void before() {
@@ -59,10 +99,10 @@ public class ToStringTest {
     @Test
     public void validateToStringImplementation() {
         final Expression e = not(and(eq(v(), v()), or(eqNum(v()), and(eqStr(v()), or(gtNum(v()), ltNum(v()))))));
-        final Token t = repn(sub(opt(pre(str("str", rep(cho(str("str", any(n())), seq(nod(v()), whl(def(n(), con(1), e), e)))), sink), e)), v()), v());
+        final Token t = repn(sub(opt(pre(rep(cho(any(n()), seq(nod(v()), whl(def(n(), con(1), e), e)))), e)), v()), v());
         final String output = t.toString();
         for (int i = 0; i < count; i++) {
-            Assert.assertTrue(output.contains(prefix + i));
+            assertTrue(output.contains(prefix + i));
         }
     }
 
@@ -89,9 +129,9 @@ public class ToStringTest {
 
     private void checkToken(final Token t) {
         final String s1s = t.toString();
-        Assert.assertTrue(s1s.contains("_name_a_"));
-        Assert.assertTrue(s1s.contains("_name_b_"));
-        Assert.assertTrue(s1s.contains("_name_c_"));
+        assertTrue(s1s.contains("_name_a_"));
+        assertTrue(s1s.contains("_name_b_"));
+        assertTrue(s1s.contains("_name_c_"));
     }
 
     @Test
@@ -105,19 +145,59 @@ public class ToStringTest {
     @Test
     public void data() {
         final Environment environment = stream(1, 2);
-        final String envString = "stream: InMemoryByteStream(2); offset: 0; order: graph(EMPTY)";
+        final String envString = "stream: InMemoryByteStream(2); offset: 0; order: graph(EMPTY); callbacks: ";
         assertEquals(envString, environment.toString());
         final ParseResult result = new ParseResult(true, environment);
         assertEquals("ParseResult(true, " + environment + ")", result.toString());
-        final ParseValue pv1 = new ParseValue("name", NONE, 0, new byte[] { 1, 2 }, enc());
+        final ParseValue pv1 = new ParseValue("name", NONE, 0, new byte[]{1, 2}, enc());
         final String pv1String = "name(0x0102)";
         final OptionalValue ov1 = OptionalValue.of(pv1);
-        final OptionalValue ov2 = OptionalValue.of(new Value(new byte[] { 3 }, enc()));
+        final OptionalValue ov2 = OptionalValue.of(new Value(new byte[]{3}, enc()));
         assertEquals(">OptionalValue(0x03)>OptionalValue(" + pv1String + ")", EMPTY.add(ov1).add(ov2).toString());
-        final ParseValue pv2 = new ParseValue("two", NONE, 0, new byte[] { 3, 4 }, enc());
+        final ParseValue pv2 = new ParseValue("two", NONE, 0, new byte[]{3, 4}, enc());
         final String pv2String = "two(0x0304)";
         assertEquals(">" + pv2String + ">" + pv1String, ParseItemList.create(pv1).add(pv2).toString());
         assertEquals(">" + pv2String + ">" + pv1String, ParseValueList.create(pv1).add(pv2).toString());
+    }
+
+    @Test
+    public void expression() {
+        final ValueExpression nth = nth(ref("value"), ref("index"));
+        assertThat(nth.toString(), is(equalTo("Nth(NameRef(value),NameRef(index))")));
+    }
+
+
+    @Test
+    public void callback() {
+        final String emptyStreamName = "InMemoryByteStream(0)";
+        final String emptyGraphName = "graph(EMPTY)";
+        final InMemoryByteStream emptyStream = new InMemoryByteStream(new byte[] {});
+        final Environment empty = new Environment(emptyStream);
+        final String prefix = "stream: " + emptyStreamName + "; offset: 0; order: " + emptyGraphName + "; callbacks: ";
+        assertEquals(prefix, empty.toString());
+        final TokenCallbackList singleList = TokenCallbackList.create(new TokenCallback(makeToken("a"), makeCallback("first")));
+        final Environment one = new Environment(emptyStream, singleList);
+        final String tokenCallback1Name = ">a->first";
+        final String oneName = prefix + tokenCallback1Name;
+        assertEquals(oneName, one.toString());
+        final Environment two = new Environment(emptyStream, singleList.add(new TokenCallback(makeToken("b"), makeCallback("second"))));
+        final String tokenCallback2Name = ">b->second";
+        final String twoName = prefix + tokenCallback2Name + tokenCallback1Name;
+        assertEquals(twoName, two.toString());
+    }
+
+    private Token makeToken(final String name) {
+        return new Token(name, enc()) {
+            @Override protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; }
+            @Override public String toString() { return name; }
+        };
+    }
+
+    private Callback makeCallback(final String name) {
+        return new Callback() {
+            @Override public void handle(final Token token, final ParseResult result) {}
+            @Override public String toString() { return name; }
+        };
     }
 
 }

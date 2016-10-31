@@ -18,6 +18,8 @@ package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.stream.Stream;
+
 public class ParseItemList {
 
     public final ParseItem head;
@@ -62,4 +64,14 @@ public class ParseItemList {
         return isEmpty() ? "" : ">" + head + tail.toString();
     }
 
+    public Stream<ParseItemList> tailStream() {
+        if (tail == null) {
+            return Stream.of(this);
+        }
+        return Stream.concat(Stream.of(this), tail.tailStream());
+    }
+
+    public ParseItem getHead() {
+        return head;
+    }
 }

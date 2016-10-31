@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertTrue;
+
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
@@ -23,14 +25,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import io.parsingdata.metal.format.JPEG;
-import io.parsingdata.metal.format.PNG;
-import io.parsingdata.metal.format.ZIP;
-
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import io.parsingdata.metal.format.JPEG;
+import io.parsingdata.metal.format.PNG;
+import io.parsingdata.metal.format.ZIP;
 
 @RunWith(JUnit4.class)
 public class FormatTest {
@@ -42,22 +43,22 @@ public class FormatTest {
 
     @Test
     public void parsePNG() throws IOException, URISyntaxException {
-        Assert.assertTrue(PNG.FORMAT.parse(stream(toURI(PNGFILE)), enc()).succeeded);
+        assertTrue(PNG.FORMAT.parse(stream(toURI(PNGFILE)), enc()).succeeded);
     }
 
     @Test
     public void parseZIP() throws IOException, URISyntaxException {
-        Assert.assertTrue(ZIP.FORMAT.parse(stream(toURI(ZIPFILE1)), enc()).succeeded);
+        assertTrue(ZIP.FORMAT.parse(stream(toURI(ZIPFILE1)), enc()).succeeded);
     }
 
     @Test
     public void parseZIP2() throws IOException, URISyntaxException {
-        Assert.assertTrue(ZIP.FORMAT.parse(stream(toURI(ZIPFILE2)), enc()).succeeded);
+        assertTrue(ZIP.FORMAT.parse(stream(toURI(ZIPFILE2)), enc()).succeeded);
     }
 
     @Test
     public void parseJPEG() throws IOException, URISyntaxException {
-        Assert.assertTrue(JPEG.FORMAT.parse(stream(toURI(JPEGFILE)), enc()).succeeded);
+        assertTrue(JPEG.FORMAT.parse(stream(toURI(JPEGFILE)), enc()).succeeded);
     }
 
     private URI toURI(final String resource) throws URISyntaxException {

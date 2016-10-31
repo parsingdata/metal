@@ -16,60 +16,68 @@
 
 package io.parsingdata.metal.token;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
-import io.parsingdata.metal.data.ParseRef;
-import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.ValueExpression;
+import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.ParseResult.failure;
+import static io.parsingdata.metal.data.ParseResult.success;
+import static io.parsingdata.metal.data.selection.ByOffset.hasRootAtOffset;
 
 import java.io.IOException;
 
-import static io.parsingdata.metal.Util.checkNotNull;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.ParseReference;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class Sub extends Token {
 
     public final Token token;
     public final ValueExpression address;
 
-    public Sub(final String name, final Token token, final ValueExpression address, final Encoding enc) {
-        super(name, enc);
+    public Sub(final String name, final Token token, final ValueExpression address, final Encoding encoding) {
+        super(name, encoding);
         this.token = checkNotNull(token, "token");
         this.address = checkNotNull(address, "address");
     }
 
     @Override
-    protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final OptionalValueList addrs = address.eval(env, enc);
-        if (addrs.isEmpty() || addrs.containsEmpty()) { return new ParseResult(false, env); }
-        final ParseResult res = iterate(scope, addrs, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
-        if (res.succeeded) {
-            return new ParseResult(true, new Environment(res.environment.order.closeBranch(), res.environment.input, env.offset));
+    protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        final OptionalValueList addresses = address.eval(environment, encoding);
+        if (addresses.isEmpty() || addresses.containsEmpty()) { return failure(environment); }
+        final ParseResult result = iterate(scope, addresses, environment.addBranch(this), encoding);
+        if (result.succeeded) {
+            return success(result.environment.closeBranch().seek(environment.offset));
         }
-        return new ParseResult(false, env);
+        return failure(environment);
     }
 
-    private ParseResult iterate(final String scope, final OptionalValueList addrs, final Environment env, final Encoding enc) throws IOException {
-        final long ref = addrs.head.get().asNumeric().longValue();
-        final ParseResult res = parse(scope, ref, env, enc);
-        if (res.succeeded) {
-            if (addrs.tail.isEmpty()) {
-                return res;
+    private ParseResult iterate(final String scope, final OptionalValueList addresses, final Environment environment, final Encoding encoding) throws IOException {
+        final long offset = addresses.head.get().asNumeric().longValue();
+        final ParseResult result = parse(scope, offset, environment, encoding);
+        if (result.succeeded) {
+            if (addresses.tail.isEmpty()) {
+                return result;
             }
-            return iterate(scope, addrs.tail, res.environment, enc);
+            return iterate(scope, addresses.tail, result.environment, encoding);
         }
-        return new ParseResult(false, env);
+        return failure(environment);
     }
 
-    private ParseResult parse(final String scope, final long ref, final Environment env, final Encoding enc) throws IOException {
-        if (env.order.hasGraphAtRef(ref)) {
-            return new ParseResult(true, new Environment(env.order.add(new ParseRef(ref, this)), env.input, env.offset));
+    private ParseResult parse(final String scope, final long offset, final Environment environment, final Encoding encoding) throws IOException {
+        if (hasRootAtOffset(environment.order, token.getCanonical(environment), offset)) {
+            return success(environment.add(new ParseReference(offset, token.getCanonical(environment))));
         }
-        final ParseResult res = token.parse(scope, new Environment(env.order, env.input, ref), enc);
-        if (res.succeeded) {
-            return res;
+        final ParseResult result = token.parse(scope, environment.seek(offset), encoding);
+        if (result.succeeded) {
+            return result;
         }
-        return new ParseResult(false, env);
+        return failure(environment);
+    }
+
+    @Override
+    public boolean isLocal() {
+        return false;
     }
 
     @Override

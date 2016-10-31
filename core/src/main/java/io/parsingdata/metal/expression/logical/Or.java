@@ -27,8 +27,8 @@ public class Or extends BinaryLogicalExpression {
     }
 
     @Override
-    public boolean eval(final Environment env, final Encoding enc) {
-        return left.eval(env, enc) || right.eval(env, enc);
+    public boolean eval(final Environment environment, final Encoding encoding) {
+        return left.eval(environment, encoding) || right.eval(environment, encoding);
     }
 
 }

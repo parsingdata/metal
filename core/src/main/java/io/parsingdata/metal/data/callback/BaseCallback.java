@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.token;
+package io.parsingdata.metal.data.callback;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.token.Token;
 
-public interface StructSink {
+public abstract class BaseCallback implements Callback {
 
-    void handleStruct(final String scopeName, final Environment env, final Encoding enc, final ParseGraph struct);
+    @Override
+    public void handle(final Token token, final ParseResult result) {
+        if (result.succeeded) {
+            handleSuccess(token, result.environment);
+        } else {
+            handleFailure(token, result.environment);
+        }
+    }
+
+    protected abstract void handleSuccess(Token token, Environment environment);
+    protected abstract void handleFailure(Token token, Environment environment);
 
 }

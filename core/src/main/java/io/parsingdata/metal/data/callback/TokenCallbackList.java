@@ -14,51 +14,45 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.data;
+package io.parsingdata.metal.data.callback;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-public class ParseGraphList {
+public class TokenCallbackList {
 
-    public final ParseGraph head;
-    public final ParseGraphList tail;
+    public final TokenCallback head;
+    public final TokenCallbackList tail;
     public final long size;
 
-    public static final ParseGraphList EMPTY = new ParseGraphList();
+    public static final TokenCallbackList EMPTY = new TokenCallbackList();
 
-    private ParseGraphList() {
+    private TokenCallbackList() {
         head = null;
         tail = null;
         size = 0;
     }
 
-    private ParseGraphList(final ParseGraph head, final ParseGraphList tail) {
+    private TokenCallbackList(final TokenCallback head, final TokenCallbackList tail) {
         this.head = checkNotNull(head, "head");
         this.tail = checkNotNull(tail, "tail");
         size = tail.size + 1;
     }
 
-    public static ParseGraphList create(final ParseGraph head) {
+    public static TokenCallbackList create(final TokenCallback head) {
         return EMPTY.add(checkNotNull(head, "head"));
     }
 
-    public ParseGraphList add(final ParseGraph head) {
-        return new ParseGraphList(checkNotNull(head, "head"), this);
-    }
-
-    public ParseGraphList add(final ParseGraphList list) {
-        checkNotNull(list, "list");
-        ParseGraphList lst = list;
-        ParseGraphList addTo = this;
-        while (lst.head != null) {
-            addTo = addTo.add(lst.head);
-            lst = lst.tail;
-        }
-        return addTo;
+    public TokenCallbackList add(final TokenCallback head) {
+        return new TokenCallbackList(checkNotNull(head, "head"), this);
     }
 
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    @Override
+    public String toString() {
+        return isEmpty() ? "" : ">" + head + tail.toString();
     }
 
 }

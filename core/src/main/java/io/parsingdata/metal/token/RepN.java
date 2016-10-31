@@ -16,45 +16,47 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.ParseResult.failure;
+import static io.parsingdata.metal.data.ParseResult.success;
+
+import java.io.IOException;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.OptionalValueList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
-import java.io.IOException;
-
-import static io.parsingdata.metal.Util.checkNotNull;
-
 public class RepN extends Token {
 
     public final Token token;
     public final ValueExpression n;
 
-    public RepN(final String name, final Token token, final ValueExpression n, final Encoding enc) {
-        super(name, enc);
+    public RepN(final String name, final Token token, final ValueExpression n, final Encoding encoding) {
+        super(name, encoding);
         this.token = checkNotNull(token, "token");
         this.n = checkNotNull(n, "n");
     }
 
     @Override
-    protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final OptionalValueList counts = n.eval(env, enc);
+    protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        final OptionalValueList counts = n.eval(environment, encoding);
         if (counts.size != 1 || !counts.head.isPresent()) {
-            return new ParseResult(false, env);
+            return failure(environment);
         }
-        final ParseResult res = iterate(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc, counts.head.get().asNumeric().longValue());
-        if (res.succeeded) {
-            return new ParseResult(true, new Environment(res.environment.order.closeBranch(), res.environment.input, res.environment.offset));
+        final ParseResult result = iterate(scope, environment.addBranch(this), encoding, counts.head.get().asNumeric().longValue());
+        if (result.succeeded) {
+            return success(result.environment.closeBranch());
         }
-        return new ParseResult(false, env);
+        return failure(environment);
     }
 
-    private ParseResult iterate(final String scope, final Environment env, final Encoding enc, final long count) throws IOException {
-        if (count <= 0) { return new ParseResult(true, env); }
-        final ParseResult res = token.parse(scope, env, enc);
-        if (res.succeeded) { return iterate(scope, res.environment, enc, count - 1); }
-        return new ParseResult(false, env);
+    private ParseResult iterate(final String scope, final Environment environment, final Encoding encoding, final long count) throws IOException {
+        if (count <= 0) { return success(environment); }
+        final ParseResult result = token.parse(scope, environment, encoding);
+        if (result.succeeded) { return iterate(scope, result.environment, encoding, count - 1); }
+        return failure(environment);
     }
 
     @Override

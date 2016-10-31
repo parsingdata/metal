@@ -26,6 +26,14 @@ public class ParseResult {
         this.environment = environment;
     }
 
+    public static ParseResult success(final Environment environment) {
+        return new ParseResult(true, environment);
+    }
+
+    public static ParseResult failure(final Environment environment) {
+        return new ParseResult(false, environment);
+    }
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + succeeded + ", " + environment + ")";

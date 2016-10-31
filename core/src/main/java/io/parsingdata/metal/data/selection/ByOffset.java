@@ -17,36 +17,53 @@
 package io.parsingdata.metal.data.selection;
 
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.selection.ByToken.getAllRoots;
 
 import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseGraphList;
 import io.parsingdata.metal.data.ParseItem;
+import io.parsingdata.metal.data.ParseItemList;
 import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.token.Token;
 
 public final class ByOffset {
 
     private ByOffset() {}
 
-    public static boolean hasGraphAtRef(final ParseGraph graph, final long ref) {
-        return findRef(ByType.getGraphs(graph), ref) != null;
+    public static boolean hasRootAtOffset(final ParseGraph graph, final Token definition, final long offset) {
+        return findItemAtOffset(getAllRoots(graph, definition), offset) != null;
     }
 
-    public static ParseGraph findRef(final ParseGraphList graphs, final long ref) {
-        checkNotNull(graphs, "graphs");
-        if (graphs.isEmpty()) { return null; }
-        ParseGraphList gr = graphs;
-        ParseGraph best = null;
-        while (gr.head != null) {
-            if (gr.head.containsValue() && gr.head.getLowestOffsetValue().getOffset() == ref) {
-                best = gr.head;
-            }
-            gr = gr.tail;
+    public static ParseItem findItemAtOffset(final ParseItemList items, final long offset) {
+        checkNotNull(items, "items");
+
+        return items.tailStream()
+            .filter(list -> {
+                return !list.isEmpty();
+            })
+            .map(ParseItemList::getHead)
+            .filter(head -> {
+                if (head.isValue() && head.asValue().getOffset() == offset) {
+                    return true;
+                }
+                else if (head.isGraph()) {
+                    final ParseValue value = getLowestOffsetValue(head.asGraph(), null);
+                    return value != null && value.getOffset() == offset;
+                }
+                return false;
+            }).findFirst().orElse(null);
+    }
+
+    private static ParseValue getLowestOffsetValue(final ParseGraph graph, final ParseValue lowest) {
+        if (graph.isEmpty() || !graph.getDefinition().isLocal()) { return lowest; }
+        if (graph.head.isValue()) {
+            return getLowestOffsetValue(graph.tail, lowest == null || lowest.getOffset() > graph.head.asValue().getOffset() ? graph.head.asValue() : lowest);
         }
-        return best;
-    }
-
-    public static ParseValue getLowestOffsetValue(final ParseGraph graph) {
-        checkNotNull(graph, "graph");
+        if (graph.head.isGraph()) {
+            return getLowestOffsetValue(graph.tail, getLowestOffsetValue(graph.head.asGraph(), lowest));
+        }
+        return getLowestOffsetValue(graph.tail, lowest);
+/*
+checkNotNull(graph, "graph");
         if (!graph.containsValue()) { throw new IllegalStateException("Cannot determine lowest offset if graph does not contain a value."); }
         ParseGraph gr = graph;
         ParseValue low = null;
@@ -57,6 +74,7 @@ public final class ByOffset {
             }
             gr = gr.tail;
         }
-        return low;
+        return low;*/
     }
+
 }

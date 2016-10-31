@@ -21,11 +21,13 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
+import static io.parsingdata.metal.data.selection.ByItem.getGraphAfter;
+
 public class ByItemTest {
 
     @Test
     public void empty() {
-        assertTrue(ByItem.getGraphAfter(ParseGraph.EMPTY, null).isEmpty());
+        assertTrue(getGraphAfter(ParseGraph.EMPTY, null).isEmpty());
     }
 
 }

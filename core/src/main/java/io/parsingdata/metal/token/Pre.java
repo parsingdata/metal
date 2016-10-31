@@ -16,33 +16,35 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Shorthand.expTrue;
+import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.ParseResult.failure;
+import static io.parsingdata.metal.data.ParseResult.success;
+
+import java.io.IOException;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
-
-import java.io.IOException;
-
-import static io.parsingdata.metal.Shorthand.expTrue;
-import static io.parsingdata.metal.Util.checkNotNull;
 
 public class Pre extends Token {
 
     public final Token token;
     public final Expression predicate;
 
-    public Pre(final String name, final Token token, final Expression predicate, final Encoding enc) {
-        super(name, enc);
+    public Pre(final String name, final Token token, final Expression predicate, final Encoding encoding) {
+        super(name, encoding);
         this.token = checkNotNull(token, "token");
         this.predicate = predicate == null ? expTrue() : predicate;
     }
 
     @Override
-    protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        if (!predicate.eval(env, enc)) { return new ParseResult(true, env); }
-        final ParseResult res = token.parse(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
-        if (res.succeeded) { return new ParseResult(true, new Environment(res.environment.order.closeBranch(), res.environment.input, res.environment.offset)); }
-        return new ParseResult(false, env);
+    protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        if (!predicate.eval(environment, encoding)) { return success(environment); }
+        final ParseResult result = token.parse(scope, environment.addBranch(this), encoding);
+        if (result.succeeded) { return success(result.environment.closeBranch()); }
+        return failure(environment);
     }
 
     @Override

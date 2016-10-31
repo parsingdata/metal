@@ -16,25 +16,48 @@
 
 package io.parsingdata.metal;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
-import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.token.Cho;
-import io.parsingdata.metal.token.Seq;
-import io.parsingdata.metal.token.Token;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
-import static io.parsingdata.metal.Shorthand.*;
+import static io.parsingdata.metal.Shorthand.cho;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.eqStr;
+import static io.parsingdata.metal.Shorthand.expTrue;
+import static io.parsingdata.metal.Shorthand.gtNum;
+import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.nod;
+import static io.parsingdata.metal.Shorthand.opt;
+import static io.parsingdata.metal.Shorthand.pre;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.rep;
+import static io.parsingdata.metal.Shorthand.repn;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.expression.value.Value;
+import io.parsingdata.metal.token.Cho;
+import io.parsingdata.metal.token.Nod;
+import io.parsingdata.metal.token.Seq;
+import io.parsingdata.metal.token.Token;
 
 public class ShorthandsTest {
 
@@ -74,9 +97,9 @@ public class ShorthandsTest {
     }
 
     private void runChoice(final int data, final String matched) throws IOException {
-        final ParseResult res = multiChoice.parse(stream(data), enc());
-        assertTrue(res.succeeded);
-        assertTrue(res.environment.order.current().matches(matched));
+        final ParseResult result = multiChoice.parse(stream(data), enc());
+        assertTrue(result.succeeded);
+        assertTrue(result.environment.order.current().matches(matched));
     }
 
     @Test
@@ -99,35 +122,40 @@ public class ShorthandsTest {
     @Test
     public void allTokensNamed() throws IOException {
         final ParseResult result =
-            str("str",
-                rep("rep",
-                    repn("repn",
-                        seq("seq",
-                            pre("pre",
-                                opt("opt",
-                                    any("a")),
-                                expTrue()),
-                            cho("cho",
-                                def("def0", con(1), eq(con(0))),
-                                def("def1", con(1), eq(con(1)))),
-                            sub("sub",
-                                def("def2", con(1), eq(con(2))),
-                                con(2))
-                        ), con(1)
-                    )
+            rep("rep",
+                repn("repn",
+                    seq("seq",
+                        pre("pre",
+                            opt("opt",
+                                any("a")),
+                            expTrue()),
+                        cho("cho",
+                            def("def0", con(1), eq(con(0))),
+                            def("def1", con(1), eq(con(1)))),
+                        sub("sub",
+                            def("def2", con(1), eq(con(2))),
+                            con(2))
+                    ), con(1)
                 )
             ).parse(stream(2, 1, 2), enc());
         assertTrue(result.succeeded);
-        checkNameAndValue("str.rep.repn.seq.pre.opt.a", 2, result.environment);
-        checkNameAndValue("str.rep.repn.seq.cho.def1", 1, result.environment);
-        checkNameAndValue("str.rep.repn.seq.sub.def2", 2, result.environment);
+        checkNameAndValue("rep.repn.seq.pre.opt.a", 2, result.environment);
+        checkNameAndValue("rep.repn.seq.cho.def1", 1, result.environment);
+        checkNameAndValue("rep.repn.seq.sub.def2", 2, result.environment);
     }
 
     private void checkNameAndValue(final String name, final int value, final Environment env) {
-        OptionalValueList refList = ref(name).eval(env, enc());
-        assertFalse(refList.isEmpty());
-        assertEquals(1, refList.size);
-        assertEquals(value, refList.head.get().asNumeric().intValue());
+        OptionalValueList values = ref(name).eval(env, enc());
+        assertFalse(values.isEmpty());
+        assertEquals(1, values.size);
+        assertEquals(value, values.head.get().asNumeric().intValue());
+
+        while (!values.isEmpty()) {
+            final Value current = values.head.get();
+            assertThat(current, is(instanceOf(ParseValue.class)));
+            assertEquals(name, ((ParseValue)values.head.get()).name);
+            values = values.tail;
+        }
     }
 
     @Rule
@@ -183,4 +211,12 @@ public class ShorthandsTest {
         assertEquals(DEFB, seq.tokens()[1]);
     }
 
+    @Test
+    public void nodLongSizes() {
+        final Nod nod1 = (Nod) nod("name", 5);
+        con(5).equals(nod1.size);
+
+        final Nod nod2 = (Nod) nod(7);
+        con(7).equals(nod2.size);
+    }
 }

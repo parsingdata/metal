@@ -16,19 +16,27 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.repn;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+
+import java.io.IOException;
+
+import org.junit.Test;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
-import org.junit.Test;
-
-import java.io.IOException;
-
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class SubStructTableTest {
 
@@ -43,48 +51,49 @@ public class SubStructTableTest {
 
     @Test
     public void table() throws IOException {
-        final Environment env = stream(3, 6, 4, 9, 42, 84, 42, 84, 0, 42, 84);
-                            /* offset: 0, 1, 2, 3,  4,  5,  6,  7, 8,  9, 10
-                             * count:  ^
-                             * pointers:  ^, ^, ^
-                             * ref1:      +----------------^^--^^
-                             * ref2:         +-----^^--^^
-                             * ref3:            +---------------------^^--^^
-                             */
-        final ParseResult res = table.parse(env, enc());
-        assertTrue(res.succeeded);
-        assertEquals(4, res.environment.offset);
-        final ParseGraph order = res.environment.order;
-        checkStruct(order.head.asGraph().head.asGraph().head.asGraph());
-        checkStruct(order.head.asGraph().head.asGraph().tail.head.asGraph());
-        checkStruct(order.head.asGraph().head.asGraph().tail.tail.head.asGraph());
+        final Environment environment = stream(3, 6, 4, 9, 42, 84, 42, 84, 0, 42, 84);
+                                    /* offset: 0, 1, 2, 3,  4,  5,  6,  7, 8,  9, 10
+                                     * count:  ^
+                                     * pointers:  ^, ^, ^
+                                     * ref1:      +----------------^^--^^
+                                     * ref2:         +-----^^--^^
+                                     * ref3:            +---------------------^^--^^
+                                     */
+        final ParseResult result = table.parse(environment, enc());
+        assertTrue(result.succeeded);
+        assertEquals(4, result.environment.offset);
+        final ParseGraph graph = result.environment.order;
+        checkStruct(graph.head.asGraph().head.asGraph().head.asGraph(), 6);
+        checkStruct(graph.head.asGraph().head.asGraph().tail.head.asGraph(), 4);
+        checkStruct(graph.head.asGraph().head.asGraph().tail.tail.head.asGraph(), 9);
     }
 
     @Test
     public void tableWithDuplicate() throws IOException {
-        final Environment env = stream(4, 7, 5, 5, 10, 42, 84, 42, 84, 0, 42, 84);
-                            /* offset: 0, 1, 2, 3,  4,  5,  6,  7, 8,  9, 10, 11
-                             * count:  ^
-                             * pointers:  ^, ^, ^, ^^
-                             * ref1:      +--------------------^^--^^
-                             * ref2:         +---------^^--^^
-                             * ref3:         +---------^^--^^ duplicate!
-                             * ref4:               ++---------------------^^--^^
-                             */
-        final ParseResult res = table.parse(env, enc());
-        assertTrue(res.succeeded);
-        assertEquals(5, res.environment.offset);
-        final ParseGraph order = res.environment.order;
-        checkStruct(order.head.asGraph().head.asGraph().head.asGraph());
-        assertTrue(order.head.asGraph().head.asGraph().tail.head.isRef());
-        checkStruct(order.head.asGraph().head.asGraph().tail.head.asRef().resolve(order));
-        checkStruct(order.head.asGraph().head.asGraph().tail.tail.head.asGraph());
-        checkStruct(order.head.asGraph().head.asGraph().tail.tail.tail.head.asGraph());
+        final Environment environment = stream(4, 7, 5, 5, 10, 42, 84, 42, 84, 0, 42, 84);
+                                    /* offset: 0, 1, 2, 3,  4,  5,  6,  7, 8,  9, 10, 11
+                                     * count:  ^
+                                     * pointers:  ^, ^, ^, ^^
+                                     * ref1:      +--------------------^^--^^
+                                     * ref2:         +---------^^--^^
+                                     * ref3:         +---------^^--^^ duplicate!
+                                     * ref4:               ++---------------------^^--^^
+                                     */
+        final ParseResult result = table.parse(environment, enc());
+        assertTrue(result.succeeded);
+        assertEquals(5, result.environment.offset);
+        final ParseGraph graph = result.environment.order;
+        checkStruct(graph.head.asGraph().head.asGraph().head.asGraph(), 7);
+        assertTrue(graph.head.asGraph().head.asGraph().tail.head.isReference());
+        checkStruct(graph.head.asGraph().head.asGraph().tail.head.asReference().resolve(graph).asGraph(), 5);
+        checkStruct(graph.head.asGraph().head.asGraph().tail.tail.head.asGraph(), 5);
+        checkStruct(graph.head.asGraph().head.asGraph().tail.tail.tail.head.asGraph(), 10);
     }
 
-    private void checkStruct(final ParseGraph graph) {
+    private void checkStruct(final ParseGraph graph, final int offsetHeader) {
         assertEquals(84, graph.head.asValue().asNumeric().intValue());
         assertEquals(42, graph.tail.head.asValue().asNumeric().intValue());
+        assertEquals(offsetHeader, graph.tail.head.asValue().getOffset());
     }
 
 }

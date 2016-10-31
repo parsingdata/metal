@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.data.selection;
+package io.parsingdata.metal.data;
 
-import io.parsingdata.metal.data.ParseGraph;
+import static org.junit.Assert.assertNull;
+
+import static io.parsingdata.metal.data.selection.ByName.getValue;
+
 import org.junit.Test;
-
-import static junit.framework.TestCase.assertNull;
 
 public class ByNameTest {
 
     @Test
     public void getValueOnEmpty() {
-        assertNull(ByName.getValue(ParseGraph.EMPTY, "name"));
+        assertNull(getValue(ParseGraph.EMPTY, "name"));
     }
 
     @Test
     public void getValueOnBranchedEmpty() {
-        assertNull(ByName.getValue(ParseGraph.EMPTY.addBranch(ParseGraph.NONE), "name"));
+        assertNull(getValue(ParseGraph.EMPTY.addBranch(ParseGraph.NONE), "name"));
     }
 
 }

@@ -17,17 +17,23 @@
 package io.parsingdata.metal.expression.value;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import static io.parsingdata.metal.Shorthand.add;
+import static io.parsingdata.metal.Shorthand.ADD_REDUCER;
+import static io.parsingdata.metal.Shorthand.DIV_REDUCER;
 import static io.parsingdata.metal.Shorthand.cho;
+import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.foldLeft;
 import static io.parsingdata.metal.Shorthand.foldRight;
 import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
 
@@ -35,19 +41,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 
 /**
  * See {@link io.parsingdata.metal.ReducersTest} for other fold tests.
  */
 public class FoldEdgeCaseTest {
-
-    private final static Reducer ADD_REDUCER = new Reducer() {
-        @Override
-        public ValueExpression reduce(final ValueExpression left, final ValueExpression right) {
-            return add(left, right);
-        }
-    };
 
     private static final Reducer MULTIPLE_VALUE_REDUCER = new Reducer() {
         @Override
@@ -58,6 +58,19 @@ public class FoldEdgeCaseTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+
+    @Test
+    public void valuesContainsEmpty() {
+        assertTrue(foldLeft(div(con(1), con(0)), ADD_REDUCER).eval(stream(0), enc()).isEmpty());
+        assertTrue(foldRight(div(con(1), con(0)), ADD_REDUCER).eval(stream(0), enc()).isEmpty());
+    }
+
+    @Test
+    public void foldToEmpty() throws IOException {
+        final Environment environment = rep(any("value")).parse(stream(1, 0), enc()).environment;
+        assertFalse(foldLeft(ref("value"), DIV_REDUCER).eval(environment, enc()).head.isPresent());
+        assertFalse(foldRight(ref("value"), DIV_REDUCER).eval(environment, enc()).head.isPresent());
+    }
 
     @Test
     public void multipleInits() throws IOException {
@@ -87,8 +100,7 @@ public class FoldEdgeCaseTest {
         assertFalse(parseResult.succeeded);
     }
 
-    @Test
-    public void faultyReducerFoldLeft() throws IOException {
+    private void faultyReducer(final ValueExpression expression) throws IOException {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("Reducer must yield a single value.");
 
@@ -97,22 +109,18 @@ public class FoldEdgeCaseTest {
             def("value", 1),
             def("toFold", 1),
             def("toFold", 1),
-            def("folded", 1, eq(foldLeft(ref("toFold"), MULTIPLE_VALUE_REDUCER)))
+            def("folded", 1, eq(expression))
         ).parse(stream(1, 2, 1, 2, 3), enc());
     }
 
     @Test
-    public void faultyReducerFoldRight() throws IOException {
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("Reducer must yield a single value.");
+    public void faultyReducerFoldLeft() throws IOException {
+        faultyReducer(foldLeft(ref("toFold"), MULTIPLE_VALUE_REDUCER));
+    }
 
-        seq(
-            def("value", 1), // the reducer returns a Ref to these two values
-            def("value", 1),
-            def("toFold", 1),
-            def("toFold", 1),
-            def("folded", 1, eq(foldRight(ref("toFold"), MULTIPLE_VALUE_REDUCER)))
-        ).parse(stream(1, 2, 1, 2, 3), enc());
+    @Test
+    public void faultyReducerFoldRight() throws IOException {
+        faultyReducer(foldRight(ref("toFold"), MULTIPLE_VALUE_REDUCER));
     }
 
 }

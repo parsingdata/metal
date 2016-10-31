@@ -16,21 +16,32 @@
 
 package io.parsingdata.metal.expression.value;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
-import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.token.Token;
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import static io.parsingdata.metal.Shorthand.cho;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.div;
+import static io.parsingdata.metal.Shorthand.elvis;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
 
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import org.junit.Test;
+
+import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.token.Token;
 
 public class ElvisExpressionTest {
 
@@ -107,8 +118,16 @@ public class ElvisExpressionTest {
     @Test
     public void elvisListEmpty() {
         final ValueExpression elvis = elvis(ref("a"), ref("b"));
-        final OptionalValueList eval = elvis.eval(new Environment(null), enc());
+        final OptionalValueList eval = elvis.eval(stream(0), enc());
         assertEquals(0, eval.size);
+    }
+
+    @Test
+    public void elvisLeftNone() {
+        final ValueExpression elvis = elvis(div(con(1), con(0)), con(1));
+        final OptionalValueList eval = elvis.eval(stream(0), enc());
+        assertEquals(1, eval.size);
+        assertEquals(1, eval.head.get().asNumeric().intValue());
     }
 
     @Test

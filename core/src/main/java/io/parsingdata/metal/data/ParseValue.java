@@ -16,11 +16,11 @@
 
 package io.parsingdata.metal.data;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Token;
-
-import static io.parsingdata.metal.Util.checkNotNull;
 
 public class ParseValue extends Value implements ParseItem {
 
@@ -28,8 +28,8 @@ public class ParseValue extends Value implements ParseItem {
     public Token definition;
     public final long offset;
 
-    public ParseValue(final String name, final Token definition, final long offset, final byte[] data, final Encoding enc) {
-        super(data, enc);
+    public ParseValue(final String name, final Token definition, final long offset, final byte[] data, final Encoding encoding) {
+        super(data, encoding);
         this.name = checkNotNull(name, "name");
         this.definition = checkNotNull(definition, "definition");
         this.offset = offset;
@@ -45,10 +45,10 @@ public class ParseValue extends Value implements ParseItem {
 
     @Override public boolean isValue() { return true; }
     @Override public boolean isGraph() { return false; }
-    @Override public boolean isRef() { return false; }
+    @Override public boolean isReference() { return false; }
     @Override public ParseValue asValue() { return this; }
     @Override public ParseGraph asGraph() { throw new UnsupportedOperationException("Cannot convert ParseValue to ParseGraph."); }
-    @Override public ParseRef asRef() { throw new UnsupportedOperationException("Cannot convert ParseValue to ParseRef."); }
+    @Override public ParseReference asReference() { throw new UnsupportedOperationException("Cannot convert ParseValue to ParseReference."); }
     @Override public Token getDefinition() { return definition; }
 
     @Override

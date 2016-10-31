@@ -16,24 +16,32 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
 
-import io.parsingdata.metal.token.Token;
-
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.UnaryValueExpression;
+import io.parsingdata.metal.expression.value.Value;
+import io.parsingdata.metal.expression.value.ValueOperation;
+import io.parsingdata.metal.token.Token;
 
 @RunWith(JUnit4.class)
 public class ValueExpressionSemanticsTest {
@@ -44,12 +52,28 @@ public class ValueExpressionSemanticsTest {
 
     @Test
     public void Cat() throws IOException {
-        Assert.assertTrue(cat.parse(stream(1, 2, 1, 2), enc()).succeeded);
+        assertTrue(cat.parse(stream(1, 2, 1, 2), enc()).succeeded);
     }
 
     @Test
     public void CatNoMatch() throws IOException {
-        Assert.assertFalse(cat.parse(stream(1, 2, 12, 12), enc()).succeeded);
+        assertFalse(cat.parse(stream(1, 2, 12, 12), enc()).succeeded);
+    }
+
+    @Test
+    public void callback() throws IOException {
+        final Environment data = stream(1, 2, 3, 4);
+        def("a", 4, eq(new UnaryValueExpression(ref("a")) {
+            @Override
+            public OptionalValue eval(Value value, Environment environment, Encoding encoding) {
+                return value.operation(new ValueOperation() {
+                    @Override
+                    public OptionalValue execute(Value value) {
+                        return OptionalValue.of(value);
+                    }
+                });
+            }
+        })).parse(data, enc());
     }
 
 }

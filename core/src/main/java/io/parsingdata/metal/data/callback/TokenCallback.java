@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.data.selection;
+package io.parsingdata.metal.data.callback;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import io.parsingdata.metal.token.Token;
 
-import static io.parsingdata.metal.data.ParseGraph.EMPTY;
-import static io.parsingdata.metal.data.selection.ByOffset.getLowestOffsetValue;
+import static io.parsingdata.metal.Util.checkNotNull;
 
-public class ByOffsetTest {
+public class TokenCallback {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final Token token;
+    public final Callback callback;
 
-    @Test
-    public void getLowestOffsetWithoutValue() {
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("Cannot determine lowest offset if graph does not contain a value.");
-        getLowestOffsetValue(EMPTY);
+    public TokenCallback(final Token token, final Callback callback) {
+        this.token = checkNotNull(token, "token");
+        this.callback = checkNotNull(callback, "callback");
+    }
+
+    @Override
+    public String toString() {
+        return token + "->" + callback;
     }
 
 }

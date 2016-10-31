@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.expression.value;
+package io.parsingdata.metal.data.callback;
 
-public interface ValueOperation {
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.token.Token;
 
-    OptionalValue execute(Value value);
+public interface Callback {
+
+    void handle(Token token, ParseResult result);
 
 }

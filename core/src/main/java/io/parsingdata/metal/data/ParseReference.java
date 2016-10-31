@@ -17,30 +17,31 @@
 package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.selection.ByOffset.findItemAtOffset;
+import static io.parsingdata.metal.data.selection.ByToken.getAllRoots;
 
-import io.parsingdata.metal.data.selection.ByOffset;
 import io.parsingdata.metal.token.Token;
 
-public class ParseRef implements ParseItem {
+public class ParseReference implements ParseItem {
 
     public final long location;
     public final Token definition;
 
-    public ParseRef(final long location, final Token definition) {
+    public ParseReference(final long location, final Token definition) {
         this.location = location;
         this.definition = checkNotNull(definition, "definition");
     }
 
-    public ParseGraph resolve(final ParseGraph root) {
-        return ByOffset.findRef(ParseGraphList.create(root).add(root.getGraphs()), location);
+    public ParseItem resolve(final ParseGraph root) {
+        return findItemAtOffset(getAllRoots(root, definition), location);
     }
 
     @Override public boolean isValue() { return false; }
     @Override public boolean isGraph() { return false; }
-    @Override public boolean isRef() { return true; }
-    @Override public ParseValue asValue() { throw new UnsupportedOperationException("Cannot convert ParseRef to ParseValue."); }
-    @Override public ParseGraph asGraph() { throw new UnsupportedOperationException("Cannot convert ParseRef to ParseGraph."); }
-    @Override public ParseRef asRef() { return this; }
+    @Override public boolean isReference() { return true; }
+    @Override public ParseValue asValue() { throw new UnsupportedOperationException("Cannot convert ParseReference to ParseValue."); }
+    @Override public ParseGraph asGraph() { throw new UnsupportedOperationException("Cannot convert ParseReference to ParseGraph."); }
+    @Override public ParseReference asReference() { return this; }
     @Override public Token getDefinition() { return definition; }
 
     @Override

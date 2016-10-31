@@ -32,11 +32,11 @@ public class Len extends UnaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value value, final Environment env, final Encoding enc) {
-        return OptionalValue.of(num(value.getValue().length));
+    public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) {
+        return OptionalValue.of(fromNumeric(value.getValue().length));
     }
 
-    private static Value num(final long length) {
+    private static Value fromNumeric(final long length) {
         return ConstantFactory.createFromNumeric(length, new Encoding(Sign.SIGNED));
     }
 }

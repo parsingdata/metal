@@ -16,11 +16,15 @@
 
 package io.parsingdata.metal.expression.value.arithmetic;
 
+import java.math.BigInteger;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.*;
-
-import java.math.BigInteger;
+import io.parsingdata.metal.expression.value.BinaryValueExpression;
+import io.parsingdata.metal.expression.value.ConstantFactory;
+import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.Value;
+import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class Mod extends BinaryValueExpression {
 
@@ -29,9 +33,9 @@ public class Mod extends BinaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value left, final Value right, final Environment env, final Encoding enc) {
+    public OptionalValue eval(final Value left, final Value right, final Environment environment, final Encoding encoding) {
         if (right.asNumeric().compareTo(BigInteger.ZERO) < 0) { return OptionalValue.empty(); }
-        return OptionalValue.of(ConstantFactory.createFromNumeric(left.asNumeric().mod(right.asNumeric()), enc));
+        return OptionalValue.of(ConstantFactory.createFromNumeric(left.asNumeric().mod(right.asNumeric()), encoding));
     }
 
 }

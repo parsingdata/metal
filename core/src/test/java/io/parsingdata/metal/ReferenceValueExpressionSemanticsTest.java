@@ -16,22 +16,33 @@
 
 package io.parsingdata.metal;
 
+import static io.parsingdata.metal.Shorthand.ADD_REDUCER;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.first;
+import static io.parsingdata.metal.Shorthand.fold;
+import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.offset;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.repn;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
+import static io.parsingdata.metal.util.TokenDefinitions.eqRef;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import org.junit.runners.Parameterized.Parameters;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
-import org.junit.runners.Parameterized.Parameters;
-
-import java.util.Arrays;
-import java.util.Collection;
-
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
-import static io.parsingdata.metal.util.TokenDefinitions.eqRef;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
 
@@ -72,8 +83,8 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
         });
     }
 
-    public ReferenceValueExpressionSemanticsTest(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
-        super(token, env, enc, result);
+    public ReferenceValueExpressionSemanticsTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
+        super(token, environment, encoding, result);
     }
 
     private static final Token sequenceMatch2 = seq(any("a"),

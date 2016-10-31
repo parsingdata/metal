@@ -16,33 +16,34 @@
 
 package io.parsingdata.metal.token;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.encoding.Encoding;
+import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.ParseResult.success;
 
 import java.io.IOException;
 
-import static io.parsingdata.metal.Util.checkNotNull;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.encoding.Encoding;
 
 public class Rep extends Token {
 
     public final Token token;
 
-    public Rep(final String name, final Token token, final Encoding enc) {
-        super(name, enc);
+    public Rep(final String name, final Token token, final Encoding encoding) {
+        super(name, encoding);
         this.token = checkNotNull(token, "token");
     }
 
     @Override
-    protected ParseResult parseImpl(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final ParseResult res = iterate(scope, new Environment(env.order.addBranch(this), env.input, env.offset), enc);
-        return new ParseResult(true, new Environment(res.environment.order.closeBranch(), res.environment.input, res.environment.offset));
+    protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        final ParseResult result = iterate(scope, environment.addBranch(this), encoding);
+        return success(result.environment.closeBranch());
     }
 
-    private ParseResult iterate(final String scope, final Environment env, final Encoding enc) throws IOException {
-        final ParseResult res = token.parse(scope, env, enc);
-        if (res.succeeded) { return iterate(scope, res.environment, enc); }
-        return new ParseResult(true, env);
+    private ParseResult iterate(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        final ParseResult result = token.parse(scope, environment, encoding);
+        if (result.succeeded) { return iterate(scope, result.environment, encoding); }
+        return success(environment);
     }
 
     @Override

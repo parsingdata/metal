@@ -73,8 +73,8 @@ public class BitwiseValueExpressionSemanticsTest extends ParameterizedParse {
         });
     }
 
-    public BitwiseValueExpressionSemanticsTest(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
-        super(token, env, enc, result);
+    public BitwiseValueExpressionSemanticsTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
+        super(token, environment, encoding, result);
     }
 
     private static Token simpleNot(final int size) {

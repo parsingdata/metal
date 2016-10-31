@@ -16,22 +16,34 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static io.parsingdata.metal.Shorthand.add;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.first;
+import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.neg;
+import static io.parsingdata.metal.Shorthand.not;
+import static io.parsingdata.metal.Shorthand.offset;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EncodingFactory.signed;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import org.junit.runners.Parameterized;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
-import org.junit.runners.Parameterized;
 
-import java.util.Arrays;
-import java.util.Collection;
-
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
-import static io.parsingdata.metal.util.EncodingFactory.*;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-
-public class BinaryValueExpressionListSemanticsTest extends ParameterizedParse {
+public class ValueExpressionListSemanticsTest extends ParameterizedParse {
 
     @Parameterized.Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
@@ -50,30 +62,40 @@ public class BinaryValueExpressionListSemanticsTest extends ParameterizedParse {
             { "a, a, b, b, first(not(a)+not(b))", pred2(eq(first(add(not(ref("a")), not(ref("b")))))), stream(230, 2, 25, 4, -1), enc(), true },
             { "a, a, a, b, b, last(not(a)+not(b))", pred3(eq(last(add(not(ref("a")), not(ref("b")))))), stream(1, 2, 200, 4, 55, -1), enc(), true },
             { "a, a, a, b, b, first(not(a)+not(b))", pred3(eq(first(add(not(ref("a")), not(ref("b")))))), stream(200, 2, 3, 55, 5, -1), enc(), false },
+            { "a, a, last(neg(a))", pred(eq(last(neg(ref("a"))))), stream(1, 2, -2), signed(), true },
+            { "a, a, first(neg(a))", pred(eq(first(neg(ref("a"))))), stream(1, 2, -1), signed(), true }
+
         });
     }
 
-    public BinaryValueExpressionListSemanticsTest(final String desc, final Token token, final Environment env, final Encoding enc, final boolean result) {
-        super(token, env, enc, result);
+    public ValueExpressionListSemanticsTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
+        super(token, environment, encoding, result);
     }
 
-    private static Token pred2(Expression pred) {
+    private static Token pred(Expression predicate) {
+        return
+            seq(any("a"),
+                any("a"),
+                def("b", con(1), predicate));
+    }
+
+    private static Token pred2(Expression predicate) {
         return
             seq(any("a"),
                 any("a"),
                 any("b"),
                 any("b"),
-                def("c", con(1), pred));
+                def("c", con(1), predicate));
     }
 
-    private static Token pred3(Expression pred) {
+    private static Token pred3(Expression predicate) {
         return
             seq(any("a"),
                 any("a"),
                 any("a"),
                 any("b"),
                 any("b"),
-                def("c", con(1), pred));
+                def("c", con(1), predicate));
     }
 
 }

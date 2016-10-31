@@ -28,6 +28,7 @@ import static io.parsingdata.metal.Shorthand.len;
 import static io.parsingdata.metal.Shorthand.ltNum;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.encoding.ByteOrder.LITTLE_ENDIAN;
 import static io.parsingdata.metal.encoding.Sign.UNSIGNED;
 
@@ -64,21 +65,21 @@ public class ByteLengthTest {
         final byte[] text2 = "Metal".getBytes(UTF_8);
 
         final ByteStream stream = new InMemoryByteStream(concat(text1, text2));
-        final Environment env = new Environment(stream);
-        final ParseResult result = STRING.parse(env, ENCODING);
+        final Environment environment = new Environment(stream);
+        final ParseResult result = STRING.parse(environment, ENCODING);
 
         assertTrue(result.succeeded);
         final ParseGraph graph = result.environment.order;
-        assertEquals(5, graph.get("length").asNumeric().byteValue());
-        assertEquals("Hello", graph.get("text1").asString());
-        assertEquals("Metal", graph.get("text2").asString());
+        assertEquals(5, getValue(graph, "length").asNumeric().byteValue());
+        assertEquals("Hello", getValue(graph, "text1").asString());
+        assertEquals("Metal", getValue(graph, "text2").asString());
     }
 
     @Test
     public void testLenNull() throws IOException {
         final ByteStream stream = new InMemoryByteStream(string("Joe"));
-        final Environment env = new Environment(stream);
-        final ParseResult result = NAME.parse(env, ENCODING);
+        final Environment environment = new Environment(stream);
+        final ParseResult result = NAME.parse(environment, ENCODING);
         assertFalse(result.succeeded);
     }
 

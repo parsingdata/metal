@@ -19,15 +19,56 @@ package io.parsingdata.metal;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.True;
-import io.parsingdata.metal.expression.comparison.*;
-import io.parsingdata.metal.expression.logical.*;
-import io.parsingdata.metal.expression.value.*;
-import io.parsingdata.metal.expression.value.arithmetic.*;
+import io.parsingdata.metal.expression.comparison.ComparisonExpression;
+import io.parsingdata.metal.expression.comparison.Eq;
+import io.parsingdata.metal.expression.comparison.EqNum;
+import io.parsingdata.metal.expression.comparison.EqStr;
+import io.parsingdata.metal.expression.comparison.GtNum;
+import io.parsingdata.metal.expression.comparison.LtNum;
+import io.parsingdata.metal.expression.logical.And;
+import io.parsingdata.metal.expression.logical.BinaryLogicalExpression;
+import io.parsingdata.metal.expression.logical.Not;
+import io.parsingdata.metal.expression.logical.Or;
+import io.parsingdata.metal.expression.logical.UnaryLogicalExpression;
+import io.parsingdata.metal.expression.value.BinaryValueExpression;
+import io.parsingdata.metal.expression.value.Cat;
+import io.parsingdata.metal.expression.value.Const;
+import io.parsingdata.metal.expression.value.ConstantFactory;
+import io.parsingdata.metal.expression.value.Elvis;
+import io.parsingdata.metal.expression.value.FoldLeft;
+import io.parsingdata.metal.expression.value.FoldRight;
+import io.parsingdata.metal.expression.value.Reducer;
+import io.parsingdata.metal.expression.value.UnaryValueExpression;
+import io.parsingdata.metal.expression.value.Value;
+import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.expression.value.arithmetic.Add;
+import io.parsingdata.metal.expression.value.arithmetic.Div;
+import io.parsingdata.metal.expression.value.arithmetic.Mod;
+import io.parsingdata.metal.expression.value.arithmetic.Mul;
+import io.parsingdata.metal.expression.value.arithmetic.Neg;
 import io.parsingdata.metal.expression.value.arithmetic.Sub;
 import io.parsingdata.metal.expression.value.bitwise.ShiftLeft;
 import io.parsingdata.metal.expression.value.bitwise.ShiftRight;
-import io.parsingdata.metal.expression.value.reference.*;
-import io.parsingdata.metal.token.*;
+import io.parsingdata.metal.expression.value.reference.Count;
+import io.parsingdata.metal.expression.value.reference.CurrentOffset;
+import io.parsingdata.metal.expression.value.reference.First;
+import io.parsingdata.metal.expression.value.reference.Last;
+import io.parsingdata.metal.expression.value.reference.Len;
+import io.parsingdata.metal.expression.value.reference.NameRef;
+import io.parsingdata.metal.expression.value.reference.Nth;
+import io.parsingdata.metal.expression.value.reference.Offset;
+import io.parsingdata.metal.expression.value.reference.Self;
+import io.parsingdata.metal.token.Cho;
+import io.parsingdata.metal.token.Def;
+import io.parsingdata.metal.token.Nod;
+import io.parsingdata.metal.token.Opt;
+import io.parsingdata.metal.token.Pre;
+import io.parsingdata.metal.token.Rep;
+import io.parsingdata.metal.token.RepN;
+import io.parsingdata.metal.token.Seq;
+import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.token.TokenRef;
+import io.parsingdata.metal.token.While;
 
 public final class Shorthand {
 
@@ -57,12 +98,6 @@ public final class Shorthand {
     public static Token seq(final String name, final Token... tokens) { return seq(name, null, tokens); }
     public static Token seq(final Encoding encoding, final Token... tokens) { return seq("", encoding, tokens); }
     public static Token seq(final Token... tokens) { return seq((Encoding)null, tokens); }
-    public static Token str(final String scope, final Token token, final Encoding encoding, final StructSink sink, final Expression predicate) { return new Str(scope, token, encoding, sink, predicate); }
-    public static Token str(final String scope, final Token token, final Encoding encoding, final StructSink sink) { return str(scope, token, encoding, sink, null); }
-    public static Token str(final String scope, final Token token, final Encoding encoding) { return str(scope, token, encoding, null); }
-    public static Token str(final String scope, final Token token, final StructSink sink, final Expression predicate) { return str(scope, token, null, sink, predicate); }
-    public static Token str(final String scope, final Token token, final StructSink sink) { return str(scope, token, null, sink); }
-    public static Token str(final String scope, final Token token) { return str(scope, token, (Encoding)null); }
     public static Token sub(final String name, final Token token, final ValueExpression address, final Encoding encoding) { return new io.parsingdata.metal.token.Sub(name, token, address, encoding); }
     public static Token sub(final String name, final Token token, final ValueExpression address) { return sub(name, token, address, null); }
     public static Token sub(final Token token, final ValueExpression address, final Encoding encoding) { return sub("", token, address, encoding); }
@@ -81,6 +116,9 @@ public final class Shorthand {
     public static Token opt(final Token token) { return opt(token, null); }
     public static Token nod(final String name, final ValueExpression size) { return new Nod(name, size, null); }
     public static Token nod(final ValueExpression size) { return nod("", size); }
+    public static Token nod(final String name, final long size) { return nod(name, con(size)); }
+    public static Token nod(final long size) { return nod("", con(size)); }
+    public static Token token(final String tokenName) { return new TokenRef("", tokenName, null); }
 
     public static BinaryValueExpression add(final ValueExpression left, final ValueExpression right) { return new Add(left, right); }
     public static BinaryValueExpression div(final ValueExpression left, final ValueExpression right) { return new Div(left, right); }
@@ -100,12 +138,15 @@ public final class Shorthand {
     public static ValueExpression con(final Value value) { return new Const(value); }
     public static ValueExpression con(final Encoding encoding, final int... values) { return new Const(new Value(toByteArray(values), encoding)); }
     public static ValueExpression con(final int... values) { return con(new Encoding(), values); }
+    public static ValueExpression con(final byte[] value) { return con(value, new Encoding()); }
+    public static ValueExpression con(final byte[] value, final Encoding encoding) { return con(ConstantFactory.createFromBytes(value, encoding)); }
     public static final ValueExpression self = new Self();
     public static ValueExpression len(final ValueExpression operand) { return new Len(operand); }
     public static ValueExpression ref(final String name) { return new NameRef(name); }
-    public static ValueExpression ref(final Token definition) { return new TokenRef(definition); }
+    public static ValueExpression ref(final Token definition) { return new io.parsingdata.metal.expression.value.reference.TokenRef(definition); }
     public static ValueExpression first(final ValueExpression operand) { return new First(operand); }
     public static ValueExpression last(final ValueExpression operand) { return new Last(operand); }
+    public static ValueExpression nth(final ValueExpression values, final ValueExpression indices) { return new Nth(values, indices); }
     public static ValueExpression offset(final ValueExpression operand) { return new Offset(operand); }
     public static final ValueExpression currentOffset = new CurrentOffset();
     public static ValueExpression cat(final ValueExpression left, final ValueExpression right) { return new Cat(left, right); }
@@ -138,13 +179,14 @@ public final class Shorthand {
     public final static Reducer MUL_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return mul(left, right); } };
     public final static Reducer CAT_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return cat(left, right); } };
     public final static Reducer SUB_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return sub(left, right); } };
+    public final static Reducer DIV_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return div(left, right); } };
 
     public static byte[] toByteArray(final int... bytes) {
-        final byte[] out = new byte[bytes.length];
+        final byte[] outBytes = new byte[bytes.length];
         for (int i = 0; i < bytes.length; i++) {
-            out[i] = (byte) bytes[i];
+            outBytes[i] = (byte) bytes[i];
         }
-        return out;
+        return outBytes;
     }
 
 }
