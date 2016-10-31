@@ -16,16 +16,18 @@
 
 package io.parsingdata.metal.data;
 
-import org.junit.Test;
-
-import static io.parsingdata.metal.data.ParseValueList.EMPTY;
 import static org.junit.Assert.assertEquals;
+
+import static io.parsingdata.metal.data.selection.ByValue.getValuesSincePrefix;
+
+import org.junit.Test;
 
 public class ParseValueListTest {
 
     @Test
     public void getValuesSincePrefixOnEmpty() {
-        assertEquals(EMPTY, EMPTY.getValuesSincePrefix(null));
+        ImmutableList<ParseValue> list = new ImmutableList<>();
+        assertEquals(list, getValuesSincePrefix(list, null));
     }
 
 }

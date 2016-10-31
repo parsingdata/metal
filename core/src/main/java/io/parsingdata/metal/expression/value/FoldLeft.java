@@ -18,10 +18,10 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.OptionalValueList.EMPTY;
+import static io.parsingdata.metal.Util.containsEmpty;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 
 public class FoldLeft implements ValueExpression {
@@ -37,20 +37,20 @@ public class FoldLeft implements ValueExpression {
     }
 
     @Override
-    public OptionalValueList eval(final Environment environment, final Encoding encoding) {
-        final OptionalValueList initial = this.initial != null ? this.initial.eval(environment, encoding) : EMPTY;
-        if (initial.size > 1) { return EMPTY; }
-        final OptionalValueList values = this.values.eval(environment, encoding).reverse();
-        if (values.isEmpty() || values.containsEmpty()) { return initial; }
+    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
+        final ImmutableList<OptionalValue> initial = this.initial != null ? this.initial.eval(environment, encoding) : new ImmutableList<OptionalValue>();
+        if (initial.size > 1) { return new ImmutableList<>(); }
+        final ImmutableList<OptionalValue> values = this.values.eval(environment, encoding).reverse();
+        if (values.isEmpty() || containsEmpty(values)) { return initial; }
         if (!initial.isEmpty()) {
-            return OptionalValueList.create(fold(environment, encoding, reducer, initial.head, values));
+            return ImmutableList.create(fold(environment, encoding, reducer, initial.head, values));
         }
-        return OptionalValueList.create(fold(environment, encoding, reducer, values.head, values.tail));
+        return ImmutableList.create(fold(environment, encoding, reducer, values.head, values.tail));
     }
 
-    private OptionalValue fold(final Environment environment, final Encoding encoding, final Reducer reducer, final OptionalValue head, final OptionalValueList tail) {
+    private OptionalValue fold(final Environment environment, final Encoding encoding, final Reducer reducer, final OptionalValue head, final ImmutableList<OptionalValue> tail) {
         if (!head.isPresent() || tail.isEmpty()) { return head; }
-        final OptionalValueList reducedValue = reducer.reduce(con(head.get()), con(tail.head.get())).eval(environment, encoding);
+        final ImmutableList<OptionalValue> reducedValue = reducer.reduce(con(head.get()), con(tail.head.get())).eval(environment, encoding);
         if (reducedValue.size != 1) { throw new IllegalStateException("Reducer must yield a single value."); }
         return fold(environment, encoding, reducer, reducedValue.head, tail.tail);
     }

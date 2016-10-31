@@ -19,7 +19,7 @@ package io.parsingdata.metal.expression.value.reference;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.value.ConstantFactory;
@@ -36,9 +36,9 @@ public class Count implements ValueExpression {
     }
 
     @Override
-    public OptionalValueList eval(final Environment environment, final Encoding encoding) {
-        final OptionalValueList values = operand.eval(environment, encoding);
-        return OptionalValueList.create(OptionalValue.of(fromNumeric(values.size)));
+    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
+        final ImmutableList<OptionalValue> values = operand.eval(environment, encoding);
+        return ImmutableList.create(OptionalValue.of(fromNumeric(values.size)));
     }
 
     private static Value fromNumeric(final long length) {

@@ -14,28 +14,18 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.expression.value;
+package io.parsingdata.metal.data.selection;
 
-import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.data.ParseValue;
 
-public class Const implements ValueExpression {
+public class ByValue {
 
-    public final Value value;
-
-    public Const(final Value value) {
-        this.value = value;
-    }
-
-    @Override
-    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
-        return ImmutableList.create(OptionalValue.of(value));
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" + value.toString() + ")";
+    public static ImmutableList<ParseValue> getValuesSincePrefix(final ImmutableList<ParseValue> list, final ParseValue prefix) {
+        if (list.isEmpty()) { return list; }
+        if (list.head == prefix) { return new ImmutableList<ParseValue>(); }
+        final ImmutableList<ParseValue> tailList = getValuesSincePrefix(list.tail, prefix);
+        return tailList.add(list.head);
     }
 
 }

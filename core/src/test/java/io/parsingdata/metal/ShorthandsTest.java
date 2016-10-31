@@ -50,9 +50,10 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Nod;
@@ -145,7 +146,7 @@ public class ShorthandsTest {
     }
 
     private void checkNameAndValue(final String name, final int value, final Environment env) {
-        OptionalValueList values = ref(name).eval(env, enc());
+        ImmutableList<OptionalValue> values = ref(name).eval(env, enc());
         assertFalse(values.isEmpty());
         assertEquals(1, values.size);
         assertEquals(value, values.head.get().asNumeric().intValue());

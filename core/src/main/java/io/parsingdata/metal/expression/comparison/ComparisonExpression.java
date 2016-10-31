@@ -19,7 +19,7 @@ package io.parsingdata.metal.expression.comparison;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.value.OptionalValue;
@@ -38,14 +38,14 @@ public abstract class ComparisonExpression implements Expression {
 
     @Override
     public boolean eval(final Environment environment, final Encoding encoding) {
-        final OptionalValueList values = value == null ? OptionalValueList.create(OptionalValue.of(environment.order.current())) : value.eval(environment, encoding);
+        final ImmutableList<OptionalValue> values = value == null ? ImmutableList.create(OptionalValue.of(environment.order.current())) : value.eval(environment, encoding);
         if (values.isEmpty()) { return false; }
-        final OptionalValueList predicates = predicate.eval(environment, encoding);
+        final ImmutableList<OptionalValue> predicates = predicate.eval(environment, encoding);
         if (values.size != predicates.size) { return false; }
         return compare(values, predicates);
     }
 
-    private boolean compare(final OptionalValueList currents, final OptionalValueList predicates) {
+    private boolean compare(final ImmutableList<OptionalValue> currents, final ImmutableList<OptionalValue> predicates) {
         if (!currents.head.isPresent() || !predicates.head.isPresent()) { return false; }
         final boolean headResult = compare(currents.head.get(), predicates.head.get());
         if (!headResult || currents.tail.isEmpty()) { return headResult; }

@@ -17,10 +17,9 @@
 package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.OptionalValueList.EMPTY;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -44,11 +43,11 @@ public abstract class BinaryValueExpression implements ValueExpression {
     }
 
     @Override
-    public OptionalValueList eval(final Environment environment, final Encoding encoding) {
+    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
         return evalLists(left.eval(environment, encoding), right.eval(environment, encoding), environment, encoding);
     }
 
-    private OptionalValueList evalLists(final OptionalValueList leftValues, final OptionalValueList rightValues, final Environment environment, final Encoding encoding) {
+    private ImmutableList<OptionalValue> evalLists(final ImmutableList<OptionalValue> leftValues, final ImmutableList<OptionalValue> rightValues, final Environment environment, final Encoding encoding) {
         if (leftValues.isEmpty()) {
             return makeListWithEmpty(rightValues.size);
         }
@@ -58,8 +57,8 @@ public abstract class BinaryValueExpression implements ValueExpression {
         return evalLists(leftValues.tail, rightValues.tail, environment, encoding).add(eval(leftValues.head, rightValues.head, environment, encoding));
     }
 
-    private OptionalValueList makeListWithEmpty(final long size) {
-        if (size <= 0) { return EMPTY; }
+    private ImmutableList<OptionalValue> makeListWithEmpty(final long size) {
+        if (size <= 0) { return new ImmutableList<>(); }
         return makeListWithEmpty(size - 1).add(OptionalValue.empty());
     }
 

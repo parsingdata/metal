@@ -21,23 +21,26 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.data.selection.ByName.get;
+import static io.parsingdata.metal.data.selection.ByName.getAll;
+import static io.parsingdata.metal.data.selection.ByValue.getValuesSincePrefix;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.data.ParseValueList;
 
 @RunWith(JUnit4.class)
 public class ParseValueListTest {
 
-    private final ParseValueList l1;
-    private final ParseValueList l2;
-    private final ParseValueList l3;
-    private final ParseValueList l4;
-    private final ParseValueList l5;
+    private final ImmutableList<ParseValue> l1;
+    private final ImmutableList<ParseValue> l2;
+    private final ImmutableList<ParseValue> l3;
+    private final ImmutableList<ParseValue> l4;
+    private final ImmutableList<ParseValue> l5;
     private final ParseValue v1;
     private final ParseValue v2;
     private final ParseValue v3;
@@ -46,7 +49,7 @@ public class ParseValueListTest {
 
     public ParseValueListTest() {
         v1 = val('a');
-        l1 = ParseValueList.create(v1);
+        l1 = ImmutableList.create(v1);
         v2 = val('b');
         l2 = l1.add(v2);
         v3 = val('a');
@@ -59,7 +62,7 @@ public class ParseValueListTest {
 
     @Test
     public void addList() {
-        final ParseValueList l6 = l5.add(l5);
+        final ImmutableList<ParseValue> l6 = l5.add(l5);
         assertEquals(v5, l6.head);
         assertEquals(v4, l6.tail.head);
         assertEquals(v3, l6.tail.tail.head);
@@ -89,17 +92,17 @@ public class ParseValueListTest {
 
     @Test
     public void getSingleMatch() {
-        assertEquals(l5.get("b"), v2);
+        assertEquals(get(l5, "b"), v2);
     }
 
     @Test
     public void getSingleNoMatch() {
-        assertNull(l5.get("f"));
+        assertNull(get(l5, "f"));
     }
 
     @Test
     public void getMultiMultiMatch() {
-        final ParseValueList res = l5.getAll("a");
+        final ImmutableList<ParseValue> res = getAll(l5, "a");
         assertEquals(res.head, v3);
         assertEquals(res.tail.head, v1);
         assertTrue(res.tail.tail.isEmpty());
@@ -107,20 +110,20 @@ public class ParseValueListTest {
 
     @Test
     public void getMultiSingleMatch() {
-        final ParseValueList res = l5.getAll("d");
+        final ImmutableList<ParseValue> res = getAll(l5, "d");
         assertEquals(res.head, v4);
         assertTrue(res.tail.isEmpty());
     }
 
     @Test
     public void getMultiNoMatch() {
-        final ParseValueList res = l5.getAll("f");
+        final ImmutableList<ParseValue> res = getAll(l5, "f");
         assertTrue(res.isEmpty());
     }
 
     @Test
     public void getScopedMatch() {
-        final ParseValueList res = l5.getValuesSincePrefix(v3);
+        final ImmutableList<ParseValue> res = getValuesSincePrefix(l5, v3);
         assertEquals(res.head, v5);
         assertEquals(res.tail.head, v4);
         assertTrue(res.tail.tail.isEmpty());
@@ -128,13 +131,13 @@ public class ParseValueListTest {
 
     @Test
     public void getScopedNoMatch() {
-        final ParseValueList res = l5.getValuesSincePrefix(v5);
+        final ImmutableList<ParseValue> res = getValuesSincePrefix(l5, v5);
         assertTrue(res.isEmpty());
     }
 
     @Test
     public void reverse() {
-        final ParseValueList rev = l5.reverse();
+        final ImmutableList<ParseValue> rev = l5.reverse();
         assertEquals(rev.head, v1);
         assertEquals(rev.tail.head, v2);
         assertEquals(rev.tail.tail.head, v3);
@@ -145,7 +148,7 @@ public class ParseValueListTest {
 
     @Test
     public void reverseEmpty() {
-        assertTrue(ParseValueList.EMPTY.reverse().isEmpty());
+        assertTrue(new ImmutableList<ParseValue>().reverse().isEmpty());
     }
 
     @Test
@@ -156,7 +159,7 @@ public class ParseValueListTest {
 
     @Test
     public void sizeEmpty() {
-        assertEquals(0, ParseValueList.EMPTY.size);
+        assertEquals(0, new ImmutableList<ParseValue>().size);
     }
 
     private ParseValue val(final char c) {

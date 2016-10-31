@@ -16,6 +16,9 @@
 
 package io.parsingdata.metal;
 
+import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.token.Token;
 
 public final class Util {
@@ -58,4 +61,17 @@ public final class Util {
         }
         return new String(hexChars);
     }
+
+    // TODO: MUST MOVE BEFORE MERGING
+    public static boolean containsEmpty(ImmutableList<OptionalValue> list) {
+        if (list.isEmpty()) { return false; }
+        return !list.head.isPresent() || containsEmpty(list.tail);
+    }
+
+    public static ImmutableList<OptionalValue> create(final ImmutableList<ParseValue> list) {
+        checkNotNull(list, "list");
+        if (list.isEmpty()) { return new ImmutableList<>(); }
+        return create(list.tail).add(OptionalValue.of(list.head));
+    }
+
 }

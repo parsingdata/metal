@@ -16,19 +16,20 @@
 
 package io.parsingdata.metal.data;
 
-import io.parsingdata.metal.expression.value.OptionalValue;
-import io.parsingdata.metal.expression.value.Value;
-import org.junit.Test;
-
-import static io.parsingdata.metal.data.OptionalValueList.EMPTY;
+import static io.parsingdata.metal.Util.containsEmpty;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static junit.framework.TestCase.assertTrue;
+
+import org.junit.Test;
+
+import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.Value;
 
 public class OptionalValueListTest {
 
     @Test
     public void containsEmptyInTail() {
-        assertTrue(EMPTY.add(OptionalValue.empty()).add(OptionalValue.of(new Value(new byte[] { 1, 2 }, enc()))).containsEmpty());
+        assertTrue(containsEmpty(ImmutableList.create(OptionalValue.empty()).add(OptionalValue.of(new Value(new byte[] { 1, 2 }, enc())))));
     }
 
 }
