@@ -40,7 +40,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 public final class GUID {
     private static final Encoding BIG_ENDIAN = new Encoding();
 
-    GUID() {}
+    private GUID() {
+    }
 
     /**
      * Use a String representation of a GUID as predicate.
