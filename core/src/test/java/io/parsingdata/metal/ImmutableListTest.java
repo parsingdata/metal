@@ -27,14 +27,11 @@ import static io.parsingdata.metal.data.selection.ByValue.getValuesSincePrefix;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
 
-@RunWith(JUnit4.class)
-public class ParseValueListTest {
+public class ImmutableListTest {
 
     private final ImmutableList<ParseValue> l1;
     private final ImmutableList<ParseValue> l2;
@@ -47,7 +44,7 @@ public class ParseValueListTest {
     private final ParseValue v4;
     private final ParseValue v5;
 
-    public ParseValueListTest() {
+    public ImmutableListTest() {
         v1 = val('a');
         l1 = ImmutableList.create(v1);
         v2 = val('b');

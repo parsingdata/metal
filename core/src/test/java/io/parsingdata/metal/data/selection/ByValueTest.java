@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.data;
+package io.parsingdata.metal.data.selection;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,7 +22,10 @@ import static io.parsingdata.metal.data.selection.ByValue.getValuesSincePrefix;
 
 import org.junit.Test;
 
-public class ParseValueListTest {
+import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseValue;
+
+public class ByValueTest {
 
     @Test
     public void getValuesSincePrefixOnEmpty() {
