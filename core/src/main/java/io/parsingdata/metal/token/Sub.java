@@ -17,7 +17,6 @@
 package io.parsingdata.metal.token;
 
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.Util.containsEmpty;
 import static io.parsingdata.metal.data.ParseResult.failure;
 import static io.parsingdata.metal.data.ParseResult.success;
 import static io.parsingdata.metal.data.selection.ByOffset.hasRootAtOffset;
@@ -46,7 +45,7 @@ public class Sub extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         final ImmutableList<OptionalValue> addresses = address.eval(environment, encoding);
-        if (addresses.isEmpty() || containsEmpty(addresses)) {
+        if (addresses.isEmpty()) {
             return failure(environment);
         }
         final ParseResult result = iterate(scope, addresses, environment.addBranch(this), encoding);
@@ -57,6 +56,9 @@ public class Sub extends Token {
     }
 
     private ParseResult iterate(final String scope, final ImmutableList<OptionalValue> addresses, final Environment environment, final Encoding encoding) throws IOException {
+        if (!addresses.head.isPresent()) {
+            return failure(environment);
+        }
         final long offset = addresses.head.get().asNumeric().longValue();
         final ParseResult result = parse(scope, offset, environment, encoding);
         if (result.succeeded) {
