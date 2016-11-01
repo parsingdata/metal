@@ -63,11 +63,6 @@ public final class Util {
     }
 
     // TODO: MUST MOVE BEFORE MERGING
-    public static boolean containsEmpty(ImmutableList<OptionalValue> list) {
-        if (list.isEmpty()) { return false; }
-        return !list.head.isPresent() || containsEmpty(list.tail);
-    }
-
     public static ImmutableList<OptionalValue> create(final ImmutableList<ParseValue> list) {
         checkNotNull(list, "list");
         if (list.isEmpty()) { return new ImmutableList<>(); }
