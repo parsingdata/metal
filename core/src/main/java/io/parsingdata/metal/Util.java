@@ -16,9 +16,6 @@
 
 package io.parsingdata.metal;
 
-import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.token.Token;
 
 public final class Util {
@@ -60,13 +57,6 @@ public final class Util {
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
         return new String(hexChars);
-    }
-
-    // TODO: MUST MOVE BEFORE MERGING
-    public static ImmutableList<OptionalValue> create(final ImmutableList<ParseValue> list) {
-        checkNotNull(list, "list");
-        if (list.isEmpty()) { return new ImmutableList<>(); }
-        return create(list.tail).add(OptionalValue.of(list.head));
     }
 
 }
