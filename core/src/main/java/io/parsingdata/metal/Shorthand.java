@@ -119,7 +119,7 @@ public final class Shorthand {
     public static Token nod(final String name, final ValueExpression size) { return new Nod(name, size, null); }
     public static Token nod(final ValueExpression size) { return nod(NO_NAME, size); }
     public static Token nod(final String name, final long size) { return nod(name, con(size)); }
-    public static Token nod(final long size) { return nod(NO_NAME, con(size)); }
+    public static Token nod(final long size) { return nod(NO_NAME, size); }
     public static Token token(final String tokenName) { return new TokenRef(NO_NAME, tokenName, null); }
 
     public static BinaryValueExpression add(final ValueExpression left, final ValueExpression right) { return new Add(left, right); }

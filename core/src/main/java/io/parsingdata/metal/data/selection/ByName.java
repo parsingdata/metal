@@ -59,7 +59,7 @@ public final class ByName {
     }
 
     private static ImmutableList<ParseValue> getAllValuesRecursive(final ParseGraph graph, final String name) {
-        if (graph.isEmpty()) { return new ImmutableList<ParseValue>(); }
+        if (graph.isEmpty()) { return new ImmutableList<>(); }
         final ImmutableList<ParseValue> tailResults = getAllValuesRecursive(graph.tail, name);
         final ParseItem head = graph.head;
         if (head.isValue() && head.asValue().matches(name)) {

@@ -49,7 +49,7 @@ public final class ByToken {
     }
 
     private static ImmutableList<ParseItem> getAllRecursive(final ParseGraph graph, final Token definition) {
-        if (graph.isEmpty()) { return new ImmutableList<ParseItem>(); }
+        if (graph.isEmpty()) { return new ImmutableList<>(); }
         final ImmutableList<ParseItem> tailResults = getAllRecursive(graph.tail, definition);
         final ImmutableList<ParseItem> results = graph.definition == definition ? tailResults.add(graph) : tailResults;
         final ParseItem head = graph.head;
@@ -72,7 +72,7 @@ public final class ByToken {
     }
 
     private static ImmutableList<ParseValue> getAllValuesRecursive(final ParseGraph graph, final Token definition) {
-        if (graph.isEmpty()) { return new ImmutableList<ParseValue>(); }
+        if (graph.isEmpty()) { return new ImmutableList<>(); }
         final ImmutableList<ParseValue> tailResults = getAllValuesRecursive(graph.tail, definition);
         final ParseItem head = graph.head;
         if (head.isValue() && head.asValue().definition == definition) {

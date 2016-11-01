@@ -30,7 +30,6 @@ import static io.parsingdata.metal.Shorthand.eqStr;
 import static io.parsingdata.metal.Shorthand.expTrue;
 import static io.parsingdata.metal.Shorthand.gtNum;
 import static io.parsingdata.metal.Shorthand.last;
-import static io.parsingdata.metal.Shorthand.nod;
 import static io.parsingdata.metal.Shorthand.opt;
 import static io.parsingdata.metal.Shorthand.pre;
 import static io.parsingdata.metal.Shorthand.ref;
@@ -56,7 +55,6 @@ import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Cho;
-import io.parsingdata.metal.token.Nod;
 import io.parsingdata.metal.token.Seq;
 import io.parsingdata.metal.token.Token;
 
@@ -212,12 +210,4 @@ public class ShorthandsTest {
         assertEquals(DEFB, seq.tokens()[1]);
     }
 
-    @Test
-    public void nodLongSizes() {
-        final Nod nod1 = (Nod) nod("name", 5);
-        con(5).equals(nod1.size);
-
-        final Nod nod2 = (Nod) nod(7);
-        con(7).equals(nod2.size);
-    }
 }

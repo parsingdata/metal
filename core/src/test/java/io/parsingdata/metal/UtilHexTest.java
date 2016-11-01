@@ -31,7 +31,7 @@ import org.junit.runners.Parameterized.Parameter;
 @RunWith(Parameterized.class)
 public class UtilHexTest {
 
-    @Parameter(0)
+    @Parameter
     public byte[] input;
 
     @Parameter(1)

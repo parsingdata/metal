@@ -25,7 +25,7 @@ public final class ByValue {
 
     public static ImmutableList<ParseValue> getValuesSincePrefix(final ImmutableList<ParseValue> list, final ParseValue prefix) {
         if (list.isEmpty()) { return list; }
-        if (list.head == prefix) { return new ImmutableList<ParseValue>(); }
+        if (list.head == prefix) { return new ImmutableList<>(); }
         final ImmutableList<ParseValue> tailList = getValuesSincePrefix(list.tail, prefix);
         return tailList.add(list.head);
     }
