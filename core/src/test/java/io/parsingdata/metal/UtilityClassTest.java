@@ -32,7 +32,6 @@ import io.parsingdata.metal.data.selection.ByName;
 import io.parsingdata.metal.data.selection.ByOffset;
 import io.parsingdata.metal.data.selection.ByToken;
 import io.parsingdata.metal.data.selection.ByType;
-import io.parsingdata.metal.data.selection.ByValue;
 import io.parsingdata.metal.data.transformation.Reversal;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
@@ -53,7 +52,6 @@ public class UtilityClassTest {
         checkUtilityClass(ByOffset.class);
         checkUtilityClass(ByToken.class);
         checkUtilityClass(ByType.class);
-        checkUtilityClass(ByValue.class);
         checkUtilityClass(ConstantFactory.class);
     }
 

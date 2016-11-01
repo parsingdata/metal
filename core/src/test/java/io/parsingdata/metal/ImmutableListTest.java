@@ -23,7 +23,6 @@ import static org.junit.Assert.assertTrue;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.data.selection.ByName.get;
 import static io.parsingdata.metal.data.selection.ByName.getAll;
-import static io.parsingdata.metal.data.selection.ByValue.getValuesSincePrefix;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import org.junit.Test;
@@ -115,20 +114,6 @@ public class ImmutableListTest {
     @Test
     public void getMultiNoMatch() {
         final ImmutableList<ParseValue> res = getAll(l5, "f");
-        assertTrue(res.isEmpty());
-    }
-
-    @Test
-    public void getScopedMatch() {
-        final ImmutableList<ParseValue> res = getValuesSincePrefix(l5, v3);
-        assertEquals(res.head, v5);
-        assertEquals(res.tail.head, v4);
-        assertTrue(res.tail.tail.isEmpty());
-    }
-
-    @Test
-    public void getScopedNoMatch() {
-        final ImmutableList<ParseValue> res = getValuesSincePrefix(l5, v5);
         assertTrue(res.isEmpty());
     }
 
