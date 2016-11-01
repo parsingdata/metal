@@ -16,22 +16,29 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertEquals;
+
+import static io.parsingdata.metal.Util.tokensToString;
+import static io.parsingdata.metal.util.ClassDefinition.checkUtilityClass;
+
+import java.io.IOException;
+
+import org.junit.Test;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.data.selection.*;
+import io.parsingdata.metal.data.selection.ByItem;
+import io.parsingdata.metal.data.selection.ByName;
+import io.parsingdata.metal.data.selection.ByOffset;
+import io.parsingdata.metal.data.selection.ByToken;
+import io.parsingdata.metal.data.selection.ByType;
+import io.parsingdata.metal.data.selection.ByValue;
 import io.parsingdata.metal.data.transformation.Reversal;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.value.ConstantFactory;
 import io.parsingdata.metal.token.Token;
-import org.junit.Test;
-
-import static io.parsingdata.metal.Util.tokensToString;
-import static io.parsingdata.metal.util.ClassDefinition.checkUtilityClass;
-import static org.junit.Assert.assertEquals;
-
-import java.io.IOException;
 
 public class UtilityClassTest {
 
@@ -46,6 +53,7 @@ public class UtilityClassTest {
         checkUtilityClass(ByOffset.class);
         checkUtilityClass(ByToken.class);
         checkUtilityClass(ByType.class);
+        checkUtilityClass(ByValue.class);
         checkUtilityClass(ConstantFactory.class);
     }
 

@@ -19,7 +19,9 @@ package io.parsingdata.metal.data.selection;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
 
-public class ByValue {
+public final class ByValue {
+
+    private ByValue() {}
 
     public static ImmutableList<ParseValue> getValuesSincePrefix(final ImmutableList<ParseValue> list, final ParseValue prefix) {
         if (list.isEmpty()) { return list; }
