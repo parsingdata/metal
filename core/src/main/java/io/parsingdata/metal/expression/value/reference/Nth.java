@@ -20,12 +20,11 @@ import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.OptionalValueList.EMPTY;
 
 import java.math.BigInteger;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -57,12 +56,12 @@ public class Nth implements ValueExpression {
     }
 
     @Override
-    public OptionalValueList eval(final Environment environment, final Encoding encoding) {
+    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
         return eval(values.eval(environment, encoding), indices.eval(environment, encoding));
     }
 
-    private OptionalValueList eval(final OptionalValueList values, final OptionalValueList indices) {
-        if (indices.isEmpty()) { return EMPTY; }
+    private ImmutableList<OptionalValue> eval(final ImmutableList<OptionalValue> values, final ImmutableList<OptionalValue> indices) {
+        if (indices.isEmpty()) { return new ImmutableList<>(); }
         if (indices.head.isPresent()) {
             final BigInteger index = indices.head.get().asNumeric();
             final BigInteger valueCount = BigInteger.valueOf(values.size);
@@ -73,7 +72,7 @@ public class Nth implements ValueExpression {
         return eval(values, indices.tail).add(OptionalValue.empty());
     }
 
-    private OptionalValue nth(final OptionalValueList values, final BigInteger index) {
+    private OptionalValue nth(final ImmutableList<OptionalValue> values, final BigInteger index) {
         if (index.equals(ZERO)) {
             return values.head;
         }

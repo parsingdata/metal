@@ -43,7 +43,8 @@ import org.junit.Test;
 
 import io.parsingdata.metal.SubStructTest;
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseItemList;
+import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
@@ -85,7 +86,7 @@ public class CallbackTest {
 
             @Override
             protected void handleSuccess(Token token, Environment environment) {
-                final ParseItemList roots = getAllRoots(environment.order, token);
+                final ImmutableList<ParseItem> roots = getAllRoots(environment.order, token);
                 assertEquals(offsets[count++], roots.head.asGraph().tail.head.asValue().getOffset());
             }
 
@@ -115,11 +116,11 @@ public class CallbackTest {
                 .add(repeatingSeq, new BaseCallback() {
                     @Override
                     protected void handleSuccess(Token token, Environment environment) {
-                        final ParseItemList repRoots = getAllRoots(environment.order, token);
+                        final ImmutableList<ParseItem> repRoots = getAllRoots(environment.order, token);
                         assertEquals(1, repRoots.size);
 
                         // verify that two Seq tokens were parsed:
-                        final ParseItemList seqRoots = getAllRoots(environment.order, SIMPLE_SEQ);
+                        final ImmutableList<ParseItem> seqRoots = getAllRoots(environment.order, SIMPLE_SEQ);
                         assertEquals(2, seqRoots.size);
 
                         // verify order of the two Seq graphs:

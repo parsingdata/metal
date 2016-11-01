@@ -18,55 +18,47 @@ package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import io.parsingdata.metal.expression.value.OptionalValue;
+public class ImmutableList<T> {
 
-public class OptionalValueList {
-
-    public final OptionalValue head;
-    public final OptionalValueList tail;
+    public final T head;
+    public final ImmutableList<T> tail;
     public final long size;
 
-    public static final OptionalValueList EMPTY = new OptionalValueList();
-
-    private OptionalValueList() {
+    public ImmutableList() {
         head = null;
         tail = null;
         size = 0;
     }
 
-    private OptionalValueList(final OptionalValue head, final OptionalValueList tail) {
+    private ImmutableList(final T head, final ImmutableList<T> tail) {
         this.head = checkNotNull(head, "head");
         this.tail = checkNotNull(tail, "tail");
         size = tail.size + 1;
     }
 
-    public static OptionalValueList create(final OptionalValue head) {
-        return EMPTY.add(head);
+    public static <T> ImmutableList<T> create(final T head) {
+        return new ImmutableList<T>().add(checkNotNull(head, "head"));
     }
 
-    public static OptionalValueList create(final ParseValueList list) {
+    public ImmutableList<T> add(final T head) {
+        return new ImmutableList<>(checkNotNull(head, "head"), this);
+    }
+
+    public ImmutableList<T> add(final ImmutableList<T> list) {
         checkNotNull(list, "list");
-        if (list.isEmpty()) { return EMPTY; }
-        return create(list.tail).add(OptionalValue.of(list.head));
-    }
-
-    public OptionalValueList add(final OptionalValue head) {
-        return new OptionalValueList(head, this);
+        if (list.isEmpty()) { return this; }
+        if (isEmpty()) { return list; }
+        return add(list.tail).add(list.head);
     }
 
     public boolean isEmpty() { return size == 0; }
 
-    public boolean containsEmpty() {
-        if (isEmpty()) { return false; }
-        return !head.isPresent() || tail.containsEmpty();
-    }
-
-    public OptionalValueList reverse() {
+    public ImmutableList<T> reverse() {
         if (isEmpty()) { return this; }
         return reverse(tail, create(head));
     }
 
-    private OptionalValueList reverse(final OptionalValueList oldList, final OptionalValueList newList) {
+    private ImmutableList<T> reverse(final ImmutableList<T> oldList, final ImmutableList<T> newList) {
         if (oldList.isEmpty()) { return newList; }
         return reverse(oldList.tail, newList.add(oldList.head));
     }
