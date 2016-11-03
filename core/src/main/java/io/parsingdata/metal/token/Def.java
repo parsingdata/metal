@@ -51,6 +51,7 @@ public class Def extends Token {
         }
         // TODO: Handle value expression results as BigInteger (#16)
         final int dataSize = sizes.head.get().asNumeric().intValue();
+        // TODO: Consider whether zero is an acceptable size (#13)
         if (dataSize < 0) {
             return failure(environment);
         }
