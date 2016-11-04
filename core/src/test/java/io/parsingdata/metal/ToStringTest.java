@@ -16,10 +16,7 @@
 
 package io.parsingdata.metal;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.add;
@@ -110,7 +107,7 @@ public class ToStringTest {
     private Token t() { return any("a"); }
 
     private ValueExpression v() {
-        return neg(add(div(mod(mul(sub(last(ref(n())), first(ref(n()))), con(1)), cat(ref(n()), ref(t()))), add(self, add(offset(ref(n())), add(currentOffset, count(ref(n())))))), elvis(ref(n()), ref(n()))));
+        return neg(add(div(mod(mul(sub(last(ref(n())), first(nth(ref(n()), con(1)))), con(1)), cat(ref(n()), ref(t()))), add(self, add(offset(ref(n())), add(currentOffset, count(ref(n())))))), elvis(ref(n()), ref(n()))));
     }
 
     @Test
@@ -129,6 +126,14 @@ public class ToStringTest {
         assertTrue(s1s.contains("_name_a_"));
         assertTrue(s1s.contains("_name_b_"));
         assertTrue(s1s.contains("_name_c_"));
+    }
+
+    @Test
+    public void specialExpressions() {
+        assertTrue(v().toString().contains("Self"));
+        assertTrue(v().toString().contains("CurrentOffset"));
+        assertEquals("Self", self.toString());
+        assertEquals("CurrentOffset", currentOffset.toString());
     }
 
     @Test
@@ -156,13 +161,6 @@ public class ToStringTest {
         assertEquals(">" + pv2String + ">" + pv1String, ImmutableList.create(pv1).add(pv2).toString());
         assertEquals(">" + pv2String + ">" + pv1String, ImmutableList.create(pv1).add(pv2).toString());
     }
-
-    @Test
-    public void expression() {
-        final ValueExpression nth = nth(ref("value"), ref("index"));
-        assertThat(nth.toString(), is(equalTo("Nth(NameRef(value),NameRef(index))")));
-    }
-
 
     @Test
     public void callback() {
