@@ -40,8 +40,9 @@ import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.token.Token;
 
 public class ErrorsTest {
@@ -92,7 +93,7 @@ public class ErrorsTest {
 
     @Test
     public void definedValueHasNoOffset() {
-        final OptionalValueList offsetCon = offset(con(1)).eval(stream(), enc());
+        final ImmutableList<OptionalValue> offsetCon = offset(con(1)).eval(stream(), enc());
         assertFalse(offsetCon.isEmpty());
         assertEquals(1, offsetCon.size);
         assertFalse(offsetCon.head.isPresent());

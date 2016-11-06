@@ -43,7 +43,8 @@ import org.junit.Test;
 
 import io.parsingdata.metal.SubStructTest;
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseItemList;
+import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
@@ -85,7 +86,7 @@ public class CallbackTest {
 
             @Override
             protected void handleSuccess(Token token, Environment environment) {
-                final ParseItemList roots = getAllRoots(environment.order, token);
+                final ImmutableList<ParseItem> roots = getAllRoots(environment.order, token);
                 assertEquals(offsets[count++], roots.head.asGraph().tail.head.asValue().getOffset());
             }
 
@@ -115,11 +116,11 @@ public class CallbackTest {
                 .add(repeatingSeq, new BaseCallback() {
                     @Override
                     protected void handleSuccess(Token token, Environment environment) {
-                        final ParseItemList repRoots = getAllRoots(environment.order, token);
+                        final ImmutableList<ParseItem> repRoots = getAllRoots(environment.order, token);
                         assertEquals(1, repRoots.size);
 
                         // verify that two Seq tokens were parsed:
-                        final ParseItemList seqRoots = getAllRoots(environment.order, SIMPLE_SEQ);
+                        final ImmutableList<ParseItem> seqRoots = getAllRoots(environment.order, SIMPLE_SEQ);
                         assertEquals(2, seqRoots.size);
 
                         // verify order of the two Seq graphs:
@@ -157,17 +158,17 @@ public class CallbackTest {
         final Deque<Long> expectedSuccessOffsets = new ArrayDeque<>(Arrays.asList(1L, 2L, 1L, 2L, 3L, 3L, 3L));
         final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(Arrays.asList(THREE, SEQ123));
         final Deque<Long> expectedFailureOffsets = new ArrayDeque<>(Arrays.asList(2L, 0L));
+        final OffsetDefinitionCallback genericCallback = new OffsetDefinitionCallback(
+            expectedSuccessOffsets,
+            expectedSuccessDefinitions,
+            expectedFailureOffsets,
+            expectedFailureDefinitions);
 
-        final Callbacks callbacks = Callbacks.create().add(new OffsetDefinitionCallback(
-                expectedSuccessOffsets,
-                expectedSuccessDefinitions,
-                expectedFailureOffsets,
-                expectedFailureDefinitions
-        ));
-
+        final Callbacks callbacks = Callbacks.create().add(genericCallback);
         final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 4 }), callbacks);
         final ParseResult parse = CHOICE.parse(environment, enc());
         assertTrue(parse.succeeded);
+        genericCallback.assertAllHandled();
     }
 
     @Test
@@ -180,20 +181,22 @@ public class CallbackTest {
         final Deque<Long> expectedSuccessOffsets = new ArrayDeque<>(Arrays.asList(1L, 1L));
         final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(Collections.singletonList(ONE));
         final Deque<Long> expectedFailureOffsets = new ArrayDeque<>(Collections.singletonList(0L));
+        final OffsetDefinitionCallback genericCallback = new OffsetDefinitionCallback(
+            expectedSuccessOffsets,
+            expectedSuccessDefinitions,
+            expectedFailureOffsets,
+            expectedFailureDefinitions);
 
-        final Callbacks callbacks = Callbacks.create().add(new OffsetDefinitionCallback(
-                expectedSuccessOffsets,
-                expectedSuccessDefinitions,
-                expectedFailureOffsets,
-                expectedFailureDefinitions))
+        final Callbacks callbacks = Callbacks.create()
+            .add(genericCallback)
             .add(ONE, countingCallback)
             .add(TWO, countingCallback)
             .add(cho, countingCallback);
-
         final long expectedSuccessCount = expectedSuccessDefinitions.size();
         final long expectedFailureCount = expectedFailureDefinitions.size();
         final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 2 }), callbacks);
         assertTrue(cho.parse(environment, enc()).succeeded);
+        genericCallback.assertAllHandled();
         countingCallback.assertCounts(expectedSuccessCount, expectedFailureCount);
     }
 
@@ -220,6 +223,13 @@ public class CallbackTest {
         protected void handleFailure(Token token, Environment environment) {
             assertThat(environment.offset, is(equalTo(expectedFailureOffsets.pop())));
             assertThat(token, is(equalTo(expectedFailureDefinitions.pop())));
+        }
+
+        void assertAllHandled() {
+            assertTrue(expectedSuccessOffsets.isEmpty());
+            assertTrue(expectedSuccessDefinitions.isEmpty());
+            assertTrue(expectedFailureOffsets.isEmpty());
+            assertTrue(expectedFailureDefinitions.isEmpty());
         }
     }
 

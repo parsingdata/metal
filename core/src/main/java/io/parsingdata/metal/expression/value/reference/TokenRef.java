@@ -17,11 +17,13 @@
 package io.parsingdata.metal.expression.value.reference;
 
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.expression.value.OptionalValue.wrap;
 import static io.parsingdata.metal.data.selection.ByToken.getAllValues;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 
@@ -34,8 +36,8 @@ public class TokenRef implements ValueExpression {
     }
 
     @Override
-    public OptionalValueList eval(final Environment environment, final Encoding encoding) {
-        return OptionalValueList.create(getAllValues(environment.order, definition));
+    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
+        return wrap(getAllValues(environment.order, definition));
     }
 
     @Override

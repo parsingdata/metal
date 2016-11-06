@@ -16,21 +16,27 @@
 
 package io.parsingdata.metal;
 
-import io.parsingdata.metal.data.OptionalValueList;
-import org.junit.Test;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.format.Callback.crc32;
 import static io.parsingdata.metal.format.Callback.inflate;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.expression.value.OptionalValue;
 
 public class CallbackTest {
 
     @Test
     public void crc32Good() {
-        final OptionalValueList result = crc32(con(0x01020304)).eval(stream(), enc());
+        final ImmutableList<OptionalValue> result = crc32(con(0x01020304)).eval(stream(), enc());
         assertEquals(1, result.size);
         assertTrue(result.head.isPresent());
         assertArrayEquals(new byte[] { -74, 60, -5, -51 }, result.head.get().getValue());
@@ -38,7 +44,7 @@ public class CallbackTest {
 
     @Test
     public void inflateGood() {
-        final OptionalValueList result = inflate(con(0xcb, 0x4d, 0x2d, 0x49, 0xcc, 0x01, 0x00)).eval(stream(), enc());
+        final ImmutableList<OptionalValue> result = inflate(con(0xcb, 0x4d, 0x2d, 0x49, 0xcc, 0x01, 0x00)).eval(stream(), enc());
         assertEquals(1, result.size);
         assertTrue(result.head.isPresent());
         assertEquals("metal", result.head.get().asString());
@@ -46,7 +52,7 @@ public class CallbackTest {
 
     @Test
     public void inflateDataFormatError() {
-        final OptionalValueList result = inflate(con(0xffffffff)).eval(stream(), enc());
+        final ImmutableList<OptionalValue> result = inflate(con(0xffffffff)).eval(stream(), enc());
         assertEquals(1, result.size);
         assertFalse(result.head.isPresent());
     }

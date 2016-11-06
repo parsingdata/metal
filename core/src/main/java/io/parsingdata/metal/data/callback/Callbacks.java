@@ -18,17 +18,18 @@ package io.parsingdata.metal.data.callback;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 
 public class Callbacks {
 
-    public static final Callbacks NONE = new Callbacks(null, TokenCallbackList.EMPTY);
+    public static final Callbacks NONE = new Callbacks(null, new ImmutableList<TokenCallback>());
 
     public final Callback genericCallback;
-    public final TokenCallbackList tokenCallbacks;
+    public final ImmutableList<TokenCallback> tokenCallbacks;
 
-    private Callbacks(final Callback genericCallback, final TokenCallbackList tokenCallbacks) {
+    private Callbacks(final Callback genericCallback, final ImmutableList<TokenCallback> tokenCallbacks) {
         this.genericCallback = genericCallback;
         this.tokenCallbacks = checkNotNull(tokenCallbacks, "tokenCallbacks");
     }
@@ -50,7 +51,7 @@ public class Callbacks {
         handleCallbacks(tokenCallbacks, token, result);
     }
 
-    private void handleCallbacks(final TokenCallbackList callbacks, final Token token, final ParseResult result) {
+    private void handleCallbacks(final ImmutableList<TokenCallback> callbacks, final Token token, final ParseResult result) {
         if (callbacks.isEmpty()) { return; }
         if (callbacks.head.token == token) {
             callbacks.head.callback.handle(token, result);

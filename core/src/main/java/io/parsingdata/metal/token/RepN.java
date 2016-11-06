@@ -23,9 +23,10 @@ import static io.parsingdata.metal.data.ParseResult.success;
 import java.io.IOException;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class RepN extends Token {
@@ -41,7 +42,7 @@ public class RepN extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final OptionalValueList counts = n.eval(environment, encoding);
+        final ImmutableList<OptionalValue> counts = n.eval(environment, encoding);
         if (counts.size != 1 || !counts.head.isPresent()) {
             return failure(environment);
         }

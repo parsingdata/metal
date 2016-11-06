@@ -25,7 +25,7 @@ import io.parsingdata.metal.token.Token;
 public class ParseValue extends Value implements ParseItem {
 
     public final String name;
-    public Token definition;
+    public final Token definition;
     public final long offset;
 
     public ParseValue(final String name, final Token definition, final long offset, final byte[] data, final Encoding encoding) {

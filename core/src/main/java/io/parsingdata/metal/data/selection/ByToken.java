@@ -18,10 +18,10 @@ package io.parsingdata.metal.data.selection;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
-import io.parsingdata.metal.data.ParseItemList;
-import io.parsingdata.metal.data.ParseValueList;
+import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.token.Token;
 
 public final class ByToken {
@@ -42,16 +42,16 @@ public final class ByToken {
         return get(graph.tail, definition);
     }
 
-    public static ParseItemList getAll(final ParseGraph graph, final Token definition) {
+    public static ImmutableList<ParseItem> getAll(final ParseGraph graph, final Token definition) {
         checkNotNull(graph, "graph");
         checkNotNull(definition, "definition");
         return getAllRecursive(graph, definition);
     }
 
-    private static ParseItemList getAllRecursive(final ParseGraph graph, final Token definition) {
-        if (graph.isEmpty()) { return ParseItemList.EMPTY; }
-        final ParseItemList tailResults = getAllRecursive(graph.tail, definition);
-        final ParseItemList results = graph.definition == definition ? tailResults.add(graph) : tailResults;
+    private static ImmutableList<ParseItem> getAllRecursive(final ParseGraph graph, final Token definition) {
+        if (graph.isEmpty()) { return new ImmutableList<>(); }
+        final ImmutableList<ParseItem> tailResults = getAllRecursive(graph.tail, definition);
+        final ImmutableList<ParseItem> results = graph.definition == definition ? tailResults.add(graph) : tailResults;
         final ParseItem head = graph.head;
         if (head.isValue() && head.asValue().definition == definition) {
             return results.add(head);
@@ -65,15 +65,15 @@ public final class ByToken {
         return results;
     }
 
-    public static ParseValueList getAllValues(final ParseGraph graph, final Token definition) {
+    public static ImmutableList<ParseValue> getAllValues(final ParseGraph graph, final Token definition) {
         checkNotNull(graph, "graph");
         checkNotNull(definition, "definition");
         return getAllValuesRecursive(graph, definition);
     }
 
-    private static ParseValueList getAllValuesRecursive(final ParseGraph graph, final Token definition) {
-        if (graph.isEmpty()) { return ParseValueList.EMPTY; }
-        final ParseValueList tailResults = getAllValuesRecursive(graph.tail, definition);
+    private static ImmutableList<ParseValue> getAllValuesRecursive(final ParseGraph graph, final Token definition) {
+        if (graph.isEmpty()) { return new ImmutableList<>(); }
+        final ImmutableList<ParseValue> tailResults = getAllValuesRecursive(graph.tail, definition);
         final ParseItem head = graph.head;
         if (head.isValue() && head.asValue().definition == definition) {
             return tailResults.add(head.asValue());
@@ -84,16 +84,16 @@ public final class ByToken {
         return tailResults;
     }
 
-    public static ParseItemList getAllRoots(final ParseGraph graph, final Token definition) {
+    public static ImmutableList<ParseItem> getAllRoots(final ParseGraph graph, final Token definition) {
         checkNotNull(graph, "graph");
         checkNotNull(definition, "definition");
         return getAllRootsRecursive(graph, null, definition);
     }
 
-    private static ParseItemList getAllRootsRecursive(final ParseItem item, final ParseGraph parent, final Token definition) {
-        final ParseItemList result = item.getDefinition() == definition && (parent == null || parent.getDefinition() != definition)
-                ? ParseItemList.create(item)
-                : ParseItemList.EMPTY;
+    private static ImmutableList<ParseItem> getAllRootsRecursive(final ParseItem item, final ParseGraph parent, final Token definition) {
+        final ImmutableList<ParseItem> result = item.getDefinition() == definition && (parent == null || parent.getDefinition() != definition)
+                ? ImmutableList.create(item)
+                : new ImmutableList<ParseItem>();
         if (item.isGraph() && !item.asGraph().isEmpty()) {
             return getAllRootsRecursive(item.asGraph().tail, item.asGraph(), definition)
                     .add(getAllRootsRecursive(item.asGraph().head, item.asGraph(), definition))
