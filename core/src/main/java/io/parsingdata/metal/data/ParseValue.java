@@ -39,8 +39,6 @@ public class ParseValue extends Value implements ParseItem {
         return this.name.equals(name) || this.name.endsWith(Token.SEPARATOR + name);
     }
 
-    public long getOffset() { return offset; }
-
     @Override public boolean isValue() { return true; }
     @Override public boolean isGraph() { return false; }
     @Override public boolean isReference() { return false; }
