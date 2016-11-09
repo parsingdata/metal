@@ -29,7 +29,7 @@ public class ValueByteStream implements ByteStream {
     }
 
     @Override
-    public int read(long offset, byte[] data) throws IOException {
+    public int read(final long offset, final byte[] data) throws IOException {
         final byte[] inputData = value.getValue();
         if (offset >= inputData.length) { return 0; }
         final int toCopy = (int)offset + data.length > inputData.length ? inputData.length - (int)offset : data.length;

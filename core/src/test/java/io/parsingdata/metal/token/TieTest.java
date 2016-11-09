@@ -20,17 +20,23 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.CAT_REDUCER;
+import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.elvis;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.fold;
 import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.mod;
+import static io.parsingdata.metal.Shorthand.nth;
 import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.rev;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.tie;
+import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -39,30 +45,40 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class TieTest {
 
-    private static final Token increasing =
-        seq(def("one", 1, eq(con(1))),
-            def("two", 1, eq(con(2))),
-            def("three", 1, eq(con(3))),
-            def("four", 1, eq(con(4))),
-            def("five", 1, eq(con(5))),
-            def("six", 1, eq(con(6))));
+    // Starts at 1, then increases with 1, modulo 100.
+    private static final Token INC_PREV_MOD_100 =
+        rep(def("value", 1, eq(mod(add(elvis(nth(rev(ref("value")), con(1)), con(0)), con(1)), con(100)))));
 
-    private static final Token container =
+    private static final Token CONTAINER =
         seq(def("blockSize", 1),
             def("tableSize", 1),
             repn(any("offset"), last(ref("tableSize"))),
             sub(def("data", last(ref("blockSize"))), ref("offset")),
-            tie(increasing, fold(rev(ref("data")), CAT_REDUCER)));
+            tie(INC_PREV_MOD_100, fold(rev(ref("data")), CAT_REDUCER)));
 
     @Test
-    public void containerWithIncreasing() throws IOException {
-        final ParseResult result = container.parse(stream(2, 3, 7, 5, 9, 3, 4, 1, 2, 5, 6), enc());
+    public void smallContainer() throws IOException {
+        final ParseResult result = CONTAINER.parse(stream(2, 3, 7, 5, 9, 3, 4, 1, 2, 5, 6), enc());
         assertTrue(result.succeeded);
         assertEquals(5, result.environment.offset);
+        assertEquals(6, getAllValues(result.environment.order, "value").size);
+    }
+
+    @Test
+    public void increasing() throws IOException {
+        final byte[] data = new byte[1024];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = (byte)((i+1) % 100);
+        }
+        final ParseResult result = INC_PREV_MOD_100.parse(new Environment(new InMemoryByteStream(data)), enc());
+        assertTrue(result.succeeded);
+        assertEquals(1024, result.environment.offset);
     }
 
 }
