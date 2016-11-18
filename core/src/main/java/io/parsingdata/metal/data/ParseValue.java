@@ -26,13 +26,13 @@ public class ParseValue extends Value implements ParseItem {
 
     public final String name;
     public final Token definition;
-    public final long offset;
+    public final Source source;
 
-    public ParseValue(final String name, final Token definition, final long offset, final byte[] data, final Encoding encoding) {
+    public ParseValue(final String name, final Token definition, final Source source, final byte[] data, final Encoding encoding) {
         super(data, encoding);
         this.name = checkNotNull(name, "name");
         this.definition = checkNotNull(definition, "definition");
-        this.offset = offset;
+        this.source = checkNotNull(source, "source");
     }
 
     public boolean matches(final String name) {

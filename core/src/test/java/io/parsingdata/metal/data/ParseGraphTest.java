@@ -75,7 +75,7 @@ public class ParseGraphTest {
     }
 
     private static ParseValue makeValWithDef(final char name, final Token token, final long offset) {
-        return new ParseValue(Character.toString(name), token, offset, new byte[] { (byte) name }, enc());
+        return new ParseValue(Character.toString(name), token, Source.create(offset, 1), new byte[] { (byte) name }, enc());
     }
 
     private static ParseValue makeVal(final char name, final long offset) {
@@ -127,7 +127,7 @@ public class ParseGraphTest {
             .add(a)
             .addBranch(t)
             .add(b)
-            .add(new ParseReference(a.offset, aDef))
+            .add(new ParseReference(a.source.offset, aDef))
             .closeBranch();
     }
 

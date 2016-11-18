@@ -130,7 +130,7 @@ public class TreeTest {
         final ParseItem head = graph.head;
         assertTrue(head.isValue());
         assertEquals(HEAD, head.asValue().asNumeric().intValue());
-        assertEquals(offset, head.asValue().offset);
+        assertEquals(offset, head.asValue().source.offset);
         final ParseItem nr = graph.tail.head;
         assertTrue(nr.isValue());
     }
