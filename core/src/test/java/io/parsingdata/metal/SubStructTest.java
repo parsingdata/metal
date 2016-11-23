@@ -31,7 +31,6 @@ import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.seek;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -98,7 +97,7 @@ public class SubStructTest {
     }
 
     private ParseGraph startCycle(final int offset) throws IOException {
-        final Environment environment = seek(stream(0, 4, 1, 21, 0, 0, 1), offset);
+        final Environment environment = stream(0, 4, 1, 21, 0, 0, 1).seek(offset);
         final ParseResult result = LINKED_LIST.parse(environment, enc());
         assertTrue(result.succeeded);
         assertEquals(1, getReferences(result.environment.order).size);

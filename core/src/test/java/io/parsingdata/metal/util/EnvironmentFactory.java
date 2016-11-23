@@ -40,8 +40,4 @@ public class EnvironmentFactory {
         return new Environment(new InMemoryByteStream(value.getBytes(charset)));
     }
 
-    public static Environment seek(final Environment environment, final int offset) {
-        return new Environment(environment.order, environment.input, offset, environment.callbacks);
-    }
-
 }
