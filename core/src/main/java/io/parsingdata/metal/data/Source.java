@@ -20,13 +20,13 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class Source {
 
-    public final ValueExpression expression;
+    public final ValueExpression dataExpression;
     public final Environment environment;
     public final long offset;
     public final int size;
 
-    public Source(final ValueExpression expression, final Environment environment, final long offset, final int size) {
-        this.expression = expression;
+    public Source(final ValueExpression dataExpression, final Environment environment, final long offset, final int size) {
+        this.dataExpression = dataExpression;
         this.environment = environment;
         this.offset = offset;
         this.size = size;

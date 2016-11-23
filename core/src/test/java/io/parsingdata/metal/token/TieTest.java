@@ -17,6 +17,7 @@
 package io.parsingdata.metal.token;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.CAT_REDUCER;
@@ -46,7 +47,11 @@ import java.io.IOException;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.Source;
+import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class TieTest {
@@ -64,10 +69,29 @@ public class TieTest {
 
     @Test
     public void smallContainer() throws IOException {
-        final ParseResult result = CONTAINER.parse(stream(2, 3, 7, 5, 9, 3, 4, 1, 2, 5, 6), enc());
-        assertTrue(result.succeeded);
+        final ParseResult result = parseContainer();
         assertEquals(5, result.environment.offset);
         assertEquals(6, getAllValues(result.environment.order, "value").size);
+    }
+
+    @Test
+    public void checkContainerSource() throws IOException {
+        final ParseResult result = parseContainer();
+        ImmutableList<ParseValue> values = getAllValues(result.environment.order, "value");
+        final Source source = values.head.source;
+        assertNotNull(source.environment);
+        assertNotNull(source.dataExpression);
+
+        ImmutableList<OptionalValue> dataResult = source.dataExpression.eval(source.environment, values.head.encoding);
+        assertEquals(1, dataResult.size);
+        assertTrue(dataResult.head.isPresent());
+        parseIncreasing(dataResult.head.get().getValue());
+    }
+
+    private ParseResult parseContainer() throws IOException {
+        final ParseResult result = CONTAINER.parse(stream(2, 3, 7, 5, 9, 3, 4, 1, 2, 5, 6), enc());
+        assertTrue(result.succeeded);
+        return result;
     }
 
     @Test
@@ -76,9 +100,13 @@ public class TieTest {
         for (int i = 0; i < data.length; i++) {
             data[i] = (byte)((i+1) % 100);
         }
+        assertEquals(1024, parseIncreasing(data).environment.offset);
+    }
+
+    private ParseResult parseIncreasing(final byte[] data) throws IOException {
         final ParseResult result = INC_PREV_MOD_100.parse(new Environment(new InMemoryByteStream(data)), enc());
         assertTrue(result.succeeded);
-        assertEquals(1024, result.environment.offset);
+        return result;
     }
 
 }

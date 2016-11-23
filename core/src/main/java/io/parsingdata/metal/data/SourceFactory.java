@@ -33,7 +33,7 @@ public class SourceFactory {
     }
 
     public Source create(final long offset, final int size) {
-        return new Source(dataExpression, environment, offset, size);
+        return Source.create(dataExpression, environment, offset, size);
     }
 
 }
