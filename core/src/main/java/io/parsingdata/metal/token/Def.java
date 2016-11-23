@@ -26,7 +26,6 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.data.Source;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.True;
@@ -60,7 +59,7 @@ public class Def extends Token {
         if (environment.input.read(environment.offset, data) != data.length) {
             return failure(environment);
         }
-        final Environment newEnvironment = environment.add(new ParseValue(scope, this, Source.create(environment.offset, data.length), data, encoding)).seek(environment.offset + dataSize);
+        final Environment newEnvironment = environment.add(new ParseValue(scope, this, environment.sourceFactory.create(environment.offset, data.length), data, encoding)).seek(environment.offset + dataSize);
         return predicate.eval(newEnvironment, encoding) ? success(newEnvironment) : failure(environment);
     }
 

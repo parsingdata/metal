@@ -26,17 +26,19 @@ public class Environment {
     public final ParseGraph order;
     public final ByteStream input;
     public final long offset;
+    public final SourceFactory sourceFactory;
     public final Callbacks callbacks;
 
-    public Environment(final ParseGraph order, final ByteStream input, final long offset, final Callbacks callbacks) {
+    public Environment(final ParseGraph order, final ByteStream input, final long offset, final SourceFactory sourceFactory, final Callbacks callbacks) {
         this.order = checkNotNull(order, "order");
         this.input = checkNotNull(input, "input");
         this.offset = offset;
+        this.sourceFactory = checkNotNull(sourceFactory, "sourceFactory");
         this.callbacks = checkNotNull(callbacks, "callbacks");
     }
 
     public Environment(final ByteStream input, final long offset, final Callbacks callbacks) {
-        this(ParseGraph.EMPTY, input, offset, callbacks);
+        this(ParseGraph.EMPTY, input, offset, new SourceFactory(), callbacks);
     }
 
     public Environment(final ByteStream input, final long offset) {
@@ -52,23 +54,23 @@ public class Environment {
     }
 
     public Environment addBranch(final Token token) {
-        return new Environment(order.addBranch(token), input, offset, callbacks);
+        return new Environment(order.addBranch(token), input, offset, sourceFactory, callbacks);
     }
 
     public Environment closeBranch() {
-        return new Environment(order.closeBranch(), input, offset, callbacks);
+        return new Environment(order.closeBranch(), input, offset, sourceFactory, callbacks);
     }
 
     public Environment add(final ParseValue parseValue) {
-        return new Environment(order.add(parseValue), input, offset, callbacks);
+        return new Environment(order.add(parseValue), input, offset, sourceFactory, callbacks);
     }
 
     public Environment seek(final long newOffset) {
-        return new Environment(order, input, newOffset, callbacks);
+        return new Environment(order, input, newOffset, sourceFactory, callbacks);
     }
 
     public Environment add(final ParseReference parseReference) {
-        return new Environment(order.add(parseReference), input, offset, callbacks);
+        return new Environment(order.add(parseReference), input, offset, sourceFactory, callbacks);
     }
 
     @Override

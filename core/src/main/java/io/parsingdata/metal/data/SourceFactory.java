@@ -18,26 +18,22 @@ package io.parsingdata.metal.data;
 
 import io.parsingdata.metal.expression.value.ValueExpression;
 
-public class Source {
+public class SourceFactory {
 
-    public final ValueExpression expression;
+    public final ValueExpression dataExpression;
     public final Environment environment;
-    public final long offset;
-    public final int size;
 
-    public Source(final ValueExpression expression, final Environment environment, final long offset, final int size) {
-        this.expression = expression;
+    public SourceFactory(final ValueExpression dataExpression, final Environment environment) {
+        this.dataExpression = dataExpression;
         this.environment = environment;
-        this.offset = offset;
-        this.size = size;
     }
 
-    public static Source create(final ValueExpression expression, final Environment environment, final long offset, final int size) {
-        return new Source(expression, environment, offset, size);
+    public SourceFactory() {
+        this(null, null);
     }
 
-    public static Source create(final long offset, final int size) {
-        return new Source(null, null, offset, size);
+    public Source create(final long offset, final int size) {
+        return new Source(dataExpression, environment, offset, size);
     }
 
 }
