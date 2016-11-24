@@ -65,7 +65,7 @@ public class ValueExpressionSemanticsTest {
         final Environment data = stream(1, 2, 3, 4);
         def("a", 4, eq(new UnaryValueExpression(ref("a")) {
             @Override
-            public OptionalValue eval(Value value, Environment environment, Encoding encoding) {
+            public OptionalValue eval(Value value, Environment environment, Encoding encoding) throws IOException {
                 return value.operation(new ValueOperation() {
                     @Override
                     public OptionalValue execute(Value value) {

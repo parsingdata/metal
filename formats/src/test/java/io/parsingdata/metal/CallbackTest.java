@@ -27,6 +27,8 @@ import static io.parsingdata.metal.format.Callback.inflate;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
 import io.parsingdata.metal.data.ImmutableList;
@@ -35,7 +37,7 @@ import io.parsingdata.metal.expression.value.OptionalValue;
 public class CallbackTest {
 
     @Test
-    public void crc32Good() {
+    public void crc32Good() throws IOException {
         final ImmutableList<OptionalValue> result = crc32(con(0x01020304)).eval(stream(), enc());
         assertEquals(1, result.size);
         assertTrue(result.head.isPresent());
@@ -43,7 +45,7 @@ public class CallbackTest {
     }
 
     @Test
-    public void inflateGood() {
+    public void inflateGood() throws IOException {
         final ImmutableList<OptionalValue> result = inflate(con(0xcb, 0x4d, 0x2d, 0x49, 0xcc, 0x01, 0x00)).eval(stream(), enc());
         assertEquals(1, result.size);
         assertTrue(result.head.isPresent());
@@ -51,7 +53,7 @@ public class CallbackTest {
     }
 
     @Test
-    public void inflateDataFormatError() {
+    public void inflateDataFormatError() throws IOException {
         final ImmutableList<OptionalValue> result = inflate(con(0xffffffff)).eval(stream(), enc());
         assertEquals(1, result.size);
         assertFalse(result.head.isPresent());

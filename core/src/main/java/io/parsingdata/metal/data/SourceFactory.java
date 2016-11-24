@@ -16,24 +16,8 @@
 
 package io.parsingdata.metal.data;
 
-import io.parsingdata.metal.expression.value.ValueExpression;
+public interface SourceFactory {
 
-public class SourceFactory {
-
-    public final ValueExpression dataExpression;
-    public final Environment environment;
-
-    public SourceFactory(final ValueExpression dataExpression, final Environment environment) {
-        this.dataExpression = dataExpression;
-        this.environment = environment;
-    }
-
-    public SourceFactory() {
-        this(null, null);
-    }
-
-    public Source create(final long offset, final int size) {
-        return Source.create(dataExpression, environment, offset, size);
-    }
+    Source create(long offset, int size);
 
 }

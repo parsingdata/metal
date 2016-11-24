@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.expression.logical;
+package io.parsingdata.metal.data;
+
+import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.Expression;
+public class ByteStreamSource extends Source {
 
-public class And extends BinaryLogicalExpression {
+    public final ByteStream input;
 
-    public And(final Expression left, final Expression right) {
-        super(left, right);
+    public ByteStreamSource(final ByteStream input, final long offset, final int size) {
+        super(offset, size);
+        this.input = checkNotNull(input, "input");
     }
 
     @Override
-    public boolean eval(final Environment environment, final Encoding encoding) throws IOException {
-        return left.eval(environment, encoding) && right.eval(environment, encoding);
+    public byte[] getData() throws IOException {
+        final byte[] outputData = new byte[size];
+        input.read(offset, outputData);
+        return outputData;
     }
 
 }

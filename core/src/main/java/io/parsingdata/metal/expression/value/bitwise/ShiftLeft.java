@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.expression.value.bitwise;
 
+import java.io.IOException;
 import java.util.BitSet;
 
 import io.parsingdata.metal.data.Environment;
@@ -33,7 +34,7 @@ public class ShiftLeft extends BinaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value operand, final Value positions, final Environment environment, final Encoding encoding) {
+    public OptionalValue eval(final Value operand, final Value positions, final Environment environment, final Encoding encoding) throws IOException {
         final BitSet leftBits = operand.asBitSet();
         final int shiftLeft = positions.asNumeric().intValue();
         final int bitCount = leftBits.length() + shiftLeft;

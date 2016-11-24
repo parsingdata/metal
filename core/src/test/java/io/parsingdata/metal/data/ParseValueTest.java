@@ -26,6 +26,8 @@ import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static junit.framework.TestCase.assertFalse;
 
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,11 +46,11 @@ public class ParseValueTest {
     @Before
     public void setUp() {
         definition = def("value", 1);
-        value = new ParseValue("value", definition, Source.create(0L, 1), new byte[] { 1 }, enc());
+        value = new ParseValue("value", definition, new ByteArraySource(new byte[] { 1 }), enc());
     }
 
     @Test
-    public void state() {
+    public void state() throws IOException {
         assertThat(value.name, is("value"));
         assertThat(value.getDefinition(), is(definition));
         assertThat(value.source.offset, is(0L));

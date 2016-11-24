@@ -21,6 +21,7 @@ import static java.math.BigInteger.ZERO;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.io.IOException;
 import java.math.BigInteger;
 
 import io.parsingdata.metal.data.Environment;
@@ -56,11 +57,11 @@ public class Nth implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
+    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) throws IOException {
         return eval(values.eval(environment, encoding), indices.eval(environment, encoding));
     }
 
-    private ImmutableList<OptionalValue> eval(final ImmutableList<OptionalValue> values, final ImmutableList<OptionalValue> indices) {
+    private ImmutableList<OptionalValue> eval(final ImmutableList<OptionalValue> values, final ImmutableList<OptionalValue> indices) throws IOException {
         if (indices.isEmpty()) { return new ImmutableList<>(); }
         if (indices.head.isPresent()) {
             final BigInteger index = indices.head.get().asNumeric();

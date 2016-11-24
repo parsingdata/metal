@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.expression.logical;
+package io.parsingdata.metal.data;
 
-import java.io.IOException;
+public class ByteStreamSourceFactory implements SourceFactory {
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.Expression;
+    public final ByteStream input;
 
-public class And extends BinaryLogicalExpression {
-
-    public And(final Expression left, final Expression right) {
-        super(left, right);
+    public ByteStreamSourceFactory(final ByteStream input) {
+        this.input = input;
     }
 
     @Override
-    public boolean eval(final Environment environment, final Encoding encoding) throws IOException {
-        return left.eval(environment, encoding) && right.eval(environment, encoding);
+    public Source create(long offset, int size) {
+        return new ByteStreamSource(input, offset, size);
     }
 
 }

@@ -17,10 +17,12 @@
 package io.parsingdata.metal.format;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.zip.CRC32;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
+import io.parsingdata.metal.data.ByteArraySource;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
@@ -36,17 +38,17 @@ public final class Callback {
     public static ValueExpression crc32(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) {
+            public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) throws IOException {
                 return value.operation(new ValueOperation() {
                     @Override
-                    public OptionalValue execute(final Value value) {
+                    public OptionalValue execute(final Value value) throws IOException {
                         final CRC32 crc = new CRC32();
                         crc.update(value.getValue());
                         final long crcValue = crc.getValue();
-                        return OptionalValue.of(new Value(encoding.byteOrder.apply(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
-                                                                                                (byte)((crcValue & 0xff0000) >> 16),
-                                                                                                (byte)((crcValue & 0xff00) >> 8),
-                                                                                                (byte) (crcValue & 0xff) }), encoding));
+                        return OptionalValue.of(new Value(new ByteArraySource(encoding.byteOrder.apply(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
+                                                                                                                    (byte)((crcValue & 0xff0000) >> 16),
+                                                                                                                    (byte)((crcValue & 0xff00) >> 8),
+                                                                                                                    (byte) (crcValue & 0xff) })), encoding));
                     }
                 });
             }
@@ -56,10 +58,10 @@ public final class Callback {
     public static ValueExpression inflate(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) {
+            public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) throws IOException {
                 return value.operation(new ValueOperation() {
                     @Override
-                    public OptionalValue execute(final Value value) {
+                    public OptionalValue execute(final Value value) throws IOException {
                         final Inflater inf = new Inflater(true);
                         inf.setInput(value.getValue());
                         final byte[] dataReceiver = new byte[512];
@@ -72,7 +74,7 @@ public final class Callback {
                                 return OptionalValue.empty();
                             }
                         }
-                        return OptionalValue.of(new Value(out.toByteArray(), encoding));
+                        return OptionalValue.of(new Value(new ByteArraySource(out.toByteArray()), encoding));
                     }
                 });
             }

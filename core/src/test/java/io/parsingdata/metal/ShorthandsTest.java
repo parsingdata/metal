@@ -143,7 +143,7 @@ public class ShorthandsTest {
         checkNameAndValue("rep.repn.seq.sub.def2", 2, result.environment);
     }
 
-    private void checkNameAndValue(final String name, final int value, final Environment env) {
+    private void checkNameAndValue(final String name, final int value, final Environment env) throws IOException {
         ImmutableList<OptionalValue> values = ref(name).eval(env, enc());
         assertFalse(values.isEmpty());
         assertEquals(1, values.size);

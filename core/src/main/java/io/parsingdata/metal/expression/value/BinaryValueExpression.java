@@ -18,6 +18,8 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.io.IOException;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
@@ -43,11 +45,11 @@ public abstract class BinaryValueExpression implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
+    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) throws IOException {
         return evalLists(left.eval(environment, encoding), right.eval(environment, encoding), environment, encoding);
     }
 
-    private ImmutableList<OptionalValue> evalLists(final ImmutableList<OptionalValue> leftValues, final ImmutableList<OptionalValue> rightValues, final Environment environment, final Encoding encoding) {
+    private ImmutableList<OptionalValue> evalLists(final ImmutableList<OptionalValue> leftValues, final ImmutableList<OptionalValue> rightValues, final Environment environment, final Encoding encoding) throws IOException {
         if (leftValues.isEmpty()) {
             return makeListWithEmpty(rightValues.size);
         }
@@ -62,14 +64,14 @@ public abstract class BinaryValueExpression implements ValueExpression {
         return makeListWithEmpty(size - 1).add(OptionalValue.empty());
     }
 
-    private OptionalValue eval(final OptionalValue left, final OptionalValue right, final Environment environment, final Encoding encoding) {
+    private OptionalValue eval(final OptionalValue left, final OptionalValue right, final Environment environment, final Encoding encoding) throws IOException {
         if (!left.isPresent() || !right.isPresent()) {
             return OptionalValue.empty();
         }
         return eval(left.get(), right.get(), environment, encoding);
     }
 
-    public abstract OptionalValue eval(final Value left, final Value right, final Environment environment, final Encoding encoding);
+    public abstract OptionalValue eval(final Value left, final Value right, final Environment environment, final Encoding encoding) throws IOException;
 
     @Override
     public String toString() {

@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.expression.value.arithmetic;
 
+import java.io.IOException;
 import java.math.BigInteger;
 
 import io.parsingdata.metal.data.Environment;
@@ -33,7 +34,7 @@ public class Div extends BinaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value left, final Value right, final Environment environment, final Encoding encoding) {
+    public OptionalValue eval(final Value left, final Value right, final Environment environment, final Encoding encoding) throws IOException {
         if (right.asNumeric().equals(BigInteger.ZERO)) {
             return OptionalValue.empty();
         }

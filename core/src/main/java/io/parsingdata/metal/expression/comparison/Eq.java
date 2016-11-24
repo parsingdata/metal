@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.expression.comparison;
 
+import java.io.IOException;
+
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
@@ -26,7 +28,7 @@ public class Eq extends ComparisonExpression {
     }
 
     @Override
-    public boolean compare(final Value left, final Value right) {
+    public boolean compare(final Value left, final Value right) throws IOException {
         final byte[] leftBytes = left.getValue();
         final byte[] rightBytes = right.getValue();
         if (leftBytes.length != rightBytes.length) { return false; }

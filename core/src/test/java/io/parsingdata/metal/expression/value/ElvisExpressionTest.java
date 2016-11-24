@@ -116,14 +116,14 @@ public class ElvisExpressionTest {
     }
 
     @Test
-    public void elvisListEmpty() {
+    public void elvisListEmpty() throws IOException {
         final ValueExpression elvis = elvis(ref("a"), ref("b"));
         final ImmutableList<OptionalValue> eval = elvis.eval(stream(0), enc());
         assertEquals(0, eval.size);
     }
 
     @Test
-    public void elvisLeftNone() {
+    public void elvisLeftNone() throws IOException {
         final ValueExpression elvis = elvis(div(con(1), con(0)), con(1));
         final ImmutableList<OptionalValue> eval = elvis.eval(stream(0), enc());
         assertEquals(1, eval.size);

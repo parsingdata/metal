@@ -41,6 +41,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import io.parsingdata.metal.data.ByteArraySource;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
@@ -62,7 +63,7 @@ public class FoldEdgeCaseTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void valuesContainsEmpty() {
+    public void valuesContainsEmpty() throws IOException {
         assertTrue(foldLeft(div(con(1), con(0)), ADD_REDUCER).eval(stream(0), enc()).isEmpty());
         assertTrue(foldRight(div(con(1), con(0)), ADD_REDUCER).eval(stream(0), enc()).isEmpty());
     }
@@ -75,11 +76,11 @@ public class FoldEdgeCaseTest {
     }
 
     @Test
-    public void inputContainsEmptyInTail() {
+    public void inputContainsEmptyInTail() throws IOException {
         assertTrue(foldRight(new ValueExpression() {
             @Override
             public ImmutableList<OptionalValue> eval(Environment environment, Encoding encoding) {
-                return ImmutableList.create(OptionalValue.empty()).add(OptionalValue.of(new Value(new byte[] { 1, 2 }, enc())));
+                return ImmutableList.create(OptionalValue.empty()).add(OptionalValue.of(new Value(new ByteArraySource(new byte[] { 1, 2 }), enc())));
             }
         }, ADD_REDUCER).eval(stream(0), enc()).isEmpty());
     }

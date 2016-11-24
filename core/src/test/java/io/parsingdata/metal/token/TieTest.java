@@ -17,7 +17,6 @@
 package io.parsingdata.metal.token;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.CAT_REDUCER;
@@ -51,7 +50,6 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.Source;
-import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class TieTest {
@@ -79,13 +77,7 @@ public class TieTest {
         final ParseResult result = parseContainer();
         ImmutableList<ParseValue> values = getAllValues(result.environment.order, "value");
         final Source source = values.head.source;
-        assertNotNull(source.environment);
-        assertNotNull(source.dataExpression);
-
-        ImmutableList<OptionalValue> dataResult = source.dataExpression.eval(source.environment, values.head.encoding);
-        assertEquals(1, dataResult.size);
-        assertTrue(dataResult.head.isPresent());
-        parseIncreasing(dataResult.head.get().getValue());
+        parseIncreasing(source.getData());
     }
 
     private ParseResult parseContainer() throws IOException {

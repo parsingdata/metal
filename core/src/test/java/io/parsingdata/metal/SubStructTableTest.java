@@ -90,7 +90,7 @@ public class SubStructTableTest {
         checkStruct(graph.head.asGraph().head.asGraph().tail.tail.tail.head.asGraph(), 10);
     }
 
-    private void checkStruct(final ParseGraph graph, final int offsetHeader) {
+    private void checkStruct(final ParseGraph graph, final int offsetHeader) throws IOException {
         assertEquals(84, graph.head.asValue().asNumeric().intValue());
         assertEquals(42, graph.tail.head.asValue().asNumeric().intValue());
         assertEquals(offsetHeader, graph.tail.head.asValue().source.offset);

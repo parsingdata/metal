@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.expression.value.bitwise;
 
+import java.io.IOException;
 import java.util.BitSet;
 
 import io.parsingdata.metal.data.Environment;
@@ -33,7 +34,7 @@ public class Or extends BinaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value left, final Value right, final Environment environment, final Encoding encoding) {
+    public OptionalValue eval(final Value left, final Value right, final Environment environment, final Encoding encoding) throws IOException {
         final BitSet leftBits = left.asBitSet();
         leftBits.or(right.asBitSet());
         final int minSize = Math.max(left.getValue().length, right.getValue().length);

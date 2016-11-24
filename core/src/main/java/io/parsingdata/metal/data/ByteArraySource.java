@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.expression.logical;
+package io.parsingdata.metal.data;
 
 import java.io.IOException;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.Expression;
+public class ByteArraySource extends Source {
 
-public class And extends BinaryLogicalExpression {
+    private final byte[] data; // Private because array contents is mutable.
 
-    public And(final Expression left, final Expression right) {
-        super(left, right);
+    public ByteArraySource(final byte[] data) {
+        super(0, data.length);
+        this.data = data;
     }
 
     @Override
-    public boolean eval(final Environment environment, final Encoding encoding) throws IOException {
-        return left.eval(environment, encoding) && right.eval(environment, encoding);
+    public byte[] getData() throws IOException {
+        return data.clone();
     }
 
 }

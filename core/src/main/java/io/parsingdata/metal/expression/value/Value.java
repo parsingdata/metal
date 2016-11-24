@@ -18,48 +18,54 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.BitSet;
 
 import io.parsingdata.metal.Util;
+import io.parsingdata.metal.data.Source;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 
 public class Value {
 
-    private final byte[] data; // Private because array contents is mutable.
+    public final Source source;
     public final Encoding encoding;
 
-    public Value(final byte[] data, final Encoding encoding) {
-        this.data = data.clone();
+    public Value(final Source source, final Encoding encoding) {
+        this.source = source;
         this.encoding = checkNotNull(encoding, "encoding");
     }
 
-    public byte[] getValue() {
-        return data.clone();
+    public byte[] getValue() throws IOException {
+        return source.getData();
     }
 
-    public BigInteger asNumeric() {
-        return encoding.sign == Sign.SIGNED ? new BigInteger(encoding.byteOrder.apply(data))
-                                            : new BigInteger(1, encoding.byteOrder.apply(data));
+    public BigInteger asNumeric() throws IOException {
+        return encoding.sign == Sign.SIGNED ? new BigInteger(encoding.byteOrder.apply(getValue()))
+                                            : new BigInteger(1, encoding.byteOrder.apply(getValue()));
     }
 
-    public String asString() {
-        return new String(data, encoding.charset);
+    public String asString() throws IOException {
+        return new String(getValue(), encoding.charset);
     }
 
-    public BitSet asBitSet() {
-        return BitSet.valueOf(encoding.byteOrder == ByteOrder.BIG_ENDIAN ? ByteOrder.LITTLE_ENDIAN.apply(data) : data);
+    public BitSet asBitSet() throws IOException {
+        return BitSet.valueOf(encoding.byteOrder == ByteOrder.BIG_ENDIAN ? ByteOrder.LITTLE_ENDIAN.apply(getValue()) : getValue());
     }
 
-    public OptionalValue operation(final ValueOperation operation) {
+    public OptionalValue operation(final ValueOperation operation) throws IOException {
         return operation.execute(this);
     }
 
     @Override
     public String toString() {
-        return "0x" + Util.bytesToHexString(data);
+        try {
+            return "0x" + Util.bytesToHexString(getValue());
+        } catch (IOException e) {
+            return "Error: " + e.getMessage();
+        }
     }
 
 }

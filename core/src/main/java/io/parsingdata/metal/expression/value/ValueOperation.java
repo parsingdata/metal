@@ -16,8 +16,10 @@
 
 package io.parsingdata.metal.expression.value;
 
+import java.io.IOException;
+
 public interface ValueOperation {
 
-    OptionalValue execute(Value value);
+    OptionalValue execute(Value value) throws IOException;
 
 }

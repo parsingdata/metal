@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
+import java.io.IOException;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
@@ -32,7 +34,7 @@ public class Len extends UnaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) {
+    public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) throws IOException {
         return OptionalValue.of(fromNumeric(value.getValue().length));
     }
 

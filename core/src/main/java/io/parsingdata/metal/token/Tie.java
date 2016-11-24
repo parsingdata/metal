@@ -25,8 +25,6 @@ import java.io.IOException;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.data.SourceFactory;
-import io.parsingdata.metal.data.ValueByteStream;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
@@ -50,9 +48,9 @@ public class Tie extends Token {
             return failure(environment);
         }
         final Value data = dataResult.head.get();
-        final ParseResult result = token.parse(new Environment(environment.addBranch(this).order, new ValueByteStream(data), 0, new SourceFactory(dataExpression, environment), environment.callbacks), encoding);
+        final ParseResult result = token.parse(environment.addBranch(this).source(dataExpression, environment, encoding), encoding);
         if (result.succeeded) {
-            return success(new Environment(result.environment.closeBranch().order, environment.input, environment.offset, environment.sourceFactory, environment.callbacks));
+            return success(new Environment(result.environment.closeBranch().order, environment.sourceFactory, environment.offset, environment.callbacks));
         }
         return failure(environment);
     }

@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,7 +51,7 @@ public class ConstantFactoryBigIntegerTest {
     }
 
     @Test
-    public void checkBigInteger() {
+    public void checkBigInteger() throws IOException {
         assertEquals(0, value.compareTo(ConstantFactory.createFromNumeric(value, signed()).asNumeric()));
         assertEquals(0, new BigInteger(1, value.toByteArray()).compareTo(ConstantFactory.createFromNumeric(value, enc()).asNumeric()));
     }

@@ -92,7 +92,7 @@ public class ErrorsTest {
     }
 
     @Test
-    public void definedValueHasNoOffset() {
+    public void definedValueHasNoOffset() throws IOException {
         final ImmutableList<OptionalValue> offsetCon = offset(con(1)).eval(stream(), enc());
         assertFalse(offsetCon.isEmpty());
         assertEquals(1, offsetCon.size);
