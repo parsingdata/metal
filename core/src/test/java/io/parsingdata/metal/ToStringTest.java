@@ -148,7 +148,7 @@ public class ToStringTest {
     @Test
     public void data() {
         final Environment environment = stream(1, 2);
-        final String envString = "stream: InMemoryByteStream(2); offset: 0; order: graph(EMPTY); callbacks: ";
+        final String envString = "source: InMemoryByteStream(2); offset: 0; order: graph(EMPTY); callbacks: ";
         assertEquals(envString, environment.toString());
         final ParseResult result = new ParseResult(true, environment);
         assertEquals("ParseResult(true, " + environment + ")", result.toString());
@@ -169,7 +169,7 @@ public class ToStringTest {
         final String emptyGraphName = "graph(EMPTY)";
         final InMemoryByteStream emptyStream = new InMemoryByteStream(new byte[] {});
         final Environment empty = new Environment(emptyStream);
-        final String prefix = "stream: " + emptyStreamName + "; offset: 0; order: " + emptyGraphName + "; callbacks: ";
+        final String prefix = "source: " + emptyStreamName + "; offset: 0; order: " + emptyGraphName + "; callbacks: ";
         final String genericPrefix = "generic: ";
         final String tokenPrefix = "token: ";
         assertEquals(prefix, empty.toString());

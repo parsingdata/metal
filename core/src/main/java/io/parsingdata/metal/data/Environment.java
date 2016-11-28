@@ -18,6 +18,8 @@ package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.io.IOException;
+
 import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -77,7 +79,7 @@ public class Environment {
         return new Environment(order, new DataExpressionSource(dataExpression, environment, encoding), 0L, callbacks);
     }
 
-    public Slice slice(final int size) {
+    public Slice slice(final int size) throws IOException {
         return source.create(offset, size);
     }
 

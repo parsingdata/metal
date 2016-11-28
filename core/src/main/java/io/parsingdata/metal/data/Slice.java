@@ -36,4 +36,8 @@ public class Slice {
         return source.getData(offset, size);
     }
 
+    @Override
+    public String toString() {
+        return source + "@" + offset + ":" + size;
+    }
 }

@@ -45,4 +45,8 @@ public class DataExpressionSource extends Source {
         return outputData;
     }
 
+    @Override
+    public String toString() {
+        return dataExpression.toString() + "(" + environment + "," + encoding + ")";
+    }
 }

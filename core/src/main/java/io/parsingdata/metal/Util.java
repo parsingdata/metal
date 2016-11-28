@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal;
 
-import io.parsingdata.metal.data.ByteArraySource;
+import io.parsingdata.metal.data.ConstantSlice;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.token.Token;
 
@@ -62,7 +62,7 @@ public final class Util {
     }
 
     public static Slice bytesToSlice(byte[] data) {
-        return new ByteArraySource(data).create(0, data.length);
+        return new ConstantSlice(data);
     }
 
 }

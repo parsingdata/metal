@@ -72,7 +72,7 @@ public class ParseGraphTest {
                 any("g"), any("empty"),
                 any("h"), any("empty")
             );
-        ParseResult result = token.parse(stream(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), enc());
+        ParseResult result = token.parse(stream(97, 0, 98, 0, 99, 0, 100, 0, 101, 0, 102, 0, 103, 0, 104, 0), enc());
         a = getValue(result.environment.order, "a");
         b = getValue(result.environment.order, "b");
         c = getValue(result.environment.order, "c");
