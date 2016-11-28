@@ -30,18 +30,17 @@ public class ByteStreamSource extends Source {
 
     @Override
     public byte[] getData(long offset, int size) throws IOException {
-        final byte[] outputData = new byte[size];
-        final int actualSize = input.read(offset, outputData);
-        if (actualSize != size) {
-            final byte[] actualOutputData = new byte[actualSize];
-            input.read(offset, actualOutputData);
-            return actualOutputData;
-        }
-        return outputData;
+        final byte[] data = new byte[size];
+        final int readSize = input.read(offset, data);
+        if (readSize == size) { return data; }
+        final byte[] resizedData = new byte[readSize];
+        System.arraycopy(data, 0, resizedData, 0, readSize);
+        return resizedData;
     }
 
     @Override
     public String toString() {
         return input.toString();
     }
+    
 }
