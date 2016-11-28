@@ -16,13 +16,14 @@
 
 package io.parsingdata.metal.format;
 
+import static io.parsingdata.metal.Util.bytesToSlice;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.zip.CRC32;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
-import io.parsingdata.metal.data.ByteArraySlice;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
@@ -45,10 +46,10 @@ public final class Callback {
                         final CRC32 crc = new CRC32();
                         crc.update(value.getValue());
                         final long crcValue = crc.getValue();
-                        return OptionalValue.of(new Value(new ByteArraySlice(encoding.byteOrder.apply(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
-                                                                                                                    (byte)((crcValue & 0xff0000) >> 16),
-                                                                                                                    (byte)((crcValue & 0xff00) >> 8),
-                                                                                                                    (byte) (crcValue & 0xff) })), encoding));
+                        return OptionalValue.of(new Value(bytesToSlice(encoding.byteOrder.apply(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
+                                                                                                             (byte)((crcValue & 0xff0000) >> 16),
+                                                                                                             (byte)((crcValue & 0xff00) >> 8),
+                                                                                                             (byte) (crcValue & 0xff) })), encoding));
                     }
                 });
             }
@@ -74,7 +75,7 @@ public final class Callback {
                                 return OptionalValue.empty();
                             }
                         }
-                        return OptionalValue.of(new Value(new ByteArraySlice(out.toByteArray()), encoding));
+                        return OptionalValue.of(new Value(bytesToSlice(out.toByteArray()), encoding));
                     }
                 });
             }

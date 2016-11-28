@@ -16,18 +16,24 @@
 
 package io.parsingdata.metal.data;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 import java.io.IOException;
 
-public abstract class Slice {
+public class Slice {
 
+    public final Source source;
     public final long offset;
     public final int size;
 
-    public Slice(final long offset, final int size) {
+    public Slice(final Source source, final long offset, final int size) {
+        this.source = checkNotNull(source, "source");
         this.offset = offset;
         this.size = size;
     }
 
-    public abstract byte[] getData() throws IOException;
+    public byte[] getData() throws IOException {
+        return source.getData(offset, size);
+    }
 
 }

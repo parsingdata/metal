@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal;
 
+import io.parsingdata.metal.data.ByteArraySource;
+import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.token.Token;
 
 public final class Util {
@@ -57,6 +59,10 @@ public final class Util {
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
         return new String(hexChars);
+    }
+
+    public static Slice bytesToSlice(byte[] data) {
+        return new ByteArraySource(data).create(0, data.length);
     }
 
 }

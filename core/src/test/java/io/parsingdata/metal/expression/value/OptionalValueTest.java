@@ -19,6 +19,7 @@ package io.parsingdata.metal.expression.value;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import static io.parsingdata.metal.Util.bytesToSlice;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static junit.framework.TestCase.assertFalse;
 
@@ -28,11 +29,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.parsingdata.metal.data.ByteArraySlice;
-
 public class OptionalValueTest {
 
-    private static final Value VALUE = new Value(new ByteArraySlice(new byte[] { 1 }), enc());
+    private static final Value VALUE = new Value(bytesToSlice(new byte[] { 1 }), enc());
     private static final OptionalValue OPTIONAL_VALUE = OptionalValue.of(VALUE);
     private static final OptionalValue EMPTY = OptionalValue.empty();
 

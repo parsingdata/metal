@@ -31,6 +31,7 @@ import static io.parsingdata.metal.Shorthand.foldRight;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Util.bytesToSlice;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -41,7 +42,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.parsingdata.metal.data.ByteArraySlice;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
@@ -80,7 +80,7 @@ public class FoldEdgeCaseTest {
         assertTrue(foldRight(new ValueExpression() {
             @Override
             public ImmutableList<OptionalValue> eval(Environment environment, Encoding encoding) {
-                return ImmutableList.create(OptionalValue.empty()).add(OptionalValue.of(new Value(new ByteArraySlice(new byte[] { 1, 2 }), enc())));
+                return ImmutableList.create(OptionalValue.empty()).add(OptionalValue.of(new Value(bytesToSlice(new byte[] { 1, 2 }), enc())));
             }
         }, ADD_REDUCER).eval(stream(0), enc()).isEmpty());
     }

@@ -16,8 +16,14 @@
 
 package io.parsingdata.metal.data;
 
-public interface Source {
+import java.io.IOException;
 
-    Slice create(long offset, int size);
+public abstract class Source {
+
+    public Slice create(long offset, int size) {
+        return new Slice(this, offset, size);
+    }
+
+    public abstract byte[] getData(long offset, int size) throws IOException;
 
 }

@@ -16,20 +16,24 @@
 
 package io.parsingdata.metal.data;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 import java.io.IOException;
 
-public class ByteArraySlice extends Slice {
+public class ByteArraySource extends Source {
 
     private final byte[] data; // Private because array contents is mutable.
 
-    public ByteArraySlice(final byte[] data) {
-        super(0, data.length);
-        this.data = data;
+    public ByteArraySource(final byte[] data) {
+        this.data = checkNotNull(data, "data");
     }
 
     @Override
-    public byte[] getData() throws IOException {
-        return data.clone();
+    public byte[] getData(long offset, int size) throws IOException {
+        if (offset >= data.length) { return new byte[0]; }
+        final int toCopy = (int)offset + size > data.length ? data.length - (int)offset : size;
+        final byte[] outputData = new byte[toCopy];
+        System.arraycopy(data, (int)offset, outputData, 0, toCopy);
+        return outputData;
     }
-
 }
