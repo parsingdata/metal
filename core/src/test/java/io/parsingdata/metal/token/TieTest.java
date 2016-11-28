@@ -49,7 +49,7 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.data.Source;
+import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class TieTest {
@@ -76,8 +76,8 @@ public class TieTest {
     public void checkContainerSource() throws IOException {
         final ParseResult result = parseContainer();
         ImmutableList<ParseValue> values = getAllValues(result.environment.order, "value");
-        final Source source = values.head.source;
-        parseIncreasing(source.getData());
+        final Slice slice = values.head.slice;
+        parseIncreasing(slice.getData());
     }
 
     private ParseResult parseContainer() throws IOException {

@@ -16,24 +16,17 @@
 
 package io.parsingdata.metal.data;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
-import java.io.IOException;
-
-public class ByteStreamSource extends Source {
+public class ByteStreamSource implements Source {
 
     public final ByteStream input;
 
-    public ByteStreamSource(final ByteStream input, final long offset, final int size) {
-        super(offset, size);
-        this.input = checkNotNull(input, "input");
+    public ByteStreamSource(final ByteStream input) {
+        this.input = input;
     }
 
     @Override
-    public byte[] getData() throws IOException {
-        final byte[] outputData = new byte[size];
-        input.read(offset, outputData);
-        return outputData;
+    public Slice create(long offset, int size) {
+        return new ByteStreamSlice(input, offset, size);
     }
 
 }

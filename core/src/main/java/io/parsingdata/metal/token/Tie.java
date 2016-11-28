@@ -50,7 +50,7 @@ public class Tie extends Token {
         final Value data = dataResult.head.get();
         final ParseResult result = token.parse(environment.addBranch(this).source(dataExpression, environment, encoding), encoding);
         if (result.succeeded) {
-            return success(new Environment(result.environment.closeBranch().order, environment.sourceFactory, environment.offset, environment.callbacks));
+            return success(new Environment(result.environment.closeBranch().order, environment.source, environment.offset, environment.callbacks));
         }
         return failure(environment);
     }

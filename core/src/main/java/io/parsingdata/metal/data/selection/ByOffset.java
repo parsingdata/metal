@@ -37,10 +37,10 @@ public final class ByOffset {
         checkNotNull(items, "items");
         if (items.isEmpty()) { return null; }
         final ParseItem head = items.head;
-        if (head.isValue() && head.asValue().source.offset == offset) { return head; }
+        if (head.isValue() && head.asValue().slice.offset == offset) { return head; }
         if (head.isGraph()) {
             final ParseValue value = getLowestOffsetValue(head.asGraph(), null);
-            if (value != null && value.source.offset == offset) { return head; }
+            if (value != null && value.slice.offset == offset) { return head; }
         }
         return findItemAtOffset(items.tail, offset);
     }
@@ -48,7 +48,7 @@ public final class ByOffset {
     private static ParseValue getLowestOffsetValue(final ParseGraph graph, final ParseValue lowest) {
         if (graph.isEmpty() || !graph.getDefinition().isLocal()) { return lowest; }
         if (graph.head.isValue()) {
-            return getLowestOffsetValue(graph.tail, lowest == null || lowest.source.offset > graph.head.asValue().source.offset ? graph.head.asValue() : lowest);
+            return getLowestOffsetValue(graph.tail, lowest == null || lowest.slice.offset > graph.head.asValue().slice.offset ? graph.head.asValue() : lowest);
         }
         if (graph.head.isGraph()) {
             return getLowestOffsetValue(graph.tail, getLowestOffsetValue(graph.head.asGraph(), lowest));

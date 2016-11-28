@@ -28,11 +28,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.parsingdata.metal.data.ByteArraySource;
+import io.parsingdata.metal.data.ByteArraySlice;
 
 public class OptionalValueTest {
 
-    private static final Value VALUE = new Value(new ByteArraySource(new byte[] { 1 }), enc());
+    private static final Value VALUE = new Value(new ByteArraySlice(new byte[] { 1 }), enc());
     private static final OptionalValue OPTIONAL_VALUE = OptionalValue.of(VALUE);
     private static final OptionalValue EMPTY = OptionalValue.empty();
 

@@ -23,23 +23,23 @@ import java.math.BigInteger;
 import java.util.BitSet;
 
 import io.parsingdata.metal.Util;
-import io.parsingdata.metal.data.Source;
+import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 
 public class Value {
 
-    public final Source source;
+    public final Slice slice;
     public final Encoding encoding;
 
-    public Value(final Source source, final Encoding encoding) {
-        this.source = source;
+    public Value(final Slice slice, final Encoding encoding) {
+        this.slice = slice;
         this.encoding = checkNotNull(encoding, "encoding");
     }
 
     public byte[] getValue() throws IOException {
-        return source.getData();
+        return slice.getData();
     }
 
     public BigInteger asNumeric() throws IOException {

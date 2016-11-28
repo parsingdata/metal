@@ -18,18 +18,16 @@ package io.parsingdata.metal.data;
 
 import java.io.IOException;
 
-public class ByteArraySource extends Source {
+public abstract class Slice {
 
-    private final byte[] data; // Private because array contents is mutable.
+    public final long offset;
+    public final int size;
 
-    public ByteArraySource(final byte[] data) {
-        super(0, data.length);
-        this.data = data;
+    public Slice(final long offset, final int size) {
+        this.offset = offset;
+        this.size = size;
     }
 
-    @Override
-    public byte[] getData() throws IOException {
-        return data.clone();
-    }
+    public abstract byte[] getData() throws IOException;
 
 }

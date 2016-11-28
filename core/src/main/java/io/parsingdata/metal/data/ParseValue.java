@@ -27,8 +27,8 @@ public class ParseValue extends Value implements ParseItem {
     public final String name;
     public final Token definition;
 
-    public ParseValue(final String name, final Token definition, final Source source, final Encoding encoding) {
-        super(source, encoding);
+    public ParseValue(final String name, final Token definition, final Slice slice, final Encoding encoding) {
+        super(slice, encoding);
         this.name = checkNotNull(name, "name");
         this.definition = checkNotNull(definition, "definition");
     }

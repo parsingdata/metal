@@ -16,17 +16,20 @@
 
 package io.parsingdata.metal.data;
 
-public class ByteStreamSourceFactory implements SourceFactory {
+import java.io.IOException;
 
-    public final ByteStream input;
+public class ByteArraySlice extends Slice {
 
-    public ByteStreamSourceFactory(final ByteStream input) {
-        this.input = input;
+    private final byte[] data; // Private because array contents is mutable.
+
+    public ByteArraySlice(final byte[] data) {
+        super(0, data.length);
+        this.data = data;
     }
 
     @Override
-    public Source create(long offset, int size) {
-        return new ByteStreamSource(input, offset, size);
+    public byte[] getData() throws IOException {
+        return data.clone();
     }
 
 }

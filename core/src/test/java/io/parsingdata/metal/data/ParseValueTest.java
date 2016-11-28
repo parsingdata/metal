@@ -46,14 +46,14 @@ public class ParseValueTest {
     @Before
     public void setUp() {
         definition = def("value", 1);
-        value = new ParseValue("value", definition, new ByteArraySource(new byte[] { 1 }), enc());
+        value = new ParseValue("value", definition, new ByteArraySlice(new byte[] { 1 }), enc());
     }
 
     @Test
     public void state() throws IOException {
         assertThat(value.name, is("value"));
         assertThat(value.getDefinition(), is(definition));
-        assertThat(value.source.offset, is(0L));
+        assertThat(value.slice.offset, is(0L));
         assertThat(value.getValue(), is(equalTo(new byte[] { 1 })));
     }
 

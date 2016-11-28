@@ -18,32 +18,24 @@ package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.io.IOException;
-
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
-public class DataExpressionSource extends Source {
+public class DataExpressionSource implements Source {
 
     public final ValueExpression dataExpression;
     public final Environment environment;
     public final Encoding encoding;
 
-    public DataExpressionSource(final ValueExpression dataExpression, final Environment environment, final Encoding encoding, final long offset, final int size) {
-        super(offset, size);
+    public DataExpressionSource(final ValueExpression dataExpression, final Environment environment, final Encoding encoding) {
         this.dataExpression = checkNotNull(dataExpression, "dataExpression");
         this.environment = checkNotNull(environment, "environment");
         this.encoding = checkNotNull(encoding, "encoding");
     }
 
     @Override
-    public byte[] getData() throws IOException {
-        final byte[] inputData = dataExpression.eval(environment, encoding).head.get().getValue();
-        if (offset >= inputData.length) { return new byte[0]; }
-        final int toCopy = (int)offset + size > inputData.length ? inputData.length - (int)offset : size;
-        final byte[] outputData = new byte[toCopy];
-        System.arraycopy(inputData, (int)offset, outputData, 0, toCopy);
-        return outputData;
+    public Slice create(final long offset, final int size) {
+        return new DataExpressionSlice(dataExpression, environment, encoding, offset, size);
     }
 
 }
