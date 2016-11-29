@@ -18,8 +18,6 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
@@ -33,16 +31,16 @@ public abstract class UnaryValueExpression implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) throws IOException {
+    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
         return eval(operand.eval(environment, encoding), environment, encoding);
     }
 
-    private ImmutableList<OptionalValue> eval(final ImmutableList<OptionalValue> values, final Environment environment, final Encoding encoding) throws IOException {
+    private ImmutableList<OptionalValue> eval(final ImmutableList<OptionalValue> values, final Environment environment, final Encoding encoding) {
         if (values.isEmpty()) { return values; }
         return eval(values.tail, environment, encoding).add(values.head.isPresent() ? eval(values.head.get(), environment, encoding) : values.head);
     }
 
-    public abstract OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) throws IOException;
+    public abstract OptionalValue eval(final Value value, final Environment environment, final Encoding encoding);
 
     @Override
     public String toString() {

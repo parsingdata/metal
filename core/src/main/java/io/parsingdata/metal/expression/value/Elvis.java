@@ -18,8 +18,6 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
@@ -50,7 +48,7 @@ public class Elvis implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) throws IOException {
+    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
         return eval(left.eval(environment, encoding), right.eval(environment, encoding));
     }
 

@@ -16,13 +16,11 @@
 
 package io.parsingdata.metal.expression;
 
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 
 public interface Expression {
 
-    boolean eval(Environment environment, Encoding encoding) throws IOException;
+    boolean eval(Environment environment, Encoding encoding);
 
 }

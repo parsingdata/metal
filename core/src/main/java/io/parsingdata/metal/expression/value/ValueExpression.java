@@ -16,14 +16,12 @@
 
 package io.parsingdata.metal.expression.value;
 
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 
 public interface ValueExpression {
 
-    ImmutableList<OptionalValue> eval(Environment environment, Encoding encoding) throws IOException;
+    ImmutableList<OptionalValue> eval(Environment environment, Encoding encoding);
 
 }

@@ -19,7 +19,6 @@ package io.parsingdata.metal.format;
 import static io.parsingdata.metal.Util.bytesToSlice;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.zip.CRC32;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
@@ -39,10 +38,10 @@ public final class Callback {
     public static ValueExpression crc32(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) throws IOException {
+            public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) {
                 return value.operation(new ValueOperation() {
                     @Override
-                    public OptionalValue execute(final Value value) throws IOException {
+                    public OptionalValue execute(final Value value) {
                         final CRC32 crc = new CRC32();
                         crc.update(value.getValue());
                         final long crcValue = crc.getValue();
@@ -59,10 +58,10 @@ public final class Callback {
     public static ValueExpression inflate(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) throws IOException {
+            public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) {
                 return value.operation(new ValueOperation() {
                     @Override
-                    public OptionalValue execute(final Value value) throws IOException {
+                    public OptionalValue execute(final Value value) {
                         final Inflater inf = new Inflater(true);
                         inf.setInput(value.getValue());
                         final byte[] dataReceiver = new byte[512];

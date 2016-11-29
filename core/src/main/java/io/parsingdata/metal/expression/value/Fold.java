@@ -18,8 +18,6 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
@@ -37,7 +35,7 @@ public abstract class Fold implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) throws IOException {
+    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
         final ImmutableList<OptionalValue> initial = this.initial != null ? this.initial.eval(environment, encoding) : new ImmutableList<OptionalValue>();
         if (initial.size > 1) { return new ImmutableList<>(); }
         final ImmutableList<OptionalValue> values = prepareValues(this.values.eval(environment, encoding));
@@ -48,7 +46,7 @@ public abstract class Fold implements ValueExpression {
         return ImmutableList.create(fold(environment, encoding, reducer, values.head, values.tail));
     }
 
-    private OptionalValue fold(final Environment environment, final Encoding encoding, final Reducer reducer, final OptionalValue head, final ImmutableList<OptionalValue> tail) throws IOException {
+    private OptionalValue fold(final Environment environment, final Encoding encoding, final Reducer reducer, final OptionalValue head, final ImmutableList<OptionalValue> tail) {
         if (!head.isPresent() || tail.isEmpty()) { return head; }
         final ImmutableList<OptionalValue> reducedValue = reduce(reducer, head.get(), tail.head.get()).eval(environment, encoding);
         if (reducedValue.size != 1) { throw new IllegalStateException("Reducer must yield a single value."); }

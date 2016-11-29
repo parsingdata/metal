@@ -18,8 +18,6 @@ package io.parsingdata.metal.expression.value.reference;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
@@ -35,7 +33,7 @@ public class Last implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) throws IOException {
+    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
         final ImmutableList<OptionalValue> list = operand.eval(environment, encoding);
         return list.isEmpty() ? list : ImmutableList.create(list.head);
     }

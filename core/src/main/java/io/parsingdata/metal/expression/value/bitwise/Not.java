@@ -16,7 +16,6 @@
 
 package io.parsingdata.metal.expression.value.bitwise;
 
-import java.io.IOException;
 import java.util.BitSet;
 
 import io.parsingdata.metal.data.Environment;
@@ -34,7 +33,7 @@ public class Not extends UnaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) throws IOException {
+    public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) {
         final BitSet bits = value.asBitSet();
         bits.flip(0, value.getValue().length * 8);
         return OptionalValue.of(ConstantFactory.createFromBitSet(bits, value.getValue().length, encoding));

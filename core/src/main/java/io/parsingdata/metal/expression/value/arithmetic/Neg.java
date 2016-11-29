@@ -16,8 +16,6 @@
 
 package io.parsingdata.metal.expression.value.arithmetic;
 
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ConstantFactory;
@@ -33,7 +31,7 @@ public class Neg extends UnaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) throws IOException {
+    public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) {
         return OptionalValue.of(ConstantFactory.createFromNumeric(value.asNumeric().negate(), encoding));
     }
 

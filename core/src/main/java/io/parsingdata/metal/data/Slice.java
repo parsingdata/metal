@@ -18,8 +18,6 @@ package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.io.IOException;
-
 public class Slice {
 
     public final Source source;
@@ -34,7 +32,7 @@ public class Slice {
         this.size = data.length;
     }
 
-    public byte[] getData() throws IOException {
+    public byte[] getData() {
         return data.clone();
     }
 

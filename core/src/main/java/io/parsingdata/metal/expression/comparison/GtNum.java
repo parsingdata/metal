@@ -16,8 +16,6 @@
 
 package io.parsingdata.metal.expression.comparison;
 
-import java.io.IOException;
-
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
@@ -28,7 +26,7 @@ public class GtNum extends ComparisonExpression {
     }
 
     @Override
-    public boolean compare(final Value left, final Value right) throws IOException {
+    public boolean compare(final Value left, final Value right) {
         return left.asNumeric().compareTo(right.asNumeric()) > 0;
     }
 

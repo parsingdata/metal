@@ -16,8 +16,6 @@
 
 package io.parsingdata.metal.expression.logical;
 
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
@@ -29,7 +27,7 @@ public class Or extends BinaryLogicalExpression {
     }
 
     @Override
-    public boolean eval(final Environment environment, final Encoding encoding) throws IOException {
+    public boolean eval(final Environment environment, final Encoding encoding) {
         return left.eval(environment, encoding) || right.eval(environment, encoding);
     }
 

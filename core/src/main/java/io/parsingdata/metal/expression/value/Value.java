@@ -38,34 +38,30 @@ public class Value {
         this.encoding = checkNotNull(encoding, "encoding");
     }
 
-    public byte[] getValue() throws IOException {
+    public byte[] getValue() {
         return slice.getData();
     }
 
-    public BigInteger asNumeric() throws IOException {
+    public BigInteger asNumeric() {
         return encoding.sign == Sign.SIGNED ? new BigInteger(encoding.byteOrder.apply(getValue()))
                                             : new BigInteger(1, encoding.byteOrder.apply(getValue()));
     }
 
-    public String asString() throws IOException {
+    public String asString() {
         return new String(getValue(), encoding.charset);
     }
 
-    public BitSet asBitSet() throws IOException {
+    public BitSet asBitSet() {
         return BitSet.valueOf(encoding.byteOrder == ByteOrder.BIG_ENDIAN ? ByteOrder.LITTLE_ENDIAN.apply(getValue()) : getValue());
     }
 
-    public OptionalValue operation(final ValueOperation operation) throws IOException {
+    public OptionalValue operation(final ValueOperation operation) {
         return operation.execute(this);
     }
 
     @Override
     public String toString() {
-        try {
-            return "0x" + Util.bytesToHexString(getValue());
-        } catch (IOException e) {
-            return "Error: " + e.getMessage();
-        }
+        return "0x" + Util.bytesToHexString(getValue());
     }
 
 }

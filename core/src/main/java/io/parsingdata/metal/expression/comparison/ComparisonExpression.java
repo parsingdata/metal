@@ -18,8 +18,6 @@ package io.parsingdata.metal.expression.comparison;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.io.IOException;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
@@ -39,7 +37,7 @@ public abstract class ComparisonExpression implements Expression {
     }
 
     @Override
-    public boolean eval(final Environment environment, final Encoding encoding) throws IOException {
+    public boolean eval(final Environment environment, final Encoding encoding) {
         final ImmutableList<OptionalValue> values = value == null ? ImmutableList.create(OptionalValue.of(environment.order.current())) : value.eval(environment, encoding);
         if (values.isEmpty()) { return false; }
         final ImmutableList<OptionalValue> predicates = predicate.eval(environment, encoding);
@@ -47,14 +45,14 @@ public abstract class ComparisonExpression implements Expression {
         return compare(values, predicates);
     }
 
-    private boolean compare(final ImmutableList<OptionalValue> currents, final ImmutableList<OptionalValue> predicates) throws IOException {
+    private boolean compare(final ImmutableList<OptionalValue> currents, final ImmutableList<OptionalValue> predicates) {
         if (!currents.head.isPresent() || !predicates.head.isPresent()) { return false; }
         final boolean headResult = compare(currents.head.get(), predicates.head.get());
         if (!headResult || currents.tail.isEmpty()) { return headResult; }
         return compare(currents.tail, predicates.tail);
     }
 
-    public abstract boolean compare(final Value left, final Value right) throws IOException;
+    public abstract boolean compare(final Value left, final Value right);
 
     @Override
     public String toString() {
