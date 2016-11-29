@@ -36,7 +36,7 @@ public class DataExpressionSource extends Source {
     }
 
     @Override
-    public byte[] getData(long offset, int size) throws IOException {
+    protected byte[] getData(final long offset, final int size) throws IOException {
         final byte[] inputData = dataExpression.eval(environment, encoding).head.get().getValue();
         if (offset >= inputData.length) { return new byte[0]; }
         final int toCopy = (int)offset + size > inputData.length ? inputData.length - (int)offset : size;

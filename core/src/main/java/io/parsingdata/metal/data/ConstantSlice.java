@@ -23,12 +23,12 @@ import java.io.IOException;
 public class ConstantSlice extends Slice {
 
     public ConstantSlice(byte[] data) {
-        super(new ConstantSource(checkNotNull(data, "data")), 0, data.length);
+        super(new ConstantSource(checkNotNull(data, "data")), 0, data);
     }
 
     private static class ConstantSource extends Source {
 
-        private final byte[] data;
+        private final byte[] data; // Private because array contents is mutable.
 
         public ConstantSource(byte[] data) {
             this.data = data;

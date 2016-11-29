@@ -24,16 +24,18 @@ public class Slice {
 
     public final Source source;
     public final long offset;
+    private final byte[] data; // Private because array contents is mutable.
     public final int size;
 
-    public Slice(final Source source, final long offset, final int size) {
+    public Slice(final Source source, final long offset, final byte[] data) {
         this.source = checkNotNull(source, "source");
         this.offset = offset;
-        this.size = size;
+        this.data = checkNotNull(data, "data");
+        this.size = data.length;
     }
 
     public byte[] getData() throws IOException {
-        return source.getData(offset, size);
+        return data.clone();
     }
 
     @Override

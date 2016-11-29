@@ -29,7 +29,7 @@ public class ByteStreamSource extends Source {
     }
 
     @Override
-    public byte[] getData(long offset, int size) throws IOException {
+    protected byte[] getData(final long offset, final int size) throws IOException {
         final byte[] data = new byte[size];
         final int readSize = input.read(offset, data);
         if (readSize == size) { return data; }
@@ -42,5 +42,5 @@ public class ByteStreamSource extends Source {
     public String toString() {
         return input.toString();
     }
-    
+
 }
