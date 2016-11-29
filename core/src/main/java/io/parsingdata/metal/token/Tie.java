@@ -27,7 +27,6 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
-import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class Tie extends Token {
@@ -47,12 +46,19 @@ public class Tie extends Token {
         if (dataResult.size != 1 || !dataResult.head.isPresent()) {
             return failure(environment);
         }
-        final Value data = dataResult.head.get();
         final ParseResult result = token.parse(environment.addBranch(this).source(dataExpression, environment, encoding), encoding);
         if (result.succeeded) {
             return success(new Environment(result.environment.closeBranch().order, environment.source, environment.offset, environment.callbacks));
         }
         return failure(environment);
+    }
+
+    @Override
+    public boolean isLocal() { return false; }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + makeNameFragment() + token + ", " + dataExpression + ")";
     }
 
 }
