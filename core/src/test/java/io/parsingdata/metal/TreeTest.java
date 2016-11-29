@@ -82,22 +82,22 @@ public class TreeTest {
     }
 
     @Test
-    public void checkRegularTree() throws IOException {
+    public void checkRegularTree() {
         assertTrue(regular.succeeded);
         checkStructure(Reversal.reverse(regular.environment.order).head.asGraph(), 0);
     }
 
     @Test
-    public void checkCyclicTree() throws IOException {
+    public void checkCyclicTree() {
         assertTrue(cyclic.succeeded);
         checkStructure(Reversal.reverse(cyclic.environment.order).head.asGraph(), 0);
     }
 
-    private void checkStructure(final ParseGraph graph, final long offset) throws IOException {
+    private void checkStructure(final ParseGraph graph, final long offset) {
         checkStructure(graph, graph, offset);
     }
 
-    private void checkStructure(final ParseGraph root, final ParseGraph graph, final long offset) throws IOException {
+    private void checkStructure(final ParseGraph root, final ParseGraph graph, final long offset) {
         checkHeader(graph, offset);
         final ParseItem left = graph.tail.tail.head;
         assertTrue(left.isValue());
@@ -117,7 +117,7 @@ public class TreeTest {
         }
     }
 
-    private void checkBranch(final ParseGraph root, final long offset, final ParseItem item) throws IOException {
+    private void checkBranch(final ParseGraph root, final long offset, final ParseItem item) {
         assertFalse(item.isValue());
         if (item.asGraph().head.isGraph()) {
             checkStructure(root, item.asGraph().head.asGraph(), offset);
@@ -126,7 +126,7 @@ public class TreeTest {
         }
     }
 
-    private void checkHeader(final ParseGraph graph, final long offset) throws IOException {
+    private void checkHeader(final ParseGraph graph, final long offset) {
         final ParseItem head = graph.head;
         assertTrue(head.isValue());
         assertEquals(HEAD, head.asValue().asNumeric().intValue());
@@ -136,7 +136,7 @@ public class TreeTest {
     }
 
     @Test
-    public void checkRegularTreeFlat() throws IOException {
+    public void checkRegularTreeFlat() {
         assertTrue(regular.succeeded);
         final ImmutableList<ParseValue> nrs = getAllValues(regular.environment.order, "nr");
         for (int i = 0; i < 7; i++) {
@@ -144,7 +144,7 @@ public class TreeTest {
         }
     }
 
-    private boolean contains(final ImmutableList<ParseValue> nrs, final int i) throws IOException {
+    private boolean contains(final ImmutableList<ParseValue> nrs, final int i) {
         if (nrs.isEmpty()) { return false; }
         if (nrs.head.asNumeric().intValue() == i) { return true; }
         if (nrs.tail != null) { return contains(nrs.tail, i); }

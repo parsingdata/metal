@@ -16,7 +16,6 @@
 
 package io.parsingdata.metal.expression.value.arithmetic;
 
-import java.io.IOException;
 import java.math.BigInteger;
 
 import io.parsingdata.metal.data.Environment;

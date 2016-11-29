@@ -51,7 +51,7 @@ public class CurrentOffsetTest {
     private static final CurrentOffset CURRENT_OFFSET = new CurrentOffset();
 
     @Test
-    public void currentOffset() throws IOException {
+    public void currentOffset() {
         final Environment environment = new Environment(NO_BYTES, 42);
 
         final ImmutableList<OptionalValue> currentOffset = CURRENT_OFFSET.eval(environment, ENCODING);
@@ -62,7 +62,7 @@ public class CurrentOffsetTest {
     }
 
     @Test
-    public void currentOffsetLarger() throws IOException {
+    public void currentOffsetLarger() {
         // offset would flip signed bit if interpreted as signed integer:
         final Environment environment = new Environment(NO_BYTES, 128);
 

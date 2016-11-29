@@ -159,7 +159,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void getAllRepSeq() throws IOException {
+    public void getAllRepSeq() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2, 3, 4, 5), rep(SIMPLE_SEQ));
         final ImmutableList<ParseItem> def1Items = getAll(graph, DEF1);
         final ImmutableList<ParseItem> def2Items = getAll(graph, DEF2);
@@ -175,7 +175,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void getAllSub() throws IOException {
+    public void getAllSub() {
         final ParseGraph graph = parseResultGraph(stream(4, 2, 2, 3, 4, 5), SEQ_SUB);
         final ImmutableList<ParseItem> items = getAll(graph, TWO_BYTES);
 

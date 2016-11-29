@@ -26,8 +26,6 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
-import java.io.IOException;
-
 import org.junit.Test;
 
 import io.parsingdata.metal.data.ImmutableList;
@@ -35,21 +33,21 @@ import io.parsingdata.metal.data.ImmutableList;
 public class ValueExpressionEvalEmpty {
 
     @Test
-    public void divisionByZero() throws IOException {
+    public void divisionByZero() {
         parse(div(con(1), con(0)));
     }
 
     @Test
-    public void moduloNegative() throws IOException {
+    public void moduloNegative() {
         parse(mod(con(1), con(-1, signed())));
     }
 
     @Test
-    public void moduloZero() throws IOException {
+    public void moduloZero() {
         parse(mod(con(1), con(0)));
     }
 
-    private void parse(final ValueExpression expression) throws IOException {
+    private void parse(final ValueExpression expression) {
         final ImmutableList<OptionalValue> output = expression.eval(stream(0), enc());
         assertEquals(1, output.size);
         assertFalse(output.head.isPresent());

@@ -21,7 +21,6 @@ import static org.junit.Assert.assertEquals;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
@@ -58,7 +57,7 @@ public class ConstantFactoryLongTest {
     }
 
     @Test
-    public void checkLong() throws IOException {
+    public void checkLong() {
         assertEquals(value, ConstantFactory.createFromNumeric(value, signed()).asNumeric().longValue());
         if (value >= 0) {
             assertEquals(value, ConstantFactory.createFromNumeric(value, enc()).asNumeric().longValue());

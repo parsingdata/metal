@@ -63,7 +63,7 @@ public class FoldEdgeCaseTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void valuesContainsEmpty() throws IOException {
+    public void valuesContainsEmpty() {
         assertTrue(foldLeft(div(con(1), con(0)), ADD_REDUCER).eval(stream(0), enc()).isEmpty());
         assertTrue(foldRight(div(con(1), con(0)), ADD_REDUCER).eval(stream(0), enc()).isEmpty());
     }
@@ -76,7 +76,7 @@ public class FoldEdgeCaseTest {
     }
 
     @Test
-    public void inputContainsEmptyInTail() throws IOException {
+    public void inputContainsEmptyInTail() {
         assertTrue(foldRight(new ValueExpression() {
             @Override
             public ImmutableList<OptionalValue> eval(Environment environment, Encoding encoding) {

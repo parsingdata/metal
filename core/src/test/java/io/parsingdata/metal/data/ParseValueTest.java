@@ -27,8 +27,6 @@ import static io.parsingdata.metal.Util.bytesToSlice;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static junit.framework.TestCase.assertFalse;
 
-import java.io.IOException;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -51,7 +49,7 @@ public class ParseValueTest {
     }
 
     @Test
-    public void state() throws IOException {
+    public void state() {
         assertThat(value.name, is("value"));
         assertThat(value.getDefinition(), is(definition));
         assertThat(value.slice.offset, is(0L));

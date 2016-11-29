@@ -35,7 +35,7 @@ public class ConstantSlice extends Slice {
         }
 
         @Override
-        public byte[] getData(long offset, int size) throws IOException {
+        protected byte[] getData(long offset, int size) throws IOException {
             if (offset >= data.length) { return new byte[0]; }
             final int toCopy = (int)offset + size > data.length ? data.length - (int)offset : size;
             final byte[] outputData = new byte[toCopy];

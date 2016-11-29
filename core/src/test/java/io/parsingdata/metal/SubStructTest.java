@@ -132,19 +132,19 @@ public class SubStructTest {
         checkBranch(reference.resolve(graph).asGraph(), 4, 0); // Check cycle
     }
 
-    private void checkBranch(final ParseGraph graph, final int graphOffset, final int nextOffset) throws IOException {
+    private void checkBranch(final ParseGraph graph, final int graphOffset, final int nextOffset) {
         checkValue(graph.head, 1, graphOffset + 2); // footer
         checkValue(graph.tail.tail.head, nextOffset, graphOffset + 1); // next
         checkValue(graph.tail.tail.tail.head, 0, graphOffset); // header
     }
 
-    private void checkLeaf(final ParseGraph graph, final int graphOffset, final int nextOffset) throws IOException {
+    private void checkLeaf(final ParseGraph graph, final int graphOffset, final int nextOffset) {
         checkValue(graph.head, 1, graphOffset + 2); // footer
         checkValue(graph.tail.head, nextOffset, graphOffset + 1); // next
         checkValue(graph.tail.tail.head, 0, graphOffset); // header
     }
 
-    private void checkValue(final ParseItem item, final int value, final int offset) throws IOException {
+    private void checkValue(final ParseItem item, final int value, final int offset) {
         assertTrue(item.isValue());
         assertEquals(value, item.asValue().asNumeric().intValue());
         assertEquals(offset, item.asValue().slice.offset);
