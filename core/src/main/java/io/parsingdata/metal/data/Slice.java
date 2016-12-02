@@ -38,6 +38,6 @@ public class Slice {
 
     @Override
     public String toString() {
-        return source + "@" + offset + ":" + size;
+        return source + "@" + offset + ":" + (offset+size);
     }
 }
