@@ -46,7 +46,7 @@ public class Tie extends Token {
         if (dataResult.size != 1 || !dataResult.head.isPresent()) {
             return failure(environment);
         }
-        final ParseResult result = token.parse(environment.addBranch(this).source(dataExpression, environment, encoding), encoding);
+        final ParseResult result = token.parse(scope, environment.addBranch(this).source(dataExpression, environment, encoding), encoding);
         if (result.succeeded) {
             return success(new Environment(result.environment.closeBranch().order, environment.source, environment.offset, environment.callbacks));
         }
