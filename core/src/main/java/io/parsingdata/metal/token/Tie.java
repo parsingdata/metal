@@ -43,12 +43,24 @@ public class Tie extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         final ImmutableList<OptionalValue> dataResult = dataExpression.eval(environment, encoding);
-        if (dataResult.size != 1 || !dataResult.head.isPresent()) {
+        if (dataResult.isEmpty()) {
             return failure(environment);
         }
-        final ParseResult result = token.parse(scope, environment.addBranch(this).source(dataExpression, environment, encoding), encoding);
+        final ParseResult result = iterate(scope, dataResult, 0, environment.addBranch(this), encoding);
         if (result.succeeded) {
             return success(new Environment(result.environment.closeBranch().order, environment.source, environment.offset, environment.callbacks));
+        }
+        return failure(environment);
+    }
+
+    private ParseResult iterate(final String scope, final ImmutableList<OptionalValue> values, final int index, final Environment environment, final Encoding encoding) throws IOException {
+        if (!values.head.isPresent()) {
+            return failure(environment);
+        }
+        final ParseResult result = token.parse(scope, environment.source(dataExpression, index, environment, encoding), encoding);
+        if (result.succeeded) {
+            if (values.tail.isEmpty()) { return result; }
+            return iterate(scope, values.tail, index + 1, result.environment, encoding);
         }
         return failure(environment);
     }

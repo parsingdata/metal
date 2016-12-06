@@ -21,28 +21,38 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import java.io.IOException;
 
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class DataExpressionSource extends Source {
 
     public final ValueExpression dataExpression;
+    public final int index;
     public final Environment environment;
     public final Encoding encoding;
 
-    public DataExpressionSource(final ValueExpression dataExpression, final Environment environment, final Encoding encoding) {
+    public DataExpressionSource(final ValueExpression dataExpression, final int index, final Environment environment, final Encoding encoding) {
         this.dataExpression = checkNotNull(dataExpression, "dataExpression");
+        this.index = index;
         this.environment = checkNotNull(environment, "environment");
         this.encoding = checkNotNull(encoding, "encoding");
     }
 
     @Override
     protected byte[] getData(final long offset, final int size) throws IOException {
-        final byte[] inputData = dataExpression.eval(environment, encoding).head.get().getValue();
+        ImmutableList<OptionalValue> results = dataExpression.eval(environment, encoding);
+        if (results.size <= index) { throw new IllegalStateException("ValueExpression dataExpression yields incorrect amount of results."); }
+        final byte[] inputData = getValueAtIndex(results, index, 0).get().getValue();
         if (offset >= inputData.length) { return new byte[0]; }
         final int toCopy = (int)offset + size > inputData.length ? inputData.length - (int)offset : size;
         final byte[] outputData = new byte[toCopy];
         System.arraycopy(inputData, (int)offset, outputData, 0, toCopy);
         return outputData;
+    }
+
+    private OptionalValue getValueAtIndex(ImmutableList<OptionalValue> results, int index, int current) {
+        if (index == current) { return results.head; }
+        return getValueAtIndex(results.tail, index, current + 1);
     }
 
     @Override
