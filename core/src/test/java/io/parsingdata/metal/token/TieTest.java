@@ -39,6 +39,7 @@ import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.tie;
 import static io.parsingdata.metal.Util.bytesToSlice;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
+import static io.parsingdata.metal.data.selection.ByType.getReferences;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -192,6 +193,18 @@ public class TieTest {
                 });
             }
         };
+    }
+
+    @Test
+    public void subInTie() throws IOException {
+        final Token simpleSeq = seq(any("a"), any("b"), any("c"));
+        final Token nestedSeq =
+            seq(simpleSeq,
+                def("d", con(3)),
+                tie(sub(simpleSeq, con(0)), last(ref("d"))));
+        final ParseResult result = nestedSeq.parse(stream(1, 2, 3, 1, 2, 3), enc());
+        assertTrue(result.succeeded);
+        assertEquals(0, getReferences(result.environment.order).size);
     }
 
 }

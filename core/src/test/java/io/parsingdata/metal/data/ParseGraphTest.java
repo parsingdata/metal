@@ -131,7 +131,7 @@ public class ParseGraphTest {
             .add(a)
             .addBranch(t)
             .add(b)
-            .add(new ParseReference(a.slice.offset, aDef))
+            .add(new ParseReference(a.slice.offset, a.slice.source, aDef))
             .closeBranch();
     }
 
@@ -270,7 +270,7 @@ public class ParseGraphTest {
     @Test
     public void testCurrent() {
         assertNull(EMPTY.current());
-        assertNull(EMPTY.add(new ParseReference(0, NONE)).current());
+        assertNull(EMPTY.add(new ParseReference(0, new Source() { @Override protected byte[] getData(long offset, int size) throws IOException { throw new IllegalStateException(); } }, NONE)).current());
         assertNull(EMPTY.addBranch(NONE).current());
     }
 

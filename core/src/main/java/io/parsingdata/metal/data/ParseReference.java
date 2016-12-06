@@ -25,15 +25,17 @@ import io.parsingdata.metal.token.Token;
 public class ParseReference implements ParseItem {
 
     public final long location;
+    public final Source source;
     public final Token definition;
 
-    public ParseReference(final long location, final Token definition) {
+    public ParseReference(final long location, final Source source, final Token definition) {
         this.location = location;
+        this.source = checkNotNull(source, "source");
         this.definition = checkNotNull(definition, "definition");
     }
 
     public ParseItem resolve(final ParseGraph root) {
-        return findItemAtOffset(getAllRoots(root, definition), location);
+        return findItemAtOffset(getAllRoots(root, definition), location, source);
     }
 
     @Override public boolean isValue() { return false; }
