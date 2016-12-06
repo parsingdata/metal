@@ -17,6 +17,7 @@
 package io.parsingdata.metal.token;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.CAT_REDUCER;
@@ -24,6 +25,7 @@ import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.elvis;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.fold;
@@ -217,6 +219,24 @@ public class TieTest {
         final ParseResult result = nestedSeq.parse(stream(1, 2, 3, 1, 2, 3, 1, 2, 3), enc());
         assertTrue(result.succeeded);
         assertEquals(0, getReferences(result.environment.order).size);
+    }
+
+    @Test
+    public void tieWithEmptyListFromDataExpression() throws IOException {
+        final Token token = seq(any("a"), tie(any("b"), last(ref("c"))));
+        assertFalse(token.parse(stream(0), enc()).succeeded);
+    }
+
+    @Test
+    public void tieFail() throws IOException {
+        final Token token = seq(def("a", con(1), eq(con(0))), tie(def("b", con(1), eq(con(1))), last(ref("a"))));
+        assertFalse(token.parse(stream(0), enc()).succeeded);
+    }
+
+    @Test
+    public void tieWithEmptyValueFromDataExpression() throws IOException {
+        final Token token = seq(any("a"), tie(any("b"), div(con(1), con(0))));
+        assertFalse(token.parse(stream(0), enc()).succeeded);
     }
 
 }
