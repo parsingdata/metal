@@ -21,8 +21,8 @@ public class WriterTest {
             def("name", 7));
 
         final Data data = new Data();
-        data._name = "Gertjan";
-        data._length = (byte) data._name.length();
+        data.name = "Gertjan";
+        data.length = (byte) data.name.length();
 
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
         Writer.write(token, data, out, enc());
@@ -34,9 +34,9 @@ public class WriterTest {
     public static class Data {
 
         @Name("name")
-        public String _name;
+        public String name;
 
         @Name("length")
-        public byte _length;
+        public byte length;
     }
 }
