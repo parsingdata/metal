@@ -76,7 +76,8 @@ public class TieTest {
             repn(any("offset"), last(ref("tableSize"))),
             sub(def("data", last(ref("blockSize"))), ref("offset")),
             tie(INC_PREV_MOD_100, fold(rev(ref("data")), CAT_REDUCER)));
-    public static final Token SIMPLE_SEQ = seq(any("a"), any("b"), any("c"));
+
+    private static final Token SIMPLE_SEQ = seq(any("a"), any("b"), any("c"));
 
     @Test
     public void smallContainer() throws IOException {
@@ -211,12 +212,13 @@ public class TieTest {
 
     @Test
     public void subInTieMulti() throws IOException {
+        final Token tie = tie(SIMPLE_SEQ, ref("d"));
         final Token nestedSeq =
-            seq(SIMPLE_SEQ,
+            seq(def("d", con(3)),
                 def("d", con(3)),
-                def("d", con(3)),
-                tie(sub(SIMPLE_SEQ, con(0)), ref("d")));
-        final ParseResult result = nestedSeq.parse(stream(1, 2, 3, 1, 2, 3, 1, 2, 3), enc());
+                tie,
+                sub(tie, con(0)));
+        final ParseResult result = nestedSeq.parse(stream(1, 2, 3, 1, 2, 3), enc());
         assertTrue(result.succeeded);
         assertEquals(0, getReferences(result.environment.order).size);
     }
