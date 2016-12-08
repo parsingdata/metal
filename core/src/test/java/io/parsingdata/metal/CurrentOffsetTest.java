@@ -34,10 +34,11 @@ import org.junit.Test;
 
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
+import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.reference.CurrentOffset;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
@@ -53,7 +54,7 @@ public class CurrentOffsetTest {
     public void currentOffset() {
         final Environment environment = new Environment(NO_BYTES, 42);
 
-        final OptionalValueList currentOffset = CURRENT_OFFSET.eval(environment, ENCODING);
+        final ImmutableList<OptionalValue> currentOffset = CURRENT_OFFSET.eval(environment, ENCODING);
 
         assertNotNull(currentOffset);
         assertEquals(1, currentOffset.size);
@@ -65,7 +66,7 @@ public class CurrentOffsetTest {
         // offset would flip signed bit if interpreted as signed integer:
         final Environment environment = new Environment(NO_BYTES, 128);
 
-        final OptionalValueList currentOffset = CURRENT_OFFSET.eval(environment, ENCODING);
+        final ImmutableList<OptionalValue> currentOffset = CURRENT_OFFSET.eval(environment, ENCODING);
 
         assertNotNull(currentOffset);
         assertEquals(1, currentOffset.size);

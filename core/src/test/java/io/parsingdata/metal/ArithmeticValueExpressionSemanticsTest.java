@@ -88,6 +88,7 @@ public class ArithmeticValueExpressionSemanticsTest extends ParameterizedParse {
             { "[signed] -10 % 5 == 0", mod, stream(-10, 5, 0), signed(), true },
             { "[signed] -10 % 4 == 2", mod, stream(-10, 4, 2), signed(), true },
             { "[signed] 10 % -5 == 0", mod, stream(10, -5, 0), signed(), false },
+            { "[signed] 10 % 0 == 0", mod, stream(10, 0, 0), signed(), false },
             { "[signed] -(1) == -1", neg, stream(1, -1), signed(), true },
             { "[signed] -(2) == -2", neg, stream(2, -2), signed(), true },
             { "[signed] -(3) == -3", neg, stream(3, -3), signed(), true },

@@ -18,43 +18,49 @@ package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-public class ParseItemList {
+public class ImmutableList<T> {
 
-    public final ParseItem head;
-    public final ParseItemList tail;
+    public final T head;
+    public final ImmutableList<T> tail;
     public final long size;
 
-    public static final ParseItemList EMPTY = new ParseItemList();
-
-    private ParseItemList() {
+    public ImmutableList() {
         head = null;
         tail = null;
         size = 0;
     }
 
-    private ParseItemList(final ParseItem head, final ParseItemList tail) {
+    private ImmutableList(final T head, final ImmutableList<T> tail) {
         this.head = checkNotNull(head, "head");
         this.tail = checkNotNull(tail, "tail");
         size = tail.size + 1;
     }
 
-    public static ParseItemList create(final ParseItem head) {
-        return EMPTY.add(checkNotNull(head, "head"));
+    public static <T> ImmutableList<T> create(final T head) {
+        return new ImmutableList<T>().add(checkNotNull(head, "head"));
     }
 
-    public ParseItemList add(final ParseItem head) {
-        return new ParseItemList(checkNotNull(head, "head"), this);
+    public ImmutableList<T> add(final T head) {
+        return new ImmutableList<>(checkNotNull(head, "head"), this);
     }
 
-    public ParseItemList add(final ParseItemList list) {
+    public ImmutableList<T> add(final ImmutableList<T> list) {
         checkNotNull(list, "list");
         if (list.isEmpty()) { return this; }
         if (isEmpty()) { return list; }
         return add(list.tail).add(list.head);
     }
 
-    public boolean isEmpty() {
-        return size == 0;
+    public boolean isEmpty() { return size == 0; }
+
+    public ImmutableList<T> reverse() {
+        if (isEmpty()) { return this; }
+        return reverse(tail, create(head));
+    }
+
+    private ImmutableList<T> reverse(final ImmutableList<T> oldList, final ImmutableList<T> newList) {
+        if (oldList.isEmpty()) { return newList; }
+        return reverse(oldList.tail, newList.add(oldList.head));
     }
 
     @Override

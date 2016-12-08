@@ -34,7 +34,9 @@ public class Div extends BinaryValueExpression {
 
     @Override
     public OptionalValue eval(final Value left, final Value right, final Environment environment, final Encoding encoding) {
-        if (right.asNumeric().equals(BigInteger.ZERO)) { return OptionalValue.empty(); }
+        if (right.asNumeric().equals(BigInteger.ZERO)) {
+            return OptionalValue.empty();
+        }
         return OptionalValue.of(ConstantFactory.createFromNumeric(left.asNumeric().divide(right.asNumeric()), encoding));
     }
 

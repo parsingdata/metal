@@ -17,11 +17,11 @@
 package io.parsingdata.metal.expression.value;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 
 public interface ValueExpression {
 
-    OptionalValueList eval(Environment environment, Encoding encoding);
+    ImmutableList<OptionalValue> eval(Environment environment, Encoding encoding);
 
 }

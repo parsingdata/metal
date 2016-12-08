@@ -17,7 +17,7 @@
 package io.parsingdata.metal.expression.value.reference;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -25,8 +25,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 public class Self implements ValueExpression {
 
     @Override
-    public OptionalValueList eval(final Environment environment, final Encoding encoding) {
-        return OptionalValueList.create(OptionalValue.of(environment.order.current()));
+    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
+        return ImmutableList.create(OptionalValue.of(environment.order.current()));
     }
 
     @Override

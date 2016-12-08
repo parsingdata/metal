@@ -45,14 +45,20 @@ public class Seq extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         final ParseResult result = iterate(scope, environment.addBranch(this), encoding, 0);
-        if (result.succeeded) { return success(result.environment.closeBranch()); }
+        if (result.succeeded) {
+            return success(result.environment.closeBranch());
+        }
         return failure(environment);
     }
 
     private ParseResult iterate(final String scope, final Environment environment, final Encoding encoding, final int index) throws IOException {
-        if (index >= tokens.length) { return success(environment); }
+        if (index >= tokens.length) {
+            return success(environment);
+        }
         final ParseResult result = tokens[index].parse(scope, environment, encoding);
-        if (result.succeeded) { return iterate(scope, result.environment, encoding, index + 1); }
+        if (result.succeeded) {
+            return iterate(scope, result.environment, encoding, index + 1);
+        }
         return result;
     }
 
