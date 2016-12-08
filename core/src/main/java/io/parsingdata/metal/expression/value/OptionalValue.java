@@ -18,6 +18,10 @@ package io.parsingdata.metal.expression.value;
 
 import java.util.NoSuchElementException;
 
+import io.parsingdata.metal.Util;
+import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseValue;
+
 public class OptionalValue {
 
     private final Value value; // Private because access is explicitly guarded.
@@ -38,16 +42,19 @@ public class OptionalValue {
         return new OptionalValue();
     }
 
+    public static ImmutableList<OptionalValue> wrap(final ImmutableList<ParseValue> list) {
+        Util.checkNotNull(list, "list");
+        if (list.isEmpty()) { return new ImmutableList<>(); }
+        return wrap(list.tail).add(of(list.head));
+    }
+
     public boolean isPresent() {
         return value != null;
     }
 
     public Value get() {
-        if (isPresent()) {
-            return value;
-        } else {
-            throw new NoSuchElementException("OptionalValue instance is empty.");
-        }
+        if (isPresent()) { return value; }
+        else { throw new NoSuchElementException("OptionalValue instance is empty."); }
     }
 
     @Override

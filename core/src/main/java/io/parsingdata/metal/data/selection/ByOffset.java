@@ -19,9 +19,9 @@ package io.parsingdata.metal.data.selection;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.selection.ByToken.getAllRoots;
 
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
-import io.parsingdata.metal.data.ParseItemList;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.token.Token;
 
@@ -33,18 +33,14 @@ public final class ByOffset {
         return findItemAtOffset(getAllRoots(graph, definition), offset) != null;
     }
 
-    public static ParseItem findItemAtOffset(final ParseItemList items, final long offset) {
+    public static ParseItem findItemAtOffset(final ImmutableList<ParseItem> items, final long offset) {
         checkNotNull(items, "items");
         if (items.isEmpty()) { return null; }
         final ParseItem head = items.head;
-        if (head.isValue() && head.asValue().getOffset() == offset) {
-            return head;
-        }
+        if (head.isValue() && head.asValue().getOffset() == offset) { return head; }
         if (head.isGraph()) {
             final ParseValue value = getLowestOffsetValue(head.asGraph(), null);
-            if (value != null && value.getOffset() == offset) {
-                return head;
-            }
+            if (value != null && value.getOffset() == offset) { return head; }
         }
         return findItemAtOffset(items.tail, offset);
     }

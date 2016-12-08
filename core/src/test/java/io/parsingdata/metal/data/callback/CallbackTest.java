@@ -16,7 +16,10 @@
 
 package io.parsingdata.metal.data.callback;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.cho;
@@ -31,79 +34,77 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Deque;
 
 import org.junit.Test;
 
 import io.parsingdata.metal.SubStructTest;
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseItemList;
+import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseItem;
+import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class CallbackTest {
 
-    private int successCount = 0;
-    private int failureCount = 0;
-    private int linkedListCount = 0;
+    private static final Token ONE = def("one", 1, eq(con(1)));
+    private static final Token TWO = def("two", 1, eq(con(2)));
+    private static final Token THREE = def("three", 1, eq(con(3)));
+    private static final Token FOUR = def("four", 1, eq(con(4)));
+    private static final Token SEQ123 = seq(ONE, TWO, THREE);
+    private static final Token SEQ124 = seq(ONE, TWO, FOUR);
+    private static final Token CHOICE = cho(SEQ123, SEQ124);
+
+    private long linkedListCount = 0;
 
     @Test
     public void testHandleCallback() throws IOException {
-        final Token one = def("one", 1, eq(con(1)));
-        final Token two = def("two", 1, eq(con(2)));
-        final Token cho = cho("cho", one, two);
-        final Token sequence = seq("seq", cho, one);
-        final Callback callback = new BaseCallback() {
+        final CountingCallback countingCallback = new CountingCallback();
 
-            @Override
-            public void handleSuccess(final Token token, final Environment environment) {
-                successCount++;
-            }
-
-            @Override
-            protected void handleFailure(Token token, Environment environment) {
-                failureCount++;
-            }
-
-        };
-        final TokenCallbackList callbacks = TokenCallbackList
-            .create(new TokenCallback(one, callback))
-            .add(new TokenCallback(two, callback))
-            .add(new TokenCallback(cho, callback))
-            .add(new TokenCallback(sequence, callback));
+        final Token cho = cho("cho", ONE, TWO);
+        final Token sequence = seq("seq", cho, ONE);
+        final Callbacks callbacks = Callbacks.create()
+                .add(ONE, countingCallback)
+                .add(TWO, countingCallback)
+                .add(cho, countingCallback)
+                .add(sequence, countingCallback);
         final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 2, 1 }), callbacks);
         assertTrue(sequence.parse(environment, enc()).succeeded);
-        assertEquals(4, successCount);
-        assertEquals(1, failureCount);
+        countingCallback.assertCounts(4, 1);
     }
 
     private static final Token SIMPLE_SEQ = seq(any("a"), any("b"));
 
-    private TokenCallbackList createCallbackList(Token token, final long... offsets) {
-        return TokenCallbackList.create(new TokenCallback(token, new BaseCallback() {
+    private Callbacks createCallbackList(Token token, final long... offsets) {
+        return Callbacks.create().add(token, new BaseCallback() {
 
             private int count = 0;
 
             @Override
             protected void handleSuccess(Token token, Environment environment) {
-                final ParseItemList roots = getAllRoots(environment.order, token);
+                final ImmutableList<ParseItem> roots = getAllRoots(environment.order, token);
                 assertEquals(offsets[count++], roots.head.asGraph().tail.head.asValue().getOffset());
             }
 
             @Override
             protected void handleFailure(Token token, Environment environment) {}
-        }));
+        });
     }
 
     @Test
     public void testSimpleCallback() throws IOException {
-        final TokenCallbackList callbacks = createCallbackList(SIMPLE_SEQ, 0L);
+        final Callbacks callbacks = createCallbackList(SIMPLE_SEQ, 0L);
         final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2 }), callbacks);
         assertTrue(SIMPLE_SEQ.parse(environment, enc()).succeeded);
     }
 
     @Test
     public void testRepSimpleCallback() throws IOException {
-        final TokenCallbackList callbacks = createCallbackList(SIMPLE_SEQ, 0L, 2L);
+        final Callbacks callbacks = createCallbackList(SIMPLE_SEQ, 0L, 2L);
         final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }), callbacks);
         assertTrue(rep(SIMPLE_SEQ).parse(environment, enc()).succeeded);
     }
@@ -111,15 +112,15 @@ public class CallbackTest {
     @Test
     public void seqAndRepCallbacks() throws IOException {
         final Token repeatingSeq = rep(SIMPLE_SEQ);
-        final TokenCallbackList callbacks = createCallbackList(SIMPLE_SEQ, 0L, 2L)
-                .add(new TokenCallback(repeatingSeq, new BaseCallback() {
+        final Callbacks callbacks = createCallbackList(SIMPLE_SEQ, 0L, 2L)
+                .add(repeatingSeq, new BaseCallback() {
                     @Override
                     protected void handleSuccess(Token token, Environment environment) {
-                        final ParseItemList repRoots = getAllRoots(environment.order, token);
+                        final ImmutableList<ParseItem> repRoots = getAllRoots(environment.order, token);
                         assertEquals(1, repRoots.size);
 
                         // verify that two Seq tokens were parsed:
-                        final ParseItemList seqRoots = getAllRoots(environment.order, SIMPLE_SEQ);
+                        final ImmutableList<ParseItem> seqRoots = getAllRoots(environment.order, SIMPLE_SEQ);
                         assertEquals(2, seqRoots.size);
 
                         // verify order of the two Seq graphs:
@@ -129,14 +130,14 @@ public class CallbackTest {
 
                     @Override
                     protected void handleFailure(Token token, Environment environment) {}
-                }));
+                });
         final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }), callbacks);
         assertTrue(repeatingSeq.parse(environment, enc()).succeeded);
     }
 
     @Test
     public void refInCallback() throws IOException {
-        TokenCallbackList callbacks = TokenCallbackList.create(new TokenCallback(SubStructTest.LINKED_LIST, new BaseCallback() {
+        final Callbacks callbacks = Callbacks.create().add(SubStructTest.LINKED_LIST, new BaseCallback() {
             @Override
             protected void handleSuccess(Token token, Environment environment) {
                 linkedListCount++;
@@ -144,11 +145,111 @@ public class CallbackTest {
 
             @Override
             protected void handleFailure(Token token, Environment environment) {}
-        }));
+        });
         final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 0, 3, 1, 0, 0, 1 }), callbacks);
         assertTrue(SubStructTest.LINKED_LIST.parse(environment, enc()).succeeded);
         // The ParseReference does not trigger the callback:
         assertEquals(2, linkedListCount);
     }
 
+    @Test
+    public void genericCallback() throws IOException {
+        final Deque<Token> expectedSuccessDefinitions = new ArrayDeque<>(Arrays.asList(ONE, TWO, ONE, TWO, FOUR, SEQ124, CHOICE));
+        final Deque<Long> expectedSuccessOffsets = new ArrayDeque<>(Arrays.asList(1L, 2L, 1L, 2L, 3L, 3L, 3L));
+        final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(Arrays.asList(THREE, SEQ123));
+        final Deque<Long> expectedFailureOffsets = new ArrayDeque<>(Arrays.asList(2L, 0L));
+        final OffsetDefinitionCallback genericCallback = new OffsetDefinitionCallback(
+            expectedSuccessOffsets,
+            expectedSuccessDefinitions,
+            expectedFailureOffsets,
+            expectedFailureDefinitions);
+
+        final Callbacks callbacks = Callbacks.create().add(genericCallback);
+        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 4 }), callbacks);
+        final ParseResult parse = CHOICE.parse(environment, enc());
+        assertTrue(parse.succeeded);
+        genericCallback.assertAllHandled();
+    }
+
+    @Test
+    public void tokenAndGenericCallbacks() throws IOException {
+        final CountingCallback countingCallback = new CountingCallback();
+
+        final Token cho = cho(ONE, TWO);
+
+        final Deque<Token> expectedSuccessDefinitions = new ArrayDeque<>(Arrays.asList(TWO, cho));
+        final Deque<Long> expectedSuccessOffsets = new ArrayDeque<>(Arrays.asList(1L, 1L));
+        final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(Collections.singletonList(ONE));
+        final Deque<Long> expectedFailureOffsets = new ArrayDeque<>(Collections.singletonList(0L));
+        final OffsetDefinitionCallback genericCallback = new OffsetDefinitionCallback(
+            expectedSuccessOffsets,
+            expectedSuccessDefinitions,
+            expectedFailureOffsets,
+            expectedFailureDefinitions);
+
+        final Callbacks callbacks = Callbacks.create()
+            .add(genericCallback)
+            .add(ONE, countingCallback)
+            .add(TWO, countingCallback)
+            .add(cho, countingCallback);
+        final long expectedSuccessCount = expectedSuccessDefinitions.size();
+        final long expectedFailureCount = expectedFailureDefinitions.size();
+        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 2 }), callbacks);
+        assertTrue(cho.parse(environment, enc()).succeeded);
+        genericCallback.assertAllHandled();
+        countingCallback.assertCounts(expectedSuccessCount, expectedFailureCount);
+    }
+
+    private static class OffsetDefinitionCallback extends BaseCallback {
+        private final Deque<Long> expectedSuccessOffsets;
+        private final Deque<Token> expectedSuccessDefinitions;
+        private final Deque<Long> expectedFailureOffsets;
+        private final Deque<Token> expectedFailureDefinitions;
+
+        OffsetDefinitionCallback(Deque<Long> expectedSuccessOffsets, Deque<Token> expectedSuccessDefinitions, Deque<Long> expectedFailureOffsets, Deque<Token> expectedFailureDefinitions) {
+            this.expectedSuccessOffsets = expectedSuccessOffsets;
+            this.expectedSuccessDefinitions = expectedSuccessDefinitions;
+            this.expectedFailureOffsets = expectedFailureOffsets;
+            this.expectedFailureDefinitions = expectedFailureDefinitions;
+        }
+
+        @Override
+        protected void handleSuccess(Token token, Environment environment) {
+            assertThat(environment.offset, is(equalTo(expectedSuccessOffsets.pop())));
+            assertThat(token, is(equalTo(expectedSuccessDefinitions.pop())));
+        }
+
+        @Override
+        protected void handleFailure(Token token, Environment environment) {
+            assertThat(environment.offset, is(equalTo(expectedFailureOffsets.pop())));
+            assertThat(token, is(equalTo(expectedFailureDefinitions.pop())));
+        }
+
+        void assertAllHandled() {
+            assertTrue(expectedSuccessOffsets.isEmpty());
+            assertTrue(expectedSuccessDefinitions.isEmpty());
+            assertTrue(expectedFailureOffsets.isEmpty());
+            assertTrue(expectedFailureDefinitions.isEmpty());
+        }
+    }
+
+    private class CountingCallback extends BaseCallback {
+        private int successCount = 0;
+        private int failureCount = 0;
+
+        @Override
+        public void handleSuccess(final Token token, final Environment environment) {
+            successCount++;
+        }
+
+        @Override
+        protected void handleFailure(Token token, Environment environment) {
+            failureCount++;
+        }
+
+        void assertCounts(final long expectedSuccessCount, final long expectedFailureCount) {
+            assertEquals(expectedSuccessCount, successCount);
+            assertEquals(expectedFailureCount, failureCount);
+        }
+    }
 }

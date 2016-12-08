@@ -65,6 +65,7 @@
     <nexus-staging-plugin.version>1.6.3</nexus-staging-plugin.version>
     <gpg-plugin.version>1.5</gpg-plugin.version>
     <source-plugin.version>2.2.1</source-plugin.version>
+    <pitest-maven.version>1.1.10</pitest-maven.version>
   </properties>
 
   <profiles>
@@ -168,6 +169,27 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.pitest</groupId>
+        <artifactId>pitest-maven</artifactId>
+        <version>${pitest-maven.version}</version>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>mutationCoverage</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <targetClasses>
+            <param>io.parsingdata.metal.*</param>
+          </targetClasses>
+          <targetTests>
+            <param>io.parsingdata.metal.*</param>
+          </targetTests>
+        </configuration>
       </plugin>
     </plugins>
     <pluginManagement>

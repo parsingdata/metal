@@ -16,11 +16,11 @@
 
 package io.parsingdata.metal.data.selection;
 
-import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseItem;
-
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.ParseGraph.EMPTY;
+
+import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseItem;
 
 public final class ByItem {
 
@@ -43,4 +43,5 @@ public final class ByItem {
         // TODO: How can we do this without calling the (previously private) constructor? (#64)
         return new ParseGraph(head, getGraphAfter(graph.tail, lastHead), graph.definition);
     }
+
 }

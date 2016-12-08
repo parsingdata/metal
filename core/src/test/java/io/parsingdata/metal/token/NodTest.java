@@ -16,24 +16,31 @@
 
 package io.parsingdata.metal.token;
 
-import io.parsingdata.metal.data.ParseResult;
-import org.junit.Test;
-
-import java.io.IOException;
-
-import static io.parsingdata.metal.Shorthand.*;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EncodingFactory.signed;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.nod;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EncodingFactory.signed;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
+
+import java.io.IOException;
+
+import org.junit.Test;
+
+import io.parsingdata.metal.data.ParseResult;
+
 public class NodTest {
 
-    private static final Token NOD = nod(con(4));
+    private static final Token NOD = nod(4);
     private static final Token NOD_REF_SIZE = nod(ref("size"));
     private static final Token FOUND_REF = seq(def("size", con(1)), NOD_REF_SIZE);
 

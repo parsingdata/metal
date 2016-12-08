@@ -24,10 +24,11 @@ import static io.parsingdata.metal.data.selection.ByOffset.hasRootAtOffset;
 import java.io.IOException;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class Sub extends Token {
@@ -43,8 +44,10 @@ public class Sub extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final OptionalValueList addresses = address.eval(environment, encoding);
-        if (addresses.isEmpty() || addresses.containsEmpty()) { return failure(environment); }
+        final ImmutableList<OptionalValue> addresses = address.eval(environment, encoding);
+        if (addresses.isEmpty()) {
+            return failure(environment);
+        }
         final ParseResult result = iterate(scope, addresses, environment.addBranch(this), encoding);
         if (result.succeeded) {
             return success(result.environment.closeBranch().seek(environment.offset));
@@ -52,13 +55,14 @@ public class Sub extends Token {
         return failure(environment);
     }
 
-    private ParseResult iterate(final String scope, final OptionalValueList addresses, final Environment environment, final Encoding encoding) throws IOException {
+    private ParseResult iterate(final String scope, final ImmutableList<OptionalValue> addresses, final Environment environment, final Encoding encoding) throws IOException {
+        if (!addresses.head.isPresent()) {
+            return failure(environment);
+        }
         final long offset = addresses.head.get().asNumeric().longValue();
         final ParseResult result = parse(scope, offset, environment, encoding);
         if (result.succeeded) {
-            if (addresses.tail.isEmpty()) {
-                return result;
-            }
+            if (addresses.tail.isEmpty()) { return result; }
             return iterate(scope, addresses.tail, result.environment, encoding);
         }
         return failure(environment);
@@ -69,16 +73,12 @@ public class Sub extends Token {
             return success(environment.add(new ParseReference(offset, token.getCanonical(environment))));
         }
         final ParseResult result = token.parse(scope, environment.seek(offset), encoding);
-        if (result.succeeded) {
-            return result;
-        }
+        if (result.succeeded) { return result; }
         return failure(environment);
     }
 
     @Override
-    public boolean isLocal() {
-        return false;
-    }
+    public boolean isLocal() { return false; }
 
     @Override
     public String toString() {

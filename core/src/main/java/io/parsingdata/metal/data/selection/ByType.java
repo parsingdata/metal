@@ -18,24 +18,24 @@ package io.parsingdata.metal.data.selection;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
-import io.parsingdata.metal.data.ParseItemList;
 
 public final class ByType {
 
     private ByType() {}
 
-    public static ParseItemList getReferences(final ParseGraph graph) {
+    public static ImmutableList<ParseItem> getReferences(final ParseGraph graph) {
         checkNotNull(graph, "graph");
         return getReferences(graph, graph);
     }
 
-    private static ParseItemList getReferences(final ParseGraph graph, final ParseGraph root) {
-        if (graph.isEmpty()) { return ParseItemList.EMPTY; }
+    private static ImmutableList<ParseItem> getReferences(final ParseGraph graph, final ParseGraph root) {
+        if (graph.isEmpty()) { return new ImmutableList<>(); }
         final ParseItem head = graph.head;
-        if (head.isReference() && head.asReference().resolve(root) == null) { throw new IllegalStateException("A ref must point to an existing graph."); }
-        return getReferences(graph.tail, root).add(head.isGraph() ? getReferences(head.asGraph(), root) : (head.isReference() ? ParseItemList.EMPTY.add(head.asReference().resolve(root)) : ParseItemList.EMPTY));
+        if (head.isReference() && head.asReference().resolve(root) == null) { throw new IllegalStateException("A ParseReference must point to an existing graph."); }
+        return getReferences(graph.tail, root).add(head.isGraph() ? getReferences(head.asGraph(), root) : (head.isReference() ? ImmutableList.create(head.asReference().resolve(root)) : new ImmutableList<ParseItem>()));
     }
 
 }

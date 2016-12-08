@@ -42,7 +42,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.encoding.Encoding;
 
 /**
  * See {@link io.parsingdata.metal.ReducersTest} for other fold tests.
@@ -70,6 +72,16 @@ public class FoldEdgeCaseTest {
         final Environment environment = rep(any("value")).parse(stream(1, 0), enc()).environment;
         assertFalse(foldLeft(ref("value"), DIV_REDUCER).eval(environment, enc()).head.isPresent());
         assertFalse(foldRight(ref("value"), DIV_REDUCER).eval(environment, enc()).head.isPresent());
+    }
+
+    @Test
+    public void inputContainsEmptyInTail() {
+        assertTrue(foldRight(new ValueExpression() {
+            @Override
+            public ImmutableList<OptionalValue> eval(Environment environment, Encoding encoding) {
+                return ImmutableList.create(OptionalValue.empty()).add(OptionalValue.of(new Value(new byte[] { 1, 2 }, enc())));
+            }
+        }, ADD_REDUCER).eval(stream(0), enc()).isEmpty());
     }
 
     @Test

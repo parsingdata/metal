@@ -60,17 +60,23 @@ public class ParseGraph implements ParseItem {
     }
 
     public ParseGraph add(final ParseValue head) {
-        if (branched) { return new ParseGraph(this.head.asGraph().add(head), tail, definition, true); }
+        if (branched) {
+            return new ParseGraph(this.head.asGraph().add(head), tail, definition, true);
+        }
         return new ParseGraph(head, this, definition);
     }
 
     public ParseGraph add(final ParseReference parseReference) {
-        if (branched) { return new ParseGraph(head.asGraph().add(parseReference), tail, definition, true); }
+        if (branched) {
+            return new ParseGraph(head.asGraph().add(parseReference), tail, definition, true);
+        }
         return new ParseGraph(parseReference, this, definition);
     }
 
     ParseGraph addBranch(final Token definition) {
-        if (branched) { return new ParseGraph(head.asGraph().addBranch(definition), tail, this.definition, true); }
+        if (branched) {
+            return new ParseGraph(head.asGraph().addBranch(definition), tail, this.definition, true);
+        }
         return new ParseGraph(new ParseGraph(definition), this, this.definition, true);
     }
 
@@ -82,16 +88,16 @@ public class ParseGraph implements ParseItem {
         return new ParseGraph(head, tail, definition, false);
     }
 
-    public boolean isEmpty() {
-        return size == 0;
-    }
+    public boolean isEmpty() { return size == 0; }
 
     /**
      * @return The first value (bottom-up) in this graph
      */
     public ParseValue current() {
         if (isEmpty()) { return null; }
-        if (head.isValue()) { return head.asValue(); }
+        if (head.isValue()) {
+            return head.asValue();
+        }
         if (head.isGraph()) {
             final ParseValue value = head.asGraph().current();
             if (value != null) { return value; }
@@ -110,7 +116,9 @@ public class ParseGraph implements ParseItem {
     @Override
     public String toString() {
         if (this == EMPTY) { return "graph(EMPTY)"; }
-        if (head == null) { return "graph(terminator:" + definition.getClass().getSimpleName() + ")"; }
+        if (head == null) {
+            return "graph(terminator:" + definition.getClass().getSimpleName() + ")";
+        }
         return "graph(" + head + ", " + tail + ", " + branched + ")";
     }
 

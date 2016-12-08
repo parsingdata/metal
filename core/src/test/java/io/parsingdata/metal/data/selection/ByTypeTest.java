@@ -34,7 +34,7 @@ public class ByTypeTest {
     @Test
     public void unresolvableRef() {
         thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("A ref must point to an existing graph.");
+        thrown.expectMessage("A ParseReference must point to an existing graph.");
         getReferences(EMPTY.add(new ParseReference(0, NONE)));
     }
 

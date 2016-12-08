@@ -25,7 +25,7 @@ import io.parsingdata.metal.token.Token;
 public class ParseValue extends Value implements ParseItem {
 
     public final String name;
-    public Token definition;
+    public final Token definition;
     public final long offset;
 
     public ParseValue(final String name, final Token definition, final long offset, final byte[] data, final Encoding encoding) {
@@ -39,9 +39,7 @@ public class ParseValue extends Value implements ParseItem {
         return this.name.equals(name) || this.name.endsWith(Token.SEPARATOR + name);
     }
 
-    public long getOffset() {
-        return offset;
-    }
+    public long getOffset() { return offset; }
 
     @Override public boolean isValue() { return true; }
     @Override public boolean isGraph() { return false; }

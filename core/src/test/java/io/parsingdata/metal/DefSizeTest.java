@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
@@ -83,6 +84,14 @@ public class DefSizeTest {
         assertFalse(def("a", EMPTY_VE).parse(stream(1, 2, 3, 4), enc()).succeeded);
         final Token aList = seq(any("a"), any("a"));
         assertFalse(seq(aList, def("b", ref("a"))).parse(stream(1, 2, 3, 4), enc()).succeeded);
+    }
+
+    @Test
+    public void zeroSizeDef() throws IOException {
+        assertTrue(seq(
+            def("twentyone", con(1), eq(con(21))),
+            def("size=zero", con(0)),
+            def("fortytwo", con(1), eq(con(42)))).parse(stream(21, 42), enc()).succeeded);
     }
 
 }

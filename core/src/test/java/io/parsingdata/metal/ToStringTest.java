@@ -16,10 +16,7 @@
 
 package io.parsingdata.metal;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.add;
@@ -56,7 +53,6 @@ import static io.parsingdata.metal.Shorthand.self;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.whl;
-import static io.parsingdata.metal.data.OptionalValueList.EMPTY;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
@@ -69,13 +65,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseItemList;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.data.ParseValueList;
 import io.parsingdata.metal.data.callback.Callback;
-import io.parsingdata.metal.data.callback.TokenCallback;
-import io.parsingdata.metal.data.callback.TokenCallbackList;
+import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
@@ -113,7 +107,7 @@ public class ToStringTest {
     private Token t() { return any("a"); }
 
     private ValueExpression v() {
-        return neg(add(div(mod(mul(sub(last(ref(n())), first(ref(n()))), con(1)), cat(ref(n()), ref(t()))), add(self, add(offset(ref(n())), add(currentOffset, count(ref(n())))))), elvis(ref(n()), ref(n()))));
+        return neg(add(div(mod(mul(sub(last(ref(n())), first(nth(ref(n()), con(1)))), con(1)), cat(ref(n()), ref(t()))), add(self, add(offset(ref(n())), add(currentOffset, count(ref(n())))))), elvis(ref(n()), ref(n()))));
     }
 
     @Test
@@ -135,6 +129,14 @@ public class ToStringTest {
     }
 
     @Test
+    public void specialExpressions() {
+        assertTrue(v().toString().contains("Self"));
+        assertTrue(v().toString().contains("CurrentOffset"));
+        assertEquals("Self", self.toString());
+        assertEquals("CurrentOffset", currentOffset.toString());
+    }
+
+    @Test
     public void encoding() {
         assertEquals("Encoding(UNSIGNED,US-ASCII,BIG_ENDIAN)", new Encoding().toString());
         assertEquals("Encoding(SIGNED,US-ASCII,BIG_ENDIAN)", new Encoding(Sign.SIGNED).toString());
@@ -153,19 +155,12 @@ public class ToStringTest {
         final String pv1String = "name(0x0102)";
         final OptionalValue ov1 = OptionalValue.of(pv1);
         final OptionalValue ov2 = OptionalValue.of(new Value(new byte[]{3}, enc()));
-        assertEquals(">OptionalValue(0x03)>OptionalValue(" + pv1String + ")", EMPTY.add(ov1).add(ov2).toString());
+        assertEquals(">OptionalValue(0x03)>OptionalValue(" + pv1String + ")", ImmutableList.create(ov1).add(ov2).toString());
         final ParseValue pv2 = new ParseValue("two", NONE, 0, new byte[]{3, 4}, enc());
         final String pv2String = "two(0x0304)";
-        assertEquals(">" + pv2String + ">" + pv1String, ParseItemList.create(pv1).add(pv2).toString());
-        assertEquals(">" + pv2String + ">" + pv1String, ParseValueList.create(pv1).add(pv2).toString());
+        assertEquals(">" + pv2String + ">" + pv1String, ImmutableList.create(pv1).add(pv2).toString());
+        assertEquals(">" + pv2String + ">" + pv1String, ImmutableList.create(pv1).add(pv2).toString());
     }
-
-    @Test
-    public void expression() {
-        final ValueExpression nth = nth(ref("value"), ref("index"));
-        assertThat(nth.toString(), is(equalTo("Nth(NameRef(value),NameRef(index))")));
-    }
-
 
     @Test
     public void callback() {
@@ -174,15 +169,19 @@ public class ToStringTest {
         final InMemoryByteStream emptyStream = new InMemoryByteStream(new byte[] {});
         final Environment empty = new Environment(emptyStream);
         final String prefix = "stream: " + emptyStreamName + "; offset: 0; order: " + emptyGraphName + "; callbacks: ";
+        final String genericPrefix = "generic: ";
+        final String tokenPrefix = "token: ";
         assertEquals(prefix, empty.toString());
-        final TokenCallbackList singleList = TokenCallbackList.create(new TokenCallback(makeToken("a"), makeCallback("first")));
-        final Environment one = new Environment(emptyStream, singleList);
+        final String genericCallbackName = "genericName";
+        final Callbacks singleCallbacks = Callbacks.create().add(makeToken("a"), makeCallback("first")).add(makeCallback(genericCallbackName));
+        final Environment one = new Environment(emptyStream, singleCallbacks);
         final String tokenCallback1Name = ">a->first";
-        final String oneName = prefix + tokenCallback1Name;
+        final String oneName = prefix + genericPrefix + genericCallbackName + "; " + tokenPrefix + tokenCallback1Name;
         assertEquals(oneName, one.toString());
-        final Environment two = new Environment(emptyStream, singleList.add(new TokenCallback(makeToken("b"), makeCallback("second"))));
+        final Callbacks doubleCallbacks = Callbacks.create().add(makeToken("a"), makeCallback("first")).add(makeToken("b"), makeCallback("second"));
+        final Environment two = new Environment(emptyStream, doubleCallbacks);
         final String tokenCallback2Name = ">b->second";
-        final String twoName = prefix + tokenCallback2Name + tokenCallback1Name;
+        final String twoName = prefix + tokenPrefix + tokenCallback2Name + tokenCallback1Name;
         assertEquals(twoName, two.toString());
     }
 

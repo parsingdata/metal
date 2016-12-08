@@ -18,10 +18,10 @@ package io.parsingdata.metal.data.selection;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.data.ParseValueList;
 
 public final class ByName {
 
@@ -37,7 +37,9 @@ public final class ByName {
         checkNotNull(name, "name");
         if (graph.isEmpty()) { return null; }
         final ParseItem head = graph.head;
-        if (head.isValue() && head.asValue().matches(name)) { return head.asValue(); }
+        if (head.isValue() && head.asValue().matches(name)) {
+            return head.asValue();
+        }
         if (head.isGraph()) {
             final ParseValue value = getValue(head.asGraph(), name);
             if (value != null) { return value; }
@@ -50,19 +52,39 @@ public final class ByName {
      * @param name Name of the value
      * @return All values with the provided name in this graph
      */
-    public static ParseValueList getAllValues(final ParseGraph graph, final String name) {
+    public static ImmutableList<ParseValue> getAllValues(final ParseGraph graph, final String name) {
         checkNotNull(graph, "graph");
         checkNotNull(name, "name");
         return getAllValuesRecursive(graph, name);
     }
 
-    private static ParseValueList getAllValuesRecursive(final ParseGraph graph, final String name) {
-        if (graph.isEmpty()) { return ParseValueList.EMPTY; }
-        final ParseValueList tailResults = getAllValuesRecursive(graph.tail, name);
+    private static ImmutableList<ParseValue> getAllValuesRecursive(final ParseGraph graph, final String name) {
+        if (graph.isEmpty()) { return new ImmutableList<>(); }
+        final ImmutableList<ParseValue> tailResults = getAllValuesRecursive(graph.tail, name);
         final ParseItem head = graph.head;
-        if (head.isValue() && head.asValue().matches(name)) { return tailResults.add(head.asValue()); }
-        if (head.isGraph()) { return tailResults.add(getAllValuesRecursive(head.asGraph(), name)); }
+        if (head.isValue() && head.asValue().matches(name)) {
+            return tailResults.add(head.asValue());
+        }
+        if (head.isGraph()) {
+            return tailResults.add(getAllValuesRecursive(head.asGraph(), name));
+        }
         return tailResults;
+    }
+
+    public static ParseValue get(final ImmutableList<ParseValue> list, final String name) {
+        if (list.isEmpty()) { return null; }
+        if (list.head.matches(name)) { return list.head; }
+        else {
+            return get(list.tail, name);
+        }
+    }
+
+    public static ImmutableList<ParseValue> getAll(final ImmutableList<ParseValue> list, final String name) {
+        if (list.isEmpty()) { return list; }
+        final ImmutableList<ParseValue> tailList = getAll(list.tail, name);
+        if (list.head.matches(name)) {
+            return tailList.add(list.head);
+        } else { return tailList; }
     }
 
 }
