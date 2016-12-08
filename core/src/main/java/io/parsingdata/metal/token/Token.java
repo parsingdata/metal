@@ -19,6 +19,7 @@ package io.parsingdata.metal.token;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
@@ -49,6 +50,10 @@ public abstract class Token {
     }
 
     protected abstract ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException;
+
+    public void write(final Object obj, final OutputStream out, final Encoding encoding) throws Exception {
+        // TODO make abstract
+    }
 
     private String makeScope(final String scope) {
         return scope + (scope.isEmpty() || name.isEmpty() ? "" : SEPARATOR) + name;

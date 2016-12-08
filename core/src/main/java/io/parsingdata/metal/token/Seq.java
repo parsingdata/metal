@@ -21,6 +21,7 @@ import static io.parsingdata.metal.data.ParseResult.failure;
 import static io.parsingdata.metal.data.ParseResult.success;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
@@ -60,4 +61,10 @@ public class Seq extends Token {
         return getClass().getSimpleName() + "(" + makeNameFragment() + Util.tokensToString(tokens) + ")";
     }
 
+    @Override
+    public void write(final Object obj, final OutputStream out, final Encoding encoding) throws Exception {
+        for (final Token token : tokens) {
+            token.write(obj, out, encoding);
+        }
+    }
 }
