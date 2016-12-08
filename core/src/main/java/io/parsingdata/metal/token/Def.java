@@ -21,7 +21,6 @@ import static io.parsingdata.metal.data.ParseResult.failure;
 import static io.parsingdata.metal.data.ParseResult.success;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
@@ -32,7 +31,6 @@ import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.True;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
-import io.parsingdata.metal.writer.Writer;
 
 public class Def extends Token {
 
@@ -70,8 +68,4 @@ public class Def extends Token {
         return getClass().getSimpleName() + "(" + makeNameFragment() + size + "," + predicate + ")";
     }
 
-    @Override
-    public void write(final Object obj, final OutputStream out, final Encoding encoding) throws Exception {
-        Writer.write(obj, name, out, encoding);
-    }
 }

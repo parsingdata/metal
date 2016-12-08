@@ -25,7 +25,7 @@ public class WriterTest {
         data._length = (byte) data._name.length();
 
         final ByteArrayOutputStream out = new ByteArrayOutputStream();
-        token.write(data, out, enc());
+        Writer.write(token, data, out, enc());
 
         final byte[] expecteds = new byte[]{7, 71, 101, 114, 116, 106, 97, 110};
         assertArrayEquals(expecteds, out.toByteArray());
