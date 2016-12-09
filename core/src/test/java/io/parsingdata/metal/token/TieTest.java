@@ -39,6 +39,7 @@ import static io.parsingdata.metal.Shorthand.rev;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.tie;
+import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.Util.bytesToSlice;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
@@ -200,27 +201,24 @@ public class TieTest {
     }
 
     @Test
-    public void subInTie() throws IOException {
+    public void tieAndSubOnSameData() throws IOException {
         final Token nestedSeq =
-            seq(SIMPLE_SEQ,
-                def("d", con(3)),
-                tie(sub(SIMPLE_SEQ, con(0)), last(ref("d"))));
-        final ParseResult result = nestedSeq.parse(stream(1, 2, 3, 1, 2, 3), enc());
+            seq(def("d", con(3)),
+                tie(SIMPLE_SEQ, ref("d")),
+                sub(SIMPLE_SEQ, con(0)));
+        final ParseResult result = nestedSeq.parse(stream(1, 2, 3), enc());
         assertTrue(result.succeeded);
         assertEquals(0, getReferences(result.environment.order).size);
     }
 
     @Test
-    public void subInTieMulti() throws IOException {
-        final Token tie = tie(SIMPLE_SEQ, ref("d"));
-        final Token nestedSeq =
-            seq(def("d", con(3)),
-                def("d", con(3)),
-                tie,
-                sub(tie, con(0)));
-        final ParseResult result = nestedSeq.parse(stream(1, 2, 3, 1, 2, 3), enc());
+    public void nestedTie() throws IOException {
+        final Token nestedTie =
+            seq("s",
+                def("a", con(1)),
+                tie(token("s"), ref("a")));
+        final ParseResult result = nestedTie.parse(stream(0), enc());
         assertTrue(result.succeeded);
-        assertEquals(0, getReferences(result.environment.order).size);
     }
 
     @Test
