@@ -19,11 +19,13 @@ package io.parsingdata.metal.token;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.ParseResult.failure;
 import static io.parsingdata.metal.data.ParseResult.success;
+import static io.parsingdata.metal.data.selection.ByOffset.hasRootAtOffset;
 
 import java.io.IOException;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
@@ -57,12 +59,19 @@ public class Tie extends Token {
         if (!values.head.isPresent()) {
             return failure(environment);
         }
-        final ParseResult result = token.parse(scope, environment.source(dataExpression, index, environment, encoding), encoding);
+        final ParseResult result = parse(scope, index, environment, encoding);
         if (result.succeeded) {
             if (values.tail.isEmpty()) { return result; }
             return iterate(scope, values.tail, index + 1, result.environment, encoding);
         }
         return failure(environment);
+    }
+
+    private ParseResult parse(final String scope, final int index, final Environment environment, final Encoding encoding) throws IOException {
+        if (hasRootAtOffset(environment.order, token.getCanonical(environment), 0, environment.source)) {
+            return success(environment.add(new ParseReference(0, environment.source, token.getCanonical(environment))));
+        }
+        return token.parse(scope, environment.source(dataExpression, index, environment, encoding), encoding);
     }
 
     @Override

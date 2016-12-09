@@ -219,6 +219,7 @@ public class TieTest {
                 tie(token("s"), ref("a")));
         final ParseResult result = nestedTie.parse(stream(0), enc());
         assertTrue(result.succeeded);
+        assertEquals(1, getReferences(result.environment.order).size);
     }
 
     @Test
