@@ -56,7 +56,9 @@ import java.util.zip.Inflater;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
@@ -220,6 +222,22 @@ public class TieTest {
         final ParseResult result = nestedTie.parse(stream(0), enc());
         assertTrue(result.succeeded);
         assertEquals(1, getReferences(result.environment.order).size);
+    }
+
+    @Test
+    public void multiTie() throws IOException {
+        final Token multiTie =
+            seq(def("d", con(3)),
+                def("d", con(3)),
+                tie(SIMPLE_SEQ, ref("d")));
+        final ParseResult result = multiTie.parse(stream(1, 2, 3, 1, 2, 3), enc());
+        assertTrue(result.succeeded);
+        assertEquals(0, getReferences(result.environment.order));
+        final String[] names = { "a", "b", "c", "d" };
+        for (int i = 0; i < names.length; i++) {
+            ImmutableList<ParseValue> values = getAllValues(result.environment.order, names[i]);
+            assertEquals(2, values.size);
+        }
     }
 
     @Test

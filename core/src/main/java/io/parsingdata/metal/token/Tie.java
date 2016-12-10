@@ -75,9 +75,6 @@ public class Tie extends Token {
     }
 
     @Override
-    public boolean isLocal() { return false; }
-
-    @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + makeNameFragment() + token + ", " + dataExpression + ")";
     }
