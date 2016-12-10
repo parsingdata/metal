@@ -265,4 +265,14 @@ public class TieTest {
         assertFalse(token.parse(stream(0), enc()).succeeded);
     }
 
+    @Test
+    public void tieOnConstant() throws IOException {
+        final Token strictSeq =
+            seq(def("a", con(1), eq(con(1))),
+                def("b", con(1), eq(con(2))),
+                def("c", con(1), eq(con(3))));
+        assertTrue(tie(strictSeq, con(1, 2, 3)).parse(stream(), enc()).succeeded);
+        assertFalse(tie(strictSeq, con(1, 2, 4)).parse(stream(), enc()).succeeded);
+    }
+
 }

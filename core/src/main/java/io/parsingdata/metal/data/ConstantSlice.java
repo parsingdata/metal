@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.data;
 
+import static io.parsingdata.metal.Util.bytesToHexString;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class ConstantSlice extends Slice {
 
         @Override
         public String toString() {
-            return data.toString();
+            return bytesToHexString(data);
         }
 
     }
