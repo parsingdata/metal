@@ -31,7 +31,7 @@ public class ConstantSlice extends Slice {
         private final byte[] data; // Private because array contents is mutable.
 
         public ConstantSource(byte[] data) {
-            this.data = data;
+            this.data = checkNotNull(data, "data");
         }
 
         @Override
@@ -47,5 +47,6 @@ public class ConstantSlice extends Slice {
         public String toString() {
             return data.toString();
         }
+
     }
 }

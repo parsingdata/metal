@@ -214,17 +214,6 @@ public class TieTest {
     }
 
     @Test
-    public void nestedTie() throws IOException {
-        final Token nestedTie =
-            seq("s",
-                def("a", con(1)),
-                tie(token("s"), ref("a")));
-        final ParseResult result = nestedTie.parse(stream(0), enc());
-        assertTrue(result.succeeded);
-        assertEquals(1, getReferences(result.environment.order).size);
-    }
-
-    @Test
     public void multiTie() throws IOException {
         final Token multiTie =
             seq(def("d", con(3)),
@@ -232,8 +221,26 @@ public class TieTest {
                 tie(SIMPLE_SEQ, ref("d")));
         final ParseResult result = multiTie.parse(stream(1, 2, 3, 1, 2, 3), enc());
         assertTrue(result.succeeded);
-        assertEquals(0, getReferences(result.environment.order));
+        assertEquals(0, getReferences(result.environment.order).size);
         final String[] names = { "a", "b", "c", "d" };
+        for (int i = 0; i < names.length; i++) {
+            ImmutableList<ParseValue> values = getAllValues(result.environment.order, names[i]);
+            assertEquals(2, values.size);
+        }
+    }
+
+    @Test
+    public void tieWithDuplicate() throws IOException {
+        final ValueExpression refD = ref("d");
+        final Token duplicateTie =
+            seq(def("d", con(3)),
+                tie(SIMPLE_SEQ, refD),
+                tie(SIMPLE_SEQ, refD));
+        final ParseResult result = duplicateTie.parse(stream(1, 2, 3), enc());
+        assertTrue(result.succeeded);
+        assertEquals(0, getReferences(result.environment.order).size);
+        assertEquals(1, getAllValues(result.environment.order, "d").size);
+        final String[] names = { "a", "b", "c" };
         for (int i = 0; i < names.length; i++) {
             ImmutableList<ParseValue> values = getAllValues(result.environment.order, names[i]);
             assertEquals(2, values.size);
