@@ -74,9 +74,7 @@ public class Sub extends Token {
         if (hasRootAtOffset(environment.order, token.getCanonical(environment), offset, source)) {
             return success(environment.add(new ParseReference(offset, source, token.getCanonical(environment))));
         }
-        final ParseResult result = token.parse(scope, environment.seek(offset), encoding);
-        if (result.succeeded) { return result; }
-        return failure(environment);
+        return token.parse(scope, environment.seek(offset), encoding);
     }
 
     @Override
