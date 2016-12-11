@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal;
 
+import static io.parsingdata.metal.Util.bytesToSlice;
 import static io.parsingdata.metal.token.Token.NO_NAME;
 
 import io.parsingdata.metal.encoding.Encoding;
@@ -144,7 +145,7 @@ public final class Shorthand {
     public static ValueExpression con(final String value) { return con(value, new Encoding()); }
     public static ValueExpression con(final String value, final Encoding encoding) { return con(ConstantFactory.createFromString(value, encoding)); }
     public static ValueExpression con(final Value value) { return new Const(value); }
-    public static ValueExpression con(final Encoding encoding, final int... values) { return new Const(new Value(toByteArray(values), encoding)); }
+    public static ValueExpression con(final Encoding encoding, final int... values) { return new Const(new Value(bytesToSlice(toByteArray(values)), encoding)); }
     public static ValueExpression con(final int... values) { return con(new Encoding(), values); }
     public static ValueExpression con(final byte[] value) { return con(value, new Encoding()); }
     public static ValueExpression con(final byte[] value, final Encoding encoding) { return con(ConstantFactory.createFromBytes(value, encoding)); }

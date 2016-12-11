@@ -16,25 +16,31 @@
 
 package io.parsingdata.metal.data;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 import java.io.IOException;
 
-import io.parsingdata.metal.expression.value.Value;
+public class ByteStreamSource extends Source {
 
-public class ValueByteStream implements ByteStream {
+    public final ByteStream input;
 
-    public final Value value;
-
-    public ValueByteStream(final Value value) {
-        this.value = value;
+    public ByteStreamSource(final ByteStream input) {
+        this.input = checkNotNull(input, "input");
     }
 
     @Override
-    public int read(final long offset, final byte[] data) throws IOException {
-        final byte[] inputData = value.getValue();
-        if (offset >= inputData.length) { return 0; }
-        final int toCopy = (int)offset + data.length > inputData.length ? inputData.length - (int)offset : data.length;
-        System.arraycopy(inputData, (int)offset, data, 0, toCopy);
-        return toCopy;
+    protected byte[] getData(final long offset, final int size) throws IOException {
+        final byte[] data = new byte[size];
+        final int readSize = input.read(offset, data);
+        if (readSize == size) { return data; }
+        final byte[] resizedData = new byte[readSize];
+        System.arraycopy(data, 0, resizedData, 0, readSize);
+        return resizedData;
+    }
+
+    @Override
+    public String toString() {
+        return input.toString();
     }
 
 }

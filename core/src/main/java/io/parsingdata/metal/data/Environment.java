@@ -18,27 +18,29 @@ package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.io.IOException;
+
 import io.parsingdata.metal.data.callback.Callbacks;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 
 public class Environment {
 
     public final ParseGraph order;
-    public final ByteStream input;
     public final long offset;
-    public final SourceFactory sourceFactory;
+    public final Source source;
     public final Callbacks callbacks;
 
-    public Environment(final ParseGraph order, final ByteStream input, final long offset, final SourceFactory sourceFactory, final Callbacks callbacks) {
+    public Environment(final ParseGraph order, final Source source, final long offset, final Callbacks callbacks) {
         this.order = checkNotNull(order, "order");
-        this.input = checkNotNull(input, "input");
+        this.source = checkNotNull(source, "sourceFactory");
         this.offset = offset;
-        this.sourceFactory = checkNotNull(sourceFactory, "sourceFactory");
         this.callbacks = checkNotNull(callbacks, "callbacks");
     }
 
     public Environment(final ByteStream input, final long offset, final Callbacks callbacks) {
-        this(ParseGraph.EMPTY, input, offset, new SourceFactory(), callbacks);
+        this(ParseGraph.EMPTY, new ByteStreamSource(input), offset, callbacks);
     }
 
     public Environment(final ByteStream input, final long offset) {
@@ -54,28 +56,36 @@ public class Environment {
     }
 
     public Environment addBranch(final Token token) {
-        return new Environment(order.addBranch(token), input, offset, sourceFactory, callbacks);
+        return new Environment(order.addBranch(token), source, offset, callbacks);
     }
 
     public Environment closeBranch() {
-        return new Environment(order.closeBranch(), input, offset, sourceFactory, callbacks);
+        return new Environment(order.closeBranch(), source, offset, callbacks);
     }
 
     public Environment add(final ParseValue parseValue) {
-        return new Environment(order.add(parseValue), input, offset, sourceFactory, callbacks);
-    }
-
-    public Environment seek(final long newOffset) {
-        return new Environment(order, input, newOffset, sourceFactory, callbacks);
+        return new Environment(order.add(parseValue), source, offset, callbacks);
     }
 
     public Environment add(final ParseReference parseReference) {
-        return new Environment(order.add(parseReference), input, offset, sourceFactory, callbacks);
+        return new Environment(order.add(parseReference), source, offset, callbacks);
+    }
+
+    public Environment seek(final long newOffset) {
+        return new Environment(order, source, newOffset, callbacks);
+    }
+
+    public Environment source(final ValueExpression dataExpression, final int index, final Environment environment, final Encoding encoding) {
+        return new Environment(order, new DataExpressionSource(dataExpression, index, environment, encoding), 0L, callbacks);
+    }
+
+    public Slice slice(final int size) throws IOException {
+        return source.create(offset, size);
     }
 
     @Override
     public String toString() {
-        return "stream: " + input + "; offset: " + offset + "; order: " + order + "; callbacks: " + callbacks;
+        return "source: " + source + "; offset: " + offset + "; order: " + order + "; callbacks: " + callbacks;
     }
 
 }

@@ -16,28 +16,15 @@
 
 package io.parsingdata.metal.data;
 
-import io.parsingdata.metal.expression.value.ValueExpression;
+import java.io.IOException;
 
-public class Source {
+public abstract class Source {
 
-    public final ValueExpression dataExpression;
-    public final Environment environment;
-    public final long offset;
-    public final int size;
-
-    public Source(final ValueExpression dataExpression, final Environment environment, final long offset, final int size) {
-        this.dataExpression = dataExpression;
-        this.environment = environment;
-        this.offset = offset;
-        this.size = size;
+    public Slice create(final long offset, final int size) throws IOException {
+        final byte[] data = getData(offset, size);
+        return new Slice(this, offset, data);
     }
 
-    public static Source create(final ValueExpression expression, final Environment environment, final long offset, final int size) {
-        return new Source(expression, environment, offset, size);
-    }
-
-    public static Source create(final long offset, final int size) {
-        return new Source(null, null, offset, size);
-    }
+    protected abstract byte[] getData(long offset, int size) throws IOException;
 
 }

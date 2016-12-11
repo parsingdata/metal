@@ -19,17 +19,16 @@ package io.parsingdata.metal.token;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.ParseResult.failure;
 import static io.parsingdata.metal.data.ParseResult.success;
+import static io.parsingdata.metal.data.selection.ByOffset.hasRootAtOffset;
 
 import java.io.IOException;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.data.SourceFactory;
-import io.parsingdata.metal.data.ValueByteStream;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
-import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class Tie extends Token {
@@ -46,15 +45,31 @@ public class Tie extends Token {
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         final ImmutableList<OptionalValue> dataResult = dataExpression.eval(environment, encoding);
-        if (dataResult.size != 1 || !dataResult.head.isPresent()) {
+        if (dataResult.isEmpty()) {
             return failure(environment);
         }
-        final Value data = dataResult.head.get();
-        final ParseResult result = token.parse(new Environment(environment.addBranch(this).order, new ValueByteStream(data), 0, new SourceFactory(dataExpression, environment), environment.callbacks), encoding);
+        final ParseResult result = iterate(scope, dataResult, 0, environment.addBranch(this), encoding);
         if (result.succeeded) {
-            return success(new Environment(result.environment.closeBranch().order, environment.input, environment.offset, environment.sourceFactory, environment.callbacks));
+            return success(new Environment(result.environment.closeBranch().order, environment.source, environment.offset, environment.callbacks));
         }
         return failure(environment);
+    }
+
+    private ParseResult iterate(final String scope, final ImmutableList<OptionalValue> values, final int index, final Environment environment, final Encoding encoding) throws IOException {
+        if (!values.head.isPresent()) {
+            return failure(environment);
+        }
+        final ParseResult result = token.parse(scope, environment.source(dataExpression, index, environment, encoding), encoding);
+        if (result.succeeded) {
+            if (values.tail.isEmpty()) { return result; }
+            return iterate(scope, values.tail, index + 1, result.environment, encoding);
+        }
+        return failure(environment);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + makeNameFragment() + token + ", " + dataExpression + ")";
     }
 
 }

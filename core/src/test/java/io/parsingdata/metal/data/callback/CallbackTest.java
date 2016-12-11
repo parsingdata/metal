@@ -87,7 +87,7 @@ public class CallbackTest {
             @Override
             protected void handleSuccess(Token token, Environment environment) {
                 final ImmutableList<ParseItem> roots = getAllRoots(environment.order, token);
-                assertEquals(offsets[count++], roots.head.asGraph().tail.head.asValue().source.offset);
+                assertEquals(offsets[count++], roots.head.asGraph().tail.head.asValue().slice.offset);
             }
 
             @Override
@@ -124,8 +124,8 @@ public class CallbackTest {
                         assertEquals(2, seqRoots.size);
 
                         // verify order of the two Seq graphs:
-                        assertEquals(2, getValue(seqRoots.head.asGraph(), "a").source.offset);
-                        assertEquals(0, getValue(seqRoots.tail.head.asGraph(), "a").source.offset);
+                        assertEquals(2, getValue(seqRoots.head.asGraph(), "a").slice.offset);
+                        assertEquals(0, getValue(seqRoots.tail.head.asGraph(), "a").slice.offset);
                     }
 
                     @Override
