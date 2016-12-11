@@ -61,8 +61,4 @@ public final class Util {
         return new String(hexChars);
     }
 
-    public static Slice bytesToSlice(byte[] data) {
-        return new ConstantSlice(data);
-    }
-
 }

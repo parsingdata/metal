@@ -34,7 +34,7 @@ public class Environment {
 
     public Environment(final ParseGraph order, final Source source, final long offset, final Callbacks callbacks) {
         this.order = checkNotNull(order, "order");
-        this.source = checkNotNull(source, "sourceFactory");
+        this.source = checkNotNull(source, "source");
         this.offset = offset;
         this.callbacks = checkNotNull(callbacks, "callbacks");
     }
@@ -80,7 +80,7 @@ public class Environment {
     }
 
     public Slice slice(final int size) throws IOException {
-        return source.create(offset, size);
+        return source.slice(offset, size);
     }
 
     @Override

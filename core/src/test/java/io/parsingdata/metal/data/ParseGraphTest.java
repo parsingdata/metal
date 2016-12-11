@@ -30,6 +30,7 @@ import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.data.selection.ByItem.getGraphAfter;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
+import static io.parsingdata.metal.data.selection.ByTypeTest.EMPTY_SOURCE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -270,7 +271,7 @@ public class ParseGraphTest {
     @Test
     public void testCurrent() {
         assertNull(EMPTY.current());
-        assertNull(EMPTY.add(new ParseReference(0, new Source() { @Override protected byte[] getData(long offset, int size) throws IOException { throw new IllegalStateException(); } }, NONE)).current());
+        assertNull(EMPTY.add(new ParseReference(0, EMPTY_SOURCE, NONE)).current());
         assertNull(EMPTY.addBranch(NONE).current());
     }
 

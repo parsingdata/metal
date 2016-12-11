@@ -20,7 +20,7 @@ import java.io.IOException;
 
 public abstract class Source {
 
-    public Slice create(final long offset, final int size) throws IOException {
+    public Slice slice(final long offset, final int size) throws IOException {
         final byte[] data = getData(offset, size);
         return new Slice(this, offset, data);
     }

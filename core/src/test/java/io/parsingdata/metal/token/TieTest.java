@@ -39,8 +39,7 @@ import static io.parsingdata.metal.Shorthand.rev;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.tie;
-import static io.parsingdata.metal.Shorthand.token;
-import static io.parsingdata.metal.Util.bytesToSlice;
+import static io.parsingdata.metal.data.ConstantSlice.create;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
@@ -195,7 +194,7 @@ public class TieTest {
                                 return OptionalValue.empty();
                             }
                         }
-                        return OptionalValue.of(new Value(bytesToSlice(out.toByteArray()), encoding));
+                        return OptionalValue.of(new Value(create(out.toByteArray()), encoding));
                     }
                 });
             }

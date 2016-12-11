@@ -41,8 +41,8 @@ public class DataExpressionSourceTest {
     @Test
     public void createSliceFromParseValue() throws IOException {
         final ParseValue value = setupValue();
-        assertEquals(2, value.slice.source.create(2, 4).size);
-        assertEquals(0, value.slice.source.create(4, 4).size);
+        assertEquals(2, value.slice.source.slice(2, 4).size);
+        assertEquals(0, value.slice.source.slice(4, 4).size);
     }
 
     @Test

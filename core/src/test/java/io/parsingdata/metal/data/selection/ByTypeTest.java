@@ -31,6 +31,12 @@ import io.parsingdata.metal.data.Source;
 
 public class ByTypeTest {
 
+    public static final Source EMPTY_SOURCE = new Source() {
+        @Override
+        protected byte[] getData(long offset, int size) throws IOException {
+            throw new IllegalStateException();
+        }
+    };
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -38,7 +44,7 @@ public class ByTypeTest {
     public void unresolvableRef() {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("A ParseReference must point to an existing graph.");
-        getReferences(EMPTY.add(new ParseReference(0, new Source() { @Override protected byte[] getData(long offset, int size) throws IOException { throw new IllegalStateException(); } }, NONE)));
+        getReferences(EMPTY.add(new ParseReference(0, EMPTY_SOURCE, NONE)));
     }
 
 }

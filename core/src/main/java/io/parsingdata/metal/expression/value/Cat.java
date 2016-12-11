@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static io.parsingdata.metal.Util.bytesToSlice;
+import static io.parsingdata.metal.data.ConstantSlice.create;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
@@ -34,7 +34,7 @@ public class Cat extends BinaryValueExpression {
         final byte[] concatenatedBytes = new byte[leftBytes.length + rightBytes.length];
         System.arraycopy(leftBytes, 0, concatenatedBytes, 0, leftBytes.length);
         System.arraycopy(rightBytes, 0, concatenatedBytes, leftBytes.length, rightBytes.length);
-        return OptionalValue.of(new Value(bytesToSlice(concatenatedBytes), encoding));
+        return OptionalValue.of(new Value(create(concatenatedBytes), encoding));
     }
 
 }

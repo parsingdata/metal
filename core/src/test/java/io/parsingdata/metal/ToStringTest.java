@@ -54,7 +54,7 @@ import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.tie;
 import static io.parsingdata.metal.Shorthand.whl;
-import static io.parsingdata.metal.Util.bytesToSlice;
+import static io.parsingdata.metal.data.ConstantSlice.create;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
@@ -155,12 +155,12 @@ public class ToStringTest {
         assertEquals(envString, environment.toString());
         final ParseResult result = new ParseResult(true, environment);
         assertEquals("ParseResult(true, " + environment + ")", result.toString());
-        final ParseValue pv1 = new ParseValue("name", NONE, bytesToSlice(new byte[]{1, 2}), enc());
+        final ParseValue pv1 = new ParseValue("name", NONE, create(new byte[]{1, 2}), enc());
         final String pv1String = "name(0x0102)";
         final OptionalValue ov1 = OptionalValue.of(pv1);
-        final OptionalValue ov2 = OptionalValue.of(new Value(bytesToSlice(new byte[]{3}), enc()));
+        final OptionalValue ov2 = OptionalValue.of(new Value(create(new byte[]{3}), enc()));
         assertEquals(">OptionalValue(0x03)>OptionalValue(" + pv1String + ")", ImmutableList.create(ov1).add(ov2).toString());
-        final ParseValue pv2 = new ParseValue("two", NONE, bytesToSlice(new byte[]{3, 4}), enc());
+        final ParseValue pv2 = new ParseValue("two", NONE, create(new byte[]{3, 4}), enc());
         final String pv2String = "two(0x0304)";
         assertEquals(">" + pv2String + ">" + pv1String, ImmutableList.create(pv1).add(pv2).toString());
         assertEquals(">" + pv2String + ">" + pv1String, ImmutableList.create(pv1).add(pv2).toString());
@@ -168,10 +168,10 @@ public class ToStringTest {
 
     @Test
     public void slice() throws IOException {
-        final ParseValue pv1 = new ParseValue("name", NONE, bytesToSlice(new byte[]{1, 2}), enc());
+        final ParseValue pv1 = new ParseValue("name", NONE, create(new byte[]{1, 2}), enc());
         assertEquals("0102@0:2", pv1.slice.toString());
         final Environment oneValueEnvironment = stream().add(pv1);
-        final Environment twoValueEnvironment = oneValueEnvironment.add(new ParseValue("name2", NONE, new DataExpressionSource(ref("name"), 0, oneValueEnvironment, enc()).create(0, 2), enc()));
+        final Environment twoValueEnvironment = oneValueEnvironment.add(new ParseValue("name2", NONE, new DataExpressionSource(ref("name"), 0, oneValueEnvironment, enc()).slice(0, 2), enc()));
         final String dataExpressionSliceString = getValue(twoValueEnvironment.order, "name2").slice.toString();
         assertTrue(dataExpressionSliceString.startsWith("NameRef(name)("));
         assertTrue(dataExpressionSliceString.endsWith(")@0:2"));

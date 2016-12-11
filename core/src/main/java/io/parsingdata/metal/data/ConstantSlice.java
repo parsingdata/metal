@@ -27,6 +27,10 @@ public class ConstantSlice extends Slice {
         super(new ConstantSource(checkNotNull(data, "data")), 0, data);
     }
 
+    public static Slice create(byte[] data) {
+        return new ConstantSlice(data);
+    }
+
     private static class ConstantSource extends Source {
 
         private final byte[] data; // Private because array contents is mutable.

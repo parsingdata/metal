@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal.format;
 
-import static io.parsingdata.metal.Util.bytesToSlice;
+import static io.parsingdata.metal.data.ConstantSlice.create;
 
 import java.io.ByteArrayOutputStream;
 import java.util.zip.CRC32;
@@ -45,7 +45,7 @@ public final class Callback {
                         final CRC32 crc = new CRC32();
                         crc.update(value.getValue());
                         final long crcValue = crc.getValue();
-                        return OptionalValue.of(new Value(bytesToSlice(encoding.byteOrder.apply(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
+                        return OptionalValue.of(new Value(create(encoding.byteOrder.apply(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
                                                                                                              (byte)((crcValue & 0xff0000) >> 16),
                                                                                                              (byte)((crcValue & 0xff00) >> 8),
                                                                                                              (byte) (crcValue & 0xff) })), encoding));
@@ -74,7 +74,7 @@ public final class Callback {
                                 return OptionalValue.empty();
                             }
                         }
-                        return OptionalValue.of(new Value(bytesToSlice(out.toByteArray()), encoding));
+                        return OptionalValue.of(new Value(create(out.toByteArray()), encoding));
                     }
                 });
             }
