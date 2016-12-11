@@ -11,7 +11,6 @@ import static io.parsingdata.metal.Shorthand.tie;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
 
