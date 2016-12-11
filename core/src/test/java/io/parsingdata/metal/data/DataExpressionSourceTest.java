@@ -48,7 +48,7 @@ public class DataExpressionSourceTest {
     @Test
     public void indexOutOfBounds() throws IOException {
         thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("ValueExpression dataExpression yields incorrect amount of results.");
+        thrown.expectMessage("ValueExpression dataExpression yields 1 result(s) (expected at least 2).");
         final ParseResult result = setupResult();
         final DataExpressionSource source = new DataExpressionSource(ref("a"), 1, result.environment, enc());
         source.getData(0, 4);
