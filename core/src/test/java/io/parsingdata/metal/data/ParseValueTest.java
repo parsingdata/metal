@@ -23,6 +23,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.data.ConstantSlice.create;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static junit.framework.TestCase.assertFalse;
 
@@ -44,14 +45,14 @@ public class ParseValueTest {
     @Before
     public void setUp() {
         definition = def("value", 1);
-        value = new ParseValue("value", definition, 0, new byte[] { 1 }, enc());
+        value = new ParseValue("value", definition, create(new byte[] { 1 }), enc());
     }
 
     @Test
     public void state() {
         assertThat(value.name, is("value"));
         assertThat(value.getDefinition(), is(definition));
-        assertThat(value.getOffset(), is(0L));
+        assertThat(value.slice.offset, is(0L));
         assertThat(value.getValue(), is(equalTo(new byte[] { 1 })));
     }
 

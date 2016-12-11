@@ -23,32 +23,38 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.Source;
 import io.parsingdata.metal.token.Token;
 
 public final class ByOffset {
 
     private ByOffset() {}
 
-    public static boolean hasRootAtOffset(final ParseGraph graph, final Token definition, final long offset) {
-        return findItemAtOffset(getAllRoots(graph, definition), offset) != null;
+    public static boolean hasRootAtOffset(final ParseGraph graph, final Token definition, final long offset, final Source source) {
+        return findItemAtOffset(getAllRoots(graph, definition), offset, source) != null;
     }
 
-    public static ParseItem findItemAtOffset(final ImmutableList<ParseItem> items, final long offset) {
+    public static ParseItem findItemAtOffset(final ImmutableList<ParseItem> items, final long offset, final Source source) {
         checkNotNull(items, "items");
+        checkNotNull(source, "source");
         if (items.isEmpty()) { return null; }
         final ParseItem head = items.head;
-        if (head.isValue() && head.asValue().getOffset() == offset) { return head; }
+        if (head.isValue() && matchesLocation(head.asValue(), offset, source)) { return head; }
         if (head.isGraph()) {
             final ParseValue value = getLowestOffsetValue(head.asGraph(), null);
-            if (value != null && value.getOffset() == offset) { return head; }
+            if (value != null && matchesLocation(value, offset, source)) { return head; }
         }
-        return findItemAtOffset(items.tail, offset);
+        return findItemAtOffset(items.tail, offset, source);
+    }
+
+    private static boolean matchesLocation(final ParseValue value, final long offset, final Source source) {
+        return value.slice.offset == offset && value.slice.source == source;
     }
 
     private static ParseValue getLowestOffsetValue(final ParseGraph graph, final ParseValue lowest) {
         if (graph.isEmpty() || !graph.getDefinition().isLocal()) { return lowest; }
         if (graph.head.isValue()) {
-            return getLowestOffsetValue(graph.tail, lowest == null || lowest.getOffset() > graph.head.asValue().getOffset() ? graph.head.asValue() : lowest);
+            return getLowestOffsetValue(graph.tail, lowest == null || lowest.slice.offset > graph.head.asValue().slice.offset ? graph.head.asValue() : lowest);
         }
         if (graph.head.isGraph()) {
             return getLowestOffsetValue(graph.tail, getLowestOffsetValue(graph.head.asGraph(), lowest));

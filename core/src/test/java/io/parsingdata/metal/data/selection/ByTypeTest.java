@@ -20,14 +20,23 @@ import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
 
+import java.io.IOException;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.data.ParseReference;
+import io.parsingdata.metal.data.Source;
 
 public class ByTypeTest {
 
+    public static final Source EMPTY_SOURCE = new Source() {
+        @Override
+        protected byte[] getData(long offset, int size) throws IOException {
+            throw new IllegalStateException();
+        }
+    };
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -35,7 +44,7 @@ public class ByTypeTest {
     public void unresolvableRef() {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("A ParseReference must point to an existing graph.");
-        getReferences(EMPTY.add(new ParseReference(0, NONE)));
+        getReferences(EMPTY.add(new ParseReference(0, EMPTY_SOURCE, NONE)));
     }
 
 }

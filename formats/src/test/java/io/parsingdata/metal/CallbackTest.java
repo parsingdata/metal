@@ -22,8 +22,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Util.inflate;
 import static io.parsingdata.metal.format.Callback.crc32;
-import static io.parsingdata.metal.format.Callback.inflate;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
@@ -48,13 +48,6 @@ public class CallbackTest {
         assertEquals(1, result.size);
         assertTrue(result.head.isPresent());
         assertEquals("metal", result.head.get().asString());
-    }
-
-    @Test
-    public void inflateDataFormatError() {
-        final ImmutableList<OptionalValue> result = inflate(con(0xffffffff)).eval(stream(), enc());
-        assertEquals(1, result.size);
-        assertFalse(result.head.isPresent());
     }
 
 }

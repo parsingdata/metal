@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static io.parsingdata.metal.data.ConstantSlice.create;
+
 import java.math.BigInteger;
 import java.util.BitSet;
 
@@ -28,7 +30,7 @@ public final class ConstantFactory {
     private ConstantFactory() {}
 
     public static Value createFromBytes(final byte[] value, final Encoding encoding) {
-        return new Value(value, encoding);
+        return new Value(create(value), encoding);
     }
 
     public static Value createFromNumeric(final BigInteger value, final Encoding encoding) {
@@ -40,14 +42,14 @@ public final class ConstantFactory {
     }
 
     public static Value createFromString(final String value, final Encoding encoding) {
-        return new Value(value.getBytes(encoding.charset), encoding);
+        return new Value(create(value.getBytes(encoding.charset)), encoding);
     }
 
     public static Value createFromBitSet(final BitSet value, final int minSize, final Encoding encoding) {
         final byte[] bytes = ByteOrder.LITTLE_ENDIAN.apply(value.toByteArray());
         final byte[] outBytes = new byte[Math.max(minSize, bytes.length)];
         System.arraycopy(bytes, 0, outBytes, outBytes.length - bytes.length, bytes.length);
-        return new Value(outBytes, setToBigEndian(encoding));
+        return new Value(create(outBytes), setToBigEndian(encoding));
     }
 
     private static Encoding setToBigEndian(final Encoding encoding) {

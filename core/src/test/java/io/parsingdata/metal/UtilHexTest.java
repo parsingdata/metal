@@ -19,6 +19,13 @@ package io.parsingdata.metal;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Util.inflate;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,6 +34,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
+
+import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.expression.value.OptionalValue;
 
 @RunWith(Parameterized.class)
 public class UtilHexTest {
@@ -49,6 +59,13 @@ public class UtilHexTest {
     @Test
     public void byteToHex() {
         assertThat(Util.bytesToHexString(input), is(equalTo(output)));
+    }
+
+    @Test
+    public void inflateDataFormatError() {
+        final ImmutableList<OptionalValue> result = inflate(con(0xffffffff)).eval(stream(), enc());
+        assertEquals(1, result.size);
+        assertFalse(result.head.isPresent());
     }
 
 }

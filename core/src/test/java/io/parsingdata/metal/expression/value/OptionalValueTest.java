@@ -16,20 +16,22 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import static io.parsingdata.metal.data.ConstantSlice.create;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static junit.framework.TestCase.assertFalse;
+
+import java.util.NoSuchElementException;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.util.NoSuchElementException;
-
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 public class OptionalValueTest {
 
-    private static final Value VALUE = new Value(new byte[] { 1 }, enc());
+    private static final Value VALUE = new Value(create(new byte[] { 1 }), enc());
     private static final OptionalValue OPTIONAL_VALUE = OptionalValue.of(VALUE);
     private static final OptionalValue EMPTY = OptionalValue.empty();
 

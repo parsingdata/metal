@@ -26,20 +26,16 @@ public class ParseValue extends Value implements ParseItem {
 
     public final String name;
     public final Token definition;
-    public final long offset;
 
-    public ParseValue(final String name, final Token definition, final long offset, final byte[] data, final Encoding encoding) {
-        super(data, encoding);
+    public ParseValue(final String name, final Token definition, final Slice slice, final Encoding encoding) {
+        super(slice, encoding);
         this.name = checkNotNull(name, "name");
         this.definition = checkNotNull(definition, "definition");
-        this.offset = offset;
     }
 
     public boolean matches(final String name) {
         return this.name.equals(name) || this.name.endsWith(Token.SEPARATOR + name);
     }
-
-    public long getOffset() { return offset; }
 
     @Override public boolean isValue() { return true; }
     @Override public boolean isGraph() { return false; }

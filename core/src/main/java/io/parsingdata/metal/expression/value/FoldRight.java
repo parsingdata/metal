@@ -20,7 +20,7 @@ import static io.parsingdata.metal.Shorthand.con;
 
 import io.parsingdata.metal.data.ImmutableList;
 
-public class FoldRight extends Fold implements ValueExpression {
+public class FoldRight extends Fold {
 
     public FoldRight(final ValueExpression values, final Reducer reducer, final ValueExpression initial) {
         super(values, reducer, initial);

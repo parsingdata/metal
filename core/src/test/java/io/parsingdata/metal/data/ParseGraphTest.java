@@ -29,6 +29,8 @@ import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.data.selection.ByItem.getGraphAfter;
+import static io.parsingdata.metal.data.selection.ByName.getValue;
+import static io.parsingdata.metal.data.selection.ByTypeTest.EMPTY_SOURCE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -59,27 +61,30 @@ public class ParseGraphTest {
     private final ParseValue g;
     private final ParseValue h;
 
-    public ParseGraphTest() {
+    public ParseGraphTest() throws IOException {
         aDef = any("a");
-        a = makeValWithDef('a', aDef, 0L);
-        b = makeVal('b', 2L);
-        c = makeVal('c', 4L);
-        d = makeVal('d', 6L);
-        e = makeVal('e', 8L);
-        f = makeVal('f', 10L);
-        g = makeVal('g', 12L);
-        h = makeVal('h', 14L);
+        Token token =
+            seq(aDef, any("empty"),
+                any("b"), any("empty"),
+                any("c"), any("empty"),
+                any("d"), any("empty"),
+                any("e"), any("empty"),
+                any("f"), any("empty"),
+                any("g"), any("empty"),
+                any("h"), any("empty")
+            );
+        ParseResult result = token.parse(stream(97, 0, 98, 0, 99, 0, 100, 0, 101, 0, 102, 0, 103, 0, 104, 0), enc());
+        a = getValue(result.environment.order, "a");
+        b = getValue(result.environment.order, "b");
+        c = getValue(result.environment.order, "c");
+        d = getValue(result.environment.order, "d");
+        e = getValue(result.environment.order, "e");
+        f = getValue(result.environment.order, "f");
+        g = getValue(result.environment.order, "g");
+        h = getValue(result.environment.order, "h");
         pg = makeSimpleGraph();
         pgc = makeCycleGraph();
         pgl = makeLongGraph();
-    }
-
-    private static ParseValue makeValWithDef(final char name, final Token token, final long offset) {
-        return new ParseValue(Character.toString(name), token, offset, new byte[] { (byte) name }, enc());
-    }
-
-    private static ParseValue makeVal(final char name, final long offset) {
-        return makeValWithDef(name, def(Character.toString(name), offset), offset);
     }
 
     private ParseGraph makeSimpleGraph() {
@@ -127,7 +132,7 @@ public class ParseGraphTest {
             .add(a)
             .addBranch(t)
             .add(b)
-            .add(new ParseReference(a.getOffset(), aDef))
+            .add(new ParseReference(a.slice.offset, a.slice.source, aDef))
             .closeBranch();
     }
 
@@ -266,7 +271,7 @@ public class ParseGraphTest {
     @Test
     public void testCurrent() {
         assertNull(EMPTY.current());
-        assertNull(EMPTY.add(new ParseReference(0, NONE)).current());
+        assertNull(EMPTY.add(new ParseReference(0, EMPTY_SOURCE, NONE)).current());
         assertNull(EMPTY.addBranch(NONE).current());
     }
 

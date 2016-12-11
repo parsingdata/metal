@@ -16,13 +16,14 @@
 
 package io.parsingdata.metal;
 
+import static io.parsingdata.metal.util.ClassDefinition.checkUtilityClass;
+
+import org.junit.Test;
+
 import io.parsingdata.metal.format.Callback;
 import io.parsingdata.metal.format.JPEG;
 import io.parsingdata.metal.format.PNG;
 import io.parsingdata.metal.format.ZIP;
-import org.junit.Test;
-
-import static io.parsingdata.metal.util.ClassDefinition.checkUtilityClass;
 
 public class DescriptionClassTest {
 

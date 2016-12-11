@@ -24,7 +24,10 @@ import static org.junit.Assert.assertTrue;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.data.selection.ByTypeTest.EMPTY_SOURCE;
 import static junit.framework.TestCase.assertFalse;
+
+import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -44,7 +47,7 @@ public class ParseReferenceTest {
     @Before
     public void setUp() {
         definition = sub(def("value", 1), con(0));
-        reference = new ParseReference(0L, definition);
+        reference = new ParseReference(0L, EMPTY_SOURCE, definition);
     }
 
     @Test

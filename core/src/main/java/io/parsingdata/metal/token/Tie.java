@@ -27,62 +27,49 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.data.Source;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
-public class Sub extends Token {
+public class Tie extends Token {
 
     public final Token token;
-    public final ValueExpression address;
+    public final ValueExpression dataExpression;
 
-    public Sub(final String name, final Token token, final ValueExpression address, final Encoding encoding) {
+    public Tie(final String name, final Token token, final ValueExpression dataExpression, final Encoding encoding) {
         super(name, encoding);
         this.token = checkNotNull(token, "token");
-        this.address = checkNotNull(address, "address");
+        this.dataExpression = checkNotNull(dataExpression, "dataExpression");
     }
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final ImmutableList<OptionalValue> addresses = address.eval(environment, encoding);
-        if (addresses.isEmpty()) {
+        final ImmutableList<OptionalValue> dataResult = dataExpression.eval(environment, encoding);
+        if (dataResult.isEmpty()) {
             return failure(environment);
         }
-        final ParseResult result = iterate(scope, addresses, environment.addBranch(this), encoding);
+        final ParseResult result = iterate(scope, dataResult, 0, environment.addBranch(this), encoding);
         if (result.succeeded) {
-            return success(result.environment.closeBranch().seek(environment.offset));
+            return success(new Environment(result.environment.closeBranch().order, environment.source, environment.offset, environment.callbacks));
         }
         return failure(environment);
     }
 
-    private ParseResult iterate(final String scope, final ImmutableList<OptionalValue> addresses, final Environment environment, final Encoding encoding) throws IOException {
-        if (!addresses.head.isPresent()) {
+    private ParseResult iterate(final String scope, final ImmutableList<OptionalValue> values, final int index, final Environment environment, final Encoding encoding) throws IOException {
+        if (!values.head.isPresent()) {
             return failure(environment);
         }
-        final long offset = addresses.head.get().asNumeric().longValue();
-        final Source source = addresses.head.get().slice.source;
-        final ParseResult result = parse(scope, offset, source, environment, encoding);
+        final ParseResult result = token.parse(scope, environment.source(dataExpression, index, environment, encoding), encoding);
         if (result.succeeded) {
-            if (addresses.tail.isEmpty()) { return result; }
-            return iterate(scope, addresses.tail, result.environment, encoding);
+            if (values.tail.isEmpty()) { return result; }
+            return iterate(scope, values.tail, index + 1, result.environment, encoding);
         }
         return failure(environment);
     }
-
-    private ParseResult parse(final String scope, final long offset, final Source source, final Environment environment, final Encoding encoding) throws IOException {
-        if (hasRootAtOffset(environment.order, token.getCanonical(environment), offset, source)) {
-            return success(environment.add(new ParseReference(offset, source, token.getCanonical(environment))));
-        }
-        return token.parse(scope, environment.seek(offset), encoding);
-    }
-
-    @Override
-    public boolean isLocal() { return false; }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + makeNameFragment() + token + ", " + address + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + token + ", " + dataExpression + ")";
     }
 
 }

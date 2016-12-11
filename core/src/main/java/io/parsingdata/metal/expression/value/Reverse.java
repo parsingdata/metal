@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.expression.value.reference;
+package io.parsingdata.metal.expression.value;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.*;
 
-public class Offset extends UnaryValueExpression {
+public class Reverse implements ValueExpression {
 
-    public Offset(final ValueExpression operand) { super(operand); }
+    public final ValueExpression values;
+
+    public Reverse(final ValueExpression values) {
+        this.values = values;
+    }
 
     @Override
-    public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) {
-        if (value instanceof ParseValue) {
-            return OptionalValue.of(ConstantFactory.createFromNumeric(((ParseValue) value).slice.offset, value.encoding));
-        }
-        return OptionalValue.empty();
+    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
+        return values.eval(environment, encoding).reverse();
     }
 
 }

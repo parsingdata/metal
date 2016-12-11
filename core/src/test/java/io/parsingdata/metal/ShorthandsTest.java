@@ -37,6 +37,7 @@ import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.Shorthand.tie;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -133,7 +134,10 @@ public class ShorthandsTest {
                             def("def1", con(1), eq(con(1)))),
                         sub("sub",
                             def("def2", con(1), eq(con(2))),
-                            con(2))
+                            con(2)),
+                        tie("tie",
+                            def("def3", con(1), eq(con(1))),
+                            last(ref("def1")))
                     ), con(1)
                 )
             ).parse(stream(2, 1, 2), enc());
@@ -141,6 +145,7 @@ public class ShorthandsTest {
         checkNameAndValue("rep.repn.seq.pre.opt.a", 2, result.environment);
         checkNameAndValue("rep.repn.seq.cho.def1", 1, result.environment);
         checkNameAndValue("rep.repn.seq.sub.def2", 2, result.environment);
+        checkNameAndValue("rep.repn.seq.tie.def3", 1, result.environment);
     }
 
     private void checkNameAndValue(final String name, final int value, final Environment env) {

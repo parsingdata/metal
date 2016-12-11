@@ -29,7 +29,7 @@ import io.parsingdata.metal.encoding.Encoding;
 
 public class Seq extends Token {
 
-    private final Token[] tokens; // Private because array contents is mutable.
+    private final Token[] tokens; // Private because array content is mutable.
 
     public Seq(final String name, final Encoding encoding, final Token... tokens) {
         super(name, encoding);

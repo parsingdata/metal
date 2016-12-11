@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal;
 
+import static io.parsingdata.metal.data.ConstantSlice.create;
 import static io.parsingdata.metal.token.Token.NO_NAME;
 
 import io.parsingdata.metal.encoding.Encoding;
@@ -40,6 +41,7 @@ import io.parsingdata.metal.expression.value.Elvis;
 import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
 import io.parsingdata.metal.expression.value.Reducer;
+import io.parsingdata.metal.expression.value.Reverse;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -68,6 +70,7 @@ import io.parsingdata.metal.token.Pre;
 import io.parsingdata.metal.token.Rep;
 import io.parsingdata.metal.token.RepN;
 import io.parsingdata.metal.token.Seq;
+import io.parsingdata.metal.token.Tie;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.token.TokenRef;
 import io.parsingdata.metal.token.While;
@@ -121,6 +124,10 @@ public final class Shorthand {
     public static Token nod(final String name, final long size) { return nod(name, con(size)); }
     public static Token nod(final long size) { return nod(NO_NAME, size); }
     public static Token token(final String tokenName) { return new TokenRef(NO_NAME, tokenName, null); }
+    public static Token tie(final String name, final Token token, final ValueExpression dataExpression, final Encoding encoding) { return new Tie(name, token, dataExpression, encoding); }
+    public static Token tie(final String name, final Token token, final ValueExpression dataExpression) { return tie(name, token, dataExpression, null); }
+    public static Token tie(final Token token, final ValueExpression dataExpression, final Encoding encoding) { return tie(NO_NAME, token, dataExpression, encoding); }
+    public static Token tie(final Token token, final ValueExpression dataExpression) { return tie(token, dataExpression, null); }
 
     public static BinaryValueExpression add(final ValueExpression left, final ValueExpression right) { return new Add(left, right); }
     public static BinaryValueExpression div(final ValueExpression left, final ValueExpression right) { return new Div(left, right); }
@@ -138,7 +145,7 @@ public final class Shorthand {
     public static ValueExpression con(final String value) { return con(value, new Encoding()); }
     public static ValueExpression con(final String value, final Encoding encoding) { return con(ConstantFactory.createFromString(value, encoding)); }
     public static ValueExpression con(final Value value) { return new Const(value); }
-    public static ValueExpression con(final Encoding encoding, final int... values) { return new Const(new Value(toByteArray(values), encoding)); }
+    public static ValueExpression con(final Encoding encoding, final int... values) { return new Const(new Value(create(toByteArray(values)), encoding)); }
     public static ValueExpression con(final int... values) { return con(new Encoding(), values); }
     public static ValueExpression con(final byte[] value) { return con(value, new Encoding()); }
     public static ValueExpression con(final byte[] value, final Encoding encoding) { return con(ConstantFactory.createFromBytes(value, encoding)); }
@@ -160,6 +167,7 @@ public final class Shorthand {
     public static ValueExpression foldRight(final ValueExpression values, final Reducer reducer, final ValueExpression initial) { return new FoldRight(values, reducer, initial); }
     public static ValueExpression fold(final ValueExpression values, final Reducer reducer) { return foldRight(values, reducer); }
     public static ValueExpression fold(final ValueExpression values, final Reducer reducer, final ValueExpression initial) { return foldRight(values, reducer, initial); }
+    public static ValueExpression rev(final ValueExpression values) { return new Reverse(values); }
 
     public static BinaryLogicalExpression and(final Expression left, final Expression right) { return new And(left, right); }
     public static BinaryLogicalExpression or(final Expression left, final Expression right) { return new Or(left, right); }
