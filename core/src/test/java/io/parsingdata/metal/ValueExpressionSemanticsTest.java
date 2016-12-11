@@ -66,12 +66,7 @@ public class ValueExpressionSemanticsTest {
         def("a", 4, eq(new UnaryValueExpression(ref("a")) {
             @Override
             public OptionalValue eval(Value value, Environment environment, Encoding encoding) {
-                return value.operation(new ValueOperation() {
-                    @Override
-                    public OptionalValue execute(Value value) {
-                        return OptionalValue.of(value);
-                    }
-                });
+                return OptionalValue.of(value);
             }
         })).parse(data, enc());
     }

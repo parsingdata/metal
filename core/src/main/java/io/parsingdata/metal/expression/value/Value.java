@@ -55,10 +55,6 @@ public class Value {
         return BitSet.valueOf(encoding.byteOrder == ByteOrder.BIG_ENDIAN ? ByteOrder.LITTLE_ENDIAN.apply(getValue()) : getValue());
     }
 
-    public OptionalValue operation(final ValueOperation operation) {
-        return operation.execute(this);
-    }
-
     @Override
     public String toString() {
         return "0x" + Util.bytesToHexString(getValue());
