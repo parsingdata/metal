@@ -40,7 +40,7 @@ public class DataExpressionSource extends Source {
 
     @Override
     protected byte[] getData(final long offset, final int size) throws IOException {
-        ImmutableList<OptionalValue> results = dataExpression.eval(environment, encoding);
+        final ImmutableList<OptionalValue> results = dataExpression.eval(environment, encoding);
         if (results.size <= index) { throw new IllegalStateException("ValueExpression dataExpression yields incorrect amount of results."); }
         final byte[] inputData = getValueAtIndex(results, index, 0).get().getValue();
         if (offset >= inputData.length) { return new byte[0]; }
@@ -50,13 +50,13 @@ public class DataExpressionSource extends Source {
         return outputData;
     }
 
-    private OptionalValue getValueAtIndex(ImmutableList<OptionalValue> results, int index, int current) {
+    private OptionalValue getValueAtIndex(final ImmutableList<OptionalValue> results, final int index, final int current) {
         if (index == current) { return results.head; }
         return getValueAtIndex(results.tail, index, current + 1);
     }
 
     @Override
     public String toString() {
-        return dataExpression.toString() + "(" + environment + "," + encoding + ")";
+        return dataExpression.toString() + "[" + index + "](" + environment + "," + encoding + ")";
     }
 }

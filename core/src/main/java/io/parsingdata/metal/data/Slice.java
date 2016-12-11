@@ -22,7 +22,7 @@ public class Slice {
 
     public final Source source;
     public final long offset;
-    private final byte[] data; // Private because array contents is mutable.
+    private final byte[] data; // Private because array content is mutable.
     public final int size;
 
     public Slice(final Source source, final long offset, final byte[] data) {

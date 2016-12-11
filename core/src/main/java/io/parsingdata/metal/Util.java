@@ -16,15 +16,28 @@
 
 package io.parsingdata.metal;
 
+import static io.parsingdata.metal.data.ConstantSlice.create;
+
+import java.io.ByteArrayOutputStream;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
+
 import io.parsingdata.metal.data.ConstantSlice;
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.Slice;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.UnaryValueExpression;
+import io.parsingdata.metal.expression.value.Value;
+import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.expression.value.ValueOperation;
 import io.parsingdata.metal.token.Token;
 
 public final class Util {
 
     private Util() {}
 
-    final private static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray(); // Private because array contents is mutable.
+    final private static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray(); // Private because array content is mutable.
 
     public static <T>T checkNotNull(final T argument, final String name) {
         if (argument == null) { throw new IllegalArgumentException("Argument " + name + " may not be null."); }
@@ -59,6 +72,32 @@ public final class Util {
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
         return new String(hexChars);
+    }
+
+    public static ValueExpression inflate(final ValueExpression target) {
+        return new UnaryValueExpression(target) {
+            @Override
+            public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) {
+                return value.operation(new ValueOperation() {
+                    @Override
+                    public OptionalValue execute(final Value value) {
+                        final Inflater inf = new Inflater(true);
+                        inf.setInput(value.getValue());
+                        final byte[] dataReceiver = new byte[512];
+                        final ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        while(!inf.finished()) {
+                            try {
+                                final int processed = inf.inflate(dataReceiver);
+                                out.write(dataReceiver, 0, processed);
+                            } catch (final DataFormatException e) {
+                                return OptionalValue.empty();
+                            }
+                        }
+                        return OptionalValue.of(new Value(create(out.toByteArray()), encoding));
+                    }
+                });
+            }
+        };
     }
 
 }

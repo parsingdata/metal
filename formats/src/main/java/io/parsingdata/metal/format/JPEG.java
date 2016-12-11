@@ -16,9 +16,22 @@
 
 package io.parsingdata.metal.format;
 
-import io.parsingdata.metal.token.Token;
+import static io.parsingdata.metal.Shorthand.and;
+import static io.parsingdata.metal.Shorthand.cho;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.gtNum;
+import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.ltNum;
+import static io.parsingdata.metal.Shorthand.not;
+import static io.parsingdata.metal.Shorthand.or;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.rep;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.sub;
 
-import static io.parsingdata.metal.Shorthand.*;
+import io.parsingdata.metal.token.Token;
 
 /*
  * Since nearly every byte of the scan data is individually matched, this

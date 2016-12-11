@@ -22,8 +22,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Util.inflate;
 import static io.parsingdata.metal.format.Callback.crc32;
-import static io.parsingdata.metal.format.Callback.inflate;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 

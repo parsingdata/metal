@@ -33,7 +33,7 @@ public class ConstantSlice extends Slice {
 
     private static class ConstantSource extends Source {
 
-        private final byte[] data; // Private because array contents is mutable.
+        private final byte[] data; // Private because array content is mutable.
 
         public ConstantSource(byte[] data) {
             this.data = checkNotNull(data, "data");
