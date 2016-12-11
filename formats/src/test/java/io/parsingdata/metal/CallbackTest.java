@@ -50,11 +50,4 @@ public class CallbackTest {
         assertEquals("metal", result.head.get().asString());
     }
 
-    @Test
-    public void inflateDataFormatError() {
-        final ImmutableList<OptionalValue> result = inflate(con(0xffffffff)).eval(stream(), enc());
-        assertEquals(1, result.size);
-        assertFalse(result.head.isPresent());
-    }
-
 }
