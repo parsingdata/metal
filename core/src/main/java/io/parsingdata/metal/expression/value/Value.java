@@ -18,7 +18,6 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.BitSet;
 

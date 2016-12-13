@@ -22,15 +22,12 @@ import java.io.ByteArrayOutputStream;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
-import io.parsingdata.metal.data.ConstantSlice;
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
-import io.parsingdata.metal.expression.value.ValueOperation;
 import io.parsingdata.metal.token.Token;
 
 public final class Util {

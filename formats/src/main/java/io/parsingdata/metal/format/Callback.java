@@ -26,7 +26,6 @@ import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
-import io.parsingdata.metal.expression.value.ValueOperation;
 
 public final class Callback {
 

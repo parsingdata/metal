@@ -27,8 +27,6 @@ import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.data.selection.ByTypeTest.EMPTY_SOURCE;
 import static junit.framework.TestCase.assertFalse;
 
-import java.io.IOException;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

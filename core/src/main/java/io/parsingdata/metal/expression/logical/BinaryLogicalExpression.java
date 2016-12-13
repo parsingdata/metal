@@ -16,9 +16,9 @@
 
 package io.parsingdata.metal.expression.logical;
 
-import io.parsingdata.metal.expression.Expression;
-
 import static io.parsingdata.metal.Util.checkNotNull;
+
+import io.parsingdata.metal.expression.Expression;
 
 public abstract class BinaryLogicalExpression implements LogicalExpression {
 

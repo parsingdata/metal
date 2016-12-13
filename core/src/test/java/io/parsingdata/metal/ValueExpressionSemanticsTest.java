@@ -40,7 +40,6 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
-import io.parsingdata.metal.expression.value.ValueOperation;
 import io.parsingdata.metal.token.Token;
 
 @RunWith(JUnit4.class)

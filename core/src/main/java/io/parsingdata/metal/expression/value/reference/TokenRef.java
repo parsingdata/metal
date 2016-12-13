@@ -17,8 +17,8 @@
 package io.parsingdata.metal.expression.value.reference;
 
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.expression.value.OptionalValue.wrap;
 import static io.parsingdata.metal.data.selection.ByToken.getAllValues;
+import static io.parsingdata.metal.expression.value.OptionalValue.wrap;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;

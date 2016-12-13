@@ -19,7 +19,11 @@ package io.parsingdata.metal.expression.value.reference;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.*;
+import io.parsingdata.metal.expression.value.ConstantFactory;
+import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.UnaryValueExpression;
+import io.parsingdata.metal.expression.value.Value;
+import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class Offset extends UnaryValueExpression {
 
