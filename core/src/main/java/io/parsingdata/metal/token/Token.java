@@ -24,6 +24,23 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 
+/**
+ * Base class for all Token implementations.
+ *
+ * Specifies the two fields that all tokens share: name (String) and encoding
+ * ({@link Encoding}).
+ *
+ * The name field is used during parsing to construct a scope, by concatenating
+ * the incoming scope as follows:
+ * <pre>{@code
+ * scope + SEPARATOR + name
+ * }</pre>
+ *
+ * The encoding field may be null. If it is not null, it overrides outer
+ * encoding specifications and is passed through to nested tokens instead. As
+ * such it can itself be overridden by explicit specifications of encoding in
+ * nested tokens.
+ */
 public abstract class Token {
 
     public static final String NO_NAME = "";

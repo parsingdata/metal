@@ -29,6 +29,15 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link Token} that specifies an amount of data to skip in the input.
+ *
+ * This tokens specifies a size ({@link ValueExpression}) just like {@link Def}
+ * and evaluates this in the same way (failing when not a single value
+ * results). Unlike with Def, the data is not parsed but skipped in the input.
+ *
+ * @see Def
+ */
 public class Nod extends Token {
 
     public final ValueExpression size;

@@ -32,6 +32,17 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link Token} that specifies a token to be parsed at a specific location
+ * in the input.
+ *
+ * A Sub consists of a token ({@link Token}) and an address
+ * ({@link ValueExpression}). First the address is evaluated. Then each value
+ * is used as a location in the input to parse the token at. Sub succeeds if
+ * all parses of the token at all locations succeed. Sub fails if the address
+ * evaluates to a list of locations that is either empty or contains an invalid
+ * value.
+ */
 public class Sub extends Token {
 
     public final Token token;

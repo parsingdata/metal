@@ -29,6 +29,17 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link Token} that specifies a token to be parsed inside the result of a
+ * provided {@link ValueExpression}.
+ *
+ * A Tie consists of a token ({@link Token}) and a dataExpression
+ * ({@link ValueExpression}). First the dataExpression is evaluated. Then each
+ * value is used as an input to parse the token in. Tie succeeds if all parses
+ * of the token in all results succeed. Tie fails if the dataExpression
+ * evaluates to a list of values that is either empty or contains an invalid
+ * value.
+ */
 public class Tie extends Token {
 
     public final Token token;

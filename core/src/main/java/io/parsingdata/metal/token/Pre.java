@@ -28,6 +28,14 @@ import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 
+/**
+ * A {@link Token} that specifies a conditional token.
+ *
+ * A Pre consists of a token ({@link Token}) and a predicate
+ * ({@link Expression}). First the predicate is evaluated. If it evaluates to
+ * true, the token is parsed. The only way for Pre to fail is if the predicate
+ * evaluates to true, but the token fails.
+ */
 public class Pre extends Token {
 
     public final Token token;

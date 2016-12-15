@@ -29,6 +29,16 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link Token} that specifies a repetition of a token.
+ *
+ * A RepN consists of a token ({@link Token}) and an n
+ * ({@link ValueExpression}). First n is evaluated. Parsing fails if it does
+ * not evaluate to a single value. The token is then parsed for n times. RepN
+ * succeeds if this succeeds.
+ *
+ * @see Rep
+ */
 public class RepN extends Token {
 
     public final Token token;
