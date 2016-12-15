@@ -31,7 +31,7 @@ import io.parsingdata.metal.encoding.Encoding;
  *
  * In order to allow the construction of recursive tokens, this token can be
  * used to reference an enclosing token and use it at the current location.
- * An example for use of this token is to define a circular linked list.
+ * An example for use of this token is to define a linked list.
  */
 public class TokenRef extends Token {
 
