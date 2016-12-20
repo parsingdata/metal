@@ -19,6 +19,17 @@ package io.parsingdata.metal.expression;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 
+/**
+ * Interface for all Expression implementations.
+ *
+ * Given an {@link Environment} and an {@link Encoding}, evaluating an
+ * expression either succeeds or fails. Main use of this interface is to
+ * define predicates that need to be evaluated during parsing.
+ *
+ * @see io.parsingdata.metal.token.Def
+ * @see io.parsingdata.metal.token.Pre
+ * @see io.parsingdata.metal.token.While
+ */
 public interface Expression {
 
     boolean eval(Environment environment, Encoding encoding);

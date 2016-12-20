@@ -36,6 +36,8 @@ import io.parsingdata.metal.expression.Expression;
  * to true, the token is parsed. If that succeeds, the loop is repeated. When
  * the predicate evaluates to false, the While terminates and succeeds. If the
  * token fails, the While also fails.
+ *
+ * @see Expression
  */
 public class While extends Token {
 

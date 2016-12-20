@@ -39,6 +39,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * of the token in all results succeed. Tie fails if the dataExpression
  * evaluates to a list of values that is either empty or contains an invalid
  * value.
+ *
+ * @see ValueExpression
  */
 public class Tie extends Token {
 

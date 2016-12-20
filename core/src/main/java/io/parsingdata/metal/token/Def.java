@@ -42,7 +42,9 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * Parsing will succeed if size evaluates to a single value, if that many bytes
  * are available in the input and if the predicate (if present) evaluates to true.
  *
+ * @see Expression
  * @see Nod
+ * @see ValueExpression
  */
 public class Def extends Token {
 

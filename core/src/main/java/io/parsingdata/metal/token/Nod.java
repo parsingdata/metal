@@ -37,6 +37,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * results). Unlike with Def, the data is not parsed but skipped in the input.
  *
  * @see Def
+ * @see ValueExpression
  */
 public class Nod extends Token {
 

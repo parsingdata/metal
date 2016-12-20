@@ -42,6 +42,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * all parses of the token at all locations succeed. Sub fails if the address
  * evaluates to a list of locations that is either empty or contains an invalid
  * value.
+ *
+ * @see ValueExpression
  */
 public class Sub extends Token {
 

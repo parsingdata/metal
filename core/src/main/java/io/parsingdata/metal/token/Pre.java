@@ -35,6 +35,8 @@ import io.parsingdata.metal.expression.Expression;
  * ({@link Expression}). First the predicate is evaluated. If it evaluates to
  * true, the token is parsed. The only way for Pre to fail is if the predicate
  * evaluates to true, but the token fails.
+ *
+ * @see Expression
  */
 public class Pre extends Token {
 

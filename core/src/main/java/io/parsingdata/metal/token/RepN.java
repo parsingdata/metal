@@ -38,6 +38,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * succeeds if this succeeds.
  *
  * @see Rep
+ * @see ValueExpression
  */
 public class RepN extends Token {
 
