@@ -22,9 +22,11 @@ import io.parsingdata.metal.encoding.Encoding;
 /**
  * Interface for all Expression implementations.
  *
- * Given an {@link Environment} and an {@link Encoding}, evaluating an
- * expression either succeeds or fails. Main use of this interface is to
- * define predicates that need to be evaluated during parsing.
+ * An Expression is evaluated by calling the
+ * {@link #eval(Environment, Encoding)} method. Given an {@link Environment}
+ * and an {@link Encoding}, the evaluation either succeeds or fails. Main use
+ * of Expressions is to define predicates that need to be evaluated during
+ * parsing.
  *
  * @see io.parsingdata.metal.token.Def
  * @see io.parsingdata.metal.token.Pre

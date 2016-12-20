@@ -26,6 +26,18 @@ import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * Base class for all ComparisonExpression implementations.
+ *
+ * Specifies two input {@link ValueExpression}s that are to be evaluated and
+ * their results compared. Handles evaluation of inputs and resulting lists.
+ * The abstract {@link #compare(Value, Value)} method is then called for
+ * individual values.
+ *
+ * The {@link #value} argument may be null, in which case it is not evaluated
+ * and the output value is substituted with a list containing only the
+ * {@link Value} most recently added to the {@link Environment}.
+ */
 public abstract class ComparisonExpression implements Expression {
 
     public final ValueExpression value;

@@ -28,7 +28,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * Base class for all Token implementations.
  *
  * Specifies the two fields that all tokens share: name (String) and encoding
- * ({@link Encoding}).
+ * ({@link Encoding}). A Token is parsed by calling one of the parse methods.
  *
  * The name field is used during parsing to construct a scope, by concatenating
  * the incoming scope as follows:
