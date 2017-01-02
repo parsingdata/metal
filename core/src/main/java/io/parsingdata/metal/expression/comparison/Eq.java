@@ -19,6 +19,17 @@ package io.parsingdata.metal.expression.comparison;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link ComparisonExpression} that implements byte-level equality.
+ *
+ * Both values are interpreted as byte arrays. The
+ * {@link #compare(Value, Value)} method returns true if both values represent
+ * the same array. That is, if both arrays are exactly the same size and both
+ * arrays have the same byte value at every valid index.
+ *
+ * @see EqNum
+ * @see EqStr
+ */
 public class Eq extends ComparisonExpression {
 
     public Eq(final ValueExpression value, final ValueExpression predicate) {

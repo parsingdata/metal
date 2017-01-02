@@ -19,6 +19,16 @@ package io.parsingdata.metal.expression.comparison;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link ComparisonExpression} that implements the less than operator for
+ * integers.
+ *
+ * Both values are interpreted as integers. The {@link #compare(Value, Value)}
+ * method returns true if the left value is less than the right value.
+ *
+ * @see EqNum
+ * @see GtNum
+ */
 public class LtNum extends ComparisonExpression {
 
     public LtNum(final ValueExpression value, final ValueExpression predicate) {

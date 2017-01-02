@@ -19,6 +19,17 @@ package io.parsingdata.metal.expression.comparison;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link ComparisonExpression} that implements string equality.
+ *
+ * Both values are interpreted as strings. The {@link #compare(Value, Value)}
+ * method returns true if both values represent the same string. This is
+ * distinct from the byte-level {@link Eq} because byte representations may
+ * differ, due to {@link io.parsingdata.metal.encoding.Encoding}s.
+ *
+ * @see Eq
+ * @see EqNum
+ */
 public class EqStr extends ComparisonExpression {
 
     public EqStr(final ValueExpression value, final ValueExpression predicate) {
