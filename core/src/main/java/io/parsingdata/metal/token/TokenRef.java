@@ -28,10 +28,11 @@ import io.parsingdata.metal.encoding.Encoding;
 
 /**
  * A {@link Token} that references a previously parsed token.
- *
- * In order to allow the construction of recursive tokens, this token can be
- * used to reference an enclosing token and use it at the current location.
- * An example for use of this token is to define a linked list.
+ * <p>
+ * TokenRef consists of a <code>referenceName</code> (a String). In order to
+ * allow the construction of recursive tokens, this token can be used to
+ * reference an enclosing token and use it at the current location. An example
+ * for use of this token is to recursively define a linked list.
  */
 public class TokenRef extends Token {
 

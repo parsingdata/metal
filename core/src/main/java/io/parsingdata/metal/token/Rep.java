@@ -27,9 +27,9 @@ import io.parsingdata.metal.encoding.Encoding;
 
 /**
  * A {@link Token} that specifies a possible repetition of a token.
- *
- * A Rep consists of a single token. A parse is attempted as long as a parse
- * succeeds. As soon as a parse fails, the Rep succeeds.
+ * <p>
+ * A Rep consists of a single <code>token</code>. A parse is attempted as long
+ * as parsing succeeds. As soon as a parse fails, the Rep succeeds.
  *
  * @see RepN
  */

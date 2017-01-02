@@ -35,12 +35,14 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * A {@link Token} that specifies a value to parse in the input.
- *
- * A Def consists of a size ({@link ValueExpression}, in bytes) and a
- * predicate ({@link Expression}).
- *
- * Parsing will succeed if size evaluates to a single value, if that many bytes
- * are available in the input and if the predicate (if present) evaluates to true.
+ * <p>
+ * A Def consists of a <code>size</code> (a {@link ValueExpression}, in bytes)
+ * and a <code>predicate</code> (an {@link Expression}). The
+ * <code>predicate</code> may be null.
+ * <p>
+ * Parsing will succeed if <code>size</code> evaluates to a single value, if
+ * that many bytes are available in the input and if <code>predicate</code>
+ * (if present) evaluates to <code>true</code>.
  *
  * @see Expression
  * @see Nod

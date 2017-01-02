@@ -35,13 +35,14 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 /**
  * A {@link Token} that specifies a token to be parsed at a specific location
  * in the input.
- *
- * A Sub consists of a token ({@link Token}) and an address
- * ({@link ValueExpression}). First the address is evaluated. Then each value
- * is used as a location in the input to parse the token at. Sub succeeds if
- * all parses of the token at all locations succeed. Sub fails if the address
- * evaluates to a list of locations that is either empty or contains an invalid
- * value.
+ * <p>
+ * A Sub consists of a <code>token</code> (a {@link Token}) and an
+ * <code>address</code> (a {@link ValueExpression}). First
+ * <code>address</code> is evaluated. Then each resulting value is used as a
+ * location in the input to parse <code>token</code> at. Sub succeeds if all
+ * parses of <code>token</code> at all locations succeed. Sub fails if
+ * <code>address</code> evaluates to a list of locations that is either empty
+ * or contains an invalid value.
  *
  * @see ValueExpression
  */

@@ -32,13 +32,14 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 /**
  * A {@link Token} that specifies a token to be parsed inside the result of a
  * provided {@link ValueExpression}.
- *
- * A Tie consists of a token ({@link Token}) and a dataExpression
- * ({@link ValueExpression}). First the dataExpression is evaluated. Then each
- * value is used as an input to parse the token in. Tie succeeds if all parses
- * of the token in all results succeed. Tie fails if the dataExpression
- * evaluates to a list of values that is either empty or contains an invalid
- * value.
+ * <p>
+ * A Tie consists of a <code>token</code> (a {@link Token}) and a
+ * <code>dataExpression</code> (a {@link ValueExpression}). First
+ * <code>dataExpression</code> is evaluated. Then each value is used as an
+ * input to parse the token in. Tie succeeds if all parses of
+ * <code>token</code> in all results succeed. Tie fails if
+ * <code>dataExpression</code> evaluates to a list of values that is either
+ * empty or contains an invalid value.
  *
  * @see ValueExpression
  */

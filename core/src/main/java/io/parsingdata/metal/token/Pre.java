@@ -30,11 +30,13 @@ import io.parsingdata.metal.expression.Expression;
 
 /**
  * A {@link Token} that specifies a conditional token.
- *
- * A Pre consists of a token ({@link Token}) and a predicate
- * ({@link Expression}). First the predicate is evaluated. If it evaluates to
- * true, the token is parsed. The only way for Pre to fail is if the predicate
- * evaluates to true, but the token fails.
+ * <p>
+ * A Pre consists of a <code>token</code> (a {@link Token}) and a
+ * <code>predicate</code> (an {@link Expression}). First
+ * <code>predicate</code> is evaluated. If it evaluates to <code>true</code>,
+ * the token is parsed. The only way for Pre to fail is if
+ * <code>predicate</code> evaluates to <code>true</code>, but parsing the
+ * token fails.
  *
  * @see Expression
  */

@@ -22,9 +22,10 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 /**
  * A {@link ComparisonExpression} that implements the less than operator for
  * integers.
- *
+ * <p>
  * Both values are interpreted as integers. The {@link #compare(Value, Value)}
- * method returns true if the left value is less than the right value.
+ * method returns <code>true</code> if the left value is less than the right
+ * value.
  *
  * @see EqNum
  * @see GtNum

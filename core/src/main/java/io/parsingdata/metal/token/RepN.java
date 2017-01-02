@@ -31,11 +31,12 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * A {@link Token} that specifies a repetition of a token.
- *
- * A RepN consists of a token ({@link Token}) and an n
- * ({@link ValueExpression}). First n is evaluated. Parsing fails if it does
- * not evaluate to a single value. The token is then parsed for n times. RepN
- * succeeds if this succeeds.
+ * <p>
+ * A RepN consists of a <code>token</code> (a {@link Token}) and an
+ * <code>n</code> (a {@link ValueExpression}). First <code>n</code> is
+ * evaluated. Parsing fails if it does not evaluate to a single value. The
+ * token is then parsed for an amount of times equal to the evaluated value of
+ * <code>n</code>. RepN succeeds if this succeeds.
  *
  * @see Rep
  * @see ValueExpression

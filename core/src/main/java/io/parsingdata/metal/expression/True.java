@@ -20,8 +20,8 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
- * An {@link Expression} that always evaluates to true. Generally used as
- * default on undefined predicates.
+ * An {@link Expression} that always evaluates to <code>true</code>. Generally
+ * used as default on undefined predicates.
  */
 public class True implements Expression {
 
