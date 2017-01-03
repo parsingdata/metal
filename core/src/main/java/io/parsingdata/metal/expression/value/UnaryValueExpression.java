@@ -22,6 +22,19 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 
+/**
+ * Base class for {@link ValueExpression}s with one operand.
+ * <p>
+ * A UnaryValueExpression implements a ValueExpression that has one
+ * <code>operand</code> (a {@link ValueExpression}). The operand is first
+ * evaluated. If it evaluates to {@link OptionalValue#empty()}, the result of
+ * the ValueExpression itself will we that as well.
+ * <p>
+ * To implement a UnaryValueExpression, only the
+ * {@link #eval(Value, Environment, Encoding)} must be implemented, handling
+ * the case of evaluating one value. This base class takes care of evaluating
+ * the operand and handling list semantics.
+ */
 public abstract class UnaryValueExpression implements ValueExpression {
 
     public final ValueExpression operand;

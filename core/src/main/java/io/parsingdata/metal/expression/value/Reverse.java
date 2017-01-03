@@ -20,6 +20,13 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 
+/**
+ * A {@link ValueExpression} that reverses the results of its operand.
+ * <p>
+ * Reverse has a single operand <code>values</code> (a
+ * {@link ValueExpression}). When evaluated, it evaluates <code>values</code>
+ * and then reverses and returns the result.
+ */
 public class Reverse implements ValueExpression {
 
     public final ValueExpression values;

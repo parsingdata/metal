@@ -23,20 +23,16 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
- * Expression for the 'elvis operator': <pre>?:</pre>.
+ * A {@link ValueExpression} that implements the Elvis operator:
+ * <pre>?:</pre>.
  * <p>
- * Example:
- *
- * <pre>
- *   elvis(ref("foo"), ref("bar"))
- * </pre>
- *
- * If <code>ref("foo")</code> can be successfully evaluated, this elvis-expression
- * evaluates to that value, else it evaluates to the value of <code>ref("bar")</code>.
- *
- * For lists, values with the same index are compared in this manner. If lists are of
- * unequal length, the shortest list is virtually extended with empty values (i.e.,
- * the values in the other list are returned at those locations).
+ * An Elvis expression has two operands: <code>left</code> and
+ * <code>right</code> (both {@link ValueExpression}s). Both operands are
+ * evaluated. The return value is a list with the size of the longest list
+ * returned by the two evaluations. At each index, the value at that index in
+ * the result returned by evaluating <code>left</code> is placed, except if it
+ * does not exist or is {@link OptionalValue#empty()}, in which case the value
+ * at that index in the result returned by evaluating right is placed there.
  */
 public class Elvis implements ValueExpression {
     public final ValueExpression left;

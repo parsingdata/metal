@@ -23,14 +23,23 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
- * Base class for ValueExpressions with two operands.
- *
- * Subclasses implement behaviour for evaluating two operands and returning a single
- * value as a result. If one operand evaluates to empty, the result is always empty.
- *
- * For lists, values with the same index are evaluated in this manner. If lists are of
- * unequal length, the result is a list with evaluated values the same size as the
- * shortest list, appended with empty values to match the size of the longest list.
+ * Base class for {@link ValueExpression}s with two operands.
+ * <p>
+ * A BinaryValueExpression implements a ValueExpression that has two operands:
+ * <code>left</code> and <code>right</code> (both {@link ValueExpression}s).
+ * Both operands are themselves first evaluated. If at least one of the
+ * operands evaluates to {@link OptionalValue#empty()}, the result of the
+ * ValueExpression itself will we that as well.
+ * <p>
+ * For lists, values with the same index are evaluated in this manner. If
+ * lists are of unequal length, the result is a list with evaluated values the
+ * same size as the shortest list, appended with empty values to match the
+ * size of the longest list.
+ * <p>
+ * To implement a BinaryValueExpression, only the
+ * {@link #eval(Value, Value, Environment, Encoding)} must be implemented,
+ * handling the case of evaluating two values. This base class takes care of
+ * evaluating the operands and handling list semantics.
  */
 public abstract class BinaryValueExpression implements ValueExpression {
 

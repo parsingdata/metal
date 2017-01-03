@@ -21,6 +21,9 @@ import static io.parsingdata.metal.data.ConstantSlice.create;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 
+/**
+ * A {@link BinaryValueExpression} that concatenates values at the byte-level.
+ */
 public class Cat extends BinaryValueExpression {
 
     public Cat(final ValueExpression left, final ValueExpression right) {
