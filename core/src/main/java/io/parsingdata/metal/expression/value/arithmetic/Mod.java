@@ -26,6 +26,12 @@ import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link BinaryValueExpression} that implements the modulo operation.
+ * <p>
+ * If the value of the <code>right</code> operand is equal to or smaller than
+ * zero, the result is empty.
+ */
 public class Mod extends BinaryValueExpression {
 
     public Mod(final ValueExpression left, final ValueExpression right) {

@@ -24,6 +24,9 @@ import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link BinaryValueExpression} that implements integer addition.
+ */
 public class Add extends BinaryValueExpression {
 
     public Add(final ValueExpression left, final ValueExpression right) {

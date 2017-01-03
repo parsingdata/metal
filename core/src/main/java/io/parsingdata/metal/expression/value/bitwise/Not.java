@@ -26,6 +26,9 @@ import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link UnaryValueExpression} that implements the bitwise not operator.
+ */
 public class Not extends UnaryValueExpression {
 
     public Not(final ValueExpression operand) {

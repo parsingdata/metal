@@ -34,6 +34,8 @@ import io.parsingdata.metal.encoding.Encoding;
  * {@link #eval(Value, Environment, Encoding)} must be implemented, handling
  * the case of evaluating one value. This base class takes care of evaluating
  * the operand and handling list semantics.
+ *
+ * @see BinaryValueExpression
  */
 public abstract class UnaryValueExpression implements ValueExpression {
 

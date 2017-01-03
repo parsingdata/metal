@@ -40,6 +40,8 @@ import io.parsingdata.metal.encoding.Encoding;
  * {@link #eval(Value, Value, Environment, Encoding)} must be implemented,
  * handling the case of evaluating two values. This base class takes care of
  * evaluating the operands and handling list semantics.
+ *
+ * @see UnaryValueExpression
  */
 public abstract class BinaryValueExpression implements ValueExpression {
 

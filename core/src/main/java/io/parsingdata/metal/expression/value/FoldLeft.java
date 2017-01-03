@@ -20,6 +20,14 @@ import static io.parsingdata.metal.Shorthand.con;
 
 import io.parsingdata.metal.data.ImmutableList;
 
+/**
+ * A {@link ValueExpression} implementation of the FoldLeft operation.
+ * <p>
+ * FoldLeft differs from {@link FoldRight} in that the reduce operation is
+ * applied from left to right (i.e., starting at the top).
+ *
+ * @see FoldRight
+ */
 public class FoldLeft extends Fold {
 
     public FoldLeft(final ValueExpression values, final Reducer reducer, final ValueExpression initial) {

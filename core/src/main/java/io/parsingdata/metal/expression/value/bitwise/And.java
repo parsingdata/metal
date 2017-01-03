@@ -26,6 +26,9 @@ import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link BinaryValueExpression} that implements the bitwise and operator.
+ */
 public class And extends BinaryValueExpression {
 
     public And(final ValueExpression left, final ValueExpression right) {

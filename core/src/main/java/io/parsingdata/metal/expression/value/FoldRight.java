@@ -20,6 +20,14 @@ import static io.parsingdata.metal.Shorthand.con;
 
 import io.parsingdata.metal.data.ImmutableList;
 
+/**
+ * A {@link ValueExpression} implementation of the FoldRight operation.
+ * <p>
+ * FoldRight differs from {@link FoldLeft} in that the reduce operation is
+ * applied from right to left (i.e., starting at the bottom).
+ *
+ * @see FoldLeft
+ */
 public class FoldRight extends Fold {
 
     public FoldRight(final ValueExpression values, final Reducer reducer, final ValueExpression initial) {
