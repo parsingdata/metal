@@ -20,6 +20,9 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 
+/**
+ * A {@link BinaryLogicalExpression} that implements the logical And operator.
+ */
 public class And extends BinaryLogicalExpression {
 
     public And(final Expression left, final Expression right) {

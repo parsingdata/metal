@@ -18,6 +18,12 @@ package io.parsingdata.metal.expression.logical;
 
 import io.parsingdata.metal.expression.Expression;
 
+/**
+ * Marker interface for all LogicalExpression implementations.
+ *
+ * @see UnaryLogicalExpression
+ * @see BinaryLogicalExpression
+ */
 public interface LogicalExpression extends Expression {
     
 }
