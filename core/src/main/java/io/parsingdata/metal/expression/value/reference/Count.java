@@ -27,6 +27,10 @@ import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link ValueExpression} that represents the amount of
+ * {@link OptionalValue}s returned by evaluating its <code>operand</code>.
+ */
 public class Count implements ValueExpression {
 
     public final ValueExpression operand;

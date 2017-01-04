@@ -25,6 +25,10 @@ import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link UnaryValueExpression} that represents the sizes (in bytes) of all
+ * {@link OptionalValue}s returned by evaluating its <code>operand</code>.
+ */
 public class Len extends UnaryValueExpression {
 
     public Len(final ValueExpression operand) {

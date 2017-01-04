@@ -30,20 +30,19 @@ import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * Expression for the 'nth operator':
+ * A {@link ValueExpression} that returns an indexed list of
+ * {@link OptionalValue}s.
  * <p>
- * Example:
+ * The Nth ValueExpression has two operands, <code>values</code> and
+ * <code>indices</code> (both {@link ValueExpression}s). Both operands are
+ * evaluated. Next, the resulting values of evaluating <code>indices</code> is
+ * used as a list of integer indices into the results of evaluating
+ * <code>values</code>. For every invalid index (such as
+ * {@link OptionalValue#empty()}, a negative value or an index that is out of
+ * bounds) empty is returned.
  *
- * <pre>
- *   nth(ref("value"), ref("index"))
- * </pre>
- *
- * Nth takes as arguments two lists, a list of values and a list of indices. The result
- * of the expression is a new list, where for each index <tt>i</tt> in the list of indices,
- * the value at index <tt>i</tt> is taken from the list of values.
- * <p>
- * Should an index be invalid, an empty value is added instead. The resulting list is
- * therefore always of the same size as the list of indices.
+ * @see NameRef
+ * @see TokenRef
  */
 public class Nth implements ValueExpression {
 

@@ -30,7 +30,7 @@ import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * A {@link Token} that specifies a repetition of a token.
+ * A {@link Token} that specifies a bounded repetition of a token.
  * <p>
  * A RepN consists of a <code>token</code> (a {@link Token}) and an
  * <code>n</code> (a {@link ValueExpression}). First <code>n</code> is

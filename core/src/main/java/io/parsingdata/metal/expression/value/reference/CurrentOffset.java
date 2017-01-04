@@ -25,7 +25,8 @@ import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * Retrieve the current environment offset.
+ * A {@link ValueExpression} that represents the current offset in the parse
+ * state.
  */
 public class CurrentOffset implements ValueExpression {
 

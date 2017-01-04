@@ -29,7 +29,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * <code>left</code> and <code>right</code> (both {@link ValueExpression}s).
  * Both operands are themselves first evaluated. If at least one of the
  * operands evaluates to {@link OptionalValue#empty()}, the result of the
- * ValueExpression itself will we that as well.
+ * ValueExpression itself will be empty as well.
  * <p>
  * For lists, values with the same index are evaluated in this manner. If
  * lists are of unequal length, the result is a list with evaluated values the
