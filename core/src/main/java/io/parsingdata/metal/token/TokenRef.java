@@ -34,7 +34,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * reference an enclosing token and use it at the current location. An example
  * for use of this token is to recursively define a linked list.
  * <p>
- * The referenced token in located in the current parse state by traversing
+ * The referenced token is located in the current parse state by traversing it
  * backwards until it is located. Parsing will fail if it is not found.
  *
  * @see io.parsingdata.metal.expression.value.reference.NameRef
