@@ -21,7 +21,7 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 
 /**
- * A {@link BinaryLogicalExpression} that implements the logical Or operator.
+ * A {@link BinaryLogicalExpression} that implements the logical OR operator.
  */
 public class Or extends BinaryLogicalExpression {
 

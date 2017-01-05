@@ -33,6 +33,12 @@ import io.parsingdata.metal.encoding.Encoding;
  * allow the construction of recursive tokens, this token can be used to
  * reference an enclosing token and use it at the current location. An example
  * for use of this token is to recursively define a linked list.
+ * <p>
+ * The referenced token in located in the current parse state by traversing
+ * backwards until it is located. Parsing will fail if it is not found.
+ *
+ * @see io.parsingdata.metal.expression.value.reference.NameRef
+ * @see io.parsingdata.metal.expression.value.reference.TokenRef
  */
 public class TokenRef extends Token {
 

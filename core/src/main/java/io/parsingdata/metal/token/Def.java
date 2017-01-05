@@ -38,7 +38,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * <p>
  * A Def consists of a <code>size</code> (a {@link ValueExpression}, in bytes)
  * and a <code>predicate</code> (an {@link Expression}). The
- * <code>predicate</code> may be null.
+ * <code>predicate</code> may be <code>null</code>.
  * <p>
  * Parsing will succeed if <code>size</code> evaluates to a single value, if
  * that many bytes are available in the input and if <code>predicate</code>

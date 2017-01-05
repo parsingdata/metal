@@ -27,7 +27,7 @@ import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * A {@link BinaryValueExpression} that implements the bitwise shift right
+ * A {@link BinaryValueExpression} that implements the bitwise right shift
  * operation.
  */
 public class ShiftRight extends BinaryValueExpression {

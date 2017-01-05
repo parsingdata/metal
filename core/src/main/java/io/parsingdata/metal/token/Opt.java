@@ -27,7 +27,7 @@ import io.parsingdata.metal.encoding.Encoding;
 
 /**
  * A {@link Token} that specifies an optional token.
- *<p>
+ * <p>
  * An Opt consists of a single <code>token</code> (a {@link Token}) that is
  * parsed. Regardless of whether parsing the token succeeds, Opt itself
  * succeeds.

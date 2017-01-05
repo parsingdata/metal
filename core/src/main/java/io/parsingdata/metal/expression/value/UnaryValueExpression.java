@@ -28,7 +28,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * A UnaryValueExpression implements a ValueExpression that has one
  * <code>operand</code> (a {@link ValueExpression}). The operand is first
  * evaluated. If it evaluates to {@link OptionalValue#empty()}, the result of
- * the ValueExpression itself will we that as well.
+ * the ValueExpression itself will be that as well.
  * <p>
  * To implement a UnaryValueExpression, only the
  * {@link #eval(Value, Environment, Encoding)} must be implemented, handling

@@ -27,6 +27,9 @@ import io.parsingdata.metal.encoding.Encoding;
 /**
  * Base class for all Token implementations.
  * <p>
+ * A Token is the basic building block of a parser. It denotes something that
+ * can be parsed, either by reading from the input or composing other tokens.
+ * <p>
  * Specifies the two fields that all tokens share: <code>name</code> (a
  * String) and <code>encoding</code> (an {@link Encoding}). A Token is parsed
  * by calling one of the <code>parse</code> methods. Parsing a Token succeeds

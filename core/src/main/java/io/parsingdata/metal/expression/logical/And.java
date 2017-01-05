@@ -21,7 +21,7 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 
 /**
- * A {@link BinaryLogicalExpression} that implements the logical And operator.
+ * A {@link BinaryLogicalExpression} that implements the logical AND operator.
  */
 public class And extends BinaryLogicalExpression {
 
