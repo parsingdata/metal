@@ -16,53 +16,37 @@
 
 package io.parsingdata.metal;
 
-import static org.junit.Assert.assertTrue;
-
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collection;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.runners.Parameterized;
 
+import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.format.JPEG;
 import io.parsingdata.metal.format.PNG;
 import io.parsingdata.metal.format.ZIP;
+import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.util.ParameterizedParse;
 
-@RunWith(JUnit4.class)
-public class FormatTest {
+public class FormatTest extends ParameterizedParse {
 
-    private static final String PNGFILE = "/test.png";
-    private static final String ZIPFILE1 = "/singlefile-zip30-ubuntu.zip";
-    private static final String ZIPFILE2 = "/multifile-zip30-ubuntu.zip";
-    private static final String JPEGFILE = "/test.jpg";
-
-    @Test
-    public void parsePNG() throws IOException, URISyntaxException {
-        assertTrue(PNG.FORMAT.parse(stream(toURI(PNGFILE)), enc()).succeeded);
+    @Parameterized.Parameters(name="{0} ({4})")
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] {
+            { "PNG", PNG.FORMAT, "/test.png", enc(), true },
+            { "ZIP", ZIP.FORMAT, "/singlefile-zip30-ubuntu.zip", enc(), true },
+            { "ZIP2", ZIP.FORMAT, "/multifile-zip30-ubuntu.zip", enc(), true },
+            { "JPEG", JPEG.FORMAT, "/test.jpg", enc(), true },
+        });
     }
 
-    @Test
-    public void parseZIP() throws IOException, URISyntaxException {
-        assertTrue(ZIP.FORMAT.parse(stream(toURI(ZIPFILE1)), enc()).succeeded);
-    }
-
-    @Test
-    public void parseZIP2() throws IOException, URISyntaxException {
-        assertTrue(ZIP.FORMAT.parse(stream(toURI(ZIPFILE2)), enc()).succeeded);
-    }
-
-    @Test
-    public void parseJPEG() throws IOException, URISyntaxException {
-        assertTrue(JPEG.FORMAT.parse(stream(toURI(JPEGFILE)), enc()).succeeded);
-    }
-
-    private URI toURI(final String resource) throws URISyntaxException {
-        return getClass().getResource(resource).toURI();
+    public FormatTest(final String description, final Token token, final String path, final Encoding encoding, final boolean result) throws URISyntaxException, IOException {
+        super(token, stream(FormatTest.class.getClass().getResource(path).toURI()), encoding, result);
     }
 
 }

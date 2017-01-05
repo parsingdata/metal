@@ -26,6 +26,12 @@ import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link BinaryValueExpression} that implements integer division.
+ * <p>
+ * If the value of the <code>right</code> operand is equal to zero, the result
+ * is empty.
+ */
 public class Div extends BinaryValueExpression {
 
     public Div(final ValueExpression left, final ValueExpression right) {

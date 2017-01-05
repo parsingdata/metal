@@ -19,6 +19,19 @@ package io.parsingdata.metal.expression.comparison;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link ComparisonExpression} that implements integer equality.
+ * <p>
+ * Both values are interpreted as integers. The {@link #compare(Value, Value)}
+ * method returns <code>true</code> if both values represent the same integer.
+ * This is distinct from the byte-level {@link Eq} because byte
+ * representations of two equal integers may differ, due to
+ * {@link io.parsingdata.metal.encoding.Encoding}s and other factors such as
+ * padding.
+ *
+ * @see Eq
+ * @see EqStr
+ */
 public class EqNum extends ComparisonExpression {
 
     public EqNum(final ValueExpression value, final ValueExpression predicate) {

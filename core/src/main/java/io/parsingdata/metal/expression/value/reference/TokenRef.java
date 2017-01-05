@@ -17,8 +17,8 @@
 package io.parsingdata.metal.expression.value.reference;
 
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.expression.value.OptionalValue.wrap;
 import static io.parsingdata.metal.data.selection.ByToken.getAllValues;
+import static io.parsingdata.metal.expression.value.OptionalValue.wrap;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
@@ -27,6 +27,11 @@ import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 
+/**
+ * A {@link ValueExpression} that represents all
+ * {@link io.parsingdata.metal.expression.value.Value}s in the parse state
+ * that match the provided <code>definition</code>.
+ */
 public class TokenRef implements ValueExpression {
 
     public final Token definition;

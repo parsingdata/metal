@@ -22,6 +22,11 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link ValueExpression} that represents the
+ * {@link io.parsingdata.metal.expression.value.Value} most recently added to
+ * the parse state.
+ */
 public class Self implements ValueExpression {
 
     @Override

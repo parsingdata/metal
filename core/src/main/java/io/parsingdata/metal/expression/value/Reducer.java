@@ -16,6 +16,15 @@
 
 package io.parsingdata.metal.expression.value;
 
+/**
+ * Interface for Reducer implementations used by {@link FoldLeft} and
+ * {@link FoldRight}.
+ * <p>
+ * A Reducer has a single method
+ * {@link #reduce(ValueExpression, ValueExpression)} that accepts two operands
+ * <code>left</code> and <code>right</code> (both {@link ValueExpression}). It
+ * should return a ValueExpression that composes both operands.
+ */
 public interface Reducer {
 
     ValueExpression reduce(ValueExpression left, ValueExpression right);

@@ -40,7 +40,6 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
-import io.parsingdata.metal.expression.value.ValueOperation;
 import io.parsingdata.metal.token.Token;
 
 @RunWith(JUnit4.class)
@@ -66,12 +65,7 @@ public class ValueExpressionSemanticsTest {
         def("a", 4, eq(new UnaryValueExpression(ref("a")) {
             @Override
             public OptionalValue eval(Value value, Environment environment, Encoding encoding) {
-                return value.operation(new ValueOperation() {
-                    @Override
-                    public OptionalValue execute(Value value) {
-                        return OptionalValue.of(value);
-                    }
-                });
+                return OptionalValue.of(value);
             }
         })).parse(data, enc());
     }

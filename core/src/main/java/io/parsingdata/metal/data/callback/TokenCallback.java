@@ -16,9 +16,9 @@
 
 package io.parsingdata.metal.data.callback;
 
-import io.parsingdata.metal.token.Token;
-
 import static io.parsingdata.metal.Util.checkNotNull;
+
+import io.parsingdata.metal.token.Token;
 
 public class TokenCallback {
 

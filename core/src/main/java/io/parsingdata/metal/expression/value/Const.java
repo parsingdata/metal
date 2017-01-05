@@ -20,6 +20,12 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 
+/**
+ * A {@link ValueExpression} representing a constant value.
+ * <p>
+ * Const has a single operand <code>value</code> (a {@link Value}). When
+ * evaluated, this value is returned.
+ */
 public class Const implements ValueExpression {
 
     public final Value value;

@@ -24,6 +24,9 @@ import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link UnaryValueExpression} that implements integer negation.
+ */
 public class Neg extends UnaryValueExpression {
 
     public Neg(final ValueExpression operand) {

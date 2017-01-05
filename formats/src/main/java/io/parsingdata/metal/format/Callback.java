@@ -26,7 +26,6 @@ import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
-import io.parsingdata.metal.expression.value.ValueOperation;
 
 public final class Callback {
 
@@ -36,18 +35,13 @@ public final class Callback {
         return new UnaryValueExpression(target) {
             @Override
             public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) {
-                return value.operation(new ValueOperation() {
-                    @Override
-                    public OptionalValue execute(final Value value) {
-                        final CRC32 crc = new CRC32();
-                        crc.update(value.getValue());
-                        final long crcValue = crc.getValue();
-                        return OptionalValue.of(new Value(create(encoding.byteOrder.apply(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
-                                                                                                             (byte)((crcValue & 0xff0000) >> 16),
-                                                                                                             (byte)((crcValue & 0xff00) >> 8),
-                                                                                                             (byte) (crcValue & 0xff) })), encoding));
-                    }
-                });
+                final CRC32 crc = new CRC32();
+                crc.update(value.getValue());
+                final long crcValue = crc.getValue();
+                return OptionalValue.of(new Value(create(encoding.byteOrder.apply(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
+                                                                                               (byte)((crcValue & 0xff0000) >> 16),
+                                                                                               (byte)((crcValue & 0xff00) >> 8),
+                                                                                               (byte) (crcValue & 0xff) })), encoding));
             }
         };
     }

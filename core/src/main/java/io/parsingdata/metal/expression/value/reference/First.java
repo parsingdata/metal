@@ -24,6 +24,10 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link ValueExpression} that represents the first {@link OptionalValue}
+ * returned by evaluating its <code>operand</code>.
+ */
 public class First implements ValueExpression {
 
     public final ValueExpression operand;

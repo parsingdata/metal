@@ -16,10 +16,18 @@
 
 package io.parsingdata.metal.expression.logical;
 
-import io.parsingdata.metal.expression.Expression;
-
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import io.parsingdata.metal.expression.Expression;
+
+/**
+ * Base class for {@link LogicalExpression} implementations with a single
+ * operand.
+ * <p>
+ * A UnaryLogicalExpression has one <code>operand</code> (an
+ * {@link Expression}). The <code>operand</code> is evaluated, the concrete
+ * implementation's operator is applied to the result and returned.
+ */
 public abstract class UnaryLogicalExpression implements LogicalExpression {
 
     public final Expression operand;

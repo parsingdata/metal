@@ -25,6 +25,15 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 
+/**
+ * A {@link Token} that specifies a possible repetition of a token.
+ * <p>
+ * A Rep consists of a single <code>token</code>. A parse is attempted as long
+ * as parsing succeeds. Since any amount of iterations is acceptable
+ * (including zero), parsing a Rep will always succeed.
+ *
+ * @see RepN
+ */
 public class Rep extends Token {
 
     public final Token token;

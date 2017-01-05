@@ -20,6 +20,9 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 
+/**
+ * A {@link BinaryLogicalExpression} that implements the logical OR operator.
+ */
 public class Or extends BinaryLogicalExpression {
 
     public Or(final Expression left, final Expression right) {

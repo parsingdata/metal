@@ -27,6 +27,13 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 
+/**
+ * A {@link Token} that specifies a dependency between a list of tokens.
+ * <p>
+ * A Seq consists of an array of <code>tokens</code>. If one of the tokens
+ * doesn't succeed, the Seq fails. If all of the tokens succeed, the Seq will
+ * succeed. Order is from left to right.
+ */
 public class Seq extends Token {
 
     private final Token[] tokens; // Private because array content is mutable.

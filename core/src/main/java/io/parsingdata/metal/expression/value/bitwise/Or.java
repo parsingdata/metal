@@ -26,6 +26,9 @@ import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link BinaryValueExpression} that implements the bitwise OR operator.
+ */
 public class Or extends BinaryValueExpression {
 
     public Or(final ValueExpression left, final ValueExpression right) {

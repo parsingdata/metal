@@ -24,6 +24,9 @@ import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link BinaryValueExpression} that implements integer multiplication.
+ */
 public class Mul extends BinaryValueExpression {
 
     public Mul(final ValueExpression left, final ValueExpression right) {

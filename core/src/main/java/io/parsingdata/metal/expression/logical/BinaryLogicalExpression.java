@@ -16,10 +16,18 @@
 
 package io.parsingdata.metal.expression.logical;
 
-import io.parsingdata.metal.expression.Expression;
-
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import io.parsingdata.metal.expression.Expression;
+
+/**
+ * Base class for {@link LogicalExpression} implementations with two operands.
+ * <p>
+ * A BinaryLogicalExpression has two operands, <code>left</code> and
+ * <code>right</code> (both {@link Expression}s). Both operands are evaluated,
+ * their results combined using the operator the concrete expression
+ * implements and then returned.
+ */
 public abstract class BinaryLogicalExpression implements LogicalExpression {
 
     public final Expression left;

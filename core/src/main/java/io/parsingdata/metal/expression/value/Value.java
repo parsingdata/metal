@@ -18,7 +18,6 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.BitSet;
 
@@ -53,10 +52,6 @@ public class Value {
 
     public BitSet asBitSet() {
         return BitSet.valueOf(encoding.byteOrder == ByteOrder.BIG_ENDIAN ? ByteOrder.LITTLE_ENDIAN.apply(getValue()) : getValue());
-    }
-
-    public OptionalValue operation(final ValueOperation operation) {
-        return operation.execute(this);
     }
 
     @Override

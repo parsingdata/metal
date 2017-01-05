@@ -33,6 +33,21 @@ import io.parsingdata.metal.expression.True;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link Token} that specifies a value to parse in the input.
+ * <p>
+ * A Def consists of a <code>size</code> (a {@link ValueExpression}, in bytes)
+ * and a <code>predicate</code> (an {@link Expression}). The
+ * <code>predicate</code> may be <code>null</code>.
+ * <p>
+ * Parsing will succeed if <code>size</code> evaluates to a single value, if
+ * that many bytes are available in the input and if <code>predicate</code>
+ * (if present) evaluates to <code>true</code>.
+ *
+ * @see Expression
+ * @see Nod
+ * @see ValueExpression
+ */
 public class Def extends Token {
 
     public final ValueExpression size;

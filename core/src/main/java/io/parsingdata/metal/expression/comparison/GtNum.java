@@ -19,6 +19,17 @@ package io.parsingdata.metal.expression.comparison;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link ComparisonExpression} that implements the greater than operator
+ * for integers.
+ * <p>
+ * Both values are interpreted as integers. The {@link #compare(Value, Value)}
+ * method returns <code>true</code> if the left value is greater than the
+ * right value.
+ *
+ * @see EqNum
+ * @see LtNum
+ */
 public class GtNum extends ComparisonExpression {
 
     public GtNum(final ValueExpression value, final ValueExpression predicate) {

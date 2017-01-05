@@ -22,6 +22,20 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 
+/**
+ * Base class for {@link ValueExpression} implementations of the Fold
+ * operation.
+ * <p>
+ * Fold has three operands: <code>values</code> (a {@link ValueExpression}),
+ * <code>reducer</code> (a {@link Reducer}) and <code>initial</code> (a
+ * {@link ValueExpression}). First <code>initial</code> is evaluated. If it
+ * does not return a single value, the final result is an empty list. Next,
+ * <code>values</code> is evaluated and its result is passed to the abstract
+ * {@link #prepareValues(ImmutableList)} method. The returned list is prefixed
+ * by the value returned by evaluating <code>initial</code>. On this list, the
+ * <code>reducer</code> is applied to the first two values until a single
+ * value remains, which is then returned.
+ */
 public abstract class Fold implements ValueExpression {
 
     public final ValueExpression values;

@@ -16,12 +16,13 @@
 
 package io.parsingdata.metal.data.selection;
 
-import io.parsingdata.metal.data.ParseGraph;
-import org.junit.Test;
-
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.data.selection.ByItem.getGraphAfter;
+
+import org.junit.Test;
+
+import io.parsingdata.metal.data.ParseGraph;
 
 public class ByItemTest {
 

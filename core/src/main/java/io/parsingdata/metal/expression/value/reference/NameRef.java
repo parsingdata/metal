@@ -17,8 +17,8 @@
 package io.parsingdata.metal.expression.value.reference;
 
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.expression.value.OptionalValue.wrap;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
+import static io.parsingdata.metal.expression.value.OptionalValue.wrap;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
@@ -26,6 +26,20 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link ValueExpression} that represents all
+ * {@link io.parsingdata.metal.expression.value.Value}s in the parse state
+ * that match the provided <code>name</code>.
+ * <p>
+ * A matching name can be both a full name or a partial name. A matching
+ * partial name means that any leading part of its scope is omitted. For
+ * example, the <code>name</code> "thud.blat":
+ * <ul>
+ *     <li>does match: thud.blat (full name)</li>
+ *     <li>does match: foo.bar.thud.blat (partial name)</li>
+ *     <li>does not match: foo.barthud.blat (partial names must be cut off at scope separator boundaries)</li>
+ * </ul>
+ */
 public class NameRef implements ValueExpression {
 
     public final String name;

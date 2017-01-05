@@ -19,18 +19,30 @@ package io.parsingdata.metal.token;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.ParseResult.failure;
 import static io.parsingdata.metal.data.ParseResult.success;
-import static io.parsingdata.metal.data.selection.ByOffset.hasRootAtOffset;
 
 import java.io.IOException;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link Token} that specifies a token to be parsed inside the result of a
+ * provided {@link ValueExpression}.
+ * <p>
+ * A Tie consists of a <code>token</code> (a {@link Token}) and a
+ * <code>dataExpression</code> (a {@link ValueExpression}). First
+ * <code>dataExpression</code> is evaluated. Then each value is used as an
+ * input to parse the token in. Tie succeeds if all parses of
+ * <code>token</code> in all results succeed. Tie fails if
+ * <code>dataExpression</code> evaluates to a list of values that is either
+ * empty or contains an invalid value.
+ *
+ * @see ValueExpression
+ */
 public class Tie extends Token {
 
     public final Token token;

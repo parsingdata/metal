@@ -20,6 +20,9 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 
+/**
+ * A {@link UnaryLogicalExpression} that implements the logical NOT operator.
+ */
 public class Not extends UnaryLogicalExpression {
 
     public Not(final Expression operand) {

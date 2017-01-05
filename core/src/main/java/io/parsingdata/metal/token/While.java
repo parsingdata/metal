@@ -28,6 +28,19 @@ import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 
+/**
+ * A {@link Token} that specifies a conditional repetition of a token.
+ * <p>
+ * A While consists of a <code>token</code> (a {@link Token}) and a
+ * <code>predicate</code> (an {@link Expression}). Each loop,
+ * <code>predicate</code> is evaluated. If it evaluates to <code>true</code>,
+ * <code>token</code> is parsed. If that succeeds, the loop is repeated. When
+ * <code>predicate</code> evaluates to <code>false</code>, the While
+ * terminates and succeeds. If parsing <code>token</code> fails, the While
+ * also fails.
+ *
+ * @see Expression
+ */
 public class While extends Token {
 
     public final Token token;

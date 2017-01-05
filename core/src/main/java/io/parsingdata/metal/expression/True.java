@@ -19,6 +19,10 @@ package io.parsingdata.metal.expression;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 
+/**
+ * An {@link Expression} that always evaluates to <code>true</code>. Generally
+ * used as default on undefined predicates.
+ */
 public class True implements Expression {
 
     @Override

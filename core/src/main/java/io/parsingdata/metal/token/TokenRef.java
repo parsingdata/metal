@@ -26,6 +26,20 @@ import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 
+/**
+ * A {@link Token} that references a previously parsed token.
+ * <p>
+ * TokenRef consists of a <code>referenceName</code> (a String). In order to
+ * allow the construction of recursive tokens, this token can be used to
+ * reference an enclosing token and use it at the current location. An example
+ * for use of this token is to recursively define a linked list.
+ * <p>
+ * The referenced token is located in the current parse state by traversing it
+ * backwards until it is located. Parsing will fail if it is not found.
+ *
+ * @see io.parsingdata.metal.expression.value.reference.NameRef
+ * @see io.parsingdata.metal.expression.value.reference.TokenRef
+ */
 public class TokenRef extends Token {
 
     private static final Token LOOKUP_FAILED = new Token("LOOKUP_FAILED", null) {

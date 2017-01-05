@@ -24,6 +24,9 @@ import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
+/**
+ * A {@link BinaryValueExpression} that implements integer subtraction.
+ */
 public class Sub extends BinaryValueExpression {
 
     public Sub(final ValueExpression left, final ValueExpression right) {

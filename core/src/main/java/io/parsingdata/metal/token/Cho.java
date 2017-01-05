@@ -27,6 +27,13 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 
+/**
+ * A {@link Token} that specifies a choice out of a list of tokens.
+ *<p>
+ * A Cho consists of an array of <code>tokens</code>. If none of the tokens
+ * succeed, the Cho fails. If any token succeeds, the Cho succeeds. Precedence
+ * is from left to right.
+ */
 public class Cho extends Token {
 
     private final Token[] tokens; // Private because array content is mutable.
