@@ -27,21 +27,20 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import java.util.Arrays;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.OptionalValueList;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ConstantFactory;
+import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * {@link GUID#guid(String)} creates a ValueExpression to be used as predicate for 16 byte definitions;
- *
- * @author Netherlands Forensic Institute.
  */
 public final class GUID {
+
     private static final Encoding BIG_ENDIAN = new Encoding();
 
-    private GUID() {
-    }
+    private GUID() {}
 
     /**
      * Use a String representation of a GUID as predicate.
@@ -58,7 +57,7 @@ public final class GUID {
         return new ValueExpression() {
 
             @Override
-            public OptionalValueList eval(final Environment environment, final Encoding encoding) {
+            public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
                 // Note that GUID bytes differ from UUID bytes, as the first 3 parts can be reversed
                 return cat(
                     cat(

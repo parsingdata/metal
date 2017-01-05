@@ -28,14 +28,11 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * {@link UUID#uuid(String)} creates a ValueExpression to be used as predicate for 16 byte definitions;
- *
- * @author Netherlands Forensic Institute.
  */
 public final class UUID {
     private static final Encoding BIG_ENDIAN = new Encoding();
 
-    private UUID() {
-    }
+    private UUID() {}
 
     /**
      * Use a String representation of a UUID as predicate.
