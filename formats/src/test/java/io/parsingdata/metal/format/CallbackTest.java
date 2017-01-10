@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal;
+package io.parsingdata.metal.format;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;

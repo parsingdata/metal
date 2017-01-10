@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.expression.derived;
+package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.con;
@@ -23,8 +23,6 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import java.math.BigInteger;
 
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.ConstantFactory;
-import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * {@link UUID#uuid(String)} creates a ValueExpression to be used as predicate for 16 byte definitions;

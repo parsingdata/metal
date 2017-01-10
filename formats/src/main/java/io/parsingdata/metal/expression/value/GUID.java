@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.expression.derived;
+package io.parsingdata.metal.expression.value;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
@@ -29,9 +29,6 @@ import java.util.Arrays;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.ConstantFactory;
-import io.parsingdata.metal.expression.value.OptionalValue;
-import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * {@link GUID#guid(String)} creates a ValueExpression to be used as predicate for 16 byte definitions;

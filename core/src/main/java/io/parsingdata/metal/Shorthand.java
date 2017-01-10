@@ -28,8 +28,6 @@ import io.parsingdata.metal.expression.comparison.EqNum;
 import io.parsingdata.metal.expression.comparison.EqStr;
 import io.parsingdata.metal.expression.comparison.GtNum;
 import io.parsingdata.metal.expression.comparison.LtNum;
-import io.parsingdata.metal.expression.derived.GUID;
-import io.parsingdata.metal.expression.derived.UUID;
 import io.parsingdata.metal.expression.logical.And;
 import io.parsingdata.metal.expression.logical.BinaryLogicalExpression;
 import io.parsingdata.metal.expression.logical.Not;
@@ -186,9 +184,6 @@ public final class Shorthand {
     public static ComparisonExpression gtNum(final ValueExpression value, final ValueExpression predicate) { return new GtNum(value, predicate); }
     public static ComparisonExpression ltNum(final ValueExpression predicate) { return new LtNum(null, predicate); }
     public static ComparisonExpression ltNum(final ValueExpression value, final ValueExpression predicate) { return new LtNum(value, predicate); }
-
-    public static ValueExpression guid(final String guid) { return GUID.guid(guid); }
-    public static ValueExpression uuid(final String uuid) { return UUID.uuid(uuid); }
 
     public final static Reducer ADD_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return add(left, right); } };
     public final static Reducer MUL_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return mul(left, right); } };

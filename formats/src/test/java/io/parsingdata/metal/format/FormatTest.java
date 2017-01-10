@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal;
+package io.parsingdata.metal.format;
 
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
@@ -27,9 +27,6 @@ import java.util.Collection;
 import org.junit.runners.Parameterized;
 
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.format.JPEG;
-import io.parsingdata.metal.format.PNG;
-import io.parsingdata.metal.format.ZIP;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
 
