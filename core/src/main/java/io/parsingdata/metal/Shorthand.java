@@ -19,6 +19,8 @@ package io.parsingdata.metal;
 import static io.parsingdata.metal.data.ConstantSlice.create;
 import static io.parsingdata.metal.token.Token.NO_NAME;
 
+import java.util.function.BinaryOperator;
+
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.True;
@@ -40,7 +42,6 @@ import io.parsingdata.metal.expression.value.ConstantFactory;
 import io.parsingdata.metal.expression.value.Elvis;
 import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
-import io.parsingdata.metal.expression.value.Reducer;
 import io.parsingdata.metal.expression.value.Reverse;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
@@ -161,12 +162,12 @@ public final class Shorthand {
     public static ValueExpression cat(final ValueExpression left, final ValueExpression right) { return new Cat(left, right); }
     public static ValueExpression elvis(final ValueExpression left, final ValueExpression right) { return new Elvis(left, right); }
     public static ValueExpression count(final ValueExpression operand) { return new Count(operand); }
-    public static ValueExpression foldLeft(final ValueExpression values, final Reducer reducer) { return new FoldLeft(values, reducer, null); }
-    public static ValueExpression foldLeft(final ValueExpression values, final Reducer reducer, final ValueExpression initial) { return new FoldLeft(values, reducer, initial); }
-    public static ValueExpression foldRight(final ValueExpression values, final Reducer reducer) { return new FoldRight(values, reducer, null); }
-    public static ValueExpression foldRight(final ValueExpression values, final Reducer reducer, final ValueExpression initial) { return new FoldRight(values, reducer, initial); }
-    public static ValueExpression fold(final ValueExpression values, final Reducer reducer) { return foldRight(values, reducer); }
-    public static ValueExpression fold(final ValueExpression values, final Reducer reducer, final ValueExpression initial) { return foldRight(values, reducer, initial); }
+    public static ValueExpression foldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return new FoldLeft(values, reducer, null); }
+    public static ValueExpression foldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) { return new FoldLeft(values, reducer, initial); }
+    public static ValueExpression foldRight(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return new FoldRight(values, reducer, null); }
+    public static ValueExpression foldRight(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) { return new FoldRight(values, reducer, initial); }
+    public static ValueExpression fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return foldRight(values, reducer); }
+    public static ValueExpression fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) { return foldRight(values, reducer, initial); }
     public static ValueExpression rev(final ValueExpression values) { return new Reverse(values); }
 
     public static BinaryLogicalExpression and(final Expression left, final Expression right) { return new And(left, right); }
@@ -185,11 +186,11 @@ public final class Shorthand {
     public static ComparisonExpression ltNum(final ValueExpression predicate) { return new LtNum(null, predicate); }
     public static ComparisonExpression ltNum(final ValueExpression value, final ValueExpression predicate) { return new LtNum(value, predicate); }
 
-    public final static Reducer ADD_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return add(left, right); } };
-    public final static Reducer MUL_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return mul(left, right); } };
-    public final static Reducer CAT_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return cat(left, right); } };
-    public final static Reducer SUB_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return sub(left, right); } };
-    public final static Reducer DIV_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return div(left, right); } };
+    public final static BinaryOperator<ValueExpression> ADD_REDUCER = (left, right) -> add(left, right);
+    public final static BinaryOperator<ValueExpression> MUL_REDUCER = (left, right) -> mul(left, right);
+    public final static BinaryOperator<ValueExpression> CAT_REDUCER = (left, right) -> cat(left, right);
+    public final static BinaryOperator<ValueExpression> SUB_REDUCER = (left, right) -> sub(left, right);
+    public final static BinaryOperator<ValueExpression> DIV_REDUCER = (left, right) -> div(left, right);
 
     public static byte[] toByteArray(final int... bytes) {
         final byte[] outBytes = new byte[bytes.length];

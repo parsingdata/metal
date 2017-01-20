@@ -38,6 +38,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.function.BinaryOperator;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -53,12 +54,7 @@ import io.parsingdata.metal.encoding.Encoding;
  */
 public class FoldEdgeCaseTest {
 
-    private static final Reducer MULTIPLE_VALUE_REDUCER = new Reducer() {
-        @Override
-        public ValueExpression reduce(final ValueExpression left, final ValueExpression right) {
-            return ref("value");
-        }
-    };
+    private static final BinaryOperator<ValueExpression> MULTIPLE_VALUE_REDUCER = (left, right) -> ref("value");
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();

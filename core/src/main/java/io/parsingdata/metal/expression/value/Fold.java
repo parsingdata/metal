@@ -19,6 +19,7 @@ package io.parsingdata.metal.expression.value;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Optional;
+import java.util.function.BinaryOperator;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
@@ -29,7 +30,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * operation.
  * <p>
  * Fold has three operands: <code>values</code> (a {@link ValueExpression}),
- * <code>reducer</code> (a {@link Reducer}) and <code>initial</code> (a
+ * <code>reducer</code> (a {@link BinaryOperator}) and <code>initial</code> (a
  * {@link ValueExpression}). First <code>initial</code> is evaluated. If it
  * does not return a single value, the final result is an empty list. Next,
  * <code>values</code> is evaluated and its result is passed to the abstract
@@ -41,10 +42,10 @@ import io.parsingdata.metal.encoding.Encoding;
 public abstract class Fold implements ValueExpression {
 
     public final ValueExpression values;
-    public final Reducer reducer;
+    public final BinaryOperator<ValueExpression> reducer;
     public final ValueExpression initial;
 
-    public Fold(final ValueExpression values, final Reducer reducer, final ValueExpression initial) {
+    public Fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) {
         this.values = checkNotNull(values, "values");
         this.reducer = checkNotNull(reducer, "reducer");
         this.initial = initial;
@@ -62,7 +63,7 @@ public abstract class Fold implements ValueExpression {
         return ImmutableList.create(fold(environment, encoding, reducer, values.head, values.tail));
     }
 
-    private Optional<Value> fold(final Environment environment, final Encoding encoding, final Reducer reducer, final Optional<Value> head, final ImmutableList<Optional<Value>> tail) {
+    private Optional<Value> fold(final Environment environment, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Optional<Value> head, final ImmutableList<Optional<Value>> tail) {
         if (!head.isPresent() || tail.isEmpty()) { return head; }
         final ImmutableList<Optional<Value>> reducedValue = reduce(reducer, head.get(), tail.head.get()).eval(environment, encoding);
         if (reducedValue.size != 1) { throw new IllegalStateException("Reducer must yield a single value."); }
@@ -76,6 +77,6 @@ public abstract class Fold implements ValueExpression {
 
     protected abstract ImmutableList<Optional<Value>> prepareValues(ImmutableList<Optional<Value>> values);
 
-    protected abstract ValueExpression reduce(Reducer reducer, Value head, Value tail);
+    protected abstract ValueExpression reduce(BinaryOperator<ValueExpression> reducer, Value head, Value tail);
 
 }

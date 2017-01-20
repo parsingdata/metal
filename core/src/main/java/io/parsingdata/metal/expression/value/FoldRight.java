@@ -19,6 +19,7 @@ package io.parsingdata.metal.expression.value;
 import static io.parsingdata.metal.Shorthand.con;
 
 import java.util.Optional;
+import java.util.function.BinaryOperator;
 
 import io.parsingdata.metal.data.ImmutableList;
 
@@ -32,7 +33,7 @@ import io.parsingdata.metal.data.ImmutableList;
  */
 public class FoldRight extends Fold {
 
-    public FoldRight(final ValueExpression values, final Reducer reducer, final ValueExpression initial) {
+    public FoldRight(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) {
         super(values, reducer, initial);
     }
 
@@ -42,8 +43,8 @@ public class FoldRight extends Fold {
     }
 
     @Override
-    protected ValueExpression reduce(final Reducer reducer, final Value head, final Value tail) {
-        return reducer.reduce(con(tail), con(head));
+    protected ValueExpression reduce(final BinaryOperator<ValueExpression> reducer, final Value head, final Value tail) {
+        return reducer.apply(con(tail), con(head));
     }
 
 }
