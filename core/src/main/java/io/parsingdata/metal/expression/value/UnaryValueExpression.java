@@ -18,6 +18,8 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Optional;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
@@ -27,8 +29,8 @@ import io.parsingdata.metal.encoding.Encoding;
  * <p>
  * A UnaryValueExpression implements a ValueExpression that has one
  * <code>operand</code> (a {@link ValueExpression}). The operand is first
- * evaluated. If it evaluates to {@link OptionalValue#empty()}, the result of
- * the ValueExpression itself will be that as well.
+ * evaluated. If it evaluates to {@link Optional#empty()}, the result of the
+ * ValueExpression itself will be that as well.
  * <p>
  * To implement a UnaryValueExpression, only the
  * {@link #eval(Value, Environment, Encoding)} must be implemented, handling
@@ -46,16 +48,16 @@ public abstract class UnaryValueExpression implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
+    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
         return eval(operand.eval(environment, encoding), environment, encoding);
     }
 
-    private ImmutableList<OptionalValue> eval(final ImmutableList<OptionalValue> values, final Environment environment, final Encoding encoding) {
+    private ImmutableList<Optional<Value>> eval(final ImmutableList<Optional<Value>> values, final Environment environment, final Encoding encoding) {
         if (values.isEmpty()) { return values; }
         return eval(values.tail, environment, encoding).add(values.head.isPresent() ? eval(values.head.get(), environment, encoding) : values.head);
     }
 
-    public abstract OptionalValue eval(final Value value, final Environment environment, final Encoding encoding);
+    public abstract Optional<Value> eval(final Value value, final Environment environment, final Encoding encoding);
 
     @Override
     public String toString() {

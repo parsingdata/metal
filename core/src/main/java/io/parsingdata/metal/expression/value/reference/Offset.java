@@ -16,18 +16,19 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
+import java.util.Optional;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ConstantFactory;
-import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * A {@link ValueExpression} that represents the offset of the
- * {@link OptionalValue}s returned by evaluating its <code>operand</code>.
+ * A {@link ValueExpression} that represents the offset of the {@link Value}s
+ * returned by evaluating its <code>operand</code>.
  * <p>
  * Only {@link ParseValue}s have an offset, since they originate in the input.
  * If a result does not have an offset (such as the {@link Value}s returned by
@@ -38,11 +39,11 @@ public class Offset extends UnaryValueExpression {
     public Offset(final ValueExpression operand) { super(operand); }
 
     @Override
-    public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) {
+    public Optional<Value> eval(final Value value, final Environment environment, final Encoding encoding) {
         if (value instanceof ParseValue) {
-            return OptionalValue.of(ConstantFactory.createFromNumeric(((ParseValue) value).slice.offset, value.encoding));
+            return Optional.of(ConstantFactory.createFromNumeric(((ParseValue) value).slice.offset, value.encoding));
         }
-        return OptionalValue.empty();
+        return Optional.empty();
     }
 
 }

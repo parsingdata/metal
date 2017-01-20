@@ -18,6 +18,8 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Optional;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
@@ -28,7 +30,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * A BinaryValueExpression implements a ValueExpression that has two operands:
  * <code>left</code> and <code>right</code> (both {@link ValueExpression}s).
  * Both operands are themselves first evaluated. If at least one of the
- * operands evaluates to {@link OptionalValue#empty()}, the result of the
+ * operands evaluates to {@link Optional#empty()}, the result of the
  * ValueExpression itself will be empty as well.
  * <p>
  * For lists, values with the same index are evaluated in this manner. If
@@ -54,11 +56,11 @@ public abstract class BinaryValueExpression implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
+    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
         return evalLists(left.eval(environment, encoding), right.eval(environment, encoding), environment, encoding);
     }
 
-    private ImmutableList<OptionalValue> evalLists(final ImmutableList<OptionalValue> leftValues, final ImmutableList<OptionalValue> rightValues, final Environment environment, final Encoding encoding) {
+    private ImmutableList<Optional<Value>> evalLists(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues, final Environment environment, final Encoding encoding) {
         if (leftValues.isEmpty()) {
             return makeListWithEmpty(rightValues.size);
         }
@@ -68,19 +70,19 @@ public abstract class BinaryValueExpression implements ValueExpression {
         return evalLists(leftValues.tail, rightValues.tail, environment, encoding).add(eval(leftValues.head, rightValues.head, environment, encoding));
     }
 
-    private ImmutableList<OptionalValue> makeListWithEmpty(final long size) {
+    private ImmutableList<Optional<Value>> makeListWithEmpty(final long size) {
         if (size <= 0) { return new ImmutableList<>(); }
-        return makeListWithEmpty(size - 1).add(OptionalValue.empty());
+        return makeListWithEmpty(size - 1).add(Optional.empty());
     }
 
-    private OptionalValue eval(final OptionalValue left, final OptionalValue right, final Environment environment, final Encoding encoding) {
+    private Optional<Value> eval(final Optional<Value> left, final Optional<Value> right, final Environment environment, final Encoding encoding) {
         if (!left.isPresent() || !right.isPresent()) {
-            return OptionalValue.empty();
+            return Optional.empty();
         }
         return eval(left.get(), right.get(), environment, encoding);
     }
 
-    public abstract OptionalValue eval(final Value left, final Value right, final Environment environment, final Encoding encoding);
+    public abstract Optional<Value> eval(final Value left, final Value right, final Environment environment, final Encoding encoding);
 
     @Override
     public String toString() {

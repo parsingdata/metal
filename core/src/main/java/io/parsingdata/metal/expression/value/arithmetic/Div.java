@@ -17,12 +17,12 @@
 package io.parsingdata.metal.expression.value.arithmetic;
 
 import java.math.BigInteger;
+import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.BinaryValueExpression;
 import io.parsingdata.metal.expression.value.ConstantFactory;
-import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
@@ -39,11 +39,11 @@ public class Div extends BinaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value left, final Value right, final Environment environment, final Encoding encoding) {
+    public Optional<Value> eval(final Value left, final Value right, final Environment environment, final Encoding encoding) {
         if (right.asNumeric().equals(BigInteger.ZERO)) {
-            return OptionalValue.empty();
+            return Optional.empty();
         }
-        return OptionalValue.of(ConstantFactory.createFromNumeric(left.asNumeric().divide(right.asNumeric()), encoding));
+        return Optional.of(ConstantFactory.createFromNumeric(left.asNumeric().divide(right.asNumeric()), encoding));
     }
 
 }

@@ -22,23 +22,23 @@ import static java.math.BigInteger.ZERO;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
+import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * A {@link ValueExpression} that returns an indexed list of
- * {@link OptionalValue}s.
+ * A {@link ValueExpression} that returns an indexed list of {@link Value}s.
  * <p>
  * The Nth ValueExpression has two operands, <code>values</code> and
  * <code>indices</code> (both {@link ValueExpression}s). Both operands are
  * evaluated. Next, the resulting values of evaluating <code>indices</code> is
  * used as a list of integer indices into the results of evaluating
  * <code>values</code>. For every invalid index (such as
- * {@link OptionalValue#empty()}, a negative value or an index that is out of
+ * {@link Optional#empty()}, a negative value or an index that is out of
  * bounds) empty is returned.
  *
  * @see NameRef
@@ -55,11 +55,11 @@ public class Nth implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
+    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
         return eval(values.eval(environment, encoding), indices.eval(environment, encoding));
     }
 
-    private ImmutableList<OptionalValue> eval(final ImmutableList<OptionalValue> values, final ImmutableList<OptionalValue> indices) {
+    private ImmutableList<Optional<Value>> eval(final ImmutableList<Optional<Value>> values, final ImmutableList<Optional<Value>> indices) {
         if (indices.isEmpty()) { return new ImmutableList<>(); }
         if (indices.head.isPresent()) {
             final BigInteger index = indices.head.get().asNumeric();
@@ -68,10 +68,10 @@ public class Nth implements ValueExpression {
                 return eval(values, indices.tail).add(nth(values, valueCount.subtract(index).subtract(ONE)));
             }
         }
-        return eval(values, indices.tail).add(OptionalValue.empty());
+        return eval(values, indices.tail).add(Optional.empty());
     }
 
-    private OptionalValue nth(final ImmutableList<OptionalValue> values, final BigInteger index) {
+    private Optional<Value> nth(final ImmutableList<Optional<Value>> values, final BigInteger index) {
         if (index.equals(ZERO)) {
             return values.head;
         }

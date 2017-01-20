@@ -18,6 +18,8 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Optional;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
@@ -31,8 +33,8 @@ import io.parsingdata.metal.encoding.Encoding;
  * evaluated. The return value is a list with the size of the longest list
  * returned by the two evaluations. At each index, the value at that index in
  * the result returned by evaluating <code>left</code> is placed, except if it
- * does not exist or is {@link OptionalValue#empty()}, in which case the value
- * at that index in the result returned by evaluating right is placed there.
+ * does not exist or is {@link Optional#empty()}, in which case the value at
+ * that index in the result returned by evaluating right is placed there.
  */
 public class Elvis implements ValueExpression {
     public final ValueExpression left;
@@ -44,11 +46,11 @@ public class Elvis implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
+    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
         return eval(left.eval(environment, encoding), right.eval(environment, encoding));
     }
 
-    private ImmutableList<OptionalValue> eval(final ImmutableList<OptionalValue> leftValues, final ImmutableList<OptionalValue> rightValues) {
+    private ImmutableList<Optional<Value>> eval(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues) {
         if (leftValues.isEmpty()) { return rightValues; }
         if (rightValues.isEmpty()) { return leftValues; }
         return eval(leftValues.tail, rightValues.tail).add(leftValues.head.isPresent() ? leftValues.head : rightValues.head);

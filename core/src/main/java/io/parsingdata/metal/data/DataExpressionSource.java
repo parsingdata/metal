@@ -19,9 +19,10 @@ package io.parsingdata.metal.data;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class DataExpressionSource extends Source {
@@ -40,7 +41,7 @@ public class DataExpressionSource extends Source {
 
     @Override
     protected byte[] getData(final long offset, final int size) throws IOException {
-        final ImmutableList<OptionalValue> results = dataExpression.eval(environment, encoding);
+        final ImmutableList<Optional<Value>> results = dataExpression.eval(environment, encoding);
         if (results.size <= index) { throw new IllegalStateException("ValueExpression dataExpression yields " + results.size + " result(s) (expected at least " + (index + 1) + ")."); }
         final byte[] inputData = getValueAtIndex(results, index, 0).get().getValue();
         if (offset >= inputData.length) { return new byte[0]; }
@@ -50,7 +51,7 @@ public class DataExpressionSource extends Source {
         return outputData;
     }
 
-    private OptionalValue getValueAtIndex(final ImmutableList<OptionalValue> results, final int index, final int current) {
+    private Optional<Value> getValueAtIndex(final ImmutableList<Optional<Value>> results, final int index, final int current) {
         if (index == current) { return results.head; }
         return getValueAtIndex(results.tail, index, current + 1);
     }

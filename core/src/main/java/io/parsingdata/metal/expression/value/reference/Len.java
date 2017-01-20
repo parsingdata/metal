@@ -16,18 +16,19 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
+import java.util.Optional;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.value.ConstantFactory;
-import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * A {@link UnaryValueExpression} that represents the sizes (in bytes) of all
- * {@link OptionalValue}s returned by evaluating its <code>operand</code>.
+ * {@link Value}s returned by evaluating its <code>operand</code>.
  */
 public class Len extends UnaryValueExpression {
 
@@ -36,8 +37,8 @@ public class Len extends UnaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) {
-        return OptionalValue.of(fromNumeric(value.getValue().length));
+    public Optional<Value> eval(final Value value, final Environment environment, final Encoding encoding) {
+        return Optional.of(fromNumeric(value.getValue().length));
     }
 
     private static Value fromNumeric(final long length) {

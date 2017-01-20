@@ -37,6 +37,7 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -79,8 +80,8 @@ public class FoldEdgeCaseTest {
     public void inputContainsEmptyInTail() {
         assertTrue(foldRight(new ValueExpression() {
             @Override
-            public ImmutableList<OptionalValue> eval(Environment environment, Encoding encoding) {
-                return ImmutableList.create(OptionalValue.empty()).add(OptionalValue.of(new Value(create(new byte[] { 1, 2 }), enc())));
+            public ImmutableList<Optional<Value>> eval(Environment environment, Encoding encoding) {
+                return ImmutableList.create(Optional.<Value>empty()).add(Optional.of(new Value(create(new byte[] { 1, 2 }), enc())));
             }
         }, ADD_REDUCER).eval(stream(0), enc()).isEmpty());
     }

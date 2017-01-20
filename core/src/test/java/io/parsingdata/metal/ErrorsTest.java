@@ -33,6 +33,7 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,7 +43,7 @@ import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Token;
 
 public class ErrorsTest {
@@ -93,7 +94,7 @@ public class ErrorsTest {
 
     @Test
     public void definedValueHasNoOffset() {
-        final ImmutableList<OptionalValue> offsetCon = offset(con(1)).eval(stream(), enc());
+        final ImmutableList<Optional<Value>> offsetCon = offset(con(1)).eval(stream(), enc());
         assertFalse(offsetCon.isEmpty());
         assertEquals(1, offsetCon.size);
         assertFalse(offsetCon.head.isPresent());
