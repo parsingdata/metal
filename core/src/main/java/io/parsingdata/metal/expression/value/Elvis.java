@@ -33,8 +33,8 @@ import io.parsingdata.metal.encoding.Encoding;
  * evaluated. The return value is a list with the size of the longest list
  * returned by the two evaluations. At each index, the value at that index in
  * the result returned by evaluating <code>left</code> is placed, except if it
- * does not exist or is {@link OptionalValue#empty()}, in which case the value
- * at that index in the result returned by evaluating right is placed there.
+ * does not exist or is {@link Optional#empty()}, in which case the value at
+ * that index in the result returned by evaluating right is placed there.
  */
 public class Elvis implements ValueExpression {
     public final ValueExpression left;
