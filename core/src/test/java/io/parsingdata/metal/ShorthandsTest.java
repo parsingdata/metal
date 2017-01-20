@@ -44,6 +44,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static junit.framework.TestCase.assertFalse;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -53,7 +54,6 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Seq;
@@ -149,7 +149,7 @@ public class ShorthandsTest {
     }
 
     private void checkNameAndValue(final String name, final int value, final Environment env) {
-        ImmutableList<OptionalValue> values = ref(name).eval(env, enc());
+        ImmutableList<Optional<Value>> values = ref(name).eval(env, enc());
         assertFalse(values.isEmpty());
         assertEquals(1, values.size);
         assertEquals(value, values.head.get().asNumeric().intValue());

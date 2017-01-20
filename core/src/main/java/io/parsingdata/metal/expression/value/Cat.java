@@ -18,6 +18,8 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.data.ConstantSlice.create;
 
+import java.util.Optional;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 
@@ -31,13 +33,13 @@ public class Cat extends BinaryValueExpression {
     }
 
     @Override
-    public OptionalValue eval(final Value left, final Value right, final Environment environment, final Encoding encoding) {
+    public Optional<Value> eval(final Value left, final Value right, final Environment environment, final Encoding encoding) {
         final byte[] leftBytes = left.getValue();
         final byte[] rightBytes = right.getValue();
         final byte[] concatenatedBytes = new byte[leftBytes.length + rightBytes.length];
         System.arraycopy(leftBytes, 0, concatenatedBytes, 0, leftBytes.length);
         System.arraycopy(rightBytes, 0, concatenatedBytes, leftBytes.length, rightBytes.length);
-        return OptionalValue.of(new Value(create(concatenatedBytes), encoding));
+        return Optional.of(new Value(create(concatenatedBytes), encoding));
     }
 
 }

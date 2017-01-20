@@ -18,6 +18,8 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Shorthand.con;
 
+import java.util.Optional;
+
 import io.parsingdata.metal.data.ImmutableList;
 
 /**
@@ -35,7 +37,7 @@ public class FoldRight extends Fold {
     }
 
     @Override
-    protected ImmutableList<OptionalValue> prepareValues(final ImmutableList<OptionalValue> values) {
+    protected ImmutableList<Optional<Value>> prepareValues(final ImmutableList<Optional<Value>> values) {
         return values;
     }
 

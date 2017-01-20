@@ -22,6 +22,7 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.expression.value.Value;
 
 public final class ByName {
 
@@ -52,15 +53,15 @@ public final class ByName {
      * @param name Name of the value
      * @return All values with the provided name in this graph
      */
-    public static ImmutableList<ParseValue> getAllValues(final ParseGraph graph, final String name) {
+    public static ImmutableList<Value> getAllValues(final ParseGraph graph, final String name) {
         checkNotNull(graph, "graph");
         checkNotNull(name, "name");
         return getAllValuesRecursive(graph, name);
     }
 
-    private static ImmutableList<ParseValue> getAllValuesRecursive(final ParseGraph graph, final String name) {
+    private static ImmutableList<Value> getAllValuesRecursive(final ParseGraph graph, final String name) {
         if (graph.isEmpty()) { return new ImmutableList<>(); }
-        final ImmutableList<ParseValue> tailResults = getAllValuesRecursive(graph.tail, name);
+        final ImmutableList<Value> tailResults = getAllValuesRecursive(graph.tail, name);
         final ParseItem head = graph.head;
         if (head.isValue() && head.asValue().matches(name)) {
             return tailResults.add(head.asValue());

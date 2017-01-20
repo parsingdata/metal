@@ -25,6 +25,7 @@ import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
@@ -54,7 +55,7 @@ public final class GUID {
         return new ValueExpression() {
 
             @Override
-            public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
+            public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
                 // Note that GUID bytes differ from UUID bytes, as the first 3 parts can be reversed
                 return cat(
                     cat(

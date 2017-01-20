@@ -18,11 +18,11 @@ package io.parsingdata.metal.format;
 
 import static io.parsingdata.metal.data.ConstantSlice.create;
 
+import java.util.Optional;
 import java.util.zip.CRC32;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -34,14 +34,14 @@ public final class Callback {
     public static ValueExpression crc32(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) {
+            public Optional<Value> eval(final Value value, final Environment environment, final Encoding encoding) {
                 final CRC32 crc = new CRC32();
                 crc.update(value.getValue());
                 final long crcValue = crc.getValue();
-                return OptionalValue.of(new Value(create(encoding.byteOrder.apply(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
-                                                                                               (byte)((crcValue & 0xff0000) >> 16),
-                                                                                               (byte)((crcValue & 0xff00) >> 8),
-                                                                                               (byte) (crcValue & 0xff) })), encoding));
+                return Optional.of(new Value(create(encoding.byteOrder.apply(new byte[] { (byte)((crcValue & 0xff000000) >> 24),
+                                                                                          (byte)((crcValue & 0xff0000) >> 16),
+                                                                                          (byte)((crcValue & 0xff00) >> 8),
+                                                                                          (byte) (crcValue & 0xff) })), encoding));
             }
         };
     }

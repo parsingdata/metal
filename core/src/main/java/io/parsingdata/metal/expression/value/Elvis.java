@@ -18,6 +18,8 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Optional;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
@@ -44,11 +46,11 @@ public class Elvis implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
+    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
         return eval(left.eval(environment, encoding), right.eval(environment, encoding));
     }
 
-    private ImmutableList<OptionalValue> eval(final ImmutableList<OptionalValue> leftValues, final ImmutableList<OptionalValue> rightValues) {
+    private ImmutableList<Optional<Value>> eval(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues) {
         if (leftValues.isEmpty()) { return rightValues; }
         if (rightValues.isEmpty()) { return leftValues; }
         return eval(leftValues.tail, rightValues.tail).add(leftValues.head.isPresent() ? leftValues.head : rightValues.head);

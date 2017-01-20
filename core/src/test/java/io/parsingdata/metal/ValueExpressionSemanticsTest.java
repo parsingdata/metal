@@ -30,6 +30,7 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +38,6 @@ import org.junit.runners.JUnit4;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Token;
@@ -64,8 +64,8 @@ public class ValueExpressionSemanticsTest {
         final Environment data = stream(1, 2, 3, 4);
         def("a", 4, eq(new UnaryValueExpression(ref("a")) {
             @Override
-            public OptionalValue eval(Value value, Environment environment, Encoding encoding) {
-                return OptionalValue.of(value);
+            public Optional<Value> eval(Value value, Environment environment, Encoding encoding) {
+                return Optional.of(value);
             }
         })).parse(data, enc());
     }

@@ -21,7 +21,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
-import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Token;
 
 public final class ByToken {
@@ -65,15 +65,15 @@ public final class ByToken {
         return results;
     }
 
-    public static ImmutableList<ParseValue> getAllValues(final ParseGraph graph, final Token definition) {
+    public static ImmutableList<Value> getAllValues(final ParseGraph graph, final Token definition) {
         checkNotNull(graph, "graph");
         checkNotNull(definition, "definition");
         return getAllValuesRecursive(graph, definition);
     }
 
-    private static ImmutableList<ParseValue> getAllValuesRecursive(final ParseGraph graph, final Token definition) {
+    private static ImmutableList<Value> getAllValuesRecursive(final ParseGraph graph, final Token definition) {
         if (graph.isEmpty()) { return new ImmutableList<>(); }
-        final ImmutableList<ParseValue> tailResults = getAllValuesRecursive(graph.tail, definition);
+        final ImmutableList<Value> tailResults = getAllValuesRecursive(graph.tail, definition);
         final ParseItem head = graph.head;
         if (head.isValue() && head.asValue().definition == definition) {
             return tailResults.add(head.asValue());

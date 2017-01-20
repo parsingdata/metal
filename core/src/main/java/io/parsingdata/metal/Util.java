@@ -19,12 +19,12 @@ package io.parsingdata.metal;
 import static io.parsingdata.metal.data.ConstantSlice.create;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -74,7 +74,7 @@ public final class Util {
     public static ValueExpression inflate(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public OptionalValue eval(final Value value, final Environment environment, final Encoding encoding) {
+            public Optional<Value> eval(final Value value, final Environment environment, final Encoding encoding) {
                 final Inflater inf = new Inflater(true);
                 inf.setInput(value.getValue());
                 final byte[] dataReceiver = new byte[512];
@@ -84,10 +84,10 @@ public final class Util {
                         final int processed = inf.inflate(dataReceiver);
                         out.write(dataReceiver, 0, processed);
                     } catch (final DataFormatException e) {
-                        return OptionalValue.empty();
+                        return Optional.empty();
                     }
                 }
-                return OptionalValue.of(new Value(create(out.toByteArray()), encoding));
+                return Optional.of(new Value(create(out.toByteArray()), encoding));
             }
         };
     }

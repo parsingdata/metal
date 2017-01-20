@@ -18,15 +18,17 @@ package io.parsingdata.metal.expression.value.reference;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Optional;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * A {@link ValueExpression} that represents the first {@link OptionalValue}
- * returned by evaluating its <code>operand</code>.
+ * A {@link ValueExpression} that represents the first {@link Value} returned
+ * by evaluating its <code>operand</code>.
  */
 public class First implements ValueExpression {
 
@@ -37,12 +39,12 @@ public class First implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
-        final ImmutableList<OptionalValue> list = operand.eval(environment, encoding);
+    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
+        final ImmutableList<Optional<Value>> list = operand.eval(environment, encoding);
         return list.isEmpty() ? list : ImmutableList.create(getFirst(list));
     }
 
-    private OptionalValue getFirst(final ImmutableList<OptionalValue> values) {
+    private Optional<Value> getFirst(final ImmutableList<Optional<Value>> values) {
         return values.tail.isEmpty() ? values.head : getFirst(values.tail);
     }
 

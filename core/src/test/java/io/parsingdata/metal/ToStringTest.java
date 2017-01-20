@@ -63,6 +63,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -78,7 +79,6 @@ import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.Expression;
-import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
@@ -157,9 +157,9 @@ public class ToStringTest {
         assertEquals("ParseResult(true, " + environment + ")", result.toString());
         final ParseValue pv1 = new ParseValue("name", NONE, create(new byte[]{1, 2}), enc());
         final String pv1String = "name(0x0102)";
-        final OptionalValue ov1 = OptionalValue.of(pv1);
-        final OptionalValue ov2 = OptionalValue.of(new Value(create(new byte[]{3}), enc()));
-        assertEquals(">OptionalValue(0x03)>OptionalValue(" + pv1String + ")", ImmutableList.create(ov1).add(ov2).toString());
+        final Optional<Value> ov1 = Optional.of(pv1);
+        final Optional<Value> ov2 = Optional.of(new Value(create(new byte[]{3}), enc()));
+        assertEquals(">Optional[0x03]>Optional[" + pv1String + "]", ImmutableList.create(ov1).add(ov2).toString());
         final ParseValue pv2 = new ParseValue("two", NONE, create(new byte[]{3, 4}), enc());
         final String pv2String = "two(0x0304)";
         assertEquals(">" + pv2String + ">" + pv1String, ImmutableList.create(pv1).add(pv2).toString());
