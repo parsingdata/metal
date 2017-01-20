@@ -257,14 +257,14 @@ public class ParseGraphTest {
     @Test
     public void testAsValue() {
         thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Cannot convert ParseGraph to ParseValue.");
+        thrown.expectMessage("Cannot convert to ParseValue.");
         EMPTY.asValue();
     }
 
     @Test
     public void testAsRef() {
         thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Cannot convert ParseGraph to ParseReference.");
+        thrown.expectMessage("Cannot convert to ParseReference.");
         EMPTY.asReference();
     }
 

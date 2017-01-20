@@ -37,13 +37,9 @@ public class ParseValue extends Value implements ParseItem {
         return this.name.equals(name) || this.name.endsWith(Token.SEPARATOR + name);
     }
 
-    @Override public boolean isValue() { return true; }
-    @Override public boolean isGraph() { return false; }
-    @Override public boolean isReference() { return false; }
-    @Override public ParseValue asValue() { return this; }
-    @Override public ParseGraph asGraph() { throw new UnsupportedOperationException("Cannot convert ParseValue to ParseGraph."); }
-    @Override public ParseReference asReference() { throw new UnsupportedOperationException("Cannot convert ParseValue to ParseReference."); }
-    @Override public Token getDefinition() { return definition; }
+    public boolean isValue() { return true; }
+    public ParseValue asValue() { return this; }
+    public Token getDefinition() { return definition; }
 
     @Override
     public String toString() {
