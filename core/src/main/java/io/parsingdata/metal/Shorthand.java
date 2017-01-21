@@ -186,12 +186,6 @@ public final class Shorthand {
     public static ComparisonExpression ltNum(final ValueExpression predicate) { return new LtNum(null, predicate); }
     public static ComparisonExpression ltNum(final ValueExpression value, final ValueExpression predicate) { return new LtNum(value, predicate); }
 
-    public final static BinaryOperator<ValueExpression> ADD_REDUCER = Shorthand::add;
-    public final static BinaryOperator<ValueExpression> MUL_REDUCER = Shorthand::mul;
-    public final static BinaryOperator<ValueExpression> CAT_REDUCER = Shorthand::cat;
-    public final static BinaryOperator<ValueExpression> SUB_REDUCER = Shorthand::sub;
-    public final static BinaryOperator<ValueExpression> DIV_REDUCER = Shorthand::div;
-
     public static byte[] toByteArray(final int... bytes) {
         final byte[] outBytes = new byte[bytes.length];
         for (int i = 0; i < bytes.length; i++) {
