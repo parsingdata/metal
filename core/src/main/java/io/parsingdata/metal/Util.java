@@ -19,6 +19,7 @@ package io.parsingdata.metal;
 import static io.parsingdata.metal.data.ConstantSlice.create;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
@@ -51,13 +52,7 @@ public final class Util {
 
     public static String tokensToString(final Token[] tokens) {
         checkNotNull(tokens, "tokens");
-        if (tokens.length == 0) { return ""; }
-        final StringBuilder outString = new StringBuilder();
-        for (int i = 0; i < tokens.length - 1; i++) {
-            outString.append(tokens[i].toString());
-            outString.append(", ");
-        }
-        return outString.append(tokens[tokens.length - 1]).toString();
+        return Arrays.stream(tokens).map(t -> t.toString()).reduce((l, r) -> l + ", " + r).orElse("");
     }
 
     public static String bytesToHexString(final byte[] bytes) {

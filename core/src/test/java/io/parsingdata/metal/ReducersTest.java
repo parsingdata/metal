@@ -16,10 +16,6 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.ADD_REDUCER;
-import static io.parsingdata.metal.Shorthand.CAT_REDUCER;
-import static io.parsingdata.metal.Shorthand.MUL_REDUCER;
-import static io.parsingdata.metal.Shorthand.SUB_REDUCER;
 import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
@@ -80,19 +76,19 @@ public class ReducersTest extends ParameterizedParse {
         super(token, environment, encoding, result);
     }
 
-    private final static Token reduceAddA = token(1, eq(fold(ref("a"), ADD_REDUCER)));
-    private final static Token reduceAddOffsetA = token(1, eq(fold(offset(ref("a")), ADD_REDUCER)));
-    private final static Token reduceAddAInit0 = token(1, eq(fold(ref("a"), ADD_REDUCER, con(0))));
-    private final static Token reduceAddAInit1 = token(1, eq(fold(ref("a"), ADD_REDUCER, con(1))));
-    private final static Token reduceMulA = token(1, eq(fold(ref("a"), MUL_REDUCER)));
-    private final static Token reduceAllAplusMulA = token(1, eq(add(fold(ref("a"), ADD_REDUCER), fold(ref("a"), MUL_REDUCER))));
-    private final static Token reduceCatA = token(3, eq(fold(ref("a"), CAT_REDUCER)));
-    private final static Token reduceCatAToNumBE = token(3, eqNum(fold(ref("a"), CAT_REDUCER)), enc());
-    private final static Token reduceCatAToNumLE = token(3, eqNum(fold(ref("a"), CAT_REDUCER)), le());
-    private final static Token foldLeftSubA = token(1, eq(foldLeft(ref("a"), SUB_REDUCER)));
-    private final static Token foldLeftSubAInit2 = token(1, eq(foldLeft(ref("a"), SUB_REDUCER, con(2))));
-    private final static Token foldRightSubA = token(1, eq(foldRight(ref("a"), SUB_REDUCER)));
-    private final static Token foldRightSubAInit2 = token(1, eq(foldRight(ref("a"), SUB_REDUCER, con(2))));
+    private final static Token reduceAddA = token(1, eq(fold(ref("a"), Shorthand::add)));
+    private final static Token reduceAddOffsetA = token(1, eq(fold(offset(ref("a")), Shorthand::add)));
+    private final static Token reduceAddAInit0 = token(1, eq(fold(ref("a"), Shorthand::add, con(0))));
+    private final static Token reduceAddAInit1 = token(1, eq(fold(ref("a"), Shorthand::add, con(1))));
+    private final static Token reduceMulA = token(1, eq(fold(ref("a"), Shorthand::mul)));
+    private final static Token reduceAllAplusMulA = token(1, eq(add(fold(ref("a"), Shorthand::add), fold(ref("a"), Shorthand::mul))));
+    private final static Token reduceCatA = token(3, eq(fold(ref("a"), Shorthand::cat)));
+    private final static Token reduceCatAToNumBE = token(3, eqNum(fold(ref("a"), Shorthand::cat)), enc());
+    private final static Token reduceCatAToNumLE = token(3, eqNum(fold(ref("a"), Shorthand::cat)), le());
+    private final static Token foldLeftSubA = token(1, eq(foldLeft(ref("a"), Shorthand::sub)));
+    private final static Token foldLeftSubAInit2 = token(1, eq(foldLeft(ref("a"), Shorthand::sub, con(2))));
+    private final static Token foldRightSubA = token(1, eq(foldRight(ref("a"), Shorthand::sub)));
+    private final static Token foldRightSubAInit2 = token(1, eq(foldRight(ref("a"), Shorthand::sub, con(2))));
 
     private static Token token(final long size, final Expression pred, final Encoding enc) {
         return seq(any("a"),

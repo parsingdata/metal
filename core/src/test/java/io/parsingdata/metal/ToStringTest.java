@@ -64,6 +64,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -73,7 +74,6 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.data.callback.Callback;
 import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
@@ -207,9 +207,9 @@ public class ToStringTest {
         };
     }
 
-    private Callback makeCallback(final String name) {
-        return new Callback() {
-            @Override public void handle(final Token token, final ParseResult result) {}
+    private BiConsumer<Token, ParseResult> makeCallback(final String name) {
+        return new BiConsumer<Token, ParseResult>() {
+            @Override public void accept(final Token token, final ParseResult result) {}
             @Override public String toString() { return name; }
         };
     }

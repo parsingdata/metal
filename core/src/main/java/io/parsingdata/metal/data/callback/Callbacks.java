@@ -18,6 +18,8 @@ package io.parsingdata.metal.data.callback;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.function.BiConsumer;
+
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
@@ -26,27 +28,27 @@ public class Callbacks {
 
     public static final Callbacks NONE = new Callbacks(null, new ImmutableList<TokenCallback>());
 
-    public final Callback genericCallback;
+    public final BiConsumer<Token, ParseResult> genericCallback;
     public final ImmutableList<TokenCallback> tokenCallbacks;
 
-    private Callbacks(final Callback genericCallback, final ImmutableList<TokenCallback> tokenCallbacks) {
+    private Callbacks(final BiConsumer<Token, ParseResult> genericCallback, final ImmutableList<TokenCallback> tokenCallbacks) {
         this.genericCallback = genericCallback;
         this.tokenCallbacks = checkNotNull(tokenCallbacks, "tokenCallbacks");
     }
 
     public static Callbacks create() { return NONE; }
 
-    public Callbacks add(final Callback genericCallback) {
+    public Callbacks add(final BiConsumer<Token, ParseResult> genericCallback) {
         return new Callbacks(genericCallback, tokenCallbacks);
     }
 
-    public Callbacks add(final Token token, final Callback callback) {
+    public Callbacks add(final Token token, final BiConsumer<Token, ParseResult> callback) {
         return new Callbacks(genericCallback, tokenCallbacks.add(new TokenCallback(token, callback)));
     }
 
     public void handle(final Token token, final ParseResult result) {
         if (genericCallback != null) {
-            genericCallback.handle(token, result);
+            genericCallback.accept(token, result);
         }
         handleCallbacks(tokenCallbacks, token, result);
     }
@@ -54,7 +56,7 @@ public class Callbacks {
     private void handleCallbacks(final ImmutableList<TokenCallback> callbacks, final Token token, final ParseResult result) {
         if (callbacks.isEmpty()) { return; }
         if (callbacks.head.token == token) {
-            callbacks.head.callback.handle(token, result);
+            callbacks.head.callback.accept(token, result);
         }
         handleCallbacks(callbacks.tail, token, result);
     }
