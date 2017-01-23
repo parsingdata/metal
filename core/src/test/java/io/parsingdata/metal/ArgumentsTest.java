@@ -27,6 +27,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.BinaryOperator;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +44,6 @@ import io.parsingdata.metal.expression.logical.Not;
 import io.parsingdata.metal.expression.value.Cat;
 import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
-import io.parsingdata.metal.expression.value.Reducer;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.expression.value.arithmetic.Neg;
 import io.parsingdata.metal.expression.value.reference.Count;
@@ -72,7 +72,7 @@ public class ArgumentsTest {
     final private static String VALID_NAME = "name";
     final private static String EMPTY_NAME = "";
     final private static ValueExpression VALID_VE = con(1);
-    final private static Reducer VALID_REDUCER = new Reducer() { @Override public ValueExpression reduce(final ValueExpression left, final ValueExpression right) { return null; }};
+    final private static BinaryOperator<ValueExpression> VALID_REDUCER = (left, right) -> null;
     final private static Expression VALID_E = new Expression() { @Override public boolean eval(final Environment environment, final Encoding encoding) { return false; }};
     final private static Token VALID_T = new Token("", null) { @Override protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; } };
 

@@ -16,14 +16,16 @@
 
 package io.parsingdata.metal.data.callback;
 
+import java.util.function.BiConsumer;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 
-public abstract class BaseCallback implements Callback {
+public abstract class BaseCallback implements BiConsumer<Token, ParseResult> {
 
     @Override
-    public void handle(final Token token, final ParseResult result) {
+    public void accept(final Token token, final ParseResult result) {
         if (result.succeeded) {
             handleSuccess(token, result.environment);
         } else {

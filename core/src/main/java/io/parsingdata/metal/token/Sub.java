@@ -22,6 +22,7 @@ import static io.parsingdata.metal.data.ParseResult.success;
 import static io.parsingdata.metal.data.selection.ByOffset.hasRootAtOffset;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
@@ -29,7 +30,7 @@ import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.Source;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
@@ -59,7 +60,7 @@ public class Sub extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final ImmutableList<OptionalValue> addresses = address.eval(environment, encoding);
+        final ImmutableList<Optional<Value>> addresses = address.eval(environment, encoding);
         if (addresses.isEmpty()) {
             return failure(environment);
         }
@@ -70,7 +71,7 @@ public class Sub extends Token {
         return failure(environment);
     }
 
-    private ParseResult iterate(final String scope, final ImmutableList<OptionalValue> addresses, final Environment environment, final Encoding encoding) throws IOException {
+    private ParseResult iterate(final String scope, final ImmutableList<Optional<Value>> addresses, final Environment environment, final Encoding encoding) throws IOException {
         if (!addresses.head.isPresent()) {
             return failure(environment);
         }

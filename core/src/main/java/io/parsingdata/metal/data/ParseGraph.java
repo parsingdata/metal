@@ -105,13 +105,9 @@ public class ParseGraph implements ParseItem {
         return tail.current(); // Ignore current if it's a reference (or an empty graph)
     }
 
-    @Override public boolean isValue() { return false; }
-    @Override public boolean isGraph() { return true; }
-    @Override public boolean isReference() { return false; }
-    @Override public ParseValue asValue() { throw new UnsupportedOperationException("Cannot convert ParseGraph to ParseValue."); }
-    @Override public ParseGraph asGraph() { return this; }
-    @Override public ParseReference asReference() { throw new UnsupportedOperationException("Cannot convert ParseGraph to ParseReference."); }
-    @Override public Token getDefinition() { return definition; }
+    public boolean isGraph() { return true; }
+    public ParseGraph asGraph() { return this; }
+    public Token getDefinition() { return definition; }
 
     @Override
     public String toString() {

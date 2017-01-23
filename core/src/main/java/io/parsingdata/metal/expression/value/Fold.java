@@ -18,6 +18,9 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Optional;
+import java.util.function.BinaryOperator;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
@@ -27,7 +30,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * operation.
  * <p>
  * Fold has three operands: <code>values</code> (a {@link ValueExpression}),
- * <code>reducer</code> (a {@link Reducer}) and <code>initial</code> (a
+ * <code>reducer</code> (a {@link BinaryOperator}) and <code>initial</code> (a
  * {@link ValueExpression}). First <code>initial</code> is evaluated. If it
  * does not return a single value, the final result is an empty list. Next,
  * <code>values</code> is evaluated and its result is passed to the abstract
@@ -39,20 +42,20 @@ import io.parsingdata.metal.encoding.Encoding;
 public abstract class Fold implements ValueExpression {
 
     public final ValueExpression values;
-    public final Reducer reducer;
+    public final BinaryOperator<ValueExpression> reducer;
     public final ValueExpression initial;
 
-    public Fold(final ValueExpression values, final Reducer reducer, final ValueExpression initial) {
+    public Fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) {
         this.values = checkNotNull(values, "values");
         this.reducer = checkNotNull(reducer, "reducer");
         this.initial = initial;
     }
 
     @Override
-    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
-        final ImmutableList<OptionalValue> initial = this.initial != null ? this.initial.eval(environment, encoding) : new ImmutableList<OptionalValue>();
+    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
+        final ImmutableList<Optional<Value>> initial = this.initial != null ? this.initial.eval(environment, encoding) : new ImmutableList<>();
         if (initial.size > 1) { return new ImmutableList<>(); }
-        final ImmutableList<OptionalValue> values = prepareValues(this.values.eval(environment, encoding));
+        final ImmutableList<Optional<Value>> values = prepareValues(this.values.eval(environment, encoding));
         if (values.isEmpty() || containsEmpty(values)) { return initial; }
         if (!initial.isEmpty()) {
             return ImmutableList.create(fold(environment, encoding, reducer, initial.head, values));
@@ -60,20 +63,20 @@ public abstract class Fold implements ValueExpression {
         return ImmutableList.create(fold(environment, encoding, reducer, values.head, values.tail));
     }
 
-    private OptionalValue fold(final Environment environment, final Encoding encoding, final Reducer reducer, final OptionalValue head, final ImmutableList<OptionalValue> tail) {
+    private Optional<Value> fold(final Environment environment, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Optional<Value> head, final ImmutableList<Optional<Value>> tail) {
         if (!head.isPresent() || tail.isEmpty()) { return head; }
-        final ImmutableList<OptionalValue> reducedValue = reduce(reducer, head.get(), tail.head.get()).eval(environment, encoding);
+        final ImmutableList<Optional<Value>> reducedValue = reduce(reducer, head.get(), tail.head.get()).eval(environment, encoding);
         if (reducedValue.size != 1) { throw new IllegalStateException("Reducer must yield a single value."); }
         return fold(environment, encoding, reducer, reducedValue.head, tail.tail);
     }
 
-    private boolean containsEmpty(ImmutableList<OptionalValue> list) {
+    private boolean containsEmpty(ImmutableList<Optional<Value>> list) {
         if (list.isEmpty()) { return false; }
         return !list.head.isPresent() || containsEmpty(list.tail);
     }
 
-    protected abstract ImmutableList<OptionalValue> prepareValues(ImmutableList<OptionalValue> values);
+    protected abstract ImmutableList<Optional<Value>> prepareValues(ImmutableList<Optional<Value>> values);
 
-    protected abstract ValueExpression reduce(Reducer reducer, Value head, Value tail);
+    protected abstract ValueExpression reduce(BinaryOperator<ValueExpression> reducer, Value head, Value tail);
 
 }

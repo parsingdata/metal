@@ -44,8 +44,8 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.transformation.Reversal;
+import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Token;
 
 @RunWith(JUnit4.class)
@@ -138,13 +138,13 @@ public class TreeTest {
     @Test
     public void checkRegularTreeFlat() {
         assertTrue(regular.succeeded);
-        final ImmutableList<ParseValue> nrs = getAllValues(regular.environment.order, "nr");
+        final ImmutableList<Value> nrs = getAllValues(regular.environment.order, "nr");
         for (int i = 0; i < 7; i++) {
             assertTrue(contains(nrs, i));
         }
     }
 
-    private boolean contains(final ImmutableList<ParseValue> nrs, final int i) {
+    private boolean contains(final ImmutableList<Value> nrs, final int i) {
         if (nrs.isEmpty()) { return false; }
         if (nrs.head.asNumeric().intValue() == i) { return true; }
         if (nrs.tail != null) { return contains(nrs.tail, i); }

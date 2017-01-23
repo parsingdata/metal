@@ -29,6 +29,7 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +37,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.Value;
 
 @RunWith(Parameterized.class)
 public class UtilHexTest {
@@ -63,7 +64,7 @@ public class UtilHexTest {
 
     @Test
     public void inflateDataFormatError() {
-        final ImmutableList<OptionalValue> result = inflate(con(0xffffffff)).eval(stream(), enc());
+        final ImmutableList<Optional<Value>> result = inflate(con(0xffffffff)).eval(stream(), enc());
         assertEquals(1, result.size);
         assertFalse(result.head.isPresent());
     }

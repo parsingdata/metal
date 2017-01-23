@@ -18,18 +18,19 @@ package io.parsingdata.metal.expression.value.reference;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Optional;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.value.ConstantFactory;
-import io.parsingdata.metal.expression.value.OptionalValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * A {@link ValueExpression} that represents the amount of
- * {@link OptionalValue}s returned by evaluating its <code>operand</code>.
+ * A {@link ValueExpression} that represents the amount of {@link Value}s
+ * returned by evaluating its <code>operand</code>.
  */
 public class Count implements ValueExpression {
 
@@ -40,9 +41,9 @@ public class Count implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<OptionalValue> eval(final Environment environment, final Encoding encoding) {
-        final ImmutableList<OptionalValue> values = operand.eval(environment, encoding);
-        return ImmutableList.create(OptionalValue.of(fromNumeric(values.size)));
+    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
+        final ImmutableList<Optional<Value>> values = operand.eval(environment, encoding);
+        return ImmutableList.create(Optional.of(fromNumeric(values.size)));
     }
 
     private static Value fromNumeric(final long length) {

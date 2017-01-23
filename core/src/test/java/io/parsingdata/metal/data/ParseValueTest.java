@@ -80,7 +80,7 @@ public class ParseValueTest {
         assertFalse(value.isReference());
 
         thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Cannot convert ParseValue to ParseReference");
+        thrown.expectMessage("Cannot convert to ParseReference");
         value.asReference();
     }
 
@@ -89,7 +89,7 @@ public class ParseValueTest {
         assertFalse(value.isGraph());
 
         thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Cannot convert ParseValue to ParseGraph");
+        thrown.expectMessage("Cannot convert to ParseGraph");
         value.asGraph();
     }
 

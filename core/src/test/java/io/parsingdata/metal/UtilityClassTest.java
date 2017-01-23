@@ -33,6 +33,7 @@ import io.parsingdata.metal.data.selection.ByOffset;
 import io.parsingdata.metal.data.selection.ByToken;
 import io.parsingdata.metal.data.selection.ByType;
 import io.parsingdata.metal.data.transformation.Reversal;
+import io.parsingdata.metal.data.transformation.Wrapping;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
@@ -53,6 +54,7 @@ public class UtilityClassTest {
         checkUtilityClass(ByToken.class);
         checkUtilityClass(ByType.class);
         checkUtilityClass(ConstantFactory.class);
+        checkUtilityClass(Wrapping.class);
     }
 
     // The method is used to print tokens for composing Tokens' toString()

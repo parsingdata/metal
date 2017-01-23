@@ -20,7 +20,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import static io.parsingdata.metal.Shorthand.CAT_REDUCER;
 import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.con;
@@ -51,10 +50,11 @@ import java.util.zip.Deflater;
 
 import org.junit.Test;
 
+import io.parsingdata.metal.Shorthand;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
@@ -69,7 +69,7 @@ public class TieTest {
             def("tableSize", 1),
             repn(any("offset"), last(ref("tableSize"))),
             sub(def("data", last(ref("blockSize"))), ref("offset")),
-            tie(INC_PREV_MOD_100, fold(rev(ref("data")), CAT_REDUCER)));
+            tie(INC_PREV_MOD_100, fold(rev(ref("data")), Shorthand::cat)));
 
     private static final Token SIMPLE_SEQ = seq(any("a"), any("b"), any("c"));
 
@@ -89,7 +89,7 @@ public class TieTest {
     @Test
     public void checkContainerSource() throws IOException {
         final ParseResult result = parseContainer();
-        checkFullParse(INC_PREV_MOD_100, fold(ref("value"), CAT_REDUCER).eval(result.environment, enc()).head.get().getValue());
+        checkFullParse(INC_PREV_MOD_100, fold(ref("value"), Shorthand::cat).eval(result.environment, enc()).head.get().getValue());
     }
 
     private ParseResult checkFullParse(Token token, byte[] data) throws IOException {
@@ -121,7 +121,7 @@ public class TieTest {
         final byte[] l2Data = flipBlocks(l3Data, 40);
         final Token l2Token =
             seq(rep(seq(def("left", con(40)), def("right", con(40)))),
-                tie(l3Token, fold(cat(ref("right"), ref("left")), CAT_REDUCER)));
+                tie(l3Token, fold(cat(ref("right"), ref("left")), Shorthand::cat)));
         checkFullParse(l2Token, l2Data);
 
         final byte[] l1Data = prefixSize(deflate(l2Data));
@@ -189,7 +189,7 @@ public class TieTest {
         assertEquals(0, getReferences(result.environment.order).size);
         final String[] names = { "a", "b", "c", "d" };
         for (int i = 0; i < names.length; i++) {
-            ImmutableList<ParseValue> values = getAllValues(result.environment.order, names[i]);
+            ImmutableList<Value> values = getAllValues(result.environment.order, names[i]);
             assertEquals(2, values.size);
         }
     }
@@ -207,7 +207,7 @@ public class TieTest {
         assertEquals(1, getAllValues(result.environment.order, "d").size);
         final String[] names = { "a", "b", "c" };
         for (int i = 0; i < names.length; i++) {
-            ImmutableList<ParseValue> values = getAllValues(result.environment.order, names[i]);
+            ImmutableList<Value> values = getAllValues(result.environment.order, names[i]);
             assertEquals(2, values.size);
         }
     }

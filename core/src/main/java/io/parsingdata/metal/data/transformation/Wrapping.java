@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.expression.value;
+package io.parsingdata.metal.data.transformation;
 
-/**
- * Interface for Reducer implementations used by {@link FoldLeft} and
- * {@link FoldRight}.
- * <p>
- * A Reducer has a single method
- * {@link #reduce(ValueExpression, ValueExpression)} that accepts two operands
- * <code>left</code> and <code>right</code> (both {@link ValueExpression}). It
- * should return a ValueExpression that composes both operands.
- */
-public interface Reducer {
+import static io.parsingdata.metal.Util.checkNotNull;
 
-    ValueExpression reduce(ValueExpression left, ValueExpression right);
+import java.util.Optional;
+
+import io.parsingdata.metal.data.ImmutableList;
+
+public final class Wrapping {
+
+    private Wrapping() {}
+
+    public static <T> ImmutableList<Optional<T>> wrap(final ImmutableList<T> list) {
+        checkNotNull(list, "list");
+        if (list.isEmpty()) { return new ImmutableList(); }
+        return wrap(list.tail).add(Optional.of(list.head));
+    }
 
 }

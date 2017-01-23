@@ -17,13 +17,14 @@
 package io.parsingdata.metal.expression.value;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.data.ConstantSlice.create;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static junit.framework.TestCase.assertFalse;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,8 +33,8 @@ import org.junit.rules.ExpectedException;
 public class OptionalValueTest {
 
     private static final Value VALUE = new Value(create(new byte[] { 1 }), enc());
-    private static final OptionalValue OPTIONAL_VALUE = OptionalValue.of(VALUE);
-    private static final OptionalValue EMPTY = OptionalValue.empty();
+    private static final Optional<Value> OPTIONAL_VALUE = Optional.of(VALUE);
+    private static final Optional<Value> EMPTY = Optional.empty();
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -41,16 +42,16 @@ public class OptionalValueTest {
     @Test
     public void withValue() {
         assertTrue(OPTIONAL_VALUE.isPresent());
-        assertEquals("OptionalValue(0x01)", OPTIONAL_VALUE.toString());
+        assertEquals("Optional[0x01]", OPTIONAL_VALUE.toString());
         assertEquals(OPTIONAL_VALUE.get(), VALUE);
     }
 
     @Test
     public void withoutValue() {
         assertFalse(EMPTY.isPresent());
-        assertEquals("OptionalValue(empty)", EMPTY.toString());
+        assertEquals("Optional.empty", EMPTY.toString());
 
-        thrown.expectMessage("OptionalValue instance is empty.");
+        thrown.expectMessage("No value present");
         thrown.expect(NoSuchElementException.class);
         EMPTY.get();
     }

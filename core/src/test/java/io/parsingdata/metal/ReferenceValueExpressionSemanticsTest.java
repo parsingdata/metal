@@ -16,7 +16,6 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Shorthand.ADD_REDUCER;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
@@ -78,7 +77,7 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
             { "[1, 2, 3] a, b, offset(first(c))", refList("a", "b", offset(first(ref("c")))), stream(1, 2, 3), enc(), false },
             { "[1, 2, 3, 3] a, a, a, last(ref(a.definition))", refMatch(eq(last(ref(refAny)))), stream(1, 2, 3, 3), enc(), true },
             { "[1, 2, 3, 1] a, a, a, first(ref(a.definition))", refMatch(eq(first(ref(refAny)))), stream(1, 2, 3, 1), enc(), true },
-            { "[1, 2, 3, 6] a, a, a, first(fold(ref(a.definition), add))", refMatch(eq(first(fold(ref(refAny), ADD_REDUCER)))), stream(1, 2, 3, 6), enc(), true },
+            { "[1, 2, 3, 6] a, a, a, first(fold(ref(a.definition), add))", refMatch(eq(first(fold(ref(refAny), Shorthand::add)))), stream(1, 2, 3, 6), enc(), true },
             { "[1, 2, 3, 2] a, a, a, last(ref(a.definition))", refMatch(eq(last(ref(refAny)))), stream(1, 2, 3, 2), enc(), false }
         });
     }

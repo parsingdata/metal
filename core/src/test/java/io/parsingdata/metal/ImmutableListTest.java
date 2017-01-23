@@ -24,6 +24,7 @@ import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.data.ConstantSlice.create;
 import static io.parsingdata.metal.data.selection.ByName.get;
 import static io.parsingdata.metal.data.selection.ByName.getAll;
+import static io.parsingdata.metal.data.transformation.Reversal.reverse;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import org.junit.Test;
@@ -119,8 +120,8 @@ public class ImmutableListTest {
     }
 
     @Test
-    public void reverse() {
-        final ImmutableList<ParseValue> rev = l5.reverse();
+    public void reverseRegular() {
+        final ImmutableList<ParseValue> rev = reverse(l5);
         assertEquals(rev.head, v1);
         assertEquals(rev.tail.head, v2);
         assertEquals(rev.tail.tail.head, v3);
@@ -131,7 +132,7 @@ public class ImmutableListTest {
 
     @Test
     public void reverseEmpty() {
-        assertTrue(new ImmutableList<ParseValue>().reverse().isEmpty());
+        assertTrue(reverse(new ImmutableList<ParseValue>()).isEmpty());
     }
 
     @Test

@@ -21,12 +21,13 @@ import static io.parsingdata.metal.data.ParseResult.failure;
 import static io.parsingdata.metal.data.ParseResult.success;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.OptionalValue;
+import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
@@ -56,7 +57,7 @@ public class Tie extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final ImmutableList<OptionalValue> dataResult = dataExpression.eval(environment, encoding);
+        final ImmutableList<Optional<Value>> dataResult = dataExpression.eval(environment, encoding);
         if (dataResult.isEmpty()) {
             return failure(environment);
         }
@@ -67,7 +68,7 @@ public class Tie extends Token {
         return failure(environment);
     }
 
-    private ParseResult iterate(final String scope, final ImmutableList<OptionalValue> values, final int index, final Environment environment, final Encoding encoding) throws IOException {
+    private ParseResult iterate(final String scope, final ImmutableList<Optional<Value>> values, final int index, final Environment environment, final Encoding encoding) throws IOException {
         if (!values.head.isPresent()) {
             return failure(environment);
         }

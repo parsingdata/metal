@@ -38,13 +38,9 @@ public class ParseReference implements ParseItem {
         return findItemAtOffset(getAllRoots(root, definition), location, source);
     }
 
-    @Override public boolean isValue() { return false; }
-    @Override public boolean isGraph() { return false; }
-    @Override public boolean isReference() { return true; }
-    @Override public ParseValue asValue() { throw new UnsupportedOperationException("Cannot convert ParseReference to ParseValue."); }
-    @Override public ParseGraph asGraph() { throw new UnsupportedOperationException("Cannot convert ParseReference to ParseGraph."); }
-    @Override public ParseReference asReference() { return this; }
-    @Override public Token getDefinition() { return definition; }
+    public boolean isReference() { return true; }
+    public ParseReference asReference() { return this; }
+    public Token getDefinition() { return definition; }
 
     @Override
     public String toString() {

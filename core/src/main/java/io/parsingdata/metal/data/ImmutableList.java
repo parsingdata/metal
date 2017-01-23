@@ -53,16 +53,6 @@ public class ImmutableList<T> {
 
     public boolean isEmpty() { return size == 0; }
 
-    public ImmutableList<T> reverse() {
-        if (isEmpty()) { return this; }
-        return reverse(tail, create(head));
-    }
-
-    private ImmutableList<T> reverse(final ImmutableList<T> oldList, final ImmutableList<T> newList) {
-        if (oldList.isEmpty()) { return newList; }
-        return reverse(oldList.tail, newList.add(oldList.head));
-    }
-
     @Override
     public String toString() {
         return isEmpty() ? "" : ">" + head + tail.toString();
