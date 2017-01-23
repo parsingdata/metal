@@ -18,6 +18,7 @@ package io.parsingdata.metal.expression.value.reference;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
+import static io.parsingdata.metal.data.transformation.Wrapping.wrap;
 
 import java.util.Optional;
 
@@ -51,7 +52,7 @@ public class NameRef implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
-        return ImmutableList.wrap(getAllValues(environment.order, name));
+        return wrap(getAllValues(environment.order, name));
     }
 
     @Override

@@ -18,6 +18,7 @@ package io.parsingdata.metal.expression.value.reference;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.selection.ByToken.getAllValues;
+import static io.parsingdata.metal.data.transformation.Wrapping.wrap;
 
 import java.util.Optional;
 
@@ -43,7 +44,7 @@ public class TokenRef implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
-        return ImmutableList.wrap(getAllValues(environment.order, definition));
+        return wrap(getAllValues(environment.order, definition));
     }
 
     @Override

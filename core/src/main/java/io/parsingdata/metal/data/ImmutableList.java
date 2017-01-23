@@ -18,8 +18,6 @@ package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.util.Optional;
-
 public class ImmutableList<T> {
 
     public final T head;
@@ -54,22 +52,6 @@ public class ImmutableList<T> {
     }
 
     public boolean isEmpty() { return size == 0; }
-
-    public ImmutableList<T> reverse() {
-        if (isEmpty()) { return this; }
-        return reverse(tail, create(head));
-    }
-
-    private ImmutableList<T> reverse(final ImmutableList<T> oldList, final ImmutableList<T> newList) {
-        if (oldList.isEmpty()) { return newList; }
-        return reverse(oldList.tail, newList.add(oldList.head));
-    }
-
-    public static <T> ImmutableList<Optional<T>> wrap(final ImmutableList<T> list) {
-        checkNotNull(list, "list");
-        if (list.isEmpty()) { return new ImmutableList(); }
-        return wrap(list.tail).add(Optional.of(list.head));
-    }
 
     @Override
     public String toString() {

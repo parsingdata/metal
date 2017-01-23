@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.data.transformation;
 
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 
@@ -34,6 +35,16 @@ public final class Reversal {
 
     private static ParseItem reverseItem(final ParseItem item) {
         return item.isGraph() ? Reversal.reverse(item.asGraph(), ParseGraph.EMPTY) : item;
+    }
+
+    public static <T> ImmutableList<T> reverse(final ImmutableList<T> list) {
+        if (list.isEmpty()) { return list; }
+        return reverse(list.tail, ImmutableList.create(list.head));
+    }
+
+    private static <T> ImmutableList<T> reverse(final ImmutableList<T> oldList, final ImmutableList<T> newList) {
+        if (oldList.isEmpty()) { return newList; }
+        return reverse(oldList.tail, newList.add(oldList.head));
     }
 
 }

@@ -17,6 +17,7 @@
 package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.data.transformation.Reversal.reverse;
 
 import java.util.Optional;
 import java.util.function.BinaryOperator;
@@ -39,7 +40,7 @@ public class FoldLeft extends Fold {
 
     @Override
     protected ImmutableList<Optional<Value>> prepareValues(final ImmutableList<Optional<Value>> values) {
-        return values.reverse();
+        return reverse(values);
     }
 
     @Override

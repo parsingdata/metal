@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static io.parsingdata.metal.data.transformation.Reversal.reverse;
+
 import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
@@ -39,7 +41,7 @@ public class Reverse implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
-        return values.eval(environment, encoding).reverse();
+        return reverse(values.eval(environment, encoding));
     }
 
 }
