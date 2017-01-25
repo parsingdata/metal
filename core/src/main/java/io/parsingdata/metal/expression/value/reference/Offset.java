@@ -40,10 +40,7 @@ public class Offset extends UnaryValueExpression {
 
     @Override
     public Optional<Value> eval(final Value value, final Environment environment, final Encoding encoding) {
-        if (value instanceof ParseValue) {
-            return Optional.of(ConstantFactory.createFromNumeric(((ParseValue) value).slice.offset, value.encoding));
-        }
-        return Optional.empty();
+        return Optional.of(ConstantFactory.createFromNumeric(value.slice.offset, value.encoding));
     }
 
 }

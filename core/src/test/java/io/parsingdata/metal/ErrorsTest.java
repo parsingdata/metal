@@ -18,6 +18,7 @@ package io.parsingdata.metal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.con;
@@ -90,14 +91,6 @@ public class ErrorsTest {
             );
         ParseResult result = multiRepN.parse(stream(2, 2, 2, 2), enc());
         assertFalse(result.succeeded);
-    }
-
-    @Test
-    public void definedValueHasNoOffset() {
-        final ImmutableList<Optional<Value>> offsetCon = offset(con(1)).eval(stream(), enc());
-        assertFalse(offsetCon.isEmpty());
-        assertEquals(1, offsetCon.size);
-        assertFalse(offsetCon.head.isPresent());
     }
 
 }
