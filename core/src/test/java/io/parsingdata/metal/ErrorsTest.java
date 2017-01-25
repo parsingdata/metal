@@ -16,16 +16,13 @@
 
 package io.parsingdata.metal;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.neg;
-import static io.parsingdata.metal.Shorthand.offset;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
@@ -34,7 +31,6 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,9 +38,7 @@ import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseResult;
-import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Token;
 
 public class ErrorsTest {
