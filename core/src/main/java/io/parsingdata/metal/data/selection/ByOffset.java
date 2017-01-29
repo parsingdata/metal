@@ -48,7 +48,7 @@ public final class ByOffset {
     }
 
     private static boolean matchesLocation(final ParseValue value, final long offset, final Source source) {
-        return value.slice.offset == offset && value.slice.source == source;
+        return value.slice.offset == offset && value.slice.source.equals(source);
     }
 
     private static ParseValue getLowestOffsetValue(final ParseGraph graph, final ParseValue lowest) {

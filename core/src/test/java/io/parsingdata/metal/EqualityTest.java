@@ -62,4 +62,24 @@ public class EqualityTest {
         assertEquals(2, getReferences(result.environment.order).size);
     }
 
+    public static final Token LINKED_LIST_2 =
+        seq("linkedlist",
+            def("header", con(1), eq(con(0))),
+            def("next", con(1)),
+            opt(sub(token("linkedlist"), last(ref("next")))),
+            def("footer", con(1), eq(con(1)))
+        );
+
+    public static final Token LINKED_LIST_COMPOSED_EQUAL =
+        seq(LINKED_LIST_1,
+            sub(LINKED_LIST_2, con(0)));
+
+    @Test
+    public void cycleWithEqualTokens() throws IOException {
+        final ParseResult result = LINKED_LIST_COMPOSED_EQUAL.parse(stream(0, 0, 1), enc());
+        assertTrue(result.succeeded);
+        assertEquals(1, getAllValues(result.environment.order, "header").size);
+        assertEquals(2, getReferences(result.environment.order).size);
+    }
+
 }
