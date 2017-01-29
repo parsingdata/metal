@@ -19,6 +19,7 @@ package io.parsingdata.metal.data;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class ByteStreamSource extends Source {
 
@@ -41,6 +42,18 @@ public class ByteStreamSource extends Source {
     @Override
     public String toString() {
         return input.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null
+            && getClass() == obj.getClass()
+            && Objects.equals(input, ((ByteStreamSource)obj).input);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(input);
     }
 
 }

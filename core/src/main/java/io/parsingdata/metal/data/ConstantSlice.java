@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Util.bytesToHexString;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class ConstantSlice extends Slice {
 
@@ -53,5 +54,18 @@ public class ConstantSlice extends Slice {
             return bytesToHexString(data);
         }
 
+        @Override
+        public boolean equals(Object obj) {
+            return obj != null
+                && getClass() == obj.getClass()
+                && Arrays.equals(data, ((ConstantSource)obj).data);
+        }
+
+        @Override
+        public int hashCode() {
+            return Arrays.hashCode(data);
+        }
+
     }
+
 }
