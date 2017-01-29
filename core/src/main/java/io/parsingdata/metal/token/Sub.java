@@ -76,7 +76,7 @@ public class Sub extends Token {
             return failure(environment);
         }
         final long offset = addresses.head.get().asNumeric().longValue();
-        final Source source = addresses.head.get().slice.source;
+        final Source source = environment.source;
         final ParseResult result = parse(scope, offset, source, environment, encoding);
         if (result.succeeded) {
             if (addresses.tail.isEmpty()) { return result; }
