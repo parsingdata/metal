@@ -76,4 +76,10 @@ public class TokenRef extends Token {
     public Token getCanonical(Environment environment) {
         return lookup(environment.order, referenceName);
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + makeNameFragment() + referenceName + ")";
+    }
+
 }
