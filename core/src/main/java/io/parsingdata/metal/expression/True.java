@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.expression;
 
+import java.util.Objects;
+
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 
@@ -31,6 +33,17 @@ public class True implements Expression {
     @Override
     public String toString() {
         return getClass().getSimpleName();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null
+            && getClass() == obj.getClass();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(true);
     }
 
 }

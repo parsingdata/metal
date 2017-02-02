@@ -18,6 +18,7 @@ package io.parsingdata.metal.expression.comparison;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
@@ -70,6 +71,19 @@ public abstract class ComparisonExpression implements Expression {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + (value == null ? "" : value + ",") + predicate + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null
+            && getClass() == obj.getClass()
+            && Objects.equals(value, ((ComparisonExpression)obj).value)
+            && Objects.equals(predicate, ((ComparisonExpression)obj).predicate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, predicate);
     }
 
 }
