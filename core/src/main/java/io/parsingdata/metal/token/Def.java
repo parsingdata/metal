@@ -21,6 +21,7 @@ import static io.parsingdata.metal.data.ParseResult.failure;
 import static io.parsingdata.metal.data.ParseResult.success;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
@@ -83,6 +84,18 @@ public class Def extends Token {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + makeNameFragment() + size + "," + predicate + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj)
+            && Objects.equals(size, ((Def)obj).size)
+            && Objects.equals(predicate, ((Def)obj).predicate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), size, predicate);
     }
 
 }

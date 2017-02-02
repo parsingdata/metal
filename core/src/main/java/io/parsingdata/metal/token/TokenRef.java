@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.ParseResult.failure;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseItem;
@@ -80,6 +81,17 @@ public class TokenRef extends Token {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + makeNameFragment() + referenceName + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj)
+            && Objects.equals(referenceName, ((TokenRef)obj).referenceName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), referenceName);
     }
 
 }

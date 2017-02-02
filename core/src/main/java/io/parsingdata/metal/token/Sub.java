@@ -22,6 +22,7 @@ import static io.parsingdata.metal.data.ParseResult.success;
 import static io.parsingdata.metal.data.selection.ByOffset.hasRootAtOffset;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
@@ -98,6 +99,18 @@ public class Sub extends Token {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + makeNameFragment() + token + ", " + address + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj)
+            && Objects.equals(token, ((Sub)obj).token)
+            && Objects.equals(address, ((Sub)obj).address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), token, address);
     }
 
 }

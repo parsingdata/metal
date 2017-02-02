@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.ParseResult.success;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
@@ -53,6 +54,17 @@ public class Opt extends Token {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + makeNameFragment() + token + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj)
+            && Objects.equals(token, ((Opt)obj).token);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), token);
     }
 
 }

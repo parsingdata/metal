@@ -21,6 +21,8 @@ import static io.parsingdata.metal.data.ParseResult.failure;
 import static io.parsingdata.metal.data.ParseResult.success;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Objects;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
@@ -69,6 +71,17 @@ public class Cho extends Token {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + makeNameFragment() + Util.tokensToString(tokens) + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj)
+            && Objects.deepEquals(tokens, ((Cho)obj).tokens);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), Arrays.hashCode(tokens));
     }
 
 }
