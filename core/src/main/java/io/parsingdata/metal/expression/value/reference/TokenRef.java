@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.selection.ByToken.getAllValues;
 import static io.parsingdata.metal.data.transformation.Wrapping.wrap;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
@@ -50,6 +51,18 @@ public class TokenRef implements ValueExpression {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + definition + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null
+            && getClass() == obj.getClass()
+            && Objects.equals(definition, ((TokenRef)obj).definition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(definition);
     }
 
 }

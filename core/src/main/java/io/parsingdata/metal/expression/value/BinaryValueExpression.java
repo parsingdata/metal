@@ -18,6 +18,7 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
@@ -87,6 +88,19 @@ public abstract class BinaryValueExpression implements ValueExpression {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + left + "," + right + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null
+            && getClass() == obj.getClass()
+            && Objects.equals(left, ((BinaryValueExpression)obj).left)
+            && Objects.equals(right, ((BinaryValueExpression)obj).right);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(left, right);
     }
 
 }

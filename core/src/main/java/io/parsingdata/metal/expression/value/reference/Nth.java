@@ -22,6 +22,7 @@ import static java.math.BigInteger.ZERO;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
+import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
@@ -81,6 +82,19 @@ public class Nth implements ValueExpression {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + values + "," + indices + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null
+            && getClass() == obj.getClass()
+            && Objects.equals(values, ((Nth)obj).values)
+            && Objects.equals(indices, ((Nth)obj).indices);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(values, indices);
     }
 
 }

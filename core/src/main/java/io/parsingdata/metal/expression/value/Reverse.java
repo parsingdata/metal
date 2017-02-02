@@ -18,6 +18,7 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.data.transformation.Reversal.reverse;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
@@ -42,6 +43,18 @@ public class Reverse implements ValueExpression {
     @Override
     public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
         return reverse(values.eval(environment, encoding));
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null
+            && getClass() == obj.getClass()
+            && Objects.equals(values, ((Reverse)obj).values);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(values);
     }
 
 }

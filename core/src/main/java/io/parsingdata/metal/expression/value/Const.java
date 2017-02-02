@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.expression.value;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
@@ -44,6 +45,18 @@ public class Const implements ValueExpression {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + value.toString() + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null
+            && getClass() == obj.getClass()
+            && Objects.equals(value, ((Const)obj).value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 
 }

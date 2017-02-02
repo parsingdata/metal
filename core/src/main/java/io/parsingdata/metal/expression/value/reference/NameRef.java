@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.data.transformation.Wrapping.wrap;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
@@ -58,6 +59,18 @@ public class NameRef implements ValueExpression {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + name + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null
+            && getClass() == obj.getClass()
+            && Objects.equals(name, ((NameRef)obj).name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 
 }

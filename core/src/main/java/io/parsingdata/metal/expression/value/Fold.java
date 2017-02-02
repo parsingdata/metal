@@ -18,6 +18,7 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 
@@ -78,5 +79,19 @@ public abstract class Fold implements ValueExpression {
     protected abstract ImmutableList<Optional<Value>> prepareValues(ImmutableList<Optional<Value>> values);
 
     protected abstract ValueExpression reduce(BinaryOperator<ValueExpression> reducer, Value head, Value tail);
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null
+            && getClass() == obj.getClass()
+            && Objects.equals(values, ((Fold)obj).values)
+            && Objects.equals(reducer, ((Fold)obj).reducer)
+            && Objects.equals(initial, ((Fold)obj).initial);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(values, reducer, initial);
+    }
 
 }

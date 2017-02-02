@@ -18,6 +18,7 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
@@ -37,6 +38,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * that index in the result returned by evaluating right is placed there.
  */
 public class Elvis implements ValueExpression {
+
     public final ValueExpression left;
     public final ValueExpression right;
 
@@ -60,4 +62,18 @@ public class Elvis implements ValueExpression {
     public String toString() {
         return getClass().getSimpleName() + "(" + left + "," + right + ")";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null
+            && getClass() == obj.getClass()
+            && Objects.equals(left, ((Elvis)obj).left)
+            && Objects.equals(right, ((Elvis)obj).right);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(left, right);
+    }
+
 }

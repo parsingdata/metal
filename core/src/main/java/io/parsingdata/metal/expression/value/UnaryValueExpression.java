@@ -18,6 +18,7 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
@@ -62,6 +63,18 @@ public abstract class UnaryValueExpression implements ValueExpression {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + operand + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null
+            && getClass() == obj.getClass()
+            && Objects.equals(operand, ((UnaryValueExpression)obj).operand);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(operand);
     }
 
 }
