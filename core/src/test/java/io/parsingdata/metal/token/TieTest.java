@@ -89,7 +89,7 @@ public class TieTest {
     @Test
     public void checkContainerSource() throws IOException {
         final ParseResult result = parseContainer();
-        checkFullParse(INC_PREV_MOD_100, fold(ref("value"), Shorthand::cat).eval(result.environment, enc()).head.get().getValue());
+        checkFullParse(INC_PREV_MOD_100, fold(ref("value"), Shorthand::cat).eval(result.environment.order, enc()).head.get().getValue());
     }
 
     private ParseResult checkFullParse(Token token, byte[] data) throws IOException {

@@ -18,8 +18,8 @@ package io.parsingdata.metal.expression.value.reference;
 
 import java.util.Optional;
 
-import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.value.ConstantFactory;
@@ -33,8 +33,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 public class CurrentOffset implements ValueExpression {
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
-        return ImmutableList.create(Optional.of(ConstantFactory.createFromNumeric(environment.offset, new Encoding(Sign.SIGNED))));
+    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
+        return ImmutableList.create(Optional.of(ConstantFactory.createFromNumeric(graph.current().slice.offset+graph.current().slice.size, new Encoding(Sign.SIGNED))));
     }
 
     @Override

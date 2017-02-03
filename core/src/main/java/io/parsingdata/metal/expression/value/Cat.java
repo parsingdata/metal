@@ -20,7 +20,7 @@ import static io.parsingdata.metal.data.ConstantSlice.create;
 
 import java.util.Optional;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -33,7 +33,7 @@ public class Cat extends BinaryValueExpression {
     }
 
     @Override
-    public Optional<Value> eval(final Value left, final Value right, final Environment environment, final Encoding encoding) {
+    public Optional<Value> eval(final Value left, final Value right, final ParseGraph graph, final Encoding encoding) {
         final byte[] leftBytes = left.getValue();
         final byte[] rightBytes = right.getValue();
         final byte[] concatenatedBytes = new byte[leftBytes.length + rightBytes.length];

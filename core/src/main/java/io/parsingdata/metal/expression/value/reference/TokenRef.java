@@ -23,8 +23,8 @@ import static io.parsingdata.metal.data.transformation.Wrapping.wrap;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -44,8 +44,8 @@ public class TokenRef implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
-        return wrap(getAllValues(environment.order, definition));
+    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
+        return wrap(getAllValues(graph, definition));
     }
 
     @Override

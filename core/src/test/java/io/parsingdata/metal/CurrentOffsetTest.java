@@ -55,7 +55,7 @@ public class CurrentOffsetTest {
     public void currentOffset() {
         final Environment environment = new Environment(NO_BYTES, 42);
 
-        final ImmutableList<Optional<Value>> currentOffset = CURRENT_OFFSET.eval(environment, ENCODING);
+        final ImmutableList<Optional<Value>> currentOffset = CURRENT_OFFSET.eval(environment.order, ENCODING);
 
         assertNotNull(currentOffset);
         assertEquals(1, currentOffset.size);
@@ -67,7 +67,7 @@ public class CurrentOffsetTest {
         // offset would flip signed bit if interpreted as signed integer:
         final Environment environment = new Environment(NO_BYTES, 128);
 
-        final ImmutableList<Optional<Value>> currentOffset = CURRENT_OFFSET.eval(environment, ENCODING);
+        final ImmutableList<Optional<Value>> currentOffset = CURRENT_OFFSET.eval(environment.order, ENCODING);
 
         assertNotNull(currentOffset);
         assertEquals(1, currentOffset.size);

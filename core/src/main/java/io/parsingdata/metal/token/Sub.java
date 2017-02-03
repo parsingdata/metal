@@ -61,7 +61,7 @@ public class Sub extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final ImmutableList<Optional<Value>> addresses = address.eval(environment, encoding);
+        final ImmutableList<Optional<Value>> addresses = address.eval(environment.order, encoding);
         if (addresses.isEmpty()) {
             return failure(environment);
         }

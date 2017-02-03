@@ -37,6 +37,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
@@ -64,7 +65,7 @@ public class ValueExpressionSemanticsTest {
         final Environment data = stream(1, 2, 3, 4);
         def("a", 4, eq(new UnaryValueExpression(ref("a")) {
             @Override
-            public Optional<Value> eval(Value value, Environment environment, Encoding encoding) {
+            public Optional<Value> eval(Value value, ParseGraph graph, Encoding encoding) {
                 return Optional.of(value);
             }
         })).parse(data, enc());

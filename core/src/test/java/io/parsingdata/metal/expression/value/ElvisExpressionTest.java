@@ -56,7 +56,7 @@ public class ElvisExpressionTest {
     @Test
     public void elvisLeft() throws IOException { // the building
         final ParseResult result = choice.parse(stream(1), enc());
-        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(result.environment, enc());
+        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(result.environment.order, enc());
 
         assertNotNull(eval);
         assertEquals(1, eval.size);
@@ -66,7 +66,7 @@ public class ElvisExpressionTest {
     @Test
     public void elvisRight() throws IOException {
         final ParseResult result = choice.parse(stream(2), enc());
-        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(result.environment, enc());
+        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(result.environment.order, enc());
 
         assertNotNull(eval);
         assertEquals(1, eval.size);
@@ -76,7 +76,7 @@ public class ElvisExpressionTest {
     @Test
     public void elvisNone() throws IOException {
         final ParseResult result = choice.parse(stream(3), enc());
-        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(result.environment, enc());
+        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(result.environment.order, enc());
 
         assertNotNull(eval);
         assertTrue(eval.isEmpty());
@@ -87,7 +87,7 @@ public class ElvisExpressionTest {
         final ParseResult result = seq(any("a"), any("a"), any("b"), any("b")).parse(stream(1, 2, 3, 4), enc());
         assertTrue(result.succeeded);
         final ValueExpression elvis = elvis(ref("a"), ref("b"));
-        final ImmutableList<Optional<Value>> eval = elvis.eval(result.environment, enc());
+        final ImmutableList<Optional<Value>> eval = elvis.eval(result.environment.order, enc());
         assertEquals(2, eval.size);
         assertEquals(2, eval.head.get().asNumeric().intValue());
         assertEquals(1, eval.tail.head.get().asNumeric().intValue());
@@ -98,7 +98,7 @@ public class ElvisExpressionTest {
         final ParseResult result = seq(any("a"), any("a"), any("b"), any("b")).parse(stream(1, 2, 3, 4), enc());
         assertTrue(result.succeeded);
         final ValueExpression elvis = elvis(ref("c"), ref("b"));
-        final ImmutableList<Optional<Value>> eval = elvis.eval(result.environment, enc());
+        final ImmutableList<Optional<Value>> eval = elvis.eval(result.environment.order, enc());
         assertEquals(2, eval.size);
         assertEquals(4, eval.head.get().asNumeric().intValue());
         assertEquals(3, eval.tail.head.get().asNumeric().intValue());
@@ -109,7 +109,7 @@ public class ElvisExpressionTest {
         final ParseResult result = seq(any("a"), any("a"), any("b"), any("b"), any("b")).parse(stream(1, 2, 3, 4, 5), enc());
         assertTrue(result.succeeded);
         final ValueExpression elvis = elvis(ref("a"), ref("b"));
-        final ImmutableList<Optional<Value>> eval = elvis.eval(result.environment, enc());
+        final ImmutableList<Optional<Value>> eval = elvis.eval(result.environment.order, enc());
         assertEquals(3, eval.size);
         assertEquals(2, eval.head.get().asNumeric().intValue());
         assertEquals(1, eval.tail.head.get().asNumeric().intValue());
@@ -119,14 +119,14 @@ public class ElvisExpressionTest {
     @Test
     public void elvisListEmpty() {
         final ValueExpression elvis = elvis(ref("a"), ref("b"));
-        final ImmutableList<Optional<Value>> eval = elvis.eval(stream(0), enc());
+        final ImmutableList<Optional<Value>> eval = elvis.eval(stream(0).order, enc());
         assertEquals(0, eval.size);
     }
 
     @Test
     public void elvisLeftNone() {
         final ValueExpression elvis = elvis(div(con(1), con(0)), con(1));
-        final ImmutableList<Optional<Value>> eval = elvis.eval(stream(0), enc());
+        final ImmutableList<Optional<Value>> eval = elvis.eval(stream(0).order, enc());
         assertEquals(1, eval.size);
         assertEquals(1, eval.head.get().asNumeric().intValue());
     }

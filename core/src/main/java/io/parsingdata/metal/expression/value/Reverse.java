@@ -21,8 +21,8 @@ import static io.parsingdata.metal.data.transformation.Reversal.reverse;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -41,8 +41,8 @@ public class Reverse implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
-        return reverse(values.eval(environment, encoding));
+    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
+        return reverse(values.eval(graph, encoding));
     }
 
     @Override

@@ -21,8 +21,8 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -34,7 +34,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * ValueExpression itself will be that as well.
  * <p>
  * To implement a UnaryValueExpression, only the
- * {@link #eval(Value, Environment, Encoding)} must be implemented, handling
+ * {@link #eval(Value, ParseGraph, Encoding)} must be implemented, handling
  * the case of evaluating one value. This base class takes care of evaluating
  * the operand and handling list semantics.
  *
@@ -49,16 +49,16 @@ public abstract class UnaryValueExpression implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
-        return eval(operand.eval(environment, encoding), environment, encoding);
+    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
+        return eval(operand.eval(graph, encoding), graph, encoding);
     }
 
-    private ImmutableList<Optional<Value>> eval(final ImmutableList<Optional<Value>> values, final Environment environment, final Encoding encoding) {
+    private ImmutableList<Optional<Value>> eval(final ImmutableList<Optional<Value>> values, final ParseGraph graph, final Encoding encoding) {
         if (values.isEmpty()) { return values; }
-        return eval(values.tail, environment, encoding).add(values.head.isPresent() ? eval(values.head.get(), environment, encoding) : values.head);
+        return eval(values.tail, graph, encoding).add(values.head.isPresent() ? eval(values.head.get(), graph, encoding) : values.head);
     }
 
-    public abstract Optional<Value> eval(final Value value, final Environment environment, final Encoding encoding);
+    public abstract Optional<Value> eval(final Value value, final ParseGraph graph, final Encoding encoding);
 
     @Override
     public String toString() {

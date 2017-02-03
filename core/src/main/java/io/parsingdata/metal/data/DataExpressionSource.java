@@ -41,7 +41,7 @@ public class DataExpressionSource extends Source {
 
     @Override
     protected byte[] getData(final long offset, final int size) throws IOException {
-        final ImmutableList<Optional<Value>> results = dataExpression.eval(environment, encoding);
+        final ImmutableList<Optional<Value>> results = dataExpression.eval(environment.order, encoding);
         if (results.size <= index) { throw new IllegalStateException("ValueExpression dataExpression yields " + results.size + " result(s) (expected at least " + (index + 1) + ")."); }
         final byte[] inputData = getValueAtIndex(results, index, 0).get().getValue();
         if (offset >= inputData.length) { return new byte[0]; }

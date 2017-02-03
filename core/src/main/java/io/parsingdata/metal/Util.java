@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
@@ -70,7 +70,7 @@ public final class Util {
     public static ValueExpression inflate(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public Optional<Value> eval(final Value value, final Environment environment, final Encoding encoding) {
+            public Optional<Value> eval(final Value value, final ParseGraph graph, final Encoding encoding) {
                 final Inflater inf = new Inflater(true);
                 inf.setInput(value.getValue());
                 final byte[] dataReceiver = new byte[512];

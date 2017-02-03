@@ -21,8 +21,8 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.value.ConstantFactory;
@@ -42,8 +42,8 @@ public class Count implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> values = operand.eval(environment, encoding);
+    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
+        final ImmutableList<Optional<Value>> values = operand.eval(graph, encoding);
         return ImmutableList.create(Optional.of(fromNumeric(values.size)));
     }
 

@@ -63,7 +63,7 @@ public class While extends Token {
     }
 
     private ParseResult iterate(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        if (!predicate.eval(environment, encoding)) {
+        if (!predicate.eval(environment.order, encoding)) {
             return success(environment);
         }
         final ParseResult result = token.parse(scope, environment, encoding);

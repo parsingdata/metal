@@ -56,7 +56,7 @@ public class RepN extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final ImmutableList<Optional<Value>> counts = n.eval(environment, encoding);
+        final ImmutableList<Optional<Value>> counts = n.eval(environment.order, encoding);
         if (counts.size != 1 || !counts.head.isPresent()) {
             return failure(environment);
         }

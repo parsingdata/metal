@@ -19,7 +19,7 @@ package io.parsingdata.metal.expression.value.bitwise;
 import java.util.BitSet;
 import java.util.Optional;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.BinaryValueExpression;
 import io.parsingdata.metal.expression.value.ConstantFactory;
@@ -36,7 +36,7 @@ public class And extends BinaryValueExpression {
     }
 
     @Override
-    public Optional<Value> eval(final Value left, final Value right, final Environment environment, final Encoding encoding) {
+    public Optional<Value> eval(final Value left, final Value right, final ParseGraph graph, final Encoding encoding) {
         final BitSet leftBits = left.asBitSet();
         leftBits.and(right.asBitSet());
         return Optional.of(ConstantFactory.createFromBitSet(leftBits, left.getValue().length, encoding));

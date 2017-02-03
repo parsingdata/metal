@@ -21,7 +21,7 @@ import static io.parsingdata.metal.data.ConstantSlice.create;
 import java.util.Optional;
 import java.util.zip.CRC32;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
@@ -34,7 +34,7 @@ public final class Callback {
     public static ValueExpression crc32(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public Optional<Value> eval(final Value value, final Environment environment, final Encoding encoding) {
+            public Optional<Value> eval(final Value value, final ParseGraph graph, final Encoding encoding) {
                 final CRC32 crc = new CRC32();
                 crc.update(value.getValue());
                 final long crcValue = crc.getValue();

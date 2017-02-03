@@ -54,7 +54,7 @@ public class Pre extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        if (!predicate.eval(environment, encoding)) {
+        if (!predicate.eval(environment.order, encoding)) {
             return success(environment);
         }
         final ParseResult result = token.parse(scope, environment.addBranch(this), encoding);

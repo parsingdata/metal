@@ -63,7 +63,7 @@ public class Def extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final ImmutableList<Optional<Value>> sizes = size.eval(environment, encoding);
+        final ImmutableList<Optional<Value>> sizes = size.eval(environment.order, encoding);
         if (sizes.size != 1 || !sizes.head.isPresent()) {
             return failure(environment);
         }
@@ -78,7 +78,7 @@ public class Def extends Token {
             return failure(environment);
         }
         final Environment newEnvironment = environment.add(new ParseValue(scope, this, slice, encoding)).seek(environment.offset + dataSize);
-        return predicate.eval(newEnvironment, encoding) ? success(newEnvironment) : failure(environment);
+        return predicate.eval(newEnvironment.order, encoding) ? success(newEnvironment) : failure(environment);
     }
 
     @Override
