@@ -35,6 +35,7 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.ParseResult;
@@ -74,6 +75,7 @@ public class EqualityTest {
         seq(LINKED_LIST_1,
             sub(LINKED_LIST_2, con(0)));
 
+    @Ignore
     @Test
     public void cycleWithEqualTokens() throws IOException {
         final ParseResult result = LINKED_LIST_COMPOSED_EQUAL.parse(stream(0, 0, 1), enc());
