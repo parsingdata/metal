@@ -50,7 +50,7 @@ public class DataExpressionSourceTest {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("ValueExpression dataExpression yields 1 result(s) (expected at least 2).");
         final ParseResult result = setupResult();
-        final DataExpressionSource source = new DataExpressionSource(ref("a"), 1, result.environment, enc());
+        final DataExpressionSource source = new DataExpressionSource(ref("a"), 1, result.environment.order, enc());
         source.getData(0, 4);
     }
 

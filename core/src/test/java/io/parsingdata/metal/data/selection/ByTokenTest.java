@@ -65,7 +65,7 @@ public class ByTokenTest {
     private static final Token DEF1 = def("value1", con(1));
     private static final Token DEF2 = def("value2", con(1));
     private static final Token TWO_BYTES = def("two", 2);
-    private static final Token UNUSED_DEF = def("value1", con(1));
+    private static final Token UNUSED_DEF = def("value3", con(1));
 
     private static final Token SIMPLE_SEQ = seq(DEF1, DEF2);
     private static final Token SEQ_REP = seq(DEF1, rep(DEF2));
@@ -289,7 +289,7 @@ public class ByTokenTest {
         final ImmutableList<ParseItem> seqItems = getAllRoots(result.environment.order, smallSeq);
         assertEquals(6, seqItems.size); // Three regular and three subs.
         final Set<ParseItem> items = makeSet(seqItems);
-        assertEquals(seqItems.size, items.size()); // Check that there are no duplicate results.
+        assertEquals(4, items.size()); // Check that there are two duplicates.
         for (final ParseItem item : items) {
             assertTrue(item.isGraph());
             assertEquals(2, item.asGraph().size);

@@ -20,6 +20,8 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.selection.ByOffset.findItemAtOffset;
 import static io.parsingdata.metal.data.selection.ByToken.getAllRoots;
 
+import java.util.Objects;
+
 import io.parsingdata.metal.token.Token;
 
 public class ParseReference implements ParseItem {
@@ -45,6 +47,20 @@ public class ParseReference implements ParseItem {
     @Override
     public String toString() {
         return "ref(@" + location + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null
+            && getClass() == obj.getClass()
+            && Objects.equals(location, ((ParseReference)obj).location)
+            && Objects.equals(source, ((ParseReference)obj).source)
+            && Objects.equals(definition, ((ParseReference)obj).definition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(location, source, definition);
     }
 
 }

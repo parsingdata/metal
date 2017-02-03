@@ -29,7 +29,7 @@ import static io.parsingdata.metal.Shorthand.foldRight;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.data.ConstantSlice.create;
+import static io.parsingdata.metal.expression.value.ConstantFactory.makeConstantSlice;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -77,7 +77,7 @@ public class FoldEdgeCaseTest {
         assertTrue(foldRight(new ValueExpression() {
             @Override
             public ImmutableList<Optional<Value>> eval(ParseGraph graph, Encoding encoding) {
-                return ImmutableList.create(Optional.<Value>empty()).add(Optional.of(new Value(create(new byte[] { 1, 2 }), enc())));
+                return ImmutableList.create(Optional.<Value>empty()).add(Optional.of(new Value(makeConstantSlice(new byte[] { 1, 2 }), enc())));
             }
         }, Shorthand::add).eval(stream(0).order, enc()).isEmpty());
     }

@@ -18,6 +18,8 @@ package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Objects;
+
 public class Slice {
 
     public final Source source;
@@ -40,4 +42,20 @@ public class Slice {
     public String toString() {
         return source + "@" + offset + ":" + (offset+size);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null
+            && getClass() == obj.getClass()
+            && Objects.equals(source, ((Slice)obj).source)
+            && Objects.equals(offset, ((Slice)obj).offset)
+            // The data field is excluded from equals() and hashCode() because it is cached data.
+            && Objects.equals(size, ((Slice)obj).size);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(source, offset, size);
+    }
+
 }

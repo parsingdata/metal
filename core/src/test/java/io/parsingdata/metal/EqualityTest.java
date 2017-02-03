@@ -75,7 +75,6 @@ public class EqualityTest {
         seq(LINKED_LIST_1,
             sub(LINKED_LIST_2, con(0)));
 
-    @Ignore
     @Test
     public void cycleWithEqualTokens() throws IOException {
         final ParseResult result = LINKED_LIST_COMPOSED_EQUAL.parse(stream(0, 0, 1), enc());

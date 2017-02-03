@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import static io.parsingdata.metal.data.ConstantSlice.create;
+import static io.parsingdata.metal.expression.value.ConstantFactory.makeConstantSlice;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import java.util.NoSuchElementException;
@@ -32,7 +32,7 @@ import org.junit.rules.ExpectedException;
 
 public class OptionalValueTest {
 
-    private static final Value VALUE = new Value(create(new byte[] { 1 }), enc());
+    private static final Value VALUE = new Value(makeConstantSlice(new byte[] { 1 }), enc());
     private static final Optional<Value> OPTIONAL_VALUE = Optional.of(VALUE);
     private static final Optional<Value> EMPTY = Optional.empty();
 

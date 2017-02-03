@@ -76,7 +76,7 @@ public class Environment {
     }
 
     public Environment source(final ValueExpression dataExpression, final int index, final Environment environment, final Encoding encoding) {
-        return new Environment(order, new DataExpressionSource(dataExpression, index, environment, encoding), 0L, callbacks);
+        return new Environment(order, new DataExpressionSource(dataExpression, index, environment.order, encoding), 0L, callbacks);
     }
 
     public Slice slice(final int size) throws IOException {

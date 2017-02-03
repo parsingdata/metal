@@ -18,6 +18,9 @@ package io.parsingdata.metal.encoding;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+
+import io.parsingdata.metal.data.Slice;
 
 public class Encoding {
 
@@ -55,4 +58,19 @@ public class Encoding {
     public String toString() {
         return getClass().getSimpleName() + "(" + sign + "," + charset + "," + byteOrder + ")";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null
+            && getClass() == obj.getClass()
+            && Objects.equals(sign, ((Encoding)obj).sign)
+            && Objects.equals(charset, ((Encoding)obj).charset)
+            && Objects.equals(byteOrder, ((Encoding)obj).byteOrder);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sign, charset, byteOrder);
+    }
+
 }
