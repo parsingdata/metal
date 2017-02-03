@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.data.ConstantSlice.create;
+import static io.parsingdata.metal.expression.value.ConstantFactory.makeConstantSlice;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
@@ -83,7 +83,7 @@ public final class Util {
                         return Optional.empty();
                     }
                 }
-                return Optional.of(new Value(create(out.toByteArray()), encoding));
+                return Optional.of(new Value(makeConstantSlice(out.toByteArray()), encoding));
             }
         };
     }

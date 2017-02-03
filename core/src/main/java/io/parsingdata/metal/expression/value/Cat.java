@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static io.parsingdata.metal.data.ConstantSlice.create;
+import static io.parsingdata.metal.expression.value.ConstantFactory.makeConstantSlice;
 
 import java.util.Optional;
 
@@ -39,7 +39,7 @@ public class Cat extends BinaryValueExpression {
         final byte[] concatenatedBytes = new byte[leftBytes.length + rightBytes.length];
         System.arraycopy(leftBytes, 0, concatenatedBytes, 0, leftBytes.length);
         System.arraycopy(rightBytes, 0, concatenatedBytes, leftBytes.length, rightBytes.length);
-        return Optional.of(new Value(create(concatenatedBytes), encoding));
+        return Optional.of(new Value(makeConstantSlice(concatenatedBytes), encoding));
     }
 
 }

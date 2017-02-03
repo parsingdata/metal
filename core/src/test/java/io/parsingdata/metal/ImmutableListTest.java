@@ -21,10 +21,10 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.data.ConstantSlice.create;
 import static io.parsingdata.metal.data.selection.ByName.get;
 import static io.parsingdata.metal.data.selection.ByName.getAll;
 import static io.parsingdata.metal.data.transformation.Reversal.reverse;
+import static io.parsingdata.metal.expression.value.ConstantFactory.makeConstantSlice;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import org.junit.Test;
@@ -147,7 +147,7 @@ public class ImmutableListTest {
     }
 
     private ParseValue val(final char c) {
-        return new ParseValue(Character.toString(c), def(Character.toString(c), 0L), create(new byte[] { (byte) c }), enc());
+        return new ParseValue(Character.toString(c), def(Character.toString(c), 0L), makeConstantSlice(new byte[] { (byte) c }), enc());
     }
 
 }
