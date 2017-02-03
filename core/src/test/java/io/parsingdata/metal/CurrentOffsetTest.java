@@ -27,6 +27,7 @@ import static io.parsingdata.metal.Shorthand.eqNum;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.self;
 import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -40,38 +41,32 @@ import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.value.Value;
-import io.parsingdata.metal.expression.value.reference.CurrentOffset;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class CurrentOffsetTest {
 
-    private static final Encoding ENCODING = new Encoding();
-    private static final ByteStream NO_BYTES = new InMemoryByteStream(new byte[0]);
+    private void checkCurrentOffset(final int size) throws IOException {
+        final byte[] data = new byte[size];
+        final ParseResult result = def("a", con(size)).parse(new Environment(new InMemoryByteStream(data)), enc());
+        assertTrue(result.succeeded);
 
-    private static final CurrentOffset CURRENT_OFFSET = new CurrentOffset();
+        final ImmutableList<Optional<Value>> offset = currentOffset.eval(result.environment.order, enc());
 
-    @Test
-    public void currentOffset() {
-        final Environment environment = new Environment(NO_BYTES, 42);
-
-        final ImmutableList<Optional<Value>> currentOffset = CURRENT_OFFSET.eval(environment.order, ENCODING);
-
-        assertNotNull(currentOffset);
-        assertEquals(1, currentOffset.size);
-        assertEquals(42, currentOffset.head.get().asNumeric().longValue());
+        assertNotNull(offset);
+        assertEquals(1, offset.size);
+        assertEquals(size, offset.head.get().asNumeric().longValue());
     }
 
     @Test
-    public void currentOffsetLarger() {
+    public void currentOffset() throws IOException {
+        checkCurrentOffset(42);
+    }
+
+    @Test
+    public void currentOffsetLarger() throws IOException {
         // offset would flip signed bit if interpreted as signed integer:
-        final Environment environment = new Environment(NO_BYTES, 128);
-
-        final ImmutableList<Optional<Value>> currentOffset = CURRENT_OFFSET.eval(environment.order, ENCODING);
-
-        assertNotNull(currentOffset);
-        assertEquals(1, currentOffset.size);
-        assertEquals(128, currentOffset.head.get().asNumeric().longValue());
+        checkCurrentOffset(128);
     }
 
     @Test
