@@ -158,7 +158,7 @@ public final class Shorthand {
     public static ValueExpression last(final ValueExpression operand) { return new Last(operand); }
     public static ValueExpression nth(final ValueExpression values, final ValueExpression indices) { return new Nth(values, indices); }
     public static ValueExpression offset(final ValueExpression operand) { return new Offset(operand); }
-    public static final ValueExpression currentOffset = new CurrentOffset();
+    public static final ValueExpression currentOffset = elvis(add(offset(self), len(self)), con(0));
     public static ValueExpression cat(final ValueExpression left, final ValueExpression right) { return new Cat(left, right); }
     public static ValueExpression elvis(final ValueExpression left, final ValueExpression right) { return new Elvis(left, right); }
     public static ValueExpression count(final ValueExpression operand) { return new Count(operand); }
