@@ -35,7 +35,6 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.ParseResult;

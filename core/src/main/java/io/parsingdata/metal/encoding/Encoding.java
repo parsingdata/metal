@@ -20,8 +20,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-import io.parsingdata.metal.data.Slice;
-
 public class Encoding {
 
     public static final Sign DEFAULT_SIGNED = Sign.UNSIGNED;
