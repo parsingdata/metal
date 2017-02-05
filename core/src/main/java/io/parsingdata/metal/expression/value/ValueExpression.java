@@ -30,7 +30,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * {@link Value} objects encapsulated in {@link Optional} objects (to guard
  * against <code>null</code>s).
  * <p>
- * As context, it receives the current <code>environment</code> object that
+ * As context, it receives the current <code>graph</code> object that
  * describes the parse state as well as the current <code>encoding</code>
  * object that describes the encoding to use when reading data from the input.
  */
