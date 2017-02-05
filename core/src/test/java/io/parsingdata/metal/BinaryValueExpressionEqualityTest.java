@@ -27,13 +27,17 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.BinaryValueExpression;
 import io.parsingdata.metal.expression.value.Cat;
+import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.expression.value.arithmetic.Add;
 import io.parsingdata.metal.expression.value.arithmetic.Div;
@@ -96,6 +100,11 @@ public class BinaryValueExpressionEqualityTest {
     @Test
     public void notEqualsLeftLeft() throws IllegalAccessException, InstantiationException, InvocationTargetException {
         assertFalse(makeBVE12().equals(makeBVE11()));
+    }
+
+    @Test
+    public void notEqualsType() throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        assertFalse(makeBVE12().equals(new BinaryValueExpression(makeBVE1(), makeBVE2()) { @Override public Optional<Value> eval(Value left, Value right, ParseGraph graph, Encoding encoding) { return null; } }));
     }
 
     private BinaryValueExpression makeBVE12() throws IllegalAccessException, InvocationTargetException, InstantiationException {
