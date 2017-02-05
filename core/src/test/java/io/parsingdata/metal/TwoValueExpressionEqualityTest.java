@@ -16,7 +16,9 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.and;
@@ -35,6 +37,12 @@ import org.junit.runners.Parameterized;
 
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.comparison.ComparisonExpression;
+import io.parsingdata.metal.expression.comparison.Eq;
+import io.parsingdata.metal.expression.comparison.EqNum;
+import io.parsingdata.metal.expression.comparison.EqStr;
+import io.parsingdata.metal.expression.comparison.GtNum;
+import io.parsingdata.metal.expression.comparison.LtNum;
 import io.parsingdata.metal.expression.value.BinaryValueExpression;
 import io.parsingdata.metal.expression.value.Cat;
 import io.parsingdata.metal.expression.value.Value;
@@ -50,9 +58,8 @@ import io.parsingdata.metal.expression.value.bitwise.ShiftLeft;
 import io.parsingdata.metal.expression.value.bitwise.ShiftRight;
 
 @RunWith(Parameterized.class)
-public class BinaryValueExpressionEqualityTest {
+public class TwoValueExpressionEqualityTest {
 
-    private final Class target;
     private final Constructor constructor;
 
     @Parameterized.Parameters(name="{0}")
@@ -67,64 +74,79 @@ public class BinaryValueExpressionEqualityTest {
             { Mod.class },
             { Mul.class },
             { Sub.class },
-            { Cat.class }
+            { Cat.class },
+            { Eq.class },
+            { EqNum.class },
+            { EqStr.class },
+            { GtNum.class },
+            { LtNum.class }
         });
     }
 
-    public BinaryValueExpressionEqualityTest(final Class<BinaryValueExpression> target) throws NoSuchMethodException {
-        this.target = target;
+    public TwoValueExpressionEqualityTest(final Class<?> target) throws NoSuchMethodException {
         this.constructor = target.getConstructor(ValueExpression.class, ValueExpression.class);
     }
 
     @Test
     public void NotEqualsNull() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        assertFalse(makeBVE12().equals(null));
+        assertFalse(makeTVE12().equals(null));
     }
 
     @Test
     public void equalsItselfIdentity() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        final BinaryValueExpression bve = makeBVE12();
-        assertTrue(bve.equals(bve));
+        final Object obj = makeTVE12();
+        assertTrue(obj.equals(obj));
     }
 
     @Test
     public void equalsItself() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        assertTrue(makeBVE12().equals(makeBVE12()));
+        assertTrue(makeTVE12().equals(makeTVE12()));
     }
 
     @Test
     public void notEqualsRightLeft() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        assertFalse(makeBVE12().equals(makeBVE21()));
+        assertFalse(makeTVE12().equals(makeTVE21()));
     }
 
     @Test
     public void notEqualsLeftLeft() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        assertFalse(makeBVE12().equals(makeBVE11()));
+        assertFalse(makeTVE12().equals(makeTVE11()));
     }
 
     @Test
     public void notEqualsType() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        assertFalse(makeBVE12().equals(new BinaryValueExpression(makeBVE1(), makeBVE2()) { @Override public Optional<Value> eval(Value left, Value right, ParseGraph graph, Encoding encoding) { return null; } }));
+        assertFalse(makeTVE12().equals(new BinaryValueExpression(makeTVE1(), makeTVE2()) { @Override public Optional<Value> eval(Value left, Value right, ParseGraph graph, Encoding encoding) { return null; } }));
+        assertFalse(makeTVE12().equals(new ComparisonExpression(makeTVE1(), makeTVE2()) { @Override public boolean compare(Value left, Value right) { return false; } }));
     }
 
-    private BinaryValueExpression makeBVE12() throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        return (BinaryValueExpression) constructor.newInstance(makeBVE1(), makeBVE2());
+    @Test
+    public void noHashCollisions() throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        assertEquals(makeTVE11().hashCode(), makeTVE11().hashCode());
+        assertEquals(makeTVE12().hashCode(), makeTVE12().hashCode());
+        assertEquals(makeTVE21().hashCode(), makeTVE21().hashCode());
+        assertNotEquals(makeTVE11().hashCode(), makeTVE12().hashCode());
+        assertNotEquals(makeTVE12().hashCode(), makeTVE21().hashCode());
+        assertNotEquals(makeTVE21().hashCode(), makeTVE11().hashCode());
     }
 
-    private BinaryValueExpression makeBVE21() throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        return (BinaryValueExpression) constructor.newInstance(makeBVE2(), makeBVE1());
+    private Object makeTVE12() throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        return constructor.newInstance(makeTVE1(), makeTVE2());
     }
 
-    private BinaryValueExpression makeBVE11() throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        return (BinaryValueExpression) constructor.newInstance(makeBVE1(), makeBVE1());
+    private Object makeTVE21() throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        return constructor.newInstance(makeTVE2(), makeTVE1());
     }
 
-    private ValueExpression makeBVE1() {
+    private Object makeTVE11() throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        return constructor.newInstance(makeTVE1(), makeTVE1());
+    }
+
+    private ValueExpression makeTVE1() {
         return and(con(1), con(2));
     }
 
-    private ValueExpression makeBVE2() {
-        return or(con(1), con(2));
+    private ValueExpression makeTVE2() {
+        return or(con(1), con(3));
     }
 
 }

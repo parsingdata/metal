@@ -16,7 +16,9 @@
 
 package io.parsingdata.metal;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.and;
@@ -33,6 +35,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
@@ -40,13 +43,15 @@ import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.expression.value.arithmetic.Neg;
 import io.parsingdata.metal.expression.value.bitwise.Not;
+import io.parsingdata.metal.expression.value.reference.Count;
+import io.parsingdata.metal.expression.value.reference.First;
+import io.parsingdata.metal.expression.value.reference.Last;
 import io.parsingdata.metal.expression.value.reference.Len;
 import io.parsingdata.metal.expression.value.reference.Offset;
 
 @RunWith(Parameterized.class)
-public class UnaryValueExpressionEqualityTest {
+public class OneValueExpressionEqualityTest {
 
-    private final Class target;
     private final Constructor constructor;
 
     @Parameterized.Parameters(name="{0}")
@@ -55,47 +60,57 @@ public class UnaryValueExpressionEqualityTest {
             { Len.class },
             { Offset.class },
             { Neg.class },
-            { Not.class }
+            { Not.class },
+            { Count.class },
+            { First.class },
+            { Last.class }
         });
     }
 
-    public UnaryValueExpressionEqualityTest(final Class<UnaryValueExpression> target) throws NoSuchMethodException {
-        this.target = target;
+    public OneValueExpressionEqualityTest(final Class<?> target) throws NoSuchMethodException {
         this.constructor = target.getConstructor(ValueExpression.class);
     }
 
     @Test
     public void NotEqualsNull() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        assertFalse(makeUVE1().equals(null));
+        assertFalse(makeOVE1().equals(null));
     }
 
     @Test
     public void equalsItselfIdentity() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        final UnaryValueExpression uve = makeUVE1();
-        assertTrue(uve.equals(uve));
+        final Object obj = makeOVE1();
+        assertTrue(obj.equals(obj));
     }
 
     @Test
     public void equalsItself() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        assertTrue(makeUVE1().equals(makeUVE1()));
+        assertTrue(makeOVE1().equals(makeOVE1()));
     }
 
     @Test
     public void notEquals() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        assertFalse(makeUVE1().equals(makeUVE2()));
+        assertFalse(makeOVE1().equals(makeOVE2()));
     }
 
     @Test
     public void notEqualsType() throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        assertFalse(makeUVE1().equals(new UnaryValueExpression(and(con(1), con(2))) { @Override public Optional<Value> eval(Value operand, ParseGraph graph, Encoding encoding) { return null; } }));
+        assertFalse(makeOVE1().equals(new UnaryValueExpression(and(con(1), con(2))) { @Override public Optional<Value> eval(Value operand, ParseGraph graph, Encoding encoding) { return null; } }));
+        assertFalse(makeOVE1().equals(new ValueExpression() { @Override public ImmutableList<Optional<Value>> eval(ParseGraph graph, Encoding encoding) { return null; } }));
     }
 
-    private UnaryValueExpression makeUVE1() throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        return (UnaryValueExpression) constructor.newInstance(and(con(1), con(2)));
+    @Test
+    public void noHashCollisions() throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        assertEquals(makeOVE1().hashCode(), makeOVE1().hashCode());
+        assertEquals(makeOVE2().hashCode(), makeOVE2().hashCode());
+        assertNotEquals(makeOVE1().hashCode(), makeOVE2().hashCode());
     }
 
-    private UnaryValueExpression makeUVE2() throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        return (UnaryValueExpression) constructor.newInstance(or(con(1), con(2)));
+    private Object makeOVE1() throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        return constructor.newInstance(and(con(1), con(2)));
+    }
+
+    private Object makeOVE2() throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        return constructor.newInstance(or(con(1), con(3)));
     }
 
 }
