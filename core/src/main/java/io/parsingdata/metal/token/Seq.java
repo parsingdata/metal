@@ -78,7 +78,7 @@ public class Seq extends Token {
     @Override
     public boolean equals(Object obj) {
         return super.equals(obj)
-            && Objects.deepEquals(tokens, ((Seq)obj).tokens);
+            && Arrays.equals(tokens, ((Seq)obj).tokens);
     }
 
     @Override

@@ -45,6 +45,7 @@ import io.parsingdata.metal.expression.comparison.GtNum;
 import io.parsingdata.metal.expression.comparison.LtNum;
 import io.parsingdata.metal.expression.value.BinaryValueExpression;
 import io.parsingdata.metal.expression.value.Cat;
+import io.parsingdata.metal.expression.value.Elvis;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.expression.value.arithmetic.Add;
@@ -56,6 +57,7 @@ import io.parsingdata.metal.expression.value.bitwise.And;
 import io.parsingdata.metal.expression.value.bitwise.Or;
 import io.parsingdata.metal.expression.value.bitwise.ShiftLeft;
 import io.parsingdata.metal.expression.value.bitwise.ShiftRight;
+import io.parsingdata.metal.expression.value.reference.Nth;
 
 @RunWith(Parameterized.class)
 public class TwoValueExpressionEqualityTest {
@@ -79,7 +81,9 @@ public class TwoValueExpressionEqualityTest {
             { EqNum.class },
             { EqStr.class },
             { GtNum.class },
-            { LtNum.class }
+            { LtNum.class },
+            { Nth.class },
+            { Elvis.class }
         });
     }
 

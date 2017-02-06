@@ -38,6 +38,7 @@ import org.junit.runners.Parameterized;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.Reverse;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -63,7 +64,8 @@ public class OneValueExpressionEqualityTest {
             { Not.class },
             { Count.class },
             { First.class },
-            { Last.class }
+            { Last.class },
+            { Reverse.class }
         });
     }
 
