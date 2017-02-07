@@ -125,6 +125,8 @@ public class TwoValueExpressionEqualityTest {
 
     @Test
     public void noHashCollisions() throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        final Object object = makeTVE12();
+        assertEquals(object.hashCode(), object.hashCode());
         assertEquals(makeTVE11().hashCode(), makeTVE11().hashCode());
         assertEquals(makeTVE12().hashCode(), makeTVE12().hashCode());
         assertEquals(makeTVE21().hashCode(), makeTVE21().hashCode());

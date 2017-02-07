@@ -35,7 +35,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Reverse;
@@ -97,7 +96,7 @@ public class OneValueExpressionEqualityTest {
     @Test
     public void notEqualsType() throws IllegalAccessException, InstantiationException, InvocationTargetException {
         assertFalse(makeOVE1().equals(new UnaryValueExpression(and(con(1), con(2))) { @Override public Optional<Value> eval(Value operand, ParseGraph graph, Encoding encoding) { return null; } }));
-        assertFalse(makeOVE1().equals(new ValueExpression() { @Override public ImmutableList<Optional<Value>> eval(ParseGraph graph, Encoding encoding) { return null; } }));
+        assertFalse(makeOVE1().equals((ValueExpression) (graph, encoding) -> null));
     }
 
     @Test
