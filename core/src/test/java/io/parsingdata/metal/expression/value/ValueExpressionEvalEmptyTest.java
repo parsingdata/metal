@@ -32,7 +32,7 @@ import org.junit.Test;
 
 import io.parsingdata.metal.data.ImmutableList;
 
-public class ValueExpressionEvalEmpty {
+public class ValueExpressionEvalEmptyTest {
 
     @Test
     public void divisionByZero() {

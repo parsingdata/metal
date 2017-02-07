@@ -43,7 +43,7 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
-public class PITestCases {
+public class PITestCasesTest {
 
     public static final Token MUL = seq(any("a"), any("b"), def("c", 1, eqNum(mul(ref("a"), ref("b")))));
     public static final Token MOD = seq(any("a"), any("b"), def("c", 1, eqNum(mod(ref("a"), ref("b")))));
