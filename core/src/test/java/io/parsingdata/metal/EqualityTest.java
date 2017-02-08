@@ -17,6 +17,7 @@
 package io.parsingdata.metal;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
@@ -38,6 +39,8 @@ import java.io.IOException;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.expression.True;
+import io.parsingdata.metal.expression.value.reference.Self;
 import io.parsingdata.metal.token.Token;
 
 public class EqualityTest {
@@ -80,6 +83,23 @@ public class EqualityTest {
         assertTrue(result.succeeded);
         assertEquals(1, getAllValues(result.environment.order, "header").size);
         assertEquals(2, getReferences(result.environment.order).size);
+    }
+
+    @Test
+    public void singletons() {
+        checkSingleton(new Self(), new Self());
+        checkSingleton(new True(), new True());
+    }
+
+    private void checkSingleton(final Object object, final Object same) {
+        assertFalse(object.equals(null));
+        assertFalse(same.equals(null));
+        assertTrue(object.equals(object));
+        assertTrue(same.equals(same));
+        assertTrue(object.equals(same));
+        assertTrue(same.equals(object));
+        assertFalse(object.equals(new Object() {}));
+        assertEquals(object.hashCode(), same.hashCode());
     }
 
 }
