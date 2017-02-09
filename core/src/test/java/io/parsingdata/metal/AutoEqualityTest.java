@@ -46,9 +46,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import io.parsingdata.metal.data.ByteStream;
+import io.parsingdata.metal.data.ByteStreamSource;
 import io.parsingdata.metal.data.ConstantSource;
 import io.parsingdata.metal.data.DataExpressionSource;
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.Slice;
@@ -99,9 +103,15 @@ import io.parsingdata.metal.token.Tie;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.token.TokenRef;
 import io.parsingdata.metal.token.While;
+import io.parsingdata.metal.util.InMemoryByteStream;
 
 @RunWith(Parameterized.class)
 public class AutoEqualityTest {
+
+    private static final ParseValue PARSEVALUE = new ParseValue("a", any("a"), new Slice(new ConstantSource(new byte[]{1, 2}), 0, new byte[]{1, 2}), enc());
+    private static final ParseGraph GRAPH_WITH_REFERENCE = ParseGraph.EMPTY.add(new ParseReference(0, new ConstantSource(new byte[]{1, 2}), any("a")));
+    private static final ParseGraph BRANCHED_GRAPH = new Environment((offset, data) -> 0).addBranch(any("a")).order;
+    private static final ParseGraph CLOSED_BRANCHED_GRAPH = new Environment((offset, data) -> 0).addBranch(any("a")).closeBranch().order;
 
     private static final List<Object> STRINGS = Arrays.asList("a", "b");
     private static final List<Object> ENCODINGS = Arrays.asList(enc(), signed(), le(), new Encoding(Charset.forName("UTF-8")));
@@ -113,10 +123,12 @@ public class AutoEqualityTest {
     private static final List<Object> REDUCERS = Arrays.asList((BinaryOperator<ValueExpression>) (left, right) -> cat(left, right), (BinaryOperator<ValueExpression>) (left, right) -> div(left, right));
     private static final List<Object> SLICES = Arrays.asList(new Slice(new ConstantSource(new byte[] { 1, 2 }), 0, new byte[] { 1, 2 }), new Slice(new DataExpressionSource(ref("a"), 1, ParseGraph.EMPTY, enc()), 0, new byte[] { 0, 0 }));
     private static final List<Object> BYTE_ARRAYS = Arrays.asList(new byte[] { 0 }, new byte[] { 1, 2 }, new byte[] {});
-    private static final List<Object> SOURCES = Arrays.asList(new ConstantSource(new byte[] {}), new DataExpressionSource(ref("x"), 8, ParseGraph.EMPTY.add(new ParseValue("a", any("a"), new Slice(new ConstantSource(new byte[] { 1, 2}), 0, new byte[] { 1, 2 }), enc())), signed()));
+    private static final List<Object> SOURCES = Arrays.asList(new ConstantSource(new byte[] {}), new DataExpressionSource(ref("x"), 8, ParseGraph.EMPTY.add(PARSEVALUE), signed()));
     private static final List<Object> LONGS = Arrays.asList(0L, 1L, 31L, 100000L);
     private static final List<Object> INTEGERS = Arrays.asList(0, 1, 17, 21212121);
-    private static final List<Object> PARSEGRAPHS = Arrays.asList(ParseGraph.EMPTY, ParseGraph.EMPTY.add(new ParseReference(0, new ConstantSource(new byte[] { 1, 2 }), any("a"))));
+    private static final List<Object> PARSEGRAPHS = Arrays.asList(ParseGraph.EMPTY, GRAPH_WITH_REFERENCE);
+    private static final List<Object> PARSEITEMS = Arrays.asList(CLOSED_BRANCHED_GRAPH, ParseGraph.EMPTY, GRAPH_WITH_REFERENCE, ParseGraph.EMPTY.add(PARSEVALUE), ParseGraph.EMPTY.add(PARSEVALUE).add(PARSEVALUE), BRANCHED_GRAPH);
+    private static final List<Object> BYTESTREAMS = Arrays.asList(new InMemoryByteStream(new byte[] { 1, 2 }), (ByteStream) (offset, data) -> 0);
     private static final Map<Class, List<Object>> mapping = new HashMap<Class, List<Object>>() {{
         put(String.class, STRINGS);
         put(Encoding.class, ENCODINGS);
@@ -132,6 +144,8 @@ public class AutoEqualityTest {
         put(long.class, LONGS);
         put(int.class, INTEGERS);
         put(ParseGraph.class, PARSEGRAPHS);
+        put(ParseItem.class, PARSEITEMS);
+        put(ByteStream.class, BYTESTREAMS);
     }};
 
     @Parameterized.Parameters(name="{0}")
@@ -146,7 +160,7 @@ public class AutoEqualityTest {
             io.parsingdata.metal.expression.logical.Or.class, FoldLeft.class, FoldRight.class, Value.class,
             ParseValue.class, io.parsingdata.metal.expression.logical.Not.class, Const.class, NameRef.class,
             io.parsingdata.metal.expression.value.reference.TokenRef.class, ConstantSource.class, Slice.class,
-            ParseReference.class, DataExpressionSource.class
+            ParseReference.class, DataExpressionSource.class, ParseGraph.class, ByteStreamSource.class
         );
     }
 

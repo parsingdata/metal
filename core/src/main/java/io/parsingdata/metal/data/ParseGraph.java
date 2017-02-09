@@ -126,13 +126,13 @@ public class ParseGraph implements ParseItem {
             && Objects.equals(head, ((ParseGraph)obj).head)
             && Objects.equals(tail, ((ParseGraph)obj).tail)
             && Objects.equals(branched, ((ParseGraph)obj).branched)
-            && Objects.equals(definition, ((ParseGraph)obj).definition)
-            && Objects.equals(size, ((ParseGraph)obj).size);
+            && Objects.equals(definition, ((ParseGraph)obj).definition);
+            // The size field is excluded from equals() and hashCode() because it is cached data.
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(head, tail, branched, definition, size);
+        return Objects.hash(head, tail, branched, definition);
     }
 
 }
