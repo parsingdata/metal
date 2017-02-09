@@ -18,6 +18,7 @@ package io.parsingdata.metal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
@@ -32,13 +33,19 @@ import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EncodingFactory.le;
+import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 
 import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.True;
 import io.parsingdata.metal.expression.value.reference.Self;
 import io.parsingdata.metal.token.Token;
@@ -100,6 +107,32 @@ public class EqualityTest {
         assertTrue(same.equals(object));
         assertFalse(object.equals(new Object() {}));
         assertEquals(object.hashCode(), same.hashCode());
+    }
+
+    @Test
+    public void multiConstructorTypes() {
+        final Encoding object = new Encoding();
+        final Encoding same = new Encoding(Encoding.DEFAULT_SIGNED, Encoding.DEFAULT_CHARSET, Encoding.DEFAULT_BYTE_ORDER);
+        final List<Encoding> other = Arrays.asList(signed(), le(), new Encoding(Charset.forName("UTF-8")));
+        assertFalse(object.equals(null));
+        assertFalse(same.equals(null));
+        assertTrue(object.equals(same));
+        assertTrue(same.equals(object));
+        final Object otherType = new Object() {};
+        assertFalse(object.equals(otherType));
+        assertFalse(same.equals(otherType));
+        assertEquals(object.hashCode(), same.hashCode());
+        for (Encoding e : other) {
+            assertFalse(e.equals(null));
+            assertTrue(e.equals(e));
+            assertFalse(e.equals(object));
+            assertFalse(object.equals(e));
+            assertFalse(e.equals(same));
+            assertFalse(same.equals(e));
+            assertFalse(e.equals(otherType));
+            assertNotEquals(object.hashCode(), e.hashCode());
+            assertNotEquals(same.hashCode(), e.hashCode());
+        }
     }
 
 }

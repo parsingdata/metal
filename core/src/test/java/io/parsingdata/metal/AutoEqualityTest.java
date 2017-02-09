@@ -49,8 +49,10 @@ import org.junit.runners.Parameterized;
 import io.parsingdata.metal.data.ConstantSource;
 import io.parsingdata.metal.data.DataExpressionSource;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.Slice;
+import io.parsingdata.metal.data.Source;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.comparison.Eq;
@@ -101,15 +103,20 @@ import io.parsingdata.metal.token.While;
 @RunWith(Parameterized.class)
 public class AutoEqualityTest {
 
-    private static final List<Object> STRINGS = new ArrayList<Object>() {{ add("a"); add("b"); }};
-    private static final List<Object> ENCODINGS = new ArrayList<Object>() {{ add(enc()); add(signed()); add(le()); add(new Encoding(Charset.forName("UTF-8"))); }};
-    private static final List<Object> TOKENS = new ArrayList<Object>() {{ add(any("a")); add(any("b")); }};
-    private static final List<Object> TOKEN_ARRAYS = new ArrayList<Object>() {{ add(new Token[] { any("a"), any("b")}); add(new Token[] { any("b"), any("c") }); add(new Token[] { any("a"), any("b"), any("c") }); }};
-    private static final List<Object> VALUE_EXPRESSIONS = new ArrayList<Object>() {{ add(con(1)); add(con(2)); }};
-    private static final List<Object> EXPRESSIONS = new ArrayList<Object>() {{ add(expTrue()); add(not(expTrue())); }};
-    private static final List<Object> VALUES = new ArrayList<Object>() {{ add(ConstantFactory.createFromString("a", enc())); add(ConstantFactory.createFromString("b", enc())); add(ConstantFactory.createFromNumeric(1L, signed())); }};
-    private static final List<Object> REDUCERS = new ArrayList<Object>() {{ add((BinaryOperator<ValueExpression>) (left, right) -> cat(left, right)); add((BinaryOperator<ValueExpression>) (left, right) -> div(left, right)); }};
-    private static final List<Object> SLICES = new ArrayList<Object>() {{ add(new Slice(new ConstantSource(new byte[] { 1, 2 }), 0, new byte[] { 1, 2 })); add(new Slice(new DataExpressionSource(ref("a"), 1, ParseGraph.EMPTY, enc()), 0, new byte[] { 0, 0 })); }};
+    private static final List<Object> STRINGS = Arrays.asList("a", "b");
+    private static final List<Object> ENCODINGS = Arrays.asList(enc(), signed(), le(), new Encoding(Charset.forName("UTF-8")));
+    private static final List<Object> TOKENS = Arrays.asList(any("a"), any("b"));
+    private static final List<Object> TOKEN_ARRAYS = Arrays.asList(new Token[] { any("a"), any("b")}, new Token[] { any("b"), any("c") }, new Token[] { any("a"), any("b"), any("c") });
+    private static final List<Object> VALUE_EXPRESSIONS = Arrays.asList(con(1), con(2));
+    private static final List<Object> EXPRESSIONS = Arrays.asList(expTrue(), not(expTrue()));
+    private static final List<Object> VALUES = Arrays.asList(ConstantFactory.createFromString("a", enc()), ConstantFactory.createFromString("b", enc()), ConstantFactory.createFromNumeric(1L, signed()));
+    private static final List<Object> REDUCERS = Arrays.asList((BinaryOperator<ValueExpression>) (left, right) -> cat(left, right), (BinaryOperator<ValueExpression>) (left, right) -> div(left, right));
+    private static final List<Object> SLICES = Arrays.asList(new Slice(new ConstantSource(new byte[] { 1, 2 }), 0, new byte[] { 1, 2 }), new Slice(new DataExpressionSource(ref("a"), 1, ParseGraph.EMPTY, enc()), 0, new byte[] { 0, 0 }));
+    private static final List<Object> BYTE_ARRAYS = Arrays.asList(new byte[] { 0 }, new byte[] { 1, 2 }, new byte[] {});
+    private static final List<Object> SOURCES = Arrays.asList(new ConstantSource(new byte[] {}), new DataExpressionSource(ref("x"), 8, ParseGraph.EMPTY.add(new ParseValue("a", any("a"), new Slice(new ConstantSource(new byte[] { 1, 2}), 0, new byte[] { 1, 2 }), enc())), signed()));
+    private static final List<Object> LONGS = Arrays.asList(0L, 1L, 31L, 100000L);
+    private static final List<Object> INTEGERS = Arrays.asList(0, 1, 17, 21212121);
+    private static final List<Object> PARSEGRAPHS = Arrays.asList(ParseGraph.EMPTY, ParseGraph.EMPTY.add(new ParseReference(0, new ConstantSource(new byte[] { 1, 2 }), any("a"))));
     private static final Map<Class, List<Object>> mapping = new HashMap<Class, List<Object>>() {{
         put(String.class, STRINGS);
         put(Encoding.class, ENCODINGS);
@@ -120,6 +127,11 @@ public class AutoEqualityTest {
         put(Value.class, VALUES);
         put(BinaryOperator.class, REDUCERS);
         put(Slice.class, SLICES);
+        put(byte[].class, BYTE_ARRAYS);
+        put(Source.class, SOURCES);
+        put(long.class, LONGS);
+        put(int.class, INTEGERS);
+        put(ParseGraph.class, PARSEGRAPHS);
     }};
 
     @Parameterized.Parameters(name="{0}")
@@ -133,7 +145,8 @@ public class AutoEqualityTest {
             GtNum.class, LtNum.class, Nth.class, Elvis.class, io.parsingdata.metal.expression.logical.And.class,
             io.parsingdata.metal.expression.logical.Or.class, FoldLeft.class, FoldRight.class, Value.class,
             ParseValue.class, io.parsingdata.metal.expression.logical.Not.class, Const.class, NameRef.class,
-            io.parsingdata.metal.expression.value.reference.TokenRef.class
+            io.parsingdata.metal.expression.value.reference.TokenRef.class, ConstantSource.class, Slice.class,
+            ParseReference.class, DataExpressionSource.class
         );
     }
 
