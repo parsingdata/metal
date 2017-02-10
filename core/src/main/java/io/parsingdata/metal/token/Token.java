@@ -20,10 +20,10 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -35,8 +35,8 @@ import io.parsingdata.metal.encoding.Encoding;
  * Specifies the two fields that all tokens share: <code>name</code> (a
  * String) and <code>encoding</code> (an {@link Encoding}). A Token is parsed
  * by calling one of the <code>parse</code> methods. Parsing a Token succeeds
- * if the returned {@link ParseResult}'s <code>succeeded</code> field is
- * <code>true</code>, otherwise parsing has failed.
+ * if the returned {@link Optional} contains an {@link Environment}, otherwise
+ * parsing has failed.
  * <p>
  * The <code>name</code> field is used during parsing to construct a scope, by
  * concatenating it to the incoming <code>scope</code> argument as follows:
@@ -61,18 +61,18 @@ public abstract class Token {
         this.encoding = encoding;
     }
 
-    public ParseResult parse(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    public Optional<Environment> parse(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         final Encoding activeEncoding = this.encoding != null ? this.encoding : encoding;
-        final ParseResult result = parseImpl(makeScope(scope), environment, activeEncoding);
-        result.environment.callbacks.handle(this, result);
+        final Optional<Environment> result = parseImpl(makeScope(scope), environment, activeEncoding);
+        environment.callbacks.handle(this, result);
         return result;
     }
 
-    public ParseResult parse(final Environment environment, final Encoding encoding) throws IOException {
+    public Optional<Environment> parse(final Environment environment, final Encoding encoding) throws IOException {
         return parse(NO_NAME, environment, encoding);
     }
 
-    protected abstract ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException;
+    protected abstract Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException;
 
     private String makeScope(final String scope) {
         return scope + (scope.isEmpty() || name.isEmpty() ? NO_NAME : SEPARATOR) + name;

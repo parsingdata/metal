@@ -17,13 +17,13 @@
 package io.parsingdata.metal.token;
 
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.ParseResult.success;
+import static io.parsingdata.metal.Util.success;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -45,15 +45,15 @@ public class Rep extends Token {
     }
 
     @Override
-    protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final ParseResult result = iterate(scope, environment.addBranch(this), encoding);
-        return success(result.environment.closeBranch());
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        final Optional<Environment> result = iterate(scope, environment.addBranch(this), encoding);
+        return success(result.get().closeBranch());
     }
 
-    private ParseResult iterate(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final ParseResult result = token.parse(scope, environment, encoding);
-        if (result.succeeded) {
-            return iterate(scope, result.environment, encoding);
+    private Optional<Environment> iterate(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        final Optional<Environment> result = token.parse(scope, environment, encoding);
+        if (result.isPresent()) {
+            return iterate(scope, result.get(), encoding);
         }
         return success(environment);
     }

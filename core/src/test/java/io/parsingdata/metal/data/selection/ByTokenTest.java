@@ -44,6 +44,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.Rule;
@@ -54,7 +55,6 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
@@ -75,7 +75,7 @@ public class ByTokenTest {
     private static final Token MUT_REC_1 = seq(DEF1, new Token("", enc()) {
 
         @Override
-        protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
             return MUT_REC_2.parse(scope, environment, encoding);
         }
     });
@@ -219,7 +219,7 @@ public class ByTokenTest {
 
     private ParseGraph parseResultGraph(final Environment env, final Token def) {
         try {
-            return def.parse(env, enc()).environment.order;
+            return def.parse(env, enc()).get().order;
         }
         catch (final IOException e) {
             throw new AssertionError("Parsing failed", e);
@@ -231,9 +231,9 @@ public class ByTokenTest {
         final Token smallSub = sub(DEF2, last(ref("value1")));
         final Token extraSub = sub(any("x"), last(ref("value1")));
         final Token composition = seq(DEF1, smallSub, extraSub, smallSub, extraSub);
-        final ParseResult result = composition.parse(stream(0), enc());
-        assertTrue(result.succeeded);
-        final ImmutableList<ParseItem> items = getAll(result.environment.order, DEF2);
+        final Optional<Environment> result = composition.parse(stream(0), enc());
+        assertTrue(result.isPresent());
+        final ImmutableList<ParseItem> items = getAll(result.get().order, DEF2);
         // should return the ParseGraph created by the Sub and the ParseReference that refers to the existing ParseItem
         assertEquals(2, items.size);
         assertTrue(items.head.isReference());
@@ -245,9 +245,9 @@ public class ByTokenTest {
     @Test
     public void getAllRootsSingle() throws IOException {
         final Token topSeq = seq(any("a"), smallSeq);
-        final ParseResult result = topSeq.parse(stream(1, 2, 3), enc());
-        assertTrue(result.succeeded);
-        final ImmutableList<ParseItem> seqItems = getAllRoots(result.environment.order, smallSeq);
+        final Optional<Environment> result = topSeq.parse(stream(1, 2, 3), enc());
+        assertTrue(result.isPresent());
+        final ImmutableList<ParseItem> seqItems = getAllRoots(result.get().order, smallSeq);
         assertEquals(1, seqItems.size);
         assertEquals(smallSeq, seqItems.head.getDefinition());
         final ParseValue c = seqItems.head.asGraph().head.asValue();
@@ -258,9 +258,9 @@ public class ByTokenTest {
     @Test
     public void getAllRootsMulti() throws IOException {
         final Token topSeq = seq(any("a"), smallSeq, smallSeq);
-        final ParseResult result = topSeq.parse(stream(1, 2, 3, 2, 3), enc());
-        assertTrue(result.succeeded);
-        final ImmutableList<ParseItem> seqItems = getAllRoots(result.environment.order, smallSeq);
+        final Optional<Environment> result = topSeq.parse(stream(1, 2, 3, 2, 3), enc());
+        assertTrue(result.isPresent());
+        final ImmutableList<ParseItem> seqItems = getAllRoots(result.get().order, smallSeq);
         assertEquals(2, seqItems.size);
         assertEquals(smallSeq, seqItems.head.getDefinition());
         assertEquals(smallSeq, seqItems.tail.head.getDefinition());
@@ -281,12 +281,12 @@ public class ByTokenTest {
 
     @Test
     public void getAllRootsMultiSub() throws IOException {
-        final ParseResult result = rep(seq(smallSeq, sub(smallSeq, currentOffset))).parse(stream(1, 2, 1, 2, 1, 2, 1, 2), enc());
+        final Optional<Environment> result = rep(seq(smallSeq, sub(smallSeq, currentOffset))).parse(stream(1, 2, 1, 2, 1, 2, 1, 2), enc());
                                                                                            /* 1: +--------+
                                                                                            /* 2:       +--------+
                                                                                            /* 3:             +--------+ */
-        assertTrue(result.succeeded);
-        final ImmutableList<ParseItem> seqItems = getAllRoots(result.environment.order, smallSeq);
+        assertTrue(result.isPresent());
+        final ImmutableList<ParseItem> seqItems = getAllRoots(result.get().order, smallSeq);
         assertEquals(6, seqItems.size); // Three regular and three subs.
         final Set<ParseItem> items = makeSet(seqItems);
         assertEquals(4, items.size()); // Check that there are two duplicates.
@@ -307,7 +307,7 @@ public class ByTokenTest {
         }
 
         @Override
-        protected ParseResult parseImpl(String scope, Environment environment, Encoding encoding) throws IOException {
+        protected Optional<Environment> parseImpl(String scope, Environment environment, Encoding encoding) throws IOException {
             return token.parse(scope, environment, encoding);
         }
     }
@@ -315,9 +315,9 @@ public class ByTokenTest {
     @Test
     public void getAllRootsMultiSelf() throws IOException {
         final CustomToken customToken = new CustomToken();
-        final ParseResult result = customToken.parse(stream(1, 2, 3), enc());
-        assertTrue(result.succeeded);
-        final ImmutableList<ParseItem> seqItems = getAllRoots(result.environment.order, customToken.token);
+        final Optional<Environment> result = customToken.parse(stream(1, 2, 3), enc());
+        assertTrue(result.isPresent());
+        final ImmutableList<ParseItem> seqItems = getAllRoots(result.get().order, customToken.token);
         assertEquals(3, seqItems.size);
         final Set<ParseItem> items = makeSet(seqItems);
         assertEquals(seqItems.size, items.size()); // Check that there are no duplicate results.

@@ -33,13 +33,13 @@ import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Test;
 
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
@@ -57,12 +57,12 @@ public class DefSizeTest {
             0x00, 0x00, 0x00, 0x02, // length = 2
             0x04, 0x08
         });
-        final ParseResult result = FORMAT.parse(new Environment(stream), new Encoding());
+        final Optional<Environment> result = FORMAT.parse(new Environment(stream), new Encoding());
 
-        assertTrue(result.succeeded);
+        assertTrue(result.isPresent());
         assertArrayEquals(
             new byte[]{0x04, 0x08},
-            getValue(result.environment.order, "data").getValue()
+            getValue(result.get().order, "data").getValue()
         );
     }
 
@@ -72,18 +72,16 @@ public class DefSizeTest {
             (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, // length = -1
             0x04, 0x08
         });
-        final ParseResult result = FORMAT.parse(new Environment(stream), new Encoding());
+        final Optional<Environment> result = FORMAT.parse(new Environment(stream), new Encoding());
 
-        assertFalse(result.succeeded);
-        // The top-level Token (Seq) has failed, so no values are recorded in the ParseGraph.
-        assertEquals(ParseGraph.EMPTY, result.environment.order);
+        assertFalse(result.isPresent());
     }
 
     @Test
     public void testEmptyLengthInList() throws IOException {
-        assertFalse(def("a", EMPTY_VE).parse(stream(1, 2, 3, 4), enc()).succeeded);
+        assertFalse(def("a", EMPTY_VE).parse(stream(1, 2, 3, 4), enc()).isPresent());
         final Token aList = seq(any("a"), any("a"));
-        assertFalse(seq(aList, def("b", ref("a"))).parse(stream(1, 2, 3, 4), enc()).succeeded);
+        assertFalse(seq(aList, def("b", ref("a"))).parse(stream(1, 2, 3, 4), enc()).isPresent());
     }
 
     @Test
@@ -91,7 +89,7 @@ public class DefSizeTest {
         assertTrue(seq(
             def("twentyone", con(1), eq(con(21))),
             def("size=zero", con(0)),
-            def("fortytwo", con(1), eq(con(42)))).parse(stream(21, 42), enc()).succeeded);
+            def("fortytwo", con(1), eq(con(42)))).parse(stream(21, 42), enc()).isPresent());
     }
 
 }

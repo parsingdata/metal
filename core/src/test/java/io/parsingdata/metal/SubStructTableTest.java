@@ -30,12 +30,12 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Test;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 
 public class SubStructTableTest {
@@ -59,10 +59,10 @@ public class SubStructTableTest {
                                      * ref2:         +-----^^--^^
                                      * ref3:            +---------------------^^--^^
                                      */
-        final ParseResult result = table.parse(environment, enc());
-        assertTrue(result.succeeded);
-        assertEquals(4, result.environment.offset);
-        final ParseGraph graph = result.environment.order;
+        final Optional<Environment> result = table.parse(environment, enc());
+        assertTrue(result.isPresent());
+        assertEquals(4, result.get().offset);
+        final ParseGraph graph = result.get().order;
         checkStruct(graph.head.asGraph().head.asGraph().head.asGraph(), 6);
         checkStruct(graph.head.asGraph().head.asGraph().tail.head.asGraph(), 4);
         checkStruct(graph.head.asGraph().head.asGraph().tail.tail.head.asGraph(), 9);
@@ -79,10 +79,10 @@ public class SubStructTableTest {
                                      * ref3:         +---------^^--^^ duplicate!
                                      * ref4:               ++---------------------^^--^^
                                      */
-        final ParseResult result = table.parse(environment, enc());
-        assertTrue(result.succeeded);
-        assertEquals(5, result.environment.offset);
-        final ParseGraph graph = result.environment.order;
+        final Optional<Environment> result = table.parse(environment, enc());
+        assertTrue(result.isPresent());
+        assertEquals(5, result.get().offset);
+        final ParseGraph graph = result.get().order;
         checkStruct(graph.head.asGraph().head.asGraph().head.asGraph(), 7);
         assertTrue(graph.head.asGraph().head.asGraph().tail.head.isReference());
         checkStruct(graph.head.asGraph().head.asGraph().tail.head.asReference().resolve(graph).asGraph(), 5);

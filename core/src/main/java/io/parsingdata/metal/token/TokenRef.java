@@ -17,14 +17,14 @@
 package io.parsingdata.metal.token;
 
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.ParseResult.failure;
+import static io.parsingdata.metal.Util.failure;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseItem;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -45,8 +45,8 @@ public class TokenRef extends Token {
 
     private static final Token LOOKUP_FAILED = new Token("LOOKUP_FAILED", null) {
         @Override
-        protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-            return failure(environment);
+        protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+            return failure();
         }
     };
 
@@ -59,7 +59,7 @@ public class TokenRef extends Token {
     }
 
     @Override
-    protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         return lookup(environment.order, referenceName).parse(scope, environment, encoding);
     }
 

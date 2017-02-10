@@ -52,7 +52,6 @@ import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Cho;
@@ -68,12 +67,12 @@ public class ShorthandsTest {
 
     @Test
     public void sequenceMultiMatch() throws IOException {
-        assertTrue(multiSequence.parse(stream(1, 2, 3), enc()).succeeded);
+        assertTrue(multiSequence.parse(stream(1, 2, 3), enc()).isPresent());
     }
 
     @Test
     public void sequenceMultiNoMatch() throws IOException {
-        assertFalse(multiSequence.parse(stream(1, 2, 2), enc()).succeeded);
+        assertFalse(multiSequence.parse(stream(1, 2, 2), enc()).isPresent());
     }
 
     private static final Token multiChoice =
@@ -97,14 +96,14 @@ public class ShorthandsTest {
     }
 
     private void runChoice(final int data, final String matched) throws IOException {
-        final ParseResult result = multiChoice.parse(stream(data), enc());
-        assertTrue(result.succeeded);
-        assertTrue(result.environment.order.current().matches(matched));
+        final Optional<Environment> result = multiChoice.parse(stream(data), enc());
+        assertTrue(result.isPresent());
+        assertTrue(result.get().order.current().matches(matched));
     }
 
     @Test
     public void choiceMultiNoMatch() throws IOException {
-        assertFalse(multiChoice.parse(stream(0), enc()).succeeded);
+        assertFalse(multiChoice.parse(stream(0), enc()).isPresent());
     }
 
     private static final Token nonLocalCompare =
@@ -116,12 +115,12 @@ public class ShorthandsTest {
 
     @Test
     public void nonLocalCompare() throws IOException {
-        assertTrue(nonLocalCompare.parse(stream(1, 'a', 'b', 'c', 0, 0), enc()).succeeded);
+        assertTrue(nonLocalCompare.parse(stream(1, 'a', 'b', 'c', 0, 0), enc()).isPresent());
     }
 
     @Test
     public void allTokensNamed() throws IOException {
-        final ParseResult result =
+        final Optional<Environment> result =
             rep("rep",
                 repn("repn",
                     seq("seq",
@@ -141,11 +140,11 @@ public class ShorthandsTest {
                     ), con(1)
                 )
             ).parse(stream(2, 1, 2), enc());
-        assertTrue(result.succeeded);
-        checkNameAndValue("rep.repn.seq.pre.opt.a", 2, result.environment);
-        checkNameAndValue("rep.repn.seq.cho.def1", 1, result.environment);
-        checkNameAndValue("rep.repn.seq.sub.def2", 2, result.environment);
-        checkNameAndValue("rep.repn.seq.tie.def3", 1, result.environment);
+        assertTrue(result.isPresent());
+        checkNameAndValue("rep.repn.seq.pre.opt.a", 2, result.get());
+        checkNameAndValue("rep.repn.seq.cho.def1", 1, result.get());
+        checkNameAndValue("rep.repn.seq.sub.def2", 2, result.get());
+        checkNameAndValue("rep.repn.seq.tie.def3", 1, result.get());
     }
 
     private void checkNameAndValue(final String name, final int value, final Environment env) {

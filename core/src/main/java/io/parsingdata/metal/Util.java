@@ -24,6 +24,7 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
 import io.parsingdata.metal.data.ConstantSource;
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
@@ -95,6 +96,14 @@ public final class Util {
                 return Optional.of(new Value(createFromBytes(out.toByteArray()), encoding));
             }
         };
+    }
+
+    public static Optional<Environment> success(final Environment environment) {
+        return Optional.of(environment);
+    }
+
+    public static Optional<Environment> failure() {
+        return Optional.empty();
     }
 
 }

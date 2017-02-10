@@ -18,17 +18,18 @@ package io.parsingdata.metal.data.callback;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
-import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.token.Token;
 
 public class TokenCallback {
 
     public final Token token;
-    public final BiConsumer<Token, ParseResult> callback;
+    public final BiConsumer<Token, Optional<Environment>> callback;
 
-    public TokenCallback(final Token token, final BiConsumer<Token, ParseResult> callback) {
+    public TokenCallback(final Token token, final BiConsumer<Token, Optional<Environment>> callback) {
         this.token = checkNotNull(token, "token");
         this.callback = checkNotNull(callback, "callback");
     }

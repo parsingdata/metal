@@ -17,8 +17,8 @@
 package io.parsingdata.metal.token;
 
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.ParseResult.failure;
-import static io.parsingdata.metal.data.ParseResult.success;
+import static io.parsingdata.metal.Util.failure;
+import static io.parsingdata.metal.Util.success;
 import static io.parsingdata.metal.data.selection.ByOffset.hasRootAtOffset;
 
 import java.io.IOException;
@@ -28,7 +28,6 @@ import java.util.Optional;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseReference;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.Source;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
@@ -60,33 +59,33 @@ public class Sub extends Token {
     }
 
     @Override
-    protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         final ImmutableList<Optional<Value>> addresses = address.eval(environment.order, encoding);
         if (addresses.isEmpty()) {
-            return failure(environment);
+            return failure();
         }
-        final ParseResult result = iterate(scope, addresses, environment.addBranch(this), encoding);
-        if (result.succeeded) {
-            return success(result.environment.closeBranch().seek(environment.offset));
+        final Optional<Environment> result = iterate(scope, addresses, environment.addBranch(this), encoding);
+        if (result.isPresent()) {
+            return success(result.get().closeBranch().seek(environment.offset));
         }
-        return failure(environment);
+        return failure();
     }
 
-    private ParseResult iterate(final String scope, final ImmutableList<Optional<Value>> addresses, final Environment environment, final Encoding encoding) throws IOException {
+    private Optional<Environment> iterate(final String scope, final ImmutableList<Optional<Value>> addresses, final Environment environment, final Encoding encoding) throws IOException {
         if (!addresses.head.isPresent()) {
-            return failure(environment);
+            return failure();
         }
         final long offset = addresses.head.get().asNumeric().longValue();
         final Source source = environment.source;
-        final ParseResult result = parse(scope, offset, source, environment, encoding);
-        if (result.succeeded) {
+        final Optional<Environment> result = parse(scope, offset, source, environment, encoding);
+        if (result.isPresent()) {
             if (addresses.tail.isEmpty()) { return result; }
-            return iterate(scope, addresses.tail, result.environment, encoding);
+            return iterate(scope, addresses.tail, result.get(), encoding);
         }
-        return failure(environment);
+        return failure();
     }
 
-    private ParseResult parse(final String scope, final long offset, final Source source, final Environment environment, final Encoding encoding) throws IOException {
+    private Optional<Environment> parse(final String scope, final long offset, final Source source, final Environment environment, final Encoding encoding) throws IOException {
         if (hasRootAtOffset(environment.order, token.getCanonical(environment), offset, source)) {
             return success(environment.add(new ParseReference(offset, source, token.getCanonical(environment))));
         }

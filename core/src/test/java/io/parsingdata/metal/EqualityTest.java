@@ -41,10 +41,11 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 
-import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.True;
 import io.parsingdata.metal.expression.value.reference.Self;
@@ -66,10 +67,10 @@ public class EqualityTest {
 
     @Test
     public void cycleWithIdenticalTokens() throws IOException {
-        final ParseResult result = LINKED_LIST_COMPOSED_IDENTICAL.parse(stream(0, 0, 1), enc());
-        assertTrue(result.succeeded);
-        assertEquals(1, getAllValues(result.environment.order, "header").size);
-        assertEquals(2, getReferences(result.environment.order).size);
+        final Optional<Environment> result = LINKED_LIST_COMPOSED_IDENTICAL.parse(stream(0, 0, 1), enc());
+        assertTrue(result.isPresent());
+        assertEquals(1, getAllValues(result.get().order, "header").size);
+        assertEquals(2, getReferences(result.get().order).size);
     }
 
     public static final Token LINKED_LIST_2 =
@@ -86,10 +87,10 @@ public class EqualityTest {
 
     @Test
     public void cycleWithEqualTokens() throws IOException {
-        final ParseResult result = LINKED_LIST_COMPOSED_EQUAL.parse(stream(0, 0, 1), enc());
-        assertTrue(result.succeeded);
-        assertEquals(1, getAllValues(result.environment.order, "header").size);
-        assertEquals(2, getReferences(result.environment.order).size);
+        final Optional<Environment> result = LINKED_LIST_COMPOSED_EQUAL.parse(stream(0, 0, 1), enc());
+        assertTrue(result.isPresent());
+        assertEquals(1, getAllValues(result.get().order, "header").size);
+        assertEquals(2, getReferences(result.get().order).size);
     }
 
     @Test

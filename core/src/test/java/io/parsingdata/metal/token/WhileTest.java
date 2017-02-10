@@ -33,10 +33,11 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static junit.framework.TestCase.assertFalse;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Test;
 
-import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.Environment;
 
 public class WhileTest {
 
@@ -50,27 +51,27 @@ public class WhileTest {
     public void parseAll() throws IOException {
         // two sequences of two bytes would be parsed: [0,9] and [1,10]
         // the while stops because the second 'value' is >= 1
-        final ParseResult result = WHILE.parse(stream(0, 9, 1, 10, 2, 11), enc());
+        final Optional<Environment> result = WHILE.parse(stream(0, 9, 1, 10, 2, 11), enc());
 
-        assertThat(result.environment.offset, is(4L));
+        assertThat(result.get().offset, is(4L));
     }
 
     @Test
     public void parseFails() throws IOException {
-        final ParseResult result = WHILE.parse(stream(0, 9, 0, 8), enc());
+        final Optional<Environment> result = WHILE.parse(stream(0, 9, 0, 8), enc());
 
         // parsing fails because the nested token couldn't be parsed ('value2' <= 9)
-        assertFalse(result.succeeded);
+        assertFalse(result.isPresent());
     }
 
     @Test
     public void whileWithoutExpression() throws IOException {
         // passing null as predicate make this a while(true):
         final Token trueWhile = whl(def("value", 1), null, enc());
-        final ParseResult result = trueWhile.parse(stream(0), enc());
+        final Optional<Environment> result = trueWhile.parse(stream(0), enc());
 
         // parsing fails because the nested def fails at the end of the stream
-        assertFalse(result.succeeded);
+        assertFalse(result.isPresent());
     }
 
     @Test

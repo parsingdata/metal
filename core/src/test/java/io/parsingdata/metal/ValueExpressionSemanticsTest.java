@@ -52,12 +52,12 @@ public class ValueExpressionSemanticsTest {
 
     @Test
     public void Cat() throws IOException {
-        assertTrue(cat.parse(stream(1, 2, 1, 2), enc()).succeeded);
+        assertTrue(cat.parse(stream(1, 2, 1, 2), enc()).isPresent());
     }
 
     @Test
     public void CatNoMatch() throws IOException {
-        assertFalse(cat.parse(stream(1, 2, 12, 12), enc()).succeeded);
+        assertFalse(cat.parse(stream(1, 2, 12, 12), enc()).isPresent());
     }
 
     @Test

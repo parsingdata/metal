@@ -18,47 +18,48 @@ package io.parsingdata.metal.data.callback;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 
 public class Callbacks {
 
-    public static final Callbacks NONE = new Callbacks(null, new ImmutableList<TokenCallback>());
+    public static final Callbacks NONE = new Callbacks(null, new ImmutableList<>());
 
-    public final BiConsumer<Token, ParseResult> genericCallback;
+    public final BiConsumer<Token, Optional<Environment>> genericCallback;
     public final ImmutableList<TokenCallback> tokenCallbacks;
 
-    private Callbacks(final BiConsumer<Token, ParseResult> genericCallback, final ImmutableList<TokenCallback> tokenCallbacks) {
+    private Callbacks(final BiConsumer<Token, Optional<Environment>> genericCallback, final ImmutableList<TokenCallback> tokenCallbacks) {
         this.genericCallback = genericCallback;
         this.tokenCallbacks = checkNotNull(tokenCallbacks, "tokenCallbacks");
     }
 
     public static Callbacks create() { return NONE; }
 
-    public Callbacks add(final BiConsumer<Token, ParseResult> genericCallback) {
+    public Callbacks add(final BiConsumer<Token, Optional<Environment>> genericCallback) {
         return new Callbacks(genericCallback, tokenCallbacks);
     }
 
-    public Callbacks add(final Token token, final BiConsumer<Token, ParseResult> callback) {
+    public Callbacks add(final Token token, final BiConsumer<Token, Optional<Environment>> callback) {
         return new Callbacks(genericCallback, tokenCallbacks.add(new TokenCallback(token, callback)));
     }
 
-    public void handle(final Token token, final ParseResult result) {
+    public void handle(final Token token, final Optional<Environment> environment) {
         if (genericCallback != null) {
-            genericCallback.accept(token, result);
+            genericCallback.accept(token, environment);
         }
-        handleCallbacks(tokenCallbacks, token, result);
+        handleCallbacks(tokenCallbacks, token, environment);
     }
 
-    private void handleCallbacks(final ImmutableList<TokenCallback> callbacks, final Token token, final ParseResult result) {
+    private void handleCallbacks(final ImmutableList<TokenCallback> callbacks, final Token token, final Optional<Environment> environment) {
         if (callbacks.isEmpty()) { return; }
         if (callbacks.head.token == token) {
-            callbacks.head.callback.accept(token, result);
+            callbacks.head.callback.accept(token, environment);
         }
-        handleCallbacks(callbacks.tail, token, result);
+        handleCallbacks(callbacks.tail, token, environment);
     }
 
     @Override

@@ -31,6 +31,7 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,7 +39,6 @@ import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 
 public class ErrorsTest {
@@ -51,16 +51,16 @@ public class ErrorsTest {
         thrown = ExpectedException.none();
         // Basic division by zero.
         final Token token = def("a", div(con(1), con(0)));
-        assertFalse(token.parse(stream(1), enc()).succeeded);
+        assertFalse(token.parse(stream(1), enc()).isPresent());
         // Try to negate division by zero.
         final Token token2 = def("a", neg(div(con(1), con(0))));
-        assertFalse(token2.parse(stream(1), enc()).succeeded);
+        assertFalse(token2.parse(stream(1), enc()).isPresent());
         // Add one to division by zero.
         final Token token3 = def("a", add(div(con(1), con(0)), con(1)));
-        assertFalse(token3.parse(stream(1), enc()).succeeded);
+        assertFalse(token3.parse(stream(1), enc()).isPresent());
         // Add division by zero to one.
         final Token token4 = def("a", add(con(1), div(con(1), con(0))));
-        assertFalse(token4.parse(stream(1), enc()).succeeded);
+        assertFalse(token4.parse(stream(1), enc()).isPresent());
     }
 
     @Test
@@ -83,8 +83,8 @@ public class ErrorsTest {
                 any("b"),
                 repn(dummy, ref("b"))
             );
-        ParseResult result = multiRepN.parse(stream(2, 2, 2, 2), enc());
-        assertFalse(result.succeeded);
+       Optional<Environment> result = multiRepN.parse(stream(2, 2, 2, 2), enc());
+        assertFalse(result.isPresent());
     }
 
 }

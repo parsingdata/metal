@@ -31,10 +31,11 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Test;
 
-import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.Environment;
 
 public class PreTest {
 
@@ -43,35 +44,35 @@ public class PreTest {
 
     @Test
     public void preconditionTrue() throws IOException {
-        final ParseResult result = SEQUENCE.parse(stream(1, 1), enc());
+        final Optional<Environment> result = SEQUENCE.parse(stream(1, 1), enc());
 
         // precondition is true, token is parsed
-        assertThat(result.environment.offset, is(2L));
+        assertThat(result.get().offset, is(2L));
     }
 
     @Test
     public void preconditionFalse() throws IOException {
-        final ParseResult result = SEQUENCE.parse(stream(0, 1), enc());
+        final Optional<Environment> result = SEQUENCE.parse(stream(0, 1), enc());
 
         // precondition is false, token is not parsed
-        assertThat(result.environment.offset, is(1L));
+        assertThat(result.get().offset, is(1L));
     }
 
     @Test
     public void preconditionTrueParseFails() throws IOException {
-        final ParseResult result = SEQUENCE.parse(stream(1, 2), enc());
+        final Optional<Environment> result = SEQUENCE.parse(stream(1, 2), enc());
 
         // precondition is true, but token can't be parsed
-        assertFalse(result.succeeded);
+        assertFalse(result.isPresent());
     }
 
     @Test
     public void preconditionNull() throws IOException {
         final Token noPrecondition = pre(def("value", 1), null);
-        final ParseResult result = noPrecondition.parse(stream(0), enc());
+        final Optional<Environment> result = noPrecondition.parse(stream(0), enc());
 
         // precondition null, always parse
-        assertThat(result.environment.offset, is(1L));
+        assertThat(result.get().offset, is(1L));
     }
 
     @Test

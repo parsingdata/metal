@@ -59,42 +59,42 @@ public class BackTrackOffsetTest {
 
     @Test
     public void choiceLeft() throws IOException {
-        assertTrue(_backTrackChoice.parse(stream(1, 2), enc()).succeeded);
+        assertTrue(_backTrackChoice.parse(stream(1, 2), enc()).isPresent());
     }
 
     @Test
     public void choiceRight() throws IOException {
-        assertTrue(_backTrackChoice.parse(stream(1, 3), enc()).succeeded);
+        assertTrue(_backTrackChoice.parse(stream(1, 3), enc()).isPresent());
     }
 
     @Test
     public void choiceNone() throws IOException {
-        assertFalse(_backTrackChoice.parse(stream(1, 4), enc()).succeeded);
+        assertFalse(_backTrackChoice.parse(stream(1, 4), enc()).isPresent());
     }
 
     @Test
     public void repeatZero() throws IOException {
-        assertTrue(_backTrackRepeat.parse(stream(1, 3), enc()).succeeded);
+        assertTrue(_backTrackRepeat.parse(stream(1, 3), enc()).isPresent());
     }
 
     @Test
     public void repeatOnce() throws IOException {
-        assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 3), enc()).succeeded);
+        assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 3), enc()).isPresent());
     }
 
     @Test
     public void repeatTwice() throws IOException {
-        assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 2, 1, 3), enc()).succeeded);
+        assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 2, 1, 3), enc()).isPresent());
     }
 
     @Test
     public void repeatNone() throws IOException {
-        assertFalse(_backTrackRepeat.parse(stream(1, 4), enc()).succeeded);
+        assertFalse(_backTrackRepeat.parse(stream(1, 4), enc()).isPresent());
     }
 
     @Test
     public void deepMatch() throws IOException {
-        assertTrue(_backTrackDeep.parse(stream(1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 84), enc()).succeeded);
+        assertTrue(_backTrackDeep.parse(stream(1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 84), enc()).isPresent());
     }
 
 }
