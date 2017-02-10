@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
 import java.util.BitSet;
+import java.util.Objects;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Slice;
@@ -57,6 +58,18 @@ public class Value {
     @Override
     public String toString() {
         return "0x" + Util.bytesToHexString(getValue());
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Objects.equals(slice, ((Value)obj).slice)
+            && Objects.equals(encoding, ((Value)obj).encoding);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(slice, encoding);
     }
 
 }

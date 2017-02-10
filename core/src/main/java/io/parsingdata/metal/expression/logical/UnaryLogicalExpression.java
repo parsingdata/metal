@@ -18,6 +18,9 @@ package io.parsingdata.metal.expression.logical;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Objects;
+
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.expression.Expression;
 
 /**
@@ -39,6 +42,17 @@ public abstract class UnaryLogicalExpression implements LogicalExpression {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + operand + ")";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Objects.equals(operand, ((UnaryLogicalExpression)obj).operand);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(operand);
     }
 
 }

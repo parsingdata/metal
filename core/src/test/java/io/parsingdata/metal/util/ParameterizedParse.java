@@ -24,6 +24,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
@@ -33,17 +34,11 @@ import io.parsingdata.metal.token.Token;
 @RunWith(Parameterized.class)
 public class ParameterizedParse {
 
-    private final Token token;
-    private final Environment environment;
-    private final Encoding encoding;
-    private final boolean result;
-
-    public ParameterizedParse(final Token token, final Environment environment, final Encoding encoding, final boolean result) {
-        this.token = token;
-        this.environment = environment;
-        this.encoding = encoding;
-        this.result = result;
-    }
+    @Parameter(0) public String description;
+    @Parameter(1) public Token token;
+    @Parameter(2) public Environment environment;
+    @Parameter(3) public Encoding encoding;
+    @Parameter(4) public boolean result;
 
     @Test
     public void test() throws IOException {

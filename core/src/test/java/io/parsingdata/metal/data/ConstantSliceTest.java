@@ -3,6 +3,8 @@ package io.parsingdata.metal.data;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import static io.parsingdata.metal.Util.createFromBytes;
+
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -19,13 +21,13 @@ public class ConstantSliceTest {
     public void nullInput() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Argument data may not be null.");
-        new ConstantSlice(null);
+        createFromBytes(null);
     }
 
     @Test
     public void checkData() {
         final byte[] input = { 1, 2, 3, 4 };
-        final ConstantSlice slice = new ConstantSlice(input);
+        final Slice slice = createFromBytes(input);
         final byte[] output = slice.getData();
         assertEquals(input.length, output.length);
         assertTrue(Arrays.equals(input, output));
@@ -34,7 +36,7 @@ public class ConstantSliceTest {
     @Test
     public void checkSource() throws IOException {
         final byte[] input = { 1, 2, 3, 4 };
-        final ConstantSlice slice = new ConstantSlice(input);
+        final Slice slice = createFromBytes(input);
         final byte[] output = slice.source.getData(0, 4);
         assertEquals(input.length, output.length);
         assertTrue(Arrays.equals(input, output));

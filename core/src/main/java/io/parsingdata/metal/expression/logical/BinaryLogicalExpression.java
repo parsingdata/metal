@@ -18,6 +18,9 @@ package io.parsingdata.metal.expression.logical;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Objects;
+
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.expression.Expression;
 
 /**
@@ -41,6 +44,18 @@ public abstract class BinaryLogicalExpression implements LogicalExpression {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + left + "," + right + ")";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Objects.equals(left, ((BinaryLogicalExpression)obj).left)
+            && Objects.equals(right, ((BinaryLogicalExpression)obj).right);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(left, right);
     }
 
 }

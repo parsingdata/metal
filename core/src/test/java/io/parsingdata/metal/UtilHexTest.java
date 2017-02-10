@@ -64,7 +64,7 @@ public class UtilHexTest {
 
     @Test
     public void inflateDataFormatError() {
-        final ImmutableList<Optional<Value>> result = inflate(con(0xffffffff)).eval(stream(), enc());
+        final ImmutableList<Optional<Value>> result = inflate(con(0xffffffff)).eval(stream().order, enc());
         assertEquals(1, result.size);
         assertFalse(result.head.isPresent());
     }

@@ -19,8 +19,10 @@ package io.parsingdata.metal.data;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -29,19 +31,19 @@ public class DataExpressionSource extends Source {
 
     public final ValueExpression dataExpression;
     public final int index;
-    public final Environment environment;
+    public final ParseGraph graph;
     public final Encoding encoding;
 
-    public DataExpressionSource(final ValueExpression dataExpression, final int index, final Environment environment, final Encoding encoding) {
+    public DataExpressionSource(final ValueExpression dataExpression, final int index, final ParseGraph graph, final Encoding encoding) {
         this.dataExpression = checkNotNull(dataExpression, "dataExpression");
         this.index = index;
-        this.environment = checkNotNull(environment, "environment");
+        this.graph = checkNotNull(graph, "graph");
         this.encoding = checkNotNull(encoding, "encoding");
     }
 
     @Override
     protected byte[] getData(final long offset, final int size) throws IOException {
-        final ImmutableList<Optional<Value>> results = dataExpression.eval(environment, encoding);
+        final ImmutableList<Optional<Value>> results = dataExpression.eval(graph, encoding);
         if (results.size <= index) { throw new IllegalStateException("ValueExpression dataExpression yields " + results.size + " result(s) (expected at least " + (index + 1) + ")."); }
         final byte[] inputData = getValueAtIndex(results, index, 0).get().getValue();
         if (offset >= inputData.length) { return new byte[0]; }
@@ -58,6 +60,21 @@ public class DataExpressionSource extends Source {
 
     @Override
     public String toString() {
-        return dataExpression.toString() + "[" + index + "](" + environment + "," + encoding + ")";
+        return dataExpression.toString() + "[" + index + "](" + graph + "," + encoding + ")";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Objects.equals(dataExpression, ((DataExpressionSource)obj).dataExpression)
+            && Objects.equals(index, ((DataExpressionSource)obj).index)
+            && Objects.equals(graph, ((DataExpressionSource)obj).graph)
+            && Objects.equals(encoding, ((DataExpressionSource)obj).encoding);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dataExpression, index, graph, encoding);
+    }
+
 }

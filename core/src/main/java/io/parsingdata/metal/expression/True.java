@@ -16,7 +16,10 @@
 
 package io.parsingdata.metal.expression;
 
-import io.parsingdata.metal.data.Environment;
+import java.util.Objects;
+
+import io.parsingdata.metal.Util;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -26,11 +29,21 @@ import io.parsingdata.metal.encoding.Encoding;
 public class True implements Expression {
 
     @Override
-    public boolean eval(final Environment environment, final Encoding encoding) { return true; }
+    public boolean eval(final ParseGraph graph, final Encoding encoding) { return true; }
 
     @Override
     public String toString() {
         return getClass().getSimpleName();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(true);
     }
 
 }

@@ -1,0 +1,138 @@
+/*
+ * Copyright 2013-2016 Netherlands Forensic Institute
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.parsingdata.metal;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.opt;
+import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.Shorthand.token;
+import static io.parsingdata.metal.data.selection.ByName.getAllValues;
+import static io.parsingdata.metal.data.selection.ByType.getReferences;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EncodingFactory.le;
+import static io.parsingdata.metal.util.EncodingFactory.signed;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Test;
+
+import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.True;
+import io.parsingdata.metal.expression.value.reference.Self;
+import io.parsingdata.metal.token.Token;
+
+public class EqualityTest {
+
+    public static final Token LINKED_LIST_1 =
+        seq("linkedlist",
+            def("header", con(1), eq(con(0))),
+            def("next", con(1)),
+            opt(sub(token("linkedlist"), last(ref("next")))),
+            def("footer", con(1), eq(con(1)))
+        );
+
+    public static final Token LINKED_LIST_COMPOSED_IDENTICAL =
+        seq(LINKED_LIST_1,
+            sub(LINKED_LIST_1, con(0)));
+
+    @Test
+    public void cycleWithIdenticalTokens() throws IOException {
+        final ParseResult result = LINKED_LIST_COMPOSED_IDENTICAL.parse(stream(0, 0, 1), enc());
+        assertTrue(result.succeeded);
+        assertEquals(1, getAllValues(result.environment.order, "header").size);
+        assertEquals(2, getReferences(result.environment.order).size);
+    }
+
+    public static final Token LINKED_LIST_2 =
+        seq("linkedlist",
+            def("header", con(1), eq(con(0))),
+            def("next", con(1)),
+            opt(sub(token("linkedlist"), last(ref("next")))),
+            def("footer", con(1), eq(con(1)))
+        );
+
+    public static final Token LINKED_LIST_COMPOSED_EQUAL =
+        seq(LINKED_LIST_1,
+            sub(LINKED_LIST_2, con(0)));
+
+    @Test
+    public void cycleWithEqualTokens() throws IOException {
+        final ParseResult result = LINKED_LIST_COMPOSED_EQUAL.parse(stream(0, 0, 1), enc());
+        assertTrue(result.succeeded);
+        assertEquals(1, getAllValues(result.environment.order, "header").size);
+        assertEquals(2, getReferences(result.environment.order).size);
+    }
+
+    @Test
+    public void singletons() {
+        checkSingleton(new Self(), new Self());
+        checkSingleton(new True(), new True());
+    }
+
+    private void checkSingleton(final Object object, final Object same) {
+        assertFalse(object.equals(null));
+        assertFalse(same.equals(null));
+        assertTrue(object.equals(object));
+        assertTrue(same.equals(same));
+        assertTrue(object.equals(same));
+        assertTrue(same.equals(object));
+        assertFalse(object.equals(new Object() {}));
+        assertEquals(object.hashCode(), same.hashCode());
+    }
+
+    @Test
+    public void multiConstructorTypes() {
+        final Encoding object = new Encoding();
+        final Encoding same = new Encoding(Encoding.DEFAULT_SIGNED, Encoding.DEFAULT_CHARSET, Encoding.DEFAULT_BYTE_ORDER);
+        final List<Encoding> other = Arrays.asList(signed(), le(), new Encoding(Charset.forName("UTF-8")));
+        assertFalse(object.equals(null));
+        assertFalse(same.equals(null));
+        assertTrue(object.equals(same));
+        assertTrue(same.equals(object));
+        final Object otherType = new Object() {};
+        assertFalse(object.equals(otherType));
+        assertFalse(same.equals(otherType));
+        assertEquals(object.hashCode(), same.hashCode());
+        for (Encoding e : other) {
+            assertFalse(e.equals(null));
+            assertTrue(e.equals(e));
+            assertFalse(e.equals(object));
+            assertFalse(object.equals(e));
+            assertFalse(e.equals(same));
+            assertFalse(same.equals(e));
+            assertFalse(e.equals(otherType));
+            assertNotEquals(object.hashCode(), e.hashCode());
+            assertNotEquals(same.hashCode(), e.hashCode());
+        }
+    }
+
+}

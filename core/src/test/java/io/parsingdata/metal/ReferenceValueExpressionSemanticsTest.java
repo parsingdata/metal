@@ -36,8 +36,6 @@ import java.util.Collection;
 
 import org.junit.runners.Parameterized.Parameters;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
@@ -80,10 +78,6 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
             { "[1, 2, 3, 6] a, a, a, first(fold(ref(a.definition), add))", refMatch(eq(first(fold(ref(refAny), Shorthand::add)))), stream(1, 2, 3, 6), enc(), true },
             { "[1, 2, 3, 2] a, a, a, last(ref(a.definition))", refMatch(eq(last(ref(refAny)))), stream(1, 2, 3, 2), enc(), false }
         });
-    }
-
-    public ReferenceValueExpressionSemanticsTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
-        super(token, environment, encoding, result);
     }
 
     private static final Token sequenceMatch2 = seq(any("a"),

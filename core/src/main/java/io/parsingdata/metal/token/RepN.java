@@ -21,6 +21,7 @@ import static io.parsingdata.metal.data.ParseResult.failure;
 import static io.parsingdata.metal.data.ParseResult.success;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
@@ -55,7 +56,7 @@ public class RepN extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final ImmutableList<Optional<Value>> counts = n.eval(environment, encoding);
+        final ImmutableList<Optional<Value>> counts = n.eval(environment.order, encoding);
         if (counts.size != 1 || !counts.head.isPresent()) {
             return failure(environment);
         }
@@ -80,6 +81,18 @@ public class RepN extends Token {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + makeNameFragment() + token + "," + n + ")";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return super.equals(obj)
+            && Objects.equals(token, ((RepN)obj).token)
+            && Objects.equals(n, ((RepN)obj).n);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), token, n);
     }
 
 }

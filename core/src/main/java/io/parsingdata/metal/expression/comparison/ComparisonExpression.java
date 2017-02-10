@@ -18,10 +18,13 @@ package io.parsingdata.metal.expression.comparison;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.value.Value;
@@ -50,10 +53,10 @@ public abstract class ComparisonExpression implements Expression {
     }
 
     @Override
-    public boolean eval(final Environment environment, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> values = value == null ? ImmutableList.create(Optional.of(environment.order.current())) : value.eval(environment, encoding);
+    public boolean eval(final ParseGraph graph, final Encoding encoding) {
+        final ImmutableList<Optional<Value>> values = value == null ? ImmutableList.create(Optional.of(graph.current())) : value.eval(graph, encoding);
         if (values.isEmpty()) { return false; }
-        final ImmutableList<Optional<Value>> predicates = predicate.eval(environment, encoding);
+        final ImmutableList<Optional<Value>> predicates = predicate.eval(graph, encoding);
         if (values.size != predicates.size) { return false; }
         return compare(values, predicates);
     }
@@ -70,6 +73,18 @@ public abstract class ComparisonExpression implements Expression {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + (value == null ? "" : value + ",") + predicate + ")";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Objects.equals(value, ((ComparisonExpression)obj).value)
+            && Objects.equals(predicate, ((ComparisonExpression)obj).predicate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, predicate);
     }
 
 }

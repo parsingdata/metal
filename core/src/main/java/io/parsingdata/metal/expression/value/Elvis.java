@@ -18,10 +18,12 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -37,6 +39,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * that index in the result returned by evaluating right is placed there.
  */
 public class Elvis implements ValueExpression {
+
     public final ValueExpression left;
     public final ValueExpression right;
 
@@ -46,8 +49,8 @@ public class Elvis implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
-        return eval(left.eval(environment, encoding), right.eval(environment, encoding));
+    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
+        return eval(left.eval(graph, encoding), right.eval(graph, encoding));
     }
 
     private ImmutableList<Optional<Value>> eval(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues) {
@@ -60,4 +63,17 @@ public class Elvis implements ValueExpression {
     public String toString() {
         return getClass().getSimpleName() + "(" + left + "," + right + ")";
     }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Objects.equals(left, ((Elvis)obj).left)
+            && Objects.equals(right, ((Elvis)obj).right);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(left, right);
+    }
+
 }

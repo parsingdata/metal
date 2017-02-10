@@ -18,10 +18,12 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -39,7 +41,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * size of the longest list.
  * <p>
  * To implement a BinaryValueExpression, only the
- * {@link #eval(Value, Value, Environment, Encoding)} must be implemented,
+ * {@link #eval(Value, Value, ParseGraph, Encoding)} must be implemented,
  * handling the case of evaluating two values. This base class takes care of
  * evaluating the operands and handling list semantics.
  *
@@ -56,18 +58,18 @@ public abstract class BinaryValueExpression implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
-        return evalLists(left.eval(environment, encoding), right.eval(environment, encoding), environment, encoding);
+    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
+        return evalLists(left.eval(graph, encoding), right.eval(graph, encoding), graph, encoding);
     }
 
-    private ImmutableList<Optional<Value>> evalLists(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues, final Environment environment, final Encoding encoding) {
+    private ImmutableList<Optional<Value>> evalLists(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues, final ParseGraph graph, final Encoding encoding) {
         if (leftValues.isEmpty()) {
             return makeListWithEmpty(rightValues.size);
         }
         if (rightValues.isEmpty()) {
             return makeListWithEmpty(leftValues.size);
         }
-        return evalLists(leftValues.tail, rightValues.tail, environment, encoding).add(eval(leftValues.head, rightValues.head, environment, encoding));
+        return evalLists(leftValues.tail, rightValues.tail, graph, encoding).add(eval(leftValues.head, rightValues.head, graph, encoding));
     }
 
     private ImmutableList<Optional<Value>> makeListWithEmpty(final long size) {
@@ -75,18 +77,30 @@ public abstract class BinaryValueExpression implements ValueExpression {
         return makeListWithEmpty(size - 1).add(Optional.empty());
     }
 
-    private Optional<Value> eval(final Optional<Value> left, final Optional<Value> right, final Environment environment, final Encoding encoding) {
+    private Optional<Value> eval(final Optional<Value> left, final Optional<Value> right, final ParseGraph graph, final Encoding encoding) {
         if (!left.isPresent() || !right.isPresent()) {
             return Optional.empty();
         }
-        return eval(left.get(), right.get(), environment, encoding);
+        return eval(left.get(), right.get(), graph, encoding);
     }
 
-    public abstract Optional<Value> eval(final Value left, final Value right, final Environment environment, final Encoding encoding);
+    public abstract Optional<Value> eval(final Value left, final Value right, final ParseGraph graph, final Encoding encoding);
 
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + left + "," + right + ")";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Objects.equals(left, ((BinaryValueExpression)obj).left)
+            && Objects.equals(right, ((BinaryValueExpression)obj).right);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(left, right);
     }
 
 }

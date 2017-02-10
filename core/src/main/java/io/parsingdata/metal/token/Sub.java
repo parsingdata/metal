@@ -22,6 +22,7 @@ import static io.parsingdata.metal.data.ParseResult.success;
 import static io.parsingdata.metal.data.selection.ByOffset.hasRootAtOffset;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
@@ -60,7 +61,7 @@ public class Sub extends Token {
 
     @Override
     protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final ImmutableList<Optional<Value>> addresses = address.eval(environment, encoding);
+        final ImmutableList<Optional<Value>> addresses = address.eval(environment.order, encoding);
         if (addresses.isEmpty()) {
             return failure(environment);
         }
@@ -76,7 +77,7 @@ public class Sub extends Token {
             return failure(environment);
         }
         final long offset = addresses.head.get().asNumeric().longValue();
-        final Source source = addresses.head.get().slice.source;
+        final Source source = environment.source;
         final ParseResult result = parse(scope, offset, source, environment, encoding);
         if (result.succeeded) {
             if (addresses.tail.isEmpty()) { return result; }
@@ -98,6 +99,18 @@ public class Sub extends Token {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + makeNameFragment() + token + ", " + address + ")";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return super.equals(obj)
+            && Objects.equals(token, ((Sub)obj).token)
+            && Objects.equals(address, ((Sub)obj).address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), token, address);
     }
 
 }

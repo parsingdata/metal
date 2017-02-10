@@ -16,45 +16,45 @@
 
 package io.parsingdata.metal.data;
 
+import static io.parsingdata.metal.Util.bytesToHexString;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
-import java.util.Objects;
+import java.util.Arrays;
 
 import io.parsingdata.metal.Util;
 
-public class ByteStreamSource extends Source {
+public class ConstantSource extends Source {
 
-    public final ByteStream input;
+    private final byte[] data; // Private because array content is mutable.
 
-    public ByteStreamSource(final ByteStream input) {
-        this.input = checkNotNull(input, "input");
+    public ConstantSource(final byte[] data) {
+        this.data = checkNotNull(data, "data");
     }
 
     @Override
     protected byte[] getData(final long offset, final int size) throws IOException {
-        final byte[] data = new byte[size];
-        final int readSize = input.read(offset, data);
-        if (readSize == size) { return data; }
-        final byte[] resizedData = new byte[readSize];
-        System.arraycopy(data, 0, resizedData, 0, readSize);
-        return resizedData;
+        if (offset >= data.length) { return new byte[0]; }
+        final int toCopy = (int)offset + size > data.length ? data.length - (int)offset : size;
+        final byte[] outputData = new byte[toCopy];
+        System.arraycopy(data, (int)offset, outputData, 0, toCopy);
+        return outputData;
     }
 
     @Override
     public String toString() {
-        return input.toString();
+        return bytesToHexString(data);
     }
 
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(input, ((ByteStreamSource)obj).input);
+            && Arrays.equals(data, ((ConstantSource)obj).data);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(input);
+        return Arrays.hashCode(data);
     }
 
 }

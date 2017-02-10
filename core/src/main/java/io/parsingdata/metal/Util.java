@@ -16,8 +16,6 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.data.ConstantSlice.create;
-
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.Optional;
@@ -25,7 +23,9 @@ import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ConstantSource;
+import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
@@ -51,9 +51,14 @@ public final class Util {
         return arguments;
     }
 
+    public static boolean notNullAndSameClass(final Object object, final Object other) {
+        return other != null
+            && object.getClass() == other.getClass();
+    }
+
     public static String tokensToString(final Token[] tokens) {
         checkNotNull(tokens, "tokens");
-        return Arrays.stream(tokens).map(t -> t.toString()).collect(Collectors.joining(", "));
+        return Arrays.stream(tokens).map(Object::toString).collect(Collectors.joining(", "));
     }
 
     public static String bytesToHexString(final byte[] bytes) {
@@ -67,10 +72,14 @@ public final class Util {
         return new String(hexChars);
     }
 
+    public static Slice createFromBytes(final byte[] data) {
+        return new Slice(new ConstantSource(data), 0, data);
+    }
+
     public static ValueExpression inflate(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public Optional<Value> eval(final Value value, final Environment environment, final Encoding encoding) {
+            public Optional<Value> eval(final Value value, final ParseGraph graph, final Encoding encoding) {
                 final Inflater inf = new Inflater(true);
                 inf.setInput(value.getValue());
                 final byte[] dataReceiver = new byte[512];
@@ -83,7 +92,7 @@ public final class Util {
                         return Optional.empty();
                     }
                 }
-                return Optional.of(new Value(create(out.toByteArray()), encoding));
+                return Optional.of(new Value(createFromBytes(out.toByteArray()), encoding));
             }
         };
     }

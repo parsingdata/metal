@@ -149,7 +149,7 @@ public class ShorthandsTest {
     }
 
     private void checkNameAndValue(final String name, final int value, final Environment env) {
-        ImmutableList<Optional<Value>> values = ref(name).eval(env, enc());
+        ImmutableList<Optional<Value>> values = ref(name).eval(env.order, enc());
         assertFalse(values.isEmpty());
         assertEquals(1, values.size);
         assertEquals(value, values.head.get().asNumeric().intValue());

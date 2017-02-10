@@ -18,11 +18,13 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -52,25 +54,25 @@ public abstract class Fold implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> initial = this.initial != null ? this.initial.eval(environment, encoding) : new ImmutableList<>();
+    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
+        final ImmutableList<Optional<Value>> initial = this.initial != null ? this.initial.eval(graph, encoding) : new ImmutableList<>();
         if (initial.size > 1) { return new ImmutableList<>(); }
-        final ImmutableList<Optional<Value>> values = prepareValues(this.values.eval(environment, encoding));
+        final ImmutableList<Optional<Value>> values = prepareValues(this.values.eval(graph, encoding));
         if (values.isEmpty() || containsEmpty(values)) { return initial; }
         if (!initial.isEmpty()) {
-            return ImmutableList.create(fold(environment, encoding, reducer, initial.head, values));
+            return ImmutableList.create(fold(graph, encoding, reducer, initial.head, values));
         }
-        return ImmutableList.create(fold(environment, encoding, reducer, values.head, values.tail));
+        return ImmutableList.create(fold(graph, encoding, reducer, values.head, values.tail));
     }
 
-    private Optional<Value> fold(final Environment environment, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Optional<Value> head, final ImmutableList<Optional<Value>> tail) {
+    private Optional<Value> fold(final ParseGraph graph, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Optional<Value> head, final ImmutableList<Optional<Value>> tail) {
         if (!head.isPresent() || tail.isEmpty()) { return head; }
-        final ImmutableList<Optional<Value>> reducedValue = reduce(reducer, head.get(), tail.head.get()).eval(environment, encoding);
+        final ImmutableList<Optional<Value>> reducedValue = reduce(reducer, head.get(), tail.head.get()).eval(graph, encoding);
         if (reducedValue.size != 1) { throw new IllegalStateException("Reducer must yield a single value."); }
-        return fold(environment, encoding, reducer, reducedValue.head, tail.tail);
+        return fold(graph, encoding, reducer, reducedValue.head, tail.tail);
     }
 
-    private boolean containsEmpty(ImmutableList<Optional<Value>> list) {
+    private boolean containsEmpty(final ImmutableList<Optional<Value>> list) {
         if (list.isEmpty()) { return false; }
         return !list.head.isPresent() || containsEmpty(list.tail);
     }
@@ -78,5 +80,18 @@ public abstract class Fold implements ValueExpression {
     protected abstract ImmutableList<Optional<Value>> prepareValues(ImmutableList<Optional<Value>> values);
 
     protected abstract ValueExpression reduce(BinaryOperator<ValueExpression> reducer, Value head, Value tail);
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Objects.equals(values, ((Fold)obj).values)
+            && Objects.equals(reducer, ((Fold)obj).reducer)
+            && Objects.equals(initial, ((Fold)obj).initial);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(values, reducer, initial);
+    }
 
 }

@@ -22,10 +22,12 @@ import static java.math.BigInteger.ZERO;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
+import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -55,8 +57,8 @@ public class Nth implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
-        return eval(values.eval(environment, encoding), indices.eval(environment, encoding));
+    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
+        return eval(values.eval(graph, encoding), indices.eval(graph, encoding));
     }
 
     private ImmutableList<Optional<Value>> eval(final ImmutableList<Optional<Value>> values, final ImmutableList<Optional<Value>> indices) {
@@ -81,6 +83,18 @@ public class Nth implements ValueExpression {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + values + "," + indices + ")";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Objects.equals(values, ((Nth)obj).values)
+            && Objects.equals(indices, ((Nth)obj).indices);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(values, indices);
     }
 
 }

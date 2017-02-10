@@ -18,6 +18,8 @@ package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Objects;
+
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Token;
@@ -44,6 +46,18 @@ public class ParseValue extends Value implements ParseItem {
     @Override
     public String toString() {
         return name + "(" + super.toString() + ")";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return super.equals(obj)
+            && Objects.equals(name, ((ParseValue)obj).name)
+            && Objects.equals(definition, ((ParseValue)obj).definition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), name, definition);
     }
 
 }

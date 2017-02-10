@@ -22,6 +22,7 @@ import static io.parsingdata.metal.data.ParseResult.failure;
 import static io.parsingdata.metal.data.ParseResult.success;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
@@ -62,7 +63,7 @@ public class While extends Token {
     }
 
     private ParseResult iterate(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        if (!predicate.eval(environment, encoding)) {
+        if (!predicate.eval(environment.order, encoding)) {
             return success(environment);
         }
         final ParseResult result = token.parse(scope, environment, encoding);
@@ -75,6 +76,18 @@ public class While extends Token {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + makeNameFragment() + token + ", " + predicate + ")";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return super.equals(obj)
+            && Objects.equals(token, ((While)obj).token)
+            && Objects.equals(predicate, ((While)obj).predicate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), token, predicate);
     }
 
 }

@@ -19,7 +19,9 @@ package io.parsingdata.metal.token;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
+import java.util.Objects;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
@@ -82,6 +84,18 @@ public abstract class Token {
 
     protected String makeNameFragment() {
         return name.isEmpty() ? NO_NAME : name + ",";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Objects.equals(name, ((Token)obj).name)
+            && Objects.equals(encoding, ((Token)obj).encoding);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, encoding);
     }
 
 }

@@ -18,7 +18,7 @@ package io.parsingdata.metal.expression.value.reference;
 
 import java.util.Optional;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ConstantFactory;
@@ -39,7 +39,7 @@ public class Offset extends UnaryValueExpression {
     public Offset(final ValueExpression operand) { super(operand); }
 
     @Override
-    public Optional<Value> eval(final Value value, final Environment environment, final Encoding encoding) {
+    public Optional<Value> eval(final Value value, final ParseGraph graph, final Encoding encoding) {
         return Optional.of(ConstantFactory.createFromNumeric(value.slice.offset, value.encoding));
     }
 

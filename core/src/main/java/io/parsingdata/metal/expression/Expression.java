@@ -17,13 +17,14 @@
 package io.parsingdata.metal.expression;
 
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
  * Interface for all Expression implementations.
  * <p>
  * An Expression is evaluated by calling the
- * {@link #eval(Environment, Encoding)} method. Given an {@link Environment}
+ * {@link #eval(ParseGraph, Encoding)} method. Given an {@link Environment}
  * and an {@link Encoding}, the evaluation either succeeds or fails. Main use
  * of expressions is to define predicates that are evaluated during parsing.
  *
@@ -33,6 +34,6 @@ import io.parsingdata.metal.encoding.Encoding;
  */
 public interface Expression {
 
-    boolean eval(Environment environment, Encoding encoding);
+    boolean eval(ParseGraph graph, Encoding encoding);
 
 }

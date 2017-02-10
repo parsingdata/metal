@@ -18,8 +18,9 @@ package io.parsingdata.metal.expression.value.reference;
 
 import java.util.Optional;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -32,13 +33,23 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 public class Self implements ValueExpression {
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final Environment environment, final Encoding encoding) {
-        return ImmutableList.create(Optional.of(environment.order.current()));
+    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
+        return ImmutableList.create(Optional.of(graph.current()));
     }
 
     @Override
     public String toString() {
         return getClass().getSimpleName();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return 2;
     }
 
 }

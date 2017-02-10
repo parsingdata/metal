@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.data.ConstantSlice.create;
+import static io.parsingdata.metal.Util.createFromBytes;
 import static io.parsingdata.metal.token.Token.NO_NAME;
 
 import java.util.function.BinaryOperator;
@@ -55,7 +55,6 @@ import io.parsingdata.metal.expression.value.arithmetic.Sub;
 import io.parsingdata.metal.expression.value.bitwise.ShiftLeft;
 import io.parsingdata.metal.expression.value.bitwise.ShiftRight;
 import io.parsingdata.metal.expression.value.reference.Count;
-import io.parsingdata.metal.expression.value.reference.CurrentOffset;
 import io.parsingdata.metal.expression.value.reference.First;
 import io.parsingdata.metal.expression.value.reference.Last;
 import io.parsingdata.metal.expression.value.reference.Len;
@@ -146,7 +145,7 @@ public final class Shorthand {
     public static ValueExpression con(final String value) { return con(value, new Encoding()); }
     public static ValueExpression con(final String value, final Encoding encoding) { return con(ConstantFactory.createFromString(value, encoding)); }
     public static ValueExpression con(final Value value) { return new Const(value); }
-    public static ValueExpression con(final Encoding encoding, final int... values) { return new Const(new Value(create(toByteArray(values)), encoding)); }
+    public static ValueExpression con(final Encoding encoding, final int... values) { return new Const(new Value(createFromBytes(toByteArray(values)), encoding)); }
     public static ValueExpression con(final int... values) { return con(new Encoding(), values); }
     public static ValueExpression con(final byte[] value) { return con(value, new Encoding()); }
     public static ValueExpression con(final byte[] value, final Encoding encoding) { return con(ConstantFactory.createFromBytes(value, encoding)); }
@@ -158,7 +157,7 @@ public final class Shorthand {
     public static ValueExpression last(final ValueExpression operand) { return new Last(operand); }
     public static ValueExpression nth(final ValueExpression values, final ValueExpression indices) { return new Nth(values, indices); }
     public static ValueExpression offset(final ValueExpression operand) { return new Offset(operand); }
-    public static final ValueExpression currentOffset = new CurrentOffset();
+    public static final ValueExpression currentOffset = elvis(add(offset(self), len(self)), con(0));
     public static ValueExpression cat(final ValueExpression left, final ValueExpression right) { return new Cat(left, right); }
     public static ValueExpression elvis(final ValueExpression left, final ValueExpression right) { return new Elvis(left, right); }
     public static ValueExpression count(final ValueExpression operand) { return new Count(operand); }

@@ -34,8 +34,6 @@ import java.util.Collection;
 
 import org.junit.runners.Parameterized.Parameters;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
 
@@ -53,10 +51,6 @@ public class IterateTest extends ParameterizedParse {
             { "[42], repN(x, 1/0), f", repBrokenNToken, stream(42), enc(), false },
             { "[0, 42], repN(x, 1/0), f", repBrokenNToken, stream(0, 42), enc(), false }
         });
-    }
-
-    public IterateTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
-        super(token, environment, encoding, result);
     }
 
     private static final Token repNToken =

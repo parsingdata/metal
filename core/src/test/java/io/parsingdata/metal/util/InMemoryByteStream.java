@@ -17,7 +17,9 @@
 package io.parsingdata.metal.util;
 
 import java.io.IOException;
+import java.util.Arrays;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ByteStream;
 
 public class InMemoryByteStream implements ByteStream {
@@ -38,6 +40,17 @@ public class InMemoryByteStream implements ByteStream {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + data.length + ")";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Arrays.equals(data, ((InMemoryByteStream)obj).data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(data);
     }
 
 }

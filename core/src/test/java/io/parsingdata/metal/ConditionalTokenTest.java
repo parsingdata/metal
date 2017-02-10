@@ -38,8 +38,6 @@ import java.util.Collection;
 
 import org.junit.runners.Parameterized.Parameters;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
 
@@ -57,10 +55,6 @@ public class ConditionalTokenTest extends ParameterizedParse {
             { "[2, -1, -1, 0, -1, -1] a (a x any) -1(error)", whileToken, stream(2, -1, -1, 0, -1, -1), enc(), false },
             { "[0, 0, -1] a (a x any) -1(error)", whileToken, stream(0, 0, -1), enc(), false }
         });
-    }
-
-    public ConditionalTokenTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
-        super(token, environment, encoding, result);
     }
 
     private static final Token preToken = seq(any("a"),

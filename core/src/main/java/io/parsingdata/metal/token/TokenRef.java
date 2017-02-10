@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.ParseResult.failure;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseItem;
@@ -44,21 +45,21 @@ public class TokenRef extends Token {
 
     private static final Token LOOKUP_FAILED = new Token("LOOKUP_FAILED", null) {
         @Override
-        protected ParseResult parseImpl(String scope, Environment environment, Encoding encoding) throws IOException {
+        protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
             return failure(environment);
         }
     };
 
     public final String referenceName;
 
-    public TokenRef(String name, String referenceName, Encoding encoding) {
+    public TokenRef(final String name, final String referenceName, final Encoding encoding) {
         super(name, encoding);
         this.referenceName = checkNotNull(referenceName, "referenceName");
         if (referenceName.isEmpty()) { throw new IllegalArgumentException("Argument referenceName may not be empty."); }
     }
 
     @Override
-    protected ParseResult parseImpl(String scope, Environment environment, Encoding encoding) throws IOException {
+    protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         return lookup(environment.order, referenceName).parse(scope, environment, encoding);
     }
 
@@ -73,7 +74,24 @@ public class TokenRef extends Token {
     }
 
     @Override
-    public Token getCanonical(Environment environment) {
+    public Token getCanonical(final Environment environment) {
         return lookup(environment.order, referenceName);
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + makeNameFragment() + referenceName + ")";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return super.equals(obj)
+            && Objects.equals(referenceName, ((TokenRef)obj).referenceName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), referenceName);
+    }
+
 }

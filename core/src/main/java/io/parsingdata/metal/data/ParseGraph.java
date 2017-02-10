@@ -19,7 +19,9 @@ package io.parsingdata.metal.data;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
+import java.util.Objects;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
@@ -116,6 +118,21 @@ public class ParseGraph implements ParseItem {
             return "graph(terminator:" + definition.getClass().getSimpleName() + ")";
         }
         return "graph(" + head + ", " + tail + ", " + branched + ")";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Objects.equals(head, ((ParseGraph)obj).head)
+            && Objects.equals(tail, ((ParseGraph)obj).tail)
+            && Objects.equals(branched, ((ParseGraph)obj).branched)
+            && Objects.equals(definition, ((ParseGraph)obj).definition);
+            // The size field is excluded from equals() and hashCode() because it is cached data.
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(head, tail, branched, definition);
     }
 
 }

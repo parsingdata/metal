@@ -20,7 +20,7 @@ public class OffsetTest {
 
     @Test
     public void definedValueOffset() {
-        final ImmutableList<Optional<Value>> offsetCon = offset(con(1)).eval(stream(), enc());
+        final ImmutableList<Optional<Value>> offsetCon = offset(con(1)).eval(stream().order, enc());
         assertFalse(offsetCon.isEmpty());
         assertEquals(1, offsetCon.size);
         assertTrue(offsetCon.head.isPresent());
