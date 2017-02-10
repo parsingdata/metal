@@ -35,8 +35,6 @@ import java.util.Collection;
 
 import org.junit.runners.Parameterized.Parameters;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.logical.LogicalExpression;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
@@ -57,10 +55,6 @@ public class LogicalExpressionSemanticsTest extends ParameterizedParse {
             { "!(!(3 == 1) && !(3 > 2))", notAndNotEqNotGt, stream(1, 2, 3), enc(), true },
             { "!(!(2 == 1) && !(2 > 3))", notAndNotEqNotGt, stream(1, 3, 2), enc(), false }
         });
-    }
-
-    public LogicalExpressionSemanticsTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
-        super(token, environment, encoding, result);
     }
 
     private static final Token andEqGt = logicalExp(and(eqNum(ref("a")), gtNum(ref("b"))));

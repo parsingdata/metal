@@ -22,16 +22,18 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import java.io.IOException;
 import java.util.Arrays;
 
+import io.parsingdata.metal.Util;
+
 public class ConstantSource extends Source {
 
     private final byte[] data; // Private because array content is mutable.
 
-    public ConstantSource(byte[] data) {
+    public ConstantSource(final byte[] data) {
         this.data = checkNotNull(data, "data");
     }
 
     @Override
-    protected byte[] getData(long offset, int size) throws IOException {
+    protected byte[] getData(final long offset, final int size) throws IOException {
         if (offset >= data.length) { return new byte[0]; }
         final int toCopy = (int)offset + size > data.length ? data.length - (int)offset : size;
         final byte[] outputData = new byte[toCopy];
@@ -45,9 +47,8 @@ public class ConstantSource extends Source {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj != null
-            && getClass() == obj.getClass()
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
             && Arrays.equals(data, ((ConstantSource)obj).data);
     }
 

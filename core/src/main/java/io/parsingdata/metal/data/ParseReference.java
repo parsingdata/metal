@@ -22,6 +22,7 @@ import static io.parsingdata.metal.data.selection.ByToken.getAllRoots;
 
 import java.util.Objects;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.token.Token;
 
 public class ParseReference implements ParseItem {
@@ -50,9 +51,8 @@ public class ParseReference implements ParseItem {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj != null
-            && getClass() == obj.getClass()
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
             && Objects.equals(location, ((ParseReference)obj).location)
             && Objects.equals(source, ((ParseReference)obj).source)
             && Objects.equals(definition, ((ParseReference)obj).definition);

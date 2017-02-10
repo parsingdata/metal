@@ -21,6 +21,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import java.io.IOException;
 import java.util.Objects;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
@@ -120,9 +121,8 @@ public class ParseGraph implements ParseItem {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj != null
-            && getClass() == obj.getClass()
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
             && Objects.equals(head, ((ParseGraph)obj).head)
             && Objects.equals(tail, ((ParseGraph)obj).tail)
             && Objects.equals(branched, ((ParseGraph)obj).branched)

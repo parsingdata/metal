@@ -61,9 +61,8 @@ public class Value {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj != null
-            && getClass() == obj.getClass()
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
             && Objects.equals(slice, ((Value)obj).slice)
             && Objects.equals(encoding, ((Value)obj).encoding);
     }

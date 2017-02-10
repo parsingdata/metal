@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
@@ -71,7 +72,7 @@ public abstract class Fold implements ValueExpression {
         return fold(graph, encoding, reducer, reducedValue.head, tail.tail);
     }
 
-    private boolean containsEmpty(ImmutableList<Optional<Value>> list) {
+    private boolean containsEmpty(final ImmutableList<Optional<Value>> list) {
         if (list.isEmpty()) { return false; }
         return !list.head.isPresent() || containsEmpty(list.tail);
     }
@@ -81,9 +82,8 @@ public abstract class Fold implements ValueExpression {
     protected abstract ValueExpression reduce(BinaryOperator<ValueExpression> reducer, Value head, Value tail);
 
     @Override
-    public boolean equals(Object obj) {
-        return obj != null
-            && getClass() == obj.getClass()
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
             && Objects.equals(values, ((Fold)obj).values)
             && Objects.equals(reducer, ((Fold)obj).reducer)
             && Objects.equals(initial, ((Fold)obj).initial);

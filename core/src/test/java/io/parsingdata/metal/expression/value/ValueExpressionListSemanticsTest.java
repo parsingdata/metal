@@ -37,8 +37,6 @@ import java.util.Collection;
 
 import org.junit.runners.Parameterized;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
@@ -66,10 +64,6 @@ public class ValueExpressionListSemanticsTest extends ParameterizedParse {
             { "a, a, first(neg(a))", pred(eq(first(neg(ref("a"))))), stream(1, 2, -1), signed(), true }
 
         });
-    }
-
-    public ValueExpressionListSemanticsTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
-        super(token, environment, encoding, result);
     }
 
     private static Token pred(Expression predicate) {

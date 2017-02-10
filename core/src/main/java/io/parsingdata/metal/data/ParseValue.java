@@ -49,7 +49,7 @@ public class ParseValue extends Value implements ParseItem {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         return super.equals(obj)
             && Objects.equals(name, ((ParseValue)obj).name)
             && Objects.equals(definition, ((ParseValue)obj).definition);

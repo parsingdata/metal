@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.expression.Expression;
 
 /**
@@ -46,9 +47,8 @@ public abstract class BinaryLogicalExpression implements LogicalExpression {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj != null
-            && getClass() == obj.getClass()
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
             && Objects.equals(left, ((BinaryLogicalExpression)obj).left)
             && Objects.equals(right, ((BinaryLogicalExpression)obj).right);
     }

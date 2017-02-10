@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal.format;
 
-import static io.parsingdata.metal.expression.value.ConstantFactory.makeConstantSlice;
+import static io.parsingdata.metal.Util.createFromBytes;
 
 import java.util.Optional;
 import java.util.zip.CRC32;
@@ -38,7 +38,7 @@ public final class Callback {
                 final CRC32 crc = new CRC32();
                 crc.update(value.getValue());
                 final long crcValue = crc.getValue();
-                return Optional.of(new Value(makeConstantSlice(encoding.byteOrder.apply(new byte[] {
+                return Optional.of(new Value(createFromBytes(encoding.byteOrder.apply(new byte[] {
                     (byte)((crcValue & 0xff000000) >> 24),
                     (byte)((crcValue & 0xff0000) >> 16),
                     (byte)((crcValue & 0xff00) >> 8),

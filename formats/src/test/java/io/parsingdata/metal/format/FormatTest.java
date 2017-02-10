@@ -26,24 +26,23 @@ import java.util.Collection;
 
 import org.junit.runners.Parameterized;
 
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.util.ParameterizedParse;
 
 public class FormatTest extends ParameterizedParse {
 
     @Parameterized.Parameters(name="{0} ({4})")
-    public static Collection<Object[]> data() {
+    public static Collection<Object[]> data() throws URISyntaxException, IOException {
         return Arrays.asList(new Object[][] {
-            { "PNG", PNG.FORMAT, "/test.png", enc(), true },
-            { "ZIP", ZIP.FORMAT, "/singlefile-zip30-ubuntu.zip", enc(), true },
-            { "ZIP2", ZIP.FORMAT, "/multifile-zip30-ubuntu.zip", enc(), true },
-            { "JPEG", JPEG.FORMAT, "/test.jpg", enc(), true },
+            { "PNG", PNG.FORMAT, env("/test.png"), enc(), true },
+            { "ZIP", ZIP.FORMAT, env("/singlefile-zip30-ubuntu.zip"), enc(), true },
+            { "ZIP2", ZIP.FORMAT, env("/multifile-zip30-ubuntu.zip"), enc(), true },
+            { "JPEG", JPEG.FORMAT, env("/test.jpg"), enc(), true },
         });
     }
 
-    public FormatTest(final String description, final Token token, final String path, final Encoding encoding, final boolean result) throws URISyntaxException, IOException {
-        super(token, stream(FormatTest.class.getClass().getResource(path).toURI()), encoding, result);
+    private static Environment env(final String path) throws URISyntaxException, IOException {
+        return stream(FormatTest.class.getClass().getResource(path).toURI());
     }
 
 }

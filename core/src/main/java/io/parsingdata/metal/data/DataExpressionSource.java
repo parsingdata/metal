@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -64,8 +65,7 @@ public class DataExpressionSource extends Source {
 
     @Override
     public boolean equals(Object obj) {
-        return obj != null
-            && getClass() == obj.getClass()
+        return Util.notNullAndSameClass(this, obj)
             && Objects.equals(dataExpression, ((DataExpressionSource)obj).dataExpression)
             && Objects.equals(index, ((DataExpressionSource)obj).index)
             && Objects.equals(graph, ((DataExpressionSource)obj).graph)

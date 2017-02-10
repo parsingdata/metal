@@ -20,6 +20,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+import io.parsingdata.metal.Util;
+
 public class Encoding {
 
     public static final Sign DEFAULT_SIGNED = Sign.UNSIGNED;
@@ -58,12 +60,11 @@ public class Encoding {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj != null
-            && getClass() == obj.getClass()
-            && Objects.equals(sign, ((Encoding)obj).sign)
-            && Objects.equals(charset, ((Encoding)obj).charset)
-            && Objects.equals(byteOrder, ((Encoding)obj).byteOrder);
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Objects.equals(sign, ((Encoding) obj).sign)
+            && Objects.equals(charset, ((Encoding) obj).charset)
+            && Objects.equals(byteOrder, ((Encoding) obj).byteOrder);
     }
 
     @Override

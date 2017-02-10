@@ -21,6 +21,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import java.io.IOException;
 import java.util.Objects;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
@@ -86,9 +87,8 @@ public abstract class Token {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj != null
-            && getClass() == obj.getClass()
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
             && Objects.equals(name, ((Token)obj).name)
             && Objects.equals(encoding, ((Token)obj).encoding);
     }

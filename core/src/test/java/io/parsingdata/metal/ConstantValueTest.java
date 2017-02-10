@@ -30,8 +30,6 @@ import java.util.Collection;
 
 import org.junit.runners.Parameterized.Parameters;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
@@ -63,10 +61,6 @@ public class ConstantValueTest extends ParameterizedParse {
             { "2 bytes, Eq(0x81, 0x23), Unsigned", single(2, eqNum(con(new byte[]{(byte) 0x81, (byte) 0x23}, enc()))), stream(0x23, 0x81), le(), true },
             { "2 bytes, Eq(0x81, 0x23), Unsigned", single(2, eqNum(con(new byte[]{(byte) 0x81, (byte) 0x23}, le()))), stream(0x81, 0x23), le(), true },
         });
-    }
-
-    public ConstantValueTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
-        super(token, environment, encoding, result);
     }
 
     private static Token single(final int size, final Expression predicate) {

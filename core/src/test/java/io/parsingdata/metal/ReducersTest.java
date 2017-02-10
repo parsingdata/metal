@@ -37,7 +37,6 @@ import java.util.Collection;
 
 import org.junit.runners.Parameterized.Parameters;
 
-import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.token.Token;
@@ -70,10 +69,6 @@ public class ReducersTest extends ParameterizedParse {
             { "[10, 3, 2, 9] a, a, a, subAll(a) right", foldRightSubA, stream(10, 3, 2, 9), enc(), true },
             { "[10, 3, 2, 7] a, a, a, subAll(a, 2) right", foldRightSubAInit2, stream(10, 3, 2, 7), enc(), true }
         });
-    }
-
-    public ReducersTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
-        super(token, environment, encoding, result);
     }
 
     private final static Token reduceAddA = token(1, eq(fold(ref("a"), Shorthand::add)));

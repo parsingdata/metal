@@ -20,6 +20,8 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
 
+import io.parsingdata.metal.Util;
+
 public class Slice {
 
     public final Source source;
@@ -44,9 +46,8 @@ public class Slice {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj != null
-            && getClass() == obj.getClass()
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
             && Objects.equals(source, ((Slice)obj).source)
             && Objects.equals(offset, ((Slice)obj).offset)
             // The data field is excluded from equals() and hashCode() because it is cached data.

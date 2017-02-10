@@ -34,8 +34,6 @@ import java.util.Collection;
 
 import org.junit.runners.Parameterized.Parameters;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
 
@@ -71,10 +69,6 @@ public class BitwiseValueExpressionSemanticsTest extends ParameterizedParse {
             { "[170, 0, 0, 85] a a shr 9", simpleShiftRight(2, 9), stream(170, 0, 0, 85), enc(), true },
             { "[4, 1] a a shr 1", simpleShiftRight(1, 1), stream(4, 1), enc(), false }
         });
-    }
-
-    public BitwiseValueExpressionSemanticsTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
-        super(token, environment, encoding, result);
     }
 
     private static Token simpleNot(final int size) {

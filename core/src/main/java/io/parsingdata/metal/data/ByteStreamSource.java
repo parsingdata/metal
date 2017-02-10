@@ -21,6 +21,8 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import java.io.IOException;
 import java.util.Objects;
 
+import io.parsingdata.metal.Util;
+
 public class ByteStreamSource extends Source {
 
     public final ByteStream input;
@@ -45,9 +47,8 @@ public class ByteStreamSource extends Source {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj != null
-            && getClass() == obj.getClass()
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
             && Objects.equals(input, ((ByteStreamSource)obj).input);
     }
 

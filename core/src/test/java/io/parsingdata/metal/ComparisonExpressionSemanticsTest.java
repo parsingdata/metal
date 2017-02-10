@@ -39,7 +39,6 @@ import java.util.Collection;
 
 import org.junit.runners.Parameterized.Parameters;
 
-import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.comparison.ComparisonExpression;
@@ -72,10 +71,6 @@ public class ComparisonExpressionSemanticsTest extends ParameterizedParse {
             { "1, 2, 1 != 1/0", valueCompare(1, eqNum(con(1), div(con(1), con(0)))), stream(1, 2), enc(), false },
             { "1, 2, 1/0 != 1", valueCompare(1, eqNum(div(con(1), con(0)), con(1))), stream(1, 2), enc(), false }
         });
-    }
-
-    public ComparisonExpressionSemanticsTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
-        super(token, environment, encoding, result);
     }
 
     private static Token numericCompare(final int size, final ComparisonExpression comparison) {

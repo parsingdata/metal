@@ -87,7 +87,7 @@ public class Tie extends Token {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         return super.equals(obj)
             && Objects.equals(token, ((Tie)obj).token)
             && Objects.equals(dataExpression, ((Tie)obj).dataExpression);

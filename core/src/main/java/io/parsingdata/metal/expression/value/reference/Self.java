@@ -18,6 +18,7 @@ package io.parsingdata.metal.expression.value.reference;
 
 import java.util.Optional;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
@@ -42,9 +43,8 @@ public class Self implements ValueExpression {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj != null
-            && getClass() == obj.getClass();
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj);
     }
 
     @Override

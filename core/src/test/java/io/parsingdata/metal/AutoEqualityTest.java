@@ -21,18 +21,18 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.expTrue;
 import static io.parsingdata.metal.Shorthand.not;
 import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Util.createFromBytes;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +45,7 @@ import java.util.function.BinaryOperator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
 
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.ByteStreamSource;
@@ -108,7 +109,7 @@ import io.parsingdata.metal.util.InMemoryByteStream;
 @RunWith(Parameterized.class)
 public class AutoEqualityTest {
 
-    private static final ParseValue PARSEVALUE = new ParseValue("a", any("a"), new Slice(new ConstantSource(new byte[]{1, 2}), 0, new byte[]{1, 2}), enc());
+    private static final ParseValue PARSEVALUE = new ParseValue("a", any("a"), createFromBytes(new byte[]{1, 2}), enc());
     private static final ParseGraph GRAPH_WITH_REFERENCE = ParseGraph.EMPTY.add(new ParseReference(0, new ConstantSource(new byte[]{1, 2}), any("a")));
     private static final ParseGraph BRANCHED_GRAPH = new Environment((offset, data) -> 0).addBranch(any("a")).order;
     private static final ParseGraph CLOSED_BRANCHED_GRAPH = new Environment((offset, data) -> 0).addBranch(any("a")).closeBranch().order;
@@ -120,8 +121,8 @@ public class AutoEqualityTest {
     private static final List<Object> VALUE_EXPRESSIONS = Arrays.asList(con(1), con(2));
     private static final List<Object> EXPRESSIONS = Arrays.asList(expTrue(), not(expTrue()));
     private static final List<Object> VALUES = Arrays.asList(ConstantFactory.createFromString("a", enc()), ConstantFactory.createFromString("b", enc()), ConstantFactory.createFromNumeric(1L, signed()));
-    private static final List<Object> REDUCERS = Arrays.asList((BinaryOperator<ValueExpression>) (left, right) -> cat(left, right), (BinaryOperator<ValueExpression>) (left, right) -> div(left, right));
-    private static final List<Object> SLICES = Arrays.asList(new Slice(new ConstantSource(new byte[] { 1, 2 }), 0, new byte[] { 1, 2 }), new Slice(new DataExpressionSource(ref("a"), 1, ParseGraph.EMPTY, enc()), 0, new byte[] { 0, 0 }));
+    private static final List<Object> REDUCERS = Arrays.asList((BinaryOperator<ValueExpression>) Shorthand::cat, (BinaryOperator<ValueExpression>) Shorthand::div);
+    private static final List<Object> SLICES = Arrays.asList(createFromBytes(new byte[] { 1, 2 }), new Slice(new DataExpressionSource(ref("a"), 1, ParseGraph.EMPTY, enc()), 0, new byte[] { 0, 0 }));
     private static final List<Object> BYTE_ARRAYS = Arrays.asList(new byte[] { 0 }, new byte[] { 1, 2 }, new byte[] {});
     private static final List<Object> SOURCES = Arrays.asList(new ConstantSource(new byte[] {}), new DataExpressionSource(ref("x"), 8, ParseGraph.EMPTY.add(PARSEVALUE), signed()));
     private static final List<Object> LONGS = Arrays.asList(0L, 1L, 31L, 100000L);
@@ -149,7 +150,7 @@ public class AutoEqualityTest {
     }};
 
     @Parameterized.Parameters(name="{0}")
-    public static Collection<Object[]> data() {
+    public static Collection<Object[]> data() throws IllegalAccessException, InvocationTargetException, InstantiationException {
         return generateObjectArrays(
             Cho.class, Def.class, Nod.class, Opt.class, Pre.class, Rep.class, RepN.class, Seq.class, Sub.class,
             Tie.class, TokenRef.class, While.class,
@@ -164,7 +165,7 @@ public class AutoEqualityTest {
         );
     }
 
-    private static Collection<Object[]> generateObjectArrays(Class... classes) {
+    private static Collection<Object[]> generateObjectArrays(Class... classes) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         Collection<Object[]> results = new ArrayList<>();
         for (Class c : classes) {
             results.add(generateObjectArrays(c));
@@ -172,26 +173,22 @@ public class AutoEqualityTest {
         return results;
     }
 
-    private static Object[] generateObjectArrays(Class c) {
+    private static Object[] generateObjectArrays(Class c) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         Constructor cons = c.getConstructors()[0];
         List<List<Object>> args = new ArrayList<>();
         for (Class cl : cons.getParameterTypes()) {
             args.add(mapping.get(cl));
         }
         List<List<Object>> argLists = generateCombinations(0, args);
-        Object[] instances = new Object[3];
-        try {
-            instances[0] = cons.newInstance(argLists.get(0).toArray());
-            instances[1] = cons.newInstance(argLists.get(0).toArray());
-            List<Object> otherInstances = new ArrayList<>();
-            for (List<Object> argList : argLists.subList(1, argLists.size())) {
-                otherInstances.add(cons.newInstance(argList.toArray()));
-            }
-            instances[2] = otherInstances.toArray();
-        } catch (Exception e) {
-            e.printStackTrace();
+        List<Object> otherInstances = new ArrayList<>();
+        for (List<Object> argList : argLists.subList(1, argLists.size())) {
+            otherInstances.add(cons.newInstance(argList.toArray()));
         }
-        return instances;
+        return new Object[]{
+            cons.newInstance(argLists.get(0).toArray()),
+            cons.newInstance(argLists.get(0).toArray()),
+            otherInstances.toArray()
+        };
     }
 
     private static List<List<Object>> generateCombinations(int index, List<List<Object>> args) {
@@ -211,15 +208,9 @@ public class AutoEqualityTest {
 
     public static Object OTHER_TYPE = new Object() {};
 
-    private final Object object;
-    private final Object same;
-    private final Object[] other;
-
-    public AutoEqualityTest(final Object object, final Object same, final Object[] other) throws NoSuchMethodException {
-        this.object = object;
-        this.same = same;
-        this.other = other;
-    }
+    @Parameter(0) public Object object;
+    @Parameter(1) public Object same;
+    @Parameter(2) public Object[] other;
 
     @Test
     public void NotEqualsNull() {
@@ -233,7 +224,7 @@ public class AutoEqualityTest {
     @Test
     public void equalsItselfIdentity() {
         assertTrue(object.equals(object));
-        assertTrue(other.equals(other));
+        assertTrue(same.equals(same));
         for (Object o : Arrays.asList(other)) {
             assertTrue(o.equals(o));
         }

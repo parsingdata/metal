@@ -31,8 +31,6 @@ import java.util.Collection;
 
 import org.junit.runners.Parameterized.Parameters;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
 
@@ -52,10 +50,6 @@ public class CountTest extends ParameterizedParse {
             {"[3,3,3] = fail", COUNT, stream(3, 3, 3, 3), enc(), false}, // fails because the rep 'eats' the 4th '3'
             {"[3,3,3,3] = count(4)", COUNT, stream(3, 3, 3, 3, 4), enc(), true},
         });
-    }
-
-    public CountTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
-        super(token, environment, encoding, result);
     }
 
 }

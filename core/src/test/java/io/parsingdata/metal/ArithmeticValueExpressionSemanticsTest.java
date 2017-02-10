@@ -38,8 +38,6 @@ import java.util.Collection;
 
 import org.junit.runners.Parameterized.Parameters;
 
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.BinaryValueExpression;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -96,10 +94,6 @@ public class ArithmeticValueExpressionSemanticsTest extends ParameterizedParse {
             { "[signed] -(4) == 4", neg, stream(4, 4), signed(), false },
             { "[signed] -(-5) == -5", neg, stream(-5, -5), signed(), false }
         });
-    }
-
-    public ArithmeticValueExpressionSemanticsTest(final String description, final Token token, final Environment environment, final Encoding encoding, final boolean result) {
-        super(token, environment, encoding, result);
     }
 
     private static Token add = binaryValueExpressionToken(add(ref("a"), ref("b")), 1);
