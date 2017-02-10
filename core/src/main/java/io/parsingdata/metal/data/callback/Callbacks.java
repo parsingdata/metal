@@ -56,7 +56,7 @@ public class Callbacks {
 
     private void handleCallbacks(final ImmutableList<TokenCallback> callbacks, final Token token, final Optional<Environment> environment) {
         if (callbacks.isEmpty()) { return; }
-        if (callbacks.head.token == token) {
+        if (callbacks.head.token.equals(token)) {
             callbacks.head.callback.accept(token, environment);
         }
         handleCallbacks(callbacks.tail, token, environment);
