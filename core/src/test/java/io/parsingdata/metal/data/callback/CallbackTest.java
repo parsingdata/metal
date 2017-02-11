@@ -85,13 +85,13 @@ public class CallbackTest {
             private int count = 0;
 
             @Override
-            protected void handleSuccess(Token token, Environment environment) {
-                final ImmutableList<ParseItem> roots = getAllRoots(environment.order, token);
+            protected void handleSuccess(Token token, Environment before, Environment after) {
+                final ImmutableList<ParseItem> roots = getAllRoots(after.order, token);
                 assertEquals(offsets[count++], roots.head.asGraph().tail.head.asValue().slice.offset);
             }
 
             @Override
-            protected void handleFailure(Token token) {}
+            protected void handleFailure(Token token, Environment before) {}
         });
     }
 
@@ -115,12 +115,12 @@ public class CallbackTest {
         final Callbacks callbacks = createCallbackList(SIMPLE_SEQ, 0L, 2L)
                 .add(repeatingSeq, new BaseCallback() {
                     @Override
-                    protected void handleSuccess(Token token, Environment environment) {
-                        final ImmutableList<ParseItem> repRoots = getAllRoots(environment.order, token);
+                    protected void handleSuccess(Token token, Environment before, Environment after) {
+                        final ImmutableList<ParseItem> repRoots = getAllRoots(after.order, token);
                         assertEquals(1, repRoots.size);
 
                         // verify that two Seq tokens were parsed:
-                        final ImmutableList<ParseItem> seqRoots = getAllRoots(environment.order, SIMPLE_SEQ);
+                        final ImmutableList<ParseItem> seqRoots = getAllRoots(after.order, SIMPLE_SEQ);
                         assertEquals(2, seqRoots.size);
 
                         // verify order of the two Seq graphs:
@@ -129,7 +129,7 @@ public class CallbackTest {
                     }
 
                     @Override
-                    protected void handleFailure(Token token) {}
+                    protected void handleFailure(Token token, Environment before) {}
                 });
         final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }), callbacks);
         assertTrue(repeatingSeq.parse(environment, enc()).isPresent());
@@ -139,12 +139,12 @@ public class CallbackTest {
     public void refInCallback() throws IOException {
         final Callbacks callbacks = Callbacks.create().add(SubStructTest.LINKED_LIST, new BaseCallback() {
             @Override
-            protected void handleSuccess(Token token, Environment environment) {
+            protected void handleSuccess(Token token, Environment before, Environment after) {
                 linkedListCount++;
             }
 
             @Override
-            protected void handleFailure(Token token) {}
+            protected void handleFailure(Token token, Environment before) {}
         });
         final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 0, 3, 1, 0, 0, 1 }), callbacks);
         assertTrue(SubStructTest.LINKED_LIST.parse(environment, enc()).isPresent());
@@ -214,14 +214,14 @@ public class CallbackTest {
         }
 
         @Override
-        protected void handleSuccess(Token token, Environment environment) {
-            assertThat(environment.offset, is(equalTo(expectedSuccessOffsets.pop())));
+        protected void handleSuccess(Token token, Environment before, Environment after) {
+            assertThat(after.offset, is(equalTo(expectedSuccessOffsets.pop())));
             assertThat(token, is(equalTo(expectedSuccessDefinitions.pop())));
         }
 
         @Override
-        protected void handleFailure(Token token) {
-            expectedFailureOffsets.pop();
+        protected void handleFailure(Token token, Environment before) {
+            assertThat(before.offset, is(equalTo(expectedFailureOffsets.pop())));
             assertThat(token, is(equalTo(expectedFailureDefinitions.pop())));
         }
 
@@ -238,12 +238,12 @@ public class CallbackTest {
         private int failureCount = 0;
 
         @Override
-        public void handleSuccess(final Token token, final Environment environment) {
+        public void handleSuccess(final Token token, Environment before, Environment after) {
             successCount++;
         }
 
         @Override
-        protected void handleFailure(Token token) {
+        protected void handleFailure(Token token, Environment before) {
             failureCount++;
         }
 

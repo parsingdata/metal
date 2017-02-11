@@ -74,6 +74,7 @@ import io.parsingdata.metal.data.DataExpressionSource;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.callback.Callback;
 import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
@@ -206,9 +207,9 @@ public class ToStringTest {
         };
     }
 
-    private BiConsumer<Token,Optional<Environment>> makeCallback(final String name) {
-        return new BiConsumer<Token,Optional<Environment>>() {
-            @Override public void accept(final Token token, final Optional<Environment> result) {}
+    private Callback makeCallback(final String name) {
+        return new Callback() {
+            @Override public void handle(final Token token, final Environment before, final Optional<Environment> after) {}
             @Override public String toString() { return name; }
         };
     }
