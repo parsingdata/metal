@@ -46,6 +46,7 @@ import java.util.Optional;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.True;
 import io.parsingdata.metal.expression.value.reference.Self;
@@ -134,6 +135,19 @@ public class EqualityTest {
             assertNotEquals(object.hashCode(), e.hashCode());
             assertNotEquals(same.hashCode(), e.hashCode());
         }
+    }
+
+    @Test
+    public void immutableList() {
+        final ImmutableList<String> object = ImmutableList.create("a");
+        assertFalse(object.equals(null));
+        assertTrue(object.equals(ImmutableList.create("a")));
+        assertTrue(object.equals(new ImmutableList<>().add("a")));
+        assertFalse(object.equals("a"));
+        assertTrue(object.add("b").equals(ImmutableList.create("a").add("b")));
+        assertTrue(object.add("b").add("c").equals(ImmutableList.create("a").add("b").add("c")));
+        assertFalse(object.add("b").equals(ImmutableList.create("a").add("c")));
+        assertFalse(object.add("b").add("c").equals(ImmutableList.create("a").add("c").add("c")));
     }
 
 }

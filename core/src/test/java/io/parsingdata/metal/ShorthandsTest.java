@@ -200,18 +200,18 @@ public class ShorthandsTest {
     public void checkChoTokens() {
         final Token choToken = cho(DEFA, DEFB);
         final Cho cho = (Cho)choToken;
-        assertEquals(2, cho.tokens().length);
-        assertEquals(DEFA, cho.tokens()[0]);
-        assertEquals(DEFB, cho.tokens()[1]);
+        assertEquals(2, cho.tokens.size);
+        assertEquals(DEFA, cho.tokens.head);
+        assertEquals(DEFB, cho.tokens.tail.head);
     }
 
     @Test
     public void checkSeqTokens() {
         final Token seqToken = seq(DEFA, DEFB);
         final Seq seq = (Seq)seqToken;
-        assertEquals(2, seq.tokens().length);
-        assertEquals(DEFA, seq.tokens()[0]);
-        assertEquals(DEFB, seq.tokens()[1]);
+        assertEquals(2, seq.tokens.size);
+        assertEquals(DEFA, seq.tokens.head);
+        assertEquals(DEFB, seq.tokens.tail.head);
     }
 
 }

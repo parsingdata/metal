@@ -19,14 +19,14 @@ package io.parsingdata.metal.token;
 import static io.parsingdata.metal.Util.checkContainsNoNulls;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
+import static io.parsingdata.metal.data.transformation.Array.toList;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -38,52 +38,48 @@ import io.parsingdata.metal.encoding.Encoding;
  */
 public class Seq extends Token {
 
-    private final Token[] tokens; // Private because array content is mutable.
+    public final ImmutableList<Token> tokens;
 
     public Seq(final String name, final Encoding encoding, final Token... tokens) {
         super(name, encoding);
-        this.tokens = checkContainsNoNulls(tokens, "tokens");
-        if (tokens.length < 2) { throw new IllegalArgumentException("At least two Tokens are required."); }
-    }
-
-    public Token[] tokens() {
-        return tokens.clone();
+        this.tokens = toList(checkContainsNoNulls(tokens, "tokens"));
+        if (this.tokens.size < 2) { throw new IllegalArgumentException("At least two Tokens are required."); }
     }
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final Optional<Environment> result = iterate(scope, environment.addBranch(this), encoding, 0);
+        final Optional<Environment> result = iterate(scope, environment.addBranch(this), encoding, tokens);
         if (result.isPresent()) {
             return success(result.get().closeBranch());
         }
         return failure();
     }
 
-    private Optional<Environment> iterate(final String scope, final Environment environment, final Encoding encoding, final int index) throws IOException {
-        if (index >= tokens.length) {
+    private Optional<Environment> iterate(final String scope, final Environment environment, final Encoding encoding, final ImmutableList<Token> list) throws IOException {
+        if (list.isEmpty()) {
             return success(environment);
         }
-        final Optional<Environment> result = tokens[index].parse(scope, environment, encoding);
+        final Optional<Environment> result = list.head.parse(scope, environment, encoding);
         if (result.isPresent()) {
-            return iterate(scope, result.get(), encoding, index + 1);
+            return iterate(scope, result.get(), encoding, list.tail);
         }
         return result;
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + makeNameFragment() + Util.tokensToString(tokens) + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + tokens + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return super.equals(obj)
-            && Arrays.equals(tokens, ((Seq)obj).tokens);
+            && Objects.equals(tokens, ((Seq)obj).tokens);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), Arrays.hashCode(tokens));
+        return Objects.hash(super.hashCode(), tokens);
     }
 
 }

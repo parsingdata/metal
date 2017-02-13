@@ -17,9 +17,7 @@
 package io.parsingdata.metal;
 
 import java.io.ByteArrayOutputStream;
-import java.util.Arrays;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
@@ -31,7 +29,6 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
-import io.parsingdata.metal.token.Token;
 
 public final class Util {
 
@@ -55,11 +52,6 @@ public final class Util {
     public static boolean notNullAndSameClass(final Object object, final Object other) {
         return other != null
             && object.getClass() == other.getClass();
-    }
-
-    public static String tokensToString(final Token[] tokens) {
-        checkNotNull(tokens, "tokens");
-        return Arrays.stream(tokens).map(Object::toString).collect(Collectors.joining(", "));
     }
 
     public static String bytesToHexString(final byte[] bytes) {
