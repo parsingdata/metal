@@ -19,69 +19,65 @@ package io.parsingdata.metal.token;
 import static io.parsingdata.metal.Util.checkContainsNoNulls;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
+import static io.parsingdata.metal.data.ImmutableList.create;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
  * A {@link Token} that specifies a choice out of a list of tokens.
  *<p>
- * A Cho consists of an array of <code>tokens</code>. If none of the tokens
+ * A Cho consists of a list of <code>tokens</code>. If none of the tokens
  * succeed, the Cho fails. If any token succeeds, the Cho succeeds. Precedence
  * is from left to right.
  */
 public class Cho extends Token {
 
-    private final Token[] tokens; // Private because array content is mutable.
+    public final ImmutableList<Token> tokens;
 
     public Cho(final String name, final Encoding encoding, final Token... tokens) {
         super(name, encoding);
-        this.tokens = checkContainsNoNulls(tokens, "tokens");
-        if (tokens.length < 2) { throw new IllegalArgumentException("At least two Tokens are required."); }
-    }
-
-    public Token[] tokens() {
-        return tokens.clone();
+        this.tokens = create(checkContainsNoNulls(tokens, "tokens"));
+        if (this.tokens.size < 2) { throw new IllegalArgumentException("At least two Tokens are required."); }
     }
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final Optional<Environment> result = iterate(scope, environment.addBranch(this), encoding, 0);
+        final Optional<Environment> result = iterate(scope, environment.addBranch(this), encoding, tokens);
         if (result.isPresent()) {
             return success(result.get().closeBranch());
         }
         return failure();
     }
 
-    private Optional<Environment> iterate(final String scope, final Environment environment, final Encoding encoding, final int index) throws IOException {
-        if (index >= tokens.length) {
+    private Optional<Environment> iterate(final String scope, final Environment environment, final Encoding encoding, final ImmutableList<Token> list) throws IOException {
+        if (list.isEmpty()) {
             return failure();
         }
-        final Optional<Environment> result = tokens[index].parse(scope, environment, encoding);
+        final Optional<Environment> result = list.head.parse(scope, environment, encoding);
         if (result.isPresent()) { return result; }
-        return iterate(scope, environment, encoding, index + 1);
+        return iterate(scope, environment, encoding, list.tail);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + makeNameFragment() + Util.tokensToString(tokens) + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + tokens + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return super.equals(obj)
-            && Arrays.equals(tokens, ((Cho)obj).tokens);
+            && Objects.equals(tokens, ((Cho)obj).tokens);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), Arrays.hashCode(tokens));
+        return Objects.hash(super.hashCode(), tokens);
     }
 
 }

@@ -18,6 +18,10 @@ package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.util.Objects;
+
+import io.parsingdata.metal.Util;
+
 public class ImmutableList<T> {
 
     public final T head;
@@ -40,6 +44,15 @@ public class ImmutableList<T> {
         return new ImmutableList<T>().add(checkNotNull(head, "head"));
     }
 
+    public static <T> ImmutableList<T> create(final T[] array) {
+        return createFromArray(new ImmutableList<>(), checkNotNull(array, "array"), array.length - 1);
+    }
+
+    private static <T> ImmutableList<T> createFromArray(final ImmutableList<T> list, final T[] array, final int index) {
+        if (index < 0) { return list; }
+        return createFromArray(list.add(array[index]), array, index - 1);
+    }
+
     public ImmutableList<T> add(final T head) {
         return new ImmutableList<>(checkNotNull(head, "head"), this);
     }
@@ -56,6 +69,19 @@ public class ImmutableList<T> {
     @Override
     public String toString() {
         return isEmpty() ? "" : ">" + head + tail.toString();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Objects.equals(head, ((ImmutableList)obj).head)
+            && Objects.equals(tail, ((ImmutableList)obj).tail);
+        // The size field is excluded from equals() and hashCode() because it is cached data.
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(head, tail);
     }
 
 }
