@@ -32,7 +32,7 @@ import io.parsingdata.metal.encoding.Encoding;
 /**
  * A {@link Token} that specifies a dependency between a list of tokens.
  * <p>
- * A Seq consists of an array of <code>tokens</code>. If one of the tokens
+ * A Seq consists of a list of <code>tokens</code>. If one of the tokens
  * doesn't succeed, the Seq fails. If all of the tokens succeed, the Seq will
  * succeed. Order is from left to right.
  */
