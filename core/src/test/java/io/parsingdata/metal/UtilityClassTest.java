@@ -22,11 +22,11 @@ import static io.parsingdata.metal.Util.tokensToString;
 import static io.parsingdata.metal.util.ClassDefinition.checkUtilityClass;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Test;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.selection.ByItem;
 import io.parsingdata.metal.data.selection.ByName;
 import io.parsingdata.metal.data.selection.ByOffset;
@@ -71,7 +71,7 @@ public class UtilityClassTest {
     public void checkAllTokensPrinted() {
         class NameToken extends Token {
             NameToken(final String name) { super(name, null); }
-            @Override protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; }
+            @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; }
             @Override public String toString() { return name; }
         }
         final NameToken aToken = new NameToken("a");

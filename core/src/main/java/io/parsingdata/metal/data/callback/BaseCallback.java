@@ -16,24 +16,23 @@
 
 package io.parsingdata.metal.data.callback;
 
-import java.util.function.BiConsumer;
+import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 
-public abstract class BaseCallback implements BiConsumer<Token, ParseResult> {
+public abstract class BaseCallback implements Callback {
 
     @Override
-    public void accept(final Token token, final ParseResult result) {
-        if (result.succeeded) {
-            handleSuccess(token, result.environment);
+    public void handle(final Token token, final Environment before, final Optional<Environment> after) {
+        if (after.isPresent()) {
+            handleSuccess(token, before, after.get());
         } else {
-            handleFailure(token, result.environment);
+            handleFailure(token, before);
         }
     }
 
-    protected abstract void handleSuccess(Token token, Environment environment);
-    protected abstract void handleFailure(Token token, Environment environment);
+    protected abstract void handleSuccess(Token token, Environment before, Environment after);
+    protected abstract void handleFailure(Token token, Environment before);
 
 }

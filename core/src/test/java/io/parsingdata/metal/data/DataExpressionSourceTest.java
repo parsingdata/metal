@@ -13,6 +13,7 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,12 +27,12 @@ public class DataExpressionSourceTest {
     public ExpectedException thrown = ExpectedException.none();
 
     public ParseValue setupValue() throws IOException {
-        final ParseResult result = setupResult();
-        assertTrue(result.succeeded);
-        return getValue(result.environment.order, "b");
+        final Optional<Environment> result = setupResult();
+        assertTrue(result.isPresent());
+        return getValue(result.get().order, "b");
     }
 
-    private ParseResult setupResult() throws IOException {
+    private Optional<Environment> setupResult() throws IOException {
         final Token token =
             seq(def("a", con(4)),
                 tie(def("b", con(2)), ref("a")));
@@ -49,8 +50,8 @@ public class DataExpressionSourceTest {
     public void indexOutOfBounds() throws IOException {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("ValueExpression dataExpression yields 1 result(s) (expected at least 2).");
-        final ParseResult result = setupResult();
-        final DataExpressionSource source = new DataExpressionSource(ref("a"), 1, result.environment.order, enc());
+        final Optional<Environment> result = setupResult();
+        final DataExpressionSource source = new DataExpressionSource(ref("a"), 1, result.get().order, enc());
         source.getData(0, 4);
     }
 

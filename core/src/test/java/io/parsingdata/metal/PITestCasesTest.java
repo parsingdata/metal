@@ -65,7 +65,7 @@ public class PITestCasesTest {
     }
 
     private void parse(final Token token, final Environment environment, final Encoding encoding) throws IOException {
-        assertTrue(token.parse(environment, encoding).succeeded);
+        assertTrue(token.parse(environment, encoding).isPresent());
     }
 
 }

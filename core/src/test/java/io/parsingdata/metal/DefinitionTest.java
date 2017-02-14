@@ -39,11 +39,12 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Test;
 
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 
 public class DefinitionTest {
@@ -61,9 +62,9 @@ public class DefinitionTest {
 
     @Test
     public void composed() throws IOException {
-        final ParseResult result = COMPOSED.parse(stream(1, 1, 1, 2, 2, 1, 2), enc());
-        assertTrue(result.succeeded);
-        final ParseGraph graph = result.environment.order;
+        final Optional<Environment> result = COMPOSED.parse(stream(1, 1, 1, 2, 2, 1, 2), enc());
+        assertTrue(result.isPresent());
+        final ParseGraph graph = result.get().order;
         assertEquals(NONE, graph.getDefinition());
         assertEquals(COMPOSED, graph.head.getDefinition());
         assertEquals(SUB_2, graph.head.asGraph().head.getDefinition());

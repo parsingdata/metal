@@ -27,6 +27,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.BinaryOperator;
 
 import org.junit.Test;
@@ -36,7 +37,6 @@ import org.junit.runners.Parameterized.Parameters;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.comparison.Eq;
@@ -75,7 +75,7 @@ public class ArgumentsTest {
     final private static ValueExpression VALID_VE = con(1);
     final private static BinaryOperator<ValueExpression> VALID_REDUCER = (left, right) -> null;
     final private static Expression VALID_E = new Expression() { @Override public boolean eval(final ParseGraph graph, final Encoding encoding) { return false; }};
-    final private static Token VALID_T = new Token("", null) { @Override protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; } };
+    final private static Token VALID_T = new Token("", null) { @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; } };
 
     private final Class<?> _class;
     private final Object[] _arguments;

@@ -17,8 +17,8 @@
 package io.parsingdata.metal.token;
 
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.ParseResult.failure;
-import static io.parsingdata.metal.data.ParseResult.success;
+import static io.parsingdata.metal.Util.failure;
+import static io.parsingdata.metal.Util.success;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -26,7 +26,6 @@ import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -57,28 +56,28 @@ public class Tie extends Token {
     }
 
     @Override
-    protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         final ImmutableList<Optional<Value>> dataResult = dataExpression.eval(environment.order, encoding);
         if (dataResult.isEmpty()) {
-            return failure(environment);
+            return failure();
         }
-        final ParseResult result = iterate(scope, dataResult, 0, environment.addBranch(this), encoding);
-        if (result.succeeded) {
-            return success(new Environment(result.environment.closeBranch().order, environment.source, environment.offset, environment.callbacks));
+        final Optional<Environment> result = iterate(scope, dataResult, 0, environment.addBranch(this), encoding);
+        if (result.isPresent()) {
+            return success(new Environment(result.get().closeBranch().order, environment.source, environment.offset, environment.callbacks));
         }
-        return failure(environment);
+        return failure();
     }
 
-    private ParseResult iterate(final String scope, final ImmutableList<Optional<Value>> values, final int index, final Environment environment, final Encoding encoding) throws IOException {
+    private Optional<Environment> iterate(final String scope, final ImmutableList<Optional<Value>> values, final int index, final Environment environment, final Encoding encoding) throws IOException {
         if (!values.head.isPresent()) {
-            return failure(environment);
+            return failure();
         }
-        final ParseResult result = token.parse(scope, environment.source(dataExpression, index, environment, encoding), encoding);
-        if (result.succeeded) {
+        final Optional<Environment> result = token.parse(scope, environment.source(dataExpression, index, environment, encoding), encoding);
+        if (result.isPresent()) {
             if (values.tail.isEmpty()) { return result; }
-            return iterate(scope, values.tail, index + 1, result.environment, encoding);
+            return iterate(scope, values.tail, index + 1, result.get(), encoding);
         }
-        return failure(environment);
+        return failure();
     }
 
     @Override

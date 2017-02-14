@@ -33,10 +33,11 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Test;
 
-import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.Environment;
 
 public class NodTest {
 
@@ -46,57 +47,57 @@ public class NodTest {
 
     @Test
     public void nodSkipsData() throws IOException {
-        final ParseResult parseResult = NOD.parse(stream(1, 1, 1, 1), enc());
-        assertTrue(parseResult.succeeded);
-        assertThat(parseResult.environment.offset, is(4L));
+        final Optional<Environment> result = NOD.parse(stream(1, 1, 1, 1), enc());
+        assertTrue(result.isPresent());
+        assertThat(result.get().offset, is(4L));
     }
 
     @Test
     public void nodWithRefSize() throws IOException {
-        final ParseResult parseResult = FOUND_REF.parse(stream(1, 1), enc());
+        final Optional<Environment> result = FOUND_REF.parse(stream(1, 1), enc());
         // 1 byte size, 1 byte nod:
-        assertTrue(parseResult.succeeded);
-        assertThat(parseResult.environment.offset, is(2L));
+        assertTrue(result.isPresent());
+        assertThat(result.get().offset, is(2L));
     }
 
     @Test
     public void nodWithoutSize() throws IOException {
-        final ParseResult parseResult = NOD_REF_SIZE.parse(stream(), enc());
-        assertFalse(parseResult.succeeded);
+        final Optional<Environment> result = NOD_REF_SIZE.parse(stream(), enc());
+        assertFalse(result.isPresent());
     }
 
     @Test
     public void nodWithMultipleSizes() throws IOException {
-        final ParseResult parseResult =
+        final Optional<Environment> result =
             seq(def("size", con(1)),
                 def("size", con(1)),
                 NOD_REF_SIZE).parse(stream(2, 2, 0, 0), enc());
-        assertFalse(parseResult.succeeded);
+        assertFalse(result.isPresent());
     }
 
     @Test
     public void nodWithNegativeSize() throws IOException {
-        final ParseResult parseResult =
+        final Optional<Environment> result =
             seq(def("size", con(1)),
                 NOD_REF_SIZE).parse(stream(-1), signed());
-        assertFalse(parseResult.succeeded);
+        assertFalse(result.isPresent());
     }
 
     @Test
     public void nodWithSizeZero() throws IOException {
-        final ParseResult parseResult =
+        final Optional<Environment> result =
             seq(
                 def("one", 1, eq(con(1))),
                 nod(con(0)),
                 def("two", 1, eq(con(2)))
             ).parse(stream(1, 2), enc());
-        assertTrue(parseResult.succeeded);
-        assertThat(parseResult.environment.offset, is(2L));
+        assertTrue(result.isPresent());
+        assertThat(result.get().offset, is(2L));
     }
 
     @Test
     public void nodWithEmpty() throws IOException {
-        assertFalse(nod(EMPTY_VE).parse(stream(1, 2, 3, 4), enc()).succeeded);
+        assertFalse(nod(EMPTY_VE).parse(stream(1, 2, 3, 4), enc()).isPresent());
     }
 
 }

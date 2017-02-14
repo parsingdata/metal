@@ -55,9 +55,9 @@ import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.tie;
 import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.Shorthand.whl;
+import static io.parsingdata.metal.Util.createFromBytes;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
-import static io.parsingdata.metal.Util.createFromBytes;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -73,8 +73,8 @@ import org.junit.Test;
 import io.parsingdata.metal.data.DataExpressionSource;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.callback.Callback;
 import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
@@ -153,8 +153,8 @@ public class ToStringTest {
         final Environment environment = stream(1, 2);
         final String envString = "source: InMemoryByteStream(2); offset: 0; order: graph(EMPTY); callbacks: ";
         assertEquals(envString, environment.toString());
-        final ParseResult result = new ParseResult(true, environment);
-        assertEquals("ParseResult(true, " + environment + ")", result.toString());
+        final Optional<Environment> result = Optional.of(environment);
+        assertEquals("Optional[" + environment + "]", result.toString());
         final ParseValue pv1 = new ParseValue("name", NONE, createFromBytes(new byte[]{1, 2}), enc());
         final String pv1String = "name(0x0102)";
         final Optional<Value> ov1 = Optional.of(pv1);
@@ -202,14 +202,14 @@ public class ToStringTest {
 
     private Token makeToken(final String name) {
         return new Token(name, enc()) {
-            @Override protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; }
+            @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; }
             @Override public String toString() { return name; }
         };
     }
 
-    private BiConsumer<Token, ParseResult> makeCallback(final String name) {
-        return new BiConsumer<Token, ParseResult>() {
-            @Override public void accept(final Token token, final ParseResult result) {}
+    private Callback makeCallback(final String name) {
+        return new Callback() {
+            @Override public void handle(final Token token, final Environment before, final Optional<Environment> after) {}
             @Override public String toString() { return name; }
         };
     }

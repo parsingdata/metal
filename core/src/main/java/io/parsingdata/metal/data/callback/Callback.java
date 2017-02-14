@@ -16,23 +16,13 @@
 
 package io.parsingdata.metal.data.callback;
 
-import static io.parsingdata.metal.Util.checkNotNull;
+import java.util.Optional;
 
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.token.Token;
 
-public class TokenCallback {
+public interface Callback {
 
-    public final Token token;
-    public final Callback callback;
-
-    public TokenCallback(final Token token, final Callback callback) {
-        this.token = checkNotNull(token, "token");
-        this.callback = checkNotNull(callback, "callback");
-    }
-
-    @Override
-    public String toString() {
-        return token + "->" + callback;
-    }
+    void handle(Token token, Environment before, Optional<Environment> after);
 
 }

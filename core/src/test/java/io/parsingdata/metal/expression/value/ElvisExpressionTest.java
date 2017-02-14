@@ -40,8 +40,9 @@ import java.util.Optional;
 
 import org.junit.Test;
 
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseResult;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.token.Token;
 
 public class ElvisExpressionTest {
@@ -55,8 +56,8 @@ public class ElvisExpressionTest {
 
     @Test
     public void elvisLeft() throws IOException { // the building
-        final ParseResult result = choice.parse(stream(1), enc());
-        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(result.environment.order, enc());
+        final Optional<Environment> result = choice.parse(stream(1), enc());
+        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(result.get().order, enc());
 
         assertNotNull(eval);
         assertEquals(1, eval.size);
@@ -65,8 +66,8 @@ public class ElvisExpressionTest {
 
     @Test
     public void elvisRight() throws IOException {
-        final ParseResult result = choice.parse(stream(2), enc());
-        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(result.environment.order, enc());
+        final Optional<Environment> result = choice.parse(stream(2), enc());
+        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(result.get().order, enc());
 
         assertNotNull(eval);
         assertEquals(1, eval.size);
@@ -75,8 +76,7 @@ public class ElvisExpressionTest {
 
     @Test
     public void elvisNone() throws IOException {
-        final ParseResult result = choice.parse(stream(3), enc());
-        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(result.environment.order, enc());
+        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(ParseGraph.EMPTY, enc());
 
         assertNotNull(eval);
         assertTrue(eval.isEmpty());
@@ -84,10 +84,10 @@ public class ElvisExpressionTest {
 
     @Test
     public void elvisList() throws IOException {
-        final ParseResult result = seq(any("a"), any("a"), any("b"), any("b")).parse(stream(1, 2, 3, 4), enc());
-        assertTrue(result.succeeded);
+        final Optional<Environment> result = seq(any("a"), any("a"), any("b"), any("b")).parse(stream(1, 2, 3, 4), enc());
+        assertTrue(result.isPresent());
         final ValueExpression elvis = elvis(ref("a"), ref("b"));
-        final ImmutableList<Optional<Value>> eval = elvis.eval(result.environment.order, enc());
+        final ImmutableList<Optional<Value>> eval = elvis.eval(result.get().order, enc());
         assertEquals(2, eval.size);
         assertEquals(2, eval.head.get().asNumeric().intValue());
         assertEquals(1, eval.tail.head.get().asNumeric().intValue());
@@ -95,10 +95,10 @@ public class ElvisExpressionTest {
 
     @Test
     public void elvisListWithEmpty() throws IOException {
-        final ParseResult result = seq(any("a"), any("a"), any("b"), any("b")).parse(stream(1, 2, 3, 4), enc());
-        assertTrue(result.succeeded);
+        final Optional<Environment> result = seq(any("a"), any("a"), any("b"), any("b")).parse(stream(1, 2, 3, 4), enc());
+        assertTrue(result.isPresent());
         final ValueExpression elvis = elvis(ref("c"), ref("b"));
-        final ImmutableList<Optional<Value>> eval = elvis.eval(result.environment.order, enc());
+        final ImmutableList<Optional<Value>> eval = elvis.eval(result.get().order, enc());
         assertEquals(2, eval.size);
         assertEquals(4, eval.head.get().asNumeric().intValue());
         assertEquals(3, eval.tail.head.get().asNumeric().intValue());
@@ -106,10 +106,10 @@ public class ElvisExpressionTest {
 
     @Test
     public void elvisListDifferentLengths() throws IOException {
-        final ParseResult result = seq(any("a"), any("a"), any("b"), any("b"), any("b")).parse(stream(1, 2, 3, 4, 5), enc());
-        assertTrue(result.succeeded);
+        final Optional<Environment> result = seq(any("a"), any("a"), any("b"), any("b"), any("b")).parse(stream(1, 2, 3, 4, 5), enc());
+        assertTrue(result.isPresent());
         final ValueExpression elvis = elvis(ref("a"), ref("b"));
-        final ImmutableList<Optional<Value>> eval = elvis.eval(result.environment.order, enc());
+        final ImmutableList<Optional<Value>> eval = elvis.eval(result.get().order, enc());
         assertEquals(3, eval.size);
         assertEquals(2, eval.head.get().asNumeric().intValue());
         assertEquals(1, eval.tail.head.get().asNumeric().intValue());

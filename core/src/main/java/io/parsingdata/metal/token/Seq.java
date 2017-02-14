@@ -17,16 +17,16 @@
 package io.parsingdata.metal.token;
 
 import static io.parsingdata.metal.Util.checkContainsNoNulls;
-import static io.parsingdata.metal.data.ParseResult.failure;
-import static io.parsingdata.metal.data.ParseResult.success;
+import static io.parsingdata.metal.Util.failure;
+import static io.parsingdata.metal.Util.success;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -51,21 +51,21 @@ public class Seq extends Token {
     }
 
     @Override
-    protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final ParseResult result = iterate(scope, environment.addBranch(this), encoding, 0);
-        if (result.succeeded) {
-            return success(result.environment.closeBranch());
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        final Optional<Environment> result = iterate(scope, environment.addBranch(this), encoding, 0);
+        if (result.isPresent()) {
+            return success(result.get().closeBranch());
         }
-        return failure(environment);
+        return failure();
     }
 
-    private ParseResult iterate(final String scope, final Environment environment, final Encoding encoding, final int index) throws IOException {
+    private Optional<Environment> iterate(final String scope, final Environment environment, final Encoding encoding, final int index) throws IOException {
         if (index >= tokens.length) {
             return success(environment);
         }
-        final ParseResult result = tokens[index].parse(scope, environment, encoding);
-        if (result.succeeded) {
-            return iterate(scope, result.environment, encoding, index + 1);
+        final Optional<Environment> result = tokens[index].parse(scope, environment, encoding);
+        if (result.isPresent()) {
+            return iterate(scope, result.get(), encoding, index + 1);
         }
         return result;
     }

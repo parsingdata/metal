@@ -33,13 +33,13 @@ import static io.parsingdata.metal.encoding.ByteOrder.LITTLE_ENDIAN;
 import static io.parsingdata.metal.encoding.Sign.UNSIGNED;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Test;
 
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
@@ -66,10 +66,10 @@ public class ByteLengthTest {
 
         final ByteStream stream = new InMemoryByteStream(concat(text1, text2));
         final Environment environment = new Environment(stream);
-        final ParseResult result = STRING.parse(environment, ENCODING);
+        final Optional<Environment> result = STRING.parse(environment, ENCODING);
 
-        assertTrue(result.succeeded);
-        final ParseGraph graph = result.environment.order;
+        assertTrue(result.isPresent());
+        final ParseGraph graph = result.get().order;
         assertEquals(5, getValue(graph, "length").asNumeric().byteValue());
         assertEquals("Hello", getValue(graph, "text1").asString());
         assertEquals("Metal", getValue(graph, "text2").asString());
@@ -79,8 +79,8 @@ public class ByteLengthTest {
     public void testLenNull() throws IOException {
         final ByteStream stream = new InMemoryByteStream(string("Joe"));
         final Environment environment = new Environment(stream);
-        final ParseResult result = NAME.parse(environment, ENCODING);
-        assertFalse(result.succeeded);
+        final Optional<Environment> result = NAME.parse(environment, ENCODING);
+        assertFalse(result.isPresent());
     }
 
     private byte[] string(final String text) {

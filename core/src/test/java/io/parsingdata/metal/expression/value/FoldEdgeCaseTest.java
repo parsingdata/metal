@@ -46,7 +46,6 @@ import io.parsingdata.metal.Shorthand;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -67,7 +66,7 @@ public class FoldEdgeCaseTest {
 
     @Test
     public void foldToEmpty() throws IOException {
-        final Environment environment = rep(any("value")).parse(stream(1, 0), enc()).environment;
+        final Environment environment = rep(any("value")).parse(stream(1, 0), enc()).get();
         assertFalse(foldLeft(ref("value"), Shorthand::div).eval(environment.order, enc()).head.isPresent());
         assertFalse(foldRight(ref("value"), Shorthand::div).eval(environment.order, enc()).head.isPresent());
     }
@@ -84,7 +83,7 @@ public class FoldEdgeCaseTest {
 
     @Test
     public void multipleInits() throws IOException {
-        final ParseResult parseResult =
+        final Optional<Environment> parseResult =
             seq(
                 def("init", 1),
                 def("init", 1),
@@ -96,18 +95,18 @@ public class FoldEdgeCaseTest {
                 )
             ).parse(stream(1, 2, 1, 2, 3), enc());
 
-        assertFalse(parseResult.succeeded);
+        assertFalse(parseResult.isPresent());
     }
 
     @Test
     public void noValues() throws IOException {
-        final ParseResult parseResult =
+        final Optional<Environment> parseResult =
             cho(
                 def("folded", 1, eq(foldLeft(ref("toFold"), Shorthand::add))),
                 def("folded", 1, eq(foldRight(ref("toFold"), Shorthand::add)))
             ).parse(stream(1), enc());
 
-        assertFalse(parseResult.succeeded);
+        assertFalse(parseResult.isPresent());
     }
 
     private void faultyReducer(final ValueExpression expression) throws IOException {

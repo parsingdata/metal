@@ -17,8 +17,8 @@
 package io.parsingdata.metal.token;
 
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.ParseResult.failure;
-import static io.parsingdata.metal.data.ParseResult.success;
+import static io.parsingdata.metal.Util.failure;
+import static io.parsingdata.metal.Util.success;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -26,7 +26,6 @@ import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -52,14 +51,14 @@ public class Nod extends Token {
     }
 
     @Override
-    protected ParseResult parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         final ImmutableList<Optional<Value>> sizes = size.eval(environment.order, encoding);
         if (sizes.size != 1 || !sizes.head.isPresent()) {
-            return failure(environment);
+            return failure();
         }
         final long skipSize = sizes.head.get().asNumeric().longValue();
         if (skipSize < 0) {
-            return failure(environment);
+            return failure();
         }
         return success(environment.seek(environment.offset + skipSize));
     }

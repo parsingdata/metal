@@ -42,7 +42,7 @@ public class ParameterizedParse {
 
     @Test
     public void test() throws IOException {
-        assertEquals(result, token.parse(environment, encoding).succeeded);
+        assertEquals(result, token.parse(environment, encoding).isPresent());
     }
 
 }

@@ -37,6 +37,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static junit.framework.TestCase.assertNull;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -73,15 +74,15 @@ public class ParseGraphTest {
                 any("g"), any("empty"),
                 any("h"), any("empty")
             );
-        ParseResult result = token.parse(stream(97, 0, 98, 0, 99, 0, 100, 0, 101, 0, 102, 0, 103, 0, 104, 0), enc());
-        a = getValue(result.environment.order, "a");
-        b = getValue(result.environment.order, "b");
-        c = getValue(result.environment.order, "c");
-        d = getValue(result.environment.order, "d");
-        e = getValue(result.environment.order, "e");
-        f = getValue(result.environment.order, "f");
-        g = getValue(result.environment.order, "g");
-        h = getValue(result.environment.order, "h");
+       Optional<Environment> result = token.parse(stream(97, 0, 98, 0, 99, 0, 100, 0, 101, 0, 102, 0, 103, 0, 104, 0), enc());
+        a = getValue(result.get().order, "a");
+        b = getValue(result.get().order, "b");
+        c = getValue(result.get().order, "c");
+        d = getValue(result.get().order, "d");
+        e = getValue(result.get().order, "e");
+        f = getValue(result.get().order, "f");
+        g = getValue(result.get().order, "g");
+        h = getValue(result.get().order, "h");
         pg = makeSimpleGraph();
         pgc = makeCycleGraph();
         pgl = makeLongGraph();
@@ -201,8 +202,8 @@ public class ParseGraphTest {
                  con(2)),
             nod(con(1)));
         // creates a ParseGraph with values in the head, and an empty graph as tail
-        final ParseResult result = token.parse(environment, enc());
-        assertTrue(result.environment.order.head.asGraph().head.asGraph().head.isValue());
+        final Optional<Environment> result = token.parse(environment, enc());
+        assertTrue(result.get().order.head.asGraph().head.asGraph().head.isValue());
     }
 
     @Test

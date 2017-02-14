@@ -35,15 +35,16 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.data.transformation.Reversal;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Token;
@@ -62,8 +63,8 @@ public class TreeTest {
             pre(sub(token("tree"), last(ref("right"))), not(eq(last(ref("right")), con(0))))
         );
 
-    private final ParseResult regular;
-    private final ParseResult cyclic;
+    private final Optional<Environment> regular;
+    private final Optional<Environment> cyclic;
 
     public TreeTest() throws IOException {
         regular = TREE.parse(stream(HEAD, 0, 6, 10, 8, 8, HEAD, 1, 16, 20, HEAD, 2, 24, 28, 8, 8, HEAD, 3, 0, 0, HEAD, 4, 0, 0, HEAD, 5, 0, 0, HEAD, 6, 0, 0), enc());
@@ -83,14 +84,14 @@ public class TreeTest {
 
     @Test
     public void checkRegularTree() {
-        assertTrue(regular.succeeded);
-        checkStructure(Reversal.reverse(regular.environment.order).head.asGraph(), 0);
+        assertTrue(regular.isPresent());
+        checkStructure(Reversal.reverse(regular.get().order).head.asGraph(), 0);
     }
 
     @Test
     public void checkCyclicTree() {
-        assertTrue(cyclic.succeeded);
-        checkStructure(Reversal.reverse(cyclic.environment.order).head.asGraph(), 0);
+        assertTrue(cyclic.isPresent());
+        checkStructure(Reversal.reverse(cyclic.get().order).head.asGraph(), 0);
     }
 
     private void checkStructure(final ParseGraph graph, final long offset) {
@@ -137,8 +138,8 @@ public class TreeTest {
 
     @Test
     public void checkRegularTreeFlat() {
-        assertTrue(regular.succeeded);
-        final ImmutableList<Value> nrs = getAllValues(regular.environment.order, "nr");
+        assertTrue(regular.isPresent());
+        final ImmutableList<Value> nrs = getAllValues(regular.get().order, "nr");
         for (int i = 0; i < 7; i++) {
             assertTrue(contains(nrs, i));
         }

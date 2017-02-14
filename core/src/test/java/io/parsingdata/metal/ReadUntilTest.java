@@ -42,17 +42,17 @@ public class ReadUntilTest {
 
     @Test
     public void readUntilConstant() throws IOException {
-        assertTrue(_readUntil.parse(stream(1, 2, 3, 4, 42), enc()).succeeded);
+        assertTrue(_readUntil.parse(stream(1, 2, 3, 4, 42), enc()).isPresent());
     }
 
     @Test
     public void readUntilNoSkipping() throws IOException {
-        assertTrue(_readUntil.parse(stream(42), enc()).succeeded);
+        assertTrue(_readUntil.parse(stream(42), enc()).isPresent());
     }
 
     @Test
     public void readUntilErrorNoTerminator() throws IOException {
-        assertFalse(_readUntil.parse(stream(1, 2, 3, 4), enc()).succeeded);
+        assertFalse(_readUntil.parse(stream(1, 2, 3, 4), enc()).isPresent());
     }
 
 }

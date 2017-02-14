@@ -37,6 +37,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static junit.framework.TestCase.assertFalse;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -44,7 +45,6 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseReference;
-import io.parsingdata.metal.data.ParseResult;
 import io.parsingdata.metal.token.Token;
 
 public class SubStructTest {
@@ -66,9 +66,9 @@ public class SubStructTest {
                                      * ref 2:               ^----------------+
                                      * ref 3:                   +----------------*
                                      */
-        final ParseResult result = LINKED_LIST.parse(environment, enc());
-        assertTrue(result.succeeded);
-        final ParseGraph graph = result.environment.order;
+        final Optional<Environment> result = LINKED_LIST.parse(environment, enc());
+        assertTrue(result.isPresent());
+        final ParseGraph graph = result.get().order;
         assertEquals(0, getReferences(graph).size); // No cycles
 
         final ParseGraph first = graph.head.asGraph();
@@ -84,9 +84,9 @@ public class SubStructTest {
     @Test
     public void linkedListWithSelfReference() throws IOException {
         final Environment environment = stream(0, 0, 1);
-        final ParseResult result = LINKED_LIST.parse(environment, enc());
-        assertTrue(result.succeeded);
-        final ParseGraph graph = result.environment.order;
+        final Optional<Environment> result = LINKED_LIST.parse(environment, enc());
+        assertTrue(result.isPresent());
+        final ParseGraph graph = result.get().order;
         assertEquals(1, getReferences(graph).size);
 
         final ParseGraph first = graph.head.asGraph();
@@ -98,10 +98,10 @@ public class SubStructTest {
 
     private ParseGraph startCycle(final int offset) throws IOException {
         final Environment environment = stream(0, 4, 1, 21, 0, 0, 1).seek(offset);
-        final ParseResult result = LINKED_LIST.parse(environment, enc());
-        assertTrue(result.succeeded);
-        assertEquals(1, getReferences(result.environment.order).size);
-        return result.environment.order;
+        final Optional<Environment> result = LINKED_LIST.parse(environment, enc());
+        assertTrue(result.isPresent());
+        assertEquals(1, getReferences(result.get().order).size);
+        return result.get().order;
     }
 
     @Test
@@ -152,12 +152,12 @@ public class SubStructTest {
 
     @Test
     public void errorEmptyAddressList() throws IOException {
-        assertFalse(sub(any("a"), ref("b")).parse(stream(1, 2, 3, 4), enc()).succeeded);
+        assertFalse(sub(any("a"), ref("b")).parse(stream(1, 2, 3, 4), enc()).isPresent());
     }
 
     @Test
     public void errorEmptyAddressInList() throws IOException {
-        assertFalse(sub(any("a"), cat(con(0), EMPTY_VE)).parse(stream(1, 2, 3, 4), enc()).succeeded);
+        assertFalse(sub(any("a"), cat(con(0), EMPTY_VE)).parse(stream(1, 2, 3, 4), enc()).isPresent());
     }
 
 }
