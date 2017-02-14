@@ -44,6 +44,15 @@ public class ImmutableList<T> {
         return new ImmutableList<T>().add(checkNotNull(head, "head"));
     }
 
+    public static <T> ImmutableList<T> create(final T[] array) {
+        return createFromArray(new ImmutableList<>(), checkNotNull(array, "array"), array.length - 1);
+    }
+
+    private static <T> ImmutableList<T> createFromArray(final ImmutableList<T> list, final T[] array, final int index) {
+        if (index < 0) { return list; }
+        return createFromArray(list.add(array[index]), array, index - 1);
+    }
+
     public ImmutableList<T> add(final T head) {
         return new ImmutableList<>(checkNotNull(head, "head"), this);
     }

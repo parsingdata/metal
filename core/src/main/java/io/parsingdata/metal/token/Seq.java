@@ -19,7 +19,7 @@ package io.parsingdata.metal.token;
 import static io.parsingdata.metal.Util.checkContainsNoNulls;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
-import static io.parsingdata.metal.data.transformation.Array.toList;
+import static io.parsingdata.metal.data.ImmutableList.create;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -42,7 +42,7 @@ public class Seq extends Token {
 
     public Seq(final String name, final Encoding encoding, final Token... tokens) {
         super(name, encoding);
-        this.tokens = toList(checkContainsNoNulls(tokens, "tokens"));
+        this.tokens = create(checkContainsNoNulls(tokens, "tokens"));
         if (this.tokens.size < 2) { throw new IllegalArgumentException("At least two Tokens are required."); }
     }
 
