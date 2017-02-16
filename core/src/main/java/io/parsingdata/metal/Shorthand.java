@@ -171,6 +171,8 @@ public final class Shorthand {
     public static ValueExpression fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) { return foldRight(values, reducer, initial); }
     public static ValueExpression rev(final ValueExpression values) { return new Reverse(values); }
     public static ValueExpression exp(final ValueExpression base, final ValueExpression count) { return new Expand(base, count); }
+    public static BinaryValueExpression mapLeft(final BiFunction<ValueExpression, ValueExpression, BinaryValueExpression> func, final ValueExpression left, final ValueExpression rightExpand) { return func.apply(left, exp(rightExpand, count(left))); }
+    public static BinaryValueExpression mapRight(final BiFunction<ValueExpression, ValueExpression, BinaryValueExpression> func, final ValueExpression leftExpand, final ValueExpression right) { return func.apply(exp(leftExpand, count(right)), right); }
 
     public static BinaryLogicalExpression and(final Expression left, final Expression right) { return new And(left, right); }
     public static BinaryLogicalExpression or(final Expression left, final Expression right) { return new Or(left, right); }

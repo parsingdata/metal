@@ -30,6 +30,8 @@ import static io.parsingdata.metal.Shorthand.eqStr;
 import static io.parsingdata.metal.Shorthand.expTrue;
 import static io.parsingdata.metal.Shorthand.gtNum;
 import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.mapLeft;
+import static io.parsingdata.metal.Shorthand.mapRight;
 import static io.parsingdata.metal.Shorthand.opt;
 import static io.parsingdata.metal.Shorthand.pre;
 import static io.parsingdata.metal.Shorthand.ref;
@@ -38,6 +40,7 @@ import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.tie;
+import static io.parsingdata.metal.expression.value.ExpandTest.createParseValue;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -52,6 +55,7 @@ import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Cho;
@@ -212,6 +216,30 @@ public class ShorthandsTest {
         assertEquals(2, seq.tokens.size);
         assertEquals(DEFA, seq.tokens.head);
         assertEquals(DEFB, seq.tokens.tail.head);
+    }
+
+    final ParseGraph PARSEGRAPH = ParseGraph.EMPTY.add(createParseValue("a", 126)).add(createParseValue("a", 84)).add(createParseValue("a", 42));
+
+    @Test
+    public void mapLeftWithSub() {
+        ImmutableList<Optional<Value>> result = mapLeft(Shorthand::sub, ref("a"), con(2)).eval(PARSEGRAPH, enc());
+        assertEquals(3, result.size);
+        for (int i = 0; i < 3; i++) {
+            assertTrue(result.head.isPresent());
+            assertEquals((i * 42) + 40, result.head.get().asNumeric().intValue());
+            result = result.tail;
+        }
+    }
+
+    @Test
+    public void mapRightWithSub() {
+        ImmutableList<Optional<Value>> result = mapRight(Shorthand::sub, con(126), ref("a")).eval(PARSEGRAPH, enc());
+        assertEquals(3, result.size);
+        for (int i = 0; i < 3; i++) {
+            assertTrue(result.head.isPresent());
+            assertEquals(((3 - i) * 42) - 42, result.head.get().asNumeric().intValue());
+            result = result.tail;
+        }
     }
 
 }
