@@ -19,6 +19,7 @@ package io.parsingdata.metal;
 import static io.parsingdata.metal.Util.createFromBytes;
 import static io.parsingdata.metal.token.Token.NO_NAME;
 
+import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 
 import io.parsingdata.metal.encoding.Encoding;
@@ -40,6 +41,7 @@ import io.parsingdata.metal.expression.value.Cat;
 import io.parsingdata.metal.expression.value.Const;
 import io.parsingdata.metal.expression.value.ConstantFactory;
 import io.parsingdata.metal.expression.value.Elvis;
+import io.parsingdata.metal.expression.value.Expand;
 import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
 import io.parsingdata.metal.expression.value.Reverse;
@@ -168,6 +170,7 @@ public final class Shorthand {
     public static ValueExpression fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return foldRight(values, reducer); }
     public static ValueExpression fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) { return foldRight(values, reducer, initial); }
     public static ValueExpression rev(final ValueExpression values) { return new Reverse(values); }
+    public static ValueExpression exp(final ValueExpression base, final ValueExpression count) { return new Expand(base, count); }
 
     public static BinaryLogicalExpression and(final Expression left, final Expression right) { return new And(left, right); }
     public static BinaryLogicalExpression or(final Expression left, final Expression right) { return new Or(left, right); }

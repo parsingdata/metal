@@ -32,6 +32,7 @@ import static io.parsingdata.metal.Shorthand.elvis;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.eqNum;
 import static io.parsingdata.metal.Shorthand.eqStr;
+import static io.parsingdata.metal.Shorthand.exp;
 import static io.parsingdata.metal.Shorthand.first;
 import static io.parsingdata.metal.Shorthand.gtNum;
 import static io.parsingdata.metal.Shorthand.last;
@@ -65,7 +66,6 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import java.util.function.BiConsumer;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -113,7 +113,7 @@ public class ToStringTest {
     private Token t() { return any("a"); }
 
     private ValueExpression v() {
-        return neg(add(div(mod(mul(sub(last(ref(n())), first(nth(ref(n()), con(1)))), con(1)), cat(ref(n()), ref(t()))), add(self, add(offset(ref(n())), add(currentOffset, count(ref(n())))))), elvis(ref(n()), ref(n()))));
+        return neg(add(div(mod(mul(sub(last(ref(n())), first(nth(exp(ref(n()), con(1)), con(1)))), con(1)), cat(ref(n()), ref(t()))), add(self, add(offset(ref(n())), add(currentOffset, count(ref(n())))))), elvis(ref(n()), ref(n()))));
     }
 
     @Test
