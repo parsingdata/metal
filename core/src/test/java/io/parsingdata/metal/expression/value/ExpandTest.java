@@ -99,7 +99,7 @@ public class ExpandTest {
         }
     }
 
-    private static ParseValue createParseValue(String name, int value) {
+    public static ParseValue createParseValue(String name, int value) {
         return new ParseValue(name, any(name), createFromBytes(new byte[] { (byte)value }), enc());
     }
 
