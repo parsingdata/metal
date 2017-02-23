@@ -55,7 +55,7 @@ public class PreTest {
         final Optional<Environment> result = SEQUENCE.parse(stream(0, 1), enc());
 
         // precondition is false, token is not parsed
-        assertThat(result.get().offset, is(1L));
+        assertThat(result.isPresent(), is(false));
     }
 
     @Test

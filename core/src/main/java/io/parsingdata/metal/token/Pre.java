@@ -30,14 +30,14 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 
 /**
- * A {@link Token} that specifies a conditional token.
+ * A {@link Token} that specifies a precondition for parsing a nested token.
  * <p>
  * A Pre consists of a <code>token</code> (a {@link Token}) and a
  * <code>predicate</code> (an {@link Expression}). First
  * <code>predicate</code> is evaluated. If it evaluates to <code>true</code>,
- * the token is parsed. The only way for Pre to fail is if
- * <code>predicate</code> evaluates to <code>true</code>, but parsing the
- * token fails.
+ * the token is parsed. Parsing this token will only succeed if the
+ * <code>predicate</code> evaluates to <code>true</code> and if parsing the
+ * nested token succeeds.
  *
  * @see Expression
  */
@@ -55,7 +55,7 @@ public class Pre extends Token {
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         if (!predicate.eval(environment.order, encoding)) {
-            return success(environment);
+            return failure();
         }
         final Optional<Environment> result = token.parse(scope, environment.addBranch(this), encoding);
         if (result.isPresent()) {

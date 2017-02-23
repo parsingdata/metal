@@ -25,6 +25,7 @@ import static io.parsingdata.metal.Shorthand.eqNum;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.ltNum;
 import static io.parsingdata.metal.Shorthand.offset;
+import static io.parsingdata.metal.Shorthand.opt;
 import static io.parsingdata.metal.Shorthand.pre;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
@@ -58,7 +59,7 @@ public class ConditionalTokenTest extends ParameterizedParse {
     }
 
     private static final Token preToken = seq(any("a"),
-                                              pre(any("b"), eqNum(ref("a"), con(1))),
+                                              opt(pre(any("b"), eqNum(ref("a"), con(1)))),
                                               def("c", con(1), eqNum(con(3))));
     
     private static final Token whileToken = seq(any("size"),

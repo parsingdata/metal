@@ -20,12 +20,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.last;
-import static io.parsingdata.metal.Shorthand.not;
-import static io.parsingdata.metal.Shorthand.pre;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
@@ -57,10 +56,16 @@ public class TreeTest {
         seq("tree",
             def("head", con(1), eq(con(HEAD))),
             def("nr", con(1)),
-            def("left", con(1)),
-            pre(sub(token("tree"), last(ref("left"))), not(eq(last(ref("left")), con(0)))),
-            def("right", con(1)),
-            pre(sub(token("tree"), last(ref("right"))), not(eq(last(ref("right")), con(0))))
+            cho(def("left_terminator", con(1), eq(con(0))),
+                seq(def("left", con(1)),
+                    sub(token("tree"), last(ref("left")))
+                )
+            ),
+            cho(def("right_terminator", con(1), eq(con(0))),
+                seq(def("right", con(1)),
+                    sub(token("tree"), last(ref("right")))
+                )
+            )
         );
 
     private final Optional<Environment> regular;
@@ -100,21 +105,26 @@ public class TreeTest {
 
     private void checkStructure(final ParseGraph root, final ParseGraph graph, final long offset) {
         checkHeader(graph, offset);
-        final ParseItem left = graph.tail.tail.head;
-        assertTrue(left.isValue());
-        final long leftOffset = left.asValue().asNumeric().longValue();
-        if (leftOffset != 0) {
-            final ParseItem leftItem = graph.tail.tail.tail.head.asGraph().head;
-            checkBranch(root, leftOffset, leftItem);
+        final ParseItem left = graph.tail.tail.head.asGraph().head;
+        long leftOffset = 0;
+        if (!(left.isValue() && left.asValue().matches("left_terminator"))) {
+            assertTrue(left.isGraph());
+            leftOffset = left.asGraph().head.asValue().asNumeric().longValue();
+            if (leftOffset != 0) {
+                final ParseItem leftItem = graph.tail.tail.head.asGraph().head.asGraph().tail.head.asGraph();
+                checkBranch(root, leftOffset, leftItem);
+            }
         }
 
-        final ParseItem right = leftOffset != 0 ? graph.tail.tail.tail.tail.head : graph.tail.tail.tail.head;
-        assertTrue(right.isValue());
-        final long rightOffset = right.asValue().asNumeric().longValue();
-        if (rightOffset != 0) {
-            final ParseItem rightItem = (leftOffset != 0 ? graph.tail.tail.tail.tail.tail.head : graph.tail.tail.tail.tail.head);
-            final ParseItem rightSeq = rightItem.asGraph().head;
-            checkBranch(root, rightOffset, rightSeq);
+        final ParseItem right = leftOffset != 0 ? graph.tail.tail.tail.head.asGraph().head : graph.tail.tail.tail.head.asGraph().head;
+        if (!(right.isValue() && right.asValue().matches("right_terminator"))) {
+            assertTrue(right.isGraph());
+            final long rightOffset = right.asGraph().head.asValue().asNumeric().longValue();
+            if (rightOffset != 0) {
+                final ParseItem rightItem = (leftOffset != 0 ? graph.tail.tail.tail.head.asGraph().head.asGraph().tail : graph.tail.tail.head.asGraph().head.asGraph().tail);
+                final ParseItem rightSeq = rightItem.asGraph().head;
+                checkBranch(root, rightOffset, rightSeq);
+            }
         }
     }
 
