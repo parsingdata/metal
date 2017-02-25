@@ -68,6 +68,7 @@ import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Def;
 import io.parsingdata.metal.token.Nod;
 import io.parsingdata.metal.token.Opt;
+import io.parsingdata.metal.token.Post;
 import io.parsingdata.metal.token.Pre;
 import io.parsingdata.metal.token.Rep;
 import io.parsingdata.metal.token.RepN;
@@ -113,6 +114,10 @@ public final class Shorthand {
     public static Token pre(final String name, final Token token, final Expression predicate) { return pre(name, token, predicate, null); }
     public static Token pre(final Token token, final Expression predicate, final Encoding encoding) { return pre(NO_NAME, token, predicate, encoding); }
     public static Token pre(final Token token, final Expression predicate) { return pre(token, predicate, null); }
+    public static Token post(final String name, final Token token, final Expression predicate, final Encoding encoding) { return new Post(name, token, predicate, encoding); }
+    public static Token post(final String name, final Token token, final Expression predicate) { return post(name, token, predicate, null); }
+    public static Token post(final Token token, final Expression predicate, final Encoding encoding) { return post(NO_NAME, token, predicate, encoding); }
+    public static Token post(final Token token, final Expression predicate) { return post(token, predicate, null); }
     public static Token whl(final String name, final Token token, final Expression predicate, final Encoding encoding) { return new While(name, token, predicate, encoding); }
     public static Token whl(final String name, final Token token, final Expression predicate) { return whl(name, token, predicate, null); }
     public static Token whl(final Token token, final Expression predicate, final Encoding encoding) { return whl(NO_NAME, token, predicate, encoding); }

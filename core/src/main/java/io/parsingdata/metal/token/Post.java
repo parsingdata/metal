@@ -30,23 +30,22 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 
 /**
- * A {@link Token} that specifies a precondition for parsing a nested token.
+ * A {@link Token} that specifies a postcondition for parsing a nested token.
  * <p>
- * A Pre consists of a <code>token</code> (a {@link Token}) and a
- * <code>predicate</code> (an {@link Expression}). First
- * <code>predicate</code> is evaluated. If it evaluates to <code>true</code>,
- * the token is parsed. Parsing this token will only succeed if the
- * <code>predicate</code> evaluates to <code>true</code> and if parsing the
- * nested token succeeds.
+ * A Post consists of a <code>predicate</code> (an {@link Expression}) and a
+ * <code>token</code> (a {@link Token}). First the token is parsed. If parsing
+ * succeeds, then <code>predicate</code> is evaluated. If it evaluates to
+ * <code>true</code>, this token will succeed. In all other situations, parsing
+ * this token fails.
  *
  * @see Expression
  */
-public class Pre extends Token {
+public class Post extends Token {
 
     public final Token token;
     public final Expression predicate;
 
-    public Pre(final String name, final Token token, final Expression predicate, final Encoding encoding) {
+    public Post(final String name, final Token token, final Expression predicate, final Encoding encoding) {
         super(name, encoding);
         this.token = checkNotNull(token, "token");
         this.predicate = predicate == null ? expTrue() : predicate;
@@ -54,11 +53,12 @@ public class Pre extends Token {
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        if (!predicate.eval(environment.order, encoding)) {
-            return failure();
-        }
         final Optional<Environment> result = token.parse(scope, environment.addBranch(this), encoding);
-        return result.isPresent() ? success(result.get().closeBranch()) : failure();
+        if (result.isPresent()) {
+            final Environment newEnvironment = result.get().closeBranch();
+            return predicate.eval(newEnvironment.order, encoding) ? success(newEnvironment) : failure();
+        }
+        return failure();
     }
 
     @Override
@@ -69,8 +69,8 @@ public class Pre extends Token {
     @Override
     public boolean equals(final Object obj) {
         return super.equals(obj)
-            && Objects.equals(token, ((Pre)obj).token)
-            && Objects.equals(predicate, ((Pre)obj).predicate);
+            && Objects.equals(token, ((Post)obj).token)
+            && Objects.equals(predicate, ((Post)obj).predicate);
     }
 
     @Override

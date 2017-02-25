@@ -96,6 +96,7 @@ import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Def;
 import io.parsingdata.metal.token.Nod;
 import io.parsingdata.metal.token.Opt;
+import io.parsingdata.metal.token.Post;
 import io.parsingdata.metal.token.Pre;
 import io.parsingdata.metal.token.Rep;
 import io.parsingdata.metal.token.RepN;
@@ -162,7 +163,8 @@ public class AutoEqualityTest {
             io.parsingdata.metal.expression.logical.Or.class, FoldLeft.class, FoldRight.class, Value.class,
             ParseValue.class, io.parsingdata.metal.expression.logical.Not.class, Const.class, NameRef.class,
             io.parsingdata.metal.expression.value.reference.TokenRef.class, ConstantSource.class, Slice.class,
-            ParseReference.class, DataExpressionSource.class, ParseGraph.class, ByteStreamSource.class, Expand.class
+            ParseReference.class, DataExpressionSource.class, ParseGraph.class, ByteStreamSource.class, Expand.class,
+            Post.class
         );
     }
 
