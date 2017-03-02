@@ -82,13 +82,13 @@ public final class Shorthand {
 
     private Shorthand() {}
 
-    public static Token def(final String name, final ValueExpression size, final Expression predicate, final Encoding encoding) { return new Def(name, size, predicate, encoding); }
+    public static Token def(final String name, final ValueExpression size, final Expression predicate, final Encoding encoding) { return post(def(name, size, encoding), predicate); }
     public static Token def(final String name, final ValueExpression size, final Expression predicate) { return def(name, size, predicate, null); }
-    public static Token def(final String name, final ValueExpression size, final Encoding encoding) { return def(name, size, null, encoding); }
+    public static Token def(final String name, final ValueExpression size, final Encoding encoding) { return new Def(name, size, encoding); }
     public static Token def(final String name, final ValueExpression size) { return def(name, size, (Encoding)null); }
     public static Token def(final String name, final long size, final Expression predicate, final Encoding encoding) { return def(name, con(size), predicate, encoding); }
     public static Token def(final String name, final long size, final Expression predicate) { return def(name, size, predicate, null); }
-    public static Token def(final String name, final long size, final Encoding encoding) { return def(name, size, null, encoding); }
+    public static Token def(final String name, final long size, final Encoding encoding) { return def(name, con(size), encoding); }
     public static Token def(final String name, final long size) { return def(name, size, (Encoding)null); }
     public static Token cho(final String name, final Encoding encoding, final Token... tokens) { return new Cho(name, encoding, tokens); }
     public static Token cho(final String name, final Token... tokens) { return cho(name, null, tokens); }

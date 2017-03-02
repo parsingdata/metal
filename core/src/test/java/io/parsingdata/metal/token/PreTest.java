@@ -18,7 +18,6 @@ package io.parsingdata.metal.token;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 import static io.parsingdata.metal.Shorthand.con;
@@ -78,7 +77,7 @@ public class PreTest {
     @Test
     public void testToString() {
         final Token simpleWhile = pre("pname", def("value", con(1)), eq(con(1)));
-        final String simpleWhileString = "Pre(pname,Def(value,Const(0x01),True), Eq(Const(0x01)))";
+        final String simpleWhileString = "Pre(pname,Def(value,Const(0x01)), Eq(Const(0x01)))";
         assertThat(simpleWhile.toString(), is(equalTo(simpleWhileString)));
     }
 

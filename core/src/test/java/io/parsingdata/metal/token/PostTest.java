@@ -18,15 +18,12 @@ package io.parsingdata.metal.token;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.post;
-import static io.parsingdata.metal.Shorthand.pre;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
@@ -90,7 +87,7 @@ public class PostTest {
     @Test
     public void testToString() {
         final Token simpleWhile = post("pname", def("value", con(1)), eq(con(1)));
-        final String simpleWhileString = "Post(pname,Def(value,Const(0x01),True), Eq(Const(0x01)))";
+        final String simpleWhileString = "Post(pname,Def(value,Const(0x01)), Eq(Const(0x01)))";
         assertThat(simpleWhile.toString(), is(equalTo(simpleWhileString)));
     }
 

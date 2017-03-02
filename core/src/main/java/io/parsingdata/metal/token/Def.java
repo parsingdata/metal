@@ -29,35 +29,27 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.Expression;
-import io.parsingdata.metal.expression.True;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * A {@link Token} that specifies a value to parse in the input.
  * <p>
- * A Def consists of a <code>size</code> (a {@link ValueExpression}, in bytes)
- * and a <code>predicate</code> (an {@link Expression}). The
- * <code>predicate</code> may be <code>null</code>.
+ * A Def consists of a <code>size</code> (a {@link ValueExpression}.
  * <p>
- * Parsing will succeed if <code>size</code> evaluates to a single value, if
- * that many bytes are available in the input and if <code>predicate</code>
- * (if present) evaluates to <code>true</code>.
+ * Parsing will succeed if <code>size</code> evaluates to a single value and if
+ * that many bytes are available in the input.
  *
- * @see Expression
  * @see Nod
  * @see ValueExpression
  */
 public class Def extends Token {
 
     public final ValueExpression size;
-    public final Expression predicate;
 
-    public Def(final String name, final ValueExpression size, final Expression predicate, final Encoding encoding) {
+    public Def(final String name, final ValueExpression size, final Encoding encoding) {
         super(name, encoding);
         this.size = checkNotNull(size, "size");
-        this.predicate = predicate == null ? new True() : predicate;
     }
 
     @Override
@@ -76,25 +68,23 @@ public class Def extends Token {
         if (slice.size != dataSize) {
             return failure();
         }
-        final Environment newEnvironment = environment.add(new ParseValue(scope, this, slice, encoding)).seek(environment.offset + dataSize);
-        return predicate.eval(newEnvironment.order, encoding) ? success(newEnvironment) : failure();
+        return success(environment.add(new ParseValue(scope, this, slice, encoding)).seek(environment.offset + dataSize));
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + makeNameFragment() + size + "," + predicate + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + size + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return super.equals(obj)
-            && Objects.equals(size, ((Def)obj).size)
-            && Objects.equals(predicate, ((Def)obj).predicate);
+            && Objects.equals(size, ((Def)obj).size);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), size, predicate);
+        return Objects.hash(super.hashCode(), size);
     }
 
 }

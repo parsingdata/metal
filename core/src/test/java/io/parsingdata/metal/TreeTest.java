@@ -138,7 +138,7 @@ public class TreeTest {
     }
 
     private void checkHeader(final ParseGraph graph, final long offset) {
-        final ParseItem head = graph.head;
+        final ParseItem head = graph.head.asGraph().head;
         assertTrue(head.isValue());
         assertEquals(HEAD, head.asValue().asNumeric().intValue());
         assertEquals(offset, head.asValue().slice.offset);
