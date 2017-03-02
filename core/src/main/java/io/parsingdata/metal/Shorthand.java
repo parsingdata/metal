@@ -67,7 +67,6 @@ import io.parsingdata.metal.expression.value.reference.Self;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Def;
 import io.parsingdata.metal.token.Nod;
-import io.parsingdata.metal.token.Opt;
 import io.parsingdata.metal.token.Post;
 import io.parsingdata.metal.token.Pre;
 import io.parsingdata.metal.token.Rep;
@@ -123,7 +122,7 @@ public final class Shorthand {
     public static Token whl(final String name, final Token token, final Expression predicate) { return whl(name, token, predicate, null); }
     public static Token whl(final Token token, final Expression predicate, final Encoding encoding) { return whl(NO_NAME, token, predicate, encoding); }
     public static Token whl(final Token token, final Expression predicate) { return whl(NO_NAME, token, predicate); }
-    public static Token opt(final String name, final Token token, final Encoding encoding) { return new Opt(name, token, encoding); }
+    public static Token opt(final String name, final Token token, final Encoding encoding) { return cho(name, encoding, token, empty); }
     public static Token opt(final String name, final Token token) { return opt(name, token, null); }
     public static Token opt(final Token token, final Encoding encoding) { return opt(NO_NAME, token, encoding); }
     public static Token opt(final Token token) { return opt(token, null); }

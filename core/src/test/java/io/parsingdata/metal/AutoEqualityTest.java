@@ -95,7 +95,6 @@ import io.parsingdata.metal.expression.value.reference.Offset;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Def;
 import io.parsingdata.metal.token.Nod;
-import io.parsingdata.metal.token.Opt;
 import io.parsingdata.metal.token.Post;
 import io.parsingdata.metal.token.Pre;
 import io.parsingdata.metal.token.Rep;
@@ -154,8 +153,8 @@ public class AutoEqualityTest {
     @Parameterized.Parameters(name="{0}")
     public static Collection<Object[]> data() throws IllegalAccessException, InvocationTargetException, InstantiationException {
         return generateObjectArrays(
-            Cho.class, Def.class, Nod.class, Opt.class, Pre.class, Rep.class, RepN.class, Seq.class, Sub.class,
-            Tie.class, TokenRef.class, While.class,
+            Cho.class, Def.class, Nod.class, Pre.class, Rep.class, RepN.class, Seq.class, Sub.class, Tie.class,
+            TokenRef.class, While.class, Post.class,
             Len.class, Offset.class, Neg.class, Not.class, Count.class, First.class, Last.class, Reverse.class,
             And.class, Or.class, ShiftLeft.class, ShiftRight.class, Add.class, Div.class, Mod.class, Mul.class,
             io.parsingdata.metal.expression.value.arithmetic.Sub.class, Cat.class, Eq.class, EqNum.class, EqStr.class,
@@ -163,8 +162,7 @@ public class AutoEqualityTest {
             io.parsingdata.metal.expression.logical.Or.class, FoldLeft.class, FoldRight.class, Value.class,
             ParseValue.class, io.parsingdata.metal.expression.logical.Not.class, Const.class, NameRef.class,
             io.parsingdata.metal.expression.value.reference.TokenRef.class, ConstantSource.class, Slice.class,
-            ParseReference.class, DataExpressionSource.class, ParseGraph.class, ByteStreamSource.class, Expand.class,
-            Post.class
+            ParseReference.class, DataExpressionSource.class, ParseGraph.class, ByteStreamSource.class, Expand.class
         );
     }
 

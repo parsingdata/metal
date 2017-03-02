@@ -140,8 +140,8 @@ public class SubStructTest {
 
     private void checkLeaf(final ParseGraph graph, final int graphOffset, final int nextOffset) {
         checkValue(graph.head.asGraph().head, 1, graphOffset + 2); // footer
-        checkValue(graph.tail.head, nextOffset, graphOffset + 1); // next
-        checkValue(graph.tail.tail.head.asGraph().head, 0, graphOffset); // header
+        checkValue(graph.tail.tail.head, nextOffset, graphOffset + 1); // next
+        checkValue(graph.tail.tail.tail.head.asGraph().head, 0, graphOffset); // header
     }
 
     private void checkValue(final ParseItem item, final int value, final int offset) {
