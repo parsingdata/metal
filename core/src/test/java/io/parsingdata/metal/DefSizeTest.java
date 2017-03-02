@@ -17,12 +17,12 @@
 package io.parsingdata.metal;
 
 import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.empty;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
@@ -39,7 +39,6 @@ import org.junit.Test;
 
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
@@ -88,7 +87,7 @@ public class DefSizeTest {
     public void zeroSizeDef() throws IOException {
         assertTrue(seq(
             def("twentyone", con(1), eq(con(21))),
-            def("size=zero", con(0)),
+            empty,
             def("fortytwo", con(1), eq(con(42)))).parse(stream(21, 42), enc()).isPresent());
     }
 
