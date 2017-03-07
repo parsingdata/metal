@@ -70,21 +70,6 @@ public class PostTest {
     }
 
     @Test
-    public void postconditionNull() throws IOException {
-        final Token noPostcondition = post(def("value", 1, eq(con(0))), null);
-        final Optional<Environment> resultSuccess = noPostcondition.parse(stream(0), enc());
-
-        // postcondition null, parse succeeds
-        assertThat(resultSuccess.isPresent(), is(true));
-        assertThat(resultSuccess.get().offset, is(1L));
-
-        final Optional<Environment> resultFailure = noPostcondition.parse(stream(1), enc());
-
-        // postcondition null, parse fails
-        assertThat(resultFailure.isPresent(), is(false));
-    }
-
-    @Test
     public void testToString() {
         final Token simpleWhile = post("pname", def("value", con(1)), eq(con(1)));
         final String simpleWhileString = "Post(pname,Def(value,Const(0x01)), Eq(Const(0x01)))";

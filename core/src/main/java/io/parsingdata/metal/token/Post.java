@@ -16,7 +16,6 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Shorthand.expTrue;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
@@ -48,7 +47,7 @@ public class Post extends Token {
     public Post(final String name, final Token token, final Expression predicate, final Encoding encoding) {
         super(name, encoding);
         this.token = checkNotNull(token, "token");
-        this.predicate = predicate == null ? expTrue() : predicate;
+        this.predicate = checkNotNull(predicate, "predicate");
     }
 
     @Override

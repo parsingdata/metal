@@ -66,15 +66,6 @@ public class PreTest {
     }
 
     @Test
-    public void preconditionNull() throws IOException {
-        final Token noPrecondition = pre(def("value", 1), null);
-        final Optional<Environment> result = noPrecondition.parse(stream(0), enc());
-
-        // precondition null, always parse
-        assertThat(result.get().offset, is(1L));
-    }
-
-    @Test
     public void testToString() {
         final Token simpleWhile = pre("pname", def("value", con(1)), eq(con(1)));
         final String simpleWhileString = "Pre(pname,Def(value,Const(0x01)), Eq(Const(0x01)))";
