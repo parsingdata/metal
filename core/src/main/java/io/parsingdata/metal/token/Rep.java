@@ -25,6 +25,9 @@ import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.util.FinalTrampoline;
+import io.parsingdata.metal.token.util.IntermediateTrampoline;
+import io.parsingdata.metal.token.util.Trampoline;
 
 /**
  * A {@link Token} that specifies a possible repetition of a token.
@@ -46,16 +49,16 @@ public class Rep extends Token {
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final Optional<Environment> result = iterate(scope, environment.addBranch(this), encoding);
-        return success(result.get().closeBranch());
+        final Environment input = environment.addBranch(this);
+        return success(iterate(scope, Optional.of(input), encoding, input).computeResult().closeBranch());
     }
 
-    private Optional<Environment> iterate(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final Optional<Environment> result = token.parse(scope, environment, encoding);
-        if (result.isPresent()) {
-            return iterate(scope, result.get(), encoding);
+    private Trampoline<Environment> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final Environment previous) throws IOException {
+        if (environment.isPresent()) {
+            return (IntermediateTrampoline<Environment>) () -> iterate(scope, token.parse(scope, environment.get(), encoding), encoding, environment.get());
+        } else {
+            return (FinalTrampoline<Environment>) () -> previous;
         }
-        return success(environment);
     }
 
     @Override
