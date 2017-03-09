@@ -24,11 +24,15 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.token.util.FinalTrampoline;
+import io.parsingdata.metal.token.util.IntermediateTrampoline;
+import io.parsingdata.metal.token.util.Trampoline;
 
 /**
  * A {@link Token} that specifies a bounded repetition of a token.
@@ -59,22 +63,22 @@ public class RepN extends Token {
         if (counts.size != 1 || !counts.head.isPresent()) {
             return failure();
         }
-        final Optional<Environment> result = iterate(scope, environment.addBranch(this), encoding, counts.head.get().asNumeric().longValue());
+        final Optional<Environment> result = iterate(scope, Optional.of(environment.addBranch(this)), encoding, counts.head.get().asNumeric().longValue()).computeResult();
         if (result.isPresent()) {
             return success(result.get().closeBranch());
         }
         return failure();
     }
 
-    private Optional<Environment> iterate(final String scope, final Environment environment, final Encoding encoding, final long count) throws IOException {
-        if (count <= 0) {
-            return success(environment);
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final long count) throws IOException {
+        if (environment.isPresent()) {
+            if (count <= 0) {
+                return (FinalTrampoline<Optional<Environment>>) () -> success(environment.get());
+            } else {
+                return (IntermediateTrampoline<Optional<Environment>>) () -> iterate(scope, token.parse(scope, environment.get(), encoding), encoding, count - 1);
+            }
         }
-        final Optional<Environment> result = token.parse(scope, environment, encoding);
-        if (result.isPresent()) {
-            return iterate(scope, result.get(), encoding, count - 1);
-        }
-        return failure();
+        return (FinalTrampoline<Optional<Environment>>) Util::failure;
     }
 
     @Override
