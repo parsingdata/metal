@@ -54,8 +54,8 @@ public class Post extends Token {
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         final Optional<Environment> result = token.parse(scope, environment.addBranch(this), encoding);
         if (result.isPresent()) {
-            final Environment newEnvironment = result.get().closeBranch();
-            return predicate.eval(newEnvironment.order, encoding) ? success(newEnvironment) : failure();
+            final Environment newEnvironment = result.get();
+            return predicate.eval(newEnvironment.order, encoding) ? success(newEnvironment.closeBranch()) : failure();
         }
         return failure();
     }
