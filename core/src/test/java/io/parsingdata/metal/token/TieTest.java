@@ -130,7 +130,7 @@ public class TieTest {
                 def("data", last(ref("size"))),
                 tie(l2Token, inflate(last(ref("data")))));
         final Optional<Environment> result = checkFullParse(l1Token, l1Data);
-        assertEquals(80, result.get().order.head.asGraph().head.asGraph().head.asGraph().head.asGraph().head.asGraph().head.asValue().asNumeric().intValue());
+        assertEquals(80, result.get().order.head.asGraph().head.asGraph().head.asGraph().head.asGraph().head.asGraph().head.asGraph().head.asValue().asNumeric().intValue());
     }
 
     private byte[] flipBlocks(byte[] input, int blockSize) {

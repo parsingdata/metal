@@ -26,6 +26,7 @@ import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
@@ -51,12 +52,16 @@ import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class CallbackTest {
 
-    private static final Token ONE = def("one", 1, eq(con(1)));
-    private static final Token TWO = def("two", 1, eq(con(2)));
-    private static final Token THREE = def("three", 1, eq(con(3)));
-    private static final Token FOUR = def("four", 1, eq(con(4)));
-    private static final Token SEQ123 = seq(ONE, TWO, THREE);
-    private static final Token SEQ124 = seq(ONE, TWO, FOUR);
+    private static final Token DEF_ONE = def("one", 1);
+    private static final Token POST_ONE = post(DEF_ONE, eq(con(1)));
+    private static final Token DEF_TWO = def("two", 1);
+    private static final Token POST_TWO = post(DEF_TWO, eq(con(2)));
+    private static final Token DEF_THREE = def("three", 1);
+    private static final Token POST_THREE = post(DEF_THREE, eq(con(3)));
+    private static final Token DEF_FOUR = def("four", 1);
+    private static final Token POST_FOUR = post(DEF_FOUR, eq(con(4)));
+    private static final Token SEQ123 = seq(POST_ONE, POST_TWO, POST_THREE);
+    private static final Token SEQ124 = seq(POST_ONE, POST_TWO, POST_FOUR);
     private static final Token CHOICE = cho(SEQ123, SEQ124);
 
     private long linkedListCount = 0;
@@ -65,11 +70,11 @@ public class CallbackTest {
     public void testHandleCallback() throws IOException {
         final CountingCallback countingCallback = new CountingCallback();
 
-        final Token cho = cho("cho", ONE, TWO);
-        final Token sequence = seq("seq", cho, ONE);
+        final Token cho = cho("cho", POST_ONE, POST_TWO);
+        final Token sequence = seq("seq", cho, POST_ONE);
         final Callbacks callbacks = Callbacks.create()
-                .add(ONE, countingCallback)
-                .add(TWO, countingCallback)
+                .add(POST_ONE, countingCallback)
+                .add(POST_TWO, countingCallback)
                 .add(cho, countingCallback)
                 .add(sequence, countingCallback);
         final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 2, 1 }), callbacks);
@@ -154,9 +159,9 @@ public class CallbackTest {
 
     @Test
     public void genericCallback() throws IOException {
-        final Deque<Token> expectedSuccessDefinitions = new ArrayDeque<>(Arrays.asList(ONE, TWO, ONE, TWO, FOUR, SEQ124, CHOICE));
-        final Deque<Long> expectedSuccessOffsets = new ArrayDeque<>(Arrays.asList(1L, 2L, 1L, 2L, 3L, 3L, 3L));
-        final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(Arrays.asList(THREE, SEQ123));
+        final Deque<Token> expectedSuccessDefinitions = new ArrayDeque<>(Arrays.asList(DEF_ONE, POST_ONE, DEF_TWO, POST_TWO, DEF_THREE, DEF_ONE, POST_ONE, DEF_TWO, POST_TWO, DEF_FOUR, POST_FOUR, SEQ124, CHOICE));
+        final Deque<Long> expectedSuccessOffsets = new ArrayDeque<>(Arrays.asList(1L, 1L, 2L, 2L, 3L, 1L, 1L, 2L, 2L, 3L, 3L, 3L, 3L));
+        final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(Arrays.asList(POST_THREE, SEQ123));
         final Deque<Long> expectedFailureOffsets = new ArrayDeque<>(Arrays.asList(2L, 0L));
         final OffsetDefinitionCallback genericCallback = new OffsetDefinitionCallback(
             expectedSuccessOffsets,
@@ -175,11 +180,11 @@ public class CallbackTest {
     public void tokenAndGenericCallbacks() throws IOException {
         final CountingCallback countingCallback = new CountingCallback();
 
-        final Token cho = cho(ONE, TWO);
+        final Token cho = cho(POST_ONE, POST_TWO);
 
-        final Deque<Token> expectedSuccessDefinitions = new ArrayDeque<>(Arrays.asList(TWO, cho));
-        final Deque<Long> expectedSuccessOffsets = new ArrayDeque<>(Arrays.asList(1L, 1L));
-        final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(Collections.singletonList(ONE));
+        final Deque<Token> expectedSuccessDefinitions = new ArrayDeque<>(Arrays.asList(DEF_ONE, DEF_TWO, POST_TWO, cho));
+        final Deque<Long> expectedSuccessOffsets = new ArrayDeque<>(Arrays.asList(1L, 1L, 1L, 1L));
+        final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(Collections.singletonList(POST_ONE));
         final Deque<Long> expectedFailureOffsets = new ArrayDeque<>(Collections.singletonList(0L));
         final OffsetDefinitionCallback genericCallback = new OffsetDefinitionCallback(
             expectedSuccessOffsets,
@@ -189,8 +194,10 @@ public class CallbackTest {
 
         final Callbacks callbacks = Callbacks.create()
             .add(genericCallback)
-            .add(ONE, countingCallback)
-            .add(TWO, countingCallback)
+            .add(DEF_ONE, countingCallback)
+            .add(POST_ONE, countingCallback)
+            .add(DEF_TWO, countingCallback)
+            .add(POST_TWO, countingCallback)
             .add(cho, countingCallback);
         final long expectedSuccessCount = expectedSuccessDefinitions.size();
         final long expectedFailureCount = expectedFailureDefinitions.size();

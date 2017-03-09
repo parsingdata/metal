@@ -46,6 +46,7 @@ import static io.parsingdata.metal.Shorthand.nth;
 import static io.parsingdata.metal.Shorthand.offset;
 import static io.parsingdata.metal.Shorthand.opt;
 import static io.parsingdata.metal.Shorthand.or;
+import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.pre;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
@@ -98,7 +99,7 @@ public class ToStringTest {
     @Test
     public void validateToStringImplementation() {
         final Expression e = not(and(eq(v(), v()), or(eqNum(v()), and(eqStr(v()), or(gtNum(v()), ltNum(v()))))));
-        final Token t = repn(sub(opt(pre(rep(cho(token("refName"), any(n()), seq(tie(nod(v()), v()), whl(def(n(), con(1), e), e), tie(t(), con(1))))), e)), v()), v());
+        final Token t = post(repn(sub(opt(pre(rep(cho(token("refName"), any(n()), seq(tie(nod(v()), v()), whl(def(n(), con(1), e), e), tie(t(), con(1))))), e)), v()), v()), e);
         final String output = t.toString();
         for (int i = 0; i < count; i++) {
             assertTrue(output.contains(prefix + i));

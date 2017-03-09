@@ -58,7 +58,6 @@ import io.parsingdata.metal.expression.value.reference.TokenRef;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Def;
 import io.parsingdata.metal.token.Nod;
-import io.parsingdata.metal.token.Opt;
 import io.parsingdata.metal.token.Pre;
 import io.parsingdata.metal.token.Rep;
 import io.parsingdata.metal.token.RepN;
@@ -114,12 +113,10 @@ public class ArgumentsTest {
             { Cho.class, new Object[] { VALID_NAME, null, new Token[] { VALID_T, null } } },
             { Cho.class, new Object[] { VALID_NAME, null, new Token[] { null, VALID_T } } },
             { Cho.class, new Object[] { VALID_NAME, null, null } },
-            { Def.class, new Object[] { VALID_NAME, null, null, null } },
-            { Def.class, new Object[] { null, VALID_VE, null, null } },
+            { Def.class, new Object[] { VALID_NAME, null, null } },
+            { Def.class, new Object[] { null, VALID_VE, null } },
             { Nod.class, new Object[] { null, VALID_VE, null } },
             { Nod.class, new Object[] { VALID_NAME, null, null } },
-            { Opt.class, new Object[] { null, VALID_T, null } },
-            { Opt.class, new Object[] { VALID_NAME, null, null } },
             { Pre.class, new Object[] { null, VALID_T, null, null } },
             { Pre.class, new Object[] { VALID_NAME, null, null, null } },
             { Rep.class, new Object[] { null, VALID_T, null } },

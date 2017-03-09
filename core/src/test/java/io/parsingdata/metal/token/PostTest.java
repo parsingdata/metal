@@ -23,11 +23,12 @@ import static org.junit.Assert.assertThat;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
-import static io.parsingdata.metal.Shorthand.pre;
+import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -36,39 +37,42 @@ import org.junit.Test;
 
 import io.parsingdata.metal.data.Environment;
 
-public class PreTest {
+public class PostTest {
 
-    private static final Token PRECONDITION = pre(def("value", 1, eq(con(1))), eq(ref("header"), con(1)));
-    private static final Token SEQUENCE = seq(def("header", 1), PRECONDITION);
+    private static final Token SEQUENCE =
+        post(seq(any("header"),
+                 def("value", 1, eq(con(1)))),
+                 eq(ref("header"), con(1)));
 
     @Test
-    public void preconditionTrue() throws IOException {
+    public void postconditionTrue() throws IOException {
         final Optional<Environment> result = SEQUENCE.parse(stream(1, 1), enc());
 
-        // precondition is true, token is parsed
+        // token parses and postcondition is true
+        assertThat(result.isPresent(), is(true));
         assertThat(result.get().offset, is(2L));
     }
 
     @Test
-    public void preconditionFalse() throws IOException {
+    public void postconditionFalse() throws IOException {
         final Optional<Environment> result = SEQUENCE.parse(stream(0, 1), enc());
 
-        // precondition is false, token is not parsed
+        // token parses, but postcondition is false
         assertThat(result.isPresent(), is(false));
     }
 
     @Test
-    public void preconditionTrueParseFails() throws IOException {
+    public void postconditionParseFails() throws IOException {
         final Optional<Environment> result = SEQUENCE.parse(stream(1, 2), enc());
 
-        // precondition is true, but token can't be parsed
+        // parse fails
         assertThat(result.isPresent(), is(false));
     }
 
     @Test
     public void testToString() {
-        final Token simpleWhile = pre("pname", def("value", con(1)), eq(con(1)));
-        final String simpleWhileString = "Pre(pname,Def(value,Const(0x01)), Eq(Const(0x01)))";
+        final Token simpleWhile = post("pname", def("value", con(1)), eq(con(1)));
+        final String simpleWhileString = "Post(pname,Def(value,Const(0x01)), Eq(Const(0x01)))";
         assertThat(simpleWhile.toString(), is(equalTo(simpleWhileString)));
     }
 

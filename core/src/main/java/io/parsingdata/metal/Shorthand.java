@@ -67,7 +67,7 @@ import io.parsingdata.metal.expression.value.reference.Self;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Def;
 import io.parsingdata.metal.token.Nod;
-import io.parsingdata.metal.token.Opt;
+import io.parsingdata.metal.token.Post;
 import io.parsingdata.metal.token.Pre;
 import io.parsingdata.metal.token.Rep;
 import io.parsingdata.metal.token.RepN;
@@ -81,14 +81,15 @@ public final class Shorthand {
 
     private Shorthand() {}
 
-    public static Token def(final String name, final ValueExpression size, final Expression predicate, final Encoding encoding) { return new Def(name, size, predicate, encoding); }
+    public static Token def(final String name, final ValueExpression size, final Expression predicate, final Encoding encoding) { return post(def(name, size, encoding), predicate); }
     public static Token def(final String name, final ValueExpression size, final Expression predicate) { return def(name, size, predicate, null); }
-    public static Token def(final String name, final ValueExpression size, final Encoding encoding) { return def(name, size, null, encoding); }
+    public static Token def(final String name, final ValueExpression size, final Encoding encoding) { return new Def(name, size, encoding); }
     public static Token def(final String name, final ValueExpression size) { return def(name, size, (Encoding)null); }
     public static Token def(final String name, final long size, final Expression predicate, final Encoding encoding) { return def(name, con(size), predicate, encoding); }
     public static Token def(final String name, final long size, final Expression predicate) { return def(name, size, predicate, null); }
-    public static Token def(final String name, final long size, final Encoding encoding) { return def(name, size, null, encoding); }
+    public static Token def(final String name, final long size, final Encoding encoding) { return def(name, con(size), encoding); }
     public static Token def(final String name, final long size) { return def(name, size, (Encoding)null); }
+    public static final Token empty = def(NO_NAME, 0L);
     public static Token cho(final String name, final Encoding encoding, final Token... tokens) { return new Cho(name, encoding, tokens); }
     public static Token cho(final String name, final Token... tokens) { return cho(name, null, tokens); }
     public static Token cho(final Encoding encoding, final Token... tokens) { return cho(NO_NAME, encoding, tokens); }
@@ -113,11 +114,15 @@ public final class Shorthand {
     public static Token pre(final String name, final Token token, final Expression predicate) { return pre(name, token, predicate, null); }
     public static Token pre(final Token token, final Expression predicate, final Encoding encoding) { return pre(NO_NAME, token, predicate, encoding); }
     public static Token pre(final Token token, final Expression predicate) { return pre(token, predicate, null); }
+    public static Token post(final String name, final Token token, final Expression predicate, final Encoding encoding) { return new Post(name, token, predicate, encoding); }
+    public static Token post(final String name, final Token token, final Expression predicate) { return post(name, token, predicate, null); }
+    public static Token post(final Token token, final Expression predicate, final Encoding encoding) { return post(NO_NAME, token, predicate, encoding); }
+    public static Token post(final Token token, final Expression predicate) { return post(token, predicate, null); }
     public static Token whl(final String name, final Token token, final Expression predicate, final Encoding encoding) { return new While(name, token, predicate, encoding); }
     public static Token whl(final String name, final Token token, final Expression predicate) { return whl(name, token, predicate, null); }
     public static Token whl(final Token token, final Expression predicate, final Encoding encoding) { return whl(NO_NAME, token, predicate, encoding); }
     public static Token whl(final Token token, final Expression predicate) { return whl(NO_NAME, token, predicate); }
-    public static Token opt(final String name, final Token token, final Encoding encoding) { return new Opt(name, token, encoding); }
+    public static Token opt(final String name, final Token token, final Encoding encoding) { return cho(name, encoding, token, empty); }
     public static Token opt(final String name, final Token token) { return opt(name, token, null); }
     public static Token opt(final Token token, final Encoding encoding) { return opt(NO_NAME, token, encoding); }
     public static Token opt(final Token token) { return opt(token, null); }

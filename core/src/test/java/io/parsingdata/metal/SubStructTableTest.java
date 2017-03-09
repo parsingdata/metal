@@ -91,9 +91,10 @@ public class SubStructTableTest {
     }
 
     private void checkStruct(final ParseGraph graph, final int offsetHeader) {
-        assertEquals(84, graph.head.asValue().asNumeric().intValue());
-        assertEquals(42, graph.tail.head.asValue().asNumeric().intValue());
-        assertEquals(offsetHeader, graph.tail.head.asValue().slice.offset);
+        assertTrue(graph.head.isGraph());
+        assertEquals(84, graph.head.asGraph().head.asValue().asNumeric().intValue());
+        assertEquals(42, graph.tail.head.asGraph().head.asValue().asNumeric().intValue());
+        assertEquals(offsetHeader, graph.tail.head.asGraph().head.asValue().slice.offset);
     }
 
 }
