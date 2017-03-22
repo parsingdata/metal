@@ -307,7 +307,7 @@ public class ByTokenTest {
         }
 
         @Override
-        protected Optional<Environment> parseImpl(String scope, Environment environment, Encoding encoding) throws IOException {
+        protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
             return token.parse(scope, environment, encoding);
         }
     }
@@ -329,4 +329,37 @@ public class ByTokenTest {
         assertEquals(1, getAllRoots(ParseGraph.EMPTY, ParseGraph.NONE).size);
     }
 
+    @Test
+    public void getAllRootsOrderRepDef() throws IOException {
+        final ParseGraph graph = parseResultGraph(stream(0, 1, 2), rep(DEF1));
+        final ImmutableList<ParseItem> items = getAllRoots(graph, DEF1);
+        assertThat(items.size, is(equalTo(3L)));
+        assertThat(items.head.asValue().asNumeric().intValue(), is(equalTo(2)));
+        assertThat(items.tail.head.asValue().asNumeric().intValue(), is(equalTo(1)));
+        assertThat(items.tail.tail.head.asValue().asNumeric().intValue(), is(equalTo(0)));
+    }
+
+    @Test
+    public void getAllRootsOrderSeqSub() {
+        final ParseGraph graph = parseResultGraph(stream(4, 2, 2, 3, 4, 5), SEQ_SUB);
+        final ImmutableList<ParseItem> items = getAllRoots(graph, TWO_BYTES);
+        assertThat(items.size, is(equalTo(2L)));
+        assertThat(items.head.asValue().asNumeric().intValue(), is(equalTo(0x0203)));
+        assertThat(items.tail.head.asValue().asNumeric().intValue(), is(equalTo(0x0405)));
+    }
+
+    @Test
+    public void getAllRootsOrderMutualRecursive() {
+        final ParseGraph graph = parseResultGraph(stream(0, 1, 2, 3, 4, 5), MUT_REC_1);
+        final ImmutableList<ParseItem> items = getAllRoots(graph, MUT_REC_1);
+        assertThat(items.size, is(equalTo(2L)));
+
+        final ImmutableList<ParseItem> firstMutRecValues = getAll(items.head.asGraph(), DEF1);
+        assertThat(firstMutRecValues.size, is(equalTo(1L)));
+        assertThat(firstMutRecValues.head.asValue().asNumeric().intValue(), is(equalTo(3)));
+
+        final ImmutableList<ParseItem> secondMutRecValues = getAll(items.tail.head.asGraph(), DEF1);
+        assertThat(secondMutRecValues.size, is(equalTo(2L)));
+        assertThat(secondMutRecValues.tail.head.asValue().asNumeric().intValue(), is(equalTo(0)));
+    }
 }
