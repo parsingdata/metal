@@ -34,6 +34,7 @@ import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.data.selection.ByToken.get;
 import static io.parsingdata.metal.data.selection.ByToken.getAll;
@@ -56,6 +57,7 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.transformation.Reversal;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Token;
@@ -81,6 +83,13 @@ public class ByTokenTest {
     });
 
     private static final Token MUT_REC_2 = seq(REPN_DEF2, opt(MUT_REC_1));
+    
+    private static final Token SELF_REC =
+        seq("selfRec",
+            DEF1,
+            def("childCount", 1),
+            repn(
+                 token("selfRec"), last(ref("childCount"))));
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -354,12 +363,32 @@ public class ByTokenTest {
         final ImmutableList<ParseItem> items = getAllRoots(graph, MUT_REC_1);
         assertThat(items.size, is(equalTo(2L)));
 
+        // item.head is the MUT_REC_1 graph containing [3, 4, 5], with '3' having the DEF1 definition
         final ImmutableList<ParseItem> firstMutRecValues = getAll(items.head.asGraph(), DEF1);
         assertThat(firstMutRecValues.size, is(equalTo(1L)));
         assertThat(firstMutRecValues.head.asValue().asNumeric().intValue(), is(equalTo(3)));
 
+        // item.tail.head is the MUT_REC_1 graph containing [0, 1, 2, 3, 4, 5], with '0' and '3' having the DEF1 definition
         final ImmutableList<ParseItem> secondMutRecValues = getAll(items.tail.head.asGraph(), DEF1);
         assertThat(secondMutRecValues.size, is(equalTo(2L)));
         assertThat(secondMutRecValues.tail.head.asValue().asNumeric().intValue(), is(equalTo(0)));
     }
+
+    @Test
+    public void getAllRootsSelfRecursive() throws IOException {
+        final ParseGraph graph = parseResultGraph(stream(0xA, 3, 0xB, 2, 0xC, 0, 0xD, 0, 0xE, 0, 0xF, 0), SELF_REC);
+        ImmutableList<ParseItem> items = ByToken.getAllRoots(graph, SELF_REC);
+        assertThat(items.size, is(equalTo(6L)));
+
+        for (int value = 0xF; value >= 0xA; value--) {
+            final ImmutableList<ParseItem> values = getAll(items.head.asGraph(), DEF1);
+            assertThat(lastItem(values).asValue().asNumeric().intValue(), is(equalTo(value)));
+            items = items.tail;
+        }
+    }
+
+    private static <T> T lastItem(final ImmutableList<T> items) {
+        return Reversal.reverse(items).head;
+    }
+
 }
