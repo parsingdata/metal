@@ -366,12 +366,12 @@ public class ByTokenTest {
         // item.head is the MUT_REC_1 graph containing [3, 4, 5], with '3' having the DEF1 definition
         final ImmutableList<ParseItem> firstMutRecValues = getAll(items.head.asGraph(), DEF1);
         assertThat(firstMutRecValues.size, is(equalTo(1L)));
-        assertThat(firstMutRecValues.head.asValue().asNumeric().intValue(), is(equalTo(3)));
+        assertThat(lastItem(firstMutRecValues).asValue().asNumeric().intValue(), is(equalTo(3)));
 
         // item.tail.head is the MUT_REC_1 graph containing [0, 1, 2, 3, 4, 5], with '0' and '3' having the DEF1 definition
         final ImmutableList<ParseItem> secondMutRecValues = getAll(items.tail.head.asGraph(), DEF1);
         assertThat(secondMutRecValues.size, is(equalTo(2L)));
-        assertThat(secondMutRecValues.tail.head.asValue().asNumeric().intValue(), is(equalTo(0)));
+        assertThat(lastItem(secondMutRecValues).asValue().asNumeric().intValue(), is(equalTo(0)));
     }
 
     @Test

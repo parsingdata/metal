@@ -96,8 +96,8 @@ public final class ByToken {
             : new ImmutableList<>();
         if (item.isGraph() && !item.asGraph().isEmpty()) {
             return result
-                .add(getAllRootsRecursive(item.asGraph().tail, item.asGraph(), definition)
-                    .add(getAllRootsRecursive(item.asGraph().head, item.asGraph(), definition)));
+                .add(getAllRootsRecursive(item.asGraph().tail, item.asGraph(), definition))
+                .add(getAllRootsRecursive(item.asGraph().head, item.asGraph(), definition));
         }
         return result;
     }
