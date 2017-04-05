@@ -92,12 +92,12 @@ public final class ByToken {
 
     private static ImmutableList<ParseItem> getAllRootsRecursive(final ParseItem item, final ParseGraph parent, final Token definition) {
         final ImmutableList<ParseItem> result = item.getDefinition().equals(definition) && (parent == null || !parent.getDefinition().equals(definition))
-                ? ImmutableList.create(item)
-                : new ImmutableList();
+            ? ImmutableList.create(item)
+            : new ImmutableList<>();
         if (item.isGraph() && !item.asGraph().isEmpty()) {
-            return getAllRootsRecursive(item.asGraph().tail, item.asGraph(), definition)
-                    .add(getAllRootsRecursive(item.asGraph().head, item.asGraph(), definition))
-                    .add(result);
+            return result
+                .add(getAllRootsRecursive(item.asGraph().tail, item.asGraph(), definition))
+                .add(getAllRootsRecursive(item.asGraph().head, item.asGraph(), definition));
         }
         return result;
     }
