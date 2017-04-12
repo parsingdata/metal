@@ -25,9 +25,13 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.util.FinalTrampoline;
+import io.parsingdata.metal.token.util.IntermediateTrampoline;
+import io.parsingdata.metal.token.util.Trampoline;
 
 /**
  * A {@link Token} that specifies a dependency between a list of tokens.
@@ -48,22 +52,22 @@ public class Seq extends Token {
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final Optional<Environment> result = iterate(scope, environment.addBranch(this), encoding, tokens);
+        final Optional<Environment> result = iterate(scope, Optional.of(environment.addBranch(this)), encoding, tokens).computeResult();
         if (result.isPresent()) {
             return success(result.get().closeBranch());
         }
         return failure();
     }
 
-    private Optional<Environment> iterate(final String scope, final Environment environment, final Encoding encoding, final ImmutableList<Token> list) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final ImmutableList<Token> list) throws IOException {
+        if (!environment.isPresent()) {
+            return (FinalTrampoline<Optional<Environment>>) Util::failure;
+        }
         if (list.isEmpty()) {
-            return success(environment);
+            return (FinalTrampoline<Optional<Environment>>) () -> success(environment.get());
+        } else {
+            return (IntermediateTrampoline<Optional<Environment>>) () -> iterate(scope, list.head.parse(scope, environment.get(), encoding), encoding, list.tail);
         }
-        final Optional<Environment> result = list.head.parse(scope, environment, encoding);
-        if (result.isPresent()) {
-            return iterate(scope, result.get(), encoding, list.tail);
-        }
-        return result;
     }
 
     @Override
