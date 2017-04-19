@@ -1,0 +1,370 @@
+<html>
+<head>
+<style>
+    body {
+        font-family: Verdana;
+    }
+
+    .byteWrapper, .linenr, .spacer {
+        display: table-cell;
+    }
+
+    .byteWrapper, .spacer, .spacerRow {
+        cursor: none;
+    }
+
+    .linenr {
+        padding-right: 4px;
+        margin-right: 10px;
+        text-align: right;
+        background-color: #bab398;
+    }
+
+    .selected {
+        background-color: #2929d0;
+        color: white;
+    }
+
+    #filePosition, .row {
+        font-size: 16px;
+    }
+
+    #name {
+        padding-left: 12px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .row {
+        display: table-row;
+    }
+
+    .spacerRow {
+        height: 2px;
+    }
+
+    #hexview, #asciiview {
+        display: table;
+        background-color: #e6dfd3;
+    }
+
+    #hexview {
+        float: left;
+        padding-right: 10px;
+        border-right: 1px solid black;
+    }
+
+    #asciiview {
+        padding-left: 10px;
+    }
+
+    #toolbar #values {
+        font-size: 12px;
+    }
+
+    #toolbar {
+        display: block;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+    }
+
+    #pagesOfInterest button {
+        display: block;
+        width: 140px;
+    }
+</style>
+<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+<script>
+var page = 0;
+var pageSize = 1024;
+var columnCount = 32;
+
+function unpack(buffer, asBigEndian) {
+    if (buffer.length == 1 || buffer.length == 2 || buffer.length == 4 || buffer.length == 6 || buffer.length == 8) {
+         var value = 0;
+         for (var j = 0, i = asBigEndian ? buffer.length - 1 : 0; asBigEndian ? i >= 0 : i < buffer.length; asBigEndian ? i-- : i++, j++) {
+             value |= (buffer[i] & 0xff) << (j * 8);
+         }
+         return value;
+    }
+    return '';
+}
+
+$(function() {
+    $('body').on('mouseenter', '.byte', function(){
+        var position = parseInt($(this).attr('position'));
+        $('.byte[position=' + position +']').each(function(index, value) {
+            $(value).addClass('selected');
+        });
+
+        $('#filePosition').text(toHex(position) + ' / ' + position);
+
+        var definition = getDefinition(parseInt(position)); // TODO int != long
+        if (definition) {
+            $('#name').text(definition[2]);
+
+            getData(definition[0], definition[1], function(buffer) {
+                $('#values #length').text(buffer.length);
+                $('#values #be').text(unpack(buffer, true));
+                $('#values #le').text(unpack(buffer, false));
+            });
+        }
+        else {
+            $('#values #length').empty();
+            $('#values #be').empty();
+            $('#values #le').empty();
+        }
+    }).on('keydown', 'numeric', function(e){-1!==$.inArray(e.keyCode,[46,8,9,27,13,110,190])||/65|67|86|88/.test(e.keyCode)&&(!0===e.ctrlKey||!0===e.metaKey)||35<=e.keyCode&&40>=e.keyCode||(e.shiftKey||48>e.keyCode||57<e.keyCode)&&(96>e.keyCode||105<e.keyCode)&&e.preventDefault()});
+
+    $('body').on('mouseleave', '.byte', function(){
+        var position = parseInt($(this).attr('position'));
+        $('.byte[position=' + position +']').each(function(index, value){
+            $(value).removeClass('selected');
+        });
+        $('#name').html('&nbsp;')
+        $('#filePosition').html('&nbsp;')
+    });
+
+    $('#prev').click(function(e) {
+        page -= 1;
+        readPage();
+    }).attr("disabled", true);
+
+    $('#next').click(function(e) {
+        page += 1;
+        readPage();
+    });
+
+    var prevPage;
+    $.each(locations, function(index, value) {
+        var page = Math.floor(value / (pageSize / columnCount));
+        if (page !== prevPage) {
+            $('#pagesOfInterest').append($('<button>').text('Page ' + page).attr('page', page));
+            prevPage = page;
+        }
+    });
+
+    $('#pagesOfInterest').on('click', 'button', function() {
+        $('#jumpPage').val($(this).attr('page'));
+        $('#goPage').trigger('click');
+    });
+
+    $('#goPage').click(function() {
+        page = parseInt($('#jumpPage').val());
+        readPage();
+    });
+
+    $('#goOffset').click(function() {
+        var offset = parseInt($('#jumpOffset').val());
+        page = Math.floor(offset / pageSize);
+        readPage();
+    });
+});
+
+var lastDefinition;
+function getDefinition(position) {
+    if (lastDefinition && inRange(lastDefinition, position)) {
+        // Instead of reading all rows above to check if this is part of a multi-row def,
+        // just cache the previous definition and check again.
+        // Note that this only works for drawing the highlights, not for a mouseover event.
+        return lastDefinition;
+    }
+
+    var rowIndex = $.inArray(Math.floor(position / columnCount), locations);
+    if (rowIndex !== -1) {
+        var row = data[rowIndex];
+        for (var i = 0; i < row.length; i++) {
+            var definition = row[i];
+            if (inRange(definition, position)) {
+                lastDefinition = definition;
+                return definition;
+            }
+        }
+    }
+}
+
+function inRange(definition, position) {
+    var offset = definition[0];
+    var size = definition[1];
+    return position >= offset && position < offset + size;
+}
+
+function isStartOrEnd(definition, position) {
+    var offset = definition[0];
+    var size = definition[1];
+    return position === offset || position === offset + size;
+}
+
+function hsv2rgb(h, s, v) {
+    var r, g, b;
+    var i;
+    var f, p, q, t;
+    s /= 100;
+    v /= 100;
+    h /= 60;
+    i = Math.floor(h);
+    f = h - i;
+    p = v * (1 - s);
+    q = v * (1 - s * f);
+    t = v * (1 - s * (1 - f));
+    switch(i) {
+        case 0: r = v; g = t; b = p; break;
+        case 1: r = q; g = v; b = p; break;
+        case 2: r = p; g = v; b = t; break;
+        case 3: r = p; g = q; b = v; break;
+        case 4: r = t; g = p; b = v; break;
+        default: r = v; g = p; b = q;
+    }
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+
+var flip = true;
+var lastColor = 0;
+var colors = {};
+function getHue(str) {
+    if (!(str in colors)) {
+        lastColor = (lastColor + 12) % 180;
+        colors[str] = flip ? lastColor : 360 - lastColor;
+        flip = !flip;
+    }
+    return colors[str];
+}
+
+var file;
+function readSingleFile(e) {
+    file = e.files[0];
+    if (!file) {
+        return;
+    }
+    readPage();
+}
+
+function toHex(value) {
+    var hex = value.toString(16);
+    hex = (hex.length === 1) ? '0' + hex : hex;
+    return hex;
+}
+
+function getData(offset, size, callback) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var buffer = new Uint8Array(e.target.result);
+        callback(buffer);
+    };
+    var slice = file.slice(offset, offset + size);
+    reader.readAsArrayBuffer(slice);
+}
+
+function readPage() {
+    var pageOffset = page * pageSize;
+    if (page > 0) {
+        $('#prev').removeAttr('disabled');
+    }
+    else {
+        $('#prev').attr('disabled', true);
+    }
+    $("#jumpPage").val(page);
+    $("#jumpOffset").val(pageOffset);
+
+    getData(pageOffset, pageSize, function(buffer) {
+        var pagePosition = 0;
+        $('#hexview').empty();
+        $('#asciiview').empty();
+
+        for (var row = 0; pagePosition < buffer.length; row++) {
+            if (buffer.length - pagePosition < columnCount) {
+                columnCount = buffer.length - pagePosition;
+            }
+
+            var hexNr = (pagePosition + pageOffset).toString(16);
+            var hexRow = $('<div>').addClass('row')
+                .append($('<div>').addClass('linenr').text(hexNr));
+
+            $('#hexview').append(hexRow).append($('<div>').addClass('spacerRow row'));
+
+            var asciiRow = $('<div>').addClass('row');
+            $('#asciiview').append(asciiRow).append($('<div>').addClass('spacerRow row'));
+
+            for (var column = 0; column < columnCount; column++, pagePosition++) {
+                var filePosition = pageOffset + pagePosition;
+                var definition = getDefinition(filePosition);
+
+                var byte = buffer[pagePosition] & 0xff;
+                var hex = toHex(byte);
+
+                if (column % 2 == 0) {
+                    var spacer = $('<span>').addClass('spacer').html('&nbsp;');
+                    if (definition) {
+                        if (!isStartOrEnd(definition, filePosition)) {
+                            var rgb = hsv2rgb(getHue(definition[2]) % 360, 80, 100);
+                            colorByte(spacer, rgb, filePosition, definition);
+                        }
+                    }
+                    hexRow.append(spacer);
+                }
+                var hexByte = $('<span>').addClass('byte').attr('position', filePosition).text(hex);
+                var hexByteWrapper = $('<span>').addClass('byteWrapper').append(hexByte);
+                hexRow.append(hexByteWrapper);
+
+                var character = byte >= 32 && byte <= 126 ? String.fromCharCode(byte) : '\u00B7';
+                var asciiByte = $('<span>').addClass('byte').attr('position', filePosition).text(character);
+                var asciiByteWrapper = $('<span>').addClass('byteWrapper').append(asciiByte);
+                asciiRow.append(asciiByteWrapper);
+
+                if (definition) {
+                    var rgb = hsv2rgb(getHue(definition[2]) % 360, 80, 100);
+                    colorByte(hexByteWrapper, rgb, filePosition, definition);
+                    colorByte(asciiByteWrapper, rgb, filePosition, definition);
+                }
+            }
+        }
+    });
+}
+
+function colorByte(wrapper, rgb, filePosition, definition) {
+    wrapper.css('background-color', 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ', .5)');
+
+    var offset = definition[0];
+    var size = definition[1];
+    var border = '1px solid rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
+    wrapper.css('border-top', border);
+    wrapper.css('border-bottom', border);
+
+    if (filePosition === offset) {
+        wrapper.css('border-left', border);
+    }
+    if (filePosition === offset + size -1) {
+        wrapper.css('border-right', border);
+    }
+}
+
+</script>
+<body>
+    Select source file:
+    <input type="file" id="fileInput" onChange="readSingleFile(this)"/>
+    <input type="text" size="4" id="jumpPage" class="numeric" value="0"><button id="goPage">Jump to page</button>
+    <input type="text" size="8" id="jumpOffset" class="numeric" value="0"><button id="goOffset">Jump to offset</button>
+    <button id="prev">Previous page</button>
+    <button id="next">Next page</button><br>
+    <br>
+
+    <span id="filePosition"></span><span id="name">&nbsp;</span><br>
+
+    <div id="hexview"></div>
+    <div id="asciiview"></div>
+    <div id="toolbar">
+        <div id="values">
+            Length: <span id="length"></span><br>
+            Big Endian: <span id="be"></span><br>
+            Little Endian: <span id="le"></span>
+        </div>
+        <div id="pagesOfInterest">Pages of interest:</div>
+    </div>
+
+    <script>
+    var locations = [0];
+    var data = [[[0, 1, 'length'], [1, 7, 'text']],[]];
+    </script>
+</body>
+</html>
