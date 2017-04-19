@@ -71,14 +71,14 @@ public class RepN extends Token {
     }
 
     private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final long count) throws IOException {
-        if (environment.isPresent()) {
-            if (count <= 0) {
-                return (FinalTrampoline<Optional<Environment>>) () -> success(environment.get());
-            } else {
-                return (IntermediateTrampoline<Optional<Environment>>) () -> iterate(scope, token.parse(scope, environment.get(), encoding), encoding, count - 1);
-            }
+        if (!environment.isPresent()) {
+            return (FinalTrampoline<Optional<Environment>>) Util::failure;
         }
-        return (FinalTrampoline<Optional<Environment>>) Util::failure;
+        if (count <= 0) {
+            return (FinalTrampoline<Optional<Environment>>) () -> success(environment.get());
+        } else {
+            return (IntermediateTrampoline<Optional<Environment>>) () -> iterate(scope, token.parse(scope, environment.get(), encoding), encoding, count - 1);
+        }
     }
 
     @Override

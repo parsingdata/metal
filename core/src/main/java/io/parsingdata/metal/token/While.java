@@ -25,9 +25,13 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
+import io.parsingdata.metal.token.util.FinalTrampoline;
+import io.parsingdata.metal.token.util.IntermediateTrampoline;
+import io.parsingdata.metal.token.util.Trampoline;
 
 /**
  * A {@link Token} that specifies a conditional repetition of a token.
@@ -55,22 +59,22 @@ public class While extends Token {
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final Optional<Environment> result = iterate(scope, environment.addBranch(this), encoding);
+        final Optional<Environment> result = iterate(scope, Optional.of(environment.addBranch(this)), encoding).computeResult();
         if (result.isPresent()) {
             return success(result.get().closeBranch());
         }
         return failure();
     }
 
-    private Optional<Environment> iterate(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        if (!predicate.eval(environment.order, encoding)) {
-            return success(environment);
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding) {
+        if (!environment.isPresent()) {
+            return (FinalTrampoline<Optional<Environment>>) Util::failure;
         }
-        final Optional<Environment> result = token.parse(scope, environment, encoding);
-        if (result.isPresent()) {
-            return iterate(scope, result.get(), encoding);
+        if (predicate.eval(environment.get().order, encoding)) {
+            return (IntermediateTrampoline<Optional<Environment>>) () -> iterate(scope, token.parse(scope, environment.get(), encoding), encoding);
+        } else {
+            return (FinalTrampoline<Optional<Environment>>) () -> success(environment.get());
         }
-        return failure();
     }
 
     @Override
