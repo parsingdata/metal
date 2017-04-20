@@ -24,11 +24,15 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.token.util.FinalTrampoline;
+import io.parsingdata.metal.token.util.IntermediateTrampoline;
+import io.parsingdata.metal.token.util.Trampoline;
 
 /**
  * A {@link Token} that specifies a token to be parsed inside the result of a
@@ -61,23 +65,23 @@ public class Tie extends Token {
         if (dataResult.isEmpty()) {
             return failure();
         }
-        final Optional<Environment> result = iterate(scope, dataResult, 0, environment.addBranch(this), encoding);
+        final Optional<Environment> result = iterate(scope, dataResult, 0, environment.addBranch(this), encoding).computeResult();
         if (result.isPresent()) {
             return success(new Environment(result.get().closeBranch().order, environment.source, environment.offset, environment.callbacks));
         }
         return failure();
     }
 
-    private Optional<Environment> iterate(final String scope, final ImmutableList<Optional<Value>> values, final int index, final Environment environment, final Encoding encoding) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> values, final int index, final Environment environment, final Encoding encoding) throws IOException {
         if (!values.head.isPresent()) {
-            return failure();
+            return (FinalTrampoline<Optional<Environment>>) Util::failure;
         }
         final Optional<Environment> result = token.parse(scope, environment.source(dataExpression, index, environment, encoding), encoding);
         if (result.isPresent()) {
-            if (values.tail.isEmpty()) { return result; }
-            return iterate(scope, values.tail, index + 1, result.get(), encoding);
+            if (values.tail.isEmpty()) { return (FinalTrampoline<Optional<Environment>>) () -> result; }
+            return (IntermediateTrampoline<Optional<Environment>>) () -> iterate(scope, values.tail, index + 1, result.get(), encoding);
         }
-        return failure();
+        return (FinalTrampoline<Optional<Environment>>) Util::failure;
     }
 
     @Override
