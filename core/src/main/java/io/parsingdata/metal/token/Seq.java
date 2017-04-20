@@ -29,9 +29,9 @@ import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.token.util.FinalTrampoline;
-import io.parsingdata.metal.token.util.IntermediateTrampoline;
-import io.parsingdata.metal.token.util.Trampoline;
+import io.parsingdata.metal.FinalTrampoline;
+import io.parsingdata.metal.IntermediateTrampoline;
+import io.parsingdata.metal.Trampoline;
 
 /**
  * A {@link Token} that specifies a dependency between a list of tokens.

@@ -20,6 +20,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import io.parsingdata.metal.FinalTrampoline;
+import io.parsingdata.metal.IntermediateTrampoline;
+
 public class TrampolineTest {
 
     @Rule

@@ -30,9 +30,9 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
-import io.parsingdata.metal.token.util.FinalTrampoline;
-import io.parsingdata.metal.token.util.IntermediateTrampoline;
-import io.parsingdata.metal.token.util.Trampoline;
+import io.parsingdata.metal.FinalTrampoline;
+import io.parsingdata.metal.IntermediateTrampoline;
+import io.parsingdata.metal.Trampoline;
 
 /**
  * A {@link Token} that specifies a bounded repetition of a token.

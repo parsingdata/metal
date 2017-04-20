@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.token.util;
+package io.parsingdata.metal;
 
 import java.io.IOException;
 

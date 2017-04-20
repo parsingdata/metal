@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.token.util;
+package io.parsingdata.metal;
 
-public interface IntermediateTrampoline<T> extends Trampoline<T> {
+public interface FinalTrampoline<T> extends Trampoline<T> {
 
-    default T result() { throw new UnsupportedOperationException("An IntermediateTrampoline does not have a result."); }
-    default boolean hasNext() { return true; }
+    default boolean hasNext() { return false; }
+    default Trampoline<T> next() { throw new UnsupportedOperationException("A FinalTrampoline does not have a next computation."); }
 
 }
