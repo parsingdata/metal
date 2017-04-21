@@ -205,7 +205,7 @@ public final class Shorthand {
     }
 
     private static Token[] concatVarArgTokens(final Token token1, final Token token2, final Token... tokens) {
-        return Stream.concat(Stream.of(token1), Stream.concat(Stream.of(token2), Stream.of(tokens))).toArray(Token[]::new);
+        return Stream.concat(Stream.of(token1, token2), Stream.of(tokens)).toArray(Token[]::new);
     }
 
 }
