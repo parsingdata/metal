@@ -112,6 +112,8 @@ public class ArgumentsTest {
             { Cho.class, new Object[] { null, null, new Token[] { VALID_T, VALID_T } } },
             { Cho.class, new Object[] { VALID_NAME, null, new Token[] { VALID_T, null } } },
             { Cho.class, new Object[] { VALID_NAME, null, new Token[] { null, VALID_T } } },
+            { Cho.class, new Object[] { VALID_NAME, null, new Token[] { VALID_T } } },
+            { Cho.class, new Object[] { VALID_NAME, null, new Token[] { } } },
             { Cho.class, new Object[] { VALID_NAME, null, null } },
             { Def.class, new Object[] { VALID_NAME, null, null } },
             { Def.class, new Object[] { null, VALID_VE, null } },
@@ -127,6 +129,8 @@ public class ArgumentsTest {
             { Seq.class, new Object[] { null, null, new Token[] { VALID_T, VALID_T } } },
             { Seq.class, new Object[] { VALID_NAME, null, new Token[] { VALID_T, null } } },
             { Seq.class, new Object[] { VALID_NAME, null, new Token[] { null, VALID_T } } },
+            { Seq.class, new Object[] { VALID_NAME, null, new Token[] { VALID_T } } },
+            { Seq.class, new Object[] { VALID_NAME, null, new Token[] { } } },
             { Seq.class, new Object[] { VALID_NAME, null, null } },
             { Sub.class, new Object[] { null, VALID_T, VALID_VE, null } },
             { Sub.class, new Object[] { VALID_NAME, VALID_T, null, null } },
@@ -156,7 +160,7 @@ public class ArgumentsTest {
         catch (final InvocationTargetException e) {
             assertEquals(IllegalArgumentException.class, e.getCause().getClass());
             final String message = e.getCause().getMessage();
-            assertTrue(message.endsWith("may not be null.") || message.endsWith("may not be empty."));
+            assertTrue(message.endsWith("may not be null.") || message.endsWith("may not be empty.") || message.endsWith("two Tokens are required."));
         }
     }
 

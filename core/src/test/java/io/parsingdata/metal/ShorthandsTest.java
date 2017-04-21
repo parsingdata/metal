@@ -168,35 +168,6 @@ public class ShorthandsTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    @Test
-    public void choSingle() {
-        setUpArgumentException();
-        cho(any("a"));
-    }
-
-    @Test
-    public void choEmpty() {
-        setUpArgumentException();
-        cho();
-    }
-
-    @Test
-    public void seqSingle() {
-        setUpArgumentException();
-        seq(any("a"));
-    }
-
-    @Test
-    public void seqEmpty() {
-        setUpArgumentException();
-        seq();
-    }
-
-    private void setUpArgumentException() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("At least two Tokens are required.");
-    }
-
     public static final Token DEFA = any("a");
     public static final Token DEFB = any("b");
 
