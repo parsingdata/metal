@@ -22,7 +22,6 @@ import static io.parsingdata.metal.data.ImmutableList.create;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
