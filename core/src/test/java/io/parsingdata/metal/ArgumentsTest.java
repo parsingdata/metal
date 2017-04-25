@@ -158,7 +158,7 @@ public class ArgumentsTest {
         catch (final InvocationTargetException e) {
             assertEquals(IllegalArgumentException.class, e.getCause().getClass());
             final String message = e.getCause().getMessage();
-            assertTrue(message.endsWith("may not be null.") || message.endsWith("may not be empty.") || message.endsWith("two Tokens are required."));
+            assertTrue(message.endsWith("may not be null.") || message.endsWith("may not be empty."));
         }
     }
 
