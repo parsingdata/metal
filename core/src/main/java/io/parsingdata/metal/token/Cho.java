@@ -16,7 +16,10 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Util.*;
+import static io.parsingdata.metal.Util.checkContainsNoNulls;
+import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.Util.failure;
+import static io.parsingdata.metal.Util.success;
 import static io.parsingdata.metal.data.ImmutableList.create;
 
 import java.io.IOException;
