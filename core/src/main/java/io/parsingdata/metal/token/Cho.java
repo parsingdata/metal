@@ -17,6 +17,7 @@
 package io.parsingdata.metal.token;
 
 import static io.parsingdata.metal.Util.checkContainsNoNulls;
+import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
 import static io.parsingdata.metal.data.ImmutableList.create;
@@ -40,10 +41,11 @@ public class Cho extends Token {
 
     public final ImmutableList<Token> tokens;
 
-    public Cho(final String name, final Encoding encoding, final Token... tokens) {
+    public Cho(final String name, final Encoding encoding, final Token token1, final Token token2, final Token... additionalTokens) {
         super(name, encoding);
-        this.tokens = create(checkContainsNoNulls(tokens, "tokens"));
-        if (this.tokens.size < 2) { throw new IllegalArgumentException("At least two Tokens are required."); }
+        this.tokens = create(checkContainsNoNulls(additionalTokens, "tokens"))
+                .add(checkNotNull(token2, "token2"))
+                .add(checkNotNull(token1, "token1"));
     }
 
     @Override

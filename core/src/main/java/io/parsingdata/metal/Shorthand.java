@@ -90,10 +90,10 @@ public final class Shorthand {
     public static Token def(final String name, final long size, final Encoding encoding) { return def(name, con(size), encoding); }
     public static Token def(final String name, final long size) { return def(name, size, (Encoding)null); }
     public static final Token empty = def(NO_NAME, 0L);
-    public static Token cho(final String name, final Encoding encoding, final Token... tokens) { return new Cho(name, encoding, tokens); }
-    public static Token cho(final String name, final Token... tokens) { return cho(name, null, tokens); }
-    public static Token cho(final Encoding encoding, final Token... tokens) { return cho(NO_NAME, encoding, tokens); }
-    public static Token cho(final Token... tokens) { return cho((Encoding)null, tokens); }
+    public static Token cho(final String name, final Encoding encoding, final Token token1, final Token token2, final Token... tokens) { return new Cho(name, encoding, token1, token2, tokens); }
+    public static Token cho(final String name, final Token token1, final Token token2, final Token... tokens) { return cho(name, null, token1, token2, tokens); }
+    public static Token cho(final Encoding encoding, final Token token1, final Token token2, final Token... tokens) { return cho(NO_NAME, encoding, token1, token2, tokens); }
+    public static Token cho(final Token token1, final Token token2, final Token... tokens) { return cho((Encoding)null, token1, token2, tokens); }
     public static Token rep(final String name, final Token token, final Encoding encoding) { return new Rep(name, token, encoding); }
     public static Token rep(final String name, final Token token) { return rep(name, token, null); }
     public static Token rep(final Token token, final Encoding encoding) { return rep(NO_NAME, token, encoding); }
@@ -102,10 +102,10 @@ public final class Shorthand {
     public static Token repn(final String name, final Token token, final ValueExpression n) { return repn(name, token, n, null); }
     public static Token repn(final Token token, final ValueExpression n, final Encoding encoding) { return repn(NO_NAME, token, n, encoding); }
     public static Token repn(final Token token, final ValueExpression n) { return repn(token, n, null); }
-    public static Token seq(final String name, final Encoding encoding, final Token... tokens) { return new Seq(name, encoding, tokens); }
-    public static Token seq(final String name, final Token... tokens) { return seq(name, null, tokens); }
-    public static Token seq(final Encoding encoding, final Token... tokens) { return seq(NO_NAME, encoding, tokens); }
-    public static Token seq(final Token... tokens) { return seq((Encoding)null, tokens); }
+    public static Token seq(final String name, final Encoding encoding, final Token token1, final Token token2, final Token... tokens) { return new Seq(name, encoding, token1, token2, tokens); }
+    public static Token seq(final String name, final Token token1, final Token token2, final Token... tokens) { return seq(name, null, token1, token2, tokens); }
+    public static Token seq(final Encoding encoding, final Token token1, final Token token2, final Token... tokens) { return seq(NO_NAME, encoding, token1, token2, tokens); }
+    public static Token seq(final Token token1, final Token token2, final Token... tokens) { return seq((Encoding)null, token1, token2, tokens); }
     public static Token sub(final String name, final Token token, final ValueExpression address, final Encoding encoding) { return new io.parsingdata.metal.token.Sub(name, token, address, encoding); }
     public static Token sub(final String name, final Token token, final ValueExpression address) { return sub(name, token, address, null); }
     public static Token sub(final Token token, final ValueExpression address, final Encoding encoding) { return sub(NO_NAME, token, address, encoding); }
