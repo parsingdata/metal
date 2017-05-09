@@ -49,6 +49,8 @@ import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.expression.value.arithmetic.Add;
+import io.parsingdata.metal.expression.value.arithmetic.DivCeil;
+import io.parsingdata.metal.expression.value.arithmetic.DivFloor;
 import io.parsingdata.metal.expression.value.arithmetic.Div;
 import io.parsingdata.metal.expression.value.arithmetic.Mod;
 import io.parsingdata.metal.expression.value.arithmetic.Mul;
@@ -138,6 +140,8 @@ public final class Shorthand {
 
     public static BinaryValueExpression add(final ValueExpression left, final ValueExpression right) { return new Add(left, right); }
     public static BinaryValueExpression div(final ValueExpression left, final ValueExpression right) { return new Div(left, right); }
+    public static BinaryValueExpression divCeil(final ValueExpression left, final ValueExpression right) { return new DivCeil(left, right); }
+    public static BinaryValueExpression divFloor(final ValueExpression left, final ValueExpression right) { return new DivFloor(left, right); }
     public static BinaryValueExpression mul(final ValueExpression left, final ValueExpression right) { return new Mul(left, right); }
     public static BinaryValueExpression sub(final ValueExpression left, final ValueExpression right) { return new Sub(left, right); }
     public static BinaryValueExpression mod(final ValueExpression left, final ValueExpression right) { return new Mod(left, right); }
