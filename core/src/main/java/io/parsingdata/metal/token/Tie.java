@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
@@ -24,15 +26,13 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
-import io.parsingdata.metal.FinalTrampoline;
-import io.parsingdata.metal.IntermediateTrampoline;
-import io.parsingdata.metal.Trampoline;
 
 /**
  * A {@link Token} that specifies a token to be parsed inside the result of a
@@ -70,14 +70,14 @@ public class Tie extends Token {
 
     private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> values, final int index, final Environment returnEnvironment, final Environment environment, final Encoding encoding) throws IOException {
         if (!values.head.isPresent()) {
-            return (FinalTrampoline<Optional<Environment>>) Util::failure;
+            return complete(Util::failure);
         }
         final Optional<Environment> result = token.parse(scope, environment.source(dataExpression, index, environment, encoding), encoding);
         if (result.isPresent()) {
-            if (values.tail.isEmpty()) { return (FinalTrampoline<Optional<Environment>>) () -> success(new Environment(result.get().closeBranch().order, returnEnvironment.source, returnEnvironment.offset, returnEnvironment.callbacks)); }
-            return (IntermediateTrampoline<Optional<Environment>>) () -> iterate(scope, values.tail, index + 1, returnEnvironment, result.get(), encoding);
+            if (values.tail.isEmpty()) { return complete(() -> success(new Environment(result.get().closeBranch().order, returnEnvironment.source, returnEnvironment.offset, returnEnvironment.callbacks))); }
+            return intermediate(() -> iterate(scope, values.tail, index + 1, returnEnvironment, result.get(), encoding));
         }
-        return (FinalTrampoline<Optional<Environment>>) Util::failure;
+        return complete(Util::failure);
     }
 
     @Override

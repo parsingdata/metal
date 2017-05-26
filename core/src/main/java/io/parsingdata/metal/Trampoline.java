@@ -26,10 +26,28 @@ public interface Trampoline<T> {
 
     default T computeResult() throws IOException {
         Trampoline<T> current = this;
-        while(current.hasNext()) {
+        while (current.hasNext()) {
             current = current.next();
         }
         return current.result();
+    }
+
+    static <T> Trampoline<T> complete(CompletedTrampoline<T> completedTrampoline) { return completedTrampoline; }
+
+    interface CompletedTrampoline<T> extends Trampoline<T> {
+
+        default boolean hasNext() { return false; }
+        default Trampoline<T> next() { throw new UnsupportedOperationException("A CompletedTrampoline does not have a next computation."); }
+
+    }
+
+    static <T> Trampoline<T> intermediate(IntermediateTrampoline<T> intermediateTrampoline) { return intermediateTrampoline; }
+
+    interface IntermediateTrampoline<T> extends Trampoline<T> {
+
+        default T result() { throw new UnsupportedOperationException("An IntermediateTrampoline does not have a result."); }
+        default boolean hasNext() { return true; }
+
     }
 
 }

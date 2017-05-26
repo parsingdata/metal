@@ -20,8 +20,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.parsingdata.metal.FinalTrampoline;
-import io.parsingdata.metal.IntermediateTrampoline;
+import io.parsingdata.metal.Trampoline.CompletedTrampoline;
+import io.parsingdata.metal.Trampoline.IntermediateTrampoline;
 
 public class TrampolineTest {
 
@@ -38,8 +38,8 @@ public class TrampolineTest {
     @Test
     public void nextOnFinalTrampoline() {
         thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("A FinalTrampoline does not have a next computation.");
-        ((FinalTrampoline<Integer>) () -> 42).next();
+        thrown.expectMessage("A CompletedTrampoline does not have a next computation.");
+        ((CompletedTrampoline<Integer>) () -> 42).next();
     }
 
 }

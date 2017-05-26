@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
@@ -25,6 +27,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
@@ -33,9 +36,6 @@ import io.parsingdata.metal.data.Source;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
-import io.parsingdata.metal.FinalTrampoline;
-import io.parsingdata.metal.IntermediateTrampoline;
-import io.parsingdata.metal.Trampoline;
 
 /**
  * A {@link Token} that specifies a token to be parsed at a specific location
@@ -73,14 +73,14 @@ public class Sub extends Token {
 
     private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> addresses, final long returnOffset, final Environment environment, final Encoding encoding) throws IOException {
         if (!addresses.head.isPresent()) {
-            return (FinalTrampoline<Optional<Environment>>) Util::failure;
+            return complete(Util::failure);
         }
         final Optional<Environment> result = parse(scope, addresses.head.get().asNumeric().longValue(), environment.source, environment, encoding);
         if (result.isPresent()) {
-            if (addresses.tail.isEmpty()) { return (FinalTrampoline<Optional<Environment>>) () -> success(result.get().closeBranch().seek(returnOffset)); }
-            return (IntermediateTrampoline<Optional<Environment>>) () -> iterate(scope, addresses.tail, returnOffset, result.get(), encoding);
+            if (addresses.tail.isEmpty()) { return complete(() -> success(result.get().closeBranch().seek(returnOffset))); }
+            return intermediate(() -> iterate(scope, addresses.tail, returnOffset, result.get(), encoding));
         }
-        return (FinalTrampoline<Optional<Environment>>) Util::failure;
+        return complete(Util::failure);
     }
 
     private Optional<Environment> parse(final String scope, final long offset, final Source source, final Environment environment, final Encoding encoding) throws IOException {

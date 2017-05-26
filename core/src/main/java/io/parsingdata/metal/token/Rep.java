@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.success;
 
@@ -23,11 +25,9 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.FinalTrampoline;
-import io.parsingdata.metal.IntermediateTrampoline;
-import io.parsingdata.metal.Trampoline;
 
 /**
  * A {@link Token} that specifies a possible repetition of a token.
@@ -55,9 +55,9 @@ public class Rep extends Token {
 
     private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final Environment previous) throws IOException {
         if (environment.isPresent()) {
-            return (IntermediateTrampoline<Optional<Environment>>) () -> iterate(scope, token.parse(scope, environment.get(), encoding), encoding, environment.get());
+            return intermediate(() -> iterate(scope, token.parse(scope, environment.get(), encoding), encoding, environment.get()));
         }
-        return (FinalTrampoline<Optional<Environment>>) () -> success(previous.closeBranch());
+        return complete(() -> success(previous.closeBranch()));
     }
 
     @Override
