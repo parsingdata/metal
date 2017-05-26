@@ -68,21 +68,17 @@ public class Sub extends Token {
         if (addresses.isEmpty()) {
             return failure();
         }
-        final Optional<Environment> result = iterate(scope, addresses, environment.addBranch(this), encoding).computeResult();
-        if (result.isPresent()) {
-            return success(result.get().closeBranch().seek(environment.offset));
-        }
-        return failure();
+        return iterate(scope, addresses, environment.offset, environment.addBranch(this), encoding).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> addresses, final Environment environment, final Encoding encoding) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> addresses, final long returnOffset, final Environment environment, final Encoding encoding) throws IOException {
         if (!addresses.head.isPresent()) {
             return (FinalTrampoline<Optional<Environment>>) Util::failure;
         }
         final Optional<Environment> result = parse(scope, addresses.head.get().asNumeric().longValue(), environment.source, environment, encoding);
         if (result.isPresent()) {
-            if (addresses.tail.isEmpty()) { return (FinalTrampoline<Optional<Environment>>) () -> result; }
-            return (IntermediateTrampoline<Optional<Environment>>) () -> iterate(scope, addresses.tail, result.get(), encoding);
+            if (addresses.tail.isEmpty()) { return (FinalTrampoline<Optional<Environment>>) () -> success(result.get().closeBranch().seek(returnOffset)); }
+            return (IntermediateTrampoline<Optional<Environment>>) () -> iterate(scope, addresses.tail, returnOffset, result.get(), encoding);
         }
         return (FinalTrampoline<Optional<Environment>>) Util::failure;
     }

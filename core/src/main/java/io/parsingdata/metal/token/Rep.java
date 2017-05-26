@@ -50,15 +50,14 @@ public class Rep extends Token {
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         final Environment input = environment.addBranch(this);
-        return success(iterate(scope, Optional.of(input), encoding, input).computeResult().closeBranch());
+        return iterate(scope, Optional.of(input), encoding, input).computeResult();
     }
 
-    private Trampoline<Environment> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final Environment previous) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final Environment previous) throws IOException {
         if (environment.isPresent()) {
-            return (IntermediateTrampoline<Environment>) () -> iterate(scope, token.parse(scope, environment.get(), encoding), encoding, environment.get());
-        } else {
-            return (FinalTrampoline<Environment>) () -> previous;
+            return (IntermediateTrampoline<Optional<Environment>>) () -> iterate(scope, token.parse(scope, environment.get(), encoding), encoding, environment.get());
         }
+        return (FinalTrampoline<Optional<Environment>>) () -> success(previous.closeBranch());
     }
 
     @Override

@@ -65,21 +65,17 @@ public class Tie extends Token {
         if (dataResult.isEmpty()) {
             return failure();
         }
-        final Optional<Environment> result = iterate(scope, dataResult, 0, environment.addBranch(this), encoding).computeResult();
-        if (result.isPresent()) {
-            return success(new Environment(result.get().closeBranch().order, environment.source, environment.offset, environment.callbacks));
-        }
-        return failure();
+        return iterate(scope, dataResult, 0, environment, environment.addBranch(this), encoding).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> values, final int index, final Environment environment, final Encoding encoding) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> values, final int index, final Environment returnEnvironment, final Environment environment, final Encoding encoding) throws IOException {
         if (!values.head.isPresent()) {
             return (FinalTrampoline<Optional<Environment>>) Util::failure;
         }
         final Optional<Environment> result = token.parse(scope, environment.source(dataExpression, index, environment, encoding), encoding);
         if (result.isPresent()) {
-            if (values.tail.isEmpty()) { return (FinalTrampoline<Optional<Environment>>) () -> result; }
-            return (IntermediateTrampoline<Optional<Environment>>) () -> iterate(scope, values.tail, index + 1, result.get(), encoding);
+            if (values.tail.isEmpty()) { return (FinalTrampoline<Optional<Environment>>) () -> success(new Environment(result.get().closeBranch().order, returnEnvironment.source, returnEnvironment.offset, returnEnvironment.callbacks)); }
+            return (IntermediateTrampoline<Optional<Environment>>) () -> iterate(scope, values.tail, index + 1, returnEnvironment, result.get(), encoding);
         }
         return (FinalTrampoline<Optional<Environment>>) Util::failure;
     }

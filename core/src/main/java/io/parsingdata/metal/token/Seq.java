@@ -52,11 +52,7 @@ public class Seq extends Token {
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final Optional<Environment> result = iterate(scope, Optional.of(environment.addBranch(this)), encoding, tokens).computeResult();
-        if (result.isPresent()) {
-            return success(result.get().closeBranch());
-        }
-        return failure();
+        return iterate(scope, Optional.of(environment.addBranch(this)), encoding, tokens).computeResult();
     }
 
     private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final ImmutableList<Token> list) throws IOException {
@@ -64,10 +60,9 @@ public class Seq extends Token {
             return (FinalTrampoline<Optional<Environment>>) Util::failure;
         }
         if (list.isEmpty()) {
-            return (FinalTrampoline<Optional<Environment>>) () -> success(environment.get());
-        } else {
-            return (IntermediateTrampoline<Optional<Environment>>) () -> iterate(scope, list.head.parse(scope, environment.get(), encoding), encoding, list.tail);
+            return (FinalTrampoline<Optional<Environment>>) () -> success(environment.get().closeBranch());
         }
+        return (IntermediateTrampoline<Optional<Environment>>) () -> iterate(scope, list.head.parse(scope, environment.get(), encoding), encoding, list.tail);
     }
 
     @Override
