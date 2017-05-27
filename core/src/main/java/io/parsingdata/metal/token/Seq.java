@@ -54,7 +54,7 @@ public class Seq extends Token {
         return iterate(scope, Optional.of(environment.addBranch(this)), encoding, tokens).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final ImmutableList<Token> list) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final ImmutableList<Token> list) {
         if (!environment.isPresent()) {
             return complete(Util::failure);
         }

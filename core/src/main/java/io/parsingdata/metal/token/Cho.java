@@ -58,11 +58,9 @@ public class Cho extends Token {
         if (list.isEmpty()) {
             return complete(Util::failure);
         }
-        final Optional<Environment> result = list.head.parse(scope, environment.get(), encoding);
-        if (result.isPresent()) {
-            return complete(() -> success(result.get().closeBranch()));
-        }
-        return intermediate(() -> iterate(scope, environment, encoding, list.tail));
+        return list.head.parse(scope, environment.get(), encoding)
+            .map(result -> complete(() -> success(result.closeBranch())))
+            .orElseGet(() -> intermediate(() -> iterate(scope, environment, encoding, list.tail)));
     }
 
     @Override

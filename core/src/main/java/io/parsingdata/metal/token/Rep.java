@@ -53,11 +53,10 @@ public class Rep extends Token {
         return iterate(scope, Optional.of(input), encoding, input).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final Environment previous) throws IOException {
-        if (environment.isPresent()) {
-            return intermediate(() -> iterate(scope, token.parse(scope, environment.get(), encoding), encoding, environment.get()));
-        }
-        return complete(() -> success(previous.closeBranch()));
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final Environment previous) {
+        return environment
+            .map(result -> intermediate(() -> iterate(scope, token.parse(scope, result, encoding), encoding, result)))
+            .orElseGet(() -> complete(() -> success(previous.closeBranch())));
     }
 
     @Override

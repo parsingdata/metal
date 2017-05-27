@@ -66,7 +66,7 @@ public class RepN extends Token {
         return iterate(scope, Optional.of(environment.addBranch(this)), encoding, counts.head.get().asNumeric().longValue()).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final long count) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final long count) {
         if (!environment.isPresent()) {
             return complete(Util::failure);
         }
