@@ -19,12 +19,15 @@ package io.parsingdata.metal.expression.value.reference;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
+import static io.parsingdata.metal.SafeTrampoline.complete;
+import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
@@ -58,26 +61,26 @@ public class Nth implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        return eval(values.eval(graph, encoding), indices.eval(graph, encoding));
+        return eval(values.eval(graph, encoding), indices.eval(graph, encoding)).computeResult();
     }
 
-    private ImmutableList<Optional<Value>> eval(final ImmutableList<Optional<Value>> values, final ImmutableList<Optional<Value>> indices) {
-        if (indices.isEmpty()) { return new ImmutableList<>(); }
+    private SafeTrampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ImmutableList<Optional<Value>> indices) {
+        if (indices.isEmpty()) { return complete(ImmutableList::new); }
         if (indices.head.isPresent()) {
             final BigInteger index = indices.head.get().asNumeric();
             final BigInteger valueCount = BigInteger.valueOf(values.size);
             if (index.compareTo(valueCount) < 0 && index.compareTo(ZERO) >= 0) {
-                return eval(values, indices.tail).add(nth(values, valueCount.subtract(index).subtract(ONE)));
+                return complete(() -> eval(values, indices.tail).computeResult().add(nth(values, valueCount.subtract(index).subtract(ONE)).computeResult()));
             }
         }
-        return eval(values, indices.tail).add(Optional.empty());
+        return complete(() -> eval(values, indices.tail).computeResult().add(Optional.empty()));
     }
 
-    private Optional<Value> nth(final ImmutableList<Optional<Value>> values, final BigInteger index) {
+    private SafeTrampoline<Optional<Value>> nth(final ImmutableList<Optional<Value>> values, final BigInteger index) {
         if (index.equals(ZERO)) {
-            return values.head;
+            return complete(() -> values.head);
         }
-        return nth(values.tail, index.subtract(ONE));
+        return intermediate(() -> nth(values.tail, index.subtract(ONE)));
     }
 
     @Override
