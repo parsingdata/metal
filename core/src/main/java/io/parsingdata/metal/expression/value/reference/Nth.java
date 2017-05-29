@@ -22,6 +22,7 @@ import static java.math.BigInteger.ZERO;
 import static io.parsingdata.metal.SafeTrampoline.complete;
 import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.transformation.Reversal.reverse;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -61,19 +62,19 @@ public class Nth implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        return eval(values.eval(graph, encoding), indices.eval(graph, encoding)).computeResult();
+        return reverse(eval(values.eval(graph, encoding), indices.eval(graph, encoding), new ImmutableList<>()).computeResult());
     }
 
-    private SafeTrampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ImmutableList<Optional<Value>> indices) {
-        if (indices.isEmpty()) { return complete(ImmutableList::new); }
+    private SafeTrampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ImmutableList<Optional<Value>> indices, final ImmutableList<Optional<Value>> result) {
+        if (indices.isEmpty()) { return complete(() -> result); }
         if (indices.head.isPresent()) {
             final BigInteger index = indices.head.get().asNumeric();
             final BigInteger valueCount = BigInteger.valueOf(values.size);
             if (index.compareTo(valueCount) < 0 && index.compareTo(ZERO) >= 0) {
-                return complete(() -> eval(values, indices.tail).computeResult().add(nth(values, valueCount.subtract(index).subtract(ONE)).computeResult()));
+                return intermediate(() -> eval(values, indices.tail, result.add(nth(values, valueCount.subtract(index).subtract(ONE)).computeResult())));
             }
         }
-        return complete(() -> eval(values, indices.tail).computeResult().add(Optional.empty()));
+        return intermediate(() -> eval(values, indices.tail, result.add(Optional.empty())));
     }
 
     private SafeTrampoline<Optional<Value>> nth(final ImmutableList<Optional<Value>> values, final BigInteger index) {
