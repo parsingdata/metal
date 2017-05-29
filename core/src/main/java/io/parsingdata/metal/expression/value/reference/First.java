@@ -16,11 +16,14 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
+import static io.parsingdata.metal.SafeTrampoline.complete;
+import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
@@ -43,11 +46,11 @@ public class First implements ValueExpression {
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
         final ImmutableList<Optional<Value>> list = operand.eval(graph, encoding);
-        return list.isEmpty() ? list : ImmutableList.create(getFirst(list));
+        return list.isEmpty() ? list : ImmutableList.create(getFirst(list).computeResult());
     }
 
-    private Optional<Value> getFirst(final ImmutableList<Optional<Value>> values) {
-        return values.tail.isEmpty() ? values.head : getFirst(values.tail);
+    private SafeTrampoline<Optional<Value>> getFirst(final ImmutableList<Optional<Value>> values) {
+        return values.tail.isEmpty() ? complete(() -> values.head) : intermediate(() -> getFirst(values.tail));
     }
 
     @Override
