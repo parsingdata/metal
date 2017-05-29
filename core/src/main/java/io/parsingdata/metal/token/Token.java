@@ -80,7 +80,7 @@ public abstract class Token {
 
     public boolean isLocal() { return true; }
 
-    public Token getCanonical(final Environment environment) { return this; }
+    public Token getCanonical(final Environment environment) throws IOException { return this; }
 
     protected String makeNameFragment() {
         return name.isEmpty() ? NO_NAME : name + ",";

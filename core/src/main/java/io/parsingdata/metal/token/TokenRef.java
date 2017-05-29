@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 
@@ -23,6 +25,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.encoding.Encoding;
@@ -60,22 +63,22 @@ public class TokenRef extends Token {
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        return lookup(environment.order, referenceName).parse(scope, environment, encoding);
+        return lookup(environment.order, referenceName).computeResult().parse(scope, environment, encoding);
     }
 
-    private Token lookup(final ParseItem item, final String referenceName) {
+    private Trampoline<Token> lookup(final ParseItem item, final String referenceName) throws IOException {
         if (item.getDefinition().name.equals(referenceName)) {
-            return item.getDefinition();
+            return complete(() -> item.getDefinition());
         }
-        if (!item.isGraph() || item.asGraph().isEmpty()) { return LOOKUP_FAILED; }
-        final Token headResult = lookup(item.asGraph().head, referenceName);
-        if (headResult != LOOKUP_FAILED) { return headResult; }
-        return lookup(item.asGraph().tail, referenceName);
+        if (!item.isGraph() || item.asGraph().isEmpty()) { return complete(() -> LOOKUP_FAILED); }
+        final Token headResult = lookup(item.asGraph().head, referenceName).computeResult();
+        if (headResult != LOOKUP_FAILED) { return complete(() -> headResult); }
+        return intermediate(() -> lookup(item.asGraph().tail, referenceName));
     }
 
     @Override
-    public Token getCanonical(final Environment environment) {
-        return lookup(environment.order, referenceName);
+    public Token getCanonical(final Environment environment) throws IOException {
+        return lookup(environment.order, referenceName).computeResult();
     }
 
     @Override
