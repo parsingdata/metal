@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.token.util;
+package io.parsingdata.metal;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,6 +40,20 @@ public class TrampolineTest {
         thrown.expect(UnsupportedOperationException.class);
         thrown.expectMessage("A CompletedTrampoline does not have a next computation.");
         ((CompletedTrampoline<Integer>) () -> 42).next();
+    }
+
+    @Test
+    public void resultOnIntermediateSafeTrampoline() {
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage("An IntermediateTrampoline does not have a result.");
+        ((SafeTrampoline.IntermediateTrampoline<Integer>) () -> null).result();
+    }
+
+    @Test
+    public void nextOnFinalSafeTrampoline() {
+        thrown.expect(UnsupportedOperationException.class);
+        thrown.expectMessage("A CompletedTrampoline does not have a next computation.");
+        ((SafeTrampoline.CompletedTrampoline<Integer>) () -> 42).next();
     }
 
 }
