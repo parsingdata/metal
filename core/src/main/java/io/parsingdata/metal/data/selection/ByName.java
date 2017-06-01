@@ -16,8 +16,10 @@
 
 package io.parsingdata.metal.data.selection;
 
+import static io.parsingdata.metal.SafeTrampoline.complete;
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
@@ -56,20 +58,20 @@ public final class ByName {
     public static ImmutableList<Value> getAllValues(final ParseGraph graph, final String name) {
         checkNotNull(graph, "graph");
         checkNotNull(name, "name");
-        return getAllValuesRecursive(graph, name);
+        return getAllValuesRecursive(graph, name).computeResult();
     }
 
-    private static ImmutableList<Value> getAllValuesRecursive(final ParseGraph graph, final String name) {
-        if (graph.isEmpty()) { return new ImmutableList<>(); }
-        final ImmutableList<Value> tailResults = getAllValuesRecursive(graph.tail, name);
+    private static SafeTrampoline<ImmutableList<Value>> getAllValuesRecursive(final ParseGraph graph, final String name) {
+        if (graph.isEmpty()) { return complete(ImmutableList::new); }
+        final ImmutableList<Value> tailResults = getAllValuesRecursive(graph.tail, name).computeResult();
         final ParseItem head = graph.head;
         if (head.isValue() && head.asValue().matches(name)) {
-            return tailResults.add(head.asValue());
+            return complete(() -> tailResults.add(head.asValue()));
         }
         if (head.isGraph()) {
-            return tailResults.add(getAllValuesRecursive(head.asGraph(), name));
+            return complete(() -> tailResults.add(getAllValuesRecursive(head.asGraph(), name).computeResult()));
         }
-        return tailResults;
+        return complete(() -> tailResults);
     }
 
     public static ParseValue get(final ImmutableList<ParseValue> list, final String name) {
