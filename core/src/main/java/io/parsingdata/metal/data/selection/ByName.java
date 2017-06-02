@@ -17,7 +17,9 @@
 package io.parsingdata.metal.data.selection;
 
 import static io.parsingdata.metal.SafeTrampoline.complete;
+import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.transformation.Reversal.reverse;
 
 import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.data.ImmutableList;
@@ -58,20 +60,21 @@ public final class ByName {
     public static ImmutableList<Value> getAllValues(final ParseGraph graph, final String name) {
         checkNotNull(graph, "graph");
         checkNotNull(name, "name");
-        return getAllValuesRecursive(graph, name).computeResult();
+        return reverse(getAllValuesRecursive(ImmutableList.create(graph), new ImmutableList<>(), name).computeResult());
     }
 
-    private static SafeTrampoline<ImmutableList<Value>> getAllValuesRecursive(final ParseGraph graph, final String name) {
-        if (graph.isEmpty()) { return complete(ImmutableList::new); }
-        final ImmutableList<Value> tailResults = getAllValuesRecursive(graph.tail, name).computeResult();
+    private static SafeTrampoline<ImmutableList<Value>> getAllValuesRecursive(final ImmutableList<ParseGraph> graphList, ImmutableList<Value> values, final String name) {
+        if (graphList.isEmpty()) { return complete(() -> values); }
+        final ParseGraph graph = graphList.head;
+        if (graph.isEmpty()) { return intermediate(() -> getAllValuesRecursive(graphList.tail, values, name)); }
         final ParseItem head = graph.head;
         if (head.isValue() && head.asValue().matches(name)) {
-            return complete(() -> tailResults.add(head.asValue()));
+            return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail), values.add(head.asValue()), name));
         }
         if (head.isGraph()) {
-            return complete(() -> tailResults.add(getAllValuesRecursive(head.asGraph(), name).computeResult()));
+            return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail).add(graph.head.asGraph()), values, name));
         }
-        return complete(() -> tailResults);
+        return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail), values, name));
     }
 
     public static ParseValue get(final ImmutableList<ParseValue> list, final String name) {
