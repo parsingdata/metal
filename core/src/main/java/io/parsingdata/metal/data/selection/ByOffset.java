@@ -44,7 +44,7 @@ public final class ByOffset {
         final ParseItem head = items.head;
         if (head.isValue() && matchesLocation(head.asValue(), offset, source)) { return complete(() -> head); }
         if (head.isGraph()) {
-            final ParseValue value = getLowestOffsetValue(head.asGraph(), null).computeResult();
+            final ParseValue value = getLowestOffsetValue(ImmutableList.create(head.asGraph()), null).computeResult();
             if (value != null && matchesLocation(value, offset, source)) { return complete(() -> head); }
         }
         return intermediate(() -> findItemAtOffset(items.tail, offset, source));
@@ -54,15 +54,19 @@ public final class ByOffset {
         return value.slice.offset == offset && value.slice.source.equals(source);
     }
 
-    private static SafeTrampoline<ParseValue> getLowestOffsetValue(final ParseGraph graph, final ParseValue lowest) {
-        if (graph.isEmpty() || !graph.getDefinition().isLocal()) { return complete(() -> lowest); }
+    private static SafeTrampoline<ParseValue> getLowestOffsetValue(final ImmutableList<ParseGraph> graphList, final ParseValue lowest) {
+        if (graphList.isEmpty()) { return complete(() -> lowest); }
+        final ParseGraph graph = graphList.head;
+        if (graph.isEmpty() || !graph.getDefinition().isLocal()) {
+            return intermediate(() -> getLowestOffsetValue(graphList.tail, lowest));
+        }
         if (graph.head.isValue()) {
-            return intermediate(() -> getLowestOffsetValue(graph.tail, lowest == null || lowest.slice.offset > graph.head.asValue().slice.offset ? graph.head.asValue() : lowest));
+            return intermediate(() -> getLowestOffsetValue(graphList.tail.add(graph.tail), lowest == null || lowest.slice.offset > graph.head.asValue().slice.offset ? graph.head.asValue() : lowest));
         }
         if (graph.head.isGraph()) {
-            return intermediate(() -> getLowestOffsetValue(graph.tail, getLowestOffsetValue(graph.head.asGraph(), lowest).computeResult()));
+            return intermediate(() -> getLowestOffsetValue(graphList.tail.add(graph.head.asGraph()).add(graph.tail), lowest));
         }
-        return intermediate(() -> getLowestOffsetValue(graph.tail, lowest));
+        return intermediate(() -> getLowestOffsetValue(graphList.tail.add(graph.tail), lowest));
     }
 
 }
