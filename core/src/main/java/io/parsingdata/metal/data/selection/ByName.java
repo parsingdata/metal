@@ -63,7 +63,7 @@ public final class ByName {
         return reverse(getAllValuesRecursive(ImmutableList.create(graph), new ImmutableList<>(), name).computeResult());
     }
 
-    private static SafeTrampoline<ImmutableList<Value>> getAllValuesRecursive(final ImmutableList<ParseGraph> graphList, ImmutableList<Value> values, final String name) {
+    private static SafeTrampoline<ImmutableList<Value>> getAllValuesRecursive(final ImmutableList<ParseGraph> graphList, final ImmutableList<Value> values, final String name) {
         if (graphList.isEmpty()) { return complete(() -> values); }
         final ParseGraph graph = graphList.head;
         if (graph.isEmpty()) { return intermediate(() -> getAllValuesRecursive(graphList.tail, values, name)); }
