@@ -16,8 +16,8 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Trampoline.complete;
-import static io.parsingdata.metal.Trampoline.intermediate;
+import static io.parsingdata.metal.SafeTrampoline.complete;
+import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 
@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.Trampoline;
+import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.encoding.Encoding;
@@ -66,9 +66,9 @@ public class TokenRef extends Token {
         return lookup(environment.order, referenceName).computeResult().parse(scope, environment, encoding);
     }
 
-    private Trampoline<Token> lookup(final ParseItem item, final String referenceName) throws IOException {
+    private SafeTrampoline<Token> lookup(final ParseItem item, final String referenceName) {
         if (item.getDefinition().name.equals(referenceName)) {
-            return complete(() -> item.getDefinition());
+            return complete(item::getDefinition);
         }
         if (!item.isGraph() || item.asGraph().isEmpty()) { return complete(() -> LOOKUP_FAILED); }
         final Token headResult = lookup(item.asGraph().head, referenceName).computeResult();
@@ -77,7 +77,7 @@ public class TokenRef extends Token {
     }
 
     @Override
-    public Token getCanonical(final Environment environment) throws IOException {
+    public Token getCanonical(final Environment environment) {
         return lookup(environment.order, referenceName).computeResult();
     }
 

@@ -30,7 +30,7 @@ public interface SafeTrampoline<T> {
         return current.result();
     }
 
-    static <T> SafeTrampoline<T> complete(CompletedTrampoline<T> completedTrampoline) { return completedTrampoline; }
+    static <T> SafeTrampoline<T> complete(final CompletedTrampoline<T> completedTrampoline) { return completedTrampoline; }
 
     interface CompletedTrampoline<T> extends SafeTrampoline<T> {
 
@@ -39,7 +39,7 @@ public interface SafeTrampoline<T> {
 
     }
 
-    static <T> SafeTrampoline<T> intermediate(IntermediateTrampoline<T> intermediateTrampoline) { return intermediateTrampoline; }
+    static <T> SafeTrampoline<T> intermediate(final IntermediateTrampoline<T> intermediateTrampoline) { return intermediateTrampoline; }
 
     interface IntermediateTrampoline<T> extends SafeTrampoline<T> {
 

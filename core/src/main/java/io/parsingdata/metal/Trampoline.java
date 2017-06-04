@@ -32,7 +32,7 @@ public interface Trampoline<T> {
         return current.result();
     }
 
-    static <T> Trampoline<T> complete(CompletedTrampoline<T> completedTrampoline) { return completedTrampoline; }
+    static <T> Trampoline<T> complete(final CompletedTrampoline<T> completedTrampoline) { return completedTrampoline; }
 
     interface CompletedTrampoline<T> extends Trampoline<T> {
 
@@ -41,7 +41,7 @@ public interface Trampoline<T> {
 
     }
 
-    static <T> Trampoline<T> intermediate(IntermediateTrampoline<T> intermediateTrampoline) { return intermediateTrampoline; }
+    static <T> Trampoline<T> intermediate(final IntermediateTrampoline<T> intermediateTrampoline) { return intermediateTrampoline; }
 
     interface IntermediateTrampoline<T> extends Trampoline<T> {
 

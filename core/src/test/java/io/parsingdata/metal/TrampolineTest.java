@@ -16,6 +16,12 @@
 
 package io.parsingdata.metal;
 
+import static io.parsingdata.metal.SafeTrampoline.complete;
+import static io.parsingdata.metal.SafeTrampoline.intermediate;
+
+import java.math.BigInteger;
+
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -54,6 +60,16 @@ public class TrampolineTest {
         thrown.expect(UnsupportedOperationException.class);
         thrown.expectMessage("A CompletedTrampoline does not have a next computation.");
         ((SafeTrampoline.CompletedTrampoline<Integer>) () -> 42).next();
+    }
+
+    @Test
+    public void noStackOverflow() {
+        Assert.assertEquals(20899, fib(BigInteger.ZERO, BigInteger.ONE, 99999).computeResult().toString().length());
+    }
+
+    private SafeTrampoline<BigInteger> fib(final BigInteger l, final BigInteger r, final long count) {
+        if (count == 0) { return complete(() -> r); }
+        return intermediate(() -> fib(r, l.add(r), count-1));
     }
 
 }
