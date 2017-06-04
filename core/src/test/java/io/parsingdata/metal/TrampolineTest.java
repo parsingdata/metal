@@ -64,12 +64,13 @@ public class TrampolineTest {
 
     @Test
     public void noStackOverflow() {
-        Assert.assertEquals(20899, fib(BigInteger.ZERO, BigInteger.ONE, 99999).computeResult().toString().length());
+        // The 100000th Fibonacci number has 20899 digits
+        Assert.assertEquals(20899, fibonacci(BigInteger.ZERO, BigInteger.ONE, 100000).computeResult().toString().length());
     }
 
-    private SafeTrampoline<BigInteger> fib(final BigInteger l, final BigInteger r, final long count) {
-        if (count == 0) { return complete(() -> r); }
-        return intermediate(() -> fib(r, l.add(r), count-1));
+    private SafeTrampoline<BigInteger> fibonacci(final BigInteger l, final BigInteger r, final long count) {
+        if (count == 0) { return complete(() -> l); }
+        return intermediate(() -> fibonacci(r, l.add(r), count-1));
     }
 
 }
