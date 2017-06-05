@@ -27,6 +27,7 @@ import java.util.Optional;
 
 import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.encoding.Encoding;
 
@@ -63,22 +64,20 @@ public class TokenRef extends Token {
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        return lookup(environment.order, referenceName).computeResult().parse(scope, environment, encoding);
+        return lookup(ImmutableList.create(environment.order), referenceName).computeResult().parse(scope, environment, encoding);
     }
 
-    private SafeTrampoline<Token> lookup(final ParseItem item, final String referenceName) {
-        if (item.getDefinition().name.equals(referenceName)) {
-            return complete(item::getDefinition);
-        }
-        if (!item.isGraph() || item.asGraph().isEmpty()) { return complete(() -> LOOKUP_FAILED); }
-        final Token headResult = lookup(item.asGraph().head, referenceName).computeResult();
-        if (headResult != LOOKUP_FAILED) { return complete(() -> headResult); }
-        return intermediate(() -> lookup(item.asGraph().tail, referenceName));
+    private SafeTrampoline<Token> lookup(final ImmutableList<ParseItem> items, final String referenceName) {
+        if (items.isEmpty()) { return complete(() -> LOOKUP_FAILED); }
+        final ParseItem item = items.head;
+        if (item.getDefinition().name.equals(referenceName)) { return complete(item::getDefinition); }
+        if (item.isGraph() && !item.asGraph().isEmpty()) { return intermediate(() -> lookup(items.tail.add(item.asGraph().tail).add(item.asGraph().head), referenceName)); }
+        return intermediate(() -> lookup(items.tail, referenceName));
     }
 
     @Override
     public Token getCanonical(final Environment environment) {
-        return lookup(environment.order, referenceName).computeResult();
+        return lookup(ImmutableList.create(environment.order), referenceName).computeResult();
     }
 
     @Override
