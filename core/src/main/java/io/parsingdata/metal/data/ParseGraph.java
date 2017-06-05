@@ -16,12 +16,15 @@
 
 package io.parsingdata.metal.data;
 
+import static io.parsingdata.metal.SafeTrampoline.complete;
+import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
@@ -97,15 +100,15 @@ public class ParseGraph implements ParseItem {
      * @return The first value (bottom-up) in this graph
      */
     public ParseValue current() {
-        if (isEmpty()) { return null; }
-        if (head.isValue()) {
-            return head.asValue();
-        }
-        if (head.isGraph()) {
-            final ParseValue value = head.asGraph().current();
-            if (value != null) { return value; }
-        }
-        return tail.current(); // Ignore current if it's a reference (or an empty graph)
+        return current(ImmutableList.create(this)).computeResult();
+    }
+
+    private SafeTrampoline<ParseValue> current(ImmutableList<ParseItem> items) {
+        if (items.isEmpty()) { return complete(() -> null); }
+        final ParseItem item = items.head;
+        if (item.isValue()) { return complete(item::asValue); }
+        if (item.isGraph() && !item.asGraph().isEmpty()) { return intermediate(() -> current(items.tail.add(item.asGraph().tail).add(item.asGraph().head))); }
+        return intermediate(() -> current(items.tail));
     }
 
     public boolean isGraph() { return true; }
