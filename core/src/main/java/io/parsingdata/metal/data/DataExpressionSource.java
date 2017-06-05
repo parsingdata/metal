@@ -16,12 +16,15 @@
 
 package io.parsingdata.metal.data;
 
+import static io.parsingdata.metal.SafeTrampoline.complete;
+import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
@@ -45,7 +48,7 @@ public class DataExpressionSource extends Source {
     protected byte[] getData(final long offset, final int size) throws IOException {
         final ImmutableList<Optional<Value>> results = dataExpression.eval(graph, encoding);
         if (results.size <= index) { throw new IllegalStateException("ValueExpression dataExpression yields " + results.size + " result(s) (expected at least " + (index + 1) + ")."); }
-        final byte[] inputData = getValueAtIndex(results, index, 0).get().getValue();
+        final byte[] inputData = getValueAtIndex(results, index, 0).computeResult().get().getValue();
         if (offset >= inputData.length) { return new byte[0]; }
         final int toCopy = (int)offset + size > inputData.length ? inputData.length - (int)offset : size;
         final byte[] outputData = new byte[toCopy];
@@ -53,9 +56,9 @@ public class DataExpressionSource extends Source {
         return outputData;
     }
 
-    private Optional<Value> getValueAtIndex(final ImmutableList<Optional<Value>> results, final int index, final int current) {
-        if (index == current) { return results.head; }
-        return getValueAtIndex(results.tail, index, current + 1);
+    private SafeTrampoline<Optional<Value>> getValueAtIndex(final ImmutableList<Optional<Value>> results, final int index, final int current) {
+        if (index == current) { return complete(() -> results.head); }
+        return intermediate(() -> getValueAtIndex(results.tail, index, current + 1));
     }
 
     @Override
