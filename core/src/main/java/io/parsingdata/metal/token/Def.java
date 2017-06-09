@@ -38,7 +38,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * A Def consists of a <code>size</code> (a {@link ValueExpression}.
  * <p>
  * Parsing will succeed if <code>size</code> evaluates to a single value and if
- * that many bytes are available in the input.
+ * that many bytes are available in the input. This means that a size of zero
+ * will lead to a successful parse, but will not produce a value.
  *
  * @see Nod
  * @see ValueExpression
