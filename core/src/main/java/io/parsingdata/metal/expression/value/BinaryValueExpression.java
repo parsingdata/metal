@@ -17,6 +17,7 @@
 package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.transformation.Reversal.reverse;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -63,24 +64,21 @@ public abstract class BinaryValueExpression implements ValueExpression {
     }
 
     private ImmutableList<Optional<Value>> evalLists(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues, final ParseGraph graph, final Encoding encoding) {
-        if (leftValues.isEmpty()) {
-            return makeListWithEmpty(rightValues.size);
-        }
-        if (rightValues.isEmpty()) {
-            return makeListWithEmpty(leftValues.size);
-        }
-        return evalLists(leftValues.tail, rightValues.tail, graph, encoding).add(eval(leftValues.head, rightValues.head, graph, encoding));
+        return reverse(padList(evalLists(leftValues, rightValues, graph, encoding, new ImmutableList<>()), Math.abs(leftValues.size - rightValues.size)));
     }
 
-    private ImmutableList<Optional<Value>> makeListWithEmpty(final long size) {
-        if (size <= 0) { return new ImmutableList<>(); }
-        return makeListWithEmpty(size - 1).add(Optional.empty());
+    private ImmutableList<Optional<Value>> evalLists(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues, final ParseGraph graph, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
+        if (leftValues.isEmpty() || rightValues.isEmpty()) { return result; }
+        return evalLists(leftValues.tail, rightValues.tail, graph, encoding, result.add(eval(leftValues.head, rightValues.head, graph, encoding)));
+    }
+
+    private ImmutableList<Optional<Value>> padList(final ImmutableList<Optional<Value>> list, final long size) {
+        if (size <= 0) { return list; }
+        return padList(list.add(Optional.empty()), size - 1);
     }
 
     private Optional<Value> eval(final Optional<Value> left, final Optional<Value> right, final ParseGraph graph, final Encoding encoding) {
-        if (!left.isPresent() || !right.isPresent()) {
-            return Optional.empty();
-        }
+        if (!left.isPresent() || !right.isPresent()) { return Optional.empty(); }
         return eval(left.get(), right.get(), graph, encoding);
     }
 
