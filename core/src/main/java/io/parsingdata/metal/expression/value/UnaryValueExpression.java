@@ -16,11 +16,15 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static io.parsingdata.metal.SafeTrampoline.complete;
+import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.transformation.Reversal.reverse;
 
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
@@ -51,12 +55,12 @@ public abstract class UnaryValueExpression implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        return eval(operand.eval(graph, encoding), graph, encoding);
+        return reverse(eval(operand.eval(graph, encoding), graph, encoding, new ImmutableList<>()).computeResult());
     }
 
-    private ImmutableList<Optional<Value>> eval(final ImmutableList<Optional<Value>> values, final ParseGraph graph, final Encoding encoding) {
-        if (values.isEmpty()) { return values; }
-        return eval(values.tail, graph, encoding).add(values.head.isPresent() ? eval(values.head.get(), graph, encoding) : values.head);
+    private SafeTrampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ParseGraph graph, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
+        if (values.isEmpty()) { return complete(() -> result); }
+        return intermediate(() -> eval(values.tail, graph, encoding, result.add(values.head.flatMap(value -> eval(value, graph, encoding)))));
     }
 
     public abstract Optional<Value> eval(final Value value, final ParseGraph graph, final Encoding encoding);
