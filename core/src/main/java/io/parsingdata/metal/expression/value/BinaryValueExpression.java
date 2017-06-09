@@ -16,12 +16,15 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static io.parsingdata.metal.SafeTrampoline.complete;
+import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.transformation.Reversal.reverse;
 
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
@@ -64,17 +67,17 @@ public abstract class BinaryValueExpression implements ValueExpression {
     }
 
     private ImmutableList<Optional<Value>> evalLists(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues, final ParseGraph graph, final Encoding encoding) {
-        return reverse(padList(evalLists(leftValues, rightValues, graph, encoding, new ImmutableList<>()), Math.abs(leftValues.size - rightValues.size)));
+        return reverse(padList(evalLists(leftValues, rightValues, graph, encoding, new ImmutableList<>()).computeResult(), Math.abs(leftValues.size - rightValues.size)).computeResult());
     }
 
-    private ImmutableList<Optional<Value>> evalLists(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues, final ParseGraph graph, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
-        if (leftValues.isEmpty() || rightValues.isEmpty()) { return result; }
-        return evalLists(leftValues.tail, rightValues.tail, graph, encoding, result.add(eval(leftValues.head, rightValues.head, graph, encoding)));
+    private SafeTrampoline<ImmutableList<Optional<Value>>> evalLists(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues, final ParseGraph graph, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
+        if (leftValues.isEmpty() || rightValues.isEmpty()) { return complete(() -> result); }
+        return intermediate(() -> evalLists(leftValues.tail, rightValues.tail, graph, encoding, result.add(eval(leftValues.head, rightValues.head, graph, encoding))));
     }
 
-    private ImmutableList<Optional<Value>> padList(final ImmutableList<Optional<Value>> list, final long size) {
-        if (size <= 0) { return list; }
-        return padList(list.add(Optional.empty()), size - 1);
+    private SafeTrampoline<ImmutableList<Optional<Value>>> padList(final ImmutableList<Optional<Value>> list, final long size) {
+        if (size <= 0) { return complete(() -> list); }
+        return intermediate(() -> padList(list.add(Optional.empty()), size - 1));
     }
 
     private Optional<Value> eval(final Optional<Value> left, final Optional<Value> right, final ParseGraph graph, final Encoding encoding) {
