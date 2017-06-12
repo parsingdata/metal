@@ -63,18 +63,23 @@ public final class ByName {
         return reverse(getAllValuesRecursive(ImmutableList.create(graph), new ImmutableList<>(), name).computeResult());
     }
 
-    private static SafeTrampoline<ImmutableList<Value>> getAllValuesRecursive(final ImmutableList<ParseGraph> graphList, final ImmutableList<Value> values, final String name) {
-        if (graphList.isEmpty()) { return complete(() -> values); }
+    private static SafeTrampoline<ImmutableList<Value>> getAllValuesRecursive(final ImmutableList<ParseGraph> graphList, final ImmutableList<Value> valueList, final String name) {
+        if (graphList.isEmpty()) { return complete(() -> valueList); }
         final ParseGraph graph = graphList.head;
-        if (graph.isEmpty()) { return intermediate(() -> getAllValuesRecursive(graphList.tail, values, name)); }
-        final ParseItem head = graph.head;
-        if (head.isValue() && head.asValue().matches(name)) {
-            return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail), values.add(head.asValue()), name));
-        }
-        if (head.isGraph()) {
-            return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail).add(graph.head.asGraph()), values, name));
-        }
-        return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail), values, name));
+        if (graph.isEmpty()) { return intermediate(() -> getAllValuesRecursive(graphList.tail, valueList, name)); }
+        return intermediate(() -> getAllValuesRecursive(addIfGraph(graphList.tail.add(graph.tail), graph.head),
+                                                        addIfMatchingValue(valueList, graph.head, name),
+                                                        name));
+    }
+
+    private static ImmutableList<ParseGraph> addIfGraph(final ImmutableList<ParseGraph> graphList, final ParseItem item) {
+        if (item.isGraph()) { return graphList.add(item.asGraph()); }
+        return graphList;
+    }
+
+    private static ImmutableList<Value> addIfMatchingValue(final ImmutableList<Value> valueList, final ParseItem item, final String name) {
+        if (item.isValue() && item.asValue().matches(name)) { return valueList.add(item.asValue()); }
+        return valueList;
     }
 
     public static ParseValue get(final ImmutableList<ParseValue> list, final String name) {

@@ -53,14 +53,14 @@ public class Cho extends Token {
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        return iterate(scope, Optional.of(environment.addBranch(this)), encoding, tokens).computeResult();
+        return iterate(scope, environment.addBranch(this), encoding, tokens).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final ImmutableList<Token> list) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding, final ImmutableList<Token> list) throws IOException {
         if (list.isEmpty()) {
             return complete(Util::failure);
         }
-        return list.head.parse(scope, environment.get(), encoding)
+        return list.head.parse(scope, environment, encoding)
             .map(result -> complete(() -> success(result.closeBranch())))
             .orElseGet(() -> intermediate(() -> iterate(scope, environment, encoding, list.tail)));
     }

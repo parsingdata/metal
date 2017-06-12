@@ -107,7 +107,10 @@ public class ParseGraph implements ParseItem {
         if (items.isEmpty()) { return complete(() -> null); }
         final ParseItem item = items.head;
         if (item.isValue()) { return complete(item::asValue); }
-        if (item.isGraph() && !item.asGraph().isEmpty()) { return intermediate(() -> current(items.tail.add(item.asGraph().tail).add(item.asGraph().head))); }
+        if (item.isGraph() && !item.asGraph().isEmpty()) {
+            return intermediate(() -> current(items.tail.add(item.asGraph().tail)
+                                                        .add(item.asGraph().head)));
+        }
         return intermediate(() -> current(items.tail));
     }
 

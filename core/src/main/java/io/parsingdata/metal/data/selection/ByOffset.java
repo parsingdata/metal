@@ -61,12 +61,16 @@ public final class ByOffset {
             return intermediate(() -> getLowestOffsetValue(graphList.tail, lowest));
         }
         if (graph.head.isValue()) {
-            return intermediate(() -> getLowestOffsetValue(graphList.tail.add(graph.tail), lowest == null || lowest.slice.offset > graph.head.asValue().slice.offset ? graph.head.asValue() : lowest));
+            return intermediate(() -> getLowestOffsetValue(graphList.tail.add(graph.tail), getLowest(lowest, graph.head.asValue())));
         }
         if (graph.head.isGraph()) {
-            return intermediate(() -> getLowestOffsetValue(graphList.tail.add(graph.head.asGraph()).add(graph.tail), lowest));
+            return intermediate(() -> getLowestOffsetValue(graphList.tail.add(graph.tail).add(graph.head.asGraph()), lowest));
         }
         return intermediate(() -> getLowestOffsetValue(graphList.tail.add(graph.tail), lowest));
+    }
+
+    private static ParseValue getLowest(final ParseValue lowest, final ParseValue value) {
+        return lowest == null || lowest.slice.offset > value.slice.offset ? value : lowest;
     }
 
 }

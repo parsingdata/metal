@@ -16,12 +16,19 @@
 
 package io.parsingdata.metal;
 
-public interface SafeTrampoline<T> {
+/**
+ * A version of the {@link Trampoline} interface without a checked
+ * {@link java.io.IOException} on the {@link #next()} and
+ * {@link #computeResult()} methods.
+ *
+ * @see Trampoline
+ */
+public interface SafeTrampoline<T> extends Trampoline<T> {
 
-    T result();
-    boolean hasNext();
+    @Override
     SafeTrampoline<T> next();
 
+    @Override
     default T computeResult() {
         SafeTrampoline<T> current = this;
         while (current.hasNext()) {
@@ -32,20 +39,14 @@ public interface SafeTrampoline<T> {
 
     static <T> SafeTrampoline<T> complete(final CompletedTrampoline<T> completedTrampoline) { return completedTrampoline; }
 
-    interface CompletedTrampoline<T> extends SafeTrampoline<T> {
+    interface CompletedTrampoline<T> extends Trampoline.CompletedTrampoline<T>, SafeTrampoline<T> {
 
-        default boolean hasNext() { return false; }
         default SafeTrampoline<T> next() { throw new UnsupportedOperationException("A CompletedTrampoline does not have a next computation."); }
 
     }
 
     static <T> SafeTrampoline<T> intermediate(final IntermediateTrampoline<T> intermediateTrampoline) { return intermediateTrampoline; }
 
-    interface IntermediateTrampoline<T> extends SafeTrampoline<T> {
-
-        default T result() { throw new UnsupportedOperationException("An IntermediateTrampoline does not have a result."); }
-        default boolean hasNext() { return true; }
-
-    }
+    interface IntermediateTrampoline<T> extends Trampoline.IntermediateTrampoline<T>, SafeTrampoline<T> {}
 
 }

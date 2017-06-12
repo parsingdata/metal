@@ -75,33 +75,36 @@ public final class ByToken {
         return reverse(getAllValuesRecursive(ImmutableList.create(graph), new ImmutableList<>(), definition).computeResult());
     }
 
-    private static SafeTrampoline<ImmutableList<Value>> getAllValuesRecursive(final ImmutableList<ParseGraph> graphList, final ImmutableList<Value> values, final Token definition) {
-        if (graphList.isEmpty()) { return complete(() -> values); }
+    private static SafeTrampoline<ImmutableList<Value>> getAllValuesRecursive(final ImmutableList<ParseGraph> graphList, final ImmutableList<Value> valueList, final Token definition) {
+        if (graphList.isEmpty()) { return complete(() -> valueList); }
         final ParseGraph graph = graphList.head;
-        if (graph.isEmpty()) { return intermediate(() -> getAllValuesRecursive(graphList.tail, values, definition)); }
+        if (graph.isEmpty()) { return intermediate(() -> getAllValuesRecursive(graphList.tail, valueList, definition)); }
         final ParseItem head = graph.head;
         if (head.isValue() && head.asValue().definition.equals(definition)) {
-            return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail), values.add(head.asValue()), definition));
+            return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail), valueList.add(head.asValue()), definition));
         }
         if (head.isGraph()) {
-            return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail).add(graph.head.asGraph()), values, definition));
+            return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail).add(graph.head.asGraph()), valueList, definition));
         }
-        return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail), values, definition));
+        return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail), valueList, definition));
     }
 
     public static ImmutableList<ParseItem> getAllRoots(final ParseGraph graph, final Token definition) {
         return getAllRootsRecursive(ImmutableList.create(new Pair(checkNotNull(graph, "graph"), null)), checkNotNull(definition, "definition"), new ImmutableList<>()).computeResult();
     }
 
-    private static SafeTrampoline<ImmutableList<ParseItem>> getAllRootsRecursive(final ImmutableList<Pair> list, final Token definition, final ImmutableList<ParseItem> result) {
-        if (list.isEmpty()) { return complete(() -> result); }
-        final ParseItem item = list.head.item;
-        final ParseGraph parent = list.head.parent;
-        final ImmutableList<ParseItem> nextResult = item.getDefinition().equals(definition) && (parent == null || !parent.getDefinition().equals(definition)) ? result.add(item) : result;
+    private static SafeTrampoline<ImmutableList<ParseItem>> getAllRootsRecursive(final ImmutableList<Pair> backlog, final Token definition, final ImmutableList<ParseItem> rootList) {
+        if (backlog.isEmpty()) { return complete(() -> rootList); }
+        final ParseItem item = backlog.head.item;
+        final ParseGraph parent = backlog.head.parent;
+        final ImmutableList<ParseItem> nextResult = item.getDefinition().equals(definition) && (parent == null || !parent.getDefinition().equals(definition)) ? rootList.add(item) : rootList;
         if (item.isGraph() && !item.asGraph().isEmpty()) {
-            return intermediate(() -> getAllRootsRecursive(list.tail.add(new Pair(item.asGraph().head, item.asGraph())).add(new Pair(item.asGraph().tail, item.asGraph())), definition, nextResult));
+            final ParseGraph itemGraph = item.asGraph();
+            return intermediate(() -> getAllRootsRecursive(backlog.tail.add(new Pair(itemGraph.head, itemGraph))
+                                                                       .add(new Pair(itemGraph.tail, itemGraph)),
+                                                                       definition, nextResult));
         }
-        return intermediate(() -> getAllRootsRecursive(list.tail, definition, nextResult));
+        return intermediate(() -> getAllRootsRecursive(backlog.tail, definition, nextResult));
     }
 
     static class Pair {

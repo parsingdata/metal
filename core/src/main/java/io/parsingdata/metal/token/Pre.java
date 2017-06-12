@@ -58,7 +58,9 @@ public class Pre extends Token {
             return failure();
         }
         final Optional<Environment> result = token.parse(scope, environment.addBranch(this), encoding);
-        return result.map(resultEnvironment -> success(resultEnvironment.closeBranch())).orElseGet(Util::failure);
+        return result
+            .map(resultEnvironment -> success(resultEnvironment.closeBranch()))
+            .orElseGet(Util::failure);
     }
 
     @Override
