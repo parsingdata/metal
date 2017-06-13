@@ -63,7 +63,7 @@ public abstract class Token {
 
     public Optional<Environment> parse(final String scope, final Environment environment, final Encoding encoding) throws IOException {
         final Encoding activeEncoding = this.encoding != null ? this.encoding : encoding;
-        final Optional<Environment> result = parseImpl(makeScope(scope), environment, activeEncoding);
+        final Optional<Environment> result = parseImpl(makeScope(checkNotNull(scope, "scope")), checkNotNull(environment, "environment"), activeEncoding);
         environment.callbacks.handle(this, environment, result);
         return result;
     }
