@@ -16,9 +16,10 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkContainsNoNulls;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
 import static io.parsingdata.metal.data.ImmutableList.create;
 
@@ -26,6 +27,8 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Trampoline;
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
@@ -43,27 +46,23 @@ public class Cho extends Token {
 
     public Cho(final String name, final Encoding encoding, final Token token1, final Token token2, final Token... additionalTokens) {
         super(name, encoding);
-        this.tokens = create(checkContainsNoNulls(additionalTokens, "tokens"))
-                .add(checkNotNull(token2, "token2"))
-                .add(checkNotNull(token1, "token1"));
+        this.tokens = create(checkContainsNoNulls(additionalTokens, "additionalTokens"))
+            .add(checkNotNull(token2, "token2"))
+            .add(checkNotNull(token1, "token1"));
     }
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final Optional<Environment> result = iterate(scope, environment.addBranch(this), encoding, tokens);
-        if (result.isPresent()) {
-            return success(result.get().closeBranch());
-        }
-        return failure();
+        return iterate(scope, environment.addBranch(this), encoding, tokens).computeResult();
     }
 
-    private Optional<Environment> iterate(final String scope, final Environment environment, final Encoding encoding, final ImmutableList<Token> list) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding, final ImmutableList<Token> list) throws IOException {
         if (list.isEmpty()) {
-            return failure();
+            return complete(Util::failure);
         }
-        final Optional<Environment> result = list.head.parse(scope, environment, encoding);
-        if (result.isPresent()) { return result; }
-        return iterate(scope, environment, encoding, list.tail);
+        return list.head.parse(scope, environment, encoding)
+            .map(result -> complete(() -> success(result.closeBranch())))
+            .orElseGet(() -> intermediate(() -> iterate(scope, environment, encoding, list.tail)));
     }
 
     @Override

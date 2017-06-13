@@ -16,8 +16,12 @@
 
 package io.parsingdata.metal.data.selection;
 
+import static io.parsingdata.metal.SafeTrampoline.complete;
+import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.transformation.Reversal.reverse;
 
+import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
@@ -68,38 +72,49 @@ public final class ByToken {
     public static ImmutableList<Value> getAllValues(final ParseGraph graph, final Token definition) {
         checkNotNull(graph, "graph");
         checkNotNull(definition, "definition");
-        return getAllValuesRecursive(graph, definition);
+        return reverse(getAllValuesRecursive(ImmutableList.create(graph), new ImmutableList<>(), definition).computeResult());
     }
 
-    private static ImmutableList<Value> getAllValuesRecursive(final ParseGraph graph, final Token definition) {
-        if (graph.isEmpty()) { return new ImmutableList<>(); }
-        final ImmutableList<Value> tailResults = getAllValuesRecursive(graph.tail, definition);
+    private static SafeTrampoline<ImmutableList<Value>> getAllValuesRecursive(final ImmutableList<ParseGraph> graphList, final ImmutableList<Value> valueList, final Token definition) {
+        if (graphList.isEmpty()) { return complete(() -> valueList); }
+        final ParseGraph graph = graphList.head;
+        if (graph.isEmpty()) { return intermediate(() -> getAllValuesRecursive(graphList.tail, valueList, definition)); }
         final ParseItem head = graph.head;
         if (head.isValue() && head.asValue().definition.equals(definition)) {
-            return tailResults.add(head.asValue());
+            return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail), valueList.add(head.asValue()), definition));
         }
         if (head.isGraph()) {
-            return tailResults.add(getAllValuesRecursive(head.asGraph(), definition));
+            return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail).add(graph.head.asGraph()), valueList, definition));
         }
-        return tailResults;
+        return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail), valueList, definition));
     }
 
     public static ImmutableList<ParseItem> getAllRoots(final ParseGraph graph, final Token definition) {
-        checkNotNull(graph, "graph");
-        checkNotNull(definition, "definition");
-        return getAllRootsRecursive(graph, null, definition);
+        return getAllRootsRecursive(ImmutableList.create(new Pair(checkNotNull(graph, "graph"), null)), checkNotNull(definition, "definition"), new ImmutableList<>()).computeResult();
     }
 
-    private static ImmutableList<ParseItem> getAllRootsRecursive(final ParseItem item, final ParseGraph parent, final Token definition) {
-        final ImmutableList<ParseItem> result = item.getDefinition().equals(definition) && (parent == null || !parent.getDefinition().equals(definition))
-            ? ImmutableList.create(item)
-            : new ImmutableList<>();
+    private static SafeTrampoline<ImmutableList<ParseItem>> getAllRootsRecursive(final ImmutableList<Pair> backlog, final Token definition, final ImmutableList<ParseItem> rootList) {
+        if (backlog.isEmpty()) { return complete(() -> rootList); }
+        final ParseItem item = backlog.head.item;
+        final ParseGraph parent = backlog.head.parent;
+        final ImmutableList<ParseItem> nextResult = item.getDefinition().equals(definition) && (parent == null || !parent.getDefinition().equals(definition)) ? rootList.add(item) : rootList;
         if (item.isGraph() && !item.asGraph().isEmpty()) {
-            return result
-                .add(getAllRootsRecursive(item.asGraph().tail, item.asGraph(), definition))
-                .add(getAllRootsRecursive(item.asGraph().head, item.asGraph(), definition));
+            final ParseGraph itemGraph = item.asGraph();
+            return intermediate(() -> getAllRootsRecursive(backlog.tail.add(new Pair(itemGraph.head, itemGraph))
+                                                                       .add(new Pair(itemGraph.tail, itemGraph)),
+                                                                       definition, nextResult));
         }
-        return result;
+        return intermediate(() -> getAllRootsRecursive(backlog.tail, definition, nextResult));
+    }
+
+    static class Pair {
+        public final ParseItem item;
+        public final ParseGraph parent;
+
+        Pair(final ParseItem item, final ParseGraph parent) {
+            this.item = checkNotNull(item, "item");
+            this.parent = parent;
+        }
     }
 
 }

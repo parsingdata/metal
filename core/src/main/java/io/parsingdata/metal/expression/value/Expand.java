@@ -16,11 +16,14 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static io.parsingdata.metal.SafeTrampoline.complete;
+import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
@@ -53,12 +56,12 @@ public class Expand implements ValueExpression {
         if (base.isEmpty()) { return base; }
         final ImmutableList<Optional<Value>> count = this.count.eval(graph, encoding);
         if (count.size != 1 || !count.head.isPresent()) { throw new IllegalStateException("Count must yield a single non-empty value."); }
-        return expand(base, count.head.get().asNumeric().intValue(), new ImmutableList<>());
+        return expand(base, count.head.get().asNumeric().intValue(), new ImmutableList<>()).computeResult();
     }
 
-    private ImmutableList<Optional<Value>> expand(final ImmutableList<Optional<Value>> base, final int count, final ImmutableList<Optional<Value>> aggregate) {
-        if (count < 1) { return aggregate; }
-        return expand(base, count - 1, aggregate.add(base));
+    private SafeTrampoline<ImmutableList<Optional<Value>>> expand(final ImmutableList<Optional<Value>> base, final int count, final ImmutableList<Optional<Value>> aggregate) {
+        if (count < 1) { return complete(() -> aggregate); }
+        return intermediate(() -> expand(base, count - 1, aggregate.add(base)));
     }
 
     @Override

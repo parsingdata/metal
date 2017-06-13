@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
@@ -25,6 +27,8 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Trampoline;
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseReference;
@@ -64,25 +68,20 @@ public class Sub extends Token {
         if (addresses.isEmpty()) {
             return failure();
         }
-        final Optional<Environment> result = iterate(scope, addresses, environment.addBranch(this), encoding);
-        if (result.isPresent()) {
-            return success(result.get().closeBranch().seek(environment.offset));
-        }
-        return failure();
+        return iterate(scope, addresses, environment.addBranch(this), encoding).computeResult()
+            .flatMap(nextEnvironment -> success(nextEnvironment.seek(environment.offset)));
     }
 
-    private Optional<Environment> iterate(final String scope, final ImmutableList<Optional<Value>> addresses, final Environment environment, final Encoding encoding) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> addresses, final Environment environment, final Encoding encoding) throws IOException {
+        if (addresses.isEmpty()) {
+            return complete(() -> success(environment.closeBranch()));
+        }
         if (!addresses.head.isPresent()) {
-            return failure();
+            return complete(Util::failure);
         }
-        final long offset = addresses.head.get().asNumeric().longValue();
-        final Source source = environment.source;
-        final Optional<Environment> result = parse(scope, offset, source, environment, encoding);
-        if (result.isPresent()) {
-            if (addresses.tail.isEmpty()) { return result; }
-            return iterate(scope, addresses.tail, result.get(), encoding);
-        }
-        return failure();
+        return parse(scope, addresses.head.get().asNumeric().longValue(), environment.source, environment, encoding)
+            .map(nextEnvironment -> intermediate(() -> iterate(scope, addresses.tail, nextEnvironment, encoding)))
+            .orElseGet(() -> complete(Util::failure));
     }
 
     private Optional<Environment> parse(final String scope, final long offset, final Source source, final Environment environment, final Encoding encoding) throws IOException {

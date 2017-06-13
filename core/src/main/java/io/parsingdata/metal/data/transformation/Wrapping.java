@@ -16,10 +16,14 @@
 
 package io.parsingdata.metal.data.transformation;
 
+import static io.parsingdata.metal.SafeTrampoline.complete;
+import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.transformation.Reversal.reverse;
 
 import java.util.Optional;
 
+import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.data.ImmutableList;
 
 public final class Wrapping {
@@ -28,8 +32,12 @@ public final class Wrapping {
 
     public static <T> ImmutableList<Optional<T>> wrap(final ImmutableList<T> list) {
         checkNotNull(list, "list");
-        if (list.isEmpty()) { return new ImmutableList(); }
-        return wrap(list.tail).add(Optional.of(list.head));
+        return reverse(wrap(list, new ImmutableList<>()).computeResult());
+    }
+
+    private static <T> SafeTrampoline<ImmutableList<Optional<T>>> wrap(final ImmutableList<T> input, final ImmutableList<Optional<T>> output) {
+        if (input.isEmpty()) { return complete(() -> output); }
+        return intermediate(() -> wrap(input.tail, output.add(Optional.of(input.head))));
     }
 
 }

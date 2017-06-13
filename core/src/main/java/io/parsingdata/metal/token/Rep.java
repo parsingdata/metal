@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.success;
 
@@ -23,6 +25,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 
@@ -46,16 +49,13 @@ public class Rep extends Token {
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final Optional<Environment> result = iterate(scope, environment.addBranch(this), encoding);
-        return success(result.get().closeBranch());
+        return iterate(scope, environment.addBranch(this), encoding).computeResult();
     }
 
-    private Optional<Environment> iterate(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final Optional<Environment> result = token.parse(scope, environment, encoding);
-        if (result.isPresent()) {
-            return iterate(scope, result.get(), encoding);
-        }
-        return success(environment);
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        return token.parse(scope, environment, encoding)
+            .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, encoding)))
+            .orElseGet(() -> complete(() -> success(environment.closeBranch())));
     }
 
     @Override

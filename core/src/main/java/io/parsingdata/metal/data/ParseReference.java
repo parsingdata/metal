@@ -38,7 +38,7 @@ public class ParseReference implements ParseItem {
     }
 
     public ParseItem resolve(final ParseGraph root) {
-        return findItemAtOffset(getAllRoots(root, definition), location, source);
+        return findItemAtOffset(getAllRoots(root, definition), location, source).computeResult();
     }
 
     public boolean isReference() { return true; }

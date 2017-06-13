@@ -17,14 +17,17 @@
 package io.parsingdata.metal.token;
 
 import static io.parsingdata.metal.Shorthand.expTrue;
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
 
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Trampoline;
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
@@ -55,22 +58,16 @@ public class While extends Token {
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final Optional<Environment> result = iterate(scope, environment.addBranch(this), encoding);
-        if (result.isPresent()) {
-            return success(result.get().closeBranch());
-        }
-        return failure();
+        return iterate(scope, environment.addBranch(this), encoding).computeResult();
     }
 
-    private Optional<Environment> iterate(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        if (!predicate.eval(environment.order, encoding)) {
-            return success(environment);
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        if (predicate.eval(environment.order, encoding)) {
+            return token.parse(scope, environment, encoding)
+                .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, encoding)))
+                .orElseGet(() -> complete(Util::failure));
         }
-        final Optional<Environment> result = token.parse(scope, environment, encoding);
-        if (result.isPresent()) {
-            return iterate(scope, result.get(), encoding);
-        }
-        return failure();
+        return complete(() -> success(environment.closeBranch()));
     }
 
     @Override

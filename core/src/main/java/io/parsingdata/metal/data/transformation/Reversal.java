@@ -16,6 +16,10 @@
 
 package io.parsingdata.metal.data.transformation;
 
+import static io.parsingdata.metal.SafeTrampoline.complete;
+import static io.parsingdata.metal.SafeTrampoline.intermediate;
+
+import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
@@ -39,12 +43,12 @@ public final class Reversal {
 
     public static <T> ImmutableList<T> reverse(final ImmutableList<T> list) {
         if (list.isEmpty()) { return list; }
-        return reverse(list.tail, ImmutableList.create(list.head));
+        return reverse(list.tail, ImmutableList.create(list.head)).computeResult();
     }
 
-    private static <T> ImmutableList<T> reverse(final ImmutableList<T> oldList, final ImmutableList<T> newList) {
-        if (oldList.isEmpty()) { return newList; }
-        return reverse(oldList.tail, newList.add(oldList.head));
+    private static <T> SafeTrampoline<ImmutableList<T>> reverse(final ImmutableList<T> oldList, final ImmutableList<T> newList) {
+        if (oldList.isEmpty()) { return complete(() -> newList); }
+        return intermediate(() -> reverse(oldList.tail, newList.add(oldList.head)));
     }
 
 }

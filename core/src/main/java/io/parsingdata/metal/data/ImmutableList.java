@@ -16,10 +16,14 @@
 
 package io.parsingdata.metal.data;
 
+import static io.parsingdata.metal.SafeTrampoline.complete;
+import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.transformation.Reversal.reverse;
 
 import java.util.Objects;
 
+import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.Util;
 
 public class ImmutableList<T> {
@@ -45,12 +49,12 @@ public class ImmutableList<T> {
     }
 
     public static <T> ImmutableList<T> create(final T[] array) {
-        return createFromArray(new ImmutableList<>(), checkNotNull(array, "array"), array.length - 1);
+        return createFromArray(new ImmutableList<>(), checkNotNull(array, "array"), array.length - 1).computeResult();
     }
 
-    private static <T> ImmutableList<T> createFromArray(final ImmutableList<T> list, final T[] array, final int index) {
-        if (index < 0) { return list; }
-        return createFromArray(list.add(array[index]), array, index - 1);
+    private static <T> SafeTrampoline<ImmutableList<T>> createFromArray(final ImmutableList<T> list, final T[] array, final int index) {
+        if (index < 0) { return complete(() -> list); }
+        return intermediate(() -> createFromArray(list.add(array[index]), array, index - 1));
     }
 
     public ImmutableList<T> add(final T head) {
@@ -59,9 +63,13 @@ public class ImmutableList<T> {
 
     public ImmutableList<T> add(final ImmutableList<T> list) {
         checkNotNull(list, "list");
-        if (list.isEmpty()) { return this; }
         if (isEmpty()) { return list; }
-        return add(list.tail).add(list.head);
+        return addRecursive(reverse(list)).computeResult();
+    }
+
+    private SafeTrampoline<ImmutableList<T>> addRecursive(final ImmutableList<T> list) {
+        if (list.isEmpty()) { return complete(() -> this); }
+        return intermediate(() -> add(list.head).addRecursive(list.tail));
     }
 
     public boolean isEmpty() { return size == 0; }

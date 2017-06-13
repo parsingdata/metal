@@ -16,12 +16,15 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static io.parsingdata.metal.SafeTrampoline.complete;
+import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 
+import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
@@ -58,23 +61,24 @@ public abstract class Fold implements ValueExpression {
         final ImmutableList<Optional<Value>> initial = this.initial != null ? this.initial.eval(graph, encoding) : new ImmutableList<>();
         if (initial.size > 1) { return new ImmutableList<>(); }
         final ImmutableList<Optional<Value>> values = prepareValues(this.values.eval(graph, encoding));
-        if (values.isEmpty() || containsEmpty(values)) { return initial; }
+        if (values.isEmpty() || containsEmpty(values).computeResult()) { return initial; }
         if (!initial.isEmpty()) {
-            return ImmutableList.create(fold(graph, encoding, reducer, initial.head, values));
+            return ImmutableList.create(fold(graph, encoding, reducer, initial.head, values).computeResult());
         }
-        return ImmutableList.create(fold(graph, encoding, reducer, values.head, values.tail));
+        return ImmutableList.create(fold(graph, encoding, reducer, values.head, values.tail).computeResult());
     }
 
-    private Optional<Value> fold(final ParseGraph graph, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Optional<Value> head, final ImmutableList<Optional<Value>> tail) {
-        if (!head.isPresent() || tail.isEmpty()) { return head; }
+    private SafeTrampoline<Optional<Value>> fold(final ParseGraph graph, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Optional<Value> head, final ImmutableList<Optional<Value>> tail) {
+        if (!head.isPresent() || tail.isEmpty()) { return complete(() -> head); }
         final ImmutableList<Optional<Value>> reducedValue = reduce(reducer, head.get(), tail.head.get()).eval(graph, encoding);
         if (reducedValue.size != 1) { throw new IllegalStateException("Reducer must yield a single value."); }
-        return fold(graph, encoding, reducer, reducedValue.head, tail.tail);
+        return intermediate(() -> fold(graph, encoding, reducer, reducedValue.head, tail.tail));
     }
 
-    private boolean containsEmpty(final ImmutableList<Optional<Value>> list) {
-        if (list.isEmpty()) { return false; }
-        return !list.head.isPresent() || containsEmpty(list.tail);
+    private SafeTrampoline<Boolean> containsEmpty(final ImmutableList<Optional<Value>> list) {
+        if (list.isEmpty()) { return complete(() -> false); }
+        if (!list.head.isPresent()) { return complete(() -> true); }
+        return intermediate(() -> containsEmpty(list.tail));
     }
 
     protected abstract ImmutableList<Optional<Value>> prepareValues(ImmutableList<Optional<Value>> values);

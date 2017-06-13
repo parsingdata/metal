@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
@@ -24,6 +26,8 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Trampoline;
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
@@ -59,22 +63,16 @@ public class RepN extends Token {
         if (counts.size != 1 || !counts.head.isPresent()) {
             return failure();
         }
-        final Optional<Environment> result = iterate(scope, environment.addBranch(this), encoding, counts.head.get().asNumeric().longValue());
-        if (result.isPresent()) {
-            return success(result.get().closeBranch());
-        }
-        return failure();
+        return iterate(scope, environment.addBranch(this), encoding, counts.head.get().asNumeric().longValue()).computeResult();
     }
 
-    private Optional<Environment> iterate(final String scope, final Environment environment, final Encoding encoding, final long count) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding, final long count) throws IOException {
         if (count <= 0) {
-            return success(environment);
+            return complete(() -> success(environment.closeBranch()));
         }
-        final Optional<Environment> result = token.parse(scope, environment, encoding);
-        if (result.isPresent()) {
-            return iterate(scope, result.get(), encoding, count - 1);
-        }
-        return failure();
+        return token.parse(scope, environment, encoding)
+            .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, encoding, count - 1)))
+            .orElseGet(() -> complete(Util::failure));
     }
 
     @Override

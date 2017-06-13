@@ -83,7 +83,7 @@ public class ByTokenTest {
     });
 
     private static final Token MUT_REC_2 = seq(REPN_DEF2, opt(MUT_REC_1));
-    
+
     private static final Token SELF_REC =
         seq("selfRec",
             DEF1,

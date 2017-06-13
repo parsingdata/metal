@@ -51,7 +51,7 @@ public class Nod extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
         final ImmutableList<Optional<Value>> sizes = size.eval(environment.order, encoding);
         if (sizes.size != 1 || !sizes.head.isPresent()) {
             return failure();

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
@@ -56,8 +57,9 @@ public class Pre extends Token {
         if (!predicate.eval(environment.order, encoding)) {
             return failure();
         }
-        final Optional<Environment> result = token.parse(scope, environment.addBranch(this), encoding);
-        return result.isPresent() ? success(result.get().closeBranch()) : failure();
+        return token.parse(scope, environment.addBranch(this), encoding)
+            .map(resultEnvironment -> success(resultEnvironment.closeBranch()))
+            .orElseGet(Util::failure);
     }
 
     @Override

@@ -16,11 +16,14 @@
 
 package io.parsingdata.metal.expression.comparison;
 
+import static io.parsingdata.metal.SafeTrampoline.complete;
+import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
@@ -58,14 +61,14 @@ public abstract class ComparisonExpression implements Expression {
         if (values.isEmpty()) { return false; }
         final ImmutableList<Optional<Value>> predicates = predicate.eval(graph, encoding);
         if (values.size != predicates.size) { return false; }
-        return compare(values, predicates);
+        return compare(values, predicates).computeResult();
     }
 
-    private boolean compare(final ImmutableList<Optional<Value>> currents, final ImmutableList<Optional<Value>> predicates) {
-        if (!currents.head.isPresent() || !predicates.head.isPresent()) { return false; }
+    private SafeTrampoline<Boolean> compare(final ImmutableList<Optional<Value>> currents, final ImmutableList<Optional<Value>> predicates) {
+        if (!currents.head.isPresent() || !predicates.head.isPresent()) { return complete(() -> false); }
         final boolean headResult = compare(currents.head.get(), predicates.head.get());
-        if (!headResult || currents.tail.isEmpty()) { return headResult; }
-        return compare(currents.tail, predicates.tail);
+        if (!headResult || currents.tail.isEmpty()) { return complete(() -> headResult); }
+        return intermediate(() -> compare(currents.tail, predicates.tail));
     }
 
     public abstract boolean compare(final Value left, final Value right);
