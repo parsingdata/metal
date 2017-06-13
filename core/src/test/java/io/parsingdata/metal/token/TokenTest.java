@@ -21,7 +21,7 @@ public class TokenTest {
         protected Optional<Environment> parseImpl(String scope, Environment environment, Encoding encoding) throws IOException {
             return null;
         }
-    };;
+    };
 
     @Test
     public void parseNullEnvironment() throws IOException {
