@@ -68,19 +68,20 @@ public class Sub extends Token {
         if (addresses.isEmpty()) {
             return failure();
         }
-        return iterate(scope, addresses, environment.offset, environment.addBranch(this), encoding).computeResult();
+        return iterate(scope, addresses, environment.addBranch(this), encoding).computeResult()
+            .flatMap(nextEnvironment -> success(nextEnvironment.seek(environment.offset)));
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> addresses, final long returnOffset, final Environment environment, final Encoding encoding) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> addresses, final Environment environment, final Encoding encoding) throws IOException {
+        if (addresses.isEmpty()) {
+            return complete(() -> success(environment.closeBranch()));
+        }
         if (!addresses.head.isPresent()) {
             return complete(Util::failure);
         }
-        final Optional<Environment> result = parse(scope, addresses.head.get().asNumeric().longValue(), environment.source, environment, encoding);
-        if (result.isPresent()) {
-            if (addresses.tail.isEmpty()) { return complete(() -> success(result.get().closeBranch().seek(returnOffset))); }
-            return intermediate(() -> iterate(scope, addresses.tail, returnOffset, result.get(), encoding));
-        }
-        return complete(Util::failure);
+        return parse(scope, addresses.head.get().asNumeric().longValue(), environment.source, environment, encoding)
+            .map(nextEnvironment -> intermediate(() -> iterate(scope, addresses.tail, nextEnvironment, encoding)))
+            .orElseGet(() -> complete(Util::failure));
     }
 
     private Optional<Environment> parse(final String scope, final long offset, final Source source, final Environment environment, final Encoding encoding) throws IOException {

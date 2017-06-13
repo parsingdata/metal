@@ -49,14 +49,13 @@ public class Rep extends Token {
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final Environment input = environment.addBranch(this);
-        return iterate(scope, Optional.of(input), encoding, input).computeResult();
+        return iterate(scope, environment.addBranch(this), encoding).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final Environment previous) {
-        return environment
-            .map(result -> intermediate(() -> iterate(scope, token.parse(scope, result, encoding), encoding, result)))
-            .orElseGet(() -> complete(() -> success(previous.closeBranch())));
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        return token.parse(scope, environment, encoding)
+            .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, encoding)))
+            .orElseGet(() -> complete(() -> success(environment.closeBranch())));
     }
 
     @Override

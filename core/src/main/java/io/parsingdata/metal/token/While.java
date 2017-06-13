@@ -58,17 +58,16 @@ public class While extends Token {
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        return iterate(scope, Optional.of(environment.addBranch(this)), encoding).computeResult();
+        return iterate(scope, environment.addBranch(this), encoding).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding) {
-        if (!environment.isPresent()) {
-            return complete(Util::failure);
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        if (predicate.eval(environment.order, encoding)) {
+            return token.parse(scope, environment, encoding)
+                .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, encoding)))
+                .orElseGet(() -> complete(Util::failure));
         }
-        if (predicate.eval(environment.get().order, encoding)) {
-            return intermediate(() -> iterate(scope, token.parse(scope, environment.get(), encoding), encoding));
-        }
-        return complete(() -> success(environment.get().closeBranch()));
+        return complete(() -> success(environment.closeBranch()));
     }
 
     @Override

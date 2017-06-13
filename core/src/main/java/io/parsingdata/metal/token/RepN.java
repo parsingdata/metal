@@ -63,17 +63,16 @@ public class RepN extends Token {
         if (counts.size != 1 || !counts.head.isPresent()) {
             return failure();
         }
-        return iterate(scope, Optional.of(environment.addBranch(this)), encoding, counts.head.get().asNumeric().longValue()).computeResult();
+        return iterate(scope, environment.addBranch(this), encoding, counts.head.get().asNumeric().longValue()).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final long count) {
-        if (!environment.isPresent()) {
-            return complete(Util::failure);
-        }
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding, final long count) throws IOException {
         if (count <= 0) {
-            return complete(() -> success(environment.get().closeBranch()));
+            return complete(() -> success(environment.closeBranch()));
         }
-        return intermediate(() -> iterate(scope, token.parse(scope, environment.get(), encoding), encoding, count - 1));
+        return token.parse(scope, environment, encoding)
+            .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, encoding, count - 1)))
+            .orElseGet(() -> complete(Util::failure));
     }
 
     @Override

@@ -69,15 +69,15 @@ public class Tie extends Token {
     }
 
     private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> values, final int index, final Environment returnEnvironment, final Environment environment, final Encoding encoding) throws IOException {
+        if (values.isEmpty()) {
+            return complete(() -> success(new Environment(environment.closeBranch().order, returnEnvironment.source, returnEnvironment.offset, returnEnvironment.callbacks)));
+        }
         if (!values.head.isPresent()) {
             return complete(Util::failure);
         }
-        final Optional<Environment> result = token.parse(scope, environment.source(dataExpression, index, environment, encoding), encoding);
-        if (result.isPresent()) {
-            if (values.tail.isEmpty()) { return complete(() -> success(new Environment(result.get().closeBranch().order, returnEnvironment.source, returnEnvironment.offset, returnEnvironment.callbacks))); }
-            return intermediate(() -> iterate(scope, values.tail, index + 1, returnEnvironment, result.get(), encoding));
-        }
-        return complete(Util::failure);
+        return token.parse(scope, environment.source(dataExpression, index, environment, encoding), encoding)
+            .map(nextEnvironment -> intermediate(() -> iterate(scope, values.tail, index + 1, returnEnvironment, nextEnvironment, encoding)))
+            .orElseGet(() -> complete(Util::failure));
     }
 
     @Override

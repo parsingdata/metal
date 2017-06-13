@@ -53,17 +53,16 @@ public class Seq extends Token {
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        return iterate(scope, Optional.of(environment.addBranch(this)), encoding, tokens).computeResult();
+        return iterate(scope, environment.addBranch(this), encoding, tokens).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Optional<Environment> environment, final Encoding encoding, final ImmutableList<Token> list) {
-        if (!environment.isPresent()) {
-            return complete(Util::failure);
-        }
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding, final ImmutableList<Token> list) throws IOException {
         if (list.isEmpty()) {
-            return complete(() -> success(environment.get().closeBranch()));
+            return complete(() -> success(environment.closeBranch()));
         }
-        return intermediate(() -> iterate(scope, list.head.parse(scope, environment.get(), encoding), encoding, list.tail));
+        return list.head.parse(scope, environment, encoding)
+            .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, encoding, list.tail)))
+            .orElseGet(() -> complete(Util::failure));
     }
 
     @Override

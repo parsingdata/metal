@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
@@ -52,12 +53,9 @@ public class Post extends Token {
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final Optional<Environment> result = token.parse(scope, environment.addBranch(this), encoding);
-        if (result.isPresent()) {
-            final Environment newEnvironment = result.get();
-            return predicate.eval(newEnvironment.order, encoding) ? success(newEnvironment.closeBranch()) : failure();
-        }
-        return failure();
+        return token.parse(scope, environment.addBranch(this), encoding)
+            .map(nextEnvironment -> predicate.eval(nextEnvironment.order, encoding) ? success(nextEnvironment.closeBranch()) : failure())
+            .orElseGet(Util::failure);
     }
 
     @Override
