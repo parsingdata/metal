@@ -22,7 +22,6 @@ import static io.parsingdata.metal.util.ClassDefinition.checkUtilityClass;
 
 import org.junit.Test;
 
-import io.parsingdata.metal.data.selection.ByItem;
 import io.parsingdata.metal.data.selection.ByName;
 import io.parsingdata.metal.data.selection.ByOffset;
 import io.parsingdata.metal.data.selection.ByToken;
@@ -41,7 +40,6 @@ public class UtilityClassTest {
         checkUtilityClass(Shorthand.class);
         checkUtilityClass(Util.class);
         checkUtilityClass(Reversal.class);
-        checkUtilityClass(ByItem.class);
         checkUtilityClass(ByName.class);
         checkUtilityClass(ByOffset.class);
         checkUtilityClass(ByToken.class);
