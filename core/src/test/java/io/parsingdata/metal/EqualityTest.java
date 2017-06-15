@@ -30,12 +30,14 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.token;
+import static io.parsingdata.metal.Util.createFromBytes;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -47,6 +49,8 @@ import org.junit.Test;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.True;
 import io.parsingdata.metal.expression.value.reference.Self;
@@ -148,6 +152,18 @@ public class EqualityTest {
         assertTrue(object.add("b").add("c").equals(ImmutableList.create("a").add("b").add("c")));
         assertFalse(object.add("b").equals(ImmutableList.create("a").add("c")));
         assertFalse(object.add("b").add("c").equals(ImmutableList.create("a").add("c").add("c")));
+    }
+
+    @Test
+    public void parseGraph() {
+        final ParseValue value = new ParseValue("a", any("a"), createFromBytes(new byte[]{1, 2}), enc());
+        final ParseGraph object = ParseGraph.EMPTY.add(value);
+        assertFalse(object.equals(null));
+        assertFalse(object.equals("a"));
+        final Environment environment = new Environment((offset, data) -> 0);
+        assertNotEquals(environment.addBranch(any("a")).add(value).add(value).closeBranch().addBranch(any("a")).order, environment.addBranch(any("a")).closeBranch().addBranch(any("a")).order);
+        assertNotEquals(environment.addBranch(any("a")).order, environment.addBranch(any("a")).closeBranch().order);
+        assertNotEquals(environment.addBranch(any("a")).order, environment.addBranch(any("b")).order);
     }
 
 }
