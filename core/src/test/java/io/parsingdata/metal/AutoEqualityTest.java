@@ -162,7 +162,7 @@ public class AutoEqualityTest {
             io.parsingdata.metal.expression.logical.Or.class, FoldLeft.class, FoldRight.class, Value.class,
             ParseValue.class, io.parsingdata.metal.expression.logical.Not.class, Const.class, NameRef.class,
             io.parsingdata.metal.expression.value.reference.TokenRef.class, ConstantSource.class, Slice.class,
-            ParseReference.class, DataExpressionSource.class, ParseGraph.class, ByteStreamSource.class, Expand.class
+            ParseReference.class, DataExpressionSource.class, ByteStreamSource.class, Expand.class
         );
     }
 
