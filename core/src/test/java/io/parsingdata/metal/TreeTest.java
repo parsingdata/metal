@@ -17,7 +17,6 @@
 package io.parsingdata.metal;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.cho;
@@ -34,7 +33,6 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +42,7 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
-import io.parsingdata.metal.data.transformation.Reversal;
+import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Token;
 
@@ -68,18 +66,18 @@ public class TreeTest {
             )
         );
 
-    private final Optional<Environment> regular;
-    private final Optional<Environment> cyclic;
+    private final Environment regular;
+    private final Environment cyclic;
 
     public TreeTest() throws IOException {
-        regular = TREE.parse(stream(HEAD, 0, 6, 10, 8, 8, HEAD, 1, 16, 20, HEAD, 2, 24, 28, 8, 8, HEAD, 3, 0, 0, HEAD, 4, 0, 0, HEAD, 5, 0, 0, HEAD, 6, 0, 0), enc());
+        regular = TREE.parse(stream(HEAD, 0, 6, 10, 8, 8, HEAD, 1, 16, 20, HEAD, 2, 24, 28, 8, 8, HEAD, 3, 0, 0, HEAD, 4, 0, 0, HEAD, 5, 0, 0, HEAD, 6, 0, 0), enc()).get();
                                  /* *--------+---+        *---------+---+  *---------+---+        *--------*--*  *--------*--*  *--------*--*  *--------*--*
                                   *          \---|--------/         \---|--|---------|---|--------/              |              |              |
                                   *              \----------------------|--/         \---|-----------------------|--------------/              |
                                   *                                     \----------------|-----------------------/                             |
                                   *                                                      \-----------------------------------------------------/
                                   */
-        cyclic = TREE.parse(stream(HEAD, 0, 4, 8, HEAD, 1, 8, 0, HEAD, 2, 4, 0), enc());
+        cyclic = TREE.parse(stream(HEAD, 0, 4, 8, HEAD, 1, 8, 0, HEAD, 2, 4, 0), enc()).get();
                                 /* *--------+--+  *--------+--*  *--------+--*
                                  *          \--|--/        \-----/        |
                                  *             \--|--------------/        |
@@ -89,67 +87,65 @@ public class TreeTest {
 
     @Test
     public void checkRegularTree() {
-        assertTrue(regular.isPresent());
-        checkStructure(Reversal.reverse(regular.get().order).head.asGraph(), 0);
+        checkStructure(regular);
     }
 
     @Test
     public void checkCyclicTree() {
-        assertTrue(cyclic.isPresent());
-        checkStructure(Reversal.reverse(cyclic.get().order).head.asGraph(), 0);
+        checkStructure(cyclic);
     }
 
-    private void checkStructure(final ParseGraph graph, final long offset) {
-        checkStructure(graph, graph, offset);
+    private void checkStructure(final Environment environment) {
+        final ParseGraph input = environment.order.head.asGraph(); // order = top-level ParseGraph, head = top-level Seq
+        checkStructure(input, input, 0);
     }
 
-    private void checkStructure(final ParseGraph root, final ParseGraph graph, final long offset) {
-        checkHeader(graph, offset);
-        final ParseItem left = graph.tail.tail.head.asGraph().head;
-        long leftOffset = 0;
-        if (!(left.isValue() && left.asValue().matches("left_terminator"))) {
-            assertTrue(left.isGraph());
-            leftOffset = left.asGraph().head.asValue().asNumeric().longValue();
-            if (leftOffset != 0) {
-                final ParseItem leftItem = graph.tail.tail.head.asGraph().head.asGraph().tail.head.asGraph();
-                checkBranch(root, leftOffset, leftItem);
-            }
-        }
-
-        final ParseItem right = leftOffset != 0 ? graph.tail.tail.tail.head.asGraph().head : graph.tail.tail.tail.head.asGraph().head;
-        if (!(right.isValue() && right.asValue().matches("right_terminator"))) {
-            assertTrue(right.isGraph());
-            final long rightOffset = right.asGraph().head.asValue().asNumeric().longValue();
-            if (rightOffset != 0) {
-                final ParseItem rightItem = (leftOffset != 0 ? graph.tail.tail.tail.head.asGraph().head.asGraph().tail : graph.tail.tail.head.asGraph().head.asGraph().tail);
-                final ParseItem rightSeq = rightItem.asGraph().head;
-                checkBranch(root, rightOffset, rightSeq);
-            }
-        }
+    private void checkStructure(final ParseGraph graph, final ParseGraph root, final int offset) {
+        checkHeader(graph.tail.tail, offset); // tail = Seq, tail = Seq
+        checkBranch(graph.tail, root, "left", offset); // left
+        checkBranch(graph, root, "right", offset); // right
     }
 
-    private void checkBranch(final ParseGraph root, final long offset, final ParseItem item) {
-        assertFalse(item.isValue());
-        if (item.asGraph().head.isGraph()) {
-            checkStructure(root, item.asGraph().head.asGraph(), offset);
-        } else if (item.asGraph().head.isReference()) {
-            checkHeader(item.asGraph().head.asReference().resolve(root).asGraph(), offset);
-        }
-    }
-
-    private void checkHeader(final ParseGraph graph, final long offset) {
-        final ParseItem head = graph.head.asGraph().head;
+    private void checkHeader(final ParseGraph header, final int offset) {
+        final ParseItem head = header.tail.head.asGraph().head; // tail = Seq, head = Post, head = Def("head")
         assertTrue(head.isValue());
+        assertTrue(head.asValue().matches("head"));
         assertEquals(HEAD, head.asValue().asNumeric().intValue());
         assertEquals(offset, head.asValue().slice.offset);
-        final ParseItem nr = graph.tail.head;
+        final ParseItem nr = header.head; // head = Def("nr")
         assertTrue(nr.isValue());
+        assertTrue(nr.asValue().matches("nr"));
+    }
+
+    private void checkBranch(final ParseGraph branch, final ParseGraph root, final String name, final int offset) {
+        assertTrue(branch.isGraph()); // Seq
+        assertTrue(branch.asGraph().definition.name.endsWith("tree"));
+        assertTrue(branch.head.isGraph()); // Cho
+        assertTrue(branch.head.asGraph().head.isGraph()); // Seq for pointer, Post for terminator
+        final ParseGraph subStruct = branch.head.asGraph().head.asGraph();
+        if (subStruct.tail.isEmpty()) { // If the graph has only one entry, it's a single Post for the terminator
+            assertTrue(subStruct.head.isValue()); // Def("[left|right]_terminator")
+            assertTrue(subStruct.head.asValue().matches(name + "_terminator"));
+        } else { // Otherwise, it's a Seq with a pointer and a Sub
+            assertTrue(subStruct.tail.head.isValue()); // Def("[left|right]")
+            assertTrue(subStruct.tail.head.asValue().matches(name));
+            final int pointer = subStruct.tail.head.asValue().asNumeric().intValue();
+            assertTrue(subStruct.head.isGraph()); // Sub
+            if (subStruct.head.asGraph().head.isReference()) { // If the Sub contains a Reference, it's a cycle
+                checkResolve(subStruct.head.asGraph().head.asReference(), root, pointer);
+            } else {
+                checkStructure(subStruct.head.asGraph().head.asGraph(), root, pointer); // Recurse
+            }
+        }
+    }
+
+    private void checkResolve(final ParseReference reference, final ParseGraph root, final int offset) {
+        checkHeader(reference.resolve(root).asGraph().tail.tail, offset); // Only check header on cycle to prevent loop
     }
 
     @Test
     public void checkRegularTreeFlat() {
-        assertTrue(regular.isPresent());
-        final ImmutableList<Value> nrs = getAllValues(regular.get().order, "nr");
+        final ImmutableList<Value> nrs = getAllValues(regular.order, "nr");
         for (int i = 0; i < 7; i++) {
             assertTrue(contains(nrs, i));
         }

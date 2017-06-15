@@ -28,7 +28,6 @@ import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
-import static io.parsingdata.metal.data.selection.ByItem.getGraphAfter;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.data.selection.ByTypeTest.EMPTY_SOURCE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
@@ -204,22 +203,6 @@ public class ParseGraphTest {
         // creates a ParseGraph with values in the head, and an empty graph as tail
         final Optional<Environment> result = token.parse(environment, enc());
         assertTrue(result.get().order.head.asGraph().head.asGraph().head.isValue());
-    }
-
-    @Test
-    public void testSimpleGetGraphAfter() {
-        final ParseGraph graph = makeSimpleGraph();
-        final ParseItem itemB = graph.tail.tail.tail.head;
-        assertTrue(itemB.isValue());
-        assertEquals(b, itemB);
-        final ParseGraph subGraph = getGraphAfter(graph, itemB);
-        assertTrue(subGraph.head.isValue());
-        assertEquals(h, subGraph.head);
-        assertTrue(subGraph.tail.head.isValue());
-        assertEquals(g, subGraph.tail.head);
-        assertTrue(subGraph.tail.tail.head.isGraph());
-        assertTrue(subGraph.tail.tail.head.asGraph().head.isValue());
-        assertEquals(f, subGraph.tail.tail.head.asGraph().head);
     }
 
     @Test
