@@ -18,6 +18,7 @@ package io.parsingdata.metal.data;
 
 import java.io.IOException;
 
+@FunctionalInterface
 public interface ByteStream {
 
     int read(long offset, byte[] data) throws IOException;
