@@ -18,7 +18,6 @@ package io.parsingdata.metal.data;
 
 import io.parsingdata.metal.token.Token;
 
-@FunctionalInterface
 public interface ParseItem {
 
     default boolean isValue() { return false; }
