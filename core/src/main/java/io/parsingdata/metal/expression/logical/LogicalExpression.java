@@ -24,6 +24,7 @@ import io.parsingdata.metal.expression.Expression;
  * @see UnaryLogicalExpression
  * @see BinaryLogicalExpression
  */
+@FunctionalInterface
 public interface LogicalExpression extends Expression {
-    
+
 }

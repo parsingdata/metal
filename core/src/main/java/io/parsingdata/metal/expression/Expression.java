@@ -32,6 +32,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * @see io.parsingdata.metal.token.Pre
  * @see io.parsingdata.metal.token.While
  */
+@FunctionalInterface
 public interface Expression {
 
     boolean eval(ParseGraph graph, Encoding encoding);

@@ -34,6 +34,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * describes the parse state as well as the current <code>encoding</code>
  * object that describes the encoding to use when reading data from the input.
  */
+@FunctionalInterface
 public interface ValueExpression {
 
     ImmutableList<Optional<Value>> eval(ParseGraph graph, Encoding encoding);

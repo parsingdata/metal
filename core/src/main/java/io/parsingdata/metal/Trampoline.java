@@ -43,6 +43,7 @@ public interface Trampoline<T> {
 
     static <T> Trampoline<T> complete(final CompletedTrampoline<T> completedTrampoline) { return completedTrampoline; }
 
+    @FunctionalInterface
     interface CompletedTrampoline<T> extends Trampoline<T> {
 
         default boolean hasNext() { return false; }
@@ -52,6 +53,7 @@ public interface Trampoline<T> {
 
     static <T> Trampoline<T> intermediate(final IntermediateTrampoline<T> intermediateTrampoline) { return intermediateTrampoline; }
 
+    @FunctionalInterface
     interface IntermediateTrampoline<T> extends Trampoline<T> {
 
         default T result() { throw new UnsupportedOperationException("An IntermediateTrampoline does not have a result."); }

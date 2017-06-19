@@ -21,6 +21,7 @@ import java.util.Optional;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.token.Token;
 
+@FunctionalInterface
 public interface Callback {
 
     void handle(Token token, Environment before, Optional<Environment> after);

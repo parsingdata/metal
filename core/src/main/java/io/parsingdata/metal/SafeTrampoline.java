@@ -39,6 +39,7 @@ public interface SafeTrampoline<T> extends Trampoline<T> {
 
     static <T> SafeTrampoline<T> complete(final CompletedTrampoline<T> completedTrampoline) { return completedTrampoline; }
 
+    @FunctionalInterface
     interface CompletedTrampoline<T> extends Trampoline.CompletedTrampoline<T>, SafeTrampoline<T> {
 
         default SafeTrampoline<T> next() { throw new UnsupportedOperationException("A CompletedTrampoline does not have a next computation."); }
@@ -47,6 +48,7 @@ public interface SafeTrampoline<T> extends Trampoline<T> {
 
     static <T> SafeTrampoline<T> intermediate(final IntermediateTrampoline<T> intermediateTrampoline) { return intermediateTrampoline; }
 
+    @FunctionalInterface
     interface IntermediateTrampoline<T> extends Trampoline.IntermediateTrampoline<T>, SafeTrampoline<T> {}
 
 }
