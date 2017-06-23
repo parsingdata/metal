@@ -27,7 +27,9 @@ import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
 
-class ByPredicate {
+public final class ByPredicate {
+
+    private ByPredicate() {}
 
     public static final int NO_LIMIT = -1;
 

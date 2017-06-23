@@ -24,6 +24,7 @@ import org.junit.Test;
 
 import io.parsingdata.metal.data.selection.ByName;
 import io.parsingdata.metal.data.selection.ByOffset;
+import io.parsingdata.metal.data.selection.ByPredicate;
 import io.parsingdata.metal.data.selection.ByToken;
 import io.parsingdata.metal.data.selection.ByType;
 import io.parsingdata.metal.data.transformation.Reversal;
@@ -46,6 +47,7 @@ public class UtilityClassTest {
         checkUtilityClass(ByType.class);
         checkUtilityClass(ConstantFactory.class);
         checkUtilityClass(Wrapping.class);
+        checkUtilityClass(ByPredicate.class);
     }
 
     // Metal uses enums to prevent the use of difficult to understand boolean arguments.
