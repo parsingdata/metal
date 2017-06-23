@@ -18,7 +18,7 @@ package io.parsingdata.metal.expression.value.reference;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.selection.ByToken.getAllValues;
-import static io.parsingdata.metal.data.transformation.Wrapping.wrap;
+import static io.parsingdata.metal.data.transformation.Wrapping.wrapToBase;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -46,7 +46,7 @@ public class TokenRef implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        return wrap(getAllValues(graph, definition));
+        return wrapToBase(getAllValues(graph, definition));
     }
 
     @Override

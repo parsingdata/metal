@@ -40,4 +40,14 @@ public final class Wrapping {
         return intermediate(() -> wrap(input.tail, output.add(Optional.of(input.head))));
     }
 
+    public static <T, U extends T> ImmutableList<Optional<T>> wrapToBase(final ImmutableList<U> list) {
+        checkNotNull(list, "list");
+        return reverse(wrapToBase(list, new ImmutableList<Optional<T>>()).computeResult());
+    }
+
+    private static <T, U extends T> SafeTrampoline<ImmutableList<Optional<T>>> wrapToBase(final ImmutableList<U> input, final ImmutableList<Optional<T>> output) {
+        if (input.isEmpty()) { return complete(() -> output); }
+        return intermediate(() -> wrapToBase(input.tail, output.add(Optional.of(input.head))));
+    }
+
 }

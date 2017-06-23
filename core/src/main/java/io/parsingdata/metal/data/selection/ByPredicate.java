@@ -26,19 +26,21 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.expression.value.Value;
 
 class ByPredicate {
 
-    static SafeTrampoline<ImmutableList<Value>> getAllValues(final ImmutableList<ParseGraph> graphList, final ImmutableList<Value> valueList, final Predicate<ParseValue> predicate) {
-        if (graphList.isEmpty()) { return complete(() -> valueList); }
+    public static final int NO_LIMIT = -1;
+
+    static SafeTrampoline<ImmutableList<ParseValue>> getAllValues(final ImmutableList<ParseGraph> graphList, final ImmutableList<ParseValue> valueList, final Predicate<ParseValue> predicate, final int limit) {
+        if (graphList.isEmpty() || valueList.size == limit) { return complete(() -> valueList); }
         final ParseGraph graph = graphList.head;
         if (graph.isEmpty()) {
-            return intermediate(() -> getAllValues(graphList.tail, valueList, predicate));
+            return intermediate(() -> getAllValues(graphList.tail, valueList, predicate, limit));
         }
         return intermediate(() -> getAllValues(addIfGraph(graphList.tail.add(graph.tail), graph.head),
                                                addIfMatchingValue(valueList, graph.head, predicate),
-                                               predicate));
+                                               predicate,
+                                               limit));
     }
 
     private static ImmutableList<ParseGraph> addIfGraph(final ImmutableList<ParseGraph> graphList, final ParseItem item) {
@@ -46,7 +48,7 @@ class ByPredicate {
         return graphList;
     }
 
-    private static ImmutableList<Value> addIfMatchingValue(final ImmutableList<Value> valueList, final ParseItem item, final Predicate<ParseValue> predicate) {
+    private static ImmutableList<ParseValue> addIfMatchingValue(final ImmutableList<ParseValue> valueList, final ParseItem item, final Predicate<ParseValue> predicate) {
         if (item.isValue() && predicate.test(item.asValue())) { return valueList.add(item.asValue()); }
         return valueList;
     }

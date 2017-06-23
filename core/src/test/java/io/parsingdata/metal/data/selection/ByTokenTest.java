@@ -59,7 +59,6 @@ import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.transformation.Reversal;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Token;
 
 public class ByTokenTest {
@@ -215,7 +214,7 @@ public class ByTokenTest {
     public void compareGetAllNameWithGetAllToken() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2, 3, 4, 5), SEQ_REP);
 
-        ImmutableList<Value> values = getAllValues(graph, "value2");
+        ImmutableList<ParseValue> values = getAllValues(graph, "value2");
         ImmutableList<ParseItem> items = getAll(graph, DEF2);
 
         while (values.head != null) {
