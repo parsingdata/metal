@@ -28,15 +28,17 @@ import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.expression.value.Value;
 
-public class ByPredicate {
+class ByPredicate {
 
-    public static SafeTrampoline<ImmutableList<Value>> getAllValues(final ImmutableList<ParseGraph> graphList, final ImmutableList<Value> valueList, final Predicate<ParseValue> predicate) {
+    static SafeTrampoline<ImmutableList<Value>> getAllValues(final ImmutableList<ParseGraph> graphList, final ImmutableList<Value> valueList, final Predicate<ParseValue> predicate) {
         if (graphList.isEmpty()) { return complete(() -> valueList); }
         final ParseGraph graph = graphList.head;
-        if (graph.isEmpty()) { return intermediate(() -> getAllValues(graphList.tail, valueList, predicate)); }
+        if (graph.isEmpty()) {
+            return intermediate(() -> getAllValues(graphList.tail, valueList, predicate));
+        }
         return intermediate(() -> getAllValues(addIfGraph(graphList.tail.add(graph.tail), graph.head),
-            addIfMatchingValue(valueList, graph.head, predicate),
-            predicate));
+                                               addIfMatchingValue(valueList, graph.head, predicate),
+                                               predicate));
     }
 
     private static ImmutableList<ParseGraph> addIfGraph(final ImmutableList<ParseGraph> graphList, final ParseItem item) {
