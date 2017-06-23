@@ -72,21 +72,7 @@ public final class ByToken {
     public static ImmutableList<Value> getAllValues(final ParseGraph graph, final Token definition) {
         checkNotNull(graph, "graph");
         checkNotNull(definition, "definition");
-        return reverse(getAllValuesRecursive(ImmutableList.create(graph), new ImmutableList<>(), definition).computeResult());
-    }
-
-    private static SafeTrampoline<ImmutableList<Value>> getAllValuesRecursive(final ImmutableList<ParseGraph> graphList, final ImmutableList<Value> valueList, final Token definition) {
-        if (graphList.isEmpty()) { return complete(() -> valueList); }
-        final ParseGraph graph = graphList.head;
-        if (graph.isEmpty()) { return intermediate(() -> getAllValuesRecursive(graphList.tail, valueList, definition)); }
-        final ParseItem head = graph.head;
-        if (head.isValue() && head.asValue().definition.equals(definition)) {
-            return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail), valueList.add(head.asValue()), definition));
-        }
-        if (head.isGraph()) {
-            return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail).add(graph.head.asGraph()), valueList, definition));
-        }
-        return intermediate(() -> getAllValuesRecursive(graphList.tail.add(graph.tail), valueList, definition));
+        return reverse(ByPredicate.getAllValues(ImmutableList.create(graph), new ImmutableList<>(), (value) -> value.definition.equals(definition)).computeResult());
     }
 
     public static ImmutableList<ParseItem> getAllRoots(final ParseGraph graph, final Token definition) {
