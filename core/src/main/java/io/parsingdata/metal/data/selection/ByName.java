@@ -16,17 +16,13 @@
 
 package io.parsingdata.metal.data.selection;
 
-import static io.parsingdata.metal.SafeTrampoline.complete;
-import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.selection.ByPredicate.NO_LIMIT;
 import static io.parsingdata.metal.data.transformation.Reversal.reverse;
 
-import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.expression.value.Value;
 
 public final class ByName {
 
@@ -38,18 +34,7 @@ public final class ByName {
      * @return The first value (bottom-up) with the provided name in the provided graph
      */
     public static ParseValue getValue(final ParseGraph graph, final String name) {
-        checkNotNull(graph, "graph");
-        checkNotNull(name, "name");
-        if (graph.isEmpty()) { return null; }
-        final ParseItem head = graph.head;
-        if (head.isValue() && head.asValue().matches(name)) {
-            return head.asValue();
-        }
-        if (head.isGraph()) {
-            final ParseValue value = getValue(head.asGraph(), name);
-            if (value != null) { return value; }
-        }
-        return getValue(graph.tail, name);
+        return ByPredicate.getAllValues(ImmutableList.create(graph), new ImmutableList<>(), (value) -> value.matches(name), 1).computeResult().head;
     }
 
     /**
@@ -57,29 +42,10 @@ public final class ByName {
      * @param name Name of the value
      * @return All values with the provided name in this graph
      */
-    public static ImmutableList<Value> getAllValues(final ParseGraph graph, final String name) {
+    public static ImmutableList<ParseValue> getAllValues(final ParseGraph graph, final String name) {
         checkNotNull(graph, "graph");
         checkNotNull(name, "name");
-        return reverse(getAllValuesRecursive(ImmutableList.create(graph), new ImmutableList<>(), name).computeResult());
-    }
-
-    private static SafeTrampoline<ImmutableList<Value>> getAllValuesRecursive(final ImmutableList<ParseGraph> graphList, final ImmutableList<Value> valueList, final String name) {
-        if (graphList.isEmpty()) { return complete(() -> valueList); }
-        final ParseGraph graph = graphList.head;
-        if (graph.isEmpty()) { return intermediate(() -> getAllValuesRecursive(graphList.tail, valueList, name)); }
-        return intermediate(() -> getAllValuesRecursive(addIfGraph(graphList.tail.add(graph.tail), graph.head),
-                                                        addIfMatchingValue(valueList, graph.head, name),
-                                                        name));
-    }
-
-    private static ImmutableList<ParseGraph> addIfGraph(final ImmutableList<ParseGraph> graphList, final ParseItem item) {
-        if (item.isGraph()) { return graphList.add(item.asGraph()); }
-        return graphList;
-    }
-
-    private static ImmutableList<Value> addIfMatchingValue(final ImmutableList<Value> valueList, final ParseItem item, final String name) {
-        if (item.isValue() && item.asValue().matches(name)) { return valueList.add(item.asValue()); }
-        return valueList;
+        return reverse(ByPredicate.getAllValues(ImmutableList.create(graph), new ImmutableList<>(), (value) -> value.matches(name), NO_LIMIT).computeResult());
     }
 
     public static ParseValue get(final ImmutableList<ParseValue> list, final String name) {

@@ -54,6 +54,7 @@ import org.junit.Test;
 import io.parsingdata.metal.Shorthand;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.util.InMemoryByteStream;
@@ -189,7 +190,7 @@ public class TieTest {
         assertEquals(0, getReferences(result.get().order).size);
         final String[] names = { "a", "b", "c", "d" };
         for (int i = 0; i < names.length; i++) {
-            ImmutableList<Value> values = getAllValues(result.get().order, names[i]);
+            ImmutableList<ParseValue> values = getAllValues(result.get().order, names[i]);
             assertEquals(2, values.size);
         }
     }
@@ -207,7 +208,7 @@ public class TieTest {
         assertEquals(1, getAllValues(result.get().order, "d").size);
         final String[] names = { "a", "b", "c" };
         for (int i = 0; i < names.length; i++) {
-            ImmutableList<Value> values = getAllValues(result.get().order, names[i]);
+            ImmutableList<ParseValue> values = getAllValues(result.get().order, names[i]);
             assertEquals(2, values.size);
         }
     }

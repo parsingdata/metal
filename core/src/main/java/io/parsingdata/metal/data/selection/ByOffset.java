@@ -60,13 +60,16 @@ public final class ByOffset {
         if (graph.isEmpty() || !graph.getDefinition().isLocal()) {
             return intermediate(() -> getLowestOffsetValue(graphList.tail, lowest));
         }
-        if (graph.head.isValue()) {
-            return intermediate(() -> getLowestOffsetValue(graphList.tail.add(graph.tail), getLowest(lowest, graph.head.asValue())));
-        }
-        if (graph.head.isGraph()) {
-            return intermediate(() -> getLowestOffsetValue(graphList.tail.add(graph.tail).add(graph.head.asGraph()), lowest));
-        }
-        return intermediate(() -> getLowestOffsetValue(graphList.tail.add(graph.tail), lowest));
+        return intermediate(() -> getLowestOffsetValue(addIfGraph(graphList.tail.add(graph.tail), graph.head),
+                                                       compareIfValue(lowest, graph.head)));
+    }
+
+    private static ParseValue compareIfValue(final ParseValue lowest, final ParseItem head) {
+        return head.isValue() ? getLowest(lowest, head.asValue()) : lowest;
+    }
+
+    private static ImmutableList<ParseGraph> addIfGraph(final ImmutableList<ParseGraph> graphList, final ParseItem head) {
+        return head.isGraph() ? graphList.add(head.asGraph()) : graphList;
     }
 
     private static ParseValue getLowest(final ParseValue lowest, final ParseValue value) {
