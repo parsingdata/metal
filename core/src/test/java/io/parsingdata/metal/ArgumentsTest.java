@@ -51,10 +51,8 @@ import io.parsingdata.metal.expression.value.reference.Count;
 import io.parsingdata.metal.expression.value.reference.First;
 import io.parsingdata.metal.expression.value.reference.Last;
 import io.parsingdata.metal.expression.value.reference.Len;
-import io.parsingdata.metal.expression.value.reference.NameRef;
 import io.parsingdata.metal.expression.value.reference.Nth;
 import io.parsingdata.metal.expression.value.reference.Offset;
-import io.parsingdata.metal.expression.value.reference.TokenRef;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Def;
 import io.parsingdata.metal.token.Nod;
@@ -64,6 +62,7 @@ import io.parsingdata.metal.token.RepN;
 import io.parsingdata.metal.token.Seq;
 import io.parsingdata.metal.token.Sub;
 import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.token.TokenRef;
 import io.parsingdata.metal.token.While;
 
 @RunWith(Parameterized.class)
@@ -92,8 +91,6 @@ public class ArgumentsTest {
             { Nth.class, new Object[] { VALID_VE, null } },
             { Nth.class, new Object[] { null, VALID_VE } },
             { Offset.class, new Object[] { null } },
-            { NameRef.class, new Object[] { null } },
-            { TokenRef.class, new Object[] { null } },
             { Count.class, new Object[] { null } },
             // Derived from BinaryValueExpression
             { Cat.class, new Object[] { VALID_VE, null } },
@@ -135,10 +132,10 @@ public class ArgumentsTest {
             { Sub.class, new Object[] { VALID_NAME, null, VALID_VE, null } },
             { While.class, new Object[] { null, VALID_T, null, null } },
             { While.class, new Object[] { VALID_NAME, null, null, null } },
-            { io.parsingdata.metal.token.TokenRef.class, new Object[] { VALID_NAME, null, null } },
-            { io.parsingdata.metal.token.TokenRef.class, new Object[] { null, VALID_NAME, null } },
-            { io.parsingdata.metal.token.TokenRef.class, new Object[] { null, null, null } },
-            { io.parsingdata.metal.token.TokenRef.class, new Object[] { VALID_NAME, EMPTY_NAME, null } }
+            { TokenRef.class, new Object[] { VALID_NAME, null, null } },
+            { TokenRef.class, new Object[] { null, VALID_NAME, null } },
+            { TokenRef.class, new Object[] { null, null, null } },
+            { TokenRef.class, new Object[] { VALID_NAME, EMPTY_NAME, null } }
         });
     }
 

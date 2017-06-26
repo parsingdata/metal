@@ -89,7 +89,6 @@ import io.parsingdata.metal.expression.value.reference.Count;
 import io.parsingdata.metal.expression.value.reference.First;
 import io.parsingdata.metal.expression.value.reference.Last;
 import io.parsingdata.metal.expression.value.reference.Len;
-import io.parsingdata.metal.expression.value.reference.NameRef;
 import io.parsingdata.metal.expression.value.reference.Nth;
 import io.parsingdata.metal.expression.value.reference.Offset;
 import io.parsingdata.metal.token.Cho;
@@ -160,9 +159,8 @@ public class AutoEqualityTest {
             io.parsingdata.metal.expression.value.arithmetic.Sub.class, Cat.class, Eq.class, EqNum.class, EqStr.class,
             GtNum.class, LtNum.class, Nth.class, Elvis.class, io.parsingdata.metal.expression.logical.And.class,
             io.parsingdata.metal.expression.logical.Or.class, FoldLeft.class, FoldRight.class, Value.class,
-            ParseValue.class, io.parsingdata.metal.expression.logical.Not.class, Const.class, NameRef.class,
-            io.parsingdata.metal.expression.value.reference.TokenRef.class, ConstantSource.class, Slice.class,
-            ParseReference.class, DataExpressionSource.class, ByteStreamSource.class, Expand.class
+            ParseValue.class, io.parsingdata.metal.expression.logical.Not.class, Const.class, ConstantSource.class,
+            Slice.class, ParseReference.class, DataExpressionSource.class, ByteStreamSource.class, Expand.class
         );
     }
 

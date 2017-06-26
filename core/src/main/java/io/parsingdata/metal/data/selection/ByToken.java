@@ -70,12 +70,6 @@ public final class ByToken {
         return results;
     }
 
-    public static ImmutableList<ParseValue> getAllValues(final ParseGraph graph, final Token definition) {
-        checkNotNull(graph, "graph");
-        checkNotNull(definition, "definition");
-        return reverse(ByPredicate.getAllValues(ImmutableList.create(graph), new ImmutableList<>(), (value) -> value.definition.equals(definition), NO_LIMIT).computeResult());
-    }
-
     public static ImmutableList<ParseItem> getAllRoots(final ParseGraph graph, final Token definition) {
         return getAllRootsRecursive(ImmutableList.create(new Pair(checkNotNull(graph, "graph"), null)), checkNotNull(definition, "definition"), new ImmutableList<>()).computeResult();
     }

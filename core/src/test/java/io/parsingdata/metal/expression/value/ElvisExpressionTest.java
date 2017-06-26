@@ -133,7 +133,7 @@ public class ElvisExpressionTest {
 
     @Test
     public void toStringTest() {
-        assertThat(elvisExpression.toString(), is(equalTo("Elvis(NameRef(a),NameRef(b))")));
+        assertThat(elvisExpression.toString(), is(equalTo("Elvis(Ref(a),Ref(b))")));
     }
 
 }

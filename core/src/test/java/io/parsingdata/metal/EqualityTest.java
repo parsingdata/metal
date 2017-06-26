@@ -33,6 +33,8 @@ import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.Util.createFromBytes;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
+import static io.parsingdata.metal.expression.value.reference.Ref.nameRef;
+import static io.parsingdata.metal.expression.value.reference.Ref.tokenRef;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
@@ -53,6 +55,7 @@ import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.True;
+import io.parsingdata.metal.expression.value.reference.Ref;
 import io.parsingdata.metal.expression.value.reference.Self;
 import io.parsingdata.metal.token.Token;
 
@@ -164,6 +167,26 @@ public class EqualityTest {
         assertNotEquals(environment.addBranch(any("a")).add(value).add(value).closeBranch().addBranch(any("a")).order, environment.addBranch(any("a")).closeBranch().addBranch(any("a")).order);
         assertNotEquals(environment.addBranch(any("a")).order, environment.addBranch(any("a")).closeBranch().order);
         assertNotEquals(environment.addBranch(any("a")).order, environment.addBranch(any("b")).order);
+    }
+
+    @Test
+    public void stringRef() {
+        final Ref object = nameRef("name");
+        assertFalse(object.equals(null));
+        assertFalse(object.equals("name"));
+        assertEquals(object, nameRef("name"));
+        assertNotEquals(object, nameRef("otherName"));
+        assertNotEquals(object, tokenRef(any("name")));
+    }
+
+    @Test
+    public void definitionRef() {
+        final Ref object = tokenRef(any("name"));
+        assertFalse(object.equals(null));
+        assertFalse(object.equals("name"));
+        assertEquals(object, tokenRef(any("name")));
+        assertNotEquals(object, tokenRef(any("otherName")));
+        assertNotEquals(object, nameRef("name"));
     }
 
 }

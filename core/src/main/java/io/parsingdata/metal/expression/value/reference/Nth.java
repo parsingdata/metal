@@ -46,9 +46,6 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * <code>values</code>. For every invalid index (such as
  * {@link Optional#empty()}, a negative value or an index that is out of
  * bounds) empty is returned.
- *
- * @see NameRef
- * @see TokenRef
  */
 public class Nth implements ValueExpression {
 
