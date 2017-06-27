@@ -23,7 +23,7 @@ import static io.parsingdata.metal.data.selection.ByPredicate.getAllValues;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.Util;
@@ -46,24 +46,24 @@ import io.parsingdata.metal.token.Token;
 public class Ref<T> implements ValueExpression {
 
     public final T reference;
-    public final BiPredicate<ParseValue, T> predicate;
+    public final Predicate<ParseValue> predicate;
 
-    private Ref(final T reference, final BiPredicate<ParseValue, T> predicate) {
+    private Ref(final T reference, final Predicate<ParseValue> predicate) {
         this.reference = checkNotNull(reference, "reference");
         this.predicate = checkNotNull(predicate, "predicate");
     }
 
     public static Ref<String> nameRef(final String name) {
-        return new Ref<>(name, ParseValue::matches);
+        return new Ref<>(name, (value) -> value.matches(name));
     }
 
     public static Ref<Token> tokenRef(final Token definition) {
-        return new Ref<>(definition, (value, reference) -> value.definition.equals(reference));
+        return new Ref<>(definition, (value) -> value.definition.equals(definition));
     }
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        return wrap(getAllValues(graph, (value) -> predicate.test(value, reference)), new ImmutableList<Optional<Value>>()).computeResult();
+        return wrap(getAllValues(graph, predicate), new ImmutableList<Optional<Value>>()).computeResult();
     }
 
     private static <T, U extends T> SafeTrampoline<ImmutableList<Optional<T>>> wrap(final ImmutableList<U> input, final ImmutableList<Optional<T>> output) {
