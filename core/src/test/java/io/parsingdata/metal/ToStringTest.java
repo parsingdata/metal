@@ -174,7 +174,7 @@ public class ToStringTest {
         final Environment oneValueEnvironment = stream().add(pv1);
         final Environment twoValueEnvironment = oneValueEnvironment.add(new ParseValue("name2", NONE, new DataExpressionSource(ref("name"), 0, oneValueEnvironment.order, enc()).slice(0, 2), enc()));
         final String dataExpressionSliceString = getValue(twoValueEnvironment.order, "name2").slice.toString();
-        assertTrue(dataExpressionSliceString.startsWith("NameRef(name)[0]("));
+        assertTrue(dataExpressionSliceString.startsWith("Ref(name)[0]("));
         assertTrue(dataExpressionSliceString.endsWith(")@0:2"));
     }
 

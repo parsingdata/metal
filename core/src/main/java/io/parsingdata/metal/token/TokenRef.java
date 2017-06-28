@@ -41,9 +41,6 @@ import io.parsingdata.metal.encoding.Encoding;
  * <p>
  * The referenced token is located in the current parse state by traversing it
  * backwards until it is located. Parsing will fail if it is not found.
- *
- * @see io.parsingdata.metal.expression.value.reference.NameRef
- * @see io.parsingdata.metal.expression.value.reference.TokenRef
  */
 public class TokenRef extends Token {
 
