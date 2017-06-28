@@ -19,14 +19,11 @@ package io.parsingdata.metal.data.selection;
 import static io.parsingdata.metal.SafeTrampoline.complete;
 import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.selection.ByPredicate.NO_LIMIT;
-import static io.parsingdata.metal.data.transformation.Reversal.reverse;
 
 import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
-import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.token.Token;
 
 public final class ByToken {
