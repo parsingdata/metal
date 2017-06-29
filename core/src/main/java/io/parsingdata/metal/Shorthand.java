@@ -17,8 +17,6 @@
 package io.parsingdata.metal;
 
 import static io.parsingdata.metal.Util.createFromBytes;
-import static io.parsingdata.metal.expression.value.reference.Ref.nameRef;
-import static io.parsingdata.metal.expression.value.reference.Ref.tokenRef;
 import static io.parsingdata.metal.token.Token.NO_NAME;
 
 import java.util.function.BiFunction;
@@ -64,6 +62,8 @@ import io.parsingdata.metal.expression.value.reference.Last;
 import io.parsingdata.metal.expression.value.reference.Len;
 import io.parsingdata.metal.expression.value.reference.Nth;
 import io.parsingdata.metal.expression.value.reference.Offset;
+import io.parsingdata.metal.expression.value.reference.Ref.DefinitionRef;
+import io.parsingdata.metal.expression.value.reference.Ref.NameRef;
 import io.parsingdata.metal.expression.value.reference.Self;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Def;
@@ -159,10 +159,12 @@ public final class Shorthand {
     public static ValueExpression con(final byte[] value, final Encoding encoding) { return con(ConstantFactory.createFromBytes(value, encoding)); }
     public static final ValueExpression self = new Self();
     public static ValueExpression len(final ValueExpression operand) { return new Len(operand); }
-    public static ValueExpression ref(final String name) { return nameRef(name); }
-    public static ValueExpression ref(final Token definition) { return tokenRef(definition); }
+    public static NameRef ref(final String name) { return new NameRef(name); }
+    public static DefinitionRef ref(final Token definition) { return new DefinitionRef(definition); }
     public static ValueExpression first(final ValueExpression operand) { return new First(operand); }
     public static ValueExpression last(final ValueExpression operand) { return new Last(operand); }
+    public static ValueExpression last(final NameRef operand) { return new Last(new NameRef(operand.reference, 1)); }
+    public static ValueExpression last(final DefinitionRef operand) { return new Last(new DefinitionRef(operand.reference, 1)); }
     public static ValueExpression nth(final ValueExpression values, final ValueExpression indices) { return new Nth(values, indices); }
     public static ValueExpression offset(final ValueExpression operand) { return new Offset(operand); }
     public static final ValueExpression currentOffset = elvis(add(offset(self), len(self)), con(0));
