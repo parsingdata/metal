@@ -27,6 +27,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -38,10 +39,11 @@ public class RefEdgeCaseTest {
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
 
-    final ParseGraph parseGraph;
+    ParseGraph parseGraph;
 
-    public RefEdgeCaseTest() throws IOException {
-        this.parseGraph = rep(any("a")).parse(stream(1, 2, 3), enc()).get().order;
+    @Before
+    public void before() throws IOException {
+        parseGraph = rep(any("a")).parse(stream(1, 2, 3), enc()).get().order;
     }
 
     @Test
