@@ -33,11 +33,15 @@ public final class ByPredicate {
 
     public static final int NO_LIMIT = -1;
 
-    public static ImmutableList<ParseValue> getAllValues(final ParseGraph graph, final Predicate<ParseValue> predicate) {
-        return getAllValues(ImmutableList.create(graph), new ImmutableList<>(), predicate, NO_LIMIT).computeResult();
+    public static ImmutableList<ParseValue> getAllValues(final ParseGraph graph, final Predicate<ParseValue> predicate, final int limit) {
+        return getAllValues(ImmutableList.create(graph), new ImmutableList<>(), predicate, limit).computeResult();
     }
 
-    static SafeTrampoline<ImmutableList<ParseValue>> getAllValues(final ImmutableList<ParseGraph> graphList, final ImmutableList<ParseValue> valueList, final Predicate<ParseValue> predicate, final int limit) {
+    public static ImmutableList<ParseValue> getAllValues(final ParseGraph graph, final Predicate<ParseValue> predicate) {
+        return getAllValues(graph, predicate, NO_LIMIT);
+    }
+
+    private static SafeTrampoline<ImmutableList<ParseValue>> getAllValues(final ImmutableList<ParseGraph> graphList, final ImmutableList<ParseValue> valueList, final Predicate<ParseValue> predicate, final int limit) {
         if (graphList.isEmpty() || valueList.size == limit) { return complete(() -> valueList); }
         final ParseGraph graph = graphList.head;
         if (graph.isEmpty()) {

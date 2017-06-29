@@ -19,6 +19,7 @@ package io.parsingdata.metal.expression.value.reference;
 import static io.parsingdata.metal.SafeTrampoline.complete;
 import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.selection.ByPredicate.NO_LIMIT;
 import static io.parsingdata.metal.data.selection.ByPredicate.getAllValues;
 
 import java.util.Objects;
@@ -38,32 +39,44 @@ import io.parsingdata.metal.token.Token;
 /**
  * A {@link ValueExpression} that represents all {@link Value}s in the parse
  * state that match a provided object. This class only has a private
- * constructor and instead must be instantiated through one of its factory
- * methods: {@link #nameRef} (to match on name) and {@link #tokenRef} (to
- * match on definition).
+ * constructor and instead must be instantiated through one of its subclasses:
+ * {@link NameRef} (to match on name) and {@link DefinitionRef} (to match on
+ * definition). A limit argument may be provided to specify an upper bound to
+ * the amount of returned results.
  * @param <T> The type of reference to match on.
  */
 public class Ref<T> implements ValueExpression {
 
     public final T reference;
     public final Predicate<ParseValue> predicate;
+    public final ValueExpression limit;
 
-    private Ref(final T reference, final Predicate<ParseValue> predicate) {
+    private Ref(final T reference, final Predicate<ParseValue> predicate, final ValueExpression limit) {
         this.reference = checkNotNull(reference, "reference");
         this.predicate = checkNotNull(predicate, "predicate");
+        this.limit = limit;
     }
 
-    public static Ref<String> nameRef(final String name) {
-        return new Ref<>(name, (value) -> value.matches(name));
+    public static class NameRef extends Ref<String> {
+        public NameRef(final String reference) { this(reference, null); }
+        public NameRef(final String reference, final ValueExpression limit) { super(reference, (value) -> value.matches(reference), limit); }
     }
 
-    public static Ref<Token> tokenRef(final Token definition) {
-        return new Ref<>(definition, (value) -> value.definition.equals(definition));
+    public static class DefinitionRef extends Ref<Token> {
+        public DefinitionRef(final Token reference) { this(reference, null); }
+        public DefinitionRef(final Token reference, final ValueExpression limit) { super(reference, (value) -> value.definition.equals(reference), limit); }
     }
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        return wrap(getAllValues(graph, predicate), new ImmutableList<Optional<Value>>()).computeResult();
+        if (limit == null) { return evalImpl(graph, NO_LIMIT); }
+        ImmutableList<Optional<Value>> evaluatedLimit = limit.eval(graph, encoding);
+        if (evaluatedLimit.size != 1 || !evaluatedLimit.head.isPresent()) { throw new IllegalArgumentException("Limit must evaluate to a single non-empty value."); }
+        return evalImpl(graph, evaluatedLimit.head.get().asNumeric().intValue());
+    }
+
+    private ImmutableList<Optional<Value>> evalImpl(final ParseGraph graph, final int limit) {
+        return wrap(getAllValues(graph, predicate, limit), new ImmutableList<Optional<Value>>()).computeResult();
     }
 
     private static <T, U extends T> SafeTrampoline<ImmutableList<Optional<T>>> wrap(final ImmutableList<U> input, final ImmutableList<Optional<T>> output) {
@@ -73,18 +86,19 @@ public class Ref<T> implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + reference + ")";
+        return getClass().getSimpleName() + "(" + reference + (limit == null ? "" : "," + limit) + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(reference, ((Ref)obj).reference);
+            && Objects.equals(reference, ((Ref)obj).reference)
+            && Objects.equals(limit, ((Ref)obj).limit);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(reference);
+        return Objects.hash(reference, limit);
     }
 
 }

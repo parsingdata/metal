@@ -55,7 +55,7 @@ public class Expand implements ValueExpression {
         final ImmutableList<Optional<Value>> base = this.base.eval(graph, encoding);
         if (base.isEmpty()) { return base; }
         final ImmutableList<Optional<Value>> count = this.count.eval(graph, encoding);
-        if (count.size != 1 || !count.head.isPresent()) { throw new IllegalStateException("Count must yield a single non-empty value."); }
+        if (count.size != 1 || !count.head.isPresent()) { throw new IllegalArgumentException("Count must evaluate to a single non-empty value."); }
         return expand(base, count.head.get().asNumeric().intValue(), new ImmutableList<>()).computeResult();
     }
 

@@ -110,8 +110,8 @@ public class FoldEdgeCaseTest {
     }
 
     private void faultyReducer(final ValueExpression expression) throws IOException {
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("Reducer must yield a single value.");
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Reducer must evaluate to a single value.");
 
         seq(
             def("value", 1), // the reducer returns a Ref to these two values
