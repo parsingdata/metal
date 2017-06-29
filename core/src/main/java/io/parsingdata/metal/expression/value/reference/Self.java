@@ -34,7 +34,7 @@ public class Self implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        return ImmutableList.create(Optional.of(graph.current()));
+        return ImmutableList.create(graph.current().map(parseValue -> parseValue));
     }
 
     @Override

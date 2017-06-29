@@ -98,14 +98,14 @@ public class ParseGraph implements ParseItem {
     /**
      * @return The first value (bottom-up) in this graph
      */
-    public ParseValue current() {
+    public Optional<ParseValue> current() {
         return current(ImmutableList.create(this)).computeResult();
     }
 
-    private SafeTrampoline<ParseValue> current(ImmutableList<ParseItem> items) {
-        if (items.isEmpty()) { return complete(() -> null); }
+    private SafeTrampoline<Optional<ParseValue>> current(ImmutableList<ParseItem> items) {
+        if (items.isEmpty()) { return complete(Optional::empty); }
         final ParseItem item = items.head;
-        if (item.isValue()) { return complete(item::asValue); }
+        if (item.isValue()) { return complete(() -> Optional.of(item.asValue())); }
         if (item.isGraph() && !item.asGraph().isEmpty()) {
             return intermediate(() -> current(items.tail.add(item.asGraph().tail)
                                                         .add(item.asGraph().head)));

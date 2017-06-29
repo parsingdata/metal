@@ -57,7 +57,7 @@ public abstract class ComparisonExpression implements Expression {
 
     @Override
     public boolean eval(final ParseGraph graph, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> values = value == null ? ImmutableList.create(Optional.of(graph.current())) : value.eval(graph, encoding);
+        final ImmutableList<Optional<Value>> values = value == null ? ImmutableList.create(graph.current().map(parseValue -> parseValue)) : value.eval(graph, encoding);
         if (values.isEmpty()) { return false; }
         final ImmutableList<Optional<Value>> predicates = predicate.eval(graph, encoding);
         if (values.size != predicates.size) { return false; }
