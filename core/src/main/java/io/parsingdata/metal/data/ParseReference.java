@@ -21,6 +21,7 @@ import static io.parsingdata.metal.data.selection.ByOffset.findItemAtOffset;
 import static io.parsingdata.metal.data.selection.ByToken.getAllRoots;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.token.Token;
@@ -37,7 +38,7 @@ public class ParseReference implements ParseItem {
         this.definition = checkNotNull(definition, "definition");
     }
 
-    public ParseItem resolve(final ParseGraph root) {
+    public Optional<ParseItem> resolve(final ParseGraph root) {
         return findItemAtOffset(getAllRoots(root, definition), location, source).computeResult();
     }
 

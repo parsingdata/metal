@@ -93,7 +93,7 @@ public class SubStructTest {
         checkBranch(first, 0, 0);
 
         final ParseReference reference = first.tail.head.asGraph().head.asGraph().head.asReference();
-        checkBranch(reference.resolve(graph).asGraph(), 0, 0); // Check cycle
+        checkBranch(reference.resolve(graph).get().asGraph(), 0, 0); // Check cycle
     }
 
     private ParseGraph startCycle(final int offset) throws IOException {
@@ -115,7 +115,7 @@ public class SubStructTest {
         checkBranch(second, 4, 0);
 
         final ParseReference reference = second.tail.head.asGraph().head.asGraph().head.asReference();
-        checkBranch(reference.resolve(graph).asGraph(), 0, 4); // Check cycle
+        checkBranch(reference.resolve(graph).get().asGraph(), 0, 4); // Check cycle
     }
 
     @Test
@@ -129,7 +129,7 @@ public class SubStructTest {
         checkBranch(second, 0, 4);
 
         final ParseReference reference = second.tail.head.asGraph().head.asGraph().head.asReference();
-        checkBranch(reference.resolve(graph).asGraph(), 4, 0); // Check cycle
+        checkBranch(reference.resolve(graph).get().asGraph(), 4, 0); // Check cycle
     }
 
     private void checkBranch(final ParseGraph graph, final int graphOffset, final int nextOffset) {

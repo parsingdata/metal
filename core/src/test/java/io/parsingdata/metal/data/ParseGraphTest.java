@@ -142,7 +142,7 @@ public class ParseGraphTest {
         assertEquals(2, pgc.size);
         assertTrue(pgc.head.isGraph());
         assertTrue(pgc.head.asGraph().head.isReference());
-        assertEquals(a, pgc.head.asGraph().head.asReference().resolve(pgc));
+        assertEquals(a, pgc.head.asGraph().head.asReference().resolve(pgc).get());
         assertTrue(pgc.head.asGraph().tail.head.isValue());
         assertEquals(b, pgc.head.asGraph().tail.head);
         assertTrue(pgc.tail.head.isValue());

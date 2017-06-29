@@ -21,6 +21,8 @@ import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.selection.ByToken.getAllRoots;
 
+import java.util.Optional;
+
 import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
@@ -34,18 +36,18 @@ public final class ByOffset {
     private ByOffset() {}
 
     public static boolean hasRootAtOffset(final ParseGraph graph, final Token definition, final long offset, final Source source) {
-        return findItemAtOffset(getAllRoots(graph, definition), offset, source).computeResult() != null;
+        return findItemAtOffset(getAllRoots(graph, definition), offset, source).computeResult().isPresent();
     }
 
-    public static SafeTrampoline<ParseItem> findItemAtOffset(final ImmutableList<ParseItem> items, final long offset, final Source source) {
+    public static SafeTrampoline<Optional<ParseItem>> findItemAtOffset(final ImmutableList<ParseItem> items, final long offset, final Source source) {
         checkNotNull(items, "items");
         checkNotNull(source, "source");
-        if (items.isEmpty()) { return complete(() -> null); }
+        if (items.isEmpty()) { return complete(Optional::empty); }
         final ParseItem head = items.head;
-        if (head.isValue() && matchesLocation(head.asValue(), offset, source)) { return complete(() -> head); }
+        if (head.isValue() && matchesLocation(head.asValue(), offset, source)) { return complete(() -> Optional.of(head)); }
         if (head.isGraph()) {
             final ParseValue value = getLowestOffsetValue(ImmutableList.create(head.asGraph()), null).computeResult();
-            if (value != null && matchesLocation(value, offset, source)) { return complete(() -> head); }
+            if (value != null && matchesLocation(value, offset, source)) { return complete(() -> Optional.of(head)); }
         }
         return intermediate(() -> findItemAtOffset(items.tail, offset, source));
     }
