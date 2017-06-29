@@ -69,7 +69,7 @@ public class Ref<T> implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        return wrap(getAllValues(graph, predicate), new ImmutableList<Optional<Value>>()).computeResult();
+        return wrap(getAllValues(graph, predicate, limit), new ImmutableList<Optional<Value>>()).computeResult();
     }
 
     private static <T, U extends T> SafeTrampoline<ImmutableList<Optional<T>>> wrap(final ImmutableList<U> input, final ImmutableList<Optional<T>> output) {

@@ -22,8 +22,10 @@ import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.first;
 import static io.parsingdata.metal.Shorthand.fold;
 import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.not;
 import static io.parsingdata.metal.Shorthand.offset;
 import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
@@ -38,6 +40,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.expression.value.reference.Ref.NameRef;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
 
@@ -76,7 +79,11 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
             { "[1, 2, 3, 3] a, a, a, last(ref(a.definition))", refMatch(eq(last(ref(refAny)))), stream(1, 2, 3, 3), enc(), true },
             { "[1, 2, 3, 1] a, a, a, first(ref(a.definition))", refMatch(eq(first(ref(refAny)))), stream(1, 2, 3, 1), enc(), true },
             { "[1, 2, 3, 6] a, a, a, first(fold(ref(a.definition), add))", refMatch(eq(first(fold(ref(refAny), Shorthand::add)))), stream(1, 2, 3, 6), enc(), true },
-            { "[1, 2, 3, 2] a, a, a, last(ref(a.definition))", refMatch(eq(last(ref(refAny)))), stream(1, 2, 3, 2), enc(), false }
+            { "[1, 2, 3, 2] a, a, a, last(ref(a.definition))", refMatch(eq(last(ref(refAny)))), stream(1, 2, 3, 2), enc(), false },
+            { "[1, 2, 3, 0, 3] a, a, a, 0, sum(ref(a, 1))", limitedSum(1), stream(1, 2, 3, 0, 3), enc(), true },
+            { "[1, 2, 3, 0, 5] a, a, a, 0, sum(ref(a, 2))", limitedSum(2), stream(1, 2, 3, 0, 5), enc(), true },
+            { "[1, 2, 3, 0, 6] a, a, a, 0, sum(ref(a, 3))", limitedSum(3), stream(1, 2, 3, 0, 6), enc(), true },
+            { "[1, 2, 3, 0, 7] a, a, a, 0, sum(ref(a, 4))", limitedSum(4), stream(1, 2, 3, 0, 6), enc(), true }
         });
     }
 
@@ -99,6 +106,13 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
         return
             seq(repn(refAny, con(3)),
                 def("b", con(1), pred));
+    }
+
+    private static Token limitedSum(final int limit) {
+        return
+            seq(rep(def("a", con(1), not(eq(con(0))))),
+                def("zero", con(1), eq(con(0))),
+                def("sum", con(1), eq(fold(new NameRef("a", limit), Shorthand::add))));
     }
 
 }

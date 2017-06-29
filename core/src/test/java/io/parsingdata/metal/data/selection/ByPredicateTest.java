@@ -29,7 +29,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ImmutableList;
 
 public class ByPredicateTest {
 
@@ -38,10 +37,7 @@ public class ByPredicateTest {
         Optional<Environment> environment = rep(any("a")).parse(stream(1, 2, 3, 4, 5), enc());
         Assert.assertTrue(environment.isPresent());
         for (int i = 0; i < 7; i++) {
-            Assert.assertEquals(Math.min(5, i), getAllValues(ImmutableList.create(environment.get().order),
-                                                             new ImmutableList<>(),
-                                                             (value) -> value.matches("a"),
-                                                             i).computeResult().size);
+            Assert.assertEquals(Math.min(5, i), getAllValues(environment.get().order, (value) -> value.matches("a"), i).size);
         }
     }
 
