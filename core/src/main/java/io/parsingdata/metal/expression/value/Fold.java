@@ -71,7 +71,7 @@ public abstract class Fold implements ValueExpression {
     private SafeTrampoline<Optional<Value>> fold(final ParseGraph graph, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Optional<Value> head, final ImmutableList<Optional<Value>> tail) {
         if (!head.isPresent() || tail.isEmpty()) { return complete(() -> head); }
         final ImmutableList<Optional<Value>> reducedValue = reduce(reducer, head.get(), tail.head.get()).eval(graph, encoding);
-        if (reducedValue.size != 1) { throw new IllegalStateException("Reducer must yield a single value."); }
+        if (reducedValue.size != 1) { throw new IllegalArgumentException("Reducer must evaluate to a single value."); }
         return intermediate(() -> fold(graph, encoding, reducer, reducedValue.head, tail.tail));
     }
 

@@ -112,7 +112,7 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
         return
             seq(rep(def("a", con(1), not(eq(con(0))))),
                 def("zero", con(1), eq(con(0))),
-                def("sum", con(1), eq(fold(new NameRef("a", limit), Shorthand::add))));
+                def("sum", con(1), eq(fold(new NameRef("a", con(limit)), Shorthand::add))));
     }
 
 }

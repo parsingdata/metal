@@ -159,12 +159,14 @@ public final class Shorthand {
     public static ValueExpression con(final byte[] value, final Encoding encoding) { return con(ConstantFactory.createFromBytes(value, encoding)); }
     public static final ValueExpression self = new Self();
     public static ValueExpression len(final ValueExpression operand) { return new Len(operand); }
-    public static NameRef ref(final String name) { return new NameRef(name); }
-    public static DefinitionRef ref(final Token definition) { return new DefinitionRef(definition); }
+    public static NameRef ref(final String name) { return ref(name, null); }
+    public static NameRef ref(final String name, final ValueExpression limit) { return new NameRef(name, limit); }
+    public static DefinitionRef ref(final Token definition) { return ref(definition, null); }
+    public static DefinitionRef ref(final Token definition, final ValueExpression limit) { return new DefinitionRef(definition, limit); }
     public static ValueExpression first(final ValueExpression operand) { return new First(operand); }
     public static ValueExpression last(final ValueExpression operand) { return new Last(operand); }
-    public static ValueExpression last(final NameRef operand) { return new Last(new NameRef(operand.reference, 1)); }
-    public static ValueExpression last(final DefinitionRef operand) { return new Last(new DefinitionRef(operand.reference, 1)); }
+    public static ValueExpression last(final NameRef operand) { return new Last(new NameRef(operand.reference, con(1))); }
+    public static ValueExpression last(final DefinitionRef operand) { return new Last(new DefinitionRef(operand.reference, con(1))); }
     public static ValueExpression nth(final ValueExpression values, final ValueExpression indices) { return new Nth(values, indices); }
     public static ValueExpression offset(final ValueExpression operand) { return new Offset(operand); }
     public static final ValueExpression currentOffset = elvis(add(offset(self), len(self)), con(0));

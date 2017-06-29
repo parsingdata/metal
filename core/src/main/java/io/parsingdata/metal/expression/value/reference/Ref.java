@@ -49,26 +49,33 @@ public class Ref<T> implements ValueExpression {
 
     public final T reference;
     public final Predicate<ParseValue> predicate;
-    public final int limit;
+    public final ValueExpression limit;
 
-    private Ref(final T reference, final Predicate<ParseValue> predicate, final int limit) {
+    private Ref(final T reference, final Predicate<ParseValue> predicate, final ValueExpression limit) {
         this.reference = checkNotNull(reference, "reference");
         this.predicate = checkNotNull(predicate, "predicate");
         this.limit = limit;
     }
 
     public static class NameRef extends Ref<String> {
-        public NameRef(final String reference) { this(reference, NO_LIMIT); }
-        public NameRef(final String reference, final int limit) { super(reference, (value) -> value.matches(reference), limit); }
+        public NameRef(final String reference) { this(reference, null); }
+        public NameRef(final String reference, final ValueExpression limit) { super(reference, (value) -> value.matches(reference), limit); }
     }
 
     public static class DefinitionRef extends Ref<Token> {
-        public DefinitionRef(final Token reference) { this(reference, NO_LIMIT); }
-        public DefinitionRef(final Token reference, final int limit) { super(reference, (value) -> value.definition.equals(reference), limit); }
+        public DefinitionRef(final Token reference) { this(reference, null); }
+        public DefinitionRef(final Token reference, final ValueExpression limit) { super(reference, (value) -> value.definition.equals(reference), limit); }
     }
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
+        if (limit == null) { return evalImpl(graph, NO_LIMIT); }
+        ImmutableList<Optional<Value>> evaluatedLimit = limit.eval(graph, encoding);
+        if (evaluatedLimit.size != 1 || !evaluatedLimit.head.isPresent()) { throw new IllegalArgumentException("Limit must evaluate to a single non-empty value."); }
+        return evalImpl(graph, evaluatedLimit.head.get().asNumeric().intValue());
+    }
+
+    private ImmutableList<Optional<Value>> evalImpl(final ParseGraph graph, final int limit) {
         return wrap(getAllValues(graph, predicate, limit), new ImmutableList<Optional<Value>>()).computeResult();
     }
 
@@ -79,7 +86,7 @@ public class Ref<T> implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + reference + (limit == NO_LIMIT ? "" : "," + limit) + ")";
+        return getClass().getSimpleName() + "(" + reference + (limit == null ? "" : "," + limit) + ")";
     }
 
     @Override

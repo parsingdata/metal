@@ -32,7 +32,6 @@ import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.Util.createFromBytes;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
-import static io.parsingdata.metal.data.selection.ByPredicate.NO_LIMIT;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.le;
@@ -176,10 +175,9 @@ public class EqualityTest {
         assertFalse(object.equals(null));
         assertFalse(object.equals("name"));
         assertEquals(object, new NameRef("name"));
-        assertEquals(object, new NameRef("name", NO_LIMIT));
         assertNotEquals(object, new NameRef("otherName"));
         assertNotEquals(object, new DefinitionRef(any("name")));
-        assertNotEquals(object, new NameRef("name", 1));
+        assertNotEquals(object, new NameRef("name", con(1)));
     }
 
     @Test
@@ -188,10 +186,9 @@ public class EqualityTest {
         assertFalse(object.equals(null));
         assertFalse(object.equals("name"));
         assertEquals(object, new DefinitionRef(any("name")));
-        assertEquals(object, new DefinitionRef(any("name"), NO_LIMIT));
         assertNotEquals(object, new DefinitionRef(any("otherName")));
         assertNotEquals(object, new NameRef("name"));
-        assertNotEquals(object, new DefinitionRef(any("name"), 1));
+        assertNotEquals(object, new DefinitionRef(any("name"), con(1)));
     }
 
 }

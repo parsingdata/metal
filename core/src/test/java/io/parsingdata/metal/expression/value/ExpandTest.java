@@ -56,15 +56,15 @@ public class ExpandTest {
 
     @Test
     public void expandEmptyTimes() {
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("Count must yield a single non-empty value.");
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Count must evaluate to a single non-empty value.");
         exp(con(1), div(con(1), con(0))).eval(ParseGraph.EMPTY, enc());
     }
 
     @Test
     public void expandListTimes() {
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("Count must yield a single non-empty value.");
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Count must evaluate to a single non-empty value.");
         exp(con(1), ref("a")).eval(ParseGraph.EMPTY.add(PARSEVALUE_1).add(PARSEVALUE_2), enc());
     }
 
