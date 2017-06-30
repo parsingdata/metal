@@ -102,7 +102,7 @@ public class ShorthandsTest {
     private void runChoice(final int data, final String matched) throws IOException {
         final Optional<Environment> result = multiChoice.parse(stream(data), enc());
         assertTrue(result.isPresent());
-        assertTrue(result.get().order.current().matches(matched));
+        assertTrue(result.get().order.current().get().matches(matched));
     }
 
     @Test

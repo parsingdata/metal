@@ -140,7 +140,7 @@ public class TreeTest {
     }
 
     private void checkResolve(final ParseReference reference, final ParseGraph root, final int offset) {
-        checkHeader(reference.resolve(root).asGraph().tail.tail, offset); // Only check header on cycle to prevent loop
+        checkHeader(reference.resolve(root).get().asGraph().tail.tail, offset); // Only check header on cycle to prevent loop
     }
 
     @Test

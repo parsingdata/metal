@@ -85,7 +85,7 @@ public class SubStructTableTest {
         final ParseGraph graph = result.get().order;
         checkStruct(graph.head.asGraph().head.asGraph().head.asGraph(), 7);
         assertTrue(graph.head.asGraph().head.asGraph().tail.head.isReference());
-        checkStruct(graph.head.asGraph().head.asGraph().tail.head.asReference().resolve(graph).asGraph(), 5);
+        checkStruct(graph.head.asGraph().head.asGraph().tail.head.asReference().resolve(graph).get().asGraph(), 5);
         checkStruct(graph.head.asGraph().head.asGraph().tail.tail.head.asGraph(), 5);
         checkStruct(graph.head.asGraph().head.asGraph().tail.tail.tail.head.asGraph(), 10);
     }
