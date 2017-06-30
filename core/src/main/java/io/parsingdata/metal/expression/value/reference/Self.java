@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
+import static java.util.function.Function.identity;
+
 import java.util.Optional;
 
 import io.parsingdata.metal.Util;
@@ -34,7 +36,7 @@ public class Self implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        return ImmutableList.create(graph.current().map(parseValue -> parseValue));
+        return ImmutableList.create(graph.current().map(identity()));
     }
 
     @Override

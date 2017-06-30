@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.expression.comparison;
 
+import static java.util.function.Function.identity;
+
 import static io.parsingdata.metal.SafeTrampoline.complete;
 import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
@@ -57,7 +59,7 @@ public abstract class ComparisonExpression implements Expression {
 
     @Override
     public boolean eval(final ParseGraph graph, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> values = value == null ? ImmutableList.create(graph.current().map(parseValue -> parseValue)) : value.eval(graph, encoding);
+        final ImmutableList<Optional<Value>> values = value == null ? ImmutableList.create(graph.current().map(identity())) : value.eval(graph, encoding);
         if (values.isEmpty()) { return false; }
         final ImmutableList<Optional<Value>> predicates = predicate.eval(graph, encoding);
         if (values.size != predicates.size) { return false; }
