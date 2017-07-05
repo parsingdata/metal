@@ -76,6 +76,7 @@ import io.parsingdata.metal.token.Seq;
 import io.parsingdata.metal.token.Tie;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.token.TokenRef;
+import io.parsingdata.metal.token.Until;
 import io.parsingdata.metal.token.While;
 
 public final class Shorthand {
@@ -136,6 +137,8 @@ public final class Shorthand {
     public static Token tie(final String name, final Token token, final ValueExpression dataExpression) { return tie(name, token, dataExpression, null); }
     public static Token tie(final Token token, final ValueExpression dataExpression, final Encoding encoding) { return tie(NO_NAME, token, dataExpression, encoding); }
     public static Token tie(final Token token, final ValueExpression dataExpression) { return tie(token, dataExpression, null); }
+    public static Token until(final String name, final Token terminator, final Encoding encoding) { return new Until(name, terminator, encoding); }
+    public static Token until(final String name, final Token terminator) { return until(name, terminator, null); }
 
     public static BinaryValueExpression add(final ValueExpression left, final ValueExpression right) { return new Add(left, right); }
     public static BinaryValueExpression div(final ValueExpression left, final ValueExpression right) { return new Div(left, right); }
