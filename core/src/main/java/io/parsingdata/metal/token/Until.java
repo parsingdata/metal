@@ -60,14 +60,14 @@ public class Until extends Token {
     }
 
     private Trampoline<Optional<Environment>> handleInterval(final String scope, final Environment environment, final ImmutableList<Optional<Value>> initialSizes, final ImmutableList<Optional<Value>> stepSizes, final ImmutableList<Optional<Value>> maxSizes, final Encoding encoding) throws IOException {
-        if (checkNotValidList(initialSizes) || checkNotValidList(maxSizes) || checkNotValidList(stepSizes)) { return complete(Util::failure); }
+        if (checkNotValidList(initialSizes) || checkNotValidList(stepSizes) || checkNotValidList(maxSizes)) { return complete(Util::failure); }
         return iterate(scope, environment, getInt(initialSizes), getInt(stepSizes), getInt(maxSizes), encoding).computeResult()
             .map(nextEnvironment -> complete(() -> success(nextEnvironment)))
             .orElseGet(() -> intermediate(() -> handleInterval(scope, environment, initialSizes.tail, stepSizes.tail, maxSizes.tail, encoding)));
     }
 
     private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final int currentSize, final int stepSize, final int maxSize, final Encoding encoding) throws IOException {
-        if (currentSize > maxSize) { return complete(Util::failure); }
+        if (currentSize > maxSize || stepSize == 0) { return complete(Util::failure); }
         return terminator.parse(scope, currentSize == 0 ? environment : environment.add(new ParseValue(name, this, environment.slice(currentSize), encoding)).seek(environment.offset + currentSize), encoding)
             .map(nextEnvironment -> complete(() -> success(nextEnvironment)))
             .orElseGet(() -> intermediate(() -> iterate(scope, environment, currentSize + stepSize, stepSize, maxSize, encoding)));

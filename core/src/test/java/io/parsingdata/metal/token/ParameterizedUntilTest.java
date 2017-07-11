@@ -46,7 +46,7 @@ public class ParameterizedUntilTest extends ParameterizedParse {
             { "[a,b,c,a,b,c] i=0,s=2,m=6 ab",    untilToken(0, 2, 6, con('c'), con("ab")),    stream("abcabc", US_ASCII), enc(), true },
             { "[a,b,c,a,b,c] i=1,s=2,m=6 abcab", untilToken(1, 2, 6, con('c'), con("abcab")), stream("abcabc", US_ASCII), enc(), true },
             { "[a,b,c,a,b,c] i=0,s=3,m=6",       untilToken(0, 3, 6, con('c'), con("ab")),    stream("abcabc", US_ASCII), enc(), false },
-            //{ "[a,b,c,a,b,c] i=0,s=0,m=6",       untilToken(0, 0, 6, con('c'), con("ab")),    stream("abcabc", US_ASCII), enc(), false },
+            { "[a,b,c,a,b,c] i=0,s=0,m=6",       untilToken(0, 0, 6, con('c'), con("ab")),    stream("abcabc", US_ASCII), enc(), false },
         });
     }
 
