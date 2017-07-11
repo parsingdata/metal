@@ -38,6 +38,10 @@ public class FoldLeft extends Fold {
         super(values, reducer, initial);
     }
 
+    public FoldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) {
+        super(values, reducer);
+    }
+
     @Override
     protected ImmutableList<Optional<Value>> prepareValues(final ImmutableList<Optional<Value>> values) {
         return reverse(values);

@@ -21,6 +21,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.encoding.Encoding.DEFAULT;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -43,6 +44,7 @@ import io.parsingdata.metal.expression.comparison.Eq;
 import io.parsingdata.metal.expression.logical.And;
 import io.parsingdata.metal.expression.logical.Not;
 import io.parsingdata.metal.expression.value.Cat;
+import io.parsingdata.metal.expression.value.Fold;
 import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -73,7 +75,7 @@ public class ArgumentsTest {
     final private static ValueExpression VALID_VE = con(1);
     final private static BinaryOperator<ValueExpression> VALID_REDUCER = (left, right) -> null;
     final private static Expression VALID_E = new Expression() { @Override public boolean eval(final ParseGraph graph, final Encoding encoding) { return false; }};
-    final private static Token VALID_T = new Token("", null) { @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; } };
+    final private static Token VALID_T = new Token("", DEFAULT) { @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; } };
 
     private final Class<?> _class;
     private final Object[] _arguments;
@@ -147,7 +149,13 @@ public class ArgumentsTest {
     @Test
     public void runConstructor() throws Throwable {
         final Constructor<?>[] constructors = _class.getConstructors();
-        assertEquals(1, constructors.length);
+        if (_class.equals(Eq.class) || _class.getSuperclass().equals(Fold.class)) {
+            assertEquals(2, constructors.length);
+        }
+        else {
+            assertEquals(1, constructors.length);
+        }
+
         try {
             constructors[0].newInstance(_arguments);
             fail("Should have thrown an IllegalArgumentException.");

@@ -36,6 +36,10 @@ public class Eq extends ComparisonExpression {
         super(value, predicate);
     }
 
+    public Eq(final ValueExpression predicate) {
+        super(predicate);
+    }
+
     @Override
     public boolean compare(final Value left, final Value right) {
         final byte[] leftBytes = left.getValue();

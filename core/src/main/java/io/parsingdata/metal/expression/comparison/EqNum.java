@@ -38,6 +38,10 @@ public class EqNum extends ComparisonExpression {
         super(value, predicate);
     }
 
+    public EqNum(final ValueExpression predicate) {
+        super(predicate);
+    }
+
     @Override
     public boolean compare(final Value left, final Value right) {
         return left.asNumeric().compareTo(right.asNumeric()) == 0;

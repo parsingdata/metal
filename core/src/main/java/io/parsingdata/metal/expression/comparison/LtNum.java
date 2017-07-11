@@ -36,6 +36,10 @@ public class LtNum extends ComparisonExpression {
         super(value, predicate);
     }
 
+    public LtNum(final ValueExpression predicate) {
+        super(predicate);
+    }
+
     @Override
     public boolean compare(final Value left, final Value right) {
         return left.asNumeric().compareTo(right.asNumeric()) < 0;

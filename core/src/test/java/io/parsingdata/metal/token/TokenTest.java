@@ -16,7 +16,7 @@ public class TokenTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-    private final Token token = new Token("", null) {
+    private final Token token = new Token("", Encoding.DEFAULT) {
         @Override
         protected Optional<Environment> parseImpl(String scope, Environment environment, Encoding encoding) throws IOException {
             return null;

@@ -37,6 +37,10 @@ public class EqStr extends ComparisonExpression {
         super(value, predicate);
     }
 
+    public EqStr(final ValueExpression predicate) {
+        super(predicate);
+    }
+
     @Override
     public boolean compare(final Value left, final Value right) {
         return left.asString().equals(right.asString());

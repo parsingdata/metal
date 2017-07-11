@@ -50,6 +50,10 @@ public abstract class Fold implements ValueExpression {
     public final BinaryOperator<ValueExpression> reducer;
     public final ValueExpression initial;
 
+    public Fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) {
+        this(values, reducer, (graph, encoding) -> new ImmutableList<>());
+    }
+
     public Fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) {
         this.values = checkNotNull(values, "values");
         this.reducer = checkNotNull(reducer, "reducer");

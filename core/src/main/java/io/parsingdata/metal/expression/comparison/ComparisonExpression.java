@@ -49,17 +49,23 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  */
 public abstract class ComparisonExpression implements Expression {
 
+    private static final ValueExpression DEFAULT_VALUE_EXPRESSION = (graph, encoding) -> ImmutableList.create(graph.current().map(identity()));
+
     public final ValueExpression value;
     public final ValueExpression predicate;
 
     public ComparisonExpression(final ValueExpression value, final ValueExpression predicate) {
-        this.value = value;
+        this.value = checkNotNull(value, "value");
         this.predicate = checkNotNull(predicate, "predicate");
+    }
+
+    public ComparisonExpression(final ValueExpression predicate) {
+        this(DEFAULT_VALUE_EXPRESSION, predicate);
     }
 
     @Override
     public boolean eval(final ParseGraph graph, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> values = value == null ? ImmutableList.create(graph.current().map(identity())) : value.eval(graph, encoding);
+        final ImmutableList<Optional<Value>> values = value.eval(graph, encoding);
         if (values.isEmpty()) { return false; }
         final ImmutableList<Optional<Value>> predicates = predicate.eval(graph, encoding);
         if (values.size != predicates.size) { return false; }
@@ -77,7 +83,7 @@ public abstract class ComparisonExpression implements Expression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + (value == null ? "" : value + ",") + predicate + ")";
+        return getClass().getSimpleName() + "(" + (value.equals(DEFAULT_VALUE_EXPRESSION) ? "" : value + ",") + predicate + ")";
     }
 
     @Override

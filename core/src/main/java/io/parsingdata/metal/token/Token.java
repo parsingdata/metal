@@ -58,11 +58,11 @@ public abstract class Token {
 
     protected Token(final String name, final Encoding encoding) {
         this.name = checkNotNull(name, "name");
-        this.encoding = encoding;
+        this.encoding = checkNotNull(encoding, "encoding");
     }
 
     public Optional<Environment> parse(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        final Encoding activeEncoding = this.encoding != null ? this.encoding : encoding;
+        final Encoding activeEncoding = this.encoding.isDefault() ? encoding : this.encoding;
         final Optional<Environment> result = parseImpl(makeScope(checkNotNull(scope, "scope")), checkNotNull(environment, "environment"), activeEncoding);
         environment.callbacks.handle(this, environment, result);
         return result;

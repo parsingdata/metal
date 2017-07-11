@@ -37,6 +37,10 @@ public class FoldRight extends Fold {
         super(values, reducer, initial);
     }
 
+    public FoldRight(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) {
+        super(values, reducer);
+    }
+
     @Override
     protected ImmutableList<Optional<Value>> prepareValues(final ImmutableList<Optional<Value>> values) {
         return values;

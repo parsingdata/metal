@@ -44,7 +44,7 @@ import io.parsingdata.metal.encoding.Encoding;
  */
 public class TokenRef extends Token {
 
-    private static final Token LOOKUP_FAILED = new Token("LOOKUP_FAILED", null) {
+    private static final Token LOOKUP_FAILED = new Token("LOOKUP_FAILED", Encoding.DEFAULT) {
         @Override
         protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
             return failure();

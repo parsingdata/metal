@@ -24,6 +24,8 @@ import io.parsingdata.metal.Util;
 
 public class Encoding {
 
+    public static final Encoding DEFAULT = new Encoding();
+
     public static final Sign DEFAULT_SIGNED = Sign.UNSIGNED;
     public static final Charset DEFAULT_CHARSET = StandardCharsets.US_ASCII;
     public static final ByteOrder DEFAULT_BYTE_ORDER = ByteOrder.BIG_ENDIAN;
@@ -52,6 +54,10 @@ public class Encoding {
         this.sign = sign;
         this.charset = charset;
         this.byteOrder = byteOrder;
+    }
+
+    public boolean isDefault() {
+        return equals(DEFAULT);
     }
 
     @Override
