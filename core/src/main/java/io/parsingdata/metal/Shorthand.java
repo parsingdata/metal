@@ -137,7 +137,13 @@ public final class Shorthand {
     public static Token tie(final String name, final Token token, final ValueExpression dataExpression) { return tie(name, token, dataExpression, null); }
     public static Token tie(final Token token, final ValueExpression dataExpression, final Encoding encoding) { return tie(NO_NAME, token, dataExpression, encoding); }
     public static Token tie(final Token token, final ValueExpression dataExpression) { return tie(token, dataExpression, null); }
-    public static Token until(final String name, final Token terminator, final Encoding encoding) { return new Until(name, terminator, encoding); }
+    public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) { return new Until(name, initialSize, stepSize, maxSize, terminator, encoding); }
+    public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator) { return until(name, initialSize, stepSize, maxSize, terminator, null); }
+    public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final Token terminator, final Encoding encoding) { return until(name, initialSize, stepSize, null, terminator, encoding); }
+    public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final Token terminator) { return until(name, initialSize, stepSize, null, terminator, null); }
+    public static Token until(final String name, final ValueExpression initialSize, final Token terminator, final Encoding encoding) { return until(name, initialSize, null, terminator, encoding); }
+    public static Token until(final String name, final ValueExpression initialSize, final Token terminator) { return until(name, initialSize, null, terminator, null); }
+    public static Token until(final String name, final Token terminator, final Encoding encoding) { return until(name, null, terminator, encoding); }
     public static Token until(final String name, final Token terminator) { return until(name, terminator, null); }
 
     public static BinaryValueExpression add(final ValueExpression left, final ValueExpression right) { return new Add(left, right); }

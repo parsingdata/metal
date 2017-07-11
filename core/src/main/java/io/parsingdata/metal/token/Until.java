@@ -37,47 +37,67 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class Until extends Token {
 
-    private final ValueExpression startSize;
-    private final Token terminator;
+    public static final ValueExpression DEFAULT_INITIAL = con(0);
+    public static final ValueExpression DEFAULT_STEP = con(1);
+    public static final ValueExpression DEFAULT_MAX = con(Integer.MAX_VALUE);
 
-    public Until(final String name, final ValueExpression startSize, final Token terminator, final Encoding encoding) {
+    public final ValueExpression initialSize;
+    public final ValueExpression stepSize;
+    public final ValueExpression maxSize;
+    public final Token terminator;
+
+    public Until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) {
         super(name, encoding);
-        this.startSize = startSize == null ? con(0) : startSize;
+        this.initialSize = initialSize == null ? DEFAULT_INITIAL : initialSize;
+        this.stepSize = stepSize == null ? DEFAULT_STEP : stepSize;
+        this.maxSize = maxSize == null ? DEFAULT_MAX : maxSize;
         this.terminator = checkNotNull(terminator, "terminator");
     }
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        return handleInterval(scope, environment, encoding, startSize.eval(environment.order, encoding)).computeResult();
+        return handleInterval(scope, environment, initialSize.eval(environment.order, encoding), stepSize.eval(environment.order, encoding), maxSize.eval(environment.order, encoding), encoding).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> handleInterval(final String scope, final Environment environment, final Encoding encoding, final ImmutableList<Optional<Value>> startSizes) throws IOException {
-        if (startSizes.isEmpty() || !startSizes.head.isPresent()) { return complete(Util::failure); }
-        return iterate(scope, environment, encoding, startSizes.head.get().asNumeric().intValue()).computeResult()
+    private Trampoline<Optional<Environment>> handleInterval(final String scope, final Environment environment, final ImmutableList<Optional<Value>> initialSizes, final ImmutableList<Optional<Value>> stepSizes, final ImmutableList<Optional<Value>> maxSizes, final Encoding encoding) throws IOException {
+        if (checkNotValidList(initialSizes) || checkNotValidList(maxSizes) || checkNotValidList(stepSizes)) { return complete(Util::failure); }
+        return iterate(scope, environment, getInt(initialSizes), getInt(stepSizes), getInt(maxSizes), encoding).computeResult()
             .map(nextEnvironment -> complete(() -> success(nextEnvironment)))
-            .orElseGet(() -> intermediate(() -> handleInterval(scope, environment, encoding, startSizes.tail)));
+            .orElseGet(() -> intermediate(() -> handleInterval(scope, environment, initialSizes.tail, stepSizes.tail, maxSizes.tail, encoding)));
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding, final int currentSize) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final int currentSize, final int stepSize, final int maxSize, final Encoding encoding) throws IOException {
+        if (currentSize > maxSize) { return complete(Util::failure); }
         return terminator.parse(scope, currentSize == 0 ? environment : environment.add(new ParseValue(name, this, environment.slice(currentSize), encoding)).seek(environment.offset + currentSize), encoding)
             .map(nextEnvironment -> complete(() -> success(nextEnvironment)))
-            .orElseGet(() -> intermediate(() -> iterate(scope, environment, encoding, currentSize + 1)));
+            .orElseGet(() -> intermediate(() -> iterate(scope, environment, currentSize + stepSize, stepSize, maxSize, encoding)));
+    }
+
+    private boolean checkNotValidList(ImmutableList<Optional<Value>> list) {
+        return list.isEmpty() || !list.head.isPresent();
+    }
+
+    private int getInt(ImmutableList<Optional<Value>> list) {
+        return list.head.get().asNumeric().intValue();
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + makeNameFragment() + terminator + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + initialSize + "," + stepSize + "," + maxSize + "," + terminator + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return super.equals(obj)
+            && Objects.equals(initialSize, ((Until)obj).initialSize)
+            && Objects.equals(stepSize, ((Until)obj).stepSize)
+            && Objects.equals(maxSize, ((Until)obj).maxSize)
             && Objects.equals(terminator, ((Until)obj).terminator);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), terminator);
+        return Objects.hash(super.hashCode(), initialSize, stepSize, maxSize, terminator);
     }
 
 }
