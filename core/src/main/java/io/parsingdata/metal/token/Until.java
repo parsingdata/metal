@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
@@ -26,22 +27,35 @@ import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.Value;
+import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class Until extends Token {
 
+    private final ValueExpression startSize;
     private final Token terminator;
 
-    public Until(final String name, final Token terminator, final Encoding encoding) {
+    public Until(final String name, final ValueExpression startSize, final Token terminator, final Encoding encoding) {
         super(name, encoding);
+        this.startSize = startSize == null ? con(0) : startSize;
         this.terminator = checkNotNull(terminator, "terminator");
     }
 
     @Override
     protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
-        return iterate(scope, environment, encoding, 0).computeResult();
+        return handleInterval(scope, environment, encoding, startSize.eval(environment.order, encoding)).computeResult();
+    }
+
+    private Trampoline<Optional<Environment>> handleInterval(final String scope, final Environment environment, final Encoding encoding, final ImmutableList<Optional<Value>> startSizes) throws IOException {
+        if (startSizes.isEmpty() || !startSizes.head.isPresent()) { return complete(Util::failure); }
+        return iterate(scope, environment, encoding, startSizes.head.get().asNumeric().intValue()).computeResult()
+            .map(nextEnvironment -> complete(() -> success(nextEnvironment)))
+            .orElseGet(() -> intermediate(() -> handleInterval(scope, environment, encoding, startSizes.tail)));
     }
 
     private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding, final int currentSize) throws IOException {
