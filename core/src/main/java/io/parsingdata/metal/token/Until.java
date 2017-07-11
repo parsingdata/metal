@@ -67,7 +67,7 @@ public class Until extends Token {
     }
 
     private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final int currentSize, final int stepSize, final int maxSize, final Encoding encoding) throws IOException {
-        if (currentSize > maxSize || stepSize == 0) { return complete(Util::failure); }
+        if (stepSize == 0 || stepSize > 0 && currentSize > maxSize || stepSize < 0 && currentSize < maxSize) { return complete(Util::failure); }
         return terminator.parse(scope, currentSize == 0 ? environment : environment.add(new ParseValue(name, this, environment.slice(currentSize), encoding)).seek(environment.offset + currentSize), encoding)
             .map(nextEnvironment -> complete(() -> success(nextEnvironment)))
             .orElseGet(() -> intermediate(() -> iterate(scope, environment, currentSize + stepSize, stepSize, maxSize, encoding)));

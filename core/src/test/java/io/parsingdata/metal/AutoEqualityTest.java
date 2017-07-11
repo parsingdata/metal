@@ -103,6 +103,7 @@ import io.parsingdata.metal.token.Sub;
 import io.parsingdata.metal.token.Tie;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.token.TokenRef;
+import io.parsingdata.metal.token.Until;
 import io.parsingdata.metal.token.While;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
@@ -153,7 +154,7 @@ public class AutoEqualityTest {
     public static Collection<Object[]> data() throws IllegalAccessException, InvocationTargetException, InstantiationException {
         return generateObjectArrays(
             Cho.class, Def.class, Nod.class, Pre.class, Rep.class, RepN.class, Seq.class, Sub.class, Tie.class,
-            TokenRef.class, While.class, Post.class,
+            TokenRef.class, While.class, Post.class, Until.class,
             Len.class, Offset.class, Neg.class, Not.class, Count.class, First.class, Last.class, Reverse.class,
             And.class, Or.class, ShiftLeft.class, ShiftRight.class, Add.class, Div.class, Mod.class, Mul.class,
             io.parsingdata.metal.expression.value.arithmetic.Sub.class, Cat.class, Eq.class, EqNum.class, EqStr.class,
