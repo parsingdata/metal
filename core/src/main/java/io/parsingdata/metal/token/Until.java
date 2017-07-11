@@ -19,6 +19,7 @@ package io.parsingdata.metal.token;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
+import static io.parsingdata.metal.Util.checkNotEmpty;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.success;
 
@@ -48,6 +49,7 @@ public class Until extends Token {
 
     public Until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) {
         super(name, encoding);
+        checkNotEmpty(name, "name");
         this.initialSize = initialSize == null ? DEFAULT_INITIAL : initialSize;
         this.stepSize = stepSize == null ? DEFAULT_STEP : stepSize;
         this.maxSize = maxSize == null ? DEFAULT_MAX : maxSize;

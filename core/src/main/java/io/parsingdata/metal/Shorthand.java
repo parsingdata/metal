@@ -17,6 +17,7 @@
 package io.parsingdata.metal;
 
 import static io.parsingdata.metal.Util.createFromBytes;
+import static io.parsingdata.metal.token.Token.EMPTY;
 import static io.parsingdata.metal.token.Token.NO_NAME;
 
 import java.util.function.BiFunction;
@@ -91,7 +92,7 @@ public final class Shorthand {
     public static Token def(final String name, final long size, final Expression predicate) { return def(name, size, predicate, null); }
     public static Token def(final String name, final long size, final Encoding encoding) { return def(name, con(size), encoding); }
     public static Token def(final String name, final long size) { return def(name, size, (Encoding)null); }
-    public static final Token empty = def(NO_NAME, 0L);
+    public static final Token empty = def(EMPTY, 0L);
     public static Token cho(final String name, final Encoding encoding, final Token token1, final Token token2, final Token... tokens) { return new Cho(name, encoding, token1, token2, tokens); }
     public static Token cho(final String name, final Token token1, final Token token2, final Token... tokens) { return cho(name, null, token1, token2, tokens); }
     public static Token cho(final Encoding encoding, final Token token1, final Token token2, final Token... tokens) { return cho(NO_NAME, encoding, token1, token2, tokens); }

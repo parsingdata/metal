@@ -26,17 +26,30 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class DefTest {
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Test
-    public void testScopeWithoutEncoding() throws IOException {
+    public void scopeWithoutEncoding() throws IOException {
         assertEquals(1, getValue(def("a", 1).parse("scope", stream(1), enc()).get().order, "scope.a").asNumeric().intValue());
     }
 
     @Test
-    public void testScopeWithEncoding() throws IOException {
+    public void scopeWithEncoding() throws IOException {
         assertEquals(1, getValue(def("a", 1, signed()).parse("scope", stream(1), enc()).get().order, "scope.a").asNumeric().intValue());
     }
+
+    @Test
+    public void emptyName() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Argument name may not be empty.");
+        def("", 1);
+    }
+
 }
