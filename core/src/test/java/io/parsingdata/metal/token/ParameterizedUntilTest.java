@@ -21,8 +21,10 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.div;
+import static io.parsingdata.metal.Shorthand.empty;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.exp;
+import static io.parsingdata.metal.Shorthand.expTrue;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.ref;
@@ -56,8 +58,9 @@ public class ParameterizedUntilTest extends ParameterizedParse {
             { "[a,b,c,a,b,c] i=0,s=3,m=6",        untilToken(exp(con(0), con(2)), con(3), con(6), con('c'), con("")), stream("abcabc", US_ASCII), enc(), false },
             { "[a,b,c,a,b,c] i=0,s=3,m=6",        untilToken(exp(con(0), con(2)), exp(con(3), con(2)), con(6), con('c'), con("")), stream("abcabc", US_ASCII), enc(), false },
             { "[] i=NaN",                         untilToken(div(con(1), con(0)), con(1), con(1), con(""), con("")), stream("", US_ASCII), enc(), false },
-            { "[a,b,c,a,b,c] i=0,s=1 ab",         untilToken(0, 1, con('c'), con("ab")), stream("abcabc", US_ASCII), enc(), true },
-            { "[a,b,c,a,b,c] i=0 ab",             untilToken(0, con('c'), con("ab")), stream("abcabc", US_ASCII), enc(), true },
+            { "[a,b,c,a,b,c] i=0,s=1 ab",         untilToken(0, 1, con('c'), con("ab")),        stream("abcabc", US_ASCII), enc(), true },
+            { "[a,b,c,a,b,c] i=0 ab",             untilToken(0, con('c'), con("ab")),           stream("abcabc", US_ASCII), enc(), true },
+            { "[a,b,c,a,b,c] i=0,s=1,m=6 ab",     untilTokenAlwaysTrueTerminator(2, 1, 6),      stream("a", US_ASCII), enc(), false },
         });
     }
 
@@ -75,6 +78,10 @@ public class ParameterizedUntilTest extends ParameterizedParse {
 
     private static Token untilToken(final int initial, final ValueExpression terminator, final ValueExpression expectedValue) {
         return post(until("value", con(initial), def("terminator", 1, eq(terminator))), eq(last(ref("value")), expectedValue));
+    }
+
+    private static Token untilTokenAlwaysTrueTerminator(final int initial, final int step, final int max) {
+        return until("value", con(initial), con(step, signed()), con(max), post(empty, expTrue()));
     }
 
 }

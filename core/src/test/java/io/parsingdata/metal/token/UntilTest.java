@@ -16,20 +16,26 @@
 
 package io.parsingdata.metal.token;
 
+import static java.nio.charset.StandardCharsets.US_ASCII;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.empty;
 import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.mod;
 import static io.parsingdata.metal.Shorthand.post;
+import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.until;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -37,29 +43,44 @@ import org.junit.Test;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.util.InMemoryByteStream;
+import io.parsingdata.metal.expression.value.ValueExpression;
 
 public class UntilTest {
 
+    private static final String INPUT_1 = "Hello, World!";
+    private static final String INPUT_2 = "Another line...";
+    private static final String INPUT_3 = "Another way to scroll...";
+    private static final String INPUT = INPUT_1 + "\n" + INPUT_2 + "\n" + INPUT_3 + "\n";
+
     @Test
     public void threeNewLines() throws IOException {
-        final String input1 = "Hello, World!";
-        final String input2 = "Another line...";
-        final String input3 = "Another way to scroll...";
-        final String input = input1 + "\n" + input2 + "\n" + input3 + "\n";
-        final Optional<Environment> environment =
-            repn(
-                until(
-                    "line",
-                    post(def("newline", con(1)), eq(con('\n')))),
-                con(3)
-            ).parse(new Environment(new InMemoryByteStream(input.getBytes(StandardCharsets.US_ASCII))), enc());
+        final Optional<Environment> environment = createToken(con(0), post(def("newline", con(1)), eq(con('\n')))).parse(stream(INPUT, US_ASCII), enc());
         assertTrue(environment.isPresent());
         ImmutableList<ParseValue> values = getAllValues(environment.get().order, "line");
         assertEquals(3, values.size);
-        assertEquals(values.head.asString(), input3);
-        assertEquals(values.tail.head.asString(), input2);
-        assertEquals(values.tail.tail.head.asString(), input1);
+        assertEquals(values.head.asString(), INPUT_3);
+        assertEquals(values.tail.head.asString(), INPUT_2);
+        assertEquals(values.tail.tail.head.asString(), INPUT_1);
+    }
+
+    @Test
+    public void untilInclusive() throws IOException {
+        final Optional<Environment> environment = createToken(con(1), post(empty, eq(mod(last(ref("line")), con(256)), con('\n')))).parse(stream(INPUT, US_ASCII), enc());
+        assertTrue(environment.isPresent());
+        ImmutableList<ParseValue> values = getAllValues(environment.get().order, "line");
+        assertEquals(3, values.size);
+        assertEquals(values.head.asString(), INPUT_3 + '\n');
+        assertEquals(values.tail.head.asString(), INPUT_2 + '\n');
+        assertEquals(values.tail.tail.head.asString(), INPUT_1 + '\n');
+    }
+
+    @Test
+    public void allDefaultValueExpressions() throws IOException {
+        assertTrue(until("value", def("terminator", 1, eq(con(0)))).parse(stream(1, 2, 3, 0), enc()).isPresent());
+    }
+
+    private Token createToken(final ValueExpression initialSize, final Token terminator) {
+        return repn(until("line", initialSize, terminator), con(3));
     }
 
 }
