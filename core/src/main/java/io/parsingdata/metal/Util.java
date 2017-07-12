@@ -50,7 +50,7 @@ public final class Util {
     }
 
     public static String checkNotEmpty(final String argument, final String name) {
-        if (argument.isEmpty()) { throw new IllegalArgumentException("Argument " + name + " may not be empty."); }
+        if (checkNotNull(argument, name).isEmpty()) { throw new IllegalArgumentException("Argument " + name + " may not be empty."); }
         return argument;
     }
 

@@ -48,8 +48,7 @@ public class Until extends Token {
     public final Token terminator;
 
     public Until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) {
-        super(name, encoding);
-        checkNotEmpty(name, "name");
+        super(checkNotEmpty(name, "name"), encoding);
         this.initialSize = initialSize == null ? DEFAULT_INITIAL : initialSize;
         this.stepSize = stepSize == null ? DEFAULT_STEP : stepSize;
         this.maxSize = maxSize == null ? DEFAULT_MAX : maxSize;

@@ -50,8 +50,7 @@ public class Def extends Token {
     public final ValueExpression size;
 
     public Def(final String name, final ValueExpression size, final Encoding encoding) {
-        super(name, encoding);
-        checkNotEmpty(name, "name");
+        super(checkNotEmpty(name, "name"), encoding);
         this.size = checkNotNull(size, "size");
     }
 

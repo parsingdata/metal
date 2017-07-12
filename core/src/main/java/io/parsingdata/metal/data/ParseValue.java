@@ -32,7 +32,7 @@ public class ParseValue extends Value implements ParseItem {
 
     public ParseValue(final String name, final Token definition, final Slice slice, final Encoding encoding) {
         super(slice, encoding);
-        this.name = checkNotEmpty(checkNotNull(name, "name"), "name");
+        this.name = checkNotEmpty(name, "name");
         this.definition = checkNotNull(definition, "definition");
     }
 
