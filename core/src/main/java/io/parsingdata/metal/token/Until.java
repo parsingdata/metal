@@ -56,8 +56,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * <p>
  * If the <code>ValueExpressions</code> evaluate to lists, they are treated
  * as sets of values to attempt. If <code>stepSize</code> is negative,
- * <code>maxSize</code> is allowed to be smaller than <code>initialSize</code>.
- * A <code>stepSize</code> of zero is not allowed.
+ * <code>maxSize</code> is must be smaller than <code>initialSize</code>.
+ * Parsing fails if <code>stepSize</code> is zero.
  *
  * @see ValueExpression
  */
