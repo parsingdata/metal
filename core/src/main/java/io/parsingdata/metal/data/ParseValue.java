@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.data;
 
+import static io.parsingdata.metal.Util.checkNotEmpty;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
@@ -31,7 +32,7 @@ public class ParseValue extends Value implements ParseItem {
 
     public ParseValue(final String name, final Token definition, final Slice slice, final Encoding encoding) {
         super(slice, encoding);
-        this.name = checkNotNull(name, "name");
+        this.name = checkNotEmpty(name, "name");
         this.definition = checkNotNull(definition, "definition");
     }
 

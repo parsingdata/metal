@@ -19,6 +19,7 @@ package io.parsingdata.metal.token;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
+import static io.parsingdata.metal.Util.checkNotEmpty;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.success;
 
@@ -56,7 +57,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * <p>
  * If the <code>ValueExpressions</code> evaluate to lists, they are treated
  * as sets of values to attempt. If <code>stepSize</code> is negative,
- * <code>maxSize</code> is must be smaller than <code>initialSize</code>.
+ * <code>maxSize</code> must be smaller than <code>initialSize</code>.
  * Parsing fails if <code>stepSize</code> is zero.
  *
  * @see ValueExpression
@@ -73,7 +74,7 @@ public class Until extends Token {
     public final Token terminator;
 
     public Until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) {
-        super(name, encoding);
+        super(checkNotEmpty(name, "name"), encoding);
         this.initialSize = initialSize == null ? DEFAULT_INITIAL : initialSize;
         this.stepSize = stepSize == null ? DEFAULT_STEP : stepSize;
         this.maxSize = maxSize == null ? DEFAULT_MAX : maxSize;

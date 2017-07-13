@@ -49,6 +49,11 @@ public final class Util {
         return arguments;
     }
 
+    public static String checkNotEmpty(final String argument, final String name) {
+        if (checkNotNull(argument, name).isEmpty()) { throw new IllegalArgumentException("Argument " + name + " may not be empty."); }
+        return argument;
+    }
+
     public static boolean notNullAndSameClass(final Object object, final Object other) {
         return other != null
             && object.getClass() == other.getClass();

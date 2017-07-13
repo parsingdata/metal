@@ -93,4 +93,12 @@ public class ParseValueTest {
         value.asGraph();
     }
 
+    @Test
+    public void emptyName() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Argument name may not be empty.");
+
+        new ParseValue("", definition, createFromBytes(new byte[] { 1 }), enc());
+    }
+
 }

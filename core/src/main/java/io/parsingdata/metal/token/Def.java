@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Util.checkNotEmpty;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
@@ -49,7 +50,7 @@ public class Def extends Token {
     public final ValueExpression size;
 
     public Def(final String name, final ValueExpression size, final Encoding encoding) {
-        super(name, encoding);
+        super(checkNotEmpty(name, "name"), encoding);
         this.size = checkNotNull(size, "size");
     }
 
