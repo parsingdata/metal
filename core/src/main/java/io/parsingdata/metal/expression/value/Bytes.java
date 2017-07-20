@@ -41,19 +41,16 @@ public class Bytes implements ValueExpression {
         return reverse(toBytes(new ImmutableList<>(), input.head, input.tail, encoding));
     }
 
-    private ImmutableList<Optional<Value>> toBytes(final ImmutableList<Optional<Value>> output, final Optional<Value> value, final ImmutableList<Optional<Value>> backlog, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> result = output.add(toBytes(value, encoding));
-        return backlog.isEmpty() ? result : toBytes(result, backlog.head, backlog.tail, encoding);
+    private ImmutableList<Optional<Value>> toBytes(final ImmutableList<Optional<Value>> output, final Optional<Value> head, final ImmutableList<Optional<Value>> tail, final Encoding encoding) {
+        final ImmutableList<Optional<Value>> result = output.add(
+            head.map(value -> bytesToValues(new ImmutableList<>(), value.getValue(), 0, encoding))
+                .orElseGet(ImmutableList::new));
+        return tail.isEmpty() ? result : toBytes(result, tail.head, tail.tail, encoding);
     }
 
-    private ImmutableList<Optional<Value>> toBytes(final Optional<Value> value, final Encoding encoding) {
-        if (!value.isPresent()) { return new ImmutableList<>(); }
-        return byteToValue(new ImmutableList<>(), value.get().getValue(), 0, encoding);
-    }
-
-    private ImmutableList<Optional<Value>> byteToValue(final ImmutableList<Optional<Value>> output, final byte[] value, final int i, final Encoding encoding) {
+    private ImmutableList<Optional<Value>> bytesToValues(final ImmutableList<Optional<Value>> output, final byte[] value, final int i, final Encoding encoding) {
         if (i >= value.length) { return output; }
-        return byteToValue(output.add(Optional.of(new Value(createFromBytes(new byte[] { value[i] }), encoding))), value, i + 1, encoding);
+        return bytesToValues(output.add(Optional.of(new Value(createFromBytes(new byte[] { value[i] }), encoding))), value, i + 1, encoding);
     }
 
 }
