@@ -21,8 +21,8 @@ import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eqNum;
 import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.format.Until.refVarInt;
-import static io.parsingdata.metal.format.Until.varInt;
+import static io.parsingdata.metal.format.VarInt.refVarInt;
+import static io.parsingdata.metal.format.VarInt.varInt;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
@@ -34,7 +34,7 @@ import org.junit.runners.Parameterized;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
 
-public class UntilTest extends ParameterizedParse {
+public class VarIntTest extends ParameterizedParse {
 
     @Parameterized.Parameters(name = "{0} ({4})")
     public static Collection<Object[]> data() {

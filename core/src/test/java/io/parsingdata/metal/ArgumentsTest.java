@@ -42,6 +42,7 @@ import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.comparison.Eq;
 import io.parsingdata.metal.expression.logical.And;
 import io.parsingdata.metal.expression.logical.Not;
+import io.parsingdata.metal.expression.value.Bytes;
 import io.parsingdata.metal.expression.value.Cat;
 import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
@@ -73,7 +74,7 @@ public class ArgumentsTest {
     final private static String EMPTY_NAME = "";
     final private static ValueExpression VALID_VE = con(1);
     final private static BinaryOperator<ValueExpression> VALID_REDUCER = (left, right) -> null;
-    final private static Expression VALID_E = new Expression() { @Override public boolean eval(final ParseGraph graph, final Encoding encoding) { return false; }};
+    final private static Expression VALID_E = (graph, encoding) -> false;
     final private static Token VALID_T = new Token("", null) { @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; } };
 
     private final Class<?> _class;
@@ -93,6 +94,7 @@ public class ArgumentsTest {
             { Nth.class, new Object[] { null, VALID_VE } },
             { Offset.class, new Object[] { null } },
             { Count.class, new Object[] { null } },
+            { Bytes.class, new Object[] { null } },
             // Derived from BinaryValueExpression
             { Cat.class, new Object[] { VALID_VE, null } },
             { Cat.class, new Object[] { null, VALID_VE } },

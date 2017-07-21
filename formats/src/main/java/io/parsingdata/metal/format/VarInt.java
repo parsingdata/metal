@@ -33,16 +33,16 @@ import static io.parsingdata.metal.Shorthand.until;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 
-public class Until {
+public class VarInt {
 
-    private Until() {}
+    private VarInt() {}
 
     public static Token varInt(final String name) { return
         until(name, con(1), post(empty, eq(and(first(bytes(last(ref(name)))), con(128)), con(0))));
     }
 
     public static ValueExpression refVarInt(final String name) { return
-        foldLeft(bytes(last(ref(name))), Until::varIntReducer);
+        foldLeft(bytes(last(ref(name))), VarInt::varIntReducer);
     }
 
     private static ValueExpression varIntReducer(final ValueExpression left, final ValueExpression right) { return
