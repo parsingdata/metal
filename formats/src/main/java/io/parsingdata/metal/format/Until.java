@@ -17,19 +17,19 @@
 package io.parsingdata.metal.format;
 
 import static io.parsingdata.metal.Shorthand.and;
+import static io.parsingdata.metal.Shorthand.bytes;
 import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.elvis;
+import static io.parsingdata.metal.Shorthand.empty;
+import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.first;
 import static io.parsingdata.metal.Shorthand.foldLeft;
 import static io.parsingdata.metal.Shorthand.last;
-import static io.parsingdata.metal.Shorthand.ltNum;
 import static io.parsingdata.metal.Shorthand.or;
 import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.shl;
 import static io.parsingdata.metal.Shorthand.until;
 
-import io.parsingdata.metal.expression.value.Bytes;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 
@@ -38,11 +38,11 @@ public class Until {
     private Until() {}
 
     public static Token varInt(final String name) { return
-        until(name, post(def(name + "_final", con(1)), ltNum(con(128))));
+        until(name, con(1), post(empty, eq(and(first(bytes(last(ref(name)))), con(128)), con(0))));
     }
 
     public static ValueExpression refVarInt(final String name) { return
-        elvis(foldLeft(new Bytes(last(ref(name))), Until::varIntReducer, last(ref(name + "_final"))), last(ref(name + "_final")));
+        foldLeft(bytes(last(ref(name))), Until::varIntReducer);
     }
 
     private static ValueExpression varIntReducer(final ValueExpression left, final ValueExpression right) { return
