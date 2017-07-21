@@ -31,6 +31,20 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 
+/**
+ * A {@link ValueExpression} that splits the results of evaluating its operand
+ * into individual bytes.
+ * <p>
+ * A Bytes expression has a single <code>operand</code> (a
+ * {@link ValueExpression}). When evaluated, it evaluates <code>operand</code>
+ * and instead of returning the list of results, each result is split into
+ * {@link Value} objects representing each individual byte of the original
+ * result.
+ * <p>
+ * For example, if <code>operand</code> evaluates to a list of two values, of
+ * 2 and 3 bytes respectively, the Bytes expression turns this into a list of
+ * 5 values, representing the individual bytes of the original results.
+ */
 public class Bytes implements ValueExpression {
 
     public final ValueExpression operand;

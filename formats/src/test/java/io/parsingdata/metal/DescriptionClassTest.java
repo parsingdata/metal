@@ -23,6 +23,7 @@ import org.junit.Test;
 import io.parsingdata.metal.format.Callback;
 import io.parsingdata.metal.format.JPEG;
 import io.parsingdata.metal.format.PNG;
+import io.parsingdata.metal.format.VarInt;
 import io.parsingdata.metal.format.ZIP;
 
 public class DescriptionClassTest {
@@ -34,6 +35,7 @@ public class DescriptionClassTest {
         checkUtilityClass(JPEG.class);
         checkUtilityClass(PNG.class);
         checkUtilityClass(ZIP.class);
+        checkUtilityClass(VarInt.class);
     }
 
 }
