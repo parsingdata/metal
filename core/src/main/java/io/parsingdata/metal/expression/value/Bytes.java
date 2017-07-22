@@ -57,7 +57,7 @@ public class Bytes implements ValueExpression {
     public ImmutableList<Optional<Value>> eval(ParseGraph graph, Encoding encoding) {
         final ImmutableList<Optional<Value>> input = operand.eval(graph, encoding);
         if (input.isEmpty()) { return input; }
-        return reverse(toBytes(new ImmutableList<>(), input.head, input.tail, encoding).computeResult());
+        return toBytes(new ImmutableList<>(), input.head, input.tail, encoding).computeResult();
     }
 
     private SafeTrampoline<ImmutableList<Optional<Value>>> toBytes(final ImmutableList<Optional<Value>> output, final Optional<Value> head, final ImmutableList<Optional<Value>> tail, final Encoding encoding) {
