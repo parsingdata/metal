@@ -20,7 +20,6 @@ import static io.parsingdata.metal.SafeTrampoline.complete;
 import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.createFromBytes;
-import static io.parsingdata.metal.data.transformation.Reversal.reverse;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -54,7 +53,7 @@ public class Bytes implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(ParseGraph graph, Encoding encoding) {
+    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
         final ImmutableList<Optional<Value>> input = operand.eval(graph, encoding);
         if (input.isEmpty()) { return input; }
         return toBytes(new ImmutableList<>(), input.head, input.tail, encoding).computeResult();
