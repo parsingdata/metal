@@ -48,7 +48,7 @@ public class VarIntTest extends ParameterizedParse {
             { "[127, 127] 127 (varint) == 127", varIntAndValue(1), stream(127, 127), enc(), true },
             { "[185, 10, 5, 57] (varint) == 1337", varIntAndValue(2), stream(185, 10, 5, 57), enc(), true },
             { "[160, 141, 6, 1, 134, 160] (varint) == 100000", varIntAndValue(3), stream(160, 141, 6, 1, 134, 160), enc(), true },
-            { "[63, 63, 185, 10, 5, 57, 127, 127, 160, 141, 6, 5, 57, 1, 134, 160] 4x(varint) == 4x(decoded)", REPN_AUTO_SIZE_VARINT, stream(63, 63, 185, 10, 5, 57, 127, 127, 160, 141, 6, 1, 134, 160), enc(), true }
+            { "[63, 63, 185, 10, 5, 57, 127, 127, 160, 141, 6, 1, 134, 160] 4x(varint) == 4x(decoded)", REPN_AUTO_SIZE_VARINT, stream(63, 63, 185, 10, 5, 57, 127, 127, 160, 141, 6, 1, 134, 160), enc(), true }
         });
     }
 
