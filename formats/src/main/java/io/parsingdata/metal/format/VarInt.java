@@ -41,8 +41,8 @@ public final class VarInt {
         until(name, con(1), post(empty, eq(and(last(bytes(last(ref(name)))), con(128)), con(0))));
     }
 
-    public static ValueExpression refVarInt(final String name) { return
-        foldLeft(rev(bytes(last(ref(name)))), VarInt::varIntReducer);
+    public static ValueExpression decodeVarInt(final ValueExpression expression) { return
+        foldLeft(rev(bytes(expression)), VarInt::varIntReducer);
     }
 
     private static ValueExpression varIntReducer(final ValueExpression left, final ValueExpression right) { return
