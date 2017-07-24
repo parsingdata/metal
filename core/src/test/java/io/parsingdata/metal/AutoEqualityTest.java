@@ -65,6 +65,7 @@ import io.parsingdata.metal.expression.comparison.EqNum;
 import io.parsingdata.metal.expression.comparison.EqStr;
 import io.parsingdata.metal.expression.comparison.GtNum;
 import io.parsingdata.metal.expression.comparison.LtNum;
+import io.parsingdata.metal.expression.value.Bytes;
 import io.parsingdata.metal.expression.value.Cat;
 import io.parsingdata.metal.expression.value.Const;
 import io.parsingdata.metal.expression.value.ConstantFactory;
@@ -153,16 +154,23 @@ public class AutoEqualityTest {
     @Parameterized.Parameters(name="{0}")
     public static Collection<Object[]> data() throws IllegalAccessException, InvocationTargetException, InstantiationException {
         return generateObjectArrays(
+            // Tokens
             Cho.class, Def.class, Nod.class, Pre.class, Rep.class, RepN.class, Seq.class, Sub.class, Tie.class,
             TokenRef.class, While.class, Post.class, Until.class,
+            // ValueExpressions
             Len.class, Offset.class, Neg.class, Not.class, Count.class, First.class, Last.class, Reverse.class,
             And.class, Or.class, ShiftLeft.class, ShiftRight.class, Add.class, Div.class, Mod.class, Mul.class,
-            io.parsingdata.metal.expression.value.arithmetic.Sub.class, Cat.class, Eq.class, EqNum.class, EqStr.class,
-            GtNum.class, LtNum.class, Nth.class, Elvis.class, io.parsingdata.metal.expression.logical.And.class,
-            io.parsingdata.metal.expression.logical.Or.class, FoldLeft.class, FoldRight.class, Value.class,
-            ParseValue.class, io.parsingdata.metal.expression.logical.Not.class, Const.class, ConstantSource.class,
-            Slice.class, ParseReference.class, DataExpressionSource.class, ByteStreamSource.class, Expand.class
-        );
+            io.parsingdata.metal.expression.value.arithmetic.Sub.class, Cat.class, Nth.class, Elvis.class,
+            FoldLeft.class, FoldRight.class, Const.class, Expand.class, Bytes.class,
+            // Expressions
+            Eq.class, EqNum.class, EqStr.class, GtNum.class, LtNum.class,
+            io.parsingdata.metal.expression.logical.And.class, io.parsingdata.metal.expression.logical.Or.class,
+            io.parsingdata.metal.expression.logical.Not.class,
+            // Data structures
+            Value.class, ParseValue.class, ParseReference.class,
+            // Inputs
+            ConstantSource.class, DataExpressionSource.class, ByteStreamSource.class, Slice.class
+            );
     }
 
     private static Collection<Object[]> generateObjectArrays(Class... classes) throws IllegalAccessException, InstantiationException, InvocationTargetException {
