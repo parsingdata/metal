@@ -21,6 +21,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 import io.parsingdata.metal.Util;
 
@@ -54,7 +55,7 @@ public class ConstantSource extends Source {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(data);
+        return Objects.hash(getClass().hashCode(), data);
     }
 
 }

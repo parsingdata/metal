@@ -96,7 +96,7 @@ public abstract class Token {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, encoding);
+        return Objects.hash(getClass().hashCode(), name, encoding);
     }
 
 }

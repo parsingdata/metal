@@ -55,7 +55,7 @@ public abstract class BinaryLogicalExpression implements LogicalExpression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(left, right);
+        return Objects.hash(getClass().hashCode(), left, right);
     }
 
 }

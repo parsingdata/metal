@@ -43,7 +43,7 @@ public class True implements Expression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(true);
+        return Objects.hash(getClass().hashCode(), true);
     }
 
 }

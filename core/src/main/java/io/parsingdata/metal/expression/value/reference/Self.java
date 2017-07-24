@@ -51,7 +51,7 @@ public class Self implements ValueExpression {
 
     @Override
     public int hashCode() {
-        return 2;
+        return getClass().hashCode();
     }
 
 }
