@@ -77,7 +77,7 @@ public class DataExpressionSource extends Source {
 
     @Override
     public int hashCode() {
-        return Objects.hash(dataExpression, index, graph, encoding);
+        return Objects.hash(getClass().hashCode(), dataExpression, index, graph, encoding);
     }
 
 }

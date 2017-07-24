@@ -61,7 +61,7 @@ public class ParseReference implements ParseItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(location, source, definition);
+        return Objects.hash(getClass().hashCode(), location, source, definition);
     }
 
 }

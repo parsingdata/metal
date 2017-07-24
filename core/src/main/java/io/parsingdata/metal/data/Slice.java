@@ -56,7 +56,7 @@ public class Slice {
 
     @Override
     public int hashCode() {
-        return Objects.hash(source, offset, size);
+        return Objects.hash(getClass().hashCode(), source, offset, size);
     }
 
 }

@@ -69,7 +69,7 @@ public class Value {
 
     @Override
     public int hashCode() {
-        return Objects.hash(slice, encoding);
+        return Objects.hash(getClass().hashCode(), slice, encoding);
     }
 
 }

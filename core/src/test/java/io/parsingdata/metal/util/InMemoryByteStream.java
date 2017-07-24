@@ -18,6 +18,7 @@ package io.parsingdata.metal.util;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ByteStream;
@@ -50,7 +51,7 @@ public class InMemoryByteStream implements ByteStream {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(data);
+        return Objects.hash(getClass().hashCode(), data);
     }
 
 }

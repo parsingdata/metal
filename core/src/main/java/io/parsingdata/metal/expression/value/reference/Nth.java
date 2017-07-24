@@ -95,7 +95,7 @@ public class Nth implements ValueExpression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(values, indices);
+        return Objects.hash(getClass().hashCode(), values, indices);
     }
 
 }

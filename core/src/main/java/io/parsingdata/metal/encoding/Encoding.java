@@ -69,7 +69,7 @@ public class Encoding {
 
     @Override
     public int hashCode() {
-        return Objects.hash(sign, charset, byteOrder);
+        return Objects.hash(getClass().hashCode(), sign, charset, byteOrder);
     }
 
 }

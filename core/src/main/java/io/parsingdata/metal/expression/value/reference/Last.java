@@ -59,7 +59,7 @@ public class Last implements ValueExpression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(operand);
+        return Objects.hash(getClass().hashCode(), operand);
     }
 
 }
