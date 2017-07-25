@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BinaryOperator;
+import java.util.function.Supplier;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -116,23 +117,23 @@ public class AutoEqualityTest {
     private static final ParseGraph BRANCHED_GRAPH = new Environment((offset, data) -> 0).addBranch(any("a")).order;
     private static final ParseGraph CLOSED_BRANCHED_GRAPH = new Environment((offset, data) -> 0).addBranch(any("a")).closeBranch().order;
 
-    private static final List<Object> STRINGS = Arrays.asList("a", "b");
-    private static final List<Object> ENCODINGS = Arrays.asList(enc(), signed(), le(), new Encoding(Charset.forName("UTF-8")));
-    private static final List<Object> TOKENS = Arrays.asList(any("a"), any("b"));
-    private static final List<Object> TOKEN_ARRAYS = Arrays.asList(new Token[] { any("a"), any("b")}, new Token[] { any("b"), any("c") }, new Token[] { any("a"), any("b"), any("c") });
-    private static final List<Object> VALUE_EXPRESSIONS = Arrays.asList(con(1), con(2));
-    private static final List<Object> EXPRESSIONS = Arrays.asList(expTrue(), not(expTrue()));
-    private static final List<Object> VALUES = Arrays.asList(ConstantFactory.createFromString("a", enc()), ConstantFactory.createFromString("b", enc()), ConstantFactory.createFromNumeric(1L, signed()));
-    private static final List<Object> REDUCERS = Arrays.asList((BinaryOperator<ValueExpression>) Shorthand::cat, (BinaryOperator<ValueExpression>) Shorthand::div);
-    private static final List<Object> SLICES = Arrays.asList(createFromBytes(new byte[] { 1, 2 }), new Slice(new DataExpressionSource(ref("a"), 1, ParseGraph.EMPTY, enc()), 0, new byte[] { 0, 0 }));
-    private static final List<Object> BYTE_ARRAYS = Arrays.asList(new byte[] { 0 }, new byte[] { 1, 2 }, new byte[] {});
-    private static final List<Object> SOURCES = Arrays.asList(new ConstantSource(new byte[] {}), new DataExpressionSource(ref("x"), 8, ParseGraph.EMPTY.add(PARSEVALUE), signed()));
-    private static final List<Object> LONGS = Arrays.asList(0L, 1L, 31L, 100000L);
-    private static final List<Object> INTEGERS = Arrays.asList(0, 1, 17, 21212121);
-    private static final List<Object> PARSEGRAPHS = Arrays.asList(ParseGraph.EMPTY, GRAPH_WITH_REFERENCE);
-    private static final List<Object> PARSEITEMS = Arrays.asList(CLOSED_BRANCHED_GRAPH, ParseGraph.EMPTY, GRAPH_WITH_REFERENCE, ParseGraph.EMPTY.add(PARSEVALUE), ParseGraph.EMPTY.add(PARSEVALUE).add(PARSEVALUE), BRANCHED_GRAPH);
-    private static final List<Object> BYTESTREAMS = Arrays.asList(new InMemoryByteStream(new byte[] { 1, 2 }), (ByteStream) (offset, data) -> 0);
-    private static final Map<Class, List<Object>> mapping = new HashMap<Class, List<Object>>() {{
+    private static final List<Supplier<Object>> STRINGS = Arrays.asList(() -> "a", () -> "b");
+    private static final List<Supplier<Object>> ENCODINGS = Arrays.asList(() -> enc(), () -> signed(), () -> le(), () -> new Encoding(Charset.forName("UTF-8")));
+    private static final List<Supplier<Object>> TOKENS = Arrays.asList(() -> any("a"), () -> any("b"));
+    private static final List<Supplier<Object>> TOKEN_ARRAYS = Arrays.asList(() -> new Token[] { any("a"), any("b")}, () -> new Token[] { any("b"), any("c") }, () -> new Token[] { any("a"), any("b"), any("c") });
+    private static final List<Supplier<Object>> VALUE_EXPRESSIONS = Arrays.asList(() -> con(1), () -> con(2));
+    private static final List<Supplier<Object>> EXPRESSIONS = Arrays.asList(() -> expTrue(), () -> not(expTrue()));
+    private static final List<Supplier<Object>> VALUES = Arrays.asList(() -> ConstantFactory.createFromString("a", enc()), () -> ConstantFactory.createFromString("b", enc()), () -> ConstantFactory.createFromNumeric(1L, signed()));
+    private static final List<Supplier<Object>> REDUCERS = Arrays.asList(() -> (BinaryOperator<ValueExpression>) Shorthand::cat, () -> (BinaryOperator<ValueExpression>) Shorthand::div);
+    private static final List<Supplier<Object>> SLICES = Arrays.asList(() -> createFromBytes(new byte[] { 1, 2 }), () -> new Slice(new DataExpressionSource(ref("a"), 1, ParseGraph.EMPTY, enc()), 0, new byte[] { 0, 0 }));
+    private static final List<Supplier<Object>> BYTE_ARRAYS = Arrays.asList(() -> new byte[] { 0 }, () -> new byte[] { 1, 2 }, () -> new byte[] {});
+    private static final List<Supplier<Object>> SOURCES = Arrays.asList(() -> new ConstantSource(new byte[] {}), () -> new DataExpressionSource(ref("x"), 8, ParseGraph.EMPTY.add(PARSEVALUE), signed()));
+    private static final List<Supplier<Object>> LONGS = Arrays.asList(() -> 0L, () -> 1L, () -> 31L, () -> 100000L);
+    private static final List<Supplier<Object>> INTEGERS = Arrays.asList(() -> 0, () -> 1, () -> 17, () -> 21212121);
+    private static final List<Supplier<Object>> PARSEGRAPHS = Arrays.asList(() -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE);
+    private static final List<Supplier<Object>> PARSEITEMS = Arrays.asList(() -> CLOSED_BRANCHED_GRAPH, () -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE, () -> ParseGraph.EMPTY.add(PARSEVALUE), () -> ParseGraph.EMPTY.add(PARSEVALUE).add(PARSEVALUE), () -> BRANCHED_GRAPH);
+    private static final List<Supplier<Object>> BYTESTREAMS = Arrays.asList(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> (ByteStream) (offset, data) -> 0);
+    private static final Map<Class, List<Supplier<Object>>> mapping = new HashMap<Class, List<Supplier<Object>>>() {{
         put(String.class, STRINGS);
         put(Encoding.class, ENCODINGS);
         put(Token.class, TOKENS);
@@ -183,35 +184,43 @@ public class AutoEqualityTest {
 
     private static Object[] generateObjectArrays(Class c) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         Constructor cons = c.getConstructors()[0];
-        List<List<Object>> args = new ArrayList<>();
+        List<List<Supplier<Object>>> args = new ArrayList<>();
         for (Class cl : cons.getParameterTypes()) {
             args.add(mapping.get(cl));
         }
-        List<List<Object>> argLists = generateCombinations(0, args);
+        List<List<Supplier<Object>>> argLists = generateCombinations(0, args);
         List<Object> otherInstances = new ArrayList<>();
-        for (List<Object> argList : argLists.subList(1, argLists.size())) {
-            otherInstances.add(cons.newInstance(argList.toArray()));
+        for (List<Supplier<Object>> argList : argLists.subList(1, argLists.size())) {
+            otherInstances.add(cons.newInstance(instantiate(argList).toArray()));
         }
         return new Object[]{
-            cons.newInstance(argLists.get(0).toArray()),
-            cons.newInstance(argLists.get(0).toArray()),
+            cons.newInstance(instantiate(argLists.get(0)).toArray()),
+            cons.newInstance(instantiate(argLists.get(0)).toArray()),
             otherInstances.toArray()
         };
     }
 
-    private static List<List<Object>> generateCombinations(int index, List<List<Object>> args) {
-        List<List<Object>> result = new ArrayList<>();
+    private static List<List<Supplier<Object>>> generateCombinations(int index, List<List<Supplier<Object>>> args) {
+        List<List<Supplier<Object>>> result = new ArrayList<>();
         if (index == args.size()) {
             result.add(new ArrayList<>());
         } else {
-            for (Object obj : args.get(index)) {
-                for (List<Object> list : generateCombinations(index + 1, args)) {
+            for (Supplier<Object> obj : args.get(index)) {
+                for (List<Supplier<Object>> list : generateCombinations(index + 1, args)) {
                     list.add(0, obj);
                     result.add(list);
                 }
             }
         }
         return result;
+    }
+
+    private static List<Object> instantiate(final List<Supplier<Object>> suppliers) {
+        List<Object> output = new ArrayList<>();
+        for (Supplier<Object> supplier : suppliers) {
+            output.add(supplier.get());
+        }
+        return output;
     }
 
     public static Object OTHER_TYPE = new Object() {};
@@ -224,7 +233,7 @@ public class AutoEqualityTest {
     public void NotEqualsNull() {
         assertFalse(object.equals(null));
         assertFalse(other.equals(null));
-        for (Object o : Arrays.asList(other)) {
+        for (Object o : other) {
             assertFalse(o.equals(null));
         }
     }
@@ -233,7 +242,7 @@ public class AutoEqualityTest {
     public void equalsItselfIdentity() {
         assertTrue(object.equals(object));
         assertTrue(same.equals(same));
-        for (Object o : Arrays.asList(other)) {
+        for (Object o : other) {
             assertTrue(o.equals(o));
         }
     }
@@ -260,7 +269,7 @@ public class AutoEqualityTest {
         assertFalse(OTHER_TYPE.equals(object));
         assertFalse(other.equals(OTHER_TYPE));
         assertFalse(OTHER_TYPE.equals(other));
-        for (Object o : Arrays.asList(other)) {
+        for (Object o : other) {
             assertFalse(o.equals(OTHER_TYPE));
             assertFalse(OTHER_TYPE.equals(o));
         }
@@ -273,7 +282,7 @@ public class AutoEqualityTest {
         assertEquals(object.hashCode(), same.hashCode());
         assertNotEquals(object.hashCode(), OTHER_TYPE.hashCode());
         assertNotEquals(same.hashCode(), OTHER_TYPE.hashCode());
-        for (Object o : Arrays.asList(other)) {
+        for (Object o : other) {
             assertEquals(o.hashCode(), o.hashCode());
             assertNotEquals(o.hashCode(), OTHER_TYPE.hashCode());
         }
