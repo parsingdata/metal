@@ -68,7 +68,7 @@ public class PreTest {
     @Test
     public void testToString() {
         final Token simpleWhile = pre("pname", def("value", con(1)), eq(con(1)));
-        final String simpleWhileString = "Pre(pname,Def(value,Const(0x01)), Eq(Const(0x01)))";
+        final String simpleWhileString = "Pre(pname,Def(value,Const(0x01)),Eq(Const(0x01)))";
         assertThat(simpleWhile.toString(), is(equalTo(simpleWhileString)));
     }
 

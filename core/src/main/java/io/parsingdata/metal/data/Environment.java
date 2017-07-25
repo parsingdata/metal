@@ -85,7 +85,7 @@ public class Environment {
 
     @Override
     public String toString() {
-        return "source: " + source + "; offset: " + offset + "; order: " + order + "; callbacks: " + callbacks;
+        return getClass().getSimpleName() + "(source:" + source + ";offset:" + offset + ";order:" + order + ";callbacks:" + callbacks + ")";
     }
 
 }

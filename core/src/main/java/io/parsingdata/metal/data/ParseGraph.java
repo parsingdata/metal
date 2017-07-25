@@ -119,11 +119,11 @@ public class ParseGraph implements ParseItem {
 
     @Override
     public String toString() {
-        if (this == EMPTY) { return "graph(EMPTY)"; }
+        if (this == EMPTY) { return "pg(EMPTY)"; }
         if (head == null) {
-            return "graph(terminator:" + definition.getClass().getSimpleName() + ")";
+            return "pg(terminator:" + definition.getClass().getSimpleName() + ")";
         }
-        return "graph(" + head + ", " + tail + ", " + branched + ")";
+        return "pg(" + head + "," + tail + "," + branched + ")";
     }
 
     @Override

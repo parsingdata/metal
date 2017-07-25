@@ -42,7 +42,7 @@ public class Slice {
 
     @Override
     public String toString() {
-        return source + "@" + offset + ":" + (offset+size);
+        return getClass().getSimpleName() + "(" + source + "@" + offset + ":" + (offset+size) + ")";
     }
 
     @Override

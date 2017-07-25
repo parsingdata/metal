@@ -86,6 +86,11 @@ public abstract class Fold implements ValueExpression {
     protected abstract ValueExpression reduce(BinaryOperator<ValueExpression> reducer, Value head, Value tail);
 
     @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + values + "," + reducer + (initial == null ? "" : "," + initial) + ")";
+    }
+
+    @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
             && Objects.equals(values, ((Fold)obj).values)

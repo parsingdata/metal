@@ -56,7 +56,7 @@ public class ParseReferenceTest {
 
     @Test
     public void toStringTest() {
-        assertThat(reference.toString(), is("ref(@0)"));
+        assertThat(reference.toString(), is("pref(@0)"));
     }
 
     @Test

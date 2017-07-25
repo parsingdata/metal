@@ -96,7 +96,7 @@ public class Sub extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + makeNameFragment() + token + ", " + address + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + token + "," + address + ")";
     }
 
     @Override

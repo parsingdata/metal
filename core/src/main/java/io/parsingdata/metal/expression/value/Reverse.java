@@ -47,6 +47,11 @@ public class Reverse implements ValueExpression {
     }
 
     @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + values + ")";
+    }
+
+    @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
             && Objects.equals(values, ((Reverse)obj).values);

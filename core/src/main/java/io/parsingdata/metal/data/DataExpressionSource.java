@@ -63,7 +63,7 @@ public class DataExpressionSource extends Source {
 
     @Override
     public String toString() {
-        return dataExpression.toString() + "[" + index + "](" + graph + "," + encoding + ")";
+        return getClass().getSimpleName() + "(" + dataExpression.toString() + "[" + index + "](" + graph + "," + encoding + "))";
     }
 
     @Override

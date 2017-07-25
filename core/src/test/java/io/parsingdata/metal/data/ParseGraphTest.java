@@ -34,7 +34,6 @@ import static io.parsingdata.metal.data.selection.ByTypeTest.EMPTY_SOURCE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
-import static junit.framework.TestCase.assertNull;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -208,17 +207,17 @@ public class ParseGraphTest {
 
     @Test
     public void testSimpleToString() {
-        assertThat(pg.toString(), is("graph(h(0x68), graph(g(0x67), graph(graph(f(0x66), graph(graph(e(0x65), graph(d(0x64), graph(terminator:Def), false), false), graph(c(0x63), graph(terminator:Def), false), false), false), graph(b(0x62), graph(a(0x61), graph(EMPTY), false), false), false), false), false)"));
+        assertThat(pg.toString(), is("pg(pval(h:0x68),pg(pval(g:0x67),pg(pg(pval(f:0x66),pg(pg(pval(e:0x65),pg(pval(d:0x64),pg(terminator:Def),false),false),pg(pval(c:0x63),pg(terminator:Def),false),false),false),pg(pval(b:0x62),pg(pval(a:0x61),pg(EMPTY),false),false),false),false),false)"));
     }
 
     @Test
     public void testCycleToString() {
-        assertThat(pgc.toString(), is("graph(graph(ref(@0), graph(b(0x62), graph(terminator:Def), false), false), graph(a(0x61), graph(EMPTY), false), false)"));
+        assertThat(pgc.toString(), is("pg(pg(pref(@0),pg(pval(b:0x62),pg(terminator:Def),false),false),pg(pval(a:0x61),pg(EMPTY),false),false)"));
     }
 
     @Test
     public void testLongToString() {
-        assertThat(pgl.toString(), is("graph(graph(f(0x66), graph(terminator:Def), false), graph(e(0x65), graph(graph(graph(d(0x64), graph(terminator:Def), false), graph(c(0x63), graph(graph(terminator:Def), graph(graph(b(0x62), graph(terminator:Def), false), graph(terminator:Def), false), false), false), false), graph(a(0x61), graph(EMPTY), false), false), false), false)"));
+        assertThat(pgl.toString(), is("pg(pg(pval(f:0x66),pg(terminator:Def),false),pg(pval(e:0x65),pg(pg(pg(pval(d:0x64),pg(terminator:Def),false),pg(pval(c:0x63),pg(pg(terminator:Def),pg(pg(pval(b:0x62),pg(terminator:Def),false),pg(terminator:Def),false),false),false),false),pg(pval(a:0x61),pg(EMPTY),false),false),false),false)"));
     }
 
     @Rule
