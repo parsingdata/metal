@@ -43,7 +43,7 @@ public class ByteStreamSource extends Source {
 
     @Override
     public String toString() {
-        return input.toString();
+        return getClass().getSimpleName() + "(" + input.toString() + ")";
     }
 
     @Override

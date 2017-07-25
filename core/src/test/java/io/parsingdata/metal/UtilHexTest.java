@@ -19,25 +19,14 @@ package io.parsingdata.metal;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Util.inflate;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
-
-import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.expression.value.Value;
 
 @RunWith(Parameterized.class)
 public class UtilHexTest {
@@ -51,22 +40,19 @@ public class UtilHexTest {
     @Parameterized.Parameters(name = "{1}")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                { new byte[] { 0x01, 0x23, 0x45, 0x67, (byte) 0x89, (byte) 0xab, (byte) 0xcd, (byte) 0xef}, "0123456789ABCDEF" },
-                { new byte[] { -1 }, "FF" },
-                { new byte[0], "" }
+            { new byte[] { 0x01, 0x23, 0x45, 0x67, (byte) 0x89, (byte) 0xab, (byte) 0xcd, (byte) 0xef}, "0123456789ABCDEF" },
+            { new byte[] { -1 }, "FF" },
+            { new byte[0], "" },
+            { new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A }, "0102030405060708090A" },
+            { new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B }, "0102030405060708090A0B" },
+            { new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C }, "0102030405060708090A..." },
+            { new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D }, "0102030405060708090A..." }
         });
     }
 
     @Test
     public void byteToHex() {
-        assertThat(Util.bytesToHexString(input), is(equalTo(output)));
-    }
-
-    @Test
-    public void inflateDataFormatError() {
-        final ImmutableList<Optional<Value>> result = inflate(con(0xffffffff)).eval(stream().order, enc());
-        assertEquals(1, result.size);
-        assertFalse(result.head.isPresent());
+        assertThat(Util.bytesToShortHexString(input), is(equalTo(output)));
     }
 
 }

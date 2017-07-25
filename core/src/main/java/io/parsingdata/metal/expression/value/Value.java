@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static io.parsingdata.metal.Util.bytesToShortHexString;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
@@ -57,7 +58,7 @@ public class Value {
 
     @Override
     public String toString() {
-        return "0x" + Util.bytesToHexString(getValue());
+        return "0x" + bytesToShortHexString(getValue());
     }
 
     @Override

@@ -35,6 +35,9 @@ import static io.parsingdata.metal.Shorthand.eqNum;
 import static io.parsingdata.metal.Shorthand.eqStr;
 import static io.parsingdata.metal.Shorthand.exp;
 import static io.parsingdata.metal.Shorthand.first;
+import static io.parsingdata.metal.Shorthand.fold;
+import static io.parsingdata.metal.Shorthand.foldLeft;
+import static io.parsingdata.metal.Shorthand.foldRight;
 import static io.parsingdata.metal.Shorthand.gtNum;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.ltNum;
@@ -52,6 +55,7 @@ import static io.parsingdata.metal.Shorthand.pre;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.repn;
+import static io.parsingdata.metal.Shorthand.rev;
 import static io.parsingdata.metal.Shorthand.self;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
@@ -116,7 +120,7 @@ public class ToStringTest {
     private Token t() { return any("a"); }
 
     private ValueExpression v() {
-        return bytes(neg(add(div(mod(mul(sub(last(ref(n())), first(nth(exp(ref(n()), con(1)), con(1)))), con(1)), cat(ref(n()), ref(t()))), add(self, add(offset(ref(n())), add(currentOffset, count(ref(n())))))), elvis(ref(n()), ref(n())))));
+        return fold(foldLeft(foldRight(rev(bytes(neg(add(div(mod(mul(sub(last(ref(n())), first(nth(exp(ref(n()), con(1)), con(1)))), con(1)), cat(ref(n()), ref(t()))), add(self, add(offset(ref(n())), add(currentOffset, count(ref(n())))))), elvis(ref(n()), ref(n())))))), Shorthand::add, ref(n())), Shorthand::add), Shorthand::add, ref(n()));
     }
 
     @Test
@@ -154,17 +158,17 @@ public class ToStringTest {
     @Test
     public void data() {
         final Environment environment = stream(1, 2);
-        final String envString = "source: InMemoryByteStream(2); offset: 0; order: graph(EMPTY); callbacks: ";
+        final String envString = "Environment(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(EMPTY);callbacks:)";
         assertEquals(envString, environment.toString());
         final Optional<Environment> result = Optional.of(environment);
         assertEquals("Optional[" + environment + "]", result.toString());
         final ParseValue pv1 = new ParseValue("name", NONE, createFromBytes(new byte[]{1, 2}), enc());
-        final String pv1String = "name(0x0102)";
+        final String pv1String = "pval(name:0x0102)";
         final Optional<Value> ov1 = Optional.of(pv1);
         final Optional<Value> ov2 = Optional.of(new Value(createFromBytes(new byte[]{3}), enc()));
         assertEquals(">Optional[0x03]>Optional[" + pv1String + "]", ImmutableList.create(ov1).add(ov2).toString());
         final ParseValue pv2 = new ParseValue("two", NONE, createFromBytes(new byte[]{3, 4}), enc());
-        final String pv2String = "two(0x0304)";
+        final String pv2String = "pval(two:0x0304)";
         assertEquals(">" + pv2String + ">" + pv1String, ImmutableList.create(pv1).add(pv2).toString());
         assertEquals(">" + pv2String + ">" + pv1String, ImmutableList.create(pv1).add(pv2).toString());
     }
@@ -172,34 +176,35 @@ public class ToStringTest {
     @Test
     public void slice() throws IOException {
         final ParseValue pv1 = new ParseValue("name", NONE, createFromBytes(new byte[]{1, 2}), enc());
-        assertEquals("0102@0:2", pv1.slice.toString());
+        assertEquals("Slice(ConstantSource(0x0102)@0:2)", pv1.slice.toString());
         final Environment oneValueEnvironment = stream().add(pv1);
         final Environment twoValueEnvironment = oneValueEnvironment.add(new ParseValue("name2", NONE, new DataExpressionSource(ref("name"), 0, oneValueEnvironment.order, enc()).slice(0, 2), enc()));
         final String dataExpressionSliceString = getValue(twoValueEnvironment.order, "name2").slice.toString();
-        assertTrue(dataExpressionSliceString.startsWith("NameRef(name)[0]("));
-        assertTrue(dataExpressionSliceString.endsWith(")@0:2"));
+        assertTrue(dataExpressionSliceString.startsWith("Slice(DataExpressionSource(NameRef(name)[0]("));
+        assertTrue(dataExpressionSliceString.endsWith(")@0:2)"));
     }
 
     @Test
     public void callback() {
-        final String emptyStreamName = "InMemoryByteStream(0)";
-        final String emptyGraphName = "graph(EMPTY)";
+        final String emptyStreamName = "ByteStreamSource(InMemoryByteStream(0))";
+        final String emptyGraphName = "pg(EMPTY)";
         final InMemoryByteStream emptyStream = new InMemoryByteStream(new byte[] {});
         final Environment empty = new Environment(emptyStream);
-        final String prefix = "source: " + emptyStreamName + "; offset: 0; order: " + emptyGraphName + "; callbacks: ";
+        final String prefix = "Environment(source:" + emptyStreamName + ";offset:0;order:" + emptyGraphName + ";callbacks:";
         final String genericPrefix = "generic: ";
         final String tokenPrefix = "token: ";
-        assertEquals(prefix, empty.toString());
+        final String suffix = ")";
+        assertEquals(prefix + suffix, empty.toString());
         final String genericCallbackName = "genericName";
         final Callbacks singleCallbacks = Callbacks.create().add(makeToken("a"), makeCallback("first")).add(makeCallback(genericCallbackName));
         final Environment one = new Environment(emptyStream, singleCallbacks);
         final String tokenCallback1Name = ">a->first";
-        final String oneName = prefix + genericPrefix + genericCallbackName + "; " + tokenPrefix + tokenCallback1Name;
+        final String oneName = prefix + genericPrefix + genericCallbackName + "; " + tokenPrefix + tokenCallback1Name + suffix;
         assertEquals(oneName, one.toString());
         final Callbacks doubleCallbacks = Callbacks.create().add(makeToken("a"), makeCallback("first")).add(makeToken("b"), makeCallback("second"));
         final Environment two = new Environment(emptyStream, doubleCallbacks);
         final String tokenCallback2Name = ">b->second";
-        final String twoName = prefix + tokenPrefix + tokenCallback2Name + tokenCallback1Name;
+        final String twoName = prefix + tokenPrefix + tokenCallback2Name + tokenCallback1Name + suffix;
         assertEquals(twoName, two.toString());
     }
 

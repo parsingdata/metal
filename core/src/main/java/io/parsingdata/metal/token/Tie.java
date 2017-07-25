@@ -82,7 +82,7 @@ public class Tie extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + makeNameFragment() + token + ", " + dataExpression + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + token + "," + dataExpression + ")";
     }
 
     @Override

@@ -34,6 +34,8 @@ public final class Util {
 
     private Util() {}
 
+    final public static int MAX_VALUES_IN_HEX_STRING = 10;
+
     final private static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray(); // Private because array content is mutable.
 
     public static <T>T checkNotNull(final T argument, final String name) {
@@ -59,10 +61,21 @@ public final class Util {
             && object.getClass() == other.getClass();
     }
 
-    public static String bytesToHexString(final byte[] bytes) {
+    public static String bytesToShortHexString(final byte[] bytes) {
         checkNotNull(bytes, "bytes");
-        final char[] hexChars = new char[bytes.length * 2];
-        for (int j = 0; j < bytes.length; j++) {
+        if (bytes.length > (MAX_VALUES_IN_HEX_STRING + 1)) {
+            final char[] hexChars = new char[(MAX_VALUES_IN_HEX_STRING * 2) + 3];
+            hexChars[hexChars.length-1] = '.';
+            hexChars[hexChars.length-2] = '.';
+            hexChars[hexChars.length-3] = '.';
+            return fillHexDigits(bytes, hexChars, MAX_VALUES_IN_HEX_STRING);
+        } else {
+            return fillHexDigits(bytes, new char[bytes.length * 2], bytes.length);
+        }
+    }
+
+    private static String fillHexDigits(final byte[] bytes, final char[] hexChars, final int count) {
+        for (int j = 0; j < count; j++) {
             final int v = bytes[j] & 0xFF;
             hexChars[j * 2] = HEX_ARRAY[v >>> 4];
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];

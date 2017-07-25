@@ -72,7 +72,7 @@ public class While extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + makeNameFragment() + token + ", " + predicate + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + token + "," + predicate + ")";
     }
 
     @Override

@@ -66,7 +66,7 @@ public class ParseValueTest {
 
     @Test
     public void toStringTest() {
-        assertThat(value.toString(), is("value(0x01)"));
+        assertThat(value.toString(), is("pval(value:0x01)"));
     }
 
     @Test
