@@ -64,17 +64,13 @@ public final class Util {
     public static String bytesToShortHexString(final byte[] bytes) {
         checkNotNull(bytes, "bytes");
         if (bytes.length > (MAX_VALUES_IN_HEX_STRING + 1)) {
-            final char[] hexChars = new char[(MAX_VALUES_IN_HEX_STRING * 2) + 3];
-            hexChars[hexChars.length-1] = '.';
-            hexChars[hexChars.length-2] = '.';
-            hexChars[hexChars.length-3] = '.';
-            return fillHexDigits(bytes, hexChars, MAX_VALUES_IN_HEX_STRING);
-        } else {
-            return fillHexDigits(bytes, new char[bytes.length * 2], bytes.length);
+            return fillHexDigits(bytes, MAX_VALUES_IN_HEX_STRING) + "...";
         }
+        return fillHexDigits(bytes, bytes.length);
     }
 
-    private static String fillHexDigits(final byte[] bytes, final char[] hexChars, final int count) {
+    private static String fillHexDigits(final byte[] bytes, final int count) {
+        char[] hexChars = new char[count * 2];
         for (int j = 0; j < count; j++) {
             final int v = bytes[j] & 0xFF;
             hexChars[j * 2] = HEX_ARRAY[v >>> 4];
