@@ -22,7 +22,7 @@ import static java.math.BigInteger.ZERO;
 import static io.parsingdata.metal.SafeTrampoline.complete;
 import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.transformation.Reversal.reverse;
+import static io.parsingdata.metal.data.Selection.reverse;
 
 import java.math.BigInteger;
 import java.util.Objects;

@@ -22,12 +22,10 @@ import static io.parsingdata.metal.util.ClassDefinition.checkUtilityClass;
 
 import org.junit.Test;
 
+import io.parsingdata.metal.data.Selection;
 import io.parsingdata.metal.data.selection.ByName;
-import io.parsingdata.metal.data.selection.ByOffset;
-import io.parsingdata.metal.data.selection.ByPredicate;
 import io.parsingdata.metal.data.selection.ByToken;
 import io.parsingdata.metal.data.selection.ByType;
-import io.parsingdata.metal.data.transformation.Reversal;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.value.ConstantFactory;
@@ -39,13 +37,11 @@ public class UtilityClassTest {
     public void utilityClasses() throws ReflectiveOperationException {
         checkUtilityClass(Shorthand.class);
         checkUtilityClass(Util.class);
-        checkUtilityClass(Reversal.class);
         checkUtilityClass(ByName.class);
-        checkUtilityClass(ByOffset.class);
         checkUtilityClass(ByToken.class);
         checkUtilityClass(ByType.class);
         checkUtilityClass(ConstantFactory.class);
-        checkUtilityClass(ByPredicate.class);
+        checkUtilityClass(Selection.class);
     }
 
     // Metal uses enums to prevent the use of difficult to understand boolean arguments.

@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.data.selection;
+package io.parsingdata.metal.data;
 
 import static org.junit.Assert.assertEquals;
 
-import static io.parsingdata.metal.data.selection.ByOffset.findItemAtOffset;
+import static io.parsingdata.metal.Shorthand.rep;
+import static io.parsingdata.metal.data.Selection.findItemAtOffset;
+import static io.parsingdata.metal.data.Selection.getAllValues;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
+import java.util.Optional;
 
+import org.junit.Assert;
 import org.junit.Test;
 
-import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.data.Slice;
-import io.parsingdata.metal.data.Source;
 import io.parsingdata.metal.encoding.Encoding;
 
-public class ByOffsetTest {
+public class SelectionTest {
 
     private final Source source = new Source() { @Override protected byte[] getData(long offset, int size) throws IOException { return new byte[0]; } };
 
@@ -42,6 +43,15 @@ public class ByOffsetTest {
             findItemAtOffset(ImmutableList.create(ParseGraph.EMPTY.add(new ParseValue("two", any("a"), new Slice(source, 2, new byte[] { 1, 2 }), new Encoding()))
                                                                   .add(new ParseValue("zero", any("a"), new Slice(source, 0, new byte[] { 1, 2 }), new Encoding()))
                                                                   .add(new ParseValue("the_one", any("a"), new Slice(source, 1, new byte[] { 1, 2 }), new Encoding()))), 0, source).computeResult().get().asGraph().head.asValue().name);
+    }
+
+    @Test
+    public void limit() throws IOException {
+        Optional<Environment> environment = rep(any("a")).parse(stream(1, 2, 3, 4, 5), enc());
+        Assert.assertTrue(environment.isPresent());
+        for (int i = 0; i < 7; i++) {
+            assertEquals(Math.min(5, i), getAllValues(environment.get().order, (value) -> value.matches("a"), i).size);
+        }
     }
 
 }

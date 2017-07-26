@@ -17,7 +17,7 @@
 package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.data.transformation.Reversal.reverse;
+import static io.parsingdata.metal.data.Selection.reverse;
 
 import java.util.Optional;
 import java.util.function.BinaryOperator;

@@ -38,7 +38,7 @@ import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.data.selection.ByToken.get;
 import static io.parsingdata.metal.data.selection.ByToken.getAll;
-import static io.parsingdata.metal.data.selection.ByToken.getAllRoots;
+import static io.parsingdata.metal.data.Selection.getAllRoots;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -57,7 +57,7 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.data.transformation.Reversal;
+import io.parsingdata.metal.data.Selection;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
@@ -376,7 +376,7 @@ public class ByTokenTest {
     @Test
     public void getAllRootsSelfRecursive() throws IOException {
         final ParseGraph graph = parseResultGraph(stream(0xA, 3, 0xB, 2, 0xC, 0, 0xD, 0, 0xE, 0, 0xF, 0), SELF_REC);
-        ImmutableList<ParseItem> items = ByToken.getAllRoots(graph, SELF_REC);
+        ImmutableList<ParseItem> items = Selection.getAllRoots(graph, SELF_REC);
         assertThat(items.size, is(equalTo(6L)));
 
         for (int value = 0xF; value >= 0xA; value--) {
@@ -387,7 +387,7 @@ public class ByTokenTest {
     }
 
     private static <T> T lastItem(final ImmutableList<T> items) {
-        return Reversal.reverse(items).head;
+        return Selection.reverse(items).head;
     }
 
 }

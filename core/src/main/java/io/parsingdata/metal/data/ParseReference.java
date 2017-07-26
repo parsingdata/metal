@@ -17,8 +17,8 @@
 package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.selection.ByOffset.findItemAtOffset;
-import static io.parsingdata.metal.data.selection.ByToken.getAllRoots;
+import static io.parsingdata.metal.data.Selection.findItemAtOffset;
+import static io.parsingdata.metal.data.Selection.getAllRoots;
 
 import java.util.Objects;
 import java.util.Optional;

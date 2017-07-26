@@ -21,7 +21,7 @@ import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
-import static io.parsingdata.metal.data.selection.ByOffset.hasRootAtOffset;
+import static io.parsingdata.metal.data.Selection.hasRootAtOffset;
 
 import java.io.IOException;
 import java.util.Objects;

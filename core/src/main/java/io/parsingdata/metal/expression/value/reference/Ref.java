@@ -19,8 +19,8 @@ package io.parsingdata.metal.expression.value.reference;
 import static io.parsingdata.metal.SafeTrampoline.complete;
 import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.selection.ByPredicate.NO_LIMIT;
-import static io.parsingdata.metal.data.selection.ByPredicate.getAllValues;
+import static io.parsingdata.metal.data.Selection.NO_LIMIT;
+import static io.parsingdata.metal.data.Selection.getAllValues;
 
 import java.util.Objects;
 import java.util.Optional;

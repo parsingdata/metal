@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static io.parsingdata.metal.data.transformation.Reversal.reverse;
+import static io.parsingdata.metal.data.Selection.reverse;
 
 import java.util.Objects;
 import java.util.Optional;
