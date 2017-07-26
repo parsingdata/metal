@@ -21,11 +21,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.currentOffset;
+import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eqNum;
 import static io.parsingdata.metal.Shorthand.rep;
-import static io.parsingdata.metal.Shorthand.self;
+import static io.parsingdata.metal.Shorthand.SELF;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
@@ -49,7 +49,7 @@ public class CurrentOffsetTest {
         final Optional<Environment> result = def("a", con(size)).parse(new Environment(new InMemoryByteStream(data)), enc());
         assertTrue(result.isPresent());
 
-        final ImmutableList<Optional<Value>> offset = currentOffset.eval(result.get().order, enc());
+        final ImmutableList<Optional<Value>> offset = CURRENT_OFFSET.eval(result.get().order, enc());
 
         assertNotNull(offset);
         assertEquals(1, offset.size);
@@ -76,7 +76,7 @@ public class CurrentOffsetTest {
         final Environment environment = new Environment(new InMemoryByteStream(stream));
 
         // value - offset + 1 should be 0:
-        final Token offsetValidation = rep(def("byte", con(1), eqNum(sub(self, sub(currentOffset, con(1))), con(0))));
+        final Token offsetValidation = rep(def("byte", con(1), eqNum(sub(SELF, sub(CURRENT_OFFSET, con(1))), con(0))));
 
         final Optional<Environment> result = offsetValidation.parse(environment, new Encoding(Sign.UNSIGNED));
         assertTrue(result.isPresent());

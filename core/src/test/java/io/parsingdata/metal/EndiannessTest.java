@@ -22,7 +22,7 @@ import static io.parsingdata.metal.Shorthand.and;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
-import static io.parsingdata.metal.Shorthand.self;
+import static io.parsingdata.metal.Shorthand.SELF;
 import static io.parsingdata.metal.Shorthand.shr;
 import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
@@ -37,7 +37,7 @@ public class EndiannessTest {
 
     @Test
     public void andAcrossByteBoundaryLE() throws IOException {
-        final Token token = def("x", con(2), eq(and(self, con(0x03, 0xff)), con(0x01, 0x1b)));
+        final Token token = def("x", con(2), eq(and(SELF, con(0x03, 0xff)), con(0x01, 0x1b)));
         assertTrue(token.parse(stream(0x1b, 0x81), le()).isPresent());
     }
 

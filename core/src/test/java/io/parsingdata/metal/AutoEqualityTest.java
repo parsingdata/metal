@@ -21,8 +21,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
+import static io.parsingdata.metal.Shorthand.TRUE;
 import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.expTrue;
 import static io.parsingdata.metal.Shorthand.not;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Util.createFromBytes;
@@ -122,7 +122,7 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> TOKENS = Arrays.asList(() -> any("a"), () -> any("b"));
     private static final List<Supplier<Object>> TOKEN_ARRAYS = Arrays.asList(() -> new Token[] { any("a"), any("b")}, () -> new Token[] { any("b"), any("c") }, () -> new Token[] { any("a"), any("b"), any("c") });
     private static final List<Supplier<Object>> VALUE_EXPRESSIONS = Arrays.asList(() -> con(1), () -> con(2));
-    private static final List<Supplier<Object>> EXPRESSIONS = Arrays.asList(() -> expTrue(), () -> not(expTrue()));
+    private static final List<Supplier<Object>> EXPRESSIONS = Arrays.asList(() -> TRUE, () -> not(TRUE));
     private static final List<Supplier<Object>> VALUES = Arrays.asList(() -> ConstantFactory.createFromString("a", enc()), () -> ConstantFactory.createFromString("b", enc()), () -> ConstantFactory.createFromNumeric(1L, signed()));
     private static final List<Supplier<Object>> REDUCERS = Arrays.asList(() -> (BinaryOperator<ValueExpression>) Shorthand::cat, () -> (BinaryOperator<ValueExpression>) Shorthand::div);
     private static final List<Supplier<Object>> SLICES = Arrays.asList(() -> createFromBytes(new byte[] { 1, 2 }), () -> new Slice(new DataExpressionSource(ref("a"), 1, ParseGraph.EMPTY, enc()), 0, new byte[] { 0, 0 }));

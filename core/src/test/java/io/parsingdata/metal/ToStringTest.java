@@ -26,7 +26,7 @@ import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.count;
-import static io.parsingdata.metal.Shorthand.currentOffset;
+import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.elvis;
@@ -56,7 +56,7 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.rev;
-import static io.parsingdata.metal.Shorthand.self;
+import static io.parsingdata.metal.Shorthand.SELF;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.tie;
@@ -120,7 +120,7 @@ public class ToStringTest {
     private Token t() { return any("a"); }
 
     private ValueExpression v() {
-        return fold(foldLeft(foldRight(rev(bytes(neg(add(div(mod(mul(sub(last(ref(n())), first(nth(exp(ref(n()), con(1)), con(1)))), con(1)), cat(ref(n()), ref(t()))), add(self, add(offset(ref(n())), add(currentOffset, count(ref(n())))))), elvis(ref(n()), ref(n())))))), Shorthand::add, ref(n())), Shorthand::add), Shorthand::add, ref(n()));
+        return fold(foldLeft(foldRight(rev(bytes(neg(add(div(mod(mul(sub(last(ref(n())), first(nth(exp(ref(n()), con(1)), con(1)))), con(1)), cat(ref(n()), ref(t()))), add(SELF, add(offset(ref(n())), add(CURRENT_OFFSET, count(ref(n())))))), elvis(ref(n()), ref(n())))))), Shorthand::add, ref(n())), Shorthand::add), Shorthand::add, ref(n()));
     }
 
     @Test
@@ -144,7 +144,7 @@ public class ToStringTest {
     @Test
     public void specialExpressions() {
         assertTrue(v().toString().contains("Self"));
-        assertEquals("Self", self.toString());
+        assertEquals("Self", SELF.toString());
     }
 
     @Test

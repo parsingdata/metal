@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.count;
-import static io.parsingdata.metal.Shorthand.currentOffset;
+import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.eqNum;
@@ -56,7 +56,7 @@ public class DefinitionTest {
     public static final Token OPT_2 = opt(DEF_TWO);
     public static final Token PRE_1 = pre(DEF_ONE, eq(con(0), con(0)));
     public static final Token REPN_1 = repn(DEF_ONE, con(1));
-    public static final Token SUB_2 = sub(DEF_TWO, currentOffset);
+    public static final Token SUB_2 = sub(DEF_TWO, CURRENT_OFFSET);
     public static final Token WHL_1 = whl(DEF_ONE, eqNum(con(0), count(ref("one"))));
     public static final Token COMPOSED = seq(WHL_1, REPN_1, REP_1, CHO_12, OPT_2, PRE_1, SUB_2);
 

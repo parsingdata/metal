@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.empty;
+import static io.parsingdata.metal.Shorthand.EMPTY;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
@@ -87,7 +87,7 @@ public class DefSizeTest {
     public void zeroSizeDef() throws IOException {
         assertTrue(seq(
             def("twentyone", con(1), eq(con(21))),
-            empty,
+            EMPTY,
             def("fortytwo", con(1), eq(con(42)))).parse(stream(21, 42), enc()).isPresent());
     }
 

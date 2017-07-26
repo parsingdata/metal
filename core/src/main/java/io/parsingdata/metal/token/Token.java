@@ -52,7 +52,7 @@ public abstract class Token {
 
     public static final String NO_NAME = "";
     public static final String SEPARATOR = ".";
-    public static final String EMPTY = "__EMPTY__";
+    public static final String EMPTY_NAME = "__EMPTY__";
 
     public final String name;
     public final Encoding encoding;

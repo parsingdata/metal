@@ -18,7 +18,7 @@ package io.parsingdata.metal;
 
 import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.currentOffset;
+import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.eqNum;
@@ -63,7 +63,7 @@ public class ConditionalTokenTest extends ParameterizedParse {
                                               def("c", con(1), eqNum(con(3))));
     
     private static final Token whileToken = seq(any("size"),
-                                                whl(any("value"), ltNum(currentOffset, add(ref("size"), add(offset(last(ref("size"))), con(1))))),
+                                                whl(any("value"), ltNum(CURRENT_OFFSET, add(ref("size"), add(offset(last(ref("size"))), con(1))))),
                                                 def("footer", con(1), eq(con(0xff))));
 
 }
