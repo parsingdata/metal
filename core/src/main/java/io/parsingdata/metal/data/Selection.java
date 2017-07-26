@@ -32,7 +32,6 @@ public final class Selection {
 
     private Selection() {}
 
-    // Migrated from ByOffset
     public static boolean hasRootAtOffset(final ParseGraph graph, final Token definition, final long offset, final Source source) {
         return findItemAtOffset(getAllRoots(graph, definition), offset, source).computeResult().isPresent();
     }
@@ -68,15 +67,14 @@ public final class Selection {
         return head.isValue() ? getLowest(lowest, head.asValue()) : lowest;
     }
 
-    private static ImmutableList<ParseGraph> addIfGraph(final ImmutableList<ParseGraph> graphList, final ParseItem head) {
-        return head.isGraph() ? graphList.add(head.asGraph()) : graphList;
-    }
-
     private static ParseValue getLowest(final ParseValue lowest, final ParseValue value) {
         return lowest == null || lowest.slice.offset > value.slice.offset ? value : lowest;
     }
 
-    // Migrated from ByPredicate
+    private static ImmutableList<ParseGraph> addIfGraph(final ImmutableList<ParseGraph> graphList, final ParseItem head) {
+        return head.isGraph() ? graphList.add(head.asGraph()) : graphList;
+    }
+
     public static ImmutableList<ParseValue> getAllValues(final ParseGraph graph, final Predicate<ParseValue> predicate, final int limit) {
         return getAllValues(ImmutableList.create(graph), new ImmutableList<>(), predicate, limit).computeResult();
     }
@@ -102,7 +100,16 @@ public final class Selection {
         return valueList;
     }
 
-    // Migrated from ByToken
+    public static <T> ImmutableList<T> reverse(final ImmutableList<T> list) {
+        if (list.isEmpty()) { return list; }
+        return reverse(list.tail, ImmutableList.create(list.head)).computeResult();
+    }
+
+    private static <T> SafeTrampoline<ImmutableList<T>> reverse(final ImmutableList<T> oldList, final ImmutableList<T> newList) {
+        if (oldList.isEmpty()) { return complete(() -> newList); }
+        return intermediate(() -> reverse(oldList.tail, newList.add(oldList.head)));
+    }
+
     public static ImmutableList<ParseItem> getAllRoots(final ParseGraph graph, final Token definition) {
         return getAllRootsRecursive(ImmutableList.create(new Pair(checkNotNull(graph, "graph"), null)), checkNotNull(definition, "definition"), new ImmutableList<>()).computeResult();
     }
@@ -116,20 +123,10 @@ public final class Selection {
             final ParseGraph itemGraph = item.asGraph();
             return intermediate(() -> getAllRootsRecursive(backlog.tail.add(new Pair(itemGraph.head, itemGraph))
                                                                        .add(new Pair(itemGraph.tail, itemGraph)),
-                                                                       definition, nextResult));
+                                                           definition,
+                                                           nextResult));
         }
         return intermediate(() -> getAllRootsRecursive(backlog.tail, definition, nextResult));
-    }
-
-    // Migrated from Reversal
-    public static <T> ImmutableList<T> reverse(final ImmutableList<T> list) {
-        if (list.isEmpty()) { return list; }
-        return reverse(list.tail, ImmutableList.create(list.head)).computeResult();
-    }
-
-    private static <T> SafeTrampoline<ImmutableList<T>> reverse(final ImmutableList<T> oldList, final ImmutableList<T> newList) {
-        if (oldList.isEmpty()) { return complete(() -> newList); }
-        return intermediate(() -> reverse(oldList.tail, newList.add(oldList.head)));
     }
 
     static class Pair {
