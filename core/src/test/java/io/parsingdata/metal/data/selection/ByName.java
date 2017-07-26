@@ -17,11 +17,12 @@
 package io.parsingdata.metal.data.selection;
 
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.transformation.Reversal.reverse;
+import static io.parsingdata.metal.data.Selection.reverse;
 
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.Selection;
 
 public final class ByName {
 
@@ -33,7 +34,7 @@ public final class ByName {
      * @return The first value (bottom-up) with the provided name in the provided graph
      */
     public static ParseValue getValue(final ParseGraph graph, final String name) {
-        return ByPredicate.getAllValues(graph, (value) -> value.matches(name), 1).head;
+        return Selection.getAllValues(graph, (value) -> value.matches(name), 1).head;
     }
 
     /**
@@ -44,7 +45,7 @@ public final class ByName {
     public static ImmutableList<ParseValue> getAllValues(final ParseGraph graph, final String name) {
         checkNotNull(graph, "graph");
         checkNotNull(name, "name");
-        return reverse(ByPredicate.getAllValues(graph, (value) -> value.matches(name)));
+        return reverse(Selection.getAllValues(graph, (value) -> value.matches(name)));
     }
 
     public static ParseValue get(final ImmutableList<ParseValue> list, final String name) {

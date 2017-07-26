@@ -16,11 +16,8 @@
 
 package io.parsingdata.metal.data.selection;
 
-import static io.parsingdata.metal.SafeTrampoline.complete;
-import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import io.parsingdata.metal.SafeTrampoline;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
@@ -65,34 +62,6 @@ public final class ByToken {
             return results.add(getAllRecursive(head.asGraph(), definition));
         }
         return results;
-    }
-
-    public static ImmutableList<ParseItem> getAllRoots(final ParseGraph graph, final Token definition) {
-        return getAllRootsRecursive(ImmutableList.create(new Pair(checkNotNull(graph, "graph"), null)), checkNotNull(definition, "definition"), new ImmutableList<>()).computeResult();
-    }
-
-    private static SafeTrampoline<ImmutableList<ParseItem>> getAllRootsRecursive(final ImmutableList<Pair> backlog, final Token definition, final ImmutableList<ParseItem> rootList) {
-        if (backlog.isEmpty()) { return complete(() -> rootList); }
-        final ParseItem item = backlog.head.item;
-        final ParseGraph parent = backlog.head.parent;
-        final ImmutableList<ParseItem> nextResult = item.getDefinition().equals(definition) && (parent == null || !parent.getDefinition().equals(definition)) ? rootList.add(item) : rootList;
-        if (item.isGraph() && !item.asGraph().isEmpty()) {
-            final ParseGraph itemGraph = item.asGraph();
-            return intermediate(() -> getAllRootsRecursive(backlog.tail.add(new Pair(itemGraph.head, itemGraph))
-                                                                       .add(new Pair(itemGraph.tail, itemGraph)),
-                                                                       definition, nextResult));
-        }
-        return intermediate(() -> getAllRootsRecursive(backlog.tail, definition, nextResult));
-    }
-
-    static class Pair {
-        public final ParseItem item;
-        public final ParseGraph parent;
-
-        Pair(final ParseItem item, final ParseGraph parent) {
-            this.item = checkNotNull(item, "item");
-            this.parent = parent;
-        }
     }
 
 }
