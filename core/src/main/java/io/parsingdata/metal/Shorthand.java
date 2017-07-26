@@ -30,7 +30,9 @@ import io.parsingdata.metal.expression.comparison.ComparisonExpression;
 import io.parsingdata.metal.expression.comparison.Eq;
 import io.parsingdata.metal.expression.comparison.EqNum;
 import io.parsingdata.metal.expression.comparison.EqStr;
+import io.parsingdata.metal.expression.comparison.GtEqNum;
 import io.parsingdata.metal.expression.comparison.GtNum;
+import io.parsingdata.metal.expression.comparison.LtEqNum;
 import io.parsingdata.metal.expression.comparison.LtNum;
 import io.parsingdata.metal.expression.logical.And;
 import io.parsingdata.metal.expression.logical.BinaryLogicalExpression;
@@ -208,8 +210,12 @@ public final class Shorthand {
     public static ComparisonExpression eqStr(final ValueExpression value, final ValueExpression predicate) { return new EqStr(value, predicate); }
     public static ComparisonExpression eqNum(final ValueExpression predicate) { return new EqNum(null, predicate); }
     public static ComparisonExpression eqNum(final ValueExpression value, final ValueExpression predicate) { return new EqNum(value, predicate); }
+    public static ComparisonExpression gtEqNum(final ValueExpression predicate) { return new GtEqNum(null, predicate); }
+    public static ComparisonExpression gtEqNum(final ValueExpression value, final ValueExpression predicate) { return new GtEqNum(value, predicate); }
     public static ComparisonExpression gtNum(final ValueExpression predicate) { return new GtNum(null, predicate); }
     public static ComparisonExpression gtNum(final ValueExpression value, final ValueExpression predicate) { return new GtNum(value, predicate); }
+    public static ComparisonExpression ltEqNum(final ValueExpression predicate) { return new LtEqNum(null, predicate); }
+    public static ComparisonExpression ltEqNum(final ValueExpression value, final ValueExpression predicate) { return new LtEqNum(value, predicate); }
     public static ComparisonExpression ltNum(final ValueExpression predicate) { return new LtNum(null, predicate); }
     public static ComparisonExpression ltNum(final ValueExpression value, final ValueExpression predicate) { return new LtNum(value, predicate); }
 

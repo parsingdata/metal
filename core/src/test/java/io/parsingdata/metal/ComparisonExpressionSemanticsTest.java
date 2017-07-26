@@ -25,7 +25,9 @@ import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.eqNum;
 import static io.parsingdata.metal.Shorthand.eqStr;
+import static io.parsingdata.metal.Shorthand.gtEqNum;
 import static io.parsingdata.metal.Shorthand.gtNum;
+import static io.parsingdata.metal.Shorthand.ltEqNum;
 import static io.parsingdata.metal.Shorthand.ltNum;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.SELF;
@@ -52,9 +54,15 @@ public class ComparisonExpressionSemanticsTest extends ParameterizedParse {
         return Arrays.asList(new Object[][] {
             { "1 == 1(eqNum)", numericCompare(1, eqNum(ref("a"))), stream(1, 1), enc(), true },
             { "2 == 1(eqNum)", numericCompare(1, eqNum(ref("a"))), stream(1, 2), enc(), false },
+            { "1 >= 1", numericCompare(1, gtEqNum(ref("a"))), stream(1, 1), enc(), true },
+            { "2 >= 1", numericCompare(1, gtEqNum(ref("a"))), stream(1, 2), enc(), true },
+            { "1 >= 2", numericCompare(1, gtEqNum(ref("a"))), stream(2, 1), enc(), false },
             { "1 > 1", numericCompare(1, gtNum(ref("a"))), stream(1, 1), enc(), false },
             { "2 > 1", numericCompare(1, gtNum(ref("a"))), stream(1, 2), enc(), true },
             { "1 > 2", numericCompare(1, gtNum(ref("a"))), stream(2, 1), enc(), false },
+            { "1 <= 1", numericCompare(1, ltEqNum(ref("a"))), stream(1, 1), enc(), true },
+            { "2 <= 1", numericCompare(1, ltEqNum(ref("a"))), stream(1, 2), enc(), false },
+            { "1 <= 2", numericCompare(1, ltEqNum(ref("a"))), stream(2, 1), enc(), true },
             { "1 < 1", numericCompare(1, ltNum(ref("a"))), stream(1, 1), enc(), false },
             { "2 < 1", numericCompare(1, ltNum(ref("a"))), stream(1, 2), enc(), false },
             { "1 < 2", numericCompare(1, ltNum(ref("a"))), stream(2, 1), enc(), true },

@@ -19,6 +19,8 @@ package io.parsingdata.metal;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
+import static io.parsingdata.metal.Shorthand.SELF;
 import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.and;
 import static io.parsingdata.metal.Shorthand.bytes;
@@ -26,7 +28,6 @@ import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.count;
-import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.elvis;
@@ -38,8 +39,10 @@ import static io.parsingdata.metal.Shorthand.first;
 import static io.parsingdata.metal.Shorthand.fold;
 import static io.parsingdata.metal.Shorthand.foldLeft;
 import static io.parsingdata.metal.Shorthand.foldRight;
+import static io.parsingdata.metal.Shorthand.gtEqNum;
 import static io.parsingdata.metal.Shorthand.gtNum;
 import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.ltEqNum;
 import static io.parsingdata.metal.Shorthand.ltNum;
 import static io.parsingdata.metal.Shorthand.mod;
 import static io.parsingdata.metal.Shorthand.mul;
@@ -56,7 +59,6 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.rev;
-import static io.parsingdata.metal.Shorthand.SELF;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.tie;
@@ -104,7 +106,7 @@ public class ToStringTest {
 
     @Test
     public void validateToStringImplementation() {
-        final Expression e = not(and(eq(v(), v()), or(eqNum(v()), and(eqStr(v()), or(gtNum(v()), ltNum(v()))))));
+        final Expression e = not(and(eq(v(), v()), or(eqNum(v()), and(eqStr(v()), or(gtEqNum(v()), or(gtNum(v()), or(ltEqNum(v()), ltNum(v()))))))));
         final Token t = until("untilName", v(), v(), v(), post(repn(sub(opt(pre(rep(cho(token("refName"), any(n()), seq(tie(nod(v()), v()), whl(def(n(), con(1), e), e), tie(t(), con(1))))), e)), v()), v()), e));
         final String output = t.toString();
         for (int i = 0; i < count; i++) {

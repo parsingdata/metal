@@ -23,13 +23,17 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.TRUE;
+import static io.parsingdata.metal.Shorthand.and;
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.eqStr;
+import static io.parsingdata.metal.Shorthand.gtEqNum;
 import static io.parsingdata.metal.Shorthand.gtNum;
 import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.ltEqNum;
+import static io.parsingdata.metal.Shorthand.ltNum;
 import static io.parsingdata.metal.Shorthand.mapLeft;
 import static io.parsingdata.metal.Shorthand.mapRight;
 import static io.parsingdata.metal.Shorthand.opt;
@@ -113,7 +117,13 @@ public class ShorthandsTest {
     private static final Token nonLocalCompare =
         seq(any("a"),
             def("b", con(3)),
-            def("c", con(1), gtNum(last(ref("a")), con(0))),
+            def("c", con(1), and(
+                                 and(
+                                     and(
+                                         gtNum(last(ref("a")), con(0)),
+                                         gtEqNum(last(ref("a")), con(0))),
+                                     ltNum(con(0), last(ref("a")))),
+                                 ltEqNum(con(0), last(ref("a"))))),
             def("d", con(1), eqStr(last(ref("b")), con("abc")))
         );
 
