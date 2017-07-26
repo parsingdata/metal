@@ -36,10 +36,15 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.comparison.Eq;
+import io.parsingdata.metal.expression.comparison.EqNum;
+import io.parsingdata.metal.expression.comparison.EqStr;
+import io.parsingdata.metal.expression.comparison.GtEqNum;
+import io.parsingdata.metal.expression.comparison.GtNum;
+import io.parsingdata.metal.expression.comparison.LtEqNum;
+import io.parsingdata.metal.expression.comparison.LtNum;
 import io.parsingdata.metal.expression.logical.And;
 import io.parsingdata.metal.expression.logical.Not;
 import io.parsingdata.metal.expression.value.Bytes;
@@ -108,6 +113,12 @@ public class ArgumentsTest {
             { Not.class, new Object[] { null } },
             // Derived from ComparisonExpression
             { Eq.class, new Object[] { VALID_VE, null } },
+            { EqNum.class, new Object[] { VALID_VE, null } },
+            { EqStr.class, new Object[] { VALID_VE, null } },
+            { GtEqNum.class, new Object[] { VALID_VE, null } },
+            { GtNum.class, new Object[] { VALID_VE, null } },
+            { LtEqNum.class, new Object[] { VALID_VE, null } },
+            { LtNum.class, new Object[] { VALID_VE, null } },
             // Token implementations
             { Cho.class, new Object[] { null, null, VALID_T, VALID_T, new Token[] { VALID_T } } },
             { Cho.class, new Object[] { VALID_NAME, null, null, VALID_T, new Token[] { VALID_T } } },

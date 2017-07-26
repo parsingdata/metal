@@ -64,7 +64,9 @@ import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.comparison.Eq;
 import io.parsingdata.metal.expression.comparison.EqNum;
 import io.parsingdata.metal.expression.comparison.EqStr;
+import io.parsingdata.metal.expression.comparison.GtEqNum;
 import io.parsingdata.metal.expression.comparison.GtNum;
+import io.parsingdata.metal.expression.comparison.LtEqNum;
 import io.parsingdata.metal.expression.comparison.LtNum;
 import io.parsingdata.metal.expression.value.Bytes;
 import io.parsingdata.metal.expression.value.Cat;
@@ -164,7 +166,7 @@ public class AutoEqualityTest {
             io.parsingdata.metal.expression.value.arithmetic.Sub.class, Cat.class, Nth.class, Elvis.class,
             FoldLeft.class, FoldRight.class, Const.class, Expand.class, Bytes.class,
             // Expressions
-            Eq.class, EqNum.class, EqStr.class, GtNum.class, LtNum.class,
+            Eq.class, EqNum.class, EqStr.class, GtEqNum.class, GtNum.class, LtEqNum.class, LtNum.class,
             io.parsingdata.metal.expression.logical.And.class, io.parsingdata.metal.expression.logical.Or.class,
             io.parsingdata.metal.expression.logical.Not.class,
             // Data structures
