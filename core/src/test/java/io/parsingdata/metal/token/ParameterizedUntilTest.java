@@ -18,13 +18,13 @@ package io.parsingdata.metal.token;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
+import static io.parsingdata.metal.Shorthand.EMPTY;
+import static io.parsingdata.metal.Shorthand.TRUE;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.div;
-import static io.parsingdata.metal.Shorthand.empty;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.exp;
-import static io.parsingdata.metal.Shorthand.expTrue;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.ref;
@@ -81,7 +81,7 @@ public class ParameterizedUntilTest extends ParameterizedParse {
     }
 
     private static Token untilTokenAlwaysTrueTerminator(final int initial, final int step, final int max) {
-        return until("value", con(initial), con(step, signed()), con(max), post(empty, expTrue()));
+        return until("value", con(initial), con(step, signed()), con(max), post(EMPTY, TRUE));
     }
 
 }

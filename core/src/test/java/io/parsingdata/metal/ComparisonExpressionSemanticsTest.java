@@ -18,17 +18,17 @@ package io.parsingdata.metal;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
+import static io.parsingdata.metal.Shorthand.TRUE;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.eqNum;
 import static io.parsingdata.metal.Shorthand.eqStr;
-import static io.parsingdata.metal.Shorthand.expTrue;
 import static io.parsingdata.metal.Shorthand.gtNum;
 import static io.parsingdata.metal.Shorthand.ltNum;
 import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.self;
+import static io.parsingdata.metal.Shorthand.SELF;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
@@ -62,12 +62,12 @@ public class ComparisonExpressionSemanticsTest extends ParameterizedParse {
             { "\"abd\" == \"abc\"", stringCompare(3, eqStr(ref("a"))), stream("abcabd", US_ASCII), new Encoding(US_ASCII), false },
             { "1 == 1(eq)", valueCompare(1, eq(ref("a"))), stream(1, 1), enc(), true },
             { "2 == 1(eq)", valueCompare(1, eq(ref("a"))), stream(1, 2), enc(), false },
-            { "1 == 1 with self", valueCompare(1, eq(self, ref("a"))), stream(1, 1), enc(), true },
-            { "1 == 2 with self", valueCompare(1, eq(self, ref("a"))), stream(1, 2), enc(), false },
-            { "1, 2 == 1", listCompare(eq(ref("a"), ref("b")), expTrue()), stream(1, 2, 1, 2), enc(), false },
-            { "1, 2 == 1, 2", listCompare(expTrue(), eq(ref("a"), ref("b"))), stream(1, 2, 1, 2), enc(), true },
-            { "1, 2 == 2, 2", listCompare(expTrue(), eq(ref("a"), ref("b"))), stream(1, 2, 2, 2), enc(), false },
-            { "1, 2 == 1, 3", listCompare(expTrue(), eq(ref("a"), ref("b"))), stream(1, 2, 1, 3), enc(), false },
+            { "1 == 1 with self", valueCompare(1, eq(SELF, ref("a"))), stream(1, 1), enc(), true },
+            { "1 == 2 with self", valueCompare(1, eq(SELF, ref("a"))), stream(1, 2), enc(), false },
+            { "1, 2 == 1", listCompare(eq(ref("a"), ref("b")), TRUE), stream(1, 2, 1, 2), enc(), false },
+            { "1, 2 == 1, 2", listCompare(TRUE, eq(ref("a"), ref("b"))), stream(1, 2, 1, 2), enc(), true },
+            { "1, 2 == 2, 2", listCompare(TRUE, eq(ref("a"), ref("b"))), stream(1, 2, 2, 2), enc(), false },
+            { "1, 2 == 1, 3", listCompare(TRUE, eq(ref("a"), ref("b"))), stream(1, 2, 1, 3), enc(), false },
             { "1, 2, 1 != 1/0", valueCompare(1, eqNum(con(1), div(con(1), con(0)))), stream(1, 2), enc(), false },
             { "1, 2, 1/0 != 1", valueCompare(1, eqNum(div(con(1), con(0)), con(1))), stream(1, 2), enc(), false }
         });
@@ -79,12 +79,12 @@ public class ComparisonExpressionSemanticsTest extends ParameterizedParse {
     }
 
     private static Token stringCompare(final int size, final ComparisonExpression comparison) {
-        return seq(def("a", con(size), expTrue()),
+        return seq(def("a", con(size), TRUE),
                    def("b", con(size), comparison));
     }
 
     private static Token valueCompare(final int size, final ComparisonExpression comparison) {
-        return seq(def("a", con(size), expTrue()),
+        return seq(def("a", con(size), TRUE),
                    def("b", con(size), comparison));
     }
 

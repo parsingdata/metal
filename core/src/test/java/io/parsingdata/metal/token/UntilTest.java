@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.empty;
+import static io.parsingdata.metal.Shorthand.EMPTY;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.mod;
@@ -65,7 +65,7 @@ public class UntilTest {
 
     @Test
     public void untilInclusive() throws IOException {
-        final Optional<Environment> environment = createToken(con(1), post(empty, eq(mod(last(ref("line")), con(256)), con('\n')))).parse(stream(INPUT, US_ASCII), enc());
+        final Optional<Environment> environment = createToken(con(1), post(EMPTY, eq(mod(last(ref("line")), con(256)), con('\n')))).parse(stream(INPUT, US_ASCII), enc());
         assertTrue(environment.isPresent());
         ImmutableList<ParseValue> values = getAllValues(environment.get().order, "line");
         assertEquals(3, values.size);

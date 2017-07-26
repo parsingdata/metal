@@ -17,7 +17,7 @@
 package io.parsingdata.metal;
 
 import static io.parsingdata.metal.Util.createFromBytes;
-import static io.parsingdata.metal.token.Token.EMPTY;
+import static io.parsingdata.metal.token.Token.EMPTY_NAME;
 import static io.parsingdata.metal.token.Token.NO_NAME;
 
 import java.util.function.BiFunction;
@@ -83,6 +83,11 @@ import io.parsingdata.metal.token.While;
 
 public final class Shorthand {
 
+    public static final Token EMPTY = def(EMPTY_NAME, 0L);
+    public static final ValueExpression SELF = new Self();
+    public static final ValueExpression CURRENT_OFFSET = elvis(add(offset(SELF), len(SELF)), con(0));
+    public static final Expression TRUE = new True();
+
     private Shorthand() {}
 
     public static Token def(final String name, final ValueExpression size, final Expression predicate, final Encoding encoding) { return post(def(name, size, encoding), predicate); }
@@ -93,7 +98,6 @@ public final class Shorthand {
     public static Token def(final String name, final long size, final Expression predicate) { return def(name, size, predicate, null); }
     public static Token def(final String name, final long size, final Encoding encoding) { return def(name, con(size), encoding); }
     public static Token def(final String name, final long size) { return def(name, size, (Encoding)null); }
-    public static final Token empty = def(EMPTY, 0L);
     public static Token cho(final String name, final Encoding encoding, final Token token1, final Token token2, final Token... tokens) { return new Cho(name, encoding, token1, token2, tokens); }
     public static Token cho(final String name, final Token token1, final Token token2, final Token... tokens) { return cho(name, null, token1, token2, tokens); }
     public static Token cho(final Encoding encoding, final Token token1, final Token token2, final Token... tokens) { return cho(NO_NAME, encoding, token1, token2, tokens); }
@@ -126,7 +130,7 @@ public final class Shorthand {
     public static Token whl(final String name, final Token token, final Expression predicate) { return whl(name, token, predicate, null); }
     public static Token whl(final Token token, final Expression predicate, final Encoding encoding) { return whl(NO_NAME, token, predicate, encoding); }
     public static Token whl(final Token token, final Expression predicate) { return whl(NO_NAME, token, predicate); }
-    public static Token opt(final String name, final Token token, final Encoding encoding) { return cho(name, encoding, token, empty); }
+    public static Token opt(final String name, final Token token, final Encoding encoding) { return cho(name, encoding, token, EMPTY); }
     public static Token opt(final String name, final Token token) { return opt(name, token, null); }
     public static Token opt(final Token token, final Encoding encoding) { return opt(NO_NAME, token, encoding); }
     public static Token opt(final Token token) { return opt(token, null); }
@@ -168,7 +172,6 @@ public final class Shorthand {
     public static ValueExpression con(final int... values) { return con(new Encoding(), values); }
     public static ValueExpression con(final byte[] value) { return con(value, new Encoding()); }
     public static ValueExpression con(final byte[] value, final Encoding encoding) { return con(ConstantFactory.createFromBytes(value, encoding)); }
-    public static final ValueExpression self = new Self();
     public static ValueExpression len(final ValueExpression operand) { return new Len(operand); }
     public static NameRef ref(final String name) { return ref(name, null); }
     public static NameRef ref(final String name, final ValueExpression limit) { return new NameRef(name, limit); }
@@ -180,7 +183,6 @@ public final class Shorthand {
     public static ValueExpression last(final DefinitionRef operand) { return new Last(new DefinitionRef(operand.reference, con(1))); }
     public static ValueExpression nth(final ValueExpression values, final ValueExpression indices) { return new Nth(values, indices); }
     public static ValueExpression offset(final ValueExpression operand) { return new Offset(operand); }
-    public static final ValueExpression currentOffset = elvis(add(offset(self), len(self)), con(0));
     public static ValueExpression cat(final ValueExpression left, final ValueExpression right) { return new Cat(left, right); }
     public static ValueExpression elvis(final ValueExpression left, final ValueExpression right) { return new Elvis(left, right); }
     public static ValueExpression count(final ValueExpression operand) { return new Count(operand); }
@@ -199,7 +201,6 @@ public final class Shorthand {
     public static BinaryLogicalExpression and(final Expression left, final Expression right) { return new And(left, right); }
     public static BinaryLogicalExpression or(final Expression left, final Expression right) { return new Or(left, right); }
     public static UnaryLogicalExpression not(final Expression operand) { return new Not(operand); }
-    public static Expression expTrue() { return new True(); }
 
     public static ComparisonExpression eq(final ValueExpression predicate) { return new Eq(null, predicate); }
     public static ComparisonExpression eq(final ValueExpression value, final ValueExpression predicate) { return new Eq(value, predicate); }

@@ -22,12 +22,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import static io.parsingdata.metal.Shorthand.TRUE;
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.eqStr;
-import static io.parsingdata.metal.Shorthand.expTrue;
 import static io.parsingdata.metal.Shorthand.gtNum;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.mapLeft;
@@ -131,7 +131,7 @@ public class ShorthandsTest {
                         pre("pre",
                             opt("opt",
                                 any("a")),
-                            expTrue()),
+                            TRUE),
                         cho("cho",
                             def("def0", con(1), eq(con(0))),
                             def("def1", con(1), eq(con(1)))),

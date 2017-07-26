@@ -16,19 +16,19 @@
 
 package io.parsingdata.metal.format;
 
+import static io.parsingdata.metal.Shorthand.SELF;
+import static io.parsingdata.metal.Shorthand.TRUE;
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.count;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.eqNum;
-import static io.parsingdata.metal.Shorthand.expTrue;
 import static io.parsingdata.metal.Shorthand.first;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.offset;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
-import static io.parsingdata.metal.Shorthand.self;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Util.inflate;
@@ -68,16 +68,16 @@ public final class ZIP {
 
     private static final Token LOCAL_DEFLATED_FILE =
         seq("localdeflatedfile",
-            localFileBody("", 8, expTrue(), expTrue(), expTrue()),
-            def("compresseddata", last(ref("compressedsize")), eqNum(crc32(inflate(self)), last(ref("crc32")))));
+            localFileBody("", 8, TRUE, TRUE, TRUE),
+            def("compresseddata", last(ref("compressedsize")), eqNum(crc32(inflate(SELF)), last(ref("crc32")))));
 
     private static final Token LOCAL_EMPTY_FILE =
         localFileBody("localemptyfile", 0, eqNum(con(0)), eqNum(con(0)), eqNum(con(0)));
 
     private static final Token LOCAL_STORED_FILE =
         seq("localstoredfile",
-            localFileBody("", 0, expTrue(), expTrue(), eq(last(ref("compressedsize")))),
-            def("compresseddata", last(ref("compressedsize")), eqNum(crc32(self), last(ref("crc32")))));
+            localFileBody("", 0, TRUE, TRUE, eq(last(ref("compressedsize")))),
+            def("compresseddata", last(ref("compressedsize")), eqNum(crc32(SELF), last(ref("crc32")))));
 
     private static final Token FILES =
         rep("files",

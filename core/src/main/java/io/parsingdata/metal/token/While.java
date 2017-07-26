@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Shorthand.expTrue;
+import static io.parsingdata.metal.Shorthand.TRUE;
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
@@ -53,7 +53,7 @@ public class While extends Token {
     public While(final String name, final Token token, final Expression predicate, final Encoding encoding) {
         super(name, encoding);
         this.token = checkNotNull(token, "token");
-        this.predicate = predicate == null ? expTrue() : predicate;
+        this.predicate = predicate == null ? TRUE : predicate;
     }
 
     @Override

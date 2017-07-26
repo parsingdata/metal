@@ -25,7 +25,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.currentOffset;
+import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.opt;
@@ -289,7 +289,7 @@ public class ByTokenTest {
 
     @Test
     public void getAllRootsMultiSub() throws IOException {
-        final Optional<Environment> result = rep(seq(smallSeq, sub(smallSeq, currentOffset))).parse(stream(1, 2, 1, 2, 1, 2, 1, 2), enc());
+        final Optional<Environment> result = rep(seq(smallSeq, sub(smallSeq, CURRENT_OFFSET))).parse(stream(1, 2, 1, 2, 1, 2, 1, 2), enc());
                                                                                            /* 1: +--------+
                                                                                            /* 2:       +--------+
                                                                                            /* 3:             +--------+ */
