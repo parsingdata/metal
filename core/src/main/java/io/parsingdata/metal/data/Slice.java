@@ -18,6 +18,9 @@ package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.math.BigInteger;
 import java.util.Objects;
 
 import io.parsingdata.metal.Util;
@@ -26,23 +29,25 @@ public class Slice {
 
     public final Source source;
     public final long offset;
-    private final byte[] data; // Private because array content is mutable.
-    public final int size;
+    public final BigInteger length;
 
-    public Slice(final Source source, final long offset, final byte[] data) {
+    public Slice(final Source source, final long offset, final BigInteger length) {
         this.source = checkNotNull(source, "source");
         this.offset = offset;
-        this.data = checkNotNull(data, "data");
-        this.size = data.length;
+        this.length = checkNotNull(length, "length");
     }
 
     public byte[] getData() {
-        return data.clone();
+        try {
+            return source.getData(offset, length.intValue());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + source + "@" + offset + ":" + (offset+size) + ")";
+        return getClass().getSimpleName() + "(" + source + "@" + offset + ":" + length.add(BigInteger.valueOf(offset)) + ")";
     }
 
     @Override
@@ -50,13 +55,12 @@ public class Slice {
         return Util.notNullAndSameClass(this, obj)
             && Objects.equals(source, ((Slice)obj).source)
             && Objects.equals(offset, ((Slice)obj).offset)
-            // The data field is excluded from equals() and hashCode() because it is cached data.
-            && Objects.equals(size, ((Slice)obj).size);
+            && Objects.equals(length, ((Slice)obj).length);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), source, offset, size);
+        return Objects.hash(getClass().hashCode(), source, offset, length);
     }
 
 }

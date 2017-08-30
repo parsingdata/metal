@@ -34,7 +34,7 @@ public class TokenTest {
     public ExpectedException thrown = ExpectedException.none();
     private final Token token = new Token("", null) {
         @Override
-        protected Optional<Environment> parseImpl(String scope, Environment environment, Encoding encoding) throws IOException {
+        protected Optional<Environment> parseImpl(String scope, Environment environment, Encoding encoding) {
             return null;
         }
     };

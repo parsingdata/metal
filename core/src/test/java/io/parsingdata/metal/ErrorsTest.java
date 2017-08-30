@@ -37,7 +37,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.token.Token;
 
@@ -61,18 +60,6 @@ public class ErrorsTest {
         // Add division by zero to one.
         final Token token4 = def("a", add(con(1), div(con(1), con(0))));
         assertFalse(token4.parse(stream(1), enc()).isPresent());
-    }
-
-    @Test
-    public void ioError() throws IOException {
-        thrown.expect(IOException.class);
-        final Token token = any("a");
-        final ByteStream stream = new ByteStream() {
-            @Override
-            public int read(final long offset, final byte[] data) throws IOException { throw new IOException(); }
-        };
-        final Environment environment = new Environment(stream);
-        token.parse(environment, enc());
     }
 
     @Test

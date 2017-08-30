@@ -26,6 +26,7 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Optional;
 
 import org.junit.Assert;
@@ -40,9 +41,9 @@ public class SelectionTest {
     @Test
     public void findItemAtOffsetTest() {
         assertEquals("the_one",
-            findItemAtOffset(ImmutableList.create(ParseGraph.EMPTY.add(new ParseValue("two", any("a"), new Slice(source, 2, new byte[] { 1, 2 }), new Encoding()))
-                                                                  .add(new ParseValue("zero", any("a"), new Slice(source, 0, new byte[] { 1, 2 }), new Encoding()))
-                                                                  .add(new ParseValue("the_one", any("a"), new Slice(source, 1, new byte[] { 1, 2 }), new Encoding()))), 0, source).computeResult().get().asGraph().head.asValue().name);
+            findItemAtOffset(ImmutableList.create(ParseGraph.EMPTY.add(new ParseValue("two", any("a"), new Slice(source, 2, BigInteger.valueOf(2)), new Encoding()))
+                                                                  .add(new ParseValue("zero", any("a"), new Slice(source, 0, BigInteger.valueOf(2)), new Encoding()))
+                                                                  .add(new ParseValue("the_one", any("a"), new Slice(source, 1, BigInteger.valueOf(2)), new Encoding()))), 0, source).computeResult().get().asGraph().head.asValue().name);
     }
 
     @Test

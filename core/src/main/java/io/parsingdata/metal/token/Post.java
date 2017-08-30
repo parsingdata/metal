@@ -20,7 +20,6 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
 
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -52,7 +51,7 @@ public class Post extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
         return token.parse(scope, environment.addBranch(this), encoding)
             .map(nextEnvironment -> predicate.eval(nextEnvironment.order, encoding) ? success(nextEnvironment.closeBranch()) : failure())
             .orElseGet(Util::failure);

@@ -73,6 +73,7 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
@@ -180,7 +181,7 @@ public class ToStringTest {
         final ParseValue pv1 = new ParseValue("name", NONE, createFromBytes(new byte[]{1, 2}), enc());
         assertEquals("Slice(ConstantSource(0x0102)@0:2)", pv1.slice.toString());
         final Environment oneValueEnvironment = stream().add(pv1);
-        final Environment twoValueEnvironment = oneValueEnvironment.add(new ParseValue("name2", NONE, new DataExpressionSource(ref("name"), 0, oneValueEnvironment.order, enc()).slice(0, 2), enc()));
+        final Environment twoValueEnvironment = oneValueEnvironment.add(new ParseValue("name2", NONE, new DataExpressionSource(ref("name"), 0, oneValueEnvironment.order, enc()).slice(0, BigInteger.valueOf(2)), enc()));
         final String dataExpressionSliceString = getValue(twoValueEnvironment.order, "name2").slice.toString();
         assertTrue(dataExpressionSliceString.startsWith("Slice(DataExpressionSource(NameRef(name)[0]("));
         assertTrue(dataExpressionSliceString.endsWith(")@0:2)"));
@@ -212,7 +213,7 @@ public class ToStringTest {
 
     private Token makeToken(final String name) {
         return new Token(name, enc()) {
-            @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; }
+            @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) { return null; }
             @Override public String toString() { return name; }
         };
     }

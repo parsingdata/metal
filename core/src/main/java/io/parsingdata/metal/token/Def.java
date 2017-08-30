@@ -16,19 +16,20 @@
 
 package io.parsingdata.metal.token;
 
+import static java.math.BigInteger.ZERO;
+
 import static io.parsingdata.metal.Util.checkNotEmpty;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
 
-import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -55,24 +56,19 @@ public class Def extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
         final ImmutableList<Optional<Value>> sizes = size.eval(environment.order, encoding);
         if (sizes.size != 1 || !sizes.head.isPresent()) {
             return failure();
         }
-        // TODO: Handle value expression results as BigInteger (#16)
-        final int dataSize = sizes.head.get().asNumeric().intValue();
-        if (dataSize < 0) {
-            return failure();
-        }
-        if (dataSize == 0) {
+        final BigInteger dataSize = sizes.head.get().asNumeric();
+        if (dataSize.compareTo(ZERO) == 0) {
             return success(environment);
         }
-        final Slice slice = environment.slice(dataSize);
-        if (slice.size != dataSize) {
+        if (!environment.isAvailable(dataSize)) {
             return failure();
         }
-        return success(environment.add(new ParseValue(scope, this, slice, encoding)).seek(environment.offset + dataSize));
+        return success(environment.add(new ParseValue(scope, this, environment.slice(dataSize), encoding)).seek(dataSize.add(BigInteger.valueOf(environment.offset)).longValue()));
     }
 
     @Override

@@ -23,7 +23,6 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.success;
 import static io.parsingdata.metal.data.ImmutableList.create;
 
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -52,11 +51,11 @@ public class Cho extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
         return iterate(scope, environment.addBranch(this), encoding, tokens).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding, final ImmutableList<Token> list) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding, final ImmutableList<Token> list) {
         if (list.isEmpty()) {
             return complete(Util::failure);
         }

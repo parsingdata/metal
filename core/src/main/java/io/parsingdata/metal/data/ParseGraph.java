@@ -20,7 +20,6 @@ import static io.parsingdata.metal.SafeTrampoline.complete;
 import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -38,7 +37,7 @@ public class ParseGraph implements ParseItem {
     public final long size;
 
     public static final Token NONE = new Token("NONE", null) {
-        @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { throw new IllegalStateException("This placeholder may not be invoked."); }
+        @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) { throw new IllegalStateException("This placeholder may not be invoked."); }
         @Override public String toString() { return "None"; }
     };
 

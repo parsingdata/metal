@@ -33,6 +33,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -127,7 +128,7 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> EXPRESSIONS = Arrays.asList(() -> TRUE, () -> not(TRUE));
     private static final List<Supplier<Object>> VALUES = Arrays.asList(() -> ConstantFactory.createFromString("a", enc()), () -> ConstantFactory.createFromString("b", enc()), () -> ConstantFactory.createFromNumeric(1L, signed()));
     private static final List<Supplier<Object>> REDUCERS = Arrays.asList(() -> (BinaryOperator<ValueExpression>) Shorthand::cat, () -> (BinaryOperator<ValueExpression>) Shorthand::div);
-    private static final List<Supplier<Object>> SLICES = Arrays.asList(() -> createFromBytes(new byte[] { 1, 2 }), () -> new Slice(new DataExpressionSource(ref("a"), 1, ParseGraph.EMPTY, enc()), 0, new byte[] { 0, 0 }));
+    private static final List<Supplier<Object>> SLICES = Arrays.asList(() -> createFromBytes(new byte[] { 1, 2 }), () -> new Slice(new DataExpressionSource(ref("a"), 1, ParseGraph.EMPTY, enc()), 0, BigInteger.valueOf(2)));
     private static final List<Supplier<Object>> BYTE_ARRAYS = Arrays.asList(() -> new byte[] { 0 }, () -> new byte[] { 1, 2 }, () -> new byte[] {});
     private static final List<Supplier<Object>> SOURCES = Arrays.asList(() -> new ConstantSource(new byte[] {}), () -> new DataExpressionSource(ref("x"), 8, ParseGraph.EMPTY.add(PARSEVALUE), signed()));
     private static final List<Supplier<Object>> LONGS = Arrays.asList(() -> 0L, () -> 1L, () -> 31L, () -> 100000L);
@@ -135,6 +136,7 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> PARSEGRAPHS = Arrays.asList(() -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE);
     private static final List<Supplier<Object>> PARSEITEMS = Arrays.asList(() -> CLOSED_BRANCHED_GRAPH, () -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE, () -> ParseGraph.EMPTY.add(PARSEVALUE), () -> ParseGraph.EMPTY.add(PARSEVALUE).add(PARSEVALUE), () -> BRANCHED_GRAPH);
     private static final List<Supplier<Object>> BYTESTREAMS = Arrays.asList(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> (ByteStream) (offset, data) -> 0);
+    private static final List<Supplier<Object>> BIGINTEGERS = Arrays.asList(() -> BigInteger.ONE, () -> BigInteger.valueOf(3));
     private static final Map<Class, List<Supplier<Object>>> mapping = new HashMap<Class, List<Supplier<Object>>>() {{
         put(String.class, STRINGS);
         put(Encoding.class, ENCODINGS);
@@ -152,6 +154,7 @@ public class AutoEqualityTest {
         put(ParseGraph.class, PARSEGRAPHS);
         put(ParseItem.class, PARSEITEMS);
         put(ByteStream.class, BYTESTREAMS);
+        put(BigInteger.class, BIGINTEGERS);
     }};
 
     @Parameterized.Parameters(name="{0}")

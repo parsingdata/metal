@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.token;
 
+import static java.math.BigInteger.ZERO;
+
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
@@ -23,7 +25,7 @@ import static io.parsingdata.metal.Util.checkNotEmpty;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.success;
 
-import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -82,32 +84,32 @@ public class Until extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
         return handleInterval(scope, environment, initialSize.eval(environment.order, encoding), stepSize.eval(environment.order, encoding), maxSize.eval(environment.order, encoding), encoding).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> handleInterval(final String scope, final Environment environment, final ImmutableList<Optional<Value>> initialSizes, final ImmutableList<Optional<Value>> stepSizes, final ImmutableList<Optional<Value>> maxSizes, final Encoding encoding) throws IOException {
+    private Trampoline<Optional<Environment>> handleInterval(final String scope, final Environment environment, final ImmutableList<Optional<Value>> initialSizes, final ImmutableList<Optional<Value>> stepSizes, final ImmutableList<Optional<Value>> maxSizes, final Encoding encoding) {
         if (checkNotValidList(initialSizes) || checkNotValidList(stepSizes) || checkNotValidList(maxSizes)) { return complete(Util::failure); }
-        return iterate(scope, environment, getInt(initialSizes), getInt(stepSizes), getInt(maxSizes), encoding).computeResult()
+        return iterate(scope, environment, getNumeric(initialSizes), getNumeric(stepSizes), getNumeric(maxSizes), encoding).computeResult()
             .map(nextEnvironment -> complete(() -> success(nextEnvironment)))
             .orElseGet(() -> intermediate(() -> handleInterval(scope, environment, initialSizes.tail, stepSizes.tail, maxSizes.tail, encoding)));
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final int currentSize, final int stepSize, final int maxSize, final Encoding encoding) throws IOException {
-        if (stepSize == 0 || stepSize > 0 && currentSize > maxSize || stepSize < 0 && currentSize < maxSize) { return complete(Util::failure); }
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final BigInteger currentSize, final BigInteger stepSize, final BigInteger maxSize, final Encoding encoding) {
+        if (stepSize.compareTo(ZERO) == 0 || stepSize.compareTo(ZERO) > 0 && currentSize.compareTo(maxSize) > 0 || stepSize.compareTo(ZERO) < 0 && currentSize.compareTo(maxSize) < 0) { return complete(Util::failure); }
+        if (!environment.isAvailable(currentSize)) { return complete(Util::failure); }
         final Slice slice = environment.slice(currentSize);
-        if (slice.size != currentSize) { return complete(Util::failure); }
-        return terminator.parse(scope, currentSize == 0 ? environment : environment.add(new ParseValue(name, this, slice, encoding)).seek(environment.offset + currentSize), encoding)
+        return terminator.parse(scope, currentSize.compareTo(ZERO) == 0 ? environment : environment.add(new ParseValue(name, this, slice, encoding)).seek(environment.offset + currentSize.longValue()), encoding)
             .map(nextEnvironment -> complete(() -> success(nextEnvironment)))
-            .orElseGet(() -> intermediate(() -> iterate(scope, environment, currentSize + stepSize, stepSize, maxSize, encoding)));
+            .orElseGet(() -> intermediate(() -> iterate(scope, environment, currentSize.add(stepSize), stepSize, maxSize, encoding)));
     }
 
     private boolean checkNotValidList(ImmutableList<Optional<Value>> list) {
         return list.isEmpty() || !list.head.isPresent();
     }
 
-    private int getInt(ImmutableList<Optional<Value>> list) {
-        return list.head.get().asNumeric().intValue();
+    private BigInteger getNumeric(ImmutableList<Optional<Value>> list) {
+        return list.head.get().asNumeric();
     }
 
     @Override

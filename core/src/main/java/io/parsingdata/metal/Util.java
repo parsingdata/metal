@@ -17,6 +17,7 @@
 package io.parsingdata.metal;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigInteger;
 import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
@@ -80,7 +81,7 @@ public final class Util {
     }
 
     public static Slice createFromBytes(final byte[] data) {
-        return new Slice(new ConstantSource(data), 0, data);
+        return new Slice(new ConstantSource(data), 0, BigInteger.valueOf(data.length));
     }
 
     public static ValueExpression inflate(final ValueExpression target) {

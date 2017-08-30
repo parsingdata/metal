@@ -76,7 +76,7 @@ public class ByTokenTest {
     private static final Token MUT_REC_1 = seq(DEF1, new Token("", enc()) {
 
         @Override
-        protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
             return MUT_REC_2.parse(scope, environment, encoding);
         }
     });
@@ -226,12 +226,7 @@ public class ByTokenTest {
     }
 
     private ParseGraph parseResultGraph(final Environment env, final Token def) {
-        try {
-            return def.parse(env, enc()).get().order;
-        }
-        catch (final IOException e) {
-            throw new AssertionError("Parsing failed", e);
-        }
+        return def.parse(env, enc()).get().order;
     }
 
     @Test
@@ -315,7 +310,7 @@ public class ByTokenTest {
         }
 
         @Override
-        protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
             return token.parse(scope, environment, encoding);
         }
     }

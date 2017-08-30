@@ -20,7 +20,6 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
 
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -53,7 +52,7 @@ public class Pre extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
         if (!predicate.eval(environment.order, encoding)) {
             return failure();
         }

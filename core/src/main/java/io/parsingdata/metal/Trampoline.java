@@ -16,8 +16,6 @@
 
 package io.parsingdata.metal;
 
-import java.io.IOException;
-
 /**
  * Implements the concept of a trampoline, a mechanism that encodes a tail
  * recursive call into a lambda, which can then be returned (unwinding the
@@ -31,9 +29,9 @@ public interface Trampoline<T> {
 
     T result();
     boolean hasNext();
-    Trampoline<T> next() throws IOException;
+    Trampoline<T> next();
 
-    default T computeResult() throws IOException {
+    default T computeResult() {
         Trampoline<T> current = this;
         while (current.hasNext()) {
             current = current.next();

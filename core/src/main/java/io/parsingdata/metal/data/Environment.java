@@ -16,9 +16,11 @@
 
 package io.parsingdata.metal.data;
 
+import static java.math.BigInteger.ZERO;
+
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.io.IOException;
+import java.math.BigInteger;
 
 import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
@@ -79,8 +81,13 @@ public class Environment {
         return new Environment(order, new DataExpressionSource(dataExpression, index, environment.order, encoding), 0L, callbacks);
     }
 
-    public Slice slice(final int size) throws IOException {
-        return source.slice(offset, size);
+    public boolean isAvailable(final BigInteger dataSize) {
+        if (dataSize.compareTo(ZERO) < 0) { return false; }
+        return source.isAvailable(offset, dataSize);
+    }
+
+    public Slice slice(final BigInteger length) {
+        return source.slice(offset, length);
     }
 
     @Override

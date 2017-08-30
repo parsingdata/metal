@@ -17,14 +17,22 @@
 package io.parsingdata.metal.data;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 public abstract class Source {
 
-    public Slice slice(final long offset, final int size) throws IOException {
-        final byte[] data = getData(offset, size);
-        return new Slice(this, offset, data);
+    public Slice slice(final long offset, final BigInteger length) {
+        return new Slice(this, offset, length);
     }
 
     protected abstract byte[] getData(long offset, int size) throws IOException;
+
+    public boolean isAvailable(long offset, BigInteger dataSize) {
+        try {
+            return dataSize.intValue() == getData(offset, dataSize.intValue()).length;
+        } catch (IOException e) {
+            return false;
+        }
+    }
 
 }

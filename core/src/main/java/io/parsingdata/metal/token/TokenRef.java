@@ -21,7 +21,6 @@ import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -46,7 +45,7 @@ public class TokenRef extends Token {
 
     private static final Token LOOKUP_FAILED = new Token("LOOKUP_FAILED", null) {
         @Override
-        protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
             return failure();
         }
     };
@@ -60,7 +59,7 @@ public class TokenRef extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
         return lookup(ImmutableList.create(environment.order), referenceName).computeResult().parse(scope, environment, encoding);
     }
 

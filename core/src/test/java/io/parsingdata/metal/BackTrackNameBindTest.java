@@ -20,6 +20,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.cho;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.not;
+import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
@@ -27,7 +32,6 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static io.parsingdata.metal.util.TokenDefinitions.eq;
 import static io.parsingdata.metal.util.TokenDefinitions.eqRef;
-import static io.parsingdata.metal.util.TokenDefinitions.notEqRef;
 
 import java.io.IOException;
 
@@ -42,10 +46,10 @@ public class BackTrackNameBindTest {
 
     private final Token _choiceRef = seq(any("a"),
                                          cho(seq(any("a"), eqRef("b", "a")),
-                                             seq(notEqRef("b", "a"), any("c"))));
+                                             seq(def("b", con(1), not(Shorthand.eq(ref("a")))), any("c"))));
 
     private final Token _repeatRef = seq(rep(eq("a", 42)),
-                                         rep(notEqRef("b", "a")));
+                                         rep(def("b", con(1), not(Shorthand.eq(last(ref("a")))))));
 
     @Test
     public void choiceRefLeft() throws IOException {
