@@ -31,6 +31,7 @@ import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
@@ -115,10 +116,15 @@ import io.parsingdata.metal.util.InMemoryByteStream;
 @RunWith(Parameterized.class)
 public class AutoEqualityTest {
 
+    public static final ByteStream DUMMY_STREAM = new ByteStream() {
+        @Override public byte[] read(long offset, int length) throws IOException { return new byte[0]; }
+        @Override public boolean isAvailable(long offset, int length) { return false; }
+    };
+
     private static final ParseValue PARSEVALUE = new ParseValue("a", any("a"), createFromBytes(new byte[]{1, 2}), enc());
     private static final ParseGraph GRAPH_WITH_REFERENCE = ParseGraph.EMPTY.add(new ParseReference(0, new ConstantSource(new byte[]{1, 2}), any("a")));
-    private static final ParseGraph BRANCHED_GRAPH = new Environment((offset, data) -> 0).addBranch(any("a")).order;
-    private static final ParseGraph CLOSED_BRANCHED_GRAPH = new Environment((offset, data) -> 0).addBranch(any("a")).closeBranch().order;
+    private static final ParseGraph BRANCHED_GRAPH = new Environment(DUMMY_STREAM).addBranch(any("a")).order;
+    private static final ParseGraph CLOSED_BRANCHED_GRAPH = new Environment(DUMMY_STREAM).addBranch(any("a")).closeBranch().order;
 
     private static final List<Supplier<Object>> STRINGS = Arrays.asList(() -> "a", () -> "b");
     private static final List<Supplier<Object>> ENCODINGS = Arrays.asList(() -> enc(), () -> signed(), () -> le(), () -> new Encoding(Charset.forName("UTF-8")));
@@ -135,7 +141,7 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> INTEGERS = Arrays.asList(() -> 0, () -> 1, () -> 17, () -> 21212121);
     private static final List<Supplier<Object>> PARSEGRAPHS = Arrays.asList(() -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE);
     private static final List<Supplier<Object>> PARSEITEMS = Arrays.asList(() -> CLOSED_BRANCHED_GRAPH, () -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE, () -> ParseGraph.EMPTY.add(PARSEVALUE), () -> ParseGraph.EMPTY.add(PARSEVALUE).add(PARSEVALUE), () -> BRANCHED_GRAPH);
-    private static final List<Supplier<Object>> BYTESTREAMS = Arrays.asList(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> (ByteStream) (offset, data) -> 0);
+    private static final List<Supplier<Object>> BYTESTREAMS = Arrays.asList(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> DUMMY_STREAM);
     private static final List<Supplier<Object>> BIGINTEGERS = Arrays.asList(() -> BigInteger.ONE, () -> BigInteger.valueOf(3));
     private static final Map<Class, List<Supplier<Object>>> mapping = new HashMap<Class, List<Supplier<Object>>>() {{
         put(String.class, STRINGS);

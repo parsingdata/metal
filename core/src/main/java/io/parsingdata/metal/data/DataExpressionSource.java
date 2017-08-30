@@ -21,6 +21,7 @@ import static io.parsingdata.metal.SafeTrampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -45,15 +46,20 @@ public class DataExpressionSource extends Source {
     }
 
     @Override
-    protected byte[] getData(final long offset, final int size) throws IOException {
+    protected byte[] getData(final long offset, final BigInteger length) throws IOException {
+        if (!isAvailable(offset, length)) { throw new IOException("Data to read is not available."); }
+        final ImmutableList<Optional<Value>> results = dataExpression.eval(graph, encoding);
+        final byte[] inputData = getValueAtIndex(results, index, 0).computeResult().get().getValue();
+        final byte[] outputData = new byte[length.intValue()];
+        System.arraycopy(inputData, (int)offset, outputData, 0, outputData.length);
+        return outputData;
+    }
+
+    @Override
+    public boolean isAvailable(long offset, BigInteger length) {
         final ImmutableList<Optional<Value>> results = dataExpression.eval(graph, encoding);
         if (results.size <= index) { throw new IllegalStateException("ValueExpression dataExpression yields " + results.size + " result(s) (expected at least " + (index + 1) + ")."); }
-        final byte[] inputData = getValueAtIndex(results, index, 0).computeResult().get().getValue();
-        if (offset >= inputData.length) { return new byte[0]; }
-        final int toCopy = (int)offset + size > inputData.length ? inputData.length - (int)offset : size;
-        final byte[] outputData = new byte[toCopy];
-        System.arraycopy(inputData, (int)offset, outputData, 0, toCopy);
-        return outputData;
+        return offset + length.intValue() <= getValueAtIndex(results, index, 0).computeResult().get().slice.length.intValue();
     }
 
     private SafeTrampoline<Optional<Value>> getValueAtIndex(final ImmutableList<Optional<Value>> results, final int index, final int current) {

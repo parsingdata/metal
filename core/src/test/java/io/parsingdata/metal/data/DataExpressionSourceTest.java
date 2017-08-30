@@ -53,7 +53,7 @@ public class DataExpressionSourceTest {
         thrown.expectMessage("ValueExpression dataExpression yields 1 result(s) (expected at least 2).");
         final Optional<Environment> result = setupResult();
         final DataExpressionSource source = new DataExpressionSource(ref("a"), 1, result.get().order, enc());
-        source.getData(0, 4);
+        source.getData(0, BigInteger.valueOf(4));
     }
 
 }

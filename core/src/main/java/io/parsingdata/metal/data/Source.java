@@ -25,14 +25,8 @@ public abstract class Source {
         return new Slice(this, offset, length);
     }
 
-    protected abstract byte[] getData(long offset, int size) throws IOException;
+    protected abstract byte[] getData(long offset, BigInteger length) throws IOException;
 
-    public boolean isAvailable(long offset, BigInteger dataSize) {
-        try {
-            return dataSize.intValue() == getData(offset, dataSize.intValue()).length;
-        } catch (IOException e) {
-            return false;
-        }
-    }
+    public abstract boolean isAvailable(long offset, BigInteger length);
 
 }

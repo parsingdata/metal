@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Util.bytesToShortHexString;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -34,12 +35,16 @@ public class ConstantSource extends Source {
     }
 
     @Override
-    protected byte[] getData(final long offset, final int size) throws IOException {
-        if (offset >= data.length) { return new byte[0]; }
-        final int toCopy = (int)offset + size > data.length ? data.length - (int)offset : size;
-        final byte[] outputData = new byte[toCopy];
-        System.arraycopy(data, (int)offset, outputData, 0, toCopy);
+    protected byte[] getData(final long offset, final BigInteger length) throws IOException {
+        if (!isAvailable(offset, length)) { throw new IOException("Data to read is not available."); }
+        final byte[] outputData = new byte[length.intValue()];
+        System.arraycopy(data, (int)offset, outputData, 0, outputData.length);
         return outputData;
+    }
+
+    @Override
+    public boolean isAvailable(long offset, BigInteger length) {
+        return length.intValue() + offset <= data.length;
     }
 
     @Override

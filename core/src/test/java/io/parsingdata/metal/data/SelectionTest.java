@@ -36,7 +36,10 @@ import io.parsingdata.metal.encoding.Encoding;
 
 public class SelectionTest {
 
-    private final Source source = new Source() { @Override protected byte[] getData(long offset, int size) throws IOException { return new byte[0]; } };
+    private final Source source = new Source() {
+        @Override protected byte[] getData(long offset, BigInteger length) throws IOException { return new byte[0]; }
+        @Override public boolean isAvailable(long offset, BigInteger length) { return false; }
+    };
 
     @Test
     public void findItemAtOffsetTest() {

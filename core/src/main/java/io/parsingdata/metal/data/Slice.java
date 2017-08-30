@@ -39,7 +39,7 @@ public class Slice {
 
     public byte[] getData() {
         try {
-            return source.getData(offset, length.intValue());
+            return source.getData(offset, length);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

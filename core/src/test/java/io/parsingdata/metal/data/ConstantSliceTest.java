@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import static io.parsingdata.metal.Util.createFromBytes;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Arrays;
 
 import org.junit.Rule;
@@ -25,6 +26,16 @@ public class ConstantSliceTest {
     }
 
     @Test
+    public void readBeyondSourceSize() throws IOException {
+        thrown.expect(IOException.class);
+        thrown.expectMessage("Data to read is not available.");
+        final byte[] input = { 1, 2, 3, 4 };
+        final Slice slice = createFromBytes(input);
+        final byte[] outputBeyond = slice.source.getData(4, BigInteger.ONE);
+        assertEquals(0, outputBeyond.length);
+    }
+
+    @Test
     public void checkData() {
         final byte[] input = { 1, 2, 3, 4 };
         final Slice slice = createFromBytes(input);
@@ -37,15 +48,9 @@ public class ConstantSliceTest {
     public void checkSource() throws IOException {
         final byte[] input = { 1, 2, 3, 4 };
         final Slice slice = createFromBytes(input);
-        final byte[] output = slice.source.getData(0, 4);
+        final byte[] output = slice.source.getData(0, BigInteger.valueOf(4));
         assertEquals(input.length, output.length);
         assertTrue(Arrays.equals(input, output));
-        final byte[] outputBeyond = slice.source.getData(4, 1);
-        assertEquals(0, outputBeyond.length);
-        final byte[] outputPartial = slice.source.getData(2, 4);
-        assertEquals(2, outputPartial.length);
-        assertEquals(input[2], outputPartial[0]);
-        assertEquals(input[3], outputPartial[1]);
     }
 
 }

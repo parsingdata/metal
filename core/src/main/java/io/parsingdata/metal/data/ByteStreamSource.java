@@ -19,6 +19,7 @@ package io.parsingdata.metal.data;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Objects;
 
 import io.parsingdata.metal.Util;
@@ -32,13 +33,14 @@ public class ByteStreamSource extends Source {
     }
 
     @Override
-    protected byte[] getData(final long offset, final int size) throws IOException {
-        final byte[] data = new byte[size];
-        final int readSize = input.read(offset, data);
-        if (readSize == size) { return data; }
-        final byte[] resizedData = new byte[readSize];
-        System.arraycopy(data, 0, resizedData, 0, readSize);
-        return resizedData;
+    protected byte[] getData(final long offset, final BigInteger length) throws IOException {
+        if (!isAvailable(offset, length)) { throw new IOException("Data to read is not available."); }
+        return input.read(offset, length.intValue());
+    }
+
+    @Override
+    public boolean isAvailable(long offset, BigInteger length) {
+        return input.isAvailable(offset, length.intValue());
     }
 
     @Override
