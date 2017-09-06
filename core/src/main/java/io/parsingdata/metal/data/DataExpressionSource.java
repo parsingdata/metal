@@ -16,8 +16,8 @@
 
 package io.parsingdata.metal.data;
 
-import static io.parsingdata.metal.SafeTrampoline.complete;
-import static io.parsingdata.metal.SafeTrampoline.intermediate;
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
@@ -25,7 +25,7 @@ import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.SafeTrampoline;
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
@@ -62,7 +62,7 @@ public class DataExpressionSource extends Source {
         return offset + length.intValue() <= getValueAtIndex(results, index, 0).computeResult().get().slice.length.intValue();
     }
 
-    private SafeTrampoline<Optional<Value>> getValueAtIndex(final ImmutableList<Optional<Value>> results, final int index, final int current) {
+    private Trampoline<Optional<Value>> getValueAtIndex(final ImmutableList<Optional<Value>> results, final int index, final int current) {
         if (index == current) { return complete(() -> results.head); }
         return intermediate(() -> getValueAtIndex(results.tail, index, current + 1));
     }

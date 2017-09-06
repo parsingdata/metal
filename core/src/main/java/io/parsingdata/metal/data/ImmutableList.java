@@ -16,14 +16,14 @@
 
 package io.parsingdata.metal.data;
 
-import static io.parsingdata.metal.SafeTrampoline.complete;
-import static io.parsingdata.metal.SafeTrampoline.intermediate;
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Selection.reverse;
 
 import java.util.Objects;
 
-import io.parsingdata.metal.SafeTrampoline;
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 
 public class ImmutableList<T> {
@@ -52,7 +52,7 @@ public class ImmutableList<T> {
         return createFromArray(new ImmutableList<>(), checkNotNull(array, "array"), array.length - 1).computeResult();
     }
 
-    private static <T> SafeTrampoline<ImmutableList<T>> createFromArray(final ImmutableList<T> list, final T[] array, final int index) {
+    private static <T> Trampoline<ImmutableList<T>> createFromArray(final ImmutableList<T> list, final T[] array, final int index) {
         if (index < 0) { return complete(() -> list); }
         return intermediate(() -> createFromArray(list.add(array[index]), array, index - 1));
     }
@@ -67,7 +67,7 @@ public class ImmutableList<T> {
         return addRecursive(reverse(list)).computeResult();
     }
 
-    private SafeTrampoline<ImmutableList<T>> addRecursive(final ImmutableList<T> list) {
+    private Trampoline<ImmutableList<T>> addRecursive(final ImmutableList<T> list) {
         if (list.isEmpty()) { return complete(() -> this); }
         return intermediate(() -> add(list.head).addRecursive(list.tail));
     }

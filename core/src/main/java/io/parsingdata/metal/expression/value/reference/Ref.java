@@ -16,8 +16,8 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
-import static io.parsingdata.metal.SafeTrampoline.complete;
-import static io.parsingdata.metal.SafeTrampoline.intermediate;
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Selection.NO_LIMIT;
 import static io.parsingdata.metal.data.Selection.getAllValues;
@@ -26,7 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import io.parsingdata.metal.SafeTrampoline;
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
@@ -79,7 +79,7 @@ public class Ref<T> implements ValueExpression {
         return wrap(getAllValues(graph, predicate, limit), new ImmutableList<Optional<Value>>()).computeResult();
     }
 
-    private static <T, U extends T> SafeTrampoline<ImmutableList<Optional<T>>> wrap(final ImmutableList<U> input, final ImmutableList<Optional<T>> output) {
+    private static <T, U extends T> Trampoline<ImmutableList<Optional<T>>> wrap(final ImmutableList<U> input, final ImmutableList<Optional<T>> output) {
         if (input.isEmpty()) { return complete(() -> output); }
         return intermediate(() -> wrap(input.tail, output.add(Optional.of(input.head))));
     }

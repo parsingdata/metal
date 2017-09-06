@@ -16,13 +16,13 @@
 
 package io.parsingdata.metal.data.callback;
 
-import static io.parsingdata.metal.SafeTrampoline.complete;
-import static io.parsingdata.metal.SafeTrampoline.intermediate;
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Optional;
 
-import io.parsingdata.metal.SafeTrampoline;
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.token.Token;
@@ -56,7 +56,7 @@ public class Callbacks {
         handleCallbacks(tokenCallbacks, token, before, after).computeResult();
     }
 
-    private SafeTrampoline<Void> handleCallbacks(final ImmutableList<TokenCallback> callbacks, final Token token, final Environment before, final Optional<Environment> after) {
+    private Trampoline<Void> handleCallbacks(final ImmutableList<TokenCallback> callbacks, final Token token, final Environment before, final Optional<Environment> after) {
         if (callbacks.isEmpty()) { return complete(() -> null); }
         if (callbacks.head.token.equals(token)) {
             callbacks.head.callback.handle(token, before, after);

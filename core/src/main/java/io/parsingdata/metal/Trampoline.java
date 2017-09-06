@@ -22,8 +22,6 @@ package io.parsingdata.metal;
  * stack) and invoked. There is still some mutable local state in the
  * {@link #computeResult()} method required to perform the iteration, but the
  * client code can be fully immutable as a result.
- *
- * @see SafeTrampoline
  */
 public interface Trampoline<T> {
 

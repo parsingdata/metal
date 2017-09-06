@@ -16,15 +16,15 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static io.parsingdata.metal.SafeTrampoline.complete;
-import static io.parsingdata.metal.SafeTrampoline.intermediate;
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Selection.reverse;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.SafeTrampoline;
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
@@ -58,7 +58,7 @@ public abstract class UnaryValueExpression implements ValueExpression {
         return reverse(eval(operand.eval(graph, encoding), graph, encoding, new ImmutableList<>()).computeResult());
     }
 
-    private SafeTrampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ParseGraph graph, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
+    private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ParseGraph graph, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
         if (values.isEmpty()) { return complete(() -> result); }
         return intermediate(() -> eval(values.tail, graph, encoding, result.add(values.head.flatMap(value -> eval(value, graph, encoding)))));
     }

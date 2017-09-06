@@ -16,14 +16,14 @@
 
 package io.parsingdata.metal.data;
 
-import static io.parsingdata.metal.SafeTrampoline.complete;
-import static io.parsingdata.metal.SafeTrampoline.intermediate;
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import io.parsingdata.metal.SafeTrampoline;
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.token.Token;
 
 public final class Selection {
@@ -36,7 +36,7 @@ public final class Selection {
         return findItemAtOffset(getAllRoots(graph, definition), offset, source).computeResult().isPresent();
     }
 
-    public static SafeTrampoline<Optional<ParseItem>> findItemAtOffset(final ImmutableList<ParseItem> items, final long offset, final Source source) {
+    public static Trampoline<Optional<ParseItem>> findItemAtOffset(final ImmutableList<ParseItem> items, final long offset, final Source source) {
         checkNotNull(items, "items");
         checkNotNull(source, "source");
         if (items.isEmpty()) { return complete(Optional::empty); }
@@ -53,7 +53,7 @@ public final class Selection {
         return value.slice.offset == offset && value.slice.source.equals(source);
     }
 
-    private static SafeTrampoline<ParseValue> getLowestOffsetValue(final ImmutableList<ParseGraph> graphList, final ParseValue lowest) {
+    private static Trampoline<ParseValue> getLowestOffsetValue(final ImmutableList<ParseGraph> graphList, final ParseValue lowest) {
         if (graphList.isEmpty()) { return complete(() -> lowest); }
         final ParseGraph graph = graphList.head;
         if (graph.isEmpty() || !graph.getDefinition().isLocal()) {
@@ -83,7 +83,7 @@ public final class Selection {
         return getAllValues(graph, predicate, NO_LIMIT);
     }
 
-    private static SafeTrampoline<ImmutableList<ParseValue>> getAllValues(final ImmutableList<ParseGraph> graphList, final ImmutableList<ParseValue> valueList, final Predicate<ParseValue> predicate, final int limit) {
+    private static Trampoline<ImmutableList<ParseValue>> getAllValues(final ImmutableList<ParseGraph> graphList, final ImmutableList<ParseValue> valueList, final Predicate<ParseValue> predicate, final int limit) {
         if (graphList.isEmpty() || valueList.size == limit) { return complete(() -> valueList); }
         final ParseGraph graph = graphList.head;
         if (graph.isEmpty()) {
@@ -105,7 +105,7 @@ public final class Selection {
         return reverse(list.tail, ImmutableList.create(list.head)).computeResult();
     }
 
-    private static <T> SafeTrampoline<ImmutableList<T>> reverse(final ImmutableList<T> oldList, final ImmutableList<T> newList) {
+    private static <T> Trampoline<ImmutableList<T>> reverse(final ImmutableList<T> oldList, final ImmutableList<T> newList) {
         if (oldList.isEmpty()) { return complete(() -> newList); }
         return intermediate(() -> reverse(oldList.tail, newList.add(oldList.head)));
     }
@@ -114,7 +114,7 @@ public final class Selection {
         return getAllRootsRecursive(ImmutableList.create(new Pair(checkNotNull(graph, "graph"), null)), checkNotNull(definition, "definition"), new ImmutableList<>()).computeResult();
     }
 
-    private static SafeTrampoline<ImmutableList<ParseItem>> getAllRootsRecursive(final ImmutableList<Pair> backlog, final Token definition, final ImmutableList<ParseItem> rootList) {
+    private static Trampoline<ImmutableList<ParseItem>> getAllRootsRecursive(final ImmutableList<Pair> backlog, final Token definition, final ImmutableList<ParseItem> rootList) {
         if (backlog.isEmpty()) { return complete(() -> rootList); }
         final ParseItem item = backlog.head.item;
         final ParseGraph parent = backlog.head.parent;

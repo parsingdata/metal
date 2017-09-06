@@ -18,14 +18,14 @@ package io.parsingdata.metal.expression.comparison;
 
 import static java.util.function.Function.identity;
 
-import static io.parsingdata.metal.SafeTrampoline.complete;
-import static io.parsingdata.metal.SafeTrampoline.intermediate;
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.SafeTrampoline;
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
@@ -66,7 +66,7 @@ public abstract class ComparisonExpression implements Expression {
         return compare(values, predicates).computeResult();
     }
 
-    private SafeTrampoline<Boolean> compare(final ImmutableList<Optional<Value>> currents, final ImmutableList<Optional<Value>> predicates) {
+    private Trampoline<Boolean> compare(final ImmutableList<Optional<Value>> currents, final ImmutableList<Optional<Value>> predicates) {
         if (!currents.head.isPresent() || !predicates.head.isPresent()) { return complete(() -> false); }
         final boolean headResult = compare(currents.head.get(), predicates.head.get());
         if (!headResult || currents.tail.isEmpty()) { return complete(() -> headResult); }

@@ -16,15 +16,15 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static io.parsingdata.metal.SafeTrampoline.complete;
-import static io.parsingdata.metal.SafeTrampoline.intermediate;
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 
-import io.parsingdata.metal.SafeTrampoline;
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
@@ -68,14 +68,14 @@ public abstract class Fold implements ValueExpression {
         return ImmutableList.create(fold(graph, encoding, reducer, values.head, values.tail).computeResult());
     }
 
-    private SafeTrampoline<Optional<Value>> fold(final ParseGraph graph, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Optional<Value> head, final ImmutableList<Optional<Value>> tail) {
+    private Trampoline<Optional<Value>> fold(final ParseGraph graph, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Optional<Value> head, final ImmutableList<Optional<Value>> tail) {
         if (!head.isPresent() || tail.isEmpty()) { return complete(() -> head); }
         final ImmutableList<Optional<Value>> reducedValue = reduce(reducer, head.get(), tail.head.get()).eval(graph, encoding);
         if (reducedValue.size != 1) { throw new IllegalArgumentException("Reducer must evaluate to a single value."); }
         return intermediate(() -> fold(graph, encoding, reducer, reducedValue.head, tail.tail));
     }
 
-    private SafeTrampoline<Boolean> containsEmpty(final ImmutableList<Optional<Value>> list) {
+    private Trampoline<Boolean> containsEmpty(final ImmutableList<Optional<Value>> list) {
         if (list.isEmpty()) { return complete(() -> false); }
         if (!list.head.isPresent()) { return complete(() -> true); }
         return intermediate(() -> containsEmpty(list.tail));

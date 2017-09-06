@@ -16,14 +16,14 @@
 
 package io.parsingdata.metal.data;
 
-import static io.parsingdata.metal.SafeTrampoline.complete;
-import static io.parsingdata.metal.SafeTrampoline.intermediate;
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.SafeTrampoline;
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
@@ -101,7 +101,7 @@ public class ParseGraph implements ParseItem {
         return current(ImmutableList.create(this)).computeResult();
     }
 
-    private SafeTrampoline<Optional<ParseValue>> current(ImmutableList<ParseItem> items) {
+    private Trampoline<Optional<ParseValue>> current(ImmutableList<ParseItem> items) {
         if (items.isEmpty()) { return complete(Optional::empty); }
         final ParseItem item = items.head;
         if (item.isValue()) { return complete(() -> Optional.of(item.asValue())); }
