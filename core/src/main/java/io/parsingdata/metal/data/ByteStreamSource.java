@@ -39,7 +39,7 @@ public class ByteStreamSource extends Source {
     }
 
     @Override
-    public boolean isAvailable(long offset, BigInteger length) {
+    public boolean isAvailable(final long offset, final BigInteger length) {
         return input.isAvailable(offset, length.intValue());
     }
 

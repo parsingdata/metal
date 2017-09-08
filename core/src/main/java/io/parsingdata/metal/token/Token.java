@@ -72,7 +72,7 @@ public abstract class Token {
         return parse(NO_NAME, environment, encoding);
     }
 
-    protected abstract Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding);
+    protected abstract Optional<Environment> parseImpl(String scope, Environment environment, Encoding encoding);
 
     private String makeScope(final String scope) {
         return scope + (scope.isEmpty() || name.isEmpty() ? NO_NAME : SEPARATOR) + name;

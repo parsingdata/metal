@@ -43,7 +43,7 @@ public class ConstantSource extends Source {
     }
 
     @Override
-    public boolean isAvailable(long offset, BigInteger length) {
+    public boolean isAvailable(final long offset, final BigInteger length) {
         return length.intValue() + offset <= data.length;
     }
 

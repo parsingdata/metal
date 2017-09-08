@@ -56,7 +56,7 @@ public class DataExpressionSource extends Source {
     }
 
     @Override
-    public boolean isAvailable(long offset, BigInteger length) {
+    public boolean isAvailable(final long offset, final BigInteger length) {
         final ImmutableList<Optional<Value>> results = dataExpression.eval(graph, encoding);
         if (results.size <= index) { throw new IllegalStateException("ValueExpression dataExpression yields " + results.size + " result(s) (expected at least " + (index + 1) + ")."); }
         return offset + length.intValue() <= getValueAtIndex(results, index, 0).computeResult().get().slice.length.intValue();
