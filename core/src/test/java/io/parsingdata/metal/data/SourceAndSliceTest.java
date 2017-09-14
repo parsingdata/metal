@@ -76,6 +76,17 @@ public class SourceAndSliceTest {
         checkSlice(4, 0);
     }
 
+    private void checkSlice(final int offset, final int length) {
+        assertTrue(compareDataSlices(source.slice(offset, BigInteger.valueOf(length)).getData(), offset));
+    }
+
+    private boolean compareDataSlices(byte[] data, int offset) {
+        for(int i = 0; i < data.length; i++) {
+            if (data[i] != DATA[offset+i]) { return false; }
+        }
+        return true;
+    }
+
     @Test
     public void readBeyondEndOfSource() throws IOException {
         thrown.expect(IOException.class);
@@ -98,17 +109,6 @@ public class SourceAndSliceTest {
     public void startReadBeyondEndOfSlice() {
         thrown.expect(UncheckedIOException.class);
         source.slice(5, BigInteger.valueOf(0)).getData();
-    }
-
-    private void checkSlice(final int offset, final int length) {
-        assertTrue(compareDataSlices(source.slice(offset, BigInteger.valueOf(length)).getData(), offset));
-    }
-
-    private boolean compareDataSlices(byte[] data, int offset) {
-        for(int i = 0; i < data.length; i++) {
-            if (data[i] != DATA[offset+i]) { return false; }
-        }
-        return true;
     }
 
 }

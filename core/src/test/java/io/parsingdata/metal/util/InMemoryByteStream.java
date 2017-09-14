@@ -39,7 +39,7 @@ public class InMemoryByteStream implements ByteStream {
     }
 
     @Override
-    public boolean isAvailable(long offset, int length) {
+    public boolean isAvailable(final long offset, final int length) {
         return offset + length <= data.length;
     }
 
