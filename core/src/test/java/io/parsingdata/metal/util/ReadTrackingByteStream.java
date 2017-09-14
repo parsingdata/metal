@@ -17,12 +17,13 @@
 package io.parsingdata.metal.util;
 
 import static io.parsingdata.metal.Util.checkNotNull;
+import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.LongStream;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ByteStream;
@@ -36,6 +37,7 @@ public class ReadTrackingByteStream implements ByteStream {
         this.byteStream = checkNotNull(byteStream, "byteStream");
     }
 
+    @Override
     public byte[] read(final long offset, final int length) throws IOException {
         for (long i = offset; i < offset+length; i++) {
             read.add(i);
@@ -43,12 +45,13 @@ public class ReadTrackingByteStream implements ByteStream {
         return byteStream.read(offset, length);
     }
 
+    // or use reference type Long instead of long, then you can use Arrays#asList
     public boolean containsAll(final long... values) {
-        return read.containsAll(Arrays.asList(values));
+        return read.containsAll(LongStream.of(values).boxed().collect(toList()));
     }
 
     public boolean containsNone(final long... values) {
-        for (long v : values) {
+        for (final long v : LongStream.of(values).boxed().collect(toList())) {
             if (read.contains(v)) { return false; }
         }
         return true;
@@ -67,7 +70,7 @@ public class ReadTrackingByteStream implements ByteStream {
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(byteStream, ((ReadTrackingByteStream)obj).byteStream);
+                && Objects.equals(byteStream, ((ReadTrackingByteStream)obj).byteStream);
     }
 
     @Override

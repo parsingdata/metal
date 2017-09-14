@@ -16,8 +16,6 @@
 
 package io.parsingdata.metal.data;
 
-import static org.junit.Assert.assertTrue;
-
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
@@ -25,6 +23,7 @@ import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.toByteArray;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 
@@ -38,9 +37,9 @@ public class SliceTest {
     @Test
     public void lazyRead() {
         final ReadTrackingByteStream stream = new ReadTrackingByteStream(new InMemoryByteStream(toByteArray(1, 2, 3, 0, 0, 4, 1)));
-        Optional<Environment> result =
-            seq(def("a", con(3)),
-                post(def("b", con(2)), eq(con(0, 0)))/*,
+        final Optional<Environment> result =
+                seq(def("a", con(3)),
+                        post(def("b", con(2)), eq(con(0, 0)))/*,
                 def("c", con(1)),
                 post(def("d", con(1)), eq(con(1)))*/).parse(new Environment(stream), enc());
         assertTrue(result.isPresent());
