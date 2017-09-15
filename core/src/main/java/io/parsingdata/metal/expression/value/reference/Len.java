@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
+import java.math.BigInteger;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.ParseGraph;
@@ -38,10 +39,10 @@ public class Len extends UnaryValueExpression {
 
     @Override
     public Optional<Value> eval(final Value value, final ParseGraph graph, final Encoding encoding) {
-        return Optional.of(fromNumeric(value.getValue().length));
+        return Optional.of(fromNumeric(value.getLength()));
     }
 
-    private static Value fromNumeric(final long length) {
+    private static Value fromNumeric(final BigInteger length) {
         return ConstantFactory.createFromNumeric(length, new Encoding(Sign.SIGNED));
     }
 }

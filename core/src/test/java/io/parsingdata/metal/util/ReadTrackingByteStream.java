@@ -45,7 +45,6 @@ public class ReadTrackingByteStream implements ByteStream {
         return byteStream.read(offset, length);
     }
 
-    // or use reference type Long instead of long, then you can use Arrays#asList
     public boolean containsAll(final long... values) {
         return read.containsAll(LongStream.of(values).boxed().collect(toList()));
     }

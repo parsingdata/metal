@@ -16,14 +16,18 @@
 
 package io.parsingdata.metal.data;
 
+import static org.junit.Assert.assertTrue;
+
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.len;
 import static io.parsingdata.metal.Shorthand.post;
+import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.toByteArray;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Optional;
 
@@ -38,13 +42,26 @@ public class SliceTest {
     public void lazyRead() {
         final ReadTrackingByteStream stream = new ReadTrackingByteStream(new InMemoryByteStream(toByteArray(1, 2, 3, 0, 0, 4, 1)));
         final Optional<Environment> result =
-                seq(def("a", con(3)),
-                        post(def("b", con(2)), eq(con(0, 0)))/*,
+            seq(def("a", con(3)),
+                post(def("b", con(2)), eq(con(0, 0))),
                 def("c", con(1)),
-                post(def("d", con(1)), eq(con(1)))*/).parse(new Environment(stream), enc());
+                post(def("d", con(1)), eq(con(1)))).parse(new Environment(stream), enc());
         assertTrue(result.isPresent());
-        assertTrue(stream.containsAll(3, 4/*, 6*/));
-        assertTrue(stream.containsNone(0, 1, 2/*, 5*/));
+        assertTrue(stream.containsAll(3, 4, 6));
+        assertTrue(stream.containsNone(0, 1, 2, 5));
+    }
+
+    @Test
+    public void lazyLength() {
+        final ReadTrackingByteStream stream = new ReadTrackingByteStream(new InMemoryByteStream(toByteArray(1, 2, 3, 0, 0, 0, 4, 1)));
+        final Optional<Environment> result =
+            seq(def("a", con(3)),
+                post(def("b", len(last(ref("a")))), eq(con(0, 0, 0))),
+                def("c", con(1)),
+                post(def("d", len(last(ref("c")))), eq(con(1)))).parse(new Environment(stream), enc());
+        assertTrue(result.isPresent());
+        assertTrue(stream.containsAll(3, 4, 5, 7));
+        assertTrue(stream.containsNone(0, 1, 2, 6));
     }
 
 }

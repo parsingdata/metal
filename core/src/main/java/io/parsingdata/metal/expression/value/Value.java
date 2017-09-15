@@ -35,12 +35,16 @@ public class Value {
     public final Encoding encoding;
 
     public Value(final Slice slice, final Encoding encoding) {
-        this.slice = slice;
+        this.slice = checkNotNull(slice, "slice");
         this.encoding = checkNotNull(encoding, "encoding");
     }
 
     public byte[] getValue() {
         return slice.getData();
+    }
+
+    public BigInteger getLength() {
+        return slice.length;
     }
 
     public BigInteger asNumeric() {
