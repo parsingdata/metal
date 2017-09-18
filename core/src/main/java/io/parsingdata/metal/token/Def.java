@@ -43,7 +43,6 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * that many bytes are available in the input. This means that a size of zero
  * will lead to a successful parse, but will not produce a value.
  *
- * @see Nod
  * @see ValueExpression
  */
 public class Def extends Token {

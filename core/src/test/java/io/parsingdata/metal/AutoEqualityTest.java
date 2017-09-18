@@ -99,7 +99,6 @@ import io.parsingdata.metal.expression.value.reference.Nth;
 import io.parsingdata.metal.expression.value.reference.Offset;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Def;
-import io.parsingdata.metal.token.Nod;
 import io.parsingdata.metal.token.Post;
 import io.parsingdata.metal.token.Pre;
 import io.parsingdata.metal.token.Rep;
@@ -167,7 +166,7 @@ public class AutoEqualityTest {
     public static Collection<Object[]> data() throws IllegalAccessException, InvocationTargetException, InstantiationException {
         return generateObjectArrays(
             // Tokens
-            Cho.class, Def.class, Nod.class, Pre.class, Rep.class, RepN.class, Seq.class, Sub.class, Tie.class,
+            Cho.class, Def.class, Pre.class, Rep.class, RepN.class, Seq.class, Sub.class, Tie.class,
             TokenRef.class, While.class, Post.class, Until.class,
             // ValueExpressions
             Len.class, Offset.class, Neg.class, Not.class, Count.class, First.class, Last.class, Reverse.class,
