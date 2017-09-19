@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal.data;
 
-import static io.parsingdata.metal.Util.bytesToShortHexString;
+import static io.parsingdata.metal.Util.bytesToHexString;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class ConstantSource extends Source {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(0x" + bytesToShortHexString(data) + ")";
+        return getClass().getSimpleName() + "(0x" + bytesToHexString(data) + ")";
     }
 
     @Override

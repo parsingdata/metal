@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.data;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
@@ -29,6 +30,7 @@ import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.toByteArray;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
+import java.math.BigInteger;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -62,6 +64,18 @@ public class SliceTest {
         assertTrue(result.isPresent());
         assertTrue(stream.containsAll(3, 4, 5, 7));
         assertTrue(stream.containsNone(0, 1, 2, 6));
+    }
+
+    @Test
+    public void retrieveNoDataFromSlice() {
+        assertArrayEquals(new byte[] {}, new ConstantSource(new byte[] { 0, 1, 2, 3 }).slice(0, BigInteger.valueOf(4)).getData(BigInteger.valueOf(-1)));
+    }
+
+
+    @Test
+    public void retrievePartialDataFromSlice() {
+        assertArrayEquals(new byte[] { 0 }, new ConstantSource(new byte[] { 0, 1, 2, 3 }).slice(0, BigInteger.valueOf(4)).getData(BigInteger.ONE));
+        assertArrayEquals(new byte[] { 0, 1, 2, 3 }, new ConstantSource(new byte[] { 0, 1, 2, 3 }).slice(0, BigInteger.valueOf(4)).getData(BigInteger.TEN));
     }
 
 }

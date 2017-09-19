@@ -38,9 +38,15 @@ public class Slice {
     }
 
     public byte[] getData() {
+        return getData(length);
+    }
+
+    public byte[] getData(final BigInteger limit) {
+        if (limit.compareTo(BigInteger.ZERO) < 0) { return new byte[] {}; }
+        final BigInteger calculatedLength = limit.compareTo(length) > 0 ? length : limit;
         try {
-            return source.getData(offset, length);
-        } catch (IOException e) {
+            return source.getData(offset, calculatedLength);
+        } catch(IOException e) {
             throw new UncheckedIOException(e);
         }
     }

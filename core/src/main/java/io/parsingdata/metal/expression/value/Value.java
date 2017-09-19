@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static io.parsingdata.metal.Util.bytesToShortHexString;
+import static io.parsingdata.metal.Util.bytesToHexString;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
@@ -30,6 +30,8 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 
 public class Value {
+
+    public static final BigInteger TO_STRING_BYTE_COUNT = BigInteger.valueOf(4);
 
     public final Slice slice;
     public final Encoding encoding;
@@ -62,7 +64,7 @@ public class Value {
 
     @Override
     public String toString() {
-        return "0x" + bytesToShortHexString(getValue());
+        return "0x" + bytesToHexString(slice.getData(TO_STRING_BYTE_COUNT)) + (getLength().compareTo(TO_STRING_BYTE_COUNT) > 0 ? "..." : "");
     }
 
     @Override
