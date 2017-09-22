@@ -99,6 +99,8 @@ public final class Shorthand {
     public static Token def(final String name, final long size, final Expression predicate) { return def(name, size, predicate, null); }
     public static Token def(final String name, final long size, final Encoding encoding) { return def(name, con(size), encoding); }
     public static Token def(final String name, final long size) { return def(name, size, (Encoding)null); }
+    public static Token nod(final ValueExpression size) { return def(EMPTY_NAME, size); }
+    public static Token nod(final long size) { return nod(con(size)); }
     public static Token cho(final String name, final Encoding encoding, final Token token1, final Token token2, final Token... tokens) { return new Cho(name, encoding, token1, token2, tokens); }
     public static Token cho(final String name, final Token token1, final Token token2, final Token... tokens) { return cho(name, null, token1, token2, tokens); }
     public static Token cho(final Encoding encoding, final Token token1, final Token token2, final Token... tokens) { return cho(NO_NAME, encoding, token1, token2, tokens); }
