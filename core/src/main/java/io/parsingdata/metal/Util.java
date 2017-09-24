@@ -35,8 +35,6 @@ public final class Util {
 
     private Util() {}
 
-    final public static int MAX_VALUES_IN_HEX_STRING = 10;
-
     final private static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray(); // Private because array content is mutable.
 
     public static <T>T checkNotNull(final T argument, final String name) {
