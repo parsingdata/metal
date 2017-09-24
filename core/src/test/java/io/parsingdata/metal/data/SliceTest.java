@@ -33,12 +33,16 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import java.math.BigInteger;
 import java.util.Optional;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.util.InMemoryByteStream;
 import io.parsingdata.metal.util.ReadTrackingByteStream;
 
 public class SliceTest {
+
+    @Rule public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void lazyRead() {
@@ -67,7 +71,9 @@ public class SliceTest {
     }
 
     @Test
-    public void retrieveNoDataFromSlice() {
+    public void retrieveDataFromSliceWithNegativeLimit() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Argument limit may not be negative.");
         assertArrayEquals(new byte[] {}, new ConstantSource(new byte[] { 0, 1, 2, 3 }).slice(0, BigInteger.valueOf(4)).getData(BigInteger.valueOf(-1)));
     }
 
