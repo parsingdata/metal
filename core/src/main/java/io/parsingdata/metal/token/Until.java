@@ -96,7 +96,9 @@ public class Until extends Token {
     }
 
     private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final BigInteger currentSize, final BigInteger stepSize, final BigInteger maxSize, final Encoding encoding) {
-        if (stepSize.compareTo(ZERO) == 0 || stepSize.compareTo(ZERO) > 0 && currentSize.compareTo(maxSize) > 0 || stepSize.compareTo(ZERO) < 0 && currentSize.compareTo(maxSize) < 0) { return complete(Util::failure); }
+        if (stepSize.compareTo(ZERO) == 0 ||
+            stepSize.compareTo(ZERO) > 0 && currentSize.compareTo(maxSize) > 0 ||
+            stepSize.compareTo(ZERO) < 0 && currentSize.compareTo(maxSize) < 0) { return complete(Util::failure); }
         if (!environment.isAvailable(currentSize)) { return complete(Util::failure); }
         final Slice slice = environment.slice(currentSize);
         return terminator.parse(scope, currentSize.compareTo(ZERO) == 0 ? environment : environment.add(new ParseValue(name, this, slice, encoding)).seek(environment.offset + currentSize.longValue()), encoding)

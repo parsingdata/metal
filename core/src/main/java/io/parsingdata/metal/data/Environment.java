@@ -81,9 +81,9 @@ public class Environment {
         return new Environment(order, new DataExpressionSource(dataExpression, index, environment.order, encoding), 0L, callbacks);
     }
 
-    public boolean isAvailable(final BigInteger dataSize) {
-        if (dataSize.compareTo(ZERO) < 0) { return false; }
-        return source.isAvailable(offset, dataSize);
+    public boolean isAvailable(final BigInteger length) {
+        if (length.compareTo(ZERO) < 0) { return false; }
+        return source.isAvailable(offset, length);
     }
 
     public Slice slice(final BigInteger length) {

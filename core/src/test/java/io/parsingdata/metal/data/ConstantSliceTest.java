@@ -43,11 +43,10 @@ public class ConstantSliceTest {
 
     @Test
     public void readBeyondSourceSize() throws IOException {
-        thrown.expect(IOException.class);
         final byte[] input = { 1, 2, 3, 4 };
         final Slice slice = createFromBytes(input);
-        final byte[] outputBeyond = slice.source.getData(4, BigInteger.ONE);
-        assertEquals(0, outputBeyond.length);
+        thrown.expect(IOException.class);
+        slice.source.getData(4, BigInteger.ONE);
     }
 
     @Test
