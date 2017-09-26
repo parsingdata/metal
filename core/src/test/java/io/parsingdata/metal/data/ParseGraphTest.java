@@ -22,10 +22,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.nod;
-import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
@@ -190,19 +186,6 @@ public class ParseGraphTest {
         assertEquals(b, pgl.tail.tail.head.asGraph().tail.tail.tail.head.asGraph().head.asValue());
         assertTrue(pgl.tail.tail.tail.head.isValue());
         assertEquals(a, pgl.tail.tail.tail.head.asValue());
-    }
-
-    @Test
-    public void testHeadContainsLowestOffsetValue() throws IOException {
-        final Environment environment = stream(0, 0, 0);
-        final Token token = seq(
-            repn(
-                 def("zero", 1),
-                 con(2)),
-            nod(con(1)));
-        // creates a ParseGraph with values in the head, and an empty graph as tail
-        final Optional<Environment> result = token.parse(environment, enc());
-        assertTrue(result.get().order.head.asGraph().head.asGraph().head.isValue());
     }
 
     @Test

@@ -19,8 +19,8 @@ package io.parsingdata.metal.expression.value.reference;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
-import static io.parsingdata.metal.SafeTrampoline.complete;
-import static io.parsingdata.metal.SafeTrampoline.intermediate;
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Selection.reverse;
 
@@ -28,7 +28,7 @@ import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.SafeTrampoline;
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
@@ -62,7 +62,7 @@ public class Nth implements ValueExpression {
         return reverse(eval(values.eval(graph, encoding), indices.eval(graph, encoding), new ImmutableList<>()).computeResult());
     }
 
-    private SafeTrampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ImmutableList<Optional<Value>> indices, final ImmutableList<Optional<Value>> result) {
+    private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ImmutableList<Optional<Value>> indices, final ImmutableList<Optional<Value>> result) {
         if (indices.isEmpty()) { return complete(() -> result); }
         if (indices.head.isPresent()) {
             final BigInteger index = indices.head.get().asNumeric();
@@ -74,7 +74,7 @@ public class Nth implements ValueExpression {
         return intermediate(() -> eval(values, indices.tail, result.add(Optional.empty())));
     }
 
-    private SafeTrampoline<Optional<Value>> nth(final ImmutableList<Optional<Value>> values, final BigInteger index) {
+    private Trampoline<Optional<Value>> nth(final ImmutableList<Optional<Value>> values, final BigInteger index) {
         if (index.equals(ZERO)) {
             return complete(() -> values.head);
         }

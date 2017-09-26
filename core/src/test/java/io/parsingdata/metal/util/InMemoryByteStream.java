@@ -31,11 +31,16 @@ public class InMemoryByteStream implements ByteStream {
         this.data = data;
     }
 
-    public int read(final long offset, final byte[] data) throws IOException {
-        if (offset >= this.data.length) { return 0; }
-        final int toCopy = (int)offset + data.length > this.data.length ? this.data.length - (int)offset : data.length;
-        System.arraycopy(this.data, (int)offset, data, 0, toCopy);
-        return toCopy;
+    public byte[] read(final long offset, final int length) throws IOException {
+        if (!isAvailable(offset, length)) { throw new IOException("Data to read is not available."); }
+        byte[] data = new byte[length];
+        System.arraycopy(this.data, (int)offset, data, 0, length);
+        return data;
+    }
+
+    @Override
+    public boolean isAvailable(final long offset, final int length) {
+        return offset + length <= data.length;
     }
 
     @Override

@@ -71,7 +71,6 @@ import io.parsingdata.metal.expression.value.reference.Ref.NameRef;
 import io.parsingdata.metal.expression.value.reference.Self;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Def;
-import io.parsingdata.metal.token.Nod;
 import io.parsingdata.metal.token.Post;
 import io.parsingdata.metal.token.Pre;
 import io.parsingdata.metal.token.Rep;
@@ -100,6 +99,8 @@ public final class Shorthand {
     public static Token def(final String name, final long size, final Expression predicate) { return def(name, size, predicate, null); }
     public static Token def(final String name, final long size, final Encoding encoding) { return def(name, con(size), encoding); }
     public static Token def(final String name, final long size) { return def(name, size, (Encoding)null); }
+    public static Token nod(final ValueExpression size) { return def(EMPTY_NAME, size); }
+    public static Token nod(final long size) { return nod(con(size)); }
     public static Token cho(final String name, final Encoding encoding, final Token token1, final Token token2, final Token... tokens) { return new Cho(name, encoding, token1, token2, tokens); }
     public static Token cho(final String name, final Token token1, final Token token2, final Token... tokens) { return cho(name, null, token1, token2, tokens); }
     public static Token cho(final Encoding encoding, final Token token1, final Token token2, final Token... tokens) { return cho(NO_NAME, encoding, token1, token2, tokens); }
@@ -136,10 +137,6 @@ public final class Shorthand {
     public static Token opt(final String name, final Token token) { return opt(name, token, null); }
     public static Token opt(final Token token, final Encoding encoding) { return opt(NO_NAME, token, encoding); }
     public static Token opt(final Token token) { return opt(token, null); }
-    public static Token nod(final String name, final ValueExpression size) { return new Nod(name, size, null); }
-    public static Token nod(final ValueExpression size) { return nod(NO_NAME, size); }
-    public static Token nod(final String name, final long size) { return nod(name, con(size)); }
-    public static Token nod(final long size) { return nod(NO_NAME, size); }
     public static Token token(final String tokenName) { return new TokenRef(NO_NAME, tokenName, null); }
     public static Token tie(final String name, final Token token, final ValueExpression dataExpression, final Encoding encoding) { return new Tie(name, token, dataExpression, encoding); }
     public static Token tie(final String name, final Token token, final ValueExpression dataExpression) { return tie(name, token, dataExpression, null); }

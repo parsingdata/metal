@@ -18,7 +18,6 @@ package io.parsingdata.metal.token;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -62,18 +61,18 @@ public abstract class Token {
         this.encoding = encoding;
     }
 
-    public Optional<Environment> parse(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    public Optional<Environment> parse(final String scope, final Environment environment, final Encoding encoding) {
         final Encoding activeEncoding = this.encoding != null ? this.encoding : encoding;
         final Optional<Environment> result = parseImpl(makeScope(checkNotNull(scope, "scope")), checkNotNull(environment, "environment"), activeEncoding);
         environment.callbacks.handle(this, environment, result);
         return result;
     }
 
-    public Optional<Environment> parse(final Environment environment, final Encoding encoding) throws IOException {
+    public Optional<Environment> parse(final Environment environment, final Encoding encoding) {
         return parse(NO_NAME, environment, encoding);
     }
 
-    protected abstract Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException;
+    protected abstract Optional<Environment> parseImpl(String scope, Environment environment, Encoding encoding);
 
     private String makeScope(final String scope) {
         return scope + (scope.isEmpty() || name.isEmpty() ? NO_NAME : SEPARATOR) + name;

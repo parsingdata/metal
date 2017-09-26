@@ -16,16 +16,15 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.SafeTrampoline.complete;
-import static io.parsingdata.metal.SafeTrampoline.intermediate;
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.SafeTrampoline;
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseItem;
@@ -46,7 +45,7 @@ public class TokenRef extends Token {
 
     private static final Token LOOKUP_FAILED = new Token("LOOKUP_FAILED", null) {
         @Override
-        protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+        protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
             return failure();
         }
     };
@@ -60,11 +59,11 @@ public class TokenRef extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
         return lookup(ImmutableList.create(environment.order), referenceName).computeResult().parse(scope, environment, encoding);
     }
 
-    private SafeTrampoline<Token> lookup(final ImmutableList<ParseItem> items, final String referenceName) {
+    private Trampoline<Token> lookup(final ImmutableList<ParseItem> items, final String referenceName) {
         if (items.isEmpty()) { return complete(() -> LOOKUP_FAILED); }
         final ParseItem item = items.head;
         if (item.getDefinition().name.equals(referenceName)) { return complete(item::getDefinition); }

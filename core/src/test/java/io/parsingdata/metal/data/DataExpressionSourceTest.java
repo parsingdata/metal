@@ -1,6 +1,6 @@
 package io.parsingdata.metal.data;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
@@ -13,6 +13,7 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Optional;
 
 import org.junit.Rule;
@@ -42,8 +43,8 @@ public class DataExpressionSourceTest {
     @Test
     public void createSliceFromParseValue() throws IOException {
         final ParseValue value = setupValue();
-        assertEquals(2, value.slice.source.slice(2, 4).size);
-        assertEquals(0, value.slice.source.slice(4, 4).size);
+        assertTrue(value.slice.source.isAvailable(0, BigInteger.valueOf(4)));
+        assertFalse(value.slice.source.isAvailable(0, BigInteger.valueOf(5)));
     }
 
     @Test
@@ -52,7 +53,7 @@ public class DataExpressionSourceTest {
         thrown.expectMessage("ValueExpression dataExpression yields 1 result(s) (expected at least 2).");
         final Optional<Environment> result = setupResult();
         final DataExpressionSource source = new DataExpressionSource(ref("a"), 1, result.get().order, enc());
-        source.getData(0, 4);
+        source.getData(0, BigInteger.valueOf(4));
     }
 
 }

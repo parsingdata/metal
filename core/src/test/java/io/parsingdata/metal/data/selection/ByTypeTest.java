@@ -21,6 +21,7 @@ import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,11 +33,10 @@ import io.parsingdata.metal.data.Source;
 public class ByTypeTest {
 
     public static final Source EMPTY_SOURCE = new Source() {
-        @Override
-        protected byte[] getData(long offset, int size) throws IOException {
-            throw new IllegalStateException();
-        }
+        @Override protected byte[] getData(long offset, BigInteger length) throws IOException { throw new IllegalStateException(); }
+        @Override public boolean isAvailable(long offset, BigInteger length) { return false; }
     };
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 

@@ -23,7 +23,6 @@ import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
 import static io.parsingdata.metal.data.Selection.hasRootAtOffset;
 
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -63,7 +62,7 @@ public class Sub extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
         final ImmutableList<Optional<Value>> addresses = address.eval(environment.order, encoding);
         if (addresses.isEmpty()) {
             return failure();
@@ -72,7 +71,7 @@ public class Sub extends Token {
             .flatMap(nextEnvironment -> success(nextEnvironment.seek(environment.offset)));
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> addresses, final Environment environment, final Encoding encoding) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> addresses, final Environment environment, final Encoding encoding) {
         if (addresses.isEmpty()) {
             return complete(() -> success(environment.closeBranch()));
         }
@@ -84,7 +83,7 @@ public class Sub extends Token {
             .orElseGet(() -> complete(Util::failure));
     }
 
-    private Optional<Environment> parse(final String scope, final long offset, final Source source, final Environment environment, final Encoding encoding) throws IOException {
+    private Optional<Environment> parse(final String scope, final long offset, final Source source, final Environment environment, final Encoding encoding) {
         if (hasRootAtOffset(environment.order, token.getCanonical(environment), offset, source)) {
             return success(environment.add(new ParseReference(offset, source, token.getCanonical(environment))));
         }

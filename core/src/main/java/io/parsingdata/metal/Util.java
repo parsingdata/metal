@@ -17,6 +17,7 @@
 package io.parsingdata.metal;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigInteger;
 import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
@@ -33,8 +34,6 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 public final class Util {
 
     private Util() {}
-
-    final public static int MAX_VALUES_IN_HEX_STRING = 10;
 
     final private static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray(); // Private because array content is mutable.
 
@@ -61,17 +60,10 @@ public final class Util {
             && object.getClass() == other.getClass();
     }
 
-    public static String bytesToShortHexString(final byte[] bytes) {
+    public static String bytesToHexString(final byte[] bytes) {
         checkNotNull(bytes, "bytes");
-        if (bytes.length > (MAX_VALUES_IN_HEX_STRING + 1)) {
-            return fillHexDigits(bytes, MAX_VALUES_IN_HEX_STRING) + "...";
-        }
-        return fillHexDigits(bytes, bytes.length);
-    }
-
-    private static String fillHexDigits(final byte[] bytes, final int count) {
-        char[] hexChars = new char[count * 2];
-        for (int j = 0; j < count; j++) {
+        char[] hexChars = new char[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++) {
             final int v = bytes[j] & 0xFF;
             hexChars[j * 2] = HEX_ARRAY[v >>> 4];
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
@@ -80,7 +72,7 @@ public final class Util {
     }
 
     public static Slice createFromBytes(final byte[] data) {
-        return new Slice(new ConstantSource(data), 0, data);
+        return new Slice(new ConstantSource(data), 0, BigInteger.valueOf(data.length));
     }
 
     public static ValueExpression inflate(final ValueExpression target) {

@@ -16,15 +16,15 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static io.parsingdata.metal.SafeTrampoline.complete;
-import static io.parsingdata.metal.SafeTrampoline.intermediate;
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Selection.reverse;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.SafeTrampoline;
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
@@ -57,7 +57,7 @@ public class Elvis implements ValueExpression {
         return reverse(eval(new ImmutableList<>(), left.eval(graph, encoding), right.eval(graph, encoding)).computeResult());
     }
 
-    private SafeTrampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> result, final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues) {
+    private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> result, final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues) {
         if (leftValues.isEmpty()) { return complete(() -> result.add(reverse(rightValues))); }
         if (rightValues.isEmpty()) { return complete(() -> result.add(reverse(leftValues))); }
         return intermediate(() -> eval(result.add(leftValues.head.isPresent() ? leftValues.head : rightValues.head), leftValues.tail, rightValues.tail));

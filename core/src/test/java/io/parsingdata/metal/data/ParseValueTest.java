@@ -41,11 +41,13 @@ public class ParseValueTest {
 
     private Token definition;
     private ParseValue value;
+    private ParseValue largerValue;
 
     @Before
     public void setUp() {
         definition = def("value", 1);
         value = new ParseValue("value", definition, createFromBytes(new byte[] { 1 }), enc());
+        largerValue = new ParseValue("largerValue", definition, createFromBytes(new byte[] { 0, 1, 2, 3, 4 }), enc());
     }
 
     @Test
@@ -65,8 +67,13 @@ public class ParseValueTest {
     }
 
     @Test
-    public void toStringTest() {
+    public void valueToStringTest() {
         assertThat(value.toString(), is("pval(value:0x01)"));
+    }
+
+    @Test
+    public void largerValueToStringTest() {
+        assertThat(largerValue.toString(), is("pval(largerValue:0x00010203...)"));
     }
 
     @Test

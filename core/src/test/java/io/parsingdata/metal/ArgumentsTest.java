@@ -22,7 +22,6 @@ import static org.junit.Assert.fail;
 
 import static io.parsingdata.metal.Shorthand.con;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -61,7 +60,6 @@ import io.parsingdata.metal.expression.value.reference.Nth;
 import io.parsingdata.metal.expression.value.reference.Offset;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Def;
-import io.parsingdata.metal.token.Nod;
 import io.parsingdata.metal.token.Pre;
 import io.parsingdata.metal.token.Rep;
 import io.parsingdata.metal.token.RepN;
@@ -80,7 +78,7 @@ public class ArgumentsTest {
     final private static ValueExpression VALID_VE = con(1);
     final private static BinaryOperator<ValueExpression> VALID_REDUCER = (left, right) -> null;
     final private static Expression VALID_E = (graph, encoding) -> false;
-    final private static Token VALID_T = new Token("", null) { @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; } };
+    final private static Token VALID_T = new Token("", null) { @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) { return null; } };
 
     private final Class<?> _class;
     private final Object[] _arguments;
@@ -127,8 +125,6 @@ public class ArgumentsTest {
             { Cho.class, new Object[] { VALID_NAME, null, VALID_T, VALID_T, null } },
             { Def.class, new Object[] { VALID_NAME, null, null } },
             { Def.class, new Object[] { null, VALID_VE, null } },
-            { Nod.class, new Object[] { null, VALID_VE, null } },
-            { Nod.class, new Object[] { VALID_NAME, null, null } },
             { Pre.class, new Object[] { null, VALID_T, null, null } },
             { Pre.class, new Object[] { VALID_NAME, null, null, null } },
             { Rep.class, new Object[] { null, VALID_T, null } },

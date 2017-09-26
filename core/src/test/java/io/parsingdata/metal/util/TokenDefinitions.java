@@ -54,8 +54,4 @@ public class TokenDefinitions {
         return def(name, con(1), Shorthand.eq(ref(ref)));
     }
 
-    public static Token notEqRef(final String name, final String ref) {
-        return def(name, con(1), not(Shorthand.eq(ref(ref))));
-    }
-
 }

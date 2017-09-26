@@ -31,8 +31,10 @@ import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,7 +99,6 @@ import io.parsingdata.metal.expression.value.reference.Nth;
 import io.parsingdata.metal.expression.value.reference.Offset;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Def;
-import io.parsingdata.metal.token.Nod;
 import io.parsingdata.metal.token.Post;
 import io.parsingdata.metal.token.Pre;
 import io.parsingdata.metal.token.Rep;
@@ -114,10 +115,15 @@ import io.parsingdata.metal.util.InMemoryByteStream;
 @RunWith(Parameterized.class)
 public class AutoEqualityTest {
 
+    public static final ByteStream DUMMY_STREAM = new ByteStream() {
+        @Override public byte[] read(long offset, int length) throws IOException { return new byte[0]; }
+        @Override public boolean isAvailable(long offset, int length) { return false; }
+    };
+
     private static final ParseValue PARSEVALUE = new ParseValue("a", any("a"), createFromBytes(new byte[]{1, 2}), enc());
     private static final ParseGraph GRAPH_WITH_REFERENCE = ParseGraph.EMPTY.add(new ParseReference(0, new ConstantSource(new byte[]{1, 2}), any("a")));
-    private static final ParseGraph BRANCHED_GRAPH = new Environment((offset, data) -> 0).addBranch(any("a")).order;
-    private static final ParseGraph CLOSED_BRANCHED_GRAPH = new Environment((offset, data) -> 0).addBranch(any("a")).closeBranch().order;
+    private static final ParseGraph BRANCHED_GRAPH = new Environment(DUMMY_STREAM).addBranch(any("a")).order;
+    private static final ParseGraph CLOSED_BRANCHED_GRAPH = new Environment(DUMMY_STREAM).addBranch(any("a")).closeBranch().order;
 
     private static final List<Supplier<Object>> STRINGS = Arrays.asList(() -> "a", () -> "b");
     private static final List<Supplier<Object>> ENCODINGS = Arrays.asList(() -> enc(), () -> signed(), () -> le(), () -> new Encoding(Charset.forName("UTF-8")));
@@ -127,14 +133,15 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> EXPRESSIONS = Arrays.asList(() -> TRUE, () -> not(TRUE));
     private static final List<Supplier<Object>> VALUES = Arrays.asList(() -> ConstantFactory.createFromString("a", enc()), () -> ConstantFactory.createFromString("b", enc()), () -> ConstantFactory.createFromNumeric(1L, signed()));
     private static final List<Supplier<Object>> REDUCERS = Arrays.asList(() -> (BinaryOperator<ValueExpression>) Shorthand::cat, () -> (BinaryOperator<ValueExpression>) Shorthand::div);
-    private static final List<Supplier<Object>> SLICES = Arrays.asList(() -> createFromBytes(new byte[] { 1, 2 }), () -> new Slice(new DataExpressionSource(ref("a"), 1, ParseGraph.EMPTY, enc()), 0, new byte[] { 0, 0 }));
+    private static final List<Supplier<Object>> SLICES = Arrays.asList(() -> createFromBytes(new byte[] { 1, 2 }), () -> new Slice(new DataExpressionSource(ref("a"), 1, ParseGraph.EMPTY, enc()), 0, BigInteger.valueOf(2)));
     private static final List<Supplier<Object>> BYTE_ARRAYS = Arrays.asList(() -> new byte[] { 0 }, () -> new byte[] { 1, 2 }, () -> new byte[] {});
     private static final List<Supplier<Object>> SOURCES = Arrays.asList(() -> new ConstantSource(new byte[] {}), () -> new DataExpressionSource(ref("x"), 8, ParseGraph.EMPTY.add(PARSEVALUE), signed()));
     private static final List<Supplier<Object>> LONGS = Arrays.asList(() -> 0L, () -> 1L, () -> 31L, () -> 100000L);
     private static final List<Supplier<Object>> INTEGERS = Arrays.asList(() -> 0, () -> 1, () -> 17, () -> 21212121);
     private static final List<Supplier<Object>> PARSEGRAPHS = Arrays.asList(() -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE);
     private static final List<Supplier<Object>> PARSEITEMS = Arrays.asList(() -> CLOSED_BRANCHED_GRAPH, () -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE, () -> ParseGraph.EMPTY.add(PARSEVALUE), () -> ParseGraph.EMPTY.add(PARSEVALUE).add(PARSEVALUE), () -> BRANCHED_GRAPH);
-    private static final List<Supplier<Object>> BYTESTREAMS = Arrays.asList(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> (ByteStream) (offset, data) -> 0);
+    private static final List<Supplier<Object>> BYTESTREAMS = Arrays.asList(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> DUMMY_STREAM);
+    private static final List<Supplier<Object>> BIGINTEGERS = Arrays.asList(() -> BigInteger.ONE, () -> BigInteger.valueOf(3));
     private static final Map<Class, List<Supplier<Object>>> mapping = new HashMap<Class, List<Supplier<Object>>>() {{
         put(String.class, STRINGS);
         put(Encoding.class, ENCODINGS);
@@ -152,13 +159,14 @@ public class AutoEqualityTest {
         put(ParseGraph.class, PARSEGRAPHS);
         put(ParseItem.class, PARSEITEMS);
         put(ByteStream.class, BYTESTREAMS);
+        put(BigInteger.class, BIGINTEGERS);
     }};
 
     @Parameterized.Parameters(name="{0}")
     public static Collection<Object[]> data() throws IllegalAccessException, InvocationTargetException, InstantiationException {
         return generateObjectArrays(
             // Tokens
-            Cho.class, Def.class, Nod.class, Pre.class, Rep.class, RepN.class, Seq.class, Sub.class, Tie.class,
+            Cho.class, Def.class, Pre.class, Rep.class, RepN.class, Seq.class, Sub.class, Tie.class,
             TokenRef.class, While.class, Post.class, Until.class,
             // ValueExpressions
             Len.class, Offset.class, Neg.class, Not.class, Count.class, First.class, Last.class, Reverse.class,

@@ -67,19 +67,16 @@ import static io.parsingdata.metal.Shorthand.until;
 import static io.parsingdata.metal.Shorthand.whl;
 import static io.parsingdata.metal.Util.createFromBytes;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
-import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import io.parsingdata.metal.data.DataExpressionSource;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
@@ -107,7 +104,7 @@ public class ToStringTest {
     @Test
     public void validateToStringImplementation() {
         final Expression e = not(and(eq(v(), v()), or(eqNum(v()), and(eqStr(v()), or(gtEqNum(v()), or(gtNum(v()), or(ltEqNum(v()), ltNum(v()))))))));
-        final Token t = until("untilName", v(), v(), v(), post(repn(sub(opt(pre(rep(cho(token("refName"), any(n()), seq(tie(nod(v()), v()), whl(def(n(), con(1), e), e), tie(t(), con(1))))), e)), v()), v()), e));
+        final Token t = until("untilName", v(), v(), v(), post(repn(sub(opt(pre(rep(cho(token("refName"), any(n()), seq(nod(10), tie(def(n(), v()), v()), whl(def(n(), con(1), e), e), tie(t(), con(1))))), e)), v()), v()), e));
         final String output = t.toString();
         for (int i = 0; i < count; i++) {
             assertTrue(output.contains(prefix + i));
@@ -176,17 +173,6 @@ public class ToStringTest {
     }
 
     @Test
-    public void slice() throws IOException {
-        final ParseValue pv1 = new ParseValue("name", NONE, createFromBytes(new byte[]{1, 2}), enc());
-        assertEquals("Slice(ConstantSource(0x0102)@0:2)", pv1.slice.toString());
-        final Environment oneValueEnvironment = stream().add(pv1);
-        final Environment twoValueEnvironment = oneValueEnvironment.add(new ParseValue("name2", NONE, new DataExpressionSource(ref("name"), 0, oneValueEnvironment.order, enc()).slice(0, 2), enc()));
-        final String dataExpressionSliceString = getValue(twoValueEnvironment.order, "name2").slice.toString();
-        assertTrue(dataExpressionSliceString.startsWith("Slice(DataExpressionSource(NameRef(name)[0]("));
-        assertTrue(dataExpressionSliceString.endsWith(")@0:2)"));
-    }
-
-    @Test
     public void callback() {
         final String emptyStreamName = "ByteStreamSource(InMemoryByteStream(0))";
         final String emptyGraphName = "pg(EMPTY)";
@@ -212,7 +198,7 @@ public class ToStringTest {
 
     private Token makeToken(final String name) {
         return new Token(name, enc()) {
-            @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException { return null; }
+            @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) { return null; }
             @Override public String toString() { return name; }
         };
     }

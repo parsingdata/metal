@@ -22,7 +22,6 @@ import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.success;
 
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -57,11 +56,11 @@ public class While extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
         return iterate(scope, environment.addBranch(this), encoding).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding) {
         if (predicate.eval(environment.order, encoding)) {
             return token.parse(scope, environment, encoding)
                 .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, encoding)))

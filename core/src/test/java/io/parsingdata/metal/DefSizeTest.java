@@ -28,6 +28,7 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -71,7 +72,7 @@ public class DefSizeTest {
             (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, // length = -1
             0x04, 0x08
         });
-        final Optional<Environment> result = FORMAT.parse(new Environment(stream), new Encoding());
+        final Optional<Environment> result = FORMAT.parse(new Environment(stream), signed());
 
         assertFalse(result.isPresent());
     }

@@ -18,12 +18,11 @@ package io.parsingdata.metal;
 
 import static org.junit.Assert.assertEquals;
 
-import static io.parsingdata.metal.SafeTrampoline.complete;
-import static io.parsingdata.metal.SafeTrampoline.intermediate;
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 
 import java.math.BigInteger;
 
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -51,26 +50,12 @@ public class TrampolineTest {
     }
 
     @Test
-    public void resultOnIntermediateSafeTrampoline() {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("An IntermediateTrampoline does not have a result.");
-        ((SafeTrampoline.IntermediateTrampoline<Integer>) () -> null).result();
-    }
-
-    @Test
-    public void nextOnFinalSafeTrampoline() {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("A CompletedTrampoline does not have a next computation.");
-        ((SafeTrampoline.CompletedTrampoline<Integer>) () -> 42).next();
-    }
-
-    @Test
     public void noStackOverflow() {
         // The 100000th Fibonacci number has 20899 digits
         assertEquals(20899, fibonacci(BigInteger.ZERO, BigInteger.ONE, 100000).computeResult().toString().length());
     }
 
-    private SafeTrampoline<BigInteger> fibonacci(final BigInteger l, final BigInteger r, final long count) {
+    private Trampoline<BigInteger> fibonacci(final BigInteger l, final BigInteger r, final long count) {
         if (count == 0) { return complete(() -> l); }
         return intermediate(() -> fibonacci(r, l.add(r), count-1));
     }

@@ -21,6 +21,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
+import static io.parsingdata.metal.AutoEqualityTest.DUMMY_STREAM;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
@@ -163,7 +164,7 @@ public class EqualityTest {
         final ParseGraph object = ParseGraph.EMPTY.add(value);
         assertFalse(object.equals(null));
         assertFalse(object.equals("a"));
-        final Environment environment = new Environment((offset, data) -> 0);
+        final Environment environment = new Environment(DUMMY_STREAM);
         assertNotEquals(environment.addBranch(any("a")).add(value).add(value).closeBranch().addBranch(any("a")).order, environment.addBranch(any("a")).closeBranch().addBranch(any("a")).order);
         assertNotEquals(environment.addBranch(any("a")).order, environment.addBranch(any("a")).closeBranch().order);
         assertNotEquals(environment.addBranch(any("a")).order, environment.addBranch(any("b")).order);

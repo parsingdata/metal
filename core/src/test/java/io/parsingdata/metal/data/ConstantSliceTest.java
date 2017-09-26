@@ -1,3 +1,19 @@
+/*
+ * Copyright 2013-2016 Netherlands Forensic Institute
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.parsingdata.metal.data;
 
 import static org.junit.Assert.assertEquals;
@@ -6,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import static io.parsingdata.metal.Util.createFromBytes;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Arrays;
 
 import org.junit.Rule;
@@ -25,6 +42,14 @@ public class ConstantSliceTest {
     }
 
     @Test
+    public void readBeyondSourceSize() throws IOException {
+        final byte[] input = { 1, 2, 3, 4 };
+        final Slice slice = createFromBytes(input);
+        thrown.expect(IOException.class);
+        slice.source.getData(4, BigInteger.ONE);
+    }
+
+    @Test
     public void checkData() {
         final byte[] input = { 1, 2, 3, 4 };
         final Slice slice = createFromBytes(input);
@@ -37,15 +62,9 @@ public class ConstantSliceTest {
     public void checkSource() throws IOException {
         final byte[] input = { 1, 2, 3, 4 };
         final Slice slice = createFromBytes(input);
-        final byte[] output = slice.source.getData(0, 4);
+        final byte[] output = slice.source.getData(0, BigInteger.valueOf(4));
         assertEquals(input.length, output.length);
         assertTrue(Arrays.equals(input, output));
-        final byte[] outputBeyond = slice.source.getData(4, 1);
-        assertEquals(0, outputBeyond.length);
-        final byte[] outputPartial = slice.source.getData(2, 4);
-        assertEquals(2, outputPartial.length);
-        assertEquals(input[2], outputPartial[0]);
-        assertEquals(input[3], outputPartial[1]);
     }
 
 }

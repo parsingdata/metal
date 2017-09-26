@@ -22,7 +22,6 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
 
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -60,7 +59,7 @@ public class Tie extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
         final ImmutableList<Optional<Value>> dataResult = dataExpression.eval(environment.order, encoding);
         if (dataResult.isEmpty()) {
             return failure();
@@ -68,7 +67,7 @@ public class Tie extends Token {
         return iterate(scope, dataResult, 0, environment, environment.addBranch(this), encoding).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> values, final int index, final Environment returnEnvironment, final Environment environment, final Encoding encoding) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> values, final int index, final Environment returnEnvironment, final Environment environment, final Encoding encoding) {
         if (values.isEmpty()) {
             return complete(() -> success(new Environment(environment.closeBranch().order, returnEnvironment.source, returnEnvironment.offset, returnEnvironment.callbacks)));
         }

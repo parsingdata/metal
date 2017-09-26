@@ -22,7 +22,6 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
 
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -58,7 +57,7 @@ public class RepN extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) throws IOException {
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
         final ImmutableList<Optional<Value>> counts = n.eval(environment.order, encoding);
         if (counts.size != 1 || !counts.head.isPresent()) {
             return failure();
@@ -66,7 +65,7 @@ public class RepN extends Token {
         return iterate(scope, environment.addBranch(this), encoding, counts.head.get().asNumeric().longValue()).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding, final long count) throws IOException {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding, final long count) {
         if (count <= 0) {
             return complete(() -> success(environment.closeBranch()));
         }
