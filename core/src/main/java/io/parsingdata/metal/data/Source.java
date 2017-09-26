@@ -21,12 +21,12 @@ import java.math.BigInteger;
 
 public abstract class Source {
 
-    public Slice slice(final long offset, final BigInteger length) {
+    Slice slice(final long offset, final BigInteger length) {
         return new Slice(this, offset, length);
     }
 
     protected abstract byte[] getData(long offset, BigInteger length) throws IOException;
 
-    public abstract boolean isAvailable(long offset, BigInteger length);
+    protected abstract boolean isAvailable(long offset, BigInteger length);
 
 }

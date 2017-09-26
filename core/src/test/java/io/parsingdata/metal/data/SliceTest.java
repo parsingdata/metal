@@ -17,6 +17,7 @@
 package io.parsingdata.metal.data;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
@@ -28,7 +29,11 @@ import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.toByteArray;
+import static io.parsingdata.metal.Util.createFromBytes;
+import static io.parsingdata.metal.data.ParseGraph.NONE;
+import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.math.BigInteger;
 import java.util.Optional;
@@ -82,6 +87,17 @@ public class SliceTest {
     public void retrievePartialDataFromSlice() {
         assertArrayEquals(new byte[] { 0 }, new ConstantSource(new byte[] { 0, 1, 2, 3 }).slice(0, BigInteger.valueOf(4)).getData(BigInteger.ONE));
         assertArrayEquals(new byte[] { 0, 1, 2, 3 }, new ConstantSource(new byte[] { 0, 1, 2, 3 }).slice(0, BigInteger.valueOf(4)).getData(BigInteger.TEN));
+    }
+
+    @Test
+    public void sliceToString() {
+        final ParseValue pv1 = new ParseValue("name", NONE, createFromBytes(new byte[]{1, 2}), enc());
+        assertEquals("Slice(ConstantSource(0x0102)@0:2)", pv1.slice.toString());
+        final Environment oneValueEnvironment = stream().add(pv1);
+        final Environment twoValueEnvironment = oneValueEnvironment.add(new ParseValue("name2", NONE, new DataExpressionSource(ref("name"), 0, oneValueEnvironment.order, enc()).slice(0, BigInteger.valueOf(2)), enc()));
+        final String dataExpressionSliceString = getValue(twoValueEnvironment.order, "name2").slice.toString();
+        assertTrue(dataExpressionSliceString.startsWith("Slice(DataExpressionSource(NameRef(name)[0]("));
+        assertTrue(dataExpressionSliceString.endsWith(")@0:2)"));
     }
 
 }

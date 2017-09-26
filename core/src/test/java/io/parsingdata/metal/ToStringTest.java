@@ -67,20 +67,16 @@ import static io.parsingdata.metal.Shorthand.until;
 import static io.parsingdata.metal.Shorthand.whl;
 import static io.parsingdata.metal.Util.createFromBytes;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
-import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
-import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import io.parsingdata.metal.data.DataExpressionSource;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
@@ -174,17 +170,6 @@ public class ToStringTest {
         final String pv2String = "pval(two:0x0304)";
         assertEquals(">" + pv2String + ">" + pv1String, ImmutableList.create(pv1).add(pv2).toString());
         assertEquals(">" + pv2String + ">" + pv1String, ImmutableList.create(pv1).add(pv2).toString());
-    }
-
-    @Test
-    public void slice() throws IOException {
-        final ParseValue pv1 = new ParseValue("name", NONE, createFromBytes(new byte[]{1, 2}), enc());
-        assertEquals("Slice(ConstantSource(0x0102)@0:2)", pv1.slice.toString());
-        final Environment oneValueEnvironment = stream().add(pv1);
-        final Environment twoValueEnvironment = oneValueEnvironment.add(new ParseValue("name2", NONE, new DataExpressionSource(ref("name"), 0, oneValueEnvironment.order, enc()).slice(0, BigInteger.valueOf(2)), enc()));
-        final String dataExpressionSliceString = getValue(twoValueEnvironment.order, "name2").slice.toString();
-        assertTrue(dataExpressionSliceString.startsWith("Slice(DataExpressionSource(NameRef(name)[0]("));
-        assertTrue(dataExpressionSliceString.endsWith(")@0:2)"));
     }
 
     @Test
