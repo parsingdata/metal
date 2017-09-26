@@ -47,7 +47,7 @@ public class DataExpressionSource extends Source {
 
     @Override
     protected byte[] getData(final long offset, final BigInteger length) throws IOException {
-        if (!isAvailable(offset, length)) { throw new IOException("Data to read is not available."); }
+        if (!isAvailable(offset, length)) { throw new IOException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
         final ImmutableList<Optional<Value>> results = dataExpression.eval(graph, encoding);
         final byte[] inputData = getValueAtIndex(results, index, 0).computeResult().get().getValue();
         final byte[] outputData = new byte[length.intValue()];

@@ -36,7 +36,7 @@ public class ConstantSource extends Source {
 
     @Override
     protected byte[] getData(final long offset, final BigInteger length) throws IOException {
-        if (!isAvailable(offset, length)) { throw new IOException("Data to read is not available."); }
+        if (!isAvailable(offset, length)) { throw new IOException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
         final byte[] outputData = new byte[length.intValue()];
         System.arraycopy(data, (int)offset, outputData, 0, outputData.length);
         return outputData;

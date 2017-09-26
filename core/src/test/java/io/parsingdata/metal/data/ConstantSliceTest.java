@@ -44,7 +44,6 @@ public class ConstantSliceTest {
     @Test
     public void readBeyondSourceSize() throws IOException {
         thrown.expect(IOException.class);
-        thrown.expectMessage("Data to read is not available.");
         final byte[] input = { 1, 2, 3, 4 };
         final Slice slice = createFromBytes(input);
         final byte[] outputBeyond = slice.source.getData(4, BigInteger.ONE);
