@@ -21,6 +21,7 @@ import static java.math.BigInteger.ZERO;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
+import java.util.Optional;
 
 import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
@@ -81,13 +82,9 @@ public class Environment {
         return new Environment(order, new DataExpressionSource(dataExpression, index, environment.order, encoding), 0L, callbacks);
     }
 
-    public boolean isAvailable(final BigInteger length) {
-        if (length.compareTo(ZERO) < 0) { return false; }
-        return source.isAvailable(offset, length);
-    }
-
-    public Slice slice(final BigInteger length) {
-        return source.slice(offset, length);
+    public Optional<Slice> slice(final BigInteger length) {
+        if (length.compareTo(ZERO) < 0 || !source.isAvailable(offset, length)) { return Optional.empty(); }
+        return Optional.of(source.slice(offset, length));
     }
 
     @Override
