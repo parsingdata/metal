@@ -16,9 +16,8 @@
 
 package io.parsingdata.metal.data;
 
-import static java.math.BigInteger.ZERO;
-
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.Slice.createFromSource;
 
 import java.math.BigInteger;
 import java.util.Optional;
@@ -83,8 +82,7 @@ public class Environment {
     }
 
     public Optional<Slice> slice(final BigInteger length) {
-        if (length.compareTo(ZERO) < 0 || !source.isAvailable(offset, length)) { return Optional.empty(); }
-        return Optional.of(source.slice(offset, length));
+        return createFromSource(source, offset, length);
     }
 
     @Override

@@ -19,7 +19,7 @@ package io.parsingdata.metal.expression.value;
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.Util.createFromBytes;
+import static io.parsingdata.metal.data.Slice.createFromBytes;
 
 import java.util.Objects;
 import java.util.Optional;

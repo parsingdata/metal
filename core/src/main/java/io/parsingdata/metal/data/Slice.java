@@ -16,12 +16,15 @@
 
 package io.parsingdata.metal.data;
 
+import static java.math.BigInteger.ZERO;
+
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.math.BigInteger;
 import java.util.Objects;
+import java.util.Optional;
 
 import io.parsingdata.metal.Util;
 
@@ -31,10 +34,19 @@ public class Slice {
     public final long offset;
     public final BigInteger length;
 
-    public Slice(final Source source, final long offset, final BigInteger length) {
+    private Slice(final Source source, final long offset, final BigInteger length) {
         this.source = checkNotNull(source, "source");
         this.offset = offset;
         this.length = checkNotNull(length, "length");
+    }
+
+    public static Optional<Slice> createFromSource(final Source source, final long offset, final BigInteger length) {
+        if (length.compareTo(ZERO) < 0 || !source.isAvailable(offset, length)) { return Optional.empty(); }
+        return Optional.of(new Slice(source, offset, length));
+    }
+
+    public static Slice createFromBytes(final byte[] data) {
+        return new Slice(new ConstantSource(data), 0, BigInteger.valueOf(data.length));
     }
 
     public byte[] getData() {

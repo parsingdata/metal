@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static io.parsingdata.metal.Util.createFromBytes;
+import static io.parsingdata.metal.data.Slice.createFromBytes;
 
 import java.util.Optional;
 

@@ -23,7 +23,7 @@ import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.exp;
 import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Util.createFromBytes;
+import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 

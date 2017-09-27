@@ -17,12 +17,10 @@
 package io.parsingdata.metal;
 
 import java.io.ByteArrayOutputStream;
-import java.math.BigInteger;
 import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
-import io.parsingdata.metal.data.ConstantSource;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.Slice;
@@ -71,10 +69,6 @@ public final class Util {
         return new String(hexChars);
     }
 
-    public static Slice createFromBytes(final byte[] data) {
-        return new Slice(new ConstantSource(data), 0, BigInteger.valueOf(data.length));
-    }
-
     public static ValueExpression inflate(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
@@ -91,7 +85,7 @@ public final class Util {
                         return Optional.empty();
                     }
                 }
-                return Optional.of(new Value(createFromBytes(out.toByteArray()), encoding));
+                return Optional.of(new Value(Slice.createFromBytes(out.toByteArray()), encoding));
             }
         };
     }

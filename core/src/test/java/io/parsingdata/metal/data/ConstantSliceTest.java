@@ -19,7 +19,7 @@ package io.parsingdata.metal.data;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import static io.parsingdata.metal.Util.createFromBytes;
+import static io.parsingdata.metal.data.Slice.createFromBytes;
 
 import java.io.IOException;
 import java.math.BigInteger;

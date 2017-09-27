@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal;
 
-import static io.parsingdata.metal.Util.createFromBytes;
+import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.token.Token.EMPTY_NAME;
 import static io.parsingdata.metal.token.Token.NO_NAME;
 
