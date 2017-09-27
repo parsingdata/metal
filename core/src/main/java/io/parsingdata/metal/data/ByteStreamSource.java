@@ -19,12 +19,13 @@ package io.parsingdata.metal.data;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.math.BigInteger;
 import java.util.Objects;
 
 import io.parsingdata.metal.Util;
 
-public class ByteStreamSource extends Source {
+public class ByteStreamSource implements Source {
 
     public final ByteStream input;
 
@@ -33,9 +34,13 @@ public class ByteStreamSource extends Source {
     }
 
     @Override
-    protected byte[] getData(final long offset, final BigInteger length) throws IOException {
-        if (!isAvailable(offset, length)) { throw new IOException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
-        return input.read(offset, length.intValue());
+    public byte[] getData(final long offset, final BigInteger length) {
+        if (!isAvailable(offset, length)) { throw new RuntimeException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
+        try {
+            return input.read(offset, length.intValue());
+        } catch (final IOException exception) {
+            throw new UncheckedIOException(exception);
+        }
     }
 
     @Override

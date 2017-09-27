@@ -88,7 +88,7 @@ public class SourceAndSliceTest {
 
     @Test
     public void readBeyondEndOfSource() throws IOException {
-        thrown.expect(IOException.class);
+        thrown.expect(RuntimeException.class);
         source.getData(1, BigInteger.valueOf(4));
     }
 
@@ -99,7 +99,7 @@ public class SourceAndSliceTest {
 
     @Test
     public void startReadBeyondEndOfSource() throws IOException {
-        thrown.expect(IOException.class);
+        thrown.expect(RuntimeException.class);
         source.getData(5, BigInteger.valueOf(0));
     }
 

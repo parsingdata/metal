@@ -41,6 +41,7 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
@@ -48,10 +49,12 @@ import java.util.Optional;
 
 import org.junit.Test;
 
+import io.parsingdata.metal.data.ConstantSource;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.True;
 import io.parsingdata.metal.expression.value.reference.Ref;
@@ -190,6 +193,17 @@ public class EqualityTest {
         assertNotEquals(object, new DefinitionRef(any("otherName")));
         assertNotEquals(object, new NameRef("name"));
         assertNotEquals(object, new DefinitionRef(any("name"), con(1)));
+    }
+
+    @Test
+    public void slice() {
+        final Slice object = Slice.createFromBytes(new byte[] { 0, 1, 2, 3 });
+        assertFalse(object.equals(null));
+        assertFalse(object.equals("name"));
+        assertEquals(object, Slice.createFromBytes(new byte[] { 0, 1, 2, 3 }));
+        assertNotEquals(object, Slice.createFromBytes(new byte[] { 0, 1, 2, 4 }));
+        assertNotEquals(object, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), 1, BigInteger.valueOf(2)).get());
+        assertNotEquals(object, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), 0, BigInteger.valueOf(2)).get());
     }
 
 }

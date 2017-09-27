@@ -31,7 +31,7 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
-public class DataExpressionSource extends Source {
+public class DataExpressionSource implements Source {
 
     public final ValueExpression dataExpression;
     public final int index;
@@ -46,8 +46,8 @@ public class DataExpressionSource extends Source {
     }
 
     @Override
-    protected byte[] getData(final long offset, final BigInteger length) throws IOException {
-        if (!isAvailable(offset, length)) { throw new IOException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
+    public byte[] getData(final long offset, final BigInteger length) {
+        if (!isAvailable(offset, length)) { throw new RuntimeException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
         final ImmutableList<Optional<Value>> results = dataExpression.eval(graph, encoding);
         final byte[] inputData = getValueAtIndex(results, index, 0).computeResult().get().getValue();
         final byte[] outputData = new byte[length.intValue()];

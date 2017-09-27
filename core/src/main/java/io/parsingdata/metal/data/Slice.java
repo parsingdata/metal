@@ -56,11 +56,7 @@ public class Slice {
     public byte[] getData(final BigInteger limit) {
         if (limit.compareTo(BigInteger.ZERO) < 0) { throw new IllegalArgumentException("Argument limit may not be negative."); }
         final BigInteger calculatedLength = limit.compareTo(length) > 0 ? length : limit;
-        try {
-            return source.getData(offset, calculatedLength);
-        } catch(IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        return source.getData(offset, calculatedLength);
     }
 
     @Override

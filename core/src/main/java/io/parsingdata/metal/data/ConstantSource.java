@@ -26,7 +26,7 @@ import java.util.Objects;
 
 import io.parsingdata.metal.Util;
 
-public class ConstantSource extends Source {
+public class ConstantSource implements Source {
 
     private final byte[] data; // Private because array content is mutable.
 
@@ -35,8 +35,8 @@ public class ConstantSource extends Source {
     }
 
     @Override
-    protected byte[] getData(final long offset, final BigInteger length) throws IOException {
-        if (!isAvailable(offset, length)) { throw new IOException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
+    public byte[] getData(final long offset, final BigInteger length) {
+        if (!isAvailable(offset, length)) { throw new RuntimeException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
         final byte[] outputData = new byte[length.intValue()];
         System.arraycopy(data, (int)offset, outputData, 0, outputData.length);
         return outputData;
