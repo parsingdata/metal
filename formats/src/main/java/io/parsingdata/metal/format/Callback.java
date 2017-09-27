@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal.format;
 
-import static io.parsingdata.metal.Util.createFromBytes;
+import static io.parsingdata.metal.data.Slice.createFromBytes;
 
 import java.util.Optional;
 import java.util.zip.CRC32;
