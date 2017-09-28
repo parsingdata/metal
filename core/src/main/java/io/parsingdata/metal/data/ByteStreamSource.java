@@ -29,7 +29,7 @@ public class ByteStreamSource extends Source {
 
     public final ByteStream input;
 
-    public ByteStreamSource(final ByteStream input) {
+    ByteStreamSource(final ByteStream input) {
         this.input = checkNotNull(input, "input");
     }
 

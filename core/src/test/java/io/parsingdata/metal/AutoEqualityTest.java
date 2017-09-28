@@ -193,7 +193,8 @@ public class AutoEqualityTest {
     }
 
     private static Object[] generateObjectArrays(Class c) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        Constructor cons = c.getConstructors()[0];
+        Constructor cons = c.getDeclaredConstructors()[0];
+        cons.setAccessible(true);
         List<List<Supplier<Object>>> args = new ArrayList<>();
         for (Class cl : cons.getParameterTypes()) {
             args.add(mapping.get(cl));
