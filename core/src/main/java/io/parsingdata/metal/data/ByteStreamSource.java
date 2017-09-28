@@ -25,7 +25,7 @@ import java.util.Objects;
 
 import io.parsingdata.metal.Util;
 
-public class ByteStreamSource implements Source {
+public class ByteStreamSource extends Source {
 
     public final ByteStream input;
 
@@ -34,7 +34,7 @@ public class ByteStreamSource implements Source {
     }
 
     @Override
-    public byte[] getData(final long offset, final BigInteger length) {
+    protected byte[] getData(final long offset, final BigInteger length) {
         if (!isAvailable(offset, length)) { throw new RuntimeException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
         try {
             return input.read(offset, length.intValue());
@@ -44,7 +44,7 @@ public class ByteStreamSource implements Source {
     }
 
     @Override
-    public boolean isAvailable(final long offset, final BigInteger length) {
+    protected boolean isAvailable(final long offset, final BigInteger length) {
         return input.isAvailable(offset, length.intValue());
     }
 

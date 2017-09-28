@@ -31,7 +31,7 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
-public class DataExpressionSource implements Source {
+public class DataExpressionSource extends Source {
 
     public final ValueExpression dataExpression;
     public final int index;
@@ -46,7 +46,7 @@ public class DataExpressionSource implements Source {
     }
 
     @Override
-    public byte[] getData(final long offset, final BigInteger length) {
+    protected byte[] getData(final long offset, final BigInteger length) {
         if (!isAvailable(offset, length)) { throw new RuntimeException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
         final ImmutableList<Optional<Value>> results = dataExpression.eval(graph, encoding);
         final byte[] inputData = getValueAtIndex(results, index, 0).computeResult().get().getValue();
@@ -56,7 +56,7 @@ public class DataExpressionSource implements Source {
     }
 
     @Override
-    public boolean isAvailable(final long offset, final BigInteger length) {
+    protected boolean isAvailable(final long offset, final BigInteger length) {
         final ImmutableList<Optional<Value>> results = dataExpression.eval(graph, encoding);
         if (results.size <= index) { throw new IllegalStateException("ValueExpression dataExpression yields " + results.size + " result(s) (expected at least " + (index + 1) + ")."); }
         return offset + length.intValue() <= getValueAtIndex(results, index, 0).computeResult().get().slice.length.intValue();

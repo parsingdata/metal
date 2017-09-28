@@ -33,8 +33,8 @@ import io.parsingdata.metal.data.Source;
 public class ByTypeTest {
 
     public static final Source EMPTY_SOURCE = new Source() {
-        @Override public byte[] getData(long offset, BigInteger length) { throw new IllegalStateException(); }
-        @Override public boolean isAvailable(long offset, BigInteger length) { return false; }
+        @Override protected byte[] getData(long offset, BigInteger length) { throw new IllegalStateException(); }
+        @Override protected boolean isAvailable(long offset, BigInteger length) { return false; }
     };
 
     @Rule

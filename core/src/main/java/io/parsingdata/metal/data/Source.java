@@ -18,10 +18,10 @@ package io.parsingdata.metal.data;
 
 import java.math.BigInteger;
 
-public interface Source {
+public abstract class Source {
 
-    byte[] getData(long offset, BigInteger length);
+    protected abstract byte[] getData(long offset, BigInteger length);
 
-    boolean isAvailable(long offset, BigInteger length);
+    protected abstract boolean isAvailable(long offset, BigInteger length);
 
 }

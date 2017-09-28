@@ -31,7 +31,6 @@ import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseReference;
-import io.parsingdata.metal.data.Source;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -78,14 +77,14 @@ public class Sub extends Token {
         if (!addresses.head.isPresent()) {
             return complete(Util::failure);
         }
-        return parse(scope, addresses.head.get().asNumeric().longValue(), environment.source, environment, encoding)
+        return parse(scope, addresses.head.get().asNumeric().longValue(), environment, encoding)
             .map(nextEnvironment -> intermediate(() -> iterate(scope, addresses.tail, nextEnvironment, encoding)))
             .orElseGet(() -> complete(Util::failure));
     }
 
-    private Optional<Environment> parse(final String scope, final long offset, final Source source, final Environment environment, final Encoding encoding) {
-        if (hasRootAtOffset(environment.order, token.getCanonical(environment), offset, source)) {
-            return success(environment.add(new ParseReference(offset, source, token.getCanonical(environment))));
+    private Optional<Environment> parse(final String scope, final long offset, final Environment environment, final Encoding encoding) {
+        if (hasRootAtOffset(environment.order, token.getCanonical(environment), offset, environment.source)) {
+            return success(environment.add(new ParseReference(offset, environment.source, token.getCanonical(environment))));
         }
         return token.parse(scope, environment.seek(offset), encoding);
     }

@@ -37,8 +37,8 @@ import io.parsingdata.metal.encoding.Encoding;
 public class SelectionTest {
 
     private final Source source = new Source() {
-        @Override public byte[] getData(long offset, BigInteger length) { return new byte[0]; }
-        @Override public boolean isAvailable(long offset, BigInteger length) { return true; }
+        @Override protected byte[] getData(long offset, BigInteger length) { return new byte[0]; }
+        @Override protected boolean isAvailable(long offset, BigInteger length) { return true; }
     };
 
     @Test
