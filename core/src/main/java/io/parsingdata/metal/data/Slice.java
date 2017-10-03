@@ -20,8 +20,6 @@ import static java.math.BigInteger.ZERO;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
@@ -41,12 +39,12 @@ public class Slice {
     }
 
     public static Optional<Slice> createFromSource(final Source source, final long offset, final BigInteger length) {
-        if (length.compareTo(ZERO) < 0 || !source.isAvailable(offset, length)) { return Optional.empty(); }
+        if (checkNotNull(length, "length").compareTo(ZERO) < 0 || !checkNotNull(source, "source").isAvailable(offset, length)) { return Optional.empty(); }
         return Optional.of(new Slice(source, offset, length));
     }
 
     public static Slice createFromBytes(final byte[] data) {
-        return new Slice(new ConstantSource(data), 0, BigInteger.valueOf(data.length));
+        return new Slice(new ConstantSource(checkNotNull(data, "data")), 0, BigInteger.valueOf(data.length));
     }
 
     public byte[] getData() {

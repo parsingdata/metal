@@ -35,7 +35,7 @@ public class ByteStreamSource extends Source {
 
     @Override
     protected byte[] getData(final long offset, final BigInteger length) {
-        if (!isAvailable(offset, length)) { throw new RuntimeException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
+        if (!isAvailable(offset, length)) { throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
         try {
             return input.read(offset, length.intValue());
         } catch (final IOException exception) {
