@@ -20,7 +20,6 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
@@ -47,19 +46,20 @@ public class DataExpressionSource extends Source {
 
     @Override
     protected byte[] getData(final long offset, final BigInteger length) {
-        if (!isAvailable(offset, length)) { throw new RuntimeException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
-        final ImmutableList<Optional<Value>> results = dataExpression.eval(graph, encoding);
-        final byte[] inputData = getValueAtIndex(results, index, 0).computeResult().get().getValue();
         final byte[] outputData = new byte[length.intValue()];
-        System.arraycopy(inputData, (int)offset, outputData, 0, outputData.length);
+        System.arraycopy(getValue().getValue(), (int)offset, outputData, 0, outputData.length);
         return outputData;
     }
 
     @Override
     protected boolean isAvailable(final long offset, final BigInteger length) {
+        return offset + length.intValue() <= getValue().slice.length.intValue();
+    }
+
+    private Value getValue() {
         final ImmutableList<Optional<Value>> results = dataExpression.eval(graph, encoding);
         if (results.size <= index) { throw new IllegalStateException("ValueExpression dataExpression yields " + results.size + " result(s) (expected at least " + (index + 1) + ")."); }
-        return offset + length.intValue() <= getValueAtIndex(results, index, 0).computeResult().get().slice.length.intValue();
+        return getValueAtIndex(results, index, 0).computeResult().orElseThrow(() -> new IllegalStateException("ValueExpression dataExpression yields empty Value at index " + index + "."));
     }
 
     private Trampoline<Optional<Value>> getValueAtIndex(final ImmutableList<Optional<Value>> results, final int index, final int current) {
