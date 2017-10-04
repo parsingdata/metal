@@ -99,9 +99,15 @@ public class Until extends Token {
         if (stepSize.compareTo(ZERO) == 0 ||
             stepSize.compareTo(ZERO) > 0 && currentSize.compareTo(maxSize) > 0 ||
             stepSize.compareTo(ZERO) < 0 && currentSize.compareTo(maxSize) < 0) { return complete(Util::failure); }
-        if (!environment.isAvailable(currentSize)) { return complete(Util::failure); }
-        final Slice slice = environment.slice(currentSize);
-        return terminator.parse(scope, currentSize.compareTo(ZERO) == 0 ? environment : environment.add(new ParseValue(name, this, slice, encoding)).seek(environment.offset + currentSize.longValue()), encoding)
+        return environment
+            .slice(currentSize)
+            .map(slice -> parseSlice(scope, environment, currentSize, stepSize, maxSize, encoding, slice))
+            .orElse(complete(Util::failure));
+    }
+
+    private Trampoline<Optional<Environment>> parseSlice(String scope, Environment environment, BigInteger currentSize, BigInteger stepSize, BigInteger maxSize, Encoding encoding, Slice slice) {
+        return terminator
+            .parse(scope, currentSize.compareTo(ZERO) == 0 ? environment : environment.add(new ParseValue(name, this, slice, encoding)).seek(environment.offset + currentSize.longValue()), encoding)
             .map(nextEnvironment -> complete(() -> success(nextEnvironment)))
             .orElseGet(() -> intermediate(() -> iterate(scope, environment, currentSize.add(stepSize), stepSize, maxSize, encoding)));
     }

@@ -16,16 +16,11 @@
 
 package io.parsingdata.metal.data;
 
-import java.io.IOException;
 import java.math.BigInteger;
 
 public abstract class Source {
 
-    Slice slice(final long offset, final BigInteger length) {
-        return new Slice(this, offset, length);
-    }
-
-    protected abstract byte[] getData(long offset, BigInteger length) throws IOException;
+    protected abstract byte[] getData(long offset, BigInteger length);
 
     protected abstract boolean isAvailable(long offset, BigInteger length);
 

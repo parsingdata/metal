@@ -16,12 +16,13 @@
 
 package io.parsingdata.metal.data;
 
+import static java.math.BigInteger.ZERO;
+
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.math.BigInteger;
 import java.util.Objects;
+import java.util.Optional;
 
 import io.parsingdata.metal.Util;
 
@@ -31,10 +32,19 @@ public class Slice {
     public final long offset;
     public final BigInteger length;
 
-    public Slice(final Source source, final long offset, final BigInteger length) {
+    private Slice(final Source source, final long offset, final BigInteger length) {
         this.source = checkNotNull(source, "source");
         this.offset = offset;
         this.length = checkNotNull(length, "length");
+    }
+
+    public static Optional<Slice> createFromSource(final Source source, final long offset, final BigInteger length) {
+        if (checkNotNull(length, "length").compareTo(ZERO) < 0 || !checkNotNull(source, "source").isAvailable(offset, length)) { return Optional.empty(); }
+        return Optional.of(new Slice(source, offset, length));
+    }
+
+    public static Slice createFromBytes(final byte[] data) {
+        return new Slice(new ConstantSource(checkNotNull(data, "data")), 0, BigInteger.valueOf(data.length));
     }
 
     public byte[] getData() {
@@ -44,11 +54,7 @@ public class Slice {
     public byte[] getData(final BigInteger limit) {
         if (limit.compareTo(BigInteger.ZERO) < 0) { throw new IllegalArgumentException("Argument limit may not be negative."); }
         final BigInteger calculatedLength = limit.compareTo(length) > 0 ? length : limit;
-        try {
-            return source.getData(offset, calculatedLength);
-        } catch(IOException e) {
-            throw new UncheckedIOException(e);
-        }
+        return source.getData(offset, calculatedLength);
     }
 
     @Override

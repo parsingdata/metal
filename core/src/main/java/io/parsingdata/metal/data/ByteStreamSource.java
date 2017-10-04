@@ -19,6 +19,7 @@ package io.parsingdata.metal.data;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.math.BigInteger;
 import java.util.Objects;
 
@@ -28,18 +29,22 @@ public class ByteStreamSource extends Source {
 
     public final ByteStream input;
 
-    public ByteStreamSource(final ByteStream input) {
+    ByteStreamSource(final ByteStream input) {
         this.input = checkNotNull(input, "input");
     }
 
     @Override
-    protected byte[] getData(final long offset, final BigInteger length) throws IOException {
-        if (!isAvailable(offset, length)) { throw new IOException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
-        return input.read(offset, length.intValue());
+    protected byte[] getData(final long offset, final BigInteger length) {
+        if (!isAvailable(offset, length)) { throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
+        try {
+            return input.read(offset, length.intValue());
+        } catch (final IOException exception) {
+            throw new UncheckedIOException(exception);
+        }
     }
 
     @Override
-    public boolean isAvailable(final long offset, final BigInteger length) {
+    protected boolean isAvailable(final long offset, final BigInteger length) {
         return input.isAvailable(offset, length.intValue());
     }
 

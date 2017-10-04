@@ -64,10 +64,10 @@ public class Def extends Token {
         if (dataSize.compareTo(ZERO) == 0) {
             return success(environment);
         }
-        if (!environment.isAvailable(dataSize)) {
-            return failure();
-        }
-        return success(environment.add(new ParseValue(scope, this, environment.slice(dataSize), encoding)).seek(dataSize.add(BigInteger.valueOf(environment.offset)).longValue()));
+        return environment
+            .slice(dataSize)
+            .map(slice -> success(environment.add(new ParseValue(scope, this, slice, encoding)).seek(dataSize.add(BigInteger.valueOf(environment.offset)).longValue())))
+            .orElse(failure());
     }
 
     @Override

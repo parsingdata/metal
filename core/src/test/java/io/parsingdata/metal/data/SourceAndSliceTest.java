@@ -23,7 +23,6 @@ import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
@@ -77,7 +76,7 @@ public class SourceAndSliceTest {
     }
 
     private void checkSlice(final int offset, final int length) {
-        assertTrue(compareDataSlices(source.slice(offset, BigInteger.valueOf(length)).getData(), offset));
+        assertTrue(compareDataSlices(Slice.createFromSource(source, offset, BigInteger.valueOf(length)).get().getData(), offset));
     }
 
     private boolean compareDataSlices(byte[] data, int offset) {
@@ -89,26 +88,24 @@ public class SourceAndSliceTest {
 
     @Test
     public void readBeyondEndOfSource() throws IOException {
-        thrown.expect(IOException.class);
+        thrown.expect(IllegalStateException.class);
         source.getData(1, BigInteger.valueOf(4));
     }
 
     @Test
     public void readBeyondEndOfSlice() {
-        thrown.expect(UncheckedIOException.class);
-        source.slice(1, BigInteger.valueOf(4)).getData();
+        assertFalse(Slice.createFromSource(source, 1, BigInteger.valueOf(4)).isPresent());
     }
 
     @Test
     public void startReadBeyondEndOfSource() throws IOException {
-        thrown.expect(IOException.class);
+        thrown.expect(IllegalStateException.class);
         source.getData(5, BigInteger.valueOf(0));
     }
 
     @Test
     public void startReadBeyondEndOfSlice() {
-        thrown.expect(UncheckedIOException.class);
-        source.slice(5, BigInteger.valueOf(0)).getData();
+        assertFalse(Slice.createFromSource(source, 5, BigInteger.valueOf(0)).isPresent());
     }
 
 }

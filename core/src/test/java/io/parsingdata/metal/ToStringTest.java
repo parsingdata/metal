@@ -65,7 +65,7 @@ import static io.parsingdata.metal.Shorthand.tie;
 import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.Shorthand.until;
 import static io.parsingdata.metal.Shorthand.whl;
-import static io.parsingdata.metal.Util.createFromBytes;
+import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;

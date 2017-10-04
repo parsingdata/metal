@@ -25,7 +25,7 @@ import static io.parsingdata.metal.Shorthand.TRUE;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.not;
 import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Util.createFromBytes;
+import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
@@ -133,7 +133,7 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> EXPRESSIONS = Arrays.asList(() -> TRUE, () -> not(TRUE));
     private static final List<Supplier<Object>> VALUES = Arrays.asList(() -> ConstantFactory.createFromString("a", enc()), () -> ConstantFactory.createFromString("b", enc()), () -> ConstantFactory.createFromNumeric(1L, signed()));
     private static final List<Supplier<Object>> REDUCERS = Arrays.asList(() -> (BinaryOperator<ValueExpression>) Shorthand::cat, () -> (BinaryOperator<ValueExpression>) Shorthand::div);
-    private static final List<Supplier<Object>> SLICES = Arrays.asList(() -> createFromBytes(new byte[] { 1, 2 }), () -> new Slice(new DataExpressionSource(ref("a"), 1, ParseGraph.EMPTY, enc()), 0, BigInteger.valueOf(2)));
+    private static final List<Supplier<Object>> SLICES = Arrays.asList(() -> createFromBytes(new byte[] { 1, 2 }), () -> Slice.createFromSource(new DataExpressionSource(ref("a"), 1, ParseGraph.EMPTY.add(PARSEVALUE).add(PARSEVALUE), enc()), 0, BigInteger.valueOf(2)).get());
     private static final List<Supplier<Object>> BYTE_ARRAYS = Arrays.asList(() -> new byte[] { 0 }, () -> new byte[] { 1, 2 }, () -> new byte[] {});
     private static final List<Supplier<Object>> SOURCES = Arrays.asList(() -> new ConstantSource(new byte[] {}), () -> new DataExpressionSource(ref("x"), 8, ParseGraph.EMPTY.add(PARSEVALUE), signed()));
     private static final List<Supplier<Object>> LONGS = Arrays.asList(() -> 0L, () -> 1L, () -> 31L, () -> 100000L);
@@ -180,7 +180,7 @@ public class AutoEqualityTest {
             // Data structures
             Value.class, ParseValue.class, ParseReference.class,
             // Inputs
-            ConstantSource.class, DataExpressionSource.class, ByteStreamSource.class, Slice.class
+            ConstantSource.class, DataExpressionSource.class, ByteStreamSource.class
             );
     }
 
@@ -193,7 +193,8 @@ public class AutoEqualityTest {
     }
 
     private static Object[] generateObjectArrays(Class c) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        Constructor cons = c.getConstructors()[0];
+        Constructor cons = c.getDeclaredConstructors()[0];
+        cons.setAccessible(true);
         List<List<Supplier<Object>>> args = new ArrayList<>();
         for (Class cl : cons.getParameterTypes()) {
             args.add(mapping.get(cl));

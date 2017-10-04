@@ -31,6 +31,7 @@ public class InMemoryByteStream implements ByteStream {
         this.data = data;
     }
 
+    @Override
     public byte[] read(final long offset, final int length) throws IOException {
         if (!isAvailable(offset, length)) { throw new IOException("Data to read is not available."); }
         byte[] data = new byte[length];
