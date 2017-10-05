@@ -92,7 +92,7 @@ public class CallbackTest {
             @Override
             protected void handleSuccess(Token token, Environment before, Environment after) {
                 final ImmutableList<ParseItem> roots = getAllRoots(after.order, token);
-                assertEquals(offsets[count++], roots.head.asGraph().tail.head.asValue().slice.offset);
+                assertEquals(offsets[count++], roots.head.asGraph().tail.head.asValue().slice.offset.longValue());
             }
 
             @Override
@@ -129,8 +129,8 @@ public class CallbackTest {
                         assertEquals(2, seqRoots.size);
 
                         // verify order of the two Seq graphs:
-                        assertEquals(2, getValue(seqRoots.head.asGraph(), "a").slice.offset);
-                        assertEquals(0, getValue(seqRoots.tail.head.asGraph(), "a").slice.offset);
+                        assertEquals(2, getValue(seqRoots.head.asGraph(), "a").slice.offset.intValue());
+                        assertEquals(0, getValue(seqRoots.tail.head.asGraph(), "a").slice.offset.intValue());
                     }
 
                     @Override
@@ -222,13 +222,13 @@ public class CallbackTest {
 
         @Override
         protected void handleSuccess(Token token, Environment before, Environment after) {
-            assertThat(after.offset, is(equalTo(expectedSuccessOffsets.pop())));
+            assertThat(after.offset.longValue(), is(equalTo(expectedSuccessOffsets.pop())));
             assertThat(token, is(equalTo(expectedSuccessDefinitions.pop())));
         }
 
         @Override
         protected void handleFailure(Token token, Environment before) {
-            assertThat(before.offset, is(equalTo(expectedFailureOffsets.pop())));
+            assertThat(before.offset.longValue(), is(equalTo(expectedFailureOffsets.pop())));
             assertThat(token, is(equalTo(expectedFailureDefinitions.pop())));
         }
 

@@ -57,26 +57,26 @@ public class SourceAndSliceTest {
 
     @Test
     public void validSource() {
-        assertTrue(source.isAvailable(0, BigInteger.valueOf(4)));
-        assertTrue(source.isAvailable(1, BigInteger.valueOf(3)));
-        assertTrue(source.isAvailable(2, BigInteger.valueOf(1)));
-        assertTrue(source.isAvailable(4, BigInteger.valueOf(0)));
-        assertFalse(source.isAvailable(0, BigInteger.valueOf(5)));
-        assertFalse(source.isAvailable(4, BigInteger.valueOf(1)));
-        assertFalse(source.isAvailable(5, BigInteger.valueOf(1)));
-        assertFalse(source.isAvailable(5, BigInteger.valueOf(0)));
+        assertTrue(source.isAvailable(BigInteger.ZERO, BigInteger.valueOf(4)));
+        assertTrue(source.isAvailable(BigInteger.ONE, BigInteger.valueOf(3)));
+        assertTrue(source.isAvailable(BigInteger.valueOf(2), BigInteger.ONE));
+        assertTrue(source.isAvailable(BigInteger.valueOf(4), BigInteger.ZERO));
+        assertFalse(source.isAvailable(BigInteger.ZERO, BigInteger.valueOf(5)));
+        assertFalse(source.isAvailable(BigInteger.valueOf(4), BigInteger.ONE));
+        assertFalse(source.isAvailable(BigInteger.valueOf(5), BigInteger.ONE));
+        assertFalse(source.isAvailable(BigInteger.valueOf(5), BigInteger.ZERO));
     }
 
     @Test
     public void validSlice() {
-        checkSlice(0, 4);
-        checkSlice(1, 3);
-        checkSlice(2, 1);
-        checkSlice(4, 0);
+        checkSlice(BigInteger.ZERO, 4);
+        checkSlice(BigInteger.ONE, 3);
+        checkSlice(BigInteger.valueOf(2), 1);
+        checkSlice(BigInteger.valueOf(4), 0);
     }
 
-    private void checkSlice(final int offset, final int length) {
-        assertTrue(compareDataSlices(Slice.createFromSource(source, offset, BigInteger.valueOf(length)).get().getData(), offset));
+    private void checkSlice(final BigInteger offset, final int length) {
+        assertTrue(compareDataSlices(Slice.createFromSource(source, offset, BigInteger.valueOf(length)).get().getData(), offset.intValue()));
     }
 
     private boolean compareDataSlices(byte[] data, int offset) {
@@ -89,23 +89,23 @@ public class SourceAndSliceTest {
     @Test
     public void readBeyondEndOfSource() throws IOException {
         thrown.expect(IllegalStateException.class);
-        source.getData(1, BigInteger.valueOf(4));
+        source.getData(BigInteger.ONE, BigInteger.valueOf(4));
     }
 
     @Test
     public void readBeyondEndOfSlice() {
-        assertFalse(Slice.createFromSource(source, 1, BigInteger.valueOf(4)).isPresent());
+        assertFalse(Slice.createFromSource(source, BigInteger.ONE, BigInteger.valueOf(4)).isPresent());
     }
 
     @Test
     public void startReadBeyondEndOfSource() throws IOException {
         thrown.expect(IllegalStateException.class);
-        source.getData(5, BigInteger.valueOf(0));
+        source.getData(BigInteger.valueOf(5), BigInteger.ZERO);
     }
 
     @Test
     public void startReadBeyondEndOfSlice() {
-        assertFalse(Slice.createFromSource(source, 5, BigInteger.valueOf(0)).isPresent());
+        assertFalse(Slice.createFromSource(source, BigInteger.valueOf(5), BigInteger.ZERO).isPresent());
     }
 
 }

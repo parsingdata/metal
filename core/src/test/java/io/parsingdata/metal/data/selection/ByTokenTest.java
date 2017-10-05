@@ -255,7 +255,7 @@ public class ByTokenTest {
         assertEquals(smallSeq, seqItems.head.getDefinition());
         final ParseValue c = seqItems.head.asGraph().head.asValue();
         assertEquals(3, c.asNumeric().intValue());
-        assertEquals(2, c.slice.offset);
+        assertEquals(2, c.slice.offset.intValue());
     }
 
     @Test

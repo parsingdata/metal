@@ -80,7 +80,7 @@ public class CurrentOffsetTest {
 
         final Optional<Environment> result = offsetValidation.parse(environment, new Encoding(Sign.UNSIGNED));
         assertTrue(result.isPresent());
-        assertEquals(256, result.get().offset);
+        assertEquals(256, result.get().offset.intValue());
     }
 
 }

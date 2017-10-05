@@ -37,6 +37,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static junit.framework.TestCase.assertFalse;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -97,7 +98,7 @@ public class SubStructTest {
     }
 
     private ParseGraph startCycle(final int offset) throws IOException {
-        final Environment environment = stream(0, 4, 1, 21, 0, 0, 1).seek(offset);
+        final Environment environment = stream(0, 4, 1, 21, 0, 0, 1).seek(BigInteger.valueOf(offset));
         final Optional<Environment> result = LINKED_LIST.parse(environment, enc());
         assertTrue(result.isPresent());
         assertEquals(1, getReferences(result.get().order).size);
@@ -147,7 +148,7 @@ public class SubStructTest {
     private void checkValue(final ParseItem item, final int value, final int offset) {
         assertTrue(item.isValue());
         assertEquals(value, item.asValue().asNumeric().intValue());
-        assertEquals(offset, item.asValue().slice.offset);
+        assertEquals(offset, item.asValue().slice.offset.intValue());
     }
 
     @Test

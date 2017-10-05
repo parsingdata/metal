@@ -61,7 +61,7 @@ public class SubStructTableTest {
                                      */
         final Optional<Environment> result = table.parse(environment, enc());
         assertTrue(result.isPresent());
-        assertEquals(4, result.get().offset);
+        assertEquals(4, result.get().offset.intValue());
         final ParseGraph graph = result.get().order;
         checkStruct(graph.head.asGraph().head.asGraph().head.asGraph(), 6);
         checkStruct(graph.head.asGraph().head.asGraph().tail.head.asGraph(), 4);
@@ -81,7 +81,7 @@ public class SubStructTableTest {
                                      */
         final Optional<Environment> result = table.parse(environment, enc());
         assertTrue(result.isPresent());
-        assertEquals(5, result.get().offset);
+        assertEquals(5, result.get().offset.intValue());
         final ParseGraph graph = result.get().order;
         checkStruct(graph.head.asGraph().head.asGraph().head.asGraph(), 7);
         assertTrue(graph.head.asGraph().head.asGraph().tail.head.isReference());
@@ -94,7 +94,7 @@ public class SubStructTableTest {
         assertTrue(graph.head.isGraph());
         assertEquals(84, graph.head.asGraph().head.asValue().asNumeric().intValue());
         assertEquals(42, graph.tail.head.asGraph().head.asValue().asNumeric().intValue());
-        assertEquals(offsetHeader, graph.tail.head.asGraph().head.asValue().slice.offset);
+        assertEquals(offsetHeader, graph.tail.head.asGraph().head.asValue().slice.offset.intValue());
     }
 
 }

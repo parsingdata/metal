@@ -46,7 +46,7 @@ public class PreTest {
         final Optional<Environment> result = SEQUENCE.parse(stream(1, 1), enc());
 
         // precondition is true, token is parsed
-        assertThat(result.get().offset, is(2L));
+        assertThat(result.get().offset.longValue(), is(2L));
     }
 
     @Test

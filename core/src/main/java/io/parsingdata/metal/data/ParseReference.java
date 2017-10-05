@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Selection.findItemAtOffset;
 import static io.parsingdata.metal.data.Selection.getAllRoots;
 
+import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -28,12 +29,12 @@ import io.parsingdata.metal.token.Token;
 
 public class ParseReference implements ParseItem {
 
-    public final long location;
+    public final BigInteger location;
     public final Source source;
     public final Token definition;
 
-    public ParseReference(final long location, final Source source, final Token definition) {
-        this.location = location;
+    public ParseReference(final BigInteger location, final Source source, final Token definition) {
+        this.location = checkNotNull(location, "location");
         this.source = checkNotNull(source, "source");
         this.definition = checkNotNull(definition, "definition");
     }

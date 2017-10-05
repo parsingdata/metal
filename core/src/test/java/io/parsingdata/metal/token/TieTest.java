@@ -77,7 +77,7 @@ public class TieTest {
     @Test
     public void smallContainer() throws IOException {
         final Optional<Environment> result = parseContainer();
-        assertEquals(5, result.get().offset);
+        assertEquals(5, result.get().offset.intValue());
         assertEquals(6, getAllValues(result.get().order, "value").size);
     }
 
@@ -96,7 +96,7 @@ public class TieTest {
     private Optional<Environment> checkFullParse(Token token, byte[] data) throws IOException {
         final Optional<Environment> result = token.parse(new Environment(new InMemoryByteStream(data)), enc());
         assertTrue(result.isPresent());
-        assertEquals(data.length, result.get().offset);
+        assertEquals(data.length, result.get().offset.intValue());
         return result;
     }
 

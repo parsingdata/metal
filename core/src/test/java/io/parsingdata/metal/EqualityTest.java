@@ -202,8 +202,8 @@ public class EqualityTest {
         assertFalse(object.equals("name"));
         assertEquals(object, Slice.createFromBytes(new byte[] { 0, 1, 2, 3 }));
         assertNotEquals(object, Slice.createFromBytes(new byte[] { 0, 1, 2, 4 }));
-        assertNotEquals(object, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), 1, BigInteger.valueOf(2)).get());
-        assertNotEquals(object, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), 0, BigInteger.valueOf(2)).get());
+        assertNotEquals(object, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), BigInteger.ONE, BigInteger.valueOf(2)).get());
+        assertNotEquals(object, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), BigInteger.ZERO, BigInteger.valueOf(2)).get());
     }
 
 }

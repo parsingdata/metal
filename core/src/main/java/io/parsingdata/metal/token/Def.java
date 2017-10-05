@@ -66,7 +66,7 @@ public class Def extends Token {
         }
         return environment
             .slice(dataSize)
-            .map(slice -> success(environment.add(new ParseValue(scope, this, slice, encoding)).seek(dataSize.add(BigInteger.valueOf(environment.offset)).longValue())))
+            .map(slice -> success(environment.add(new ParseValue(scope, this, slice, encoding)).seek(dataSize.add(environment.offset))))
             .orElse(failure());
     }
 

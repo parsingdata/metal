@@ -111,7 +111,7 @@ public class TreeTest {
         assertTrue(head.isValue());
         assertTrue(head.asValue().matches("head"));
         assertEquals(HEAD, head.asValue().asNumeric().intValue());
-        assertEquals(offset, head.asValue().slice.offset);
+        assertEquals(offset, head.asValue().slice.offset.intValue());
         final ParseItem nr = header.head; // head = Def("nr")
         assertTrue(nr.isValue());
         assertTrue(nr.asValue().matches("nr"));

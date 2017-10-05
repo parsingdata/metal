@@ -34,16 +34,16 @@ public class ConstantSource extends Source {
     }
 
     @Override
-    protected byte[] getData(final long offset, final BigInteger length) {
+    protected byte[] getData(final BigInteger offset, final BigInteger length) {
         if (!isAvailable(offset, length)) { throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
         final byte[] outputData = new byte[length.intValue()];
-        System.arraycopy(data, (int)offset, outputData, 0, outputData.length);
+        System.arraycopy(data, offset.intValue(), outputData, 0, outputData.length);
         return outputData;
     }
 
     @Override
-    protected boolean isAvailable(final long offset, final BigInteger length) {
-        return length.intValue() + offset <= data.length;
+    protected boolean isAvailable(final BigInteger offset, final BigInteger length) {
+        return length.add(offset).compareTo(BigInteger.valueOf(data.length)) <= 0;
     }
 
     @Override

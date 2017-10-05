@@ -32,6 +32,7 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Optional;
 
 import org.junit.Rule;
@@ -238,7 +239,7 @@ public class ParseGraphTest {
     @Test
     public void testCurrent() {
         assertFalse(EMPTY.current().isPresent());
-        assertFalse(EMPTY.add(new ParseReference(0, EMPTY_SOURCE, NONE)).current().isPresent());
+        assertFalse(EMPTY.add(new ParseReference(BigInteger.ZERO, EMPTY_SOURCE, NONE)).current().isPresent());
         assertFalse(EMPTY.addBranch(NONE).current().isPresent());
     }
 
