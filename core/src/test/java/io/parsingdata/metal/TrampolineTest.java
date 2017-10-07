@@ -16,6 +16,9 @@
 
 package io.parsingdata.metal;
 
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
+
 import static org.junit.Assert.assertEquals;
 
 import static io.parsingdata.metal.Trampoline.complete;
@@ -52,7 +55,7 @@ public class TrampolineTest {
     @Test
     public void noStackOverflow() {
         // The 100000th Fibonacci number has 20899 digits
-        assertEquals(20899, fibonacci(BigInteger.ZERO, BigInteger.ONE, 100000).computeResult().toString().length());
+        assertEquals(20899, fibonacci(ZERO, ONE, 100000).computeResult().toString().length());
     }
 
     private Trampoline<BigInteger> fibonacci(final BigInteger l, final BigInteger r, final long count) {

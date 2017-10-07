@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.expression.value.arithmetic;
 
+import static java.math.BigInteger.ZERO;
+
 import java.math.BigInteger;
 import java.util.Optional;
 
@@ -40,7 +42,7 @@ public class Div extends BinaryValueExpression {
 
     @Override
     public Optional<Value> eval(final Value left, final Value right, final ParseGraph graph, final Encoding encoding) {
-        if (right.asNumeric().equals(BigInteger.ZERO)) {
+        if (right.asNumeric().equals(ZERO)) {
             return Optional.empty();
         }
         return Optional.of(ConstantFactory.createFromNumeric(left.asNumeric().divide(right.asNumeric()), encoding));

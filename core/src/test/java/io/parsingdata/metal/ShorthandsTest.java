@@ -165,7 +165,7 @@ public class ShorthandsTest {
         ImmutableList<Optional<Value>> values = ref(name).eval(env.order, enc());
         assertFalse(values.isEmpty());
         assertEquals(1, values.size);
-        assertEquals(value, values.head.get().asNumeric().intValue());
+        assertEquals(value, values.head.get().asNumeric().intValueExact());
 
         while (!values.isEmpty()) {
             final Value current = values.head.get();

@@ -16,6 +16,9 @@
 
 package io.parsingdata.metal.data;
 
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -46,7 +49,7 @@ public class ConstantSliceTest {
         final byte[] input = { 1, 2, 3, 4 };
         final Slice slice = createFromBytes(input);
         thrown.expect(IllegalStateException.class);
-        slice.source.getData(BigInteger.valueOf(4), BigInteger.ONE);
+        slice.source.getData(BigInteger.valueOf(4), ONE);
     }
 
     @Test
@@ -62,7 +65,7 @@ public class ConstantSliceTest {
     public void checkSource() throws IOException {
         final byte[] input = { 1, 2, 3, 4 };
         final Slice slice = createFromBytes(input);
-        final byte[] output = slice.source.getData(BigInteger.ZERO, BigInteger.valueOf(4));
+        final byte[] output = slice.source.getData(ZERO, BigInteger.valueOf(4));
         assertEquals(input.length, output.length);
         assertTrue(Arrays.equals(input, output));
     }

@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.data;
 
+import static java.math.BigInteger.ZERO;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
@@ -47,7 +49,7 @@ public class ParseReferenceTest {
     @Before
     public void setUp() {
         definition = sub(def("value", 1), con(0));
-        reference = new ParseReference(BigInteger.ZERO, EMPTY_SOURCE, definition);
+        reference = new ParseReference(ZERO, EMPTY_SOURCE, definition);
     }
 
     @Test

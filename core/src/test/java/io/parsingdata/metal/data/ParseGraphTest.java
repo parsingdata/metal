@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.data;
 
+import static java.math.BigInteger.ZERO;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -239,7 +241,7 @@ public class ParseGraphTest {
     @Test
     public void testCurrent() {
         assertFalse(EMPTY.current().isPresent());
-        assertFalse(EMPTY.add(new ParseReference(BigInteger.ZERO, EMPTY_SOURCE, NONE)).current().isPresent());
+        assertFalse(EMPTY.add(new ParseReference(ZERO, EMPTY_SOURCE, NONE)).current().isPresent());
         assertFalse(EMPTY.addBranch(NONE).current().isPresent());
     }
 

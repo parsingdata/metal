@@ -1,5 +1,7 @@
 package io.parsingdata.metal.data;
 
+import static java.math.BigInteger.ZERO;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -43,8 +45,8 @@ public class DataExpressionSourceTest {
     @Test
     public void createSliceFromParseValue() {
         final ParseValue value = setupValue();
-        assertTrue(value.slice.source.isAvailable(BigInteger.ZERO, BigInteger.valueOf(4)));
-        assertFalse(value.slice.source.isAvailable(BigInteger.ZERO, BigInteger.valueOf(5)));
+        assertTrue(value.slice.source.isAvailable(ZERO, BigInteger.valueOf(4)));
+        assertFalse(value.slice.source.isAvailable(ZERO, BigInteger.valueOf(5)));
     }
 
     @Test
@@ -53,14 +55,14 @@ public class DataExpressionSourceTest {
         thrown.expectMessage("ValueExpression dataExpression yields 1 result(s) (expected at least 2).");
         final Optional<Environment> result = setupResult();
         final DataExpressionSource source = new DataExpressionSource(ref("a"), 1, result.get().order, enc());
-        source.getData(BigInteger.ZERO, BigInteger.valueOf(4));
+        source.getData(ZERO, BigInteger.valueOf(4));
     }
 
     @Test
     public void emptyValue() {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("ValueExpression dataExpression yields empty Value at index 0.");
-        new DataExpressionSource(div(con(1), con(0)), 0, ParseGraph.EMPTY, enc()).isAvailable(BigInteger.ZERO, BigInteger.ZERO);
+        new DataExpressionSource(div(con(1), con(0)), 0, ParseGraph.EMPTY, enc()).isAvailable(ZERO, ZERO);
     }
 
 }

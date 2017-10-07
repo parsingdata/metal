@@ -16,6 +16,9 @@
 
 package io.parsingdata.metal.data;
 
+import static java.math.BigInteger.TEN;
+import static java.math.BigInteger.ZERO;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.math.BigInteger;
@@ -35,7 +38,7 @@ public class ByteStreamSourceTest {
         Slice.createFromSource(new ByteStreamSource(new ByteStream() {
             @Override public byte[] read(BigInteger offset, int length) throws IOException { throw new IOException("Always fails."); }
             @Override public boolean isAvailable(BigInteger offset, int length) { return true; }
-        }), BigInteger.ZERO, BigInteger.TEN).get().getData();
+        }), ZERO, TEN).get().getData();
     }
 
 }

@@ -16,6 +16,9 @@
 
 package io.parsingdata.metal.data;
 
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -57,20 +60,20 @@ public class SourceAndSliceTest {
 
     @Test
     public void validSource() {
-        assertTrue(source.isAvailable(BigInteger.ZERO, BigInteger.valueOf(4)));
-        assertTrue(source.isAvailable(BigInteger.ONE, BigInteger.valueOf(3)));
-        assertTrue(source.isAvailable(BigInteger.valueOf(2), BigInteger.ONE));
-        assertTrue(source.isAvailable(BigInteger.valueOf(4), BigInteger.ZERO));
-        assertFalse(source.isAvailable(BigInteger.ZERO, BigInteger.valueOf(5)));
-        assertFalse(source.isAvailable(BigInteger.valueOf(4), BigInteger.ONE));
-        assertFalse(source.isAvailable(BigInteger.valueOf(5), BigInteger.ONE));
-        assertFalse(source.isAvailable(BigInteger.valueOf(5), BigInteger.ZERO));
+        assertTrue(source.isAvailable(ZERO, BigInteger.valueOf(4)));
+        assertTrue(source.isAvailable(ONE, BigInteger.valueOf(3)));
+        assertTrue(source.isAvailable(BigInteger.valueOf(2), ONE));
+        assertTrue(source.isAvailable(BigInteger.valueOf(4), ZERO));
+        assertFalse(source.isAvailable(ZERO, BigInteger.valueOf(5)));
+        assertFalse(source.isAvailable(BigInteger.valueOf(4), ONE));
+        assertFalse(source.isAvailable(BigInteger.valueOf(5), ONE));
+        assertFalse(source.isAvailable(BigInteger.valueOf(5), ZERO));
     }
 
     @Test
     public void validSlice() {
-        checkSlice(BigInteger.ZERO, 4);
-        checkSlice(BigInteger.ONE, 3);
+        checkSlice(ZERO, 4);
+        checkSlice(ONE, 3);
         checkSlice(BigInteger.valueOf(2), 1);
         checkSlice(BigInteger.valueOf(4), 0);
     }
@@ -89,23 +92,23 @@ public class SourceAndSliceTest {
     @Test
     public void readBeyondEndOfSource() throws IOException {
         thrown.expect(IllegalStateException.class);
-        source.getData(BigInteger.ONE, BigInteger.valueOf(4));
+        source.getData(ONE, BigInteger.valueOf(4));
     }
 
     @Test
     public void readBeyondEndOfSlice() {
-        assertFalse(Slice.createFromSource(source, BigInteger.ONE, BigInteger.valueOf(4)).isPresent());
+        assertFalse(Slice.createFromSource(source, ONE, BigInteger.valueOf(4)).isPresent());
     }
 
     @Test
     public void startReadBeyondEndOfSource() throws IOException {
         thrown.expect(IllegalStateException.class);
-        source.getData(BigInteger.valueOf(5), BigInteger.ZERO);
+        source.getData(BigInteger.valueOf(5), ZERO);
     }
 
     @Test
     public void startReadBeyondEndOfSlice() {
-        assertFalse(Slice.createFromSource(source, BigInteger.valueOf(5), BigInteger.ZERO).isPresent());
+        assertFalse(Slice.createFromSource(source, BigInteger.valueOf(5), ZERO).isPresent());
     }
 
 }

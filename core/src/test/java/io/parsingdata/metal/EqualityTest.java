@@ -16,6 +16,9 @@
 
 package io.parsingdata.metal;
 
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -202,8 +205,8 @@ public class EqualityTest {
         assertFalse(object.equals("name"));
         assertEquals(object, Slice.createFromBytes(new byte[] { 0, 1, 2, 3 }));
         assertNotEquals(object, Slice.createFromBytes(new byte[] { 0, 1, 2, 4 }));
-        assertNotEquals(object, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), BigInteger.ONE, BigInteger.valueOf(2)).get());
-        assertNotEquals(object, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), BigInteger.ZERO, BigInteger.valueOf(2)).get());
+        assertNotEquals(object, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), ONE, BigInteger.valueOf(2)).get());
+        assertNotEquals(object, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), ZERO, BigInteger.valueOf(2)).get());
     }
 
 }

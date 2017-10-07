@@ -44,7 +44,7 @@ public class Slice {
     }
 
     public static Slice createFromBytes(final byte[] data) {
-        return new Slice(new ConstantSource(checkNotNull(data, "data")), BigInteger.ZERO, BigInteger.valueOf(data.length));
+        return new Slice(new ConstantSource(checkNotNull(data, "data")), ZERO, BigInteger.valueOf(data.length));
     }
 
     public byte[] getData() {
@@ -52,7 +52,7 @@ public class Slice {
     }
 
     public byte[] getData(final BigInteger limit) {
-        if (limit.compareTo(BigInteger.ZERO) < 0) { throw new IllegalArgumentException("Argument limit may not be negative."); }
+        if (limit.compareTo(ZERO) < 0) { throw new IllegalArgumentException("Argument limit may not be negative."); }
         final BigInteger calculatedLength = limit.compareTo(length) > 0 ? length : limit;
         return source.getData(offset, calculatedLength);
     }

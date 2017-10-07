@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.data.selection;
 
+import static java.math.BigInteger.ZERO;
+
 import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
@@ -44,7 +46,7 @@ public class ByTypeTest {
     public void unresolvableRef() {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("A ParseReference must point to an existing graph.");
-        getReferences(EMPTY.add(new ParseReference(BigInteger.ZERO, EMPTY_SOURCE, NONE)));
+        getReferences(EMPTY.add(new ParseReference(ZERO, EMPTY_SOURCE, NONE)));
     }
 
 }
