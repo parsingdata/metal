@@ -72,7 +72,7 @@ public class Ref<T> implements ValueExpression {
         if (limit == null) { return evalImpl(graph, NO_LIMIT); }
         ImmutableList<Optional<Value>> evaluatedLimit = limit.eval(graph, encoding);
         if (evaluatedLimit.size != 1 || !evaluatedLimit.head.isPresent()) { throw new IllegalArgumentException("Limit must evaluate to a single non-empty value."); }
-        return evalImpl(graph, evaluatedLimit.head.get().asNumeric().intValue());
+        return evalImpl(graph, evaluatedLimit.head.get().asNumeric().intValueExact());
     }
 
     private ImmutableList<Optional<Value>> evalImpl(final ParseGraph graph, final int limit) {

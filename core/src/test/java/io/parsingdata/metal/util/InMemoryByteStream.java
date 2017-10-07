@@ -36,13 +36,13 @@ public class InMemoryByteStream implements ByteStream {
     public byte[] read(final BigInteger offset, final int length) throws IOException {
         if (!isAvailable(offset, length)) { throw new IOException("Data to read is not available."); }
         byte[] data = new byte[length];
-        System.arraycopy(this.data, offset.intValue(), data, 0, length);
+        System.arraycopy(this.data, offset.intValueExact(), data, 0, length);
         return data;
     }
 
     @Override
     public boolean isAvailable(final BigInteger offset, final int length) {
-        return offset.intValue() + length <= data.length;
+        return offset.intValueExact() + length <= data.length;
     }
 
     @Override

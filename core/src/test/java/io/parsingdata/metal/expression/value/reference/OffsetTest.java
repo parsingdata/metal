@@ -24,7 +24,7 @@ public class OffsetTest {
         assertFalse(offsetCon.isEmpty());
         assertEquals(1, offsetCon.size);
         assertTrue(offsetCon.head.isPresent());
-        assertEquals(0, offsetCon.head.get().asNumeric().intValue());
+        assertEquals(0, offsetCon.head.get().asNumeric().intValueExact());
     }
 
 }

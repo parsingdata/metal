@@ -207,7 +207,7 @@ public class ShorthandsTest {
         assertEquals(3, result.size);
         for (int i = 0; i < 3; i++) {
             assertTrue(result.head.isPresent());
-            assertEquals((i * 42) + 40, result.head.get().asNumeric().intValue());
+            assertEquals((i * 42) + 40, result.head.get().asNumeric().intValueExact());
             result = result.tail;
         }
     }
@@ -218,7 +218,7 @@ public class ShorthandsTest {
         assertEquals(3, result.size);
         for (int i = 0; i < 3; i++) {
             assertTrue(result.head.isPresent());
-            assertEquals(((3 - i) * 42) - 42, result.head.get().asNumeric().intValue());
+            assertEquals(((3 - i) * 42) - 42, result.head.get().asNumeric().intValueExact());
             result = result.tail;
         }
     }

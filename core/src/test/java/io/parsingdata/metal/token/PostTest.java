@@ -50,7 +50,7 @@ public class PostTest {
 
         // token parses and postcondition is true
         assertThat(result.isPresent(), is(true));
-        assertThat(result.get().offset.longValue(), is(2L));
+        assertThat(result.get().offset.longValueExact(), is(2L));
     }
 
     @Test

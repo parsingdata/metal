@@ -79,7 +79,7 @@ public class SourceAndSliceTest {
     }
 
     private void checkSlice(final BigInteger offset, final int length) {
-        assertTrue(compareDataSlices(Slice.createFromSource(source, offset, BigInteger.valueOf(length)).get().getData(), offset.intValue()));
+        assertTrue(compareDataSlices(Slice.createFromSource(source, offset, BigInteger.valueOf(length)).get().getData(), offset.intValueExact()));
     }
 
     private boolean compareDataSlices(byte[] data, int offset) {

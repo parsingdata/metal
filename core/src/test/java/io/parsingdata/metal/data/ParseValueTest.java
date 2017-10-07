@@ -54,7 +54,7 @@ public class ParseValueTest {
     public void state() {
         assertThat(value.name, is("value"));
         assertThat(value.getDefinition(), is(definition));
-        assertThat(value.slice.offset.longValue(), is(0L));
+        assertThat(value.slice.offset.longValueExact(), is(0L));
         assertThat(value.getValue(), is(equalTo(new byte[] { 1 })));
     }
 

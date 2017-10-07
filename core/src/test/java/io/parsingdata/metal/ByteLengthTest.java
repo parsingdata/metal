@@ -70,7 +70,7 @@ public class ByteLengthTest {
 
         assertTrue(result.isPresent());
         final ParseGraph graph = result.get().order;
-        assertEquals(5, getValue(graph, "length").asNumeric().byteValue());
+        assertEquals(5, getValue(graph, "length").asNumeric().byteValueExact());
         assertEquals("Hello", getValue(graph, "text1").asString());
         assertEquals("Metal", getValue(graph, "text2").asString());
     }

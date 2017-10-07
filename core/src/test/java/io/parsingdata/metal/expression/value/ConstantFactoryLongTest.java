@@ -58,9 +58,9 @@ public class ConstantFactoryLongTest {
 
     @Test
     public void checkLong() {
-        assertEquals(value, ConstantFactory.createFromNumeric(value, signed()).asNumeric().longValue());
+        assertEquals(value, ConstantFactory.createFromNumeric(value, signed()).asNumeric().longValueExact());
         if (value >= 0) {
-            assertEquals(value, ConstantFactory.createFromNumeric(value, enc()).asNumeric().longValue());
+            assertEquals(value, ConstantFactory.createFromNumeric(value, enc()).asNumeric().longValueExact());
         } else {
             assertEquals(0, calculateUnsignedValue(value).compareTo(ConstantFactory.createFromNumeric(value, enc()).asNumeric()));
         }
@@ -68,7 +68,7 @@ public class ConstantFactoryLongTest {
 
     private BigInteger calculateUnsignedValue(final long input) {
         for (int i = 8; i < 64; i+=8) {
-            final long maxValue = BigInteger.valueOf(2).pow(i-1).longValue();
+            final long maxValue = BigInteger.valueOf(2).pow(i-1).longValueExact();
             if ((maxValue + input) >= 0) {
                 return BigInteger.valueOf(input).add(BigInteger.valueOf(2*maxValue));
             }

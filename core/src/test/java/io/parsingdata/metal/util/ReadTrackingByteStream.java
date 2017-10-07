@@ -40,7 +40,7 @@ public class ReadTrackingByteStream implements ByteStream {
 
     @Override
     public byte[] read(final BigInteger offset, final int length) throws IOException {
-        for (long i = offset.longValue(); i < offset.longValue()+length; i++) {
+        for (long i = offset.longValueExact(); i < offset.longValueExact()+length; i++) {
             read.add(i);
         }
         return byteStream.read(offset, length);

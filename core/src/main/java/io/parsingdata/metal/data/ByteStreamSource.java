@@ -37,7 +37,7 @@ public class ByteStreamSource extends Source {
     protected byte[] getData(final BigInteger offset, final BigInteger length) {
         if (!isAvailable(offset, length)) { throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
         try {
-            return input.read(offset, length.intValue());
+            return input.read(offset, length.intValueExact());
         } catch (final IOException exception) {
             throw new UncheckedIOException(exception);
         }
@@ -45,7 +45,7 @@ public class ByteStreamSource extends Source {
 
     @Override
     protected boolean isAvailable(final BigInteger offset, final BigInteger length) {
-        return input.isAvailable(offset, length.intValue());
+        return input.isAvailable(offset, length.intValueExact());
     }
 
     @Override

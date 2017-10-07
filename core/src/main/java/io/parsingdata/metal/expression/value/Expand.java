@@ -56,7 +56,7 @@ public class Expand implements ValueExpression {
         if (base.isEmpty()) { return base; }
         final ImmutableList<Optional<Value>> count = this.count.eval(graph, encoding);
         if (count.size != 1 || !count.head.isPresent()) { throw new IllegalArgumentException("Count must evaluate to a single non-empty value."); }
-        return expand(base, count.head.get().asNumeric().intValue(), new ImmutableList<>()).computeResult();
+        return expand(base, count.head.get().asNumeric().intValueExact(), new ImmutableList<>()).computeResult();
     }
 
     private Trampoline<ImmutableList<Optional<Value>>> expand(final ImmutableList<Optional<Value>> base, final int count, final ImmutableList<Optional<Value>> aggregate) {

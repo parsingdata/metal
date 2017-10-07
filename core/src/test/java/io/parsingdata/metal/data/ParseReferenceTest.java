@@ -54,7 +54,7 @@ public class ParseReferenceTest {
 
     @Test
     public void state() {
-        assertThat(reference.location.longValue(), is(0L));
+        assertThat(reference.location.longValueExact(), is(0L));
         assertThat(reference.getDefinition(), is(definition));
     }
 

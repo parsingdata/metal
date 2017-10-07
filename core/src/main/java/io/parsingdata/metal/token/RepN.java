@@ -62,7 +62,7 @@ public class RepN extends Token {
         if (counts.size != 1 || !counts.head.isPresent()) {
             return failure();
         }
-        return iterate(scope, environment.addBranch(this), encoding, counts.head.get().asNumeric().longValue()).computeResult();
+        return iterate(scope, environment.addBranch(this), encoding, counts.head.get().asNumeric().longValueExact()).computeResult();
     }
 
     private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding, final long count) {

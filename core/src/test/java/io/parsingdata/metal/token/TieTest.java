@@ -77,7 +77,7 @@ public class TieTest {
     @Test
     public void smallContainer() throws IOException {
         final Optional<Environment> result = parseContainer();
-        assertEquals(5, result.get().offset.intValue());
+        assertEquals(5, result.get().offset.intValueExact());
         assertEquals(6, getAllValues(result.get().order, "value").size);
     }
 
@@ -96,7 +96,7 @@ public class TieTest {
     private Optional<Environment> checkFullParse(Token token, byte[] data) throws IOException {
         final Optional<Environment> result = token.parse(new Environment(new InMemoryByteStream(data)), enc());
         assertTrue(result.isPresent());
-        assertEquals(data.length, result.get().offset.intValue());
+        assertEquals(data.length, result.get().offset.intValueExact());
         return result;
     }
 
@@ -131,7 +131,7 @@ public class TieTest {
                 def("data", last(ref("size"))),
                 tie(l2Token, inflate(last(ref("data")))));
         final Optional<Environment> result = checkFullParse(l1Token, l1Data);
-        assertEquals(80, result.get().order.head.asGraph().head.asGraph().head.asGraph().head.asGraph().head.asGraph().head.asGraph().head.asValue().asNumeric().intValue());
+        assertEquals(80, result.get().order.head.asGraph().head.asGraph().head.asGraph().head.asGraph().head.asGraph().head.asGraph().head.asValue().asNumeric().intValueExact());
     }
 
     private byte[] flipBlocks(byte[] input, int blockSize) {

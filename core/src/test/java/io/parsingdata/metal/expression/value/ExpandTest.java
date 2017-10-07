@@ -80,7 +80,7 @@ public class ExpandTest {
         assertEquals(SIZE, result.size);
         for (int i = 0; i < SIZE; i++) {
             assertTrue(result.head.isPresent());
-            assertEquals(VALUE_1, result.head.get().asNumeric().intValue());
+            assertEquals(VALUE_1, result.head.get().asNumeric().intValueExact());
             result = result.tail;
         }
     }
@@ -91,10 +91,10 @@ public class ExpandTest {
         assertEquals(2 * SIZE, result.size);
         for (int i = 0; i < SIZE; i++) {
             assertTrue(result.head.isPresent());
-            assertEquals(VALUE_1, result.head.get().asNumeric().intValue());
+            assertEquals(VALUE_1, result.head.get().asNumeric().intValueExact());
             result = result.tail;
             assertTrue(result.head.isPresent());
-            assertEquals(VALUE_2, result.head.get().asNumeric().intValue());
+            assertEquals(VALUE_2, result.head.get().asNumeric().intValueExact());
             result = result.tail;
         }
     }
