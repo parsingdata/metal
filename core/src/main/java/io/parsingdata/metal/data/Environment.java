@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.data;
 
+import static java.math.BigInteger.ZERO;
+
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Slice.createFromSource;
 
@@ -30,31 +32,31 @@ import io.parsingdata.metal.token.Token;
 public class Environment {
 
     public final ParseGraph order;
-    public final long offset;
+    public final BigInteger offset;
     public final Source source;
     public final Callbacks callbacks;
 
-    public Environment(final ParseGraph order, final Source source, final long offset, final Callbacks callbacks) {
+    public Environment(final ParseGraph order, final Source source, final BigInteger offset, final Callbacks callbacks) {
         this.order = checkNotNull(order, "order");
         this.source = checkNotNull(source, "source");
-        this.offset = offset;
+        this.offset = checkNotNull(offset, "offset");
         this.callbacks = checkNotNull(callbacks, "callbacks");
     }
 
-    public Environment(final ByteStream input, final long offset, final Callbacks callbacks) {
+    public Environment(final ByteStream input, final BigInteger offset, final Callbacks callbacks) {
         this(ParseGraph.EMPTY, new ByteStreamSource(input), offset, callbacks);
     }
 
-    public Environment(final ByteStream input, final long offset) {
+    public Environment(final ByteStream input, final BigInteger offset) {
         this(input, offset, Callbacks.NONE);
     }
 
     public Environment(final ByteStream input, final Callbacks callbacks) {
-        this(input, 0L, callbacks);
+        this(input, ZERO, callbacks);
     }
 
     public Environment(final ByteStream input) {
-        this(input, 0L);
+        this(input, ZERO);
     }
 
     public Environment addBranch(final Token token) {
@@ -73,12 +75,12 @@ public class Environment {
         return new Environment(order.add(parseReference), source, offset, callbacks);
     }
 
-    public Environment seek(final long newOffset) {
+    public Environment seek(final BigInteger newOffset) {
         return new Environment(order, source, newOffset, callbacks);
     }
 
     public Environment source(final ValueExpression dataExpression, final int index, final Environment environment, final Encoding encoding) {
-        return new Environment(order, new DataExpressionSource(dataExpression, index, environment.order, encoding), 0L, callbacks);
+        return new Environment(order, new DataExpressionSource(dataExpression, index, environment.order, encoding), ZERO, callbacks);
     }
 
     public Optional<Slice> slice(final BigInteger length) {

@@ -16,6 +16,9 @@
 
 package io.parsingdata.metal.data;
 
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
+
 import static org.junit.Assert.assertEquals;
 
 import static io.parsingdata.metal.Shorthand.rep;
@@ -37,16 +40,16 @@ import io.parsingdata.metal.encoding.Encoding;
 public class SelectionTest {
 
     private final Source source = new Source() {
-        @Override protected byte[] getData(long offset, BigInteger length) { return new byte[0]; }
-        @Override protected boolean isAvailable(long offset, BigInteger length) { return true; }
+        @Override protected byte[] getData(BigInteger offset, BigInteger length) { return new byte[0]; }
+        @Override protected boolean isAvailable(BigInteger offset, BigInteger length) { return true; }
     };
 
     @Test
     public void findItemAtOffsetTest() {
         assertEquals("the_one",
-            findItemAtOffset(ImmutableList.create(ParseGraph.EMPTY.add(new ParseValue("two", any("a"), Slice.createFromSource(source, 2, BigInteger.valueOf(2)).get(), new Encoding()))
-                                                                  .add(new ParseValue("zero", any("a"), Slice.createFromSource(source, 0, BigInteger.valueOf(2)).get(), new Encoding()))
-                                                                  .add(new ParseValue("the_one", any("a"), Slice.createFromSource(source, 1, BigInteger.valueOf(2)).get(), new Encoding()))), 0, source).computeResult().get().asGraph().head.asValue().name);
+            findItemAtOffset(ImmutableList.create(ParseGraph.EMPTY.add(new ParseValue("two", any("a"), Slice.createFromSource(source, BigInteger.valueOf(2), BigInteger.valueOf(2)).get(), new Encoding()))
+                                                                  .add(new ParseValue("zero", any("a"), Slice.createFromSource(source, ZERO, BigInteger.valueOf(2)).get(), new Encoding()))
+                                                                  .add(new ParseValue("the_one", any("a"), Slice.createFromSource(source, ONE, BigInteger.valueOf(2)).get(), new Encoding()))), ZERO, source).computeResult().get().asGraph().head.asValue().name);
     }
 
     @Test

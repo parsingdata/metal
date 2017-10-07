@@ -45,17 +45,17 @@ public class DataExpressionSource extends Source {
     }
 
     @Override
-    protected byte[] getData(final long offset, final BigInteger length) {
+    protected byte[] getData(final BigInteger offset, final BigInteger length) {
         final Value inputValue = getValue();
-        if (length.add(BigInteger.valueOf(offset)).compareTo(inputValue.slice.length) > 0) { throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
-        final byte[] outputData = new byte[length.intValue()];
-        System.arraycopy(inputValue.getValue(), (int)offset, outputData, 0, outputData.length);
+        if (length.add(offset).compareTo(inputValue.slice.length) > 0) { throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
+        final byte[] outputData = new byte[length.intValueExact()];
+        System.arraycopy(inputValue.getValue(), offset.intValueExact(), outputData, 0, outputData.length);
         return outputData;
     }
 
     @Override
-    protected boolean isAvailable(final long offset, final BigInteger length) {
-        return offset + length.intValue() <= getValue().slice.length.intValue();
+    protected boolean isAvailable(final BigInteger offset, final BigInteger length) {
+        return offset.add(length).compareTo(getValue().slice.length) <= 0;
     }
 
     private Value getValue() {

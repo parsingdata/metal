@@ -20,8 +20,8 @@ import java.math.BigInteger;
 
 public abstract class Source {
 
-    protected abstract byte[] getData(long offset, BigInteger length);
+    protected abstract byte[] getData(BigInteger offset, BigInteger length);
 
-    protected abstract boolean isAvailable(long offset, BigInteger length);
+    protected abstract boolean isAvailable(BigInteger offset, BigInteger length);
 
 }

@@ -110,8 +110,8 @@ public class TreeTest {
         final ParseItem head = header.tail.head.asGraph().head; // tail = Seq, head = Post, head = Def("head")
         assertTrue(head.isValue());
         assertTrue(head.asValue().matches("head"));
-        assertEquals(HEAD, head.asValue().asNumeric().intValue());
-        assertEquals(offset, head.asValue().slice.offset);
+        assertEquals(HEAD, head.asValue().asNumeric().intValueExact());
+        assertEquals(offset, head.asValue().slice.offset.intValueExact());
         final ParseItem nr = header.head; // head = Def("nr")
         assertTrue(nr.isValue());
         assertTrue(nr.asValue().matches("nr"));
@@ -129,7 +129,7 @@ public class TreeTest {
         } else { // Otherwise, it's a Seq with a pointer and a Sub
             assertTrue(subStruct.tail.head.isValue()); // Def("[left|right]")
             assertTrue(subStruct.tail.head.asValue().matches(name));
-            final int pointer = subStruct.tail.head.asValue().asNumeric().intValue();
+            final int pointer = subStruct.tail.head.asValue().asNumeric().intValueExact();
             assertTrue(subStruct.head.isGraph()); // Sub
             if (subStruct.head.asGraph().head.isReference()) { // If the Sub contains a Reference, it's a cycle
                 checkResolve(subStruct.head.asGraph().head.asReference(), root, pointer);
@@ -153,7 +153,7 @@ public class TreeTest {
 
     private boolean contains(final ImmutableList<ParseValue> nrs, final int i) {
         if (nrs.isEmpty()) { return false; }
-        if (nrs.head.asNumeric().intValue() == i) { return true; }
+        if (nrs.head.asNumeric().intValueExact() == i) { return true; }
         if (nrs.tail != null) { return contains(nrs.tail, i); }
         return false;
     }

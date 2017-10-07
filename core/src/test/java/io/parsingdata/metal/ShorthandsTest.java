@@ -165,7 +165,7 @@ public class ShorthandsTest {
         ImmutableList<Optional<Value>> values = ref(name).eval(env.order, enc());
         assertFalse(values.isEmpty());
         assertEquals(1, values.size);
-        assertEquals(value, values.head.get().asNumeric().intValue());
+        assertEquals(value, values.head.get().asNumeric().intValueExact());
 
         while (!values.isEmpty()) {
             final Value current = values.head.get();
@@ -207,7 +207,7 @@ public class ShorthandsTest {
         assertEquals(3, result.size);
         for (int i = 0; i < 3; i++) {
             assertTrue(result.head.isPresent());
-            assertEquals((i * 42) + 40, result.head.get().asNumeric().intValue());
+            assertEquals((i * 42) + 40, result.head.get().asNumeric().intValueExact());
             result = result.tail;
         }
     }
@@ -218,7 +218,7 @@ public class ShorthandsTest {
         assertEquals(3, result.size);
         for (int i = 0; i < 3; i++) {
             assertTrue(result.head.isPresent());
-            assertEquals(((3 - i) * 42) - 42, result.head.get().asNumeric().intValue());
+            assertEquals(((3 - i) * 42) - 42, result.head.get().asNumeric().intValueExact());
             result = result.tail;
         }
     }

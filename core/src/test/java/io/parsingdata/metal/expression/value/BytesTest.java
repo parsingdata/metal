@@ -61,10 +61,10 @@ public class BytesTest {
         assertTrue(result.isPresent());
         final ImmutableList<Optional<Value>> bytesAfterDivision = bytes(div(ref("value"), ref("divider"))).eval(result.get().order, enc());
         assertEquals(3, bytesAfterDivision.size); // 1 of the first division, 0 of the second, 2 of the third
-        assertEquals(1, bytesAfterDivision.head.get().asNumeric().intValue()); // first value (0x0100) / first divider (0xFF)
+        assertEquals(1, bytesAfterDivision.head.get().asNumeric().intValueExact()); // first value (0x0100) / first divider (0xFF)
         // second division result is missing because of division by zero
-        assertEquals(0, bytesAfterDivision.tail.head.get().asNumeric().intValue()); // third value (0x7F00) / third divider (0x01), right byte
-        assertEquals(127, bytesAfterDivision.tail.tail.head.get().asNumeric().intValue()); // left byte
+        assertEquals(0, bytesAfterDivision.tail.head.get().asNumeric().intValueExact()); // third value (0x7F00) / third divider (0x01), right byte
+        assertEquals(127, bytesAfterDivision.tail.tail.head.get().asNumeric().intValueExact()); // left byte
     }
 
 }

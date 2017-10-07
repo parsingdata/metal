@@ -179,8 +179,8 @@ public class ByTokenTest {
         assertThat(def1Items.head.getDefinition(), is(equalTo(DEF1)));
         assertThat(def2Items.head.getDefinition(), is(equalTo(DEF2)));
 
-        assertThat(def1Items.tail.head.asValue().asNumeric().intValue(), is(equalTo(2)));
-        assertThat(def2Items.tail.head.asValue().asNumeric().intValue(), is(equalTo(3)));
+        assertThat(def1Items.tail.head.asValue().asNumeric().intValueExact(), is(equalTo(2)));
+        assertThat(def2Items.tail.head.asValue().asNumeric().intValueExact(), is(equalTo(3)));
     }
 
     @Test
@@ -254,8 +254,8 @@ public class ByTokenTest {
         assertEquals(1, seqItems.size);
         assertEquals(smallSeq, seqItems.head.getDefinition());
         final ParseValue c = seqItems.head.asGraph().head.asValue();
-        assertEquals(3, c.asNumeric().intValue());
-        assertEquals(2, c.slice.offset);
+        assertEquals(3, c.asNumeric().intValueExact());
+        assertEquals(2, c.slice.offset.intValueExact());
     }
 
     @Test
@@ -268,9 +268,9 @@ public class ByTokenTest {
         assertEquals(smallSeq, seqItems.head.getDefinition());
         assertEquals(smallSeq, seqItems.tail.head.getDefinition());
         final ParseValue c1 = seqItems.head.asGraph().head.asValue();
-        assertEquals(3, c1.asNumeric().intValue());
+        assertEquals(3, c1.asNumeric().intValueExact());
         final ParseValue c2 = seqItems.tail.head.asGraph().head.asValue();
-        assertEquals(3, c2.asNumeric().intValue());
+        assertEquals(3, c2.asNumeric().intValueExact());
         assertNotEquals(seqItems.head.asGraph().head, seqItems.tail.head.asGraph().head);
     }
 
@@ -296,7 +296,7 @@ public class ByTokenTest {
         for (final ParseItem item : items) {
             assertTrue(item.isGraph());
             assertEquals(2, item.asGraph().size);
-            assertEquals(2, item.asGraph().head.asValue().asNumeric().intValue());
+            assertEquals(2, item.asGraph().head.asValue().asNumeric().intValueExact());
         }
     }
 
@@ -337,9 +337,9 @@ public class ByTokenTest {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2), rep(DEF1));
         final ImmutableList<ParseItem> items = getAllRoots(graph, DEF1);
         assertThat(items.size, is(equalTo(3L)));
-        assertThat(items.head.asValue().asNumeric().intValue(), is(equalTo(2)));
-        assertThat(items.tail.head.asValue().asNumeric().intValue(), is(equalTo(1)));
-        assertThat(items.tail.tail.head.asValue().asNumeric().intValue(), is(equalTo(0)));
+        assertThat(items.head.asValue().asNumeric().intValueExact(), is(equalTo(2)));
+        assertThat(items.tail.head.asValue().asNumeric().intValueExact(), is(equalTo(1)));
+        assertThat(items.tail.tail.head.asValue().asNumeric().intValueExact(), is(equalTo(0)));
     }
 
     @Test
@@ -347,8 +347,8 @@ public class ByTokenTest {
         final ParseGraph graph = parseResultGraph(stream(4, 2, 2, 3, 4, 5), SEQ_SUB);
         final ImmutableList<ParseItem> items = getAllRoots(graph, TWO_BYTES);
         assertThat(items.size, is(equalTo(2L)));
-        assertThat(items.head.asValue().asNumeric().intValue(), is(equalTo(0x0203)));
-        assertThat(items.tail.head.asValue().asNumeric().intValue(), is(equalTo(0x0405)));
+        assertThat(items.head.asValue().asNumeric().intValueExact(), is(equalTo(0x0203)));
+        assertThat(items.tail.head.asValue().asNumeric().intValueExact(), is(equalTo(0x0405)));
     }
 
     @Test
@@ -360,12 +360,12 @@ public class ByTokenTest {
         // item.head is the MUT_REC_1 graph containing [3, 4, 5], with '3' having the DEF1 definition
         final ImmutableList<ParseItem> firstMutRecValues = getAll(items.head.asGraph(), DEF1);
         assertThat(firstMutRecValues.size, is(equalTo(1L)));
-        assertThat(lastItem(firstMutRecValues).asValue().asNumeric().intValue(), is(equalTo(3)));
+        assertThat(lastItem(firstMutRecValues).asValue().asNumeric().intValueExact(), is(equalTo(3)));
 
         // item.tail.head is the MUT_REC_1 graph containing [0, 1, 2, 3, 4, 5], with '0' and '3' having the DEF1 definition
         final ImmutableList<ParseItem> secondMutRecValues = getAll(items.tail.head.asGraph(), DEF1);
         assertThat(secondMutRecValues.size, is(equalTo(2L)));
-        assertThat(lastItem(secondMutRecValues).asValue().asNumeric().intValue(), is(equalTo(0)));
+        assertThat(lastItem(secondMutRecValues).asValue().asNumeric().intValueExact(), is(equalTo(0)));
     }
 
     @Test
@@ -376,7 +376,7 @@ public class ByTokenTest {
 
         for (int value = 0xF; value >= 0xA; value--) {
             final ImmutableList<ParseItem> values = getAll(items.head.asGraph(), DEF1);
-            assertThat(lastItem(values).asValue().asNumeric().intValue(), is(equalTo(value)));
+            assertThat(lastItem(values).asValue().asNumeric().intValueExact(), is(equalTo(value)));
             items = items.tail;
         }
     }

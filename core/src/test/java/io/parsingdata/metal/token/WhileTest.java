@@ -53,7 +53,7 @@ public class WhileTest {
         // the while stops because the second 'value' is >= 1
         final Optional<Environment> result = WHILE.parse(stream(0, 9, 1, 10, 2, 11), enc());
 
-        assertThat(result.get().offset, is(4L));
+        assertThat(result.get().offset.longValueExact(), is(4L));
     }
 
     @Test

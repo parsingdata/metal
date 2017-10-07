@@ -96,34 +96,34 @@ public class NthExpressionTest {
     public void testSingleIndex() throws IOException {
         // 5 values = [1, 2, 3, 4, 5], 1 index = [0], result = [1]
         final ImmutableList<Optional<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 1, 0), 1);
-        assertThat(values.head.get().asNumeric().intValue(), is(equalTo(1)));
+        assertThat(values.head.get().asNumeric().intValueExact(), is(equalTo(1)));
     }
 
     @Test
     public void testMultipleIndices() throws IOException {
         // 5 values = [1, 2, 3, 4, 5], 2 indices = [0, 2], result = [1, 3]
         final ImmutableList<Optional<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 2, 0, 2), 2);
-        assertThat(values.head.get().asNumeric().intValue(), is(equalTo(3)));
-        assertThat(values.tail.head.get().asNumeric().intValue(), is(equalTo(1)));
+        assertThat(values.head.get().asNumeric().intValueExact(), is(equalTo(3)));
+        assertThat(values.tail.head.get().asNumeric().intValueExact(), is(equalTo(1)));
     }
 
     @Test
     public void testMultipleIndicesMixedOrder() throws IOException {
         // 5 values = [5, 6, 7, 8, 9], 4 indices = [3, 2, 0, 4], result = [8, 7, 5, 9]
         final ImmutableList<Optional<Value>> values = makeList(stream(5, 5, 6, 7, 8, 9, 4, 3, 2, 0, 4), 4);
-        assertThat(values.head.get().asNumeric().intValue(), is(equalTo(9)));
-        assertThat(values.tail.head.get().asNumeric().intValue(), is(equalTo(5)));
-        assertThat(values.tail.tail.head.get().asNumeric().intValue(), is(equalTo(7)));
-        assertThat(values.tail.tail.tail.head.get().asNumeric().intValue(), is(equalTo(8)));
+        assertThat(values.head.get().asNumeric().intValueExact(), is(equalTo(9)));
+        assertThat(values.tail.head.get().asNumeric().intValueExact(), is(equalTo(5)));
+        assertThat(values.tail.tail.head.get().asNumeric().intValueExact(), is(equalTo(7)));
+        assertThat(values.tail.tail.tail.head.get().asNumeric().intValueExact(), is(equalTo(8)));
     }
 
     @Test
     public void testMixedExistingNonExistingIndices() throws IOException {
         // 5 values = [1, 2, 3, 4, 5], 3 indices = [0, 42, 2], result = [1, Nan, 3]
         final ImmutableList<Optional<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 3, 0, 42, 2), 3);
-        assertThat(values.head.get().asNumeric().intValue(), is(equalTo(3)));
+        assertThat(values.head.get().asNumeric().intValueExact(), is(equalTo(3)));
         assertThat(values.tail.head.isPresent(), is(equalTo(false)));
-        assertThat(values.tail.tail.head.get().asNumeric().intValue(), is(equalTo(1)));
+        assertThat(values.tail.tail.head.get().asNumeric().intValueExact(), is(equalTo(1)));
     }
 
     @Test

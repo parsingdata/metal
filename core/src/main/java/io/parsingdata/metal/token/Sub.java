@@ -23,6 +23,7 @@ import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
 import static io.parsingdata.metal.data.Selection.hasRootAtOffset;
 
+import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -77,12 +78,12 @@ public class Sub extends Token {
         if (!addresses.head.isPresent()) {
             return complete(Util::failure);
         }
-        return parse(scope, addresses.head.get().asNumeric().longValue(), environment, encoding)
+        return parse(scope, addresses.head.get().asNumeric(), environment, encoding)
             .map(nextEnvironment -> intermediate(() -> iterate(scope, addresses.tail, nextEnvironment, encoding)))
             .orElseGet(() -> complete(Util::failure));
     }
 
-    private Optional<Environment> parse(final String scope, final long offset, final Environment environment, final Encoding encoding) {
+    private Optional<Environment> parse(final String scope, final BigInteger offset, final Environment environment, final Encoding encoding) {
         if (hasRootAtOffset(environment.order, token.getCanonical(environment), offset, environment.source)) {
             return success(environment.add(new ParseReference(offset, environment.source, token.getCanonical(environment))));
         }

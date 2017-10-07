@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.data;
 
+import static java.math.BigInteger.ZERO;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertThat;
@@ -26,6 +28,8 @@ import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.data.selection.ByTypeTest.EMPTY_SOURCE;
 import static junit.framework.TestCase.assertFalse;
+
+import java.math.BigInteger;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -45,12 +49,12 @@ public class ParseReferenceTest {
     @Before
     public void setUp() {
         definition = sub(def("value", 1), con(0));
-        reference = new ParseReference(0L, EMPTY_SOURCE, definition);
+        reference = new ParseReference(ZERO, EMPTY_SOURCE, definition);
     }
 
     @Test
     public void state() {
-        assertThat(reference.location, is(0L));
+        assertThat(reference.location.longValueExact(), is(0L));
         assertThat(reference.getDefinition(), is(definition));
     }
 

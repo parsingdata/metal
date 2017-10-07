@@ -16,6 +16,10 @@
 
 package io.parsingdata.metal.data;
 
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.TEN;
+import static java.math.BigInteger.ZERO;
+
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -79,14 +83,14 @@ public class SliceTest {
     public void retrieveDataFromSliceWithNegativeLimit() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Argument limit may not be negative.");
-        assertArrayEquals(new byte[] {}, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), 0, BigInteger.valueOf(4)).get().getData(BigInteger.valueOf(-1)));
+        assertArrayEquals(new byte[] {}, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), ZERO, BigInteger.valueOf(4)).get().getData(BigInteger.valueOf(-1)));
     }
 
 
     @Test
     public void retrievePartialDataFromSlice() {
-        assertArrayEquals(new byte[] { 0 }, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), 0, BigInteger.valueOf(4)).get().getData(BigInteger.ONE));
-        assertArrayEquals(new byte[] { 0, 1, 2, 3 }, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), 0, BigInteger.valueOf(4)).get().getData(BigInteger.TEN));
+        assertArrayEquals(new byte[] { 0 }, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), ZERO, BigInteger.valueOf(4)).get().getData(ONE));
+        assertArrayEquals(new byte[] { 0, 1, 2, 3 }, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), ZERO, BigInteger.valueOf(4)).get().getData(TEN));
     }
 
     @Test
@@ -94,7 +98,7 @@ public class SliceTest {
         final ParseValue pv1 = new ParseValue("name", NONE, createFromBytes(new byte[]{1, 2}), enc());
         assertEquals("Slice(ConstantSource(0x0102)@0:2)", pv1.slice.toString());
         final Environment oneValueEnvironment = stream().add(pv1);
-        final Environment twoValueEnvironment = oneValueEnvironment.add(new ParseValue("name2", NONE, Slice.createFromSource(new DataExpressionSource(ref("name"), 0, oneValueEnvironment.order, enc()), 0, BigInteger.valueOf(2)).get(), enc()));
+        final Environment twoValueEnvironment = oneValueEnvironment.add(new ParseValue("name2", NONE, Slice.createFromSource(new DataExpressionSource(ref("name"), 0, oneValueEnvironment.order, enc()), ZERO, BigInteger.valueOf(2)).get(), enc()));
         final String dataExpressionSliceString = getValue(twoValueEnvironment.order, "name2").slice.toString();
         assertTrue(dataExpressionSliceString.startsWith("Slice(DataExpressionSource(NameRef(name)[0]("));
         assertTrue(dataExpressionSliceString.endsWith(")@0:2)"));

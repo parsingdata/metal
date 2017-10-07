@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
+import java.math.BigInteger;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -32,11 +33,11 @@ public final class Selection {
 
     private Selection() {}
 
-    public static boolean hasRootAtOffset(final ParseGraph graph, final Token definition, final long offset, final Source source) {
+    public static boolean hasRootAtOffset(final ParseGraph graph, final Token definition, final BigInteger offset, final Source source) {
         return findItemAtOffset(getAllRoots(graph, definition), offset, source).computeResult().isPresent();
     }
 
-    public static Trampoline<Optional<ParseItem>> findItemAtOffset(final ImmutableList<ParseItem> items, final long offset, final Source source) {
+    public static Trampoline<Optional<ParseItem>> findItemAtOffset(final ImmutableList<ParseItem> items, final BigInteger offset, final Source source) {
         checkNotNull(items, "items");
         checkNotNull(source, "source");
         if (items.isEmpty()) { return complete(Optional::empty); }
@@ -49,8 +50,8 @@ public final class Selection {
         return intermediate(() -> findItemAtOffset(items.tail, offset, source));
     }
 
-    private static boolean matchesLocation(final ParseValue value, final long offset, final Source source) {
-        return value.slice.offset == offset && value.slice.source.equals(source);
+    private static boolean matchesLocation(final ParseValue value, final BigInteger offset, final Source source) {
+        return value.slice.offset.compareTo(offset) == 0 && value.slice.source.equals(source);
     }
 
     private static Trampoline<ParseValue> getLowestOffsetValue(final ImmutableList<ParseGraph> graphList, final ParseValue lowest) {
@@ -68,7 +69,7 @@ public final class Selection {
     }
 
     private static ParseValue getLowest(final ParseValue lowest, final ParseValue value) {
-        return lowest == null || lowest.slice.offset > value.slice.offset ? value : lowest;
+        return lowest == null || lowest.slice.offset.compareTo(value.slice.offset) > 0 ? value : lowest;
     }
 
     private static ImmutableList<ParseGraph> addIfGraph(final ImmutableList<ParseGraph> graphList, final ParseItem head) {

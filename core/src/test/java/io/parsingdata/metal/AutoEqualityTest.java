@@ -16,6 +16,9 @@
 
 package io.parsingdata.metal;
 
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -116,12 +119,12 @@ import io.parsingdata.metal.util.InMemoryByteStream;
 public class AutoEqualityTest {
 
     public static final ByteStream DUMMY_STREAM = new ByteStream() {
-        @Override public byte[] read(long offset, int length) throws IOException { return new byte[0]; }
-        @Override public boolean isAvailable(long offset, int length) { return false; }
+        @Override public byte[] read(BigInteger offset, int length) throws IOException { return new byte[0]; }
+        @Override public boolean isAvailable(BigInteger offset, int length) { return false; }
     };
 
     private static final ParseValue PARSEVALUE = new ParseValue("a", any("a"), createFromBytes(new byte[]{1, 2}), enc());
-    private static final ParseGraph GRAPH_WITH_REFERENCE = ParseGraph.EMPTY.add(new ParseReference(0, new ConstantSource(new byte[]{1, 2}), any("a")));
+    private static final ParseGraph GRAPH_WITH_REFERENCE = ParseGraph.EMPTY.add(new ParseReference(ZERO, new ConstantSource(new byte[]{1, 2}), any("a")));
     private static final ParseGraph BRANCHED_GRAPH = new Environment(DUMMY_STREAM).addBranch(any("a")).order;
     private static final ParseGraph CLOSED_BRANCHED_GRAPH = new Environment(DUMMY_STREAM).addBranch(any("a")).closeBranch().order;
 
@@ -133,7 +136,7 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> EXPRESSIONS = Arrays.asList(() -> TRUE, () -> not(TRUE));
     private static final List<Supplier<Object>> VALUES = Arrays.asList(() -> ConstantFactory.createFromString("a", enc()), () -> ConstantFactory.createFromString("b", enc()), () -> ConstantFactory.createFromNumeric(1L, signed()));
     private static final List<Supplier<Object>> REDUCERS = Arrays.asList(() -> (BinaryOperator<ValueExpression>) Shorthand::cat, () -> (BinaryOperator<ValueExpression>) Shorthand::div);
-    private static final List<Supplier<Object>> SLICES = Arrays.asList(() -> createFromBytes(new byte[] { 1, 2 }), () -> Slice.createFromSource(new DataExpressionSource(ref("a"), 1, ParseGraph.EMPTY.add(PARSEVALUE).add(PARSEVALUE), enc()), 0, BigInteger.valueOf(2)).get());
+    private static final List<Supplier<Object>> SLICES = Arrays.asList(() -> createFromBytes(new byte[] { 1, 2 }), () -> Slice.createFromSource(new DataExpressionSource(ref("a"), 1, ParseGraph.EMPTY.add(PARSEVALUE).add(PARSEVALUE), enc()), ZERO, BigInteger.valueOf(2)).get());
     private static final List<Supplier<Object>> BYTE_ARRAYS = Arrays.asList(() -> new byte[] { 0 }, () -> new byte[] { 1, 2 }, () -> new byte[] {});
     private static final List<Supplier<Object>> SOURCES = Arrays.asList(() -> new ConstantSource(new byte[] {}), () -> new DataExpressionSource(ref("x"), 8, ParseGraph.EMPTY.add(PARSEVALUE), signed()));
     private static final List<Supplier<Object>> LONGS = Arrays.asList(() -> 0L, () -> 1L, () -> 31L, () -> 100000L);
@@ -141,7 +144,7 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> PARSEGRAPHS = Arrays.asList(() -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE);
     private static final List<Supplier<Object>> PARSEITEMS = Arrays.asList(() -> CLOSED_BRANCHED_GRAPH, () -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE, () -> ParseGraph.EMPTY.add(PARSEVALUE), () -> ParseGraph.EMPTY.add(PARSEVALUE).add(PARSEVALUE), () -> BRANCHED_GRAPH);
     private static final List<Supplier<Object>> BYTESTREAMS = Arrays.asList(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> DUMMY_STREAM);
-    private static final List<Supplier<Object>> BIGINTEGERS = Arrays.asList(() -> BigInteger.ONE, () -> BigInteger.valueOf(3));
+    private static final List<Supplier<Object>> BIGINTEGERS = Arrays.asList(() -> ONE, () -> BigInteger.valueOf(3));
     private static final Map<Class, List<Supplier<Object>>> mapping = new HashMap<Class, List<Supplier<Object>>>() {{
         put(String.class, STRINGS);
         put(Encoding.class, ENCODINGS);

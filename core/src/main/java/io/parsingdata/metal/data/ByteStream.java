@@ -17,11 +17,12 @@
 package io.parsingdata.metal.data;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 public interface ByteStream {
 
-    byte[] read(long offset, int length) throws IOException;
+    byte[] read(BigInteger offset, int length) throws IOException;
 
-    boolean isAvailable(long offset, int length);
+    boolean isAvailable(BigInteger offset, int length);
 
 }

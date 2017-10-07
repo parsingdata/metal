@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.data.selection;
 
+import static java.math.BigInteger.ZERO;
+
 import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
@@ -33,8 +35,8 @@ import io.parsingdata.metal.data.Source;
 public class ByTypeTest {
 
     public static final Source EMPTY_SOURCE = new Source() {
-        @Override protected byte[] getData(long offset, BigInteger length) { throw new IllegalStateException(); }
-        @Override protected boolean isAvailable(long offset, BigInteger length) { return false; }
+        @Override protected byte[] getData(BigInteger offset, BigInteger length) { throw new IllegalStateException(); }
+        @Override protected boolean isAvailable(BigInteger offset, BigInteger length) { return false; }
     };
 
     @Rule
@@ -44,7 +46,7 @@ public class ByTypeTest {
     public void unresolvableRef() {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("A ParseReference must point to an existing graph.");
-        getReferences(EMPTY.add(new ParseReference(0, EMPTY_SOURCE, NONE)));
+        getReferences(EMPTY.add(new ParseReference(ZERO, EMPTY_SOURCE, NONE)));
     }
 
 }

@@ -37,12 +37,12 @@ public class DefTest {
 
     @Test
     public void scopeWithoutEncoding() throws IOException {
-        assertEquals(1, getValue(def("a", 1).parse("scope", stream(1), enc()).get().order, "scope.a").asNumeric().intValue());
+        assertEquals(1, getValue(def("a", 1).parse("scope", stream(1), enc()).get().order, "scope.a").asNumeric().intValueExact());
     }
 
     @Test
     public void scopeWithEncoding() throws IOException {
-        assertEquals(1, getValue(def("a", 1, signed()).parse("scope", stream(1), enc()).get().order, "scope.a").asNumeric().intValue());
+        assertEquals(1, getValue(def("a", 1, signed()).parse("scope", stream(1), enc()).get().order, "scope.a").asNumeric().intValueExact());
     }
 
     @Test

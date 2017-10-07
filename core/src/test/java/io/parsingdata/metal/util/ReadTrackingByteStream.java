@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static java.util.stream.Collectors.toList;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -38,8 +39,8 @@ public class ReadTrackingByteStream implements ByteStream {
     }
 
     @Override
-    public byte[] read(final long offset, final int length) throws IOException {
-        for (long i = offset; i < offset+length; i++) {
+    public byte[] read(final BigInteger offset, final int length) throws IOException {
+        for (long i = offset.longValueExact(); i < offset.longValueExact()+length; i++) {
             read.add(i);
         }
         return byteStream.read(offset, length);
@@ -57,7 +58,7 @@ public class ReadTrackingByteStream implements ByteStream {
     }
 
     @Override
-    public boolean isAvailable(final long offset, final int length) {
+    public boolean isAvailable(final BigInteger offset, final int length) {
         return byteStream.isAvailable(offset, length);
     }
 
