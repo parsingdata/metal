@@ -111,4 +111,15 @@ public class SourceAndSliceTest {
         assertFalse(Slice.createFromSource(source, BigInteger.valueOf(5), ZERO).isPresent());
     }
 
+    @Test
+    public void startReadAtNegativeOffsetSource() {
+        thrown.expect(IllegalStateException.class);
+        source.getData(BigInteger.valueOf(-1L), ONE);
+    }
+
+    @Test
+    public void startReadAtNegativeOffsetSlice() {
+        assertFalse(Slice.createFromSource(source, BigInteger.valueOf(-1L), ONE).isPresent());
+    }
+
 }

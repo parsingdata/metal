@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.data;
 
+import static java.math.BigInteger.ZERO;
+
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
@@ -47,7 +49,7 @@ public class DataExpressionSource extends Source {
     @Override
     protected byte[] getData(final BigInteger offset, final BigInteger length) {
         final Value inputValue = getValue();
-        if (length.add(offset).compareTo(inputValue.slice.length) > 0) { throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
+        if (offset.compareTo(ZERO) < 0 || length.add(offset).compareTo(inputValue.slice.length) > 0) { throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
         final byte[] outputData = new byte[length.intValueExact()];
         System.arraycopy(inputValue.getValue(), offset.intValueExact(), outputData, 0, outputData.length);
         return outputData;

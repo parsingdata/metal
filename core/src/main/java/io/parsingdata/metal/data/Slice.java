@@ -39,7 +39,9 @@ public class Slice {
     }
 
     public static Optional<Slice> createFromSource(final Source source, final BigInteger offset, final BigInteger length) {
-        if (checkNotNull(length, "length").compareTo(ZERO) < 0 || !checkNotNull(source, "source").isAvailable(offset, length)) { return Optional.empty(); }
+        if (offset.compareTo(ZERO) < 0 ||
+            checkNotNull(length, "length").compareTo(ZERO) < 0 ||
+            !checkNotNull(source, "source").isAvailable(offset, length)) { return Optional.empty(); }
         return Optional.of(new Slice(source, offset, length));
     }
 
