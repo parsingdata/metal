@@ -31,12 +31,14 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Optional;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.token.Token;
 
@@ -71,7 +73,17 @@ public class ErrorsTest {
                 repn(dummy, ref("b"))
             );
        Optional<Environment> result = multiRepN.parse(stream(2, 2, 2, 2), enc());
-        assertFalse(result.isPresent());
+       assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void environmentWithNegativeOffset() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Argument offset may not be negative.");
+        new Environment(new ByteStream() {
+            @Override public byte[] read(BigInteger offset, int length) throws IOException { return new byte[0]; }
+            @Override public boolean isAvailable(BigInteger offset, int length) { return false; }
+        }, BigInteger.valueOf(-1));
     }
 
 }

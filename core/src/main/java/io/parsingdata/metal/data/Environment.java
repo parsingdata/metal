@@ -18,6 +18,7 @@ package io.parsingdata.metal.data;
 
 import static java.math.BigInteger.ZERO;
 
+import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Slice.createFromSource;
 
@@ -39,7 +40,7 @@ public class Environment {
     public Environment(final ParseGraph order, final Source source, final BigInteger offset, final Callbacks callbacks) {
         this.order = checkNotNull(order, "order");
         this.source = checkNotNull(source, "source");
-        this.offset = checkNotNull(offset, "offset");
+        this.offset = checkNotNegative(offset, "offset");
         this.callbacks = checkNotNull(callbacks, "callbacks");
     }
 
