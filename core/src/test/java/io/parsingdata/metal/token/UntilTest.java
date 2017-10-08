@@ -19,6 +19,7 @@ package io.parsingdata.metal.token;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
@@ -33,6 +34,7 @@ import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.until;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.io.IOException;
@@ -77,6 +79,11 @@ public class UntilTest {
     @Test
     public void allDefaultValueExpressions() throws IOException {
         assertTrue(until("value", def("terminator", 1, eq(con(0)))).parse(stream(1, 2, 3, 0), enc()).isPresent());
+    }
+
+    @Test
+    public void errorNegativeSize() {
+        assertFalse(until("value", con(-1, signed()), def("terminator", 1, eq(con(0)))).parse(stream(1, 2, 3, 0), enc()).isPresent());
     }
 
     private Token createToken(final ValueExpression initialSize, final Token terminator) {

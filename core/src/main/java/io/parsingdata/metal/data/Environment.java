@@ -75,8 +75,8 @@ public class Environment {
         return new Environment(order.add(parseReference), source, offset, callbacks);
     }
 
-    public Environment seek(final BigInteger newOffset) {
-        return new Environment(order, source, newOffset, callbacks);
+    public Optional<Environment> seek(final BigInteger newOffset) {
+        return newOffset.compareTo(ZERO) >= 0 ? Optional.of(new Environment(order, source, newOffset, callbacks)) : Optional.empty();
     }
 
     public Environment source(final ValueExpression dataExpression, final int index, final Environment environment, final Encoding encoding) {

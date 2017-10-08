@@ -31,6 +31,7 @@ import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -40,6 +41,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Optional;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.Environment;
@@ -98,7 +100,7 @@ public class SubStructTest {
     }
 
     private ParseGraph startCycle(final int offset) throws IOException {
-        final Environment environment = stream(0, 4, 1, 21, 0, 0, 1).seek(BigInteger.valueOf(offset));
+        final Environment environment = stream(0, 4, 1, 21, 0, 0, 1).seek(BigInteger.valueOf(offset)).get();
         final Optional<Environment> result = LINKED_LIST.parse(environment, enc());
         assertTrue(result.isPresent());
         assertEquals(1, getReferences(result.get().order).size);
@@ -157,8 +159,13 @@ public class SubStructTest {
     }
 
     @Test
-    public void errorEmptyAddressInList() throws IOException {
-        assertFalse(sub(any("a"), cat(con(0), EMPTY_VE)).parse(stream(1, 2, 3, 4), enc()).isPresent());
+    public void errorEmptyAddress() throws IOException {
+        assertFalse(sub(any("a"), EMPTY_VE).parse(stream(1, 2, 3, 4), enc()).isPresent());
+    }
+
+    @Test
+    public void errorNegativeAddress() {
+        assertFalse(sub(any("a"), con(-1, signed())).parse(stream(1, 2, 3, 4), enc()).isPresent());
     }
 
 }
