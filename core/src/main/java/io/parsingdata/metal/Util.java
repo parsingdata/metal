@@ -16,7 +16,10 @@
 
 package io.parsingdata.metal;
 
+import static java.math.BigInteger.ZERO;
+
 import java.io.ByteArrayOutputStream;
+import java.math.BigInteger;
 import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
@@ -56,6 +59,11 @@ public final class Util {
     public static boolean notNullAndSameClass(final Object object, final Object other) {
         return other != null
             && object.getClass() == other.getClass();
+    }
+
+    public static BigInteger checkNotNegative(final BigInteger argument, final String name) {
+        if (checkNotNull(argument, name).compareTo(ZERO) < 0) { throw new IllegalArgumentException("Argument " + name + " may not be negative."); }
+        return argument;
     }
 
     public static String bytesToHexString(final byte[] bytes) {

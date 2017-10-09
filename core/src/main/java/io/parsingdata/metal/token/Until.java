@@ -23,6 +23,7 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotEmpty;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
 
 import java.math.BigInteger;
@@ -106,9 +107,10 @@ public class Until extends Token {
     }
 
     private Trampoline<Optional<Environment>> parseSlice(String scope, Environment environment, BigInteger currentSize, BigInteger stepSize, BigInteger maxSize, Encoding encoding, Slice slice) {
-        return terminator
-            .parse(scope, currentSize.compareTo(ZERO) == 0 ? environment : environment.add(new ParseValue(name, this, slice, encoding)).seek(environment.offset.add(currentSize)), encoding)
-            .map(nextEnvironment -> complete(() -> success(nextEnvironment)))
+        return (currentSize.compareTo(ZERO) == 0 ? Optional.of(environment) : environment.add(new ParseValue(name, this, slice, encoding)).seek(environment.offset.add(currentSize)))
+            .map(preparedEnvironment -> terminator.parse(scope, preparedEnvironment, encoding))
+            .orElse(failure())
+            .map(parsedEnvironment -> complete(() -> success(parsedEnvironment)))
             .orElseGet(() -> intermediate(() -> iterate(scope, environment, currentSize.add(stepSize), stepSize, maxSize, encoding)));
     }
 

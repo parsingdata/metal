@@ -17,7 +17,9 @@
 package io.parsingdata.metal.token;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
+import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
@@ -46,10 +48,15 @@ public class DefTest {
     }
 
     @Test
-    public void emptyName() {
+    public void errorEmptyName() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Argument name may not be empty.");
         def("", 1);
+    }
+
+    @Test
+    public void errorNegativeSize() {
+        assertFalse(def("negativeSize", con(-1, signed())).parse(stream(1), enc()).isPresent());
     }
 
 }

@@ -18,6 +18,7 @@ package io.parsingdata.metal;
 
 import static org.junit.Assert.assertFalse;
 
+import static io.parsingdata.metal.AutoEqualityTest.DUMMY_STREAM;
 import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
@@ -31,12 +32,14 @@ import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Optional;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.token.Token;
 
@@ -71,7 +74,14 @@ public class ErrorsTest {
                 repn(dummy, ref("b"))
             );
        Optional<Environment> result = multiRepN.parse(stream(2, 2, 2, 2), enc());
-        assertFalse(result.isPresent());
+       assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void environmentWithNegativeOffset() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Argument offset may not be negative.");
+        new Environment(DUMMY_STREAM, BigInteger.valueOf(-1));
     }
 
 }

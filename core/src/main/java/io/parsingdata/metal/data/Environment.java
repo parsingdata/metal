@@ -18,6 +18,7 @@ package io.parsingdata.metal.data;
 
 import static java.math.BigInteger.ZERO;
 
+import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Slice.createFromSource;
 
@@ -39,7 +40,7 @@ public class Environment {
     public Environment(final ParseGraph order, final Source source, final BigInteger offset, final Callbacks callbacks) {
         this.order = checkNotNull(order, "order");
         this.source = checkNotNull(source, "source");
-        this.offset = checkNotNull(offset, "offset");
+        this.offset = checkNotNegative(offset, "offset");
         this.callbacks = checkNotNull(callbacks, "callbacks");
     }
 
@@ -75,8 +76,8 @@ public class Environment {
         return new Environment(order.add(parseReference), source, offset, callbacks);
     }
 
-    public Environment seek(final BigInteger newOffset) {
-        return new Environment(order, source, newOffset, callbacks);
+    public Optional<Environment> seek(final BigInteger newOffset) {
+        return newOffset.compareTo(ZERO) >= 0 ? Optional.of(new Environment(order, source, newOffset, callbacks)) : Optional.empty();
     }
 
     public Environment source(final ValueExpression dataExpression, final int index, final Environment environment, final Encoding encoding) {

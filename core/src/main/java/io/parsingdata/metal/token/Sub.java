@@ -68,7 +68,7 @@ public class Sub extends Token {
             return failure();
         }
         return iterate(scope, addresses, environment.addBranch(this), encoding).computeResult()
-            .flatMap(nextEnvironment -> success(nextEnvironment.seek(environment.offset)));
+            .flatMap(nextEnvironment -> nextEnvironment.seek(environment.offset));
     }
 
     private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> addresses, final Environment environment, final Encoding encoding) {
@@ -87,7 +87,10 @@ public class Sub extends Token {
         if (hasRootAtOffset(environment.order, token.getCanonical(environment), offset, environment.source)) {
             return success(environment.add(new ParseReference(offset, environment.source, token.getCanonical(environment))));
         }
-        return token.parse(scope, environment.seek(offset), encoding);
+        return environment
+            .seek(offset)
+            .map(newEnvironment -> token.parse(scope, newEnvironment, encoding))
+            .orElse(failure());
     }
 
     @Override
