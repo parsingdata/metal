@@ -113,7 +113,7 @@ public class SourceAndSliceTest {
 
     @Test
     public void startReadAtNegativeOffsetSource() {
-        thrown.expect(IllegalStateException.class);
+        thrown.expect(IllegalArgumentException.class);
         source.getData(BigInteger.valueOf(-1L), ONE);
     }
 

@@ -18,6 +18,7 @@ package io.parsingdata.metal;
 
 import static org.junit.Assert.assertFalse;
 
+import static io.parsingdata.metal.AutoEqualityTest.DUMMY_STREAM;
 import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
@@ -80,10 +81,7 @@ public class ErrorsTest {
     public void environmentWithNegativeOffset() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Argument offset may not be negative.");
-        new Environment(new ByteStream() {
-            @Override public byte[] read(BigInteger offset, int length) throws IOException { return new byte[0]; }
-            @Override public boolean isAvailable(BigInteger offset, int length) { return false; }
-        }, BigInteger.valueOf(-1));
+        new Environment(DUMMY_STREAM, BigInteger.valueOf(-1));
     }
 
 }

@@ -19,6 +19,7 @@ package io.parsingdata.metal.data;
 import static java.math.BigInteger.ZERO;
 
 import static io.parsingdata.metal.Util.bytesToHexString;
+import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
@@ -37,7 +38,7 @@ public class ConstantSource extends Source {
 
     @Override
     protected byte[] getData(final BigInteger offset, final BigInteger length) {
-        if (offset.compareTo(ZERO) < 0 || !isAvailable(offset, length)) { throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
+        if (!isAvailable(checkNotNegative(offset, "offset"), length)) { throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
         final byte[] outputData = new byte[length.intValueExact()];
         System.arraycopy(data, offset.intValueExact(), outputData, 0, outputData.length);
         return outputData;

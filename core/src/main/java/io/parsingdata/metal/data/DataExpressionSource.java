@@ -20,6 +20,7 @@ import static java.math.BigInteger.ZERO;
 
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
+import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
@@ -48,8 +49,9 @@ public class DataExpressionSource extends Source {
 
     @Override
     protected byte[] getData(final BigInteger offset, final BigInteger length) {
+        checkNotNegative(offset, "offset");
         final Value inputValue = getValue();
-        if (offset.compareTo(ZERO) < 0 || length.add(offset).compareTo(inputValue.slice.length) > 0) { throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
+        if (length.add(offset).compareTo(inputValue.slice.length) > 0) { throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
         final byte[] outputData = new byte[length.intValueExact()];
         System.arraycopy(inputValue.getValue(), offset.intValueExact(), outputData, 0, outputData.length);
         return outputData;
