@@ -27,6 +27,7 @@ import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
@@ -67,7 +68,7 @@ public class Def extends Token {
         return environment
             .slice(dataSize)
             .map(slice -> environment.add(new ParseValue(scope, this, slice, encoding)).seek(dataSize.add(environment.offset)))
-            .orElse(failure());
+            .orElseGet(Util::failure);
     }
 
     @Override

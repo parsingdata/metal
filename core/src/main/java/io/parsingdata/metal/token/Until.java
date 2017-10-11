@@ -103,13 +103,13 @@ public class Until extends Token {
         return environment
             .slice(currentSize)
             .map(slice -> parseSlice(scope, environment, currentSize, stepSize, maxSize, encoding, slice))
-            .orElse(complete(Util::failure));
+            .orElseGet(() -> complete(Util::failure));
     }
 
     private Trampoline<Optional<Environment>> parseSlice(String scope, Environment environment, BigInteger currentSize, BigInteger stepSize, BigInteger maxSize, Encoding encoding, Slice slice) {
         return (currentSize.compareTo(ZERO) == 0 ? Optional.of(environment) : environment.add(new ParseValue(name, this, slice, encoding)).seek(environment.offset.add(currentSize)))
             .map(preparedEnvironment -> terminator.parse(scope, preparedEnvironment, encoding))
-            .orElse(failure())
+            .orElseGet(Util::failure)
             .map(parsedEnvironment -> complete(() -> success(parsedEnvironment)))
             .orElseGet(() -> intermediate(() -> iterate(scope, environment, currentSize.add(stepSize), stepSize, maxSize, encoding)));
     }

@@ -90,7 +90,7 @@ public class Sub extends Token {
         return environment
             .seek(offset)
             .map(newEnvironment -> token.parse(scope, newEnvironment, encoding))
-            .orElse(failure());
+            .orElseGet(Util::failure);
     }
 
     @Override
