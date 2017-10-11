@@ -42,7 +42,11 @@ public class FormatTest extends ParameterizedParse {
     }
 
     private static Environment env(final String path) throws URISyntaxException, IOException {
-        return stream(FormatTest.class.getClass().getResource(path).toURI());
+        return stream(FormatTest
+            .class
+            .getClass()
+            .getResource(path)
+            .toURI());
     }
 
 }
