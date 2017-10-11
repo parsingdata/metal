@@ -16,10 +16,6 @@
     <url>https://github.com/parsingdata/metal.git</url>
   </scm>
 
-  <properties>
-    <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
-  </properties>
-
   <build>
     <plugins>
       <plugin>
