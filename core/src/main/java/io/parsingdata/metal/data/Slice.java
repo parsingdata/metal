@@ -41,7 +41,9 @@ public class Slice {
     public static Optional<Slice> createFromSource(final Source source, final BigInteger offset, final BigInteger length) {
         if (offset.compareTo(ZERO) < 0 ||
             checkNotNull(length, "length").compareTo(ZERO) < 0 ||
-            !checkNotNull(source, "source").isAvailable(offset, length)) { return Optional.empty(); }
+            !checkNotNull(source, "source").isAvailable(offset, length)) {
+            return Optional.empty();
+        }
         return Optional.of(new Slice(source, offset, length));
     }
 
@@ -54,7 +56,9 @@ public class Slice {
     }
 
     public byte[] getData(final BigInteger limit) {
-        if (limit.compareTo(ZERO) < 0) { throw new IllegalArgumentException("Argument limit may not be negative."); }
+        if (limit.compareTo(ZERO) < 0) {
+            throw new IllegalArgumentException("Argument limit may not be negative.");
+        }
         final BigInteger calculatedLength = limit.compareTo(length) > 0 ? length : limit;
         return source.getData(offset, calculatedLength);
     }

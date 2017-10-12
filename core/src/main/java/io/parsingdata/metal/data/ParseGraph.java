@@ -85,7 +85,9 @@ public class ParseGraph implements ParseItem {
     }
 
     ParseGraph closeBranch() {
-        if (!branched) { throw new IllegalStateException("Cannot close branch that is not open."); }
+        if (!branched) {
+            throw new IllegalStateException("Cannot close branch that is not open.");
+        }
         if (head.asGraph().branched) {
             return new ParseGraph(head.asGraph().closeBranch(), tail, definition, true);
         }
@@ -102,9 +104,13 @@ public class ParseGraph implements ParseItem {
     }
 
     private Trampoline<Optional<ParseValue>> current(final ImmutableList<ParseItem> items) {
-        if (items.isEmpty()) { return complete(Optional::empty); }
+        if (items.isEmpty()) {
+            return complete(Optional::empty);
+        }
         final ParseItem item = items.head;
-        if (item.isValue()) { return complete(() -> Optional.of(item.asValue())); }
+        if (item.isValue()) {
+            return complete(() -> Optional.of(item.asValue()));
+        }
         if (item.isGraph() && !item.asGraph().isEmpty()) {
             return intermediate(() -> current(items.tail.add(item.asGraph().tail)
                                                         .add(item.asGraph().head)));
@@ -118,7 +124,9 @@ public class ParseGraph implements ParseItem {
 
     @Override
     public String toString() {
-        if (this == EMPTY) { return "pg(EMPTY)"; }
+        if (this == EMPTY) {
+            return "pg(EMPTY)";
+        }
         if (head == null) {
             return "pg(terminator:" + definition.getClass().getSimpleName() + ")";
         }

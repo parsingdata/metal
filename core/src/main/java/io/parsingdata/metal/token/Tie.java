@@ -74,7 +74,8 @@ public class Tie extends Token {
         if (!values.head.isPresent()) {
             return complete(Util::failure);
         }
-        return token.parse(scope, environment.source(dataExpression, index, environment, encoding), encoding)
+        return token
+            .parse(scope, environment.source(dataExpression, index, environment, encoding), encoding)
             .map(nextEnvironment -> intermediate(() -> iterate(scope, values.tail, index + 1, returnEnvironment, nextEnvironment, encoding)))
             .orElseGet(() -> complete(Util::failure));
     }

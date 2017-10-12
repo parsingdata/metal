@@ -71,17 +71,23 @@ public abstract class BinaryValueExpression implements ValueExpression {
     }
 
     private Trampoline<ImmutableList<Optional<Value>>> evalLists(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues, final ParseGraph graph, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
-        if (leftValues.isEmpty() || rightValues.isEmpty()) { return complete(() -> result); }
+        if (leftValues.isEmpty() || rightValues.isEmpty()) {
+            return complete(() -> result);
+        }
         return intermediate(() -> evalLists(leftValues.tail, rightValues.tail, graph, encoding, result.add(eval(leftValues.head, rightValues.head, graph, encoding))));
     }
 
     private Trampoline<ImmutableList<Optional<Value>>> padList(final ImmutableList<Optional<Value>> list, final long size) {
-        if (size <= 0) { return complete(() -> list); }
+        if (size <= 0) {
+            return complete(() -> list);
+        }
         return intermediate(() -> padList(list.add(Optional.empty()), size - 1));
     }
 
     private Optional<Value> eval(final Optional<Value> left, final Optional<Value> right, final ParseGraph graph, final Encoding encoding) {
-        if (!left.isPresent() || !right.isPresent()) { return Optional.empty(); }
+        if (!left.isPresent() || !right.isPresent()) {
+            return Optional.empty();
+        }
         return eval(left.get(), right.get(), graph, encoding);
     }
 

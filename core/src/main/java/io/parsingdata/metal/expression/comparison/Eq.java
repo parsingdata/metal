@@ -40,9 +40,13 @@ public class Eq extends ComparisonExpression {
     public boolean compare(final Value left, final Value right) {
         final byte[] leftBytes = left.getValue();
         final byte[] rightBytes = right.getValue();
-        if (leftBytes.length != rightBytes.length) { return false; }
+        if (leftBytes.length != rightBytes.length) {
+            return false;
+        }
         for (int i = 0; i < leftBytes.length; i++) {
-            if (leftBytes[i] != rightBytes[i]) { return false; }
+            if (leftBytes[i] != rightBytes[i]) {
+                return false;
+            }
         }
         return true;
     }

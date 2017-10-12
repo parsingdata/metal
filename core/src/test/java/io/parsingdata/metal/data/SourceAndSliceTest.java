@@ -84,7 +84,9 @@ public class SourceAndSliceTest {
 
     private boolean compareDataSlices(byte[] data, int offset) {
         for(int i = 0; i < data.length; i++) {
-            if (data[i] != DATA[offset+i]) { return false; }
+            if (data[i] != DATA[offset+i]) {
+                return false;
+            }
         }
         return true;
     }

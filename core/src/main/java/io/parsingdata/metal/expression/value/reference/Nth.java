@@ -63,7 +63,9 @@ public class Nth implements ValueExpression {
     }
 
     private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ImmutableList<Optional<Value>> indices, final ImmutableList<Optional<Value>> result) {
-        if (indices.isEmpty()) { return complete(() -> result); }
+        if (indices.isEmpty()) {
+            return complete(() -> result);
+        }
         if (indices.head.isPresent()) {
             final BigInteger index = indices.head.get().asNumeric();
             final BigInteger valueCount = BigInteger.valueOf(values.size);

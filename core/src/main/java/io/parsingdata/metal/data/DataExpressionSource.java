@@ -16,8 +16,6 @@
 
 package io.parsingdata.metal.data;
 
-import static java.math.BigInteger.ZERO;
-
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNegative;
@@ -51,7 +49,9 @@ public class DataExpressionSource extends Source {
     protected byte[] getData(final BigInteger offset, final BigInteger length) {
         checkNotNegative(offset, "offset");
         final Value inputValue = getValue();
-        if (length.add(offset).compareTo(inputValue.slice.length) > 0) { throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ")."); }
+        if (length.add(offset).compareTo(inputValue.slice.length) > 0) {
+            throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ").");
+        }
         final byte[] outputData = new byte[length.intValueExact()];
         System.arraycopy(inputValue.getValue(), offset.intValueExact(), outputData, 0, outputData.length);
         return outputData;
@@ -64,12 +64,18 @@ public class DataExpressionSource extends Source {
 
     private Value getValue() {
         final ImmutableList<Optional<Value>> results = dataExpression.eval(graph, encoding);
-        if (results.size <= index) { throw new IllegalStateException("ValueExpression dataExpression yields " + results.size + " result(s) (expected at least " + (index + 1) + ")."); }
-        return getValueAtIndex(results, index, 0).computeResult().orElseThrow(() -> new IllegalStateException("ValueExpression dataExpression yields empty Value at index " + index + "."));
+        if (results.size <= index) {
+            throw new IllegalStateException("ValueExpression dataExpression yields " + results.size + " result(s) (expected at least " + (index + 1) + ").");
+        }
+        return getValueAtIndex(results, index, 0)
+            .computeResult()
+            .orElseThrow(() -> new IllegalStateException("ValueExpression dataExpression yields empty Value at index " + index + "."));
     }
 
     private Trampoline<Optional<Value>> getValueAtIndex(final ImmutableList<Optional<Value>> results, final int index, final int current) {
-        if (index == current) { return complete(() -> results.head); }
+        if (index == current) {
+            return complete(() -> results.head);
+        }
         return intermediate(() -> getValueAtIndex(results.tail, index, current + 1));
     }
 

@@ -55,7 +55,9 @@ public class TokenRef extends Token {
     public TokenRef(final String name, final String referenceName, final Encoding encoding) {
         super(name, encoding);
         this.referenceName = checkNotNull(referenceName, "referenceName");
-        if (referenceName.isEmpty()) { throw new IllegalArgumentException("Argument referenceName may not be empty."); }
+        if (referenceName.isEmpty()) {
+            throw new IllegalArgumentException("Argument referenceName may not be empty.");
+        }
     }
 
     @Override
@@ -64,9 +66,13 @@ public class TokenRef extends Token {
     }
 
     private Trampoline<Token> lookup(final ImmutableList<ParseItem> items, final String referenceName) {
-        if (items.isEmpty()) { return complete(() -> LOOKUP_FAILED); }
+        if (items.isEmpty()) {
+            return complete(() -> LOOKUP_FAILED);
+        }
         final ParseItem item = items.head;
-        if (item.getDefinition().name.equals(referenceName)) { return complete(item::getDefinition); }
+        if (item.getDefinition().name.equals(referenceName)) {
+            return complete(item::getDefinition);
+        }
         if (item.isGraph() && !item.asGraph().isEmpty()) {
             return intermediate(() -> lookup(items.tail.add(item.asGraph().tail).add(item.asGraph().head), referenceName));
         }

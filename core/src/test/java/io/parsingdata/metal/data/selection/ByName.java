@@ -49,19 +49,27 @@ public final class ByName {
     }
 
     public static ParseValue get(final ImmutableList<ParseValue> list, final String name) {
-        if (list.isEmpty()) { return null; }
-        if (list.head.matches(name)) { return list.head; }
+        if (list.isEmpty()) {
+            return null;
+        }
+        if (list.head.matches(name)) {
+            return list.head;
+        }
         else {
             return get(list.tail, name);
         }
     }
 
     public static ImmutableList<ParseValue> getAll(final ImmutableList<ParseValue> list, final String name) {
-        if (list.isEmpty()) { return list; }
+        if (list.isEmpty()) {
+            return list;
+        }
         final ImmutableList<ParseValue> tailList = getAll(list.tail, name);
         if (list.head.matches(name)) {
             return tailList.add(list.head);
-        } else { return tailList; }
+        } else {
+            return tailList;
+        }
     }
 
 }

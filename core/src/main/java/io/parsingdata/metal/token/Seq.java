@@ -59,7 +59,8 @@ public class Seq extends Token {
         if (list.isEmpty()) {
             return complete(() -> success(environment.closeBranch()));
         }
-        return list.head.parse(scope, environment, encoding)
+        return list.head
+            .parse(scope, environment, encoding)
             .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, encoding, list.tail)))
             .orElseGet(() -> complete(Util::failure));
     }

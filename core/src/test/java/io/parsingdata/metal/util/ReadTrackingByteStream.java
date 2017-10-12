@@ -16,8 +16,9 @@
 
 package io.parsingdata.metal.util;
 
-import static io.parsingdata.metal.Util.checkNotNull;
 import static java.util.stream.Collectors.toList;
+
+import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -52,7 +53,9 @@ public class ReadTrackingByteStream implements ByteStream {
 
     public boolean containsNone(final long... values) {
         for (final long v : LongStream.of(values).boxed().collect(toList())) {
-            if (read.contains(v)) { return false; }
+            if (read.contains(v)) {
+                return false;
+            }
         }
         return true;
     }

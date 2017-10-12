@@ -69,9 +69,13 @@ public class Ref<T> implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        if (limit == null) { return evalImpl(graph, NO_LIMIT); }
+        if (limit == null) {
+            return evalImpl(graph, NO_LIMIT);
+        }
         ImmutableList<Optional<Value>> evaluatedLimit = limit.eval(graph, encoding);
-        if (evaluatedLimit.size != 1 || !evaluatedLimit.head.isPresent()) { throw new IllegalArgumentException("Limit must evaluate to a single non-empty value."); }
+        if (evaluatedLimit.size != 1 || !evaluatedLimit.head.isPresent()) {
+            throw new IllegalArgumentException("Limit must evaluate to a single non-empty value.");
+        }
         return evalImpl(graph, evaluatedLimit.head.get().asNumeric().intValueExact());
     }
 
@@ -80,7 +84,9 @@ public class Ref<T> implements ValueExpression {
     }
 
     private static <T, U extends T> Trampoline<ImmutableList<Optional<T>>> wrap(final ImmutableList<U> input, final ImmutableList<Optional<T>> output) {
-        if (input.isEmpty()) { return complete(() -> output); }
+        if (input.isEmpty()) {
+            return complete(() -> output);
+        }
         return intermediate(() -> wrap(input.tail, output.add(Optional.of(input.head))));
     }
 

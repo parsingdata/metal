@@ -53,14 +53,20 @@ public class Expand implements ValueExpression {
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
         final ImmutableList<Optional<Value>> base = this.base.eval(graph, encoding);
-        if (base.isEmpty()) { return base; }
+        if (base.isEmpty()) {
+            return base;
+        }
         final ImmutableList<Optional<Value>> count = this.count.eval(graph, encoding);
-        if (count.size != 1 || !count.head.isPresent()) { throw new IllegalArgumentException("Count must evaluate to a single non-empty value."); }
+        if (count.size != 1 || !count.head.isPresent()) {
+            throw new IllegalArgumentException("Count must evaluate to a single non-empty value.");
+        }
         return expand(base, count.head.get().asNumeric().intValueExact(), new ImmutableList<>()).computeResult();
     }
 
     private Trampoline<ImmutableList<Optional<Value>>> expand(final ImmutableList<Optional<Value>> base, final int count, final ImmutableList<Optional<Value>> aggregate) {
-        if (count < 1) { return complete(() -> aggregate); }
+        if (count < 1) {
+            return complete(() -> aggregate);
+        }
         return intermediate(() -> expand(base, count - 1, aggregate.add(base)));
     }
 

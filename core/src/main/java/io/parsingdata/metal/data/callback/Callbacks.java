@@ -39,7 +39,9 @@ public class Callbacks {
         this.tokenCallbacks = checkNotNull(tokenCallbacks, "tokenCallbacks");
     }
 
-    public static Callbacks create() { return NONE; }
+    public static Callbacks create() {
+        return NONE;
+    }
 
     public Callbacks add(final Callback genericCallback) {
         return new Callbacks(genericCallback, tokenCallbacks);
@@ -57,7 +59,9 @@ public class Callbacks {
     }
 
     private Trampoline<Void> handleCallbacks(final ImmutableList<TokenCallback> callbacks, final Token token, final Environment before, final Optional<Environment> after) {
-        if (callbacks.isEmpty()) { return complete(() -> null); }
+        if (callbacks.isEmpty()) {
+            return complete(() -> null);
+        }
         if (callbacks.head.token.equals(token)) {
             callbacks.head.callback.handle(token, before, after);
         }

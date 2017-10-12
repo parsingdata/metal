@@ -67,7 +67,8 @@ public class Sub extends Token {
         if (addresses.isEmpty()) {
             return failure();
         }
-        return iterate(scope, addresses, environment.addBranch(this), encoding).computeResult()
+        return iterate(scope, addresses, environment.addBranch(this), encoding)
+            .computeResult()
             .flatMap(nextEnvironment -> nextEnvironment.seek(environment.offset));
     }
 
@@ -94,7 +95,9 @@ public class Sub extends Token {
     }
 
     @Override
-    public boolean isLocal() { return false; }
+    public boolean isLocal() {
+        return false;
+    }
 
     @Override
     public String toString() {

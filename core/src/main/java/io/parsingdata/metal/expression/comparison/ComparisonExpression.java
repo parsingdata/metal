@@ -60,16 +60,24 @@ public abstract class ComparisonExpression implements Expression {
     @Override
     public boolean eval(final ParseGraph graph, final Encoding encoding) {
         final ImmutableList<Optional<Value>> values = value == null ? ImmutableList.create(graph.current().map(identity())) : value.eval(graph, encoding);
-        if (values.isEmpty()) { return false; }
+        if (values.isEmpty()) {
+            return false;
+        }
         final ImmutableList<Optional<Value>> predicates = predicate.eval(graph, encoding);
-        if (values.size != predicates.size) { return false; }
+        if (values.size != predicates.size) {
+            return false;
+        }
         return compare(values, predicates).computeResult();
     }
 
     private Trampoline<Boolean> compare(final ImmutableList<Optional<Value>> currents, final ImmutableList<Optional<Value>> predicates) {
-        if (!currents.head.isPresent() || !predicates.head.isPresent()) { return complete(() -> false); }
+        if (!currents.head.isPresent() || !predicates.head.isPresent()) {
+            return complete(() -> false);
+        }
         final boolean headResult = compare(currents.head.get(), predicates.head.get());
-        if (!headResult || currents.tail.isEmpty()) { return complete(() -> headResult); }
+        if (!headResult || currents.tail.isEmpty()) {
+            return complete(() -> headResult);
+        }
         return intermediate(() -> compare(currents.tail, predicates.tail));
     }
 

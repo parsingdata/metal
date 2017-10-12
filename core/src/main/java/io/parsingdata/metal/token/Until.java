@@ -23,7 +23,6 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotEmpty;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
 
 import java.math.BigInteger;
@@ -90,8 +89,11 @@ public class Until extends Token {
     }
 
     private Trampoline<Optional<Environment>> handleInterval(final String scope, final Environment environment, final ImmutableList<Optional<Value>> initialSizes, final ImmutableList<Optional<Value>> stepSizes, final ImmutableList<Optional<Value>> maxSizes, final Encoding encoding) {
-        if (checkNotValidList(initialSizes) || checkNotValidList(stepSizes) || checkNotValidList(maxSizes)) { return complete(Util::failure); }
-        return iterate(scope, environment, getNumeric(initialSizes), getNumeric(stepSizes), getNumeric(maxSizes), encoding).computeResult()
+        if (checkNotValidList(initialSizes) || checkNotValidList(stepSizes) || checkNotValidList(maxSizes)) {
+            return complete(Util::failure);
+        }
+        return iterate(scope, environment, getNumeric(initialSizes), getNumeric(stepSizes), getNumeric(maxSizes), encoding)
+            .computeResult()
             .map(nextEnvironment -> complete(() -> success(nextEnvironment)))
             .orElseGet(() -> intermediate(() -> handleInterval(scope, environment, initialSizes.tail, stepSizes.tail, maxSizes.tail, encoding)));
     }
@@ -99,7 +101,9 @@ public class Until extends Token {
     private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final BigInteger currentSize, final BigInteger stepSize, final BigInteger maxSize, final Encoding encoding) {
         if (stepSize.compareTo(ZERO) == 0 ||
             stepSize.compareTo(ZERO) > 0 && currentSize.compareTo(maxSize) > 0 ||
-            stepSize.compareTo(ZERO) < 0 && currentSize.compareTo(maxSize) < 0) { return complete(Util::failure); }
+            stepSize.compareTo(ZERO) < 0 && currentSize.compareTo(maxSize) < 0) {
+            return complete(Util::failure);
+        }
         return environment
             .slice(currentSize)
             .map(slice -> parseSlice(scope, environment, currentSize, stepSize, maxSize, encoding, slice))

@@ -59,7 +59,9 @@ public class TrampolineTest {
     }
 
     private Trampoline<BigInteger> fibonacci(final BigInteger l, final BigInteger r, final long count) {
-        if (count == 0) { return complete(() -> l); }
+        if (count == 0) {
+            return complete(() -> l);
+        }
         return intermediate(() -> fibonacci(r, l.add(r), count-1));
     }
 

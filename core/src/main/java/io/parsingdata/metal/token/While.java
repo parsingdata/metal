@@ -62,7 +62,8 @@ public class While extends Token {
 
     private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding) {
         if (predicate.eval(environment.order, encoding)) {
-            return token.parse(scope, environment, encoding)
+            return token
+                .parse(scope, environment, encoding)
                 .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, encoding)))
                 .orElseGet(() -> complete(Util::failure));
         }
