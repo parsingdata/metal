@@ -22,6 +22,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import static io.parsingdata.metal.AutoEqualityTest.DUMMY_STREAM;
 import static io.parsingdata.metal.Shorthand.TRUE;
 import static io.parsingdata.metal.Shorthand.and;
 import static io.parsingdata.metal.Shorthand.cho;
@@ -199,7 +200,7 @@ public class ShorthandsTest {
         assertEquals(DEFB, seq.tokens.tail.head);
     }
 
-    final ParseGraph PARSEGRAPH = ParseGraph.EMPTY.add(createParseValue("a", 126)).add(createParseValue("a", 84)).add(createParseValue("a", 42));
+    final ParseGraph PARSEGRAPH = new Environment(DUMMY_STREAM).add(createParseValue("a", 126)).add(createParseValue("a", 84)).add(createParseValue("a", 42)).order;
 
     @Test
     public void mapLeftWithSub() {

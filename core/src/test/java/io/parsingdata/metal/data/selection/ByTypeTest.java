@@ -18,17 +18,17 @@ package io.parsingdata.metal.data.selection;
 
 import static java.math.BigInteger.ZERO;
 
-import static io.parsingdata.metal.data.ParseGraph.EMPTY;
+import static io.parsingdata.metal.AutoEqualityTest.DUMMY_STREAM;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
 
-import java.io.IOException;
 import java.math.BigInteger;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.Source;
 
@@ -46,7 +46,7 @@ public class ByTypeTest {
     public void unresolvableRef() {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("A ParseReference must point to an existing graph.");
-        getReferences(EMPTY.add(new ParseReference(ZERO, EMPTY_SOURCE, NONE)));
+        getReferences(new Environment(DUMMY_STREAM).add(new ParseReference(ZERO, EMPTY_SOURCE, NONE)).order);
     }
 
 }
