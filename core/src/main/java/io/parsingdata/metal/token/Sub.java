@@ -76,10 +76,8 @@ public class Sub extends Token {
         if (addresses.isEmpty()) {
             return complete(() -> success(environment.closeBranch()));
         }
-        if (!addresses.head.isPresent()) {
-            return complete(Util::failure);
-        }
-        return parse(scope, addresses.head.get().asNumeric(), environment, encoding)
+        return addresses.head
+            .flatMap(address -> parse(scope, address.asNumeric(), environment, encoding))
             .map(nextEnvironment -> intermediate(() -> iterate(scope, addresses.tail, nextEnvironment, encoding)))
             .orElseGet(() -> complete(Util::failure));
     }

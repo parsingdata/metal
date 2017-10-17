@@ -61,10 +61,13 @@ public class Def extends Token {
         if (sizes.size != 1 || !sizes.head.isPresent()) {
             return failure();
         }
-        final BigInteger dataSize = sizes.head.get().asNumeric();
-        if (dataSize.compareTo(ZERO) == 0) {
-            return success(environment);
-        }
+        return sizes.head
+            .filter(dataSize -> dataSize.asNumeric().compareTo(ZERO) != 0)
+            .map(dataSize -> slice(scope, environment, encoding, dataSize.asNumeric()))
+            .orElseGet(() -> success(environment));
+    }
+
+    private Optional<Environment> slice(final String scope, final Environment environment, final Encoding encoding, final BigInteger dataSize) {
         return environment
             .slice(dataSize)
             .map(slice -> environment.add(new ParseValue(scope, this, slice, encoding)).seek(dataSize.add(environment.offset)))

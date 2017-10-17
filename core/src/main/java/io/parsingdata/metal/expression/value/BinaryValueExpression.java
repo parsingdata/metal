@@ -74,7 +74,7 @@ public abstract class BinaryValueExpression implements ValueExpression {
         if (leftValues.isEmpty() || rightValues.isEmpty()) {
             return complete(() -> result);
         }
-        return intermediate(() -> evalLists(leftValues.tail, rightValues.tail, graph, encoding, result.add(eval(leftValues.head, rightValues.head, graph, encoding))));
+        return intermediate(() -> evalLists(leftValues.tail, rightValues.tail, graph, encoding, result.add(leftValues.head.flatMap(left -> rightValues.head.flatMap(right -> eval(left, right, graph, encoding))))));
     }
 
     private Trampoline<ImmutableList<Optional<Value>>> padList(final ImmutableList<Optional<Value>> list, final long size) {
@@ -82,13 +82,6 @@ public abstract class BinaryValueExpression implements ValueExpression {
             return complete(() -> list);
         }
         return intermediate(() -> padList(list.add(Optional.empty()), size - 1));
-    }
-
-    private Optional<Value> eval(final Optional<Value> left, final Optional<Value> right, final ParseGraph graph, final Encoding encoding) {
-        if (!left.isPresent() || !right.isPresent()) {
-            return Optional.empty();
-        }
-        return eval(left.get(), right.get(), graph, encoding);
     }
 
     public abstract Optional<Value> eval(final Value left, final Value right, final ParseGraph graph, final Encoding encoding);
