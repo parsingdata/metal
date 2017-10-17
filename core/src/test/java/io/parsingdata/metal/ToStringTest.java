@@ -207,7 +207,8 @@ public class ToStringTest {
 
     private Callback makeCallback(final String name) {
         return new Callback() {
-            @Override public void handle(final Token token, final Environment before, final Optional<Environment> after) {}
+            @Override public void handleSuccess(final Token token, final Environment before, final Environment after) {}
+            @Override public void handleFailure(Token token, Environment before) {}
             @Override public String toString() { return name; }
         };
     }

@@ -20,6 +20,8 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
@@ -64,7 +66,11 @@ public abstract class Token {
     public Optional<Environment> parse(final String scope, final Environment environment, final Encoding encoding) {
         final Encoding activeEncoding = this.encoding != null ? this.encoding : encoding;
         final Optional<Environment> result = parseImpl(makeScope(checkNotNull(scope, "scope")), checkNotNull(environment, "environment"), activeEncoding);
-        environment.callbacks.handle(this, environment, result);
+        if (result.isPresent()) {
+            environment.callbacks.handleSuccess(this, environment, result.get());
+        } else {
+            environment.callbacks.handleFailure(this, environment);
+        }
         return result;
     }
 

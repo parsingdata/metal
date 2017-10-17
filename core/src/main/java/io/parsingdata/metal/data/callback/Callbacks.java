@@ -51,27 +51,44 @@ public class Callbacks {
         return new Callbacks(genericCallback, tokenCallbacks.add(new TokenCallback(token, callback)));
     }
 
-    public void handle(final Token token, final Environment before, final Optional<Environment> after) {
+    public void handleSuccess(final Token token, final Environment before, final Environment after) {
         if (genericCallback != null) {
-            genericCallback.handle(token, before, after);
+            genericCallback.handleSuccess(token, before, after);
         }
-        handleCallbacks(tokenCallbacks, token, before, after).computeResult();
+        handleCallbacksSuccess(tokenCallbacks, token, before, after).computeResult();
     }
 
-    private Trampoline<Void> handleCallbacks(final ImmutableList<TokenCallback> callbacks, final Token token, final Environment before, final Optional<Environment> after) {
+    private Trampoline<Void> handleCallbacksSuccess(final ImmutableList<TokenCallback> callbacks, final Token token, final Environment before, final Environment after) {
         if (callbacks.isEmpty()) {
             return complete(() -> null);
         }
         if (callbacks.head.token.equals(token)) {
-            callbacks.head.callback.handle(token, before, after);
+            callbacks.head.callback.handleSuccess(token, before, after);
         }
-        return intermediate(() -> handleCallbacks(callbacks.tail, token, before, after));
+        return intermediate(() -> handleCallbacksSuccess(callbacks.tail, token, before, after));
+    }
+
+    public void handleFailure(final Token token, final Environment before) {
+        if (genericCallback != null) {
+            genericCallback.handleFailure(token, before);
+        }
+        handleCallbacksFailure(tokenCallbacks, token, before).computeResult();
+    }
+
+    private Trampoline<Void> handleCallbacksFailure(final ImmutableList<TokenCallback> callbacks, final Token token, final Environment before) {
+        if (callbacks.isEmpty()) {
+            return complete(() -> null);
+        }
+        if (callbacks.head.token.equals(token)) {
+            callbacks.head.callback.handleFailure(token, before);
+        }
+        return intermediate(() -> handleCallbacksFailure(callbacks.tail, token, before));
     }
 
     @Override
     public String toString() {
         return (genericCallback == null ? "" : "generic: " + genericCallback.toString() + "; ") +
-                (tokenCallbacks.isEmpty() ? "" : "token: " + tokenCallbacks.toString());
+            (tokenCallbacks.isEmpty() ? "" : "token: " + tokenCallbacks.toString());
     }
 
 }
