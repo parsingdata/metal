@@ -78,9 +78,13 @@ public abstract class Token {
         return scope + (scope.isEmpty() || name.isEmpty() ? NO_NAME : SEPARATOR) + name;
     }
 
-    public boolean isLocal() { return true; }
+    public boolean isLocal() {
+        return true;
+    }
 
-    public Token getCanonical(final Environment environment) { return this; }
+    public Token getCanonical(final Environment environment) {
+        return this;
+    }
 
     protected String makeNameFragment() {
         return name.isEmpty() ? NO_NAME : name + ",";

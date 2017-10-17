@@ -67,7 +67,8 @@ public class Sub extends Token {
         if (addresses.isEmpty()) {
             return failure();
         }
-        return iterate(scope, addresses, environment.addBranch(this), encoding).computeResult()
+        return iterate(scope, addresses, environment.addBranch(this), encoding)
+            .computeResult()
             .flatMap(nextEnvironment -> nextEnvironment.seek(environment.offset));
     }
 
@@ -75,10 +76,8 @@ public class Sub extends Token {
         if (addresses.isEmpty()) {
             return complete(() -> success(environment.closeBranch()));
         }
-        if (!addresses.head.isPresent()) {
-            return complete(Util::failure);
-        }
-        return parse(scope, addresses.head.get().asNumeric(), environment, encoding)
+        return addresses.head
+            .flatMap(address -> parse(scope, address.asNumeric(), environment, encoding))
             .map(nextEnvironment -> intermediate(() -> iterate(scope, addresses.tail, nextEnvironment, encoding)))
             .orElseGet(() -> complete(Util::failure));
     }
@@ -90,11 +89,13 @@ public class Sub extends Token {
         return environment
             .seek(offset)
             .map(newEnvironment -> token.parse(scope, newEnvironment, encoding))
-            .orElse(failure());
+            .orElseGet(Util::failure);
     }
 
     @Override
-    public boolean isLocal() { return false; }
+    public boolean isLocal() {
+        return false;
+    }
 
     @Override
     public String toString() {

@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.expression.comparison;
 
+import java.util.Arrays;
+
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
@@ -38,13 +40,8 @@ public class Eq extends ComparisonExpression {
 
     @Override
     public boolean compare(final Value left, final Value right) {
-        final byte[] leftBytes = left.getValue();
-        final byte[] rightBytes = right.getValue();
-        if (leftBytes.length != rightBytes.length) { return false; }
-        for (int i = 0; i < leftBytes.length; i++) {
-            if (leftBytes[i] != rightBytes[i]) { return false; }
-        }
-        return true;
+        return left.slice.length.compareTo(right.slice.length) == 0
+            && Arrays.equals(left.getValue(), right.getValue());
     }
 
 }

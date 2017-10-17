@@ -69,7 +69,8 @@ public class RepN extends Token {
         if (count <= 0) {
             return complete(() -> success(environment.closeBranch()));
         }
-        return token.parse(scope, environment, encoding)
+        return token
+            .parse(scope, environment, encoding)
             .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, encoding, count - 1)))
             .orElseGet(() -> complete(Util::failure));
     }

@@ -56,8 +56,9 @@ public final class ConstantFactory {
     }
 
     private static byte[] compact(final byte[] data, final boolean signed) {
-        if (signed) { return data; }
-        if (data.length < 2) { return data; }
+        if (signed || data.length < 2) {
+            return data;
+        }
         // Strip possible leading zero byte.
         if (data[0] == 0) {
             final byte[] outBytes = new byte[data.length - 1];

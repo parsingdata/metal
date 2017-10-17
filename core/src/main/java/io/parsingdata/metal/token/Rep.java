@@ -52,7 +52,8 @@ public class Rep extends Token {
     }
 
     private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding) {
-        return token.parse(scope, environment, encoding)
+        return token
+            .parse(scope, environment, encoding)
             .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, encoding)))
             .orElseGet(() -> complete(() -> success(environment.closeBranch())));
     }

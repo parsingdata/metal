@@ -37,23 +37,37 @@ public interface Trampoline<T> {
         return current.result();
     }
 
-    static <T> Trampoline<T> complete(final CompletedTrampoline<T> completedTrampoline) { return completedTrampoline; }
+    static <T> Trampoline<T> complete(final CompletedTrampoline<T> completedTrampoline) {
+        return completedTrampoline;
+    }
 
     @FunctionalInterface
     interface CompletedTrampoline<T> extends Trampoline<T> {
 
-        default boolean hasNext() { return false; }
-        default Trampoline<T> next() { throw new UnsupportedOperationException("A CompletedTrampoline does not have a next computation."); }
+        default boolean hasNext() {
+            return false;
+        }
+
+        default Trampoline<T> next() {
+            throw new UnsupportedOperationException("A CompletedTrampoline does not have a next computation.");
+        }
 
     }
 
-    static <T> Trampoline<T> intermediate(final IntermediateTrampoline<T> intermediateTrampoline) { return intermediateTrampoline; }
+    static <T> Trampoline<T> intermediate(final IntermediateTrampoline<T> intermediateTrampoline) {
+        return intermediateTrampoline;
+    }
 
     @FunctionalInterface
     interface IntermediateTrampoline<T> extends Trampoline<T> {
 
-        default T result() { throw new UnsupportedOperationException("An IntermediateTrampoline does not have a result."); }
-        default boolean hasNext() { return true; }
+        default T result() {
+            throw new UnsupportedOperationException("An IntermediateTrampoline does not have a result.");
+        }
+
+        default boolean hasNext() {
+            return true;
+        }
 
     }
 

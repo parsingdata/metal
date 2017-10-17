@@ -53,7 +53,9 @@ public class ImmutableList<T> {
     }
 
     private static <T> Trampoline<ImmutableList<T>> createFromArray(final ImmutableList<T> list, final T[] array, final int index) {
-        if (index < 0) { return complete(() -> list); }
+        if (index < 0) {
+            return complete(() -> list);
+        }
         return intermediate(() -> createFromArray(list.add(array[index]), array, index - 1));
     }
 
@@ -63,16 +65,22 @@ public class ImmutableList<T> {
 
     public ImmutableList<T> add(final ImmutableList<T> list) {
         checkNotNull(list, "list");
-        if (isEmpty()) { return list; }
+        if (isEmpty()) {
+            return list;
+        }
         return addRecursive(reverse(list)).computeResult();
     }
 
     private Trampoline<ImmutableList<T>> addRecursive(final ImmutableList<T> list) {
-        if (list.isEmpty()) { return complete(() -> this); }
+        if (list.isEmpty()) {
+            return complete(() -> this);
+        }
         return intermediate(() -> add(list.head).addRecursive(list.tail));
     }
 
-    public boolean isEmpty() { return size == 0; }
+    public boolean isEmpty() {
+        return size == 0;
+    }
 
     @Override
     public String toString() {

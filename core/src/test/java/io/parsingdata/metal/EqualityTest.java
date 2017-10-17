@@ -167,7 +167,7 @@ public class EqualityTest {
     @Test
     public void parseGraph() {
         final ParseValue value = new ParseValue("a", any("a"), createFromBytes(new byte[]{1, 2}), enc());
-        final ParseGraph object = ParseGraph.EMPTY.add(value);
+        final ParseGraph object = new Environment(DUMMY_STREAM).add(value).order;
         assertFalse(object.equals(null));
         assertFalse(object.equals("a"));
         final Environment environment = new Environment(DUMMY_STREAM);

@@ -59,7 +59,9 @@ public abstract class UnaryValueExpression implements ValueExpression {
     }
 
     private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ParseGraph graph, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
-        if (values.isEmpty()) { return complete(() -> result); }
+        if (values.isEmpty()) {
+            return complete(() -> result);
+        }
         return intermediate(() -> eval(values.tail, graph, encoding, result.add(values.head.flatMap(value -> eval(value, graph, encoding)))));
     }
 

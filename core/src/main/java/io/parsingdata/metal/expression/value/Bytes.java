@@ -55,7 +55,9 @@ public class Bytes implements ValueExpression {
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
         final ImmutableList<Optional<Value>> input = operand.eval(graph, encoding);
-        if (input.isEmpty()) { return input; }
+        if (input.isEmpty()) {
+            return input;
+        }
         return toBytes(new ImmutableList<>(), input.head, input.tail, encoding).computeResult();
     }
 
@@ -67,7 +69,9 @@ public class Bytes implements ValueExpression {
     }
 
     private Trampoline<ImmutableList<Optional<Value>>> bytesToValues(final ImmutableList<Optional<Value>> output, final byte[] value, final int i, final Encoding encoding) {
-        if (i >= value.length) { return complete(() -> output); }
+        if (i >= value.length) {
+            return complete(() -> output);
+        }
         return intermediate(() -> bytesToValues(output.add(Optional.of(new Value(createFromBytes(new byte[] { value[i] }), encoding))), value, i + 1, encoding));
     }
 

@@ -56,16 +56,17 @@
 
     <junit.version>4.12</junit.version>
 
-    <jacoco-plugin.version>0.7.8</jacoco-plugin.version>
+    <jacoco-plugin.version>0.7.9</jacoco-plugin.version>
     <reports-plugin.version>2.9</reports-plugin.version>
-    <findbugs-plugin.version>3.0.4</findbugs-plugin.version>
-    <pmd-plugin.version>3.7</pmd-plugin.version>
+    <findbugs-plugin.version>3.0.5</findbugs-plugin.version>
+    <pmd-plugin.version>3.8</pmd-plugin.version>
     <jxr-plugin.version>2.5</jxr-plugin.version>
-    <javadoc-plugin.version>2.10.4</javadoc-plugin.version>
-    <nexus-staging-plugin.version>1.6.7</nexus-staging-plugin.version>
+    <javadoc-plugin.version>3.0.0-M1</javadoc-plugin.version>
+    <nexus-staging-plugin.version>1.6.8</nexus-staging-plugin.version>
     <gpg-plugin.version>1.6</gpg-plugin.version>
     <source-plugin.version>3.0.1</source-plugin.version>
-    <pitest-maven.version>1.1.11</pitest-maven.version>
+    <pitest-maven.version>1.2.4</pitest-maven.version>
+    <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
   </properties>
 
   <profiles>
@@ -234,6 +235,7 @@
         <configuration>
           <effort>Max</effort>
           <threshold>Low</threshold>
+          <omitVisitors>DumbMethods</omitVisitors>
         </configuration>
       </plugin>
       <plugin>

@@ -30,13 +30,21 @@ public final class ByToken {
     public static ParseItem get(final ParseGraph graph, final Token definition) {
         checkNotNull(graph, "graph");
         checkNotNull(definition, "definition");
-        if (graph.definition.equals(definition)) { return graph; }
-        if (graph.isEmpty()) { return null; }
+        if (graph.definition.equals(definition)) {
+            return graph;
+        }
+        if (graph.isEmpty()) {
+            return null;
+        }
         final ParseItem head = graph.head;
-        if (head.isValue() && head.asValue().definition.equals(definition)) { return head; }
+        if (head.isValue() && head.asValue().definition.equals(definition)) {
+            return head;
+        }
         if (head.isGraph()) {
             final ParseItem item = get(head.asGraph(), definition);
-            if (item != null) { return item; }
+            if (item != null) {
+                return item;
+            }
         }
         return get(graph.tail, definition);
     }
@@ -48,7 +56,9 @@ public final class ByToken {
     }
 
     private static ImmutableList<ParseItem> getAllRecursive(final ParseGraph graph, final Token definition) {
-        if (graph.isEmpty()) { return new ImmutableList<>(); }
+        if (graph.isEmpty()) {
+            return new ImmutableList<>();
+        }
         final ImmutableList<ParseItem> tailResults = getAllRecursive(graph.tail, definition);
         final ImmutableList<ParseItem> results = graph.definition.equals(definition) ? tailResults.add(graph) : tailResults;
         final ParseItem head = graph.head;

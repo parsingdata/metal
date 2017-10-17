@@ -59,9 +59,13 @@ public abstract class Fold implements ValueExpression {
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
         final ImmutableList<Optional<Value>> initial = this.initial != null ? this.initial.eval(graph, encoding) : new ImmutableList<>();
-        if (initial.size > 1) { return new ImmutableList<>(); }
+        if (initial.size > 1) {
+            return new ImmutableList<>();
+        }
         final ImmutableList<Optional<Value>> values = prepareValues(this.values.eval(graph, encoding));
-        if (values.isEmpty() || containsEmpty(values).computeResult()) { return initial; }
+        if (values.isEmpty() || containsEmpty(values).computeResult()) {
+            return initial;
+        }
         if (!initial.isEmpty()) {
             return ImmutableList.create(fold(graph, encoding, reducer, initial.head, values).computeResult());
         }
@@ -69,15 +73,23 @@ public abstract class Fold implements ValueExpression {
     }
 
     private Trampoline<Optional<Value>> fold(final ParseGraph graph, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Optional<Value> head, final ImmutableList<Optional<Value>> tail) {
-        if (!head.isPresent() || tail.isEmpty()) { return complete(() -> head); }
+        if (!head.isPresent() || tail.isEmpty()) {
+            return complete(() -> head);
+        }
         final ImmutableList<Optional<Value>> reducedValue = reduce(reducer, head.get(), tail.head.get()).eval(graph, encoding);
-        if (reducedValue.size != 1) { throw new IllegalArgumentException("Reducer must evaluate to a single value."); }
+        if (reducedValue.size != 1) {
+            throw new IllegalArgumentException("Reducer must evaluate to a single value.");
+        }
         return intermediate(() -> fold(graph, encoding, reducer, reducedValue.head, tail.tail));
     }
 
     private Trampoline<Boolean> containsEmpty(final ImmutableList<Optional<Value>> list) {
-        if (list.isEmpty()) { return complete(() -> false); }
-        if (!list.head.isPresent()) { return complete(() -> true); }
+        if (list.isEmpty()) {
+            return complete(() -> false);
+        }
+        if (!list.head.isPresent()) {
+            return complete(() -> true);
+        }
         return intermediate(() -> containsEmpty(list.tail));
     }
 

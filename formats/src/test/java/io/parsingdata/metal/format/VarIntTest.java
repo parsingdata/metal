@@ -52,7 +52,8 @@ public class VarIntTest extends ParameterizedParse {
         });
     }
 
-    public static final Token varIntAndValue(final int size) { return
+    public static final Token varIntAndValue(final int size) {
+        return
         seq(varInt("vint_name"), post(def("full_name", con(size)), eqNum(decodeVarInt(last(ref("vint_name"))))));
     }
 
