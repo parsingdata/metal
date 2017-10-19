@@ -23,7 +23,6 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import java.util.function.Consumer;
 
 import io.parsingdata.metal.Trampoline;
-import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.token.Token;
 
@@ -51,18 +50,11 @@ public class Callbacks {
         return new Callbacks(genericCallback, tokenCallbacks.add(new TokenCallback(token, callback)));
     }
 
-    public void handleSuccess(final Token token, final Environment before, final Environment after) {
+    public void handle(final Token token, final Consumer<Callback> handler) {
         if (genericCallback != null) {
-            genericCallback.handleSuccess(token, before, after);
+            handler.accept(genericCallback);
         }
-        handleCallbacks(tokenCallbacks, token,  (callback) -> callback.handleSuccess(token, before, after)).computeResult();
-    }
-
-    public void handleFailure(final Token token, final Environment before) {
-        if (genericCallback != null) {
-            genericCallback.handleFailure(token, before);
-        }
-        handleCallbacks(tokenCallbacks, token, (callback) -> callback.handleFailure(token, before)).computeResult();
+        handleCallbacks(tokenCallbacks, token, handler).computeResult();
     }
 
     private Trampoline<Void> handleCallbacks(final ImmutableList<TokenCallback> callbacks, final Token token, final Consumer<Callback> handler) {
