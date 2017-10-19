@@ -20,7 +20,7 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.util.Optional;
+import java.util.function.Consumer;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.data.Environment;
@@ -55,34 +55,24 @@ public class Callbacks {
         if (genericCallback != null) {
             genericCallback.handleSuccess(token, before, after);
         }
-        handleCallbacksSuccess(tokenCallbacks, token, before, after).computeResult();
-    }
-
-    private Trampoline<Void> handleCallbacksSuccess(final ImmutableList<TokenCallback> callbacks, final Token token, final Environment before, final Environment after) {
-        if (callbacks.isEmpty()) {
-            return complete(() -> null);
-        }
-        if (callbacks.head.token.equals(token)) {
-            callbacks.head.callback.handleSuccess(token, before, after);
-        }
-        return intermediate(() -> handleCallbacksSuccess(callbacks.tail, token, before, after));
+        handleCallbacks(tokenCallbacks, token,  (callback) -> callback.handleSuccess(token, before, after)).computeResult();
     }
 
     public void handleFailure(final Token token, final Environment before) {
         if (genericCallback != null) {
             genericCallback.handleFailure(token, before);
         }
-        handleCallbacksFailure(tokenCallbacks, token, before).computeResult();
+        handleCallbacks(tokenCallbacks, token, (callback) -> callback.handleFailure(token, before)).computeResult();
     }
 
-    private Trampoline<Void> handleCallbacksFailure(final ImmutableList<TokenCallback> callbacks, final Token token, final Environment before) {
+    private Trampoline<Void> handleCallbacks(final ImmutableList<TokenCallback> callbacks, final Token token, final Consumer<Callback> handler) {
         if (callbacks.isEmpty()) {
             return complete(() -> null);
         }
         if (callbacks.head.token.equals(token)) {
-            callbacks.head.callback.handleFailure(token, before);
+            handler.accept(callbacks.head.callback);
         }
-        return intermediate(() -> handleCallbacksFailure(callbacks.tail, token, before));
+        return intermediate(() -> handleCallbacks(callbacks.tail, token, handler));
     }
 
     @Override
