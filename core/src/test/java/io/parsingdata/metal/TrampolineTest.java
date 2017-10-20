@@ -21,8 +21,14 @@ import static java.math.BigInteger.ZERO;
 
 import static org.junit.Assert.assertEquals;
 
+import static io.parsingdata.metal.Shorthand.cho;
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.eqNum;
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
+import static io.parsingdata.metal.util.EncodingFactory.le;
+import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 
 import java.math.BigInteger;
 
@@ -32,7 +38,7 @@ import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.Trampoline.CompletedTrampoline;
 import io.parsingdata.metal.Trampoline.IntermediateTrampoline;
-
+import io.parsingdata.metal.token.Token;
 public class TrampolineTest {
 
     @Rule
@@ -55,7 +61,26 @@ public class TrampolineTest {
     @Test
     public void noStackOverflow() {
         // The 100000th Fibonacci number has 20899 digits
-        assertEquals(20899, fibonacci(ZERO, ONE, 100000).computeResult().toString().length());
+        assertEquals(20_899, fibonacci(ZERO, ONE, 100_000).computeResult().toString().length());
+    }
+
+    @Test
+    public void testCho() {
+        // This test fails because ParseGraph.addBranch() is recursive.
+        // Note that ParseGraph.add() is also recursive and should be fixed.
+
+        // Create nested cho
+        final int[] values = new int[10_000];
+        Token choice = def("0", 1, eqNum(con(0)));
+        for (int i = 1; i < values.length; i++) {
+            final int mod = i % 1;
+            values[i] = mod;
+            choice = cho(
+                choice,
+                def(Integer.toString(mod), 1, eqNum(con(mod))));
+        }
+
+        choice.parse(stream(values), le()).get();
     }
 
     private Trampoline<BigInteger> fibonacci(final BigInteger l, final BigInteger r, final long count) {
