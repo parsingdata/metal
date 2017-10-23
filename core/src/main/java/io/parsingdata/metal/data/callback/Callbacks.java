@@ -20,7 +20,7 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.util.Optional;
+import java.util.function.Consumer;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.data.Environment;
@@ -51,27 +51,35 @@ public class Callbacks {
         return new Callbacks(genericCallback, tokenCallbacks.add(new TokenCallback(token, callback)));
     }
 
-    public void handle(final Token token, final Environment before, final Optional<Environment> after) {
-        if (genericCallback != null) {
-            genericCallback.handle(token, before, after);
-        }
-        handleCallbacks(tokenCallbacks, token, before, after).computeResult();
+    public static Consumer<Callback> success(final Token token, final Environment before, final Environment after) {
+        return callback -> callback.handleSuccess(token, before, after);
     }
 
-    private Trampoline<Void> handleCallbacks(final ImmutableList<TokenCallback> callbacks, final Token token, final Environment before, final Optional<Environment> after) {
+    public static Consumer<Callback> failure(final Token token, final Environment before) {
+        return callback -> callback.handleFailure(token, before);
+    }
+
+    public void handle(final Token token, final Consumer<Callback> handler) {
+        if (genericCallback != null) {
+            handler.accept(genericCallback);
+        }
+        handleCallbacks(tokenCallbacks, token, handler).computeResult();
+    }
+
+    private Trampoline<Void> handleCallbacks(final ImmutableList<TokenCallback> callbacks, final Token token, final Consumer<Callback> handler) {
         if (callbacks.isEmpty()) {
             return complete(() -> null);
         }
         if (callbacks.head.token.equals(token)) {
-            callbacks.head.callback.handle(token, before, after);
+            handler.accept(callbacks.head.callback);
         }
-        return intermediate(() -> handleCallbacks(callbacks.tail, token, before, after));
+        return intermediate(() -> handleCallbacks(callbacks.tail, token, handler));
     }
 
     @Override
     public String toString() {
         return (genericCallback == null ? "" : "generic: " + genericCallback.toString() + "; ") +
-                (tokenCallbacks.isEmpty() ? "" : "token: " + tokenCallbacks.toString());
+            (tokenCallbacks.isEmpty() ? "" : "token: " + tokenCallbacks.toString());
     }
 
 }

@@ -85,18 +85,18 @@ public class CallbackTest {
     private static final Token SIMPLE_SEQ = seq(any("a"), any("b"));
 
     private Callbacks createCallbackList(Token token, final long... offsets) {
-        return Callbacks.create().add(token, new BaseCallback() {
+        return Callbacks.create().add(token, new Callback() {
 
             private int count = 0;
 
             @Override
-            protected void handleSuccess(Token token, Environment before, Environment after) {
+            public void handleSuccess(Token token, Environment before, Environment after) {
                 final ImmutableList<ParseItem> roots = getAllRoots(after.order, token);
                 assertEquals(offsets[count++], roots.head.asGraph().tail.head.asValue().slice.offset.longValueExact());
             }
 
             @Override
-            protected void handleFailure(Token token, Environment before) {}
+            public void handleFailure(Token token, Environment before) {}
         });
     }
 
@@ -118,9 +118,9 @@ public class CallbackTest {
     public void seqAndRepCallbacks() throws IOException {
         final Token repeatingSeq = rep(SIMPLE_SEQ);
         final Callbacks callbacks = createCallbackList(SIMPLE_SEQ, 0L, 2L)
-                .add(repeatingSeq, new BaseCallback() {
+                .add(repeatingSeq, new Callback() {
                     @Override
-                    protected void handleSuccess(Token token, Environment before, Environment after) {
+                    public void handleSuccess(Token token, Environment before, Environment after) {
                         final ImmutableList<ParseItem> repRoots = getAllRoots(after.order, token);
                         assertEquals(1, repRoots.size);
 
@@ -134,7 +134,7 @@ public class CallbackTest {
                     }
 
                     @Override
-                    protected void handleFailure(Token token, Environment before) {}
+                    public void handleFailure(Token token, Environment before) {}
                 });
         final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }), callbacks);
         assertTrue(repeatingSeq.parse(environment, enc()).isPresent());
@@ -142,14 +142,14 @@ public class CallbackTest {
 
     @Test
     public void refInCallback() throws IOException {
-        final Callbacks callbacks = Callbacks.create().add(SubStructTest.LINKED_LIST, new BaseCallback() {
+        final Callbacks callbacks = Callbacks.create().add(SubStructTest.LINKED_LIST, new Callback() {
             @Override
-            protected void handleSuccess(Token token, Environment before, Environment after) {
+            public void handleSuccess(Token token, Environment before, Environment after) {
                 linkedListCount++;
             }
 
             @Override
-            protected void handleFailure(Token token, Environment before) {}
+            public void handleFailure(Token token, Environment before) {}
         });
         final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 0, 3, 1, 0, 0, 1 }), callbacks);
         assertTrue(SubStructTest.LINKED_LIST.parse(environment, enc()).isPresent());
@@ -207,7 +207,7 @@ public class CallbackTest {
         countingCallback.assertCounts(expectedSuccessCount, expectedFailureCount);
     }
 
-    private static class OffsetDefinitionCallback extends BaseCallback {
+    private static class OffsetDefinitionCallback implements Callback {
         private final Deque<Long> expectedSuccessOffsets;
         private final Deque<Token> expectedSuccessDefinitions;
         private final Deque<Long> expectedFailureOffsets;
@@ -221,13 +221,13 @@ public class CallbackTest {
         }
 
         @Override
-        protected void handleSuccess(Token token, Environment before, Environment after) {
+        public void handleSuccess(Token token, Environment before, Environment after) {
             assertThat(after.offset.longValueExact(), is(equalTo(expectedSuccessOffsets.pop())));
             assertThat(token, is(equalTo(expectedSuccessDefinitions.pop())));
         }
 
         @Override
-        protected void handleFailure(Token token, Environment before) {
+        public void handleFailure(Token token, Environment before) {
             assertThat(before.offset.longValueExact(), is(equalTo(expectedFailureOffsets.pop())));
             assertThat(token, is(equalTo(expectedFailureDefinitions.pop())));
         }
@@ -240,7 +240,7 @@ public class CallbackTest {
         }
     }
 
-    private class CountingCallback extends BaseCallback {
+    private class CountingCallback implements Callback {
         private int successCount = 0;
         private int failureCount = 0;
 
@@ -250,7 +250,7 @@ public class CallbackTest {
         }
 
         @Override
-        protected void handleFailure(Token token, Environment before) {
+        public void handleFailure(Token token, Environment before) {
             failureCount++;
         }
 

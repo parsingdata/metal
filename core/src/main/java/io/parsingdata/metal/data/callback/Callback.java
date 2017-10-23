@@ -16,14 +16,12 @@
 
 package io.parsingdata.metal.data.callback;
 
-import java.util.Optional;
-
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.token.Token;
 
-@FunctionalInterface
 public interface Callback {
 
-    void handle(Token token, Environment before, Optional<Environment> after);
+    void handleSuccess(Token token, Environment before, Environment after);
+    void handleFailure(Token token, Environment before);
 
 }
