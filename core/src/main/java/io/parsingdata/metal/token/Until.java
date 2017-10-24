@@ -35,6 +35,7 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.Slice;
+import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -84,21 +85,21 @@ public class Until extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
-        return handleInterval(scope, environment, initialSize.eval(environment.order, encoding), stepSize.eval(environment.order, encoding), maxSize.eval(environment.order, encoding), encoding).computeResult();
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
+        return handleInterval(scope, environment, initialSize.eval(environment.order, encoding), stepSize.eval(environment.order, encoding), maxSize.eval(environment.order, encoding), callbacks, encoding).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> handleInterval(final String scope, final Environment environment, final ImmutableList<Optional<Value>> initialSizes, final ImmutableList<Optional<Value>> stepSizes, final ImmutableList<Optional<Value>> maxSizes, final Encoding encoding) {
+    private Trampoline<Optional<Environment>> handleInterval(final String scope, final Environment environment, final ImmutableList<Optional<Value>> initialSizes, final ImmutableList<Optional<Value>> stepSizes, final ImmutableList<Optional<Value>> maxSizes, final Callbacks callbacks, final Encoding encoding) {
         if (checkNotValidList(initialSizes) || checkNotValidList(stepSizes) || checkNotValidList(maxSizes)) {
             return complete(Util::failure);
         }
-        return iterate(scope, environment, getNumeric(initialSizes), getNumeric(stepSizes), getNumeric(maxSizes), encoding)
+        return iterate(scope, environment, getNumeric(initialSizes), getNumeric(stepSizes), getNumeric(maxSizes), callbacks, encoding)
             .computeResult()
             .map(nextEnvironment -> complete(() -> success(nextEnvironment)))
-            .orElseGet(() -> intermediate(() -> handleInterval(scope, environment, initialSizes.tail, stepSizes.tail, maxSizes.tail, encoding)));
+            .orElseGet(() -> intermediate(() -> handleInterval(scope, environment, initialSizes.tail, stepSizes.tail, maxSizes.tail, callbacks, encoding)));
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final BigInteger currentSize, final BigInteger stepSize, final BigInteger maxSize, final Encoding encoding) {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final BigInteger currentSize, final BigInteger stepSize, final BigInteger maxSize, final Callbacks callbacks, final Encoding encoding) {
         if (stepSize.compareTo(ZERO) == 0 ||
             stepSize.compareTo(ZERO) > 0 && currentSize.compareTo(maxSize) > 0 ||
             stepSize.compareTo(ZERO) < 0 && currentSize.compareTo(maxSize) < 0) {
@@ -106,16 +107,16 @@ public class Until extends Token {
         }
         return environment
             .slice(currentSize)
-            .map(slice -> parseSlice(scope, environment, currentSize, stepSize, maxSize, encoding, slice))
+            .map(slice -> parseSlice(scope, environment, currentSize, stepSize, maxSize, callbacks, encoding, slice))
             .orElseGet(() -> complete(Util::failure));
     }
 
-    private Trampoline<Optional<Environment>> parseSlice(String scope, Environment environment, BigInteger currentSize, BigInteger stepSize, BigInteger maxSize, Encoding encoding, Slice slice) {
+    private Trampoline<Optional<Environment>> parseSlice(String scope, Environment environment, BigInteger currentSize, BigInteger stepSize, BigInteger maxSize, final Callbacks callbacks, Encoding encoding, Slice slice) {
         return (currentSize.compareTo(ZERO) == 0 ? Optional.of(environment) : environment.add(new ParseValue(name, this, slice, encoding)).seek(environment.offset.add(currentSize)))
-            .map(preparedEnvironment -> terminator.parse(scope, preparedEnvironment, encoding))
+            .map(preparedEnvironment -> terminator.parse(scope, preparedEnvironment, callbacks, encoding))
             .orElseGet(Util::failure)
             .map(parsedEnvironment -> complete(() -> success(parsedEnvironment)))
-            .orElseGet(() -> intermediate(() -> iterate(scope, environment, currentSize.add(stepSize), stepSize, maxSize, encoding)));
+            .orElseGet(() -> intermediate(() -> iterate(scope, environment, currentSize.add(stepSize), stepSize, maxSize, callbacks, encoding)));
     }
 
     private boolean checkNotValidList(ImmutableList<Optional<Value>> list) {

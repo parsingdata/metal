@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
 
 public class TokenTest {
@@ -34,7 +35,7 @@ public class TokenTest {
     public ExpectedException thrown = ExpectedException.none();
     private final Token token = new Token("", null) {
         @Override
-        protected Optional<Environment> parseImpl(String scope, Environment environment, Encoding encoding) {
+        protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
             return null;
         }
     };

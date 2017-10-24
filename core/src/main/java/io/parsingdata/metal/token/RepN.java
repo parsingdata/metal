@@ -29,6 +29,7 @@ import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -57,21 +58,21 @@ public class RepN extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
         final ImmutableList<Optional<Value>> counts = n.eval(environment.order, encoding);
         if (counts.size != 1 || !counts.head.isPresent()) {
             return failure();
         }
-        return iterate(scope, environment.addBranch(this), encoding, counts.head.get().asNumeric().longValueExact()).computeResult();
+        return iterate(scope, environment.addBranch(this), callbacks, encoding, counts.head.get().asNumeric().longValueExact()).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding, final long count) {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding, final long count) {
         if (count <= 0) {
             return complete(() -> success(environment.closeBranch()));
         }
         return token
-            .parse(scope, environment, encoding)
-            .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, encoding, count - 1)))
+            .parse(scope, environment, callbacks, encoding)
+            .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, callbacks, encoding, count - 1)))
             .orElseGet(() -> complete(Util::failure));
     }
 

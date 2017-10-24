@@ -30,6 +30,7 @@ import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -51,17 +52,17 @@ public class Seq extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
-        return iterate(scope, environment.addBranch(this), encoding, tokens).computeResult();
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
+        return iterate(scope, environment.addBranch(this), callbacks, encoding, tokens).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding, final ImmutableList<Token> list) {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding, final ImmutableList<Token> list) {
         if (list.isEmpty()) {
             return complete(() -> success(environment.closeBranch()));
         }
         return list.head
-            .parse(scope, environment, encoding)
-            .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, encoding, list.tail)))
+            .parse(scope, environment, callbacks, encoding)
+            .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, callbacks, encoding, list.tail)))
             .orElseGet(() -> complete(Util::failure));
     }
 

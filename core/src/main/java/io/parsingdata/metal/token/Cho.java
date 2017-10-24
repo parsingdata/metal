@@ -30,6 +30,7 @@ import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -51,18 +52,18 @@ public class Cho extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
-        return iterate(scope, environment.addBranch(this), encoding, tokens).computeResult();
+    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
+        return iterate(scope, environment.addBranch(this), callbacks, encoding, tokens).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding, final ImmutableList<Token> list) {
+    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding, final ImmutableList<Token> list) {
         if (list.isEmpty()) {
             return complete(Util::failure);
         }
         return list.head
-            .parse(scope, environment, encoding)
+            .parse(scope, environment, callbacks, encoding)
             .map(result -> complete(() -> success(result.closeBranch())))
-            .orElseGet(() -> intermediate(() -> iterate(scope, environment, encoding, list.tail)));
+            .orElseGet(() -> intermediate(() -> iterate(scope, environment, callbacks, encoding, list.tail)));
     }
 
     @Override

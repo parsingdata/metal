@@ -25,7 +25,6 @@ import static io.parsingdata.metal.data.Slice.createFromSource;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
@@ -35,25 +34,15 @@ public class Environment {
     public final ParseGraph order;
     public final BigInteger offset;
     public final Source source;
-    public final Callbacks callbacks;
 
-    public Environment(final ParseGraph order, final Source source, final BigInteger offset, final Callbacks callbacks) {
+    public Environment(final ParseGraph order, final Source source, final BigInteger offset) {
         this.order = checkNotNull(order, "order");
         this.source = checkNotNull(source, "source");
         this.offset = checkNotNegative(offset, "offset");
-        this.callbacks = checkNotNull(callbacks, "callbacks");
-    }
-
-    public Environment(final ByteStream input, final BigInteger offset, final Callbacks callbacks) {
-        this(ParseGraph.EMPTY, new ByteStreamSource(input), offset, callbacks);
     }
 
     public Environment(final ByteStream input, final BigInteger offset) {
-        this(input, offset, Callbacks.NONE);
-    }
-
-    public Environment(final ByteStream input, final Callbacks callbacks) {
-        this(input, ZERO, callbacks);
+        this(ParseGraph.EMPTY, new ByteStreamSource(input), offset);
     }
 
     public Environment(final ByteStream input) {
@@ -61,27 +50,27 @@ public class Environment {
     }
 
     public Environment addBranch(final Token token) {
-        return new Environment(order.addBranch(token), source, offset, callbacks);
+        return new Environment(order.addBranch(token), source, offset);
     }
 
     public Environment closeBranch() {
-        return new Environment(order.closeBranch(), source, offset, callbacks);
+        return new Environment(order.closeBranch(), source, offset);
     }
 
     public Environment add(final ParseValue parseValue) {
-        return new Environment(order.add(parseValue), source, offset, callbacks);
+        return new Environment(order.add(parseValue), source, offset);
     }
 
     public Environment add(final ParseReference parseReference) {
-        return new Environment(order.add(parseReference), source, offset, callbacks);
+        return new Environment(order.add(parseReference), source, offset);
     }
 
     public Optional<Environment> seek(final BigInteger newOffset) {
-        return newOffset.compareTo(ZERO) >= 0 ? Optional.of(new Environment(order, source, newOffset, callbacks)) : Optional.empty();
+        return newOffset.compareTo(ZERO) >= 0 ? Optional.of(new Environment(order, source, newOffset)) : Optional.empty();
     }
 
     public Environment source(final ValueExpression dataExpression, final int index, final Environment environment, final Encoding encoding) {
-        return new Environment(order, new DataExpressionSource(dataExpression, index, environment.order, encoding), ZERO, callbacks);
+        return new Environment(order, new DataExpressionSource(dataExpression, index, environment.order, encoding), ZERO);
     }
 
     public Optional<Slice> slice(final BigInteger length) {
@@ -90,7 +79,7 @@ public class Environment {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(source:" + source + ";offset:" + offset + ";order:" + order + ";callbacks:" + callbacks + ")";
+        return getClass().getSimpleName() + "(source:" + source + ";offset:" + offset + ";order:" + order + ")";
     }
 
 }

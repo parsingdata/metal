@@ -24,8 +24,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
+import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.opt;
@@ -35,10 +35,10 @@ import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.token;
+import static io.parsingdata.metal.data.Selection.getAllRoots;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.data.selection.ByToken.get;
 import static io.parsingdata.metal.data.selection.ByToken.getAll;
-import static io.parsingdata.metal.data.Selection.getAllRoots;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -58,6 +58,7 @@ import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.Selection;
+import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
@@ -76,7 +77,7 @@ public class ByTokenTest {
     private static final Token MUT_REC_1 = seq(DEF1, new Token("", enc()) {
 
         @Override
-        protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
+        protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
             return MUT_REC_2.parse(scope, environment, encoding);
         }
     });
@@ -310,7 +311,7 @@ public class ByTokenTest {
         }
 
         @Override
-        protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
+        protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
             return token.parse(scope, environment, encoding);
         }
     }

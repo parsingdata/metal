@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
+import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
@@ -37,7 +38,7 @@ public class ParseGraph implements ParseItem {
     public final long size;
 
     public static final Token NONE = new Token("NONE", null) {
-        @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) { throw new IllegalStateException("This placeholder may not be invoked."); }
+        @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) { throw new IllegalStateException("This placeholder may not be invoked."); }
         @Override public String toString() { return "None"; }
     };
 
