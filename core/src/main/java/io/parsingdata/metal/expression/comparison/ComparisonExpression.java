@@ -27,7 +27,7 @@ import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
@@ -45,7 +45,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * <p>
  * The {@link #value} argument may be <code>null</code>, in which case it is
  * not evaluated and the output value is substituted with a list containing
- * only the {@link Value} most recently added to the {@link Environment}.
+ * only the {@link Value} most recently added to the {@link ParseState}.
  */
 public abstract class ComparisonExpression implements Expression {
 

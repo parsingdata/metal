@@ -24,7 +24,7 @@ import static io.parsingdata.metal.expression.value.GUID.guid;
 import static io.parsingdata.metal.util.ClassDefinition.checkUtilityClass;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.le;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

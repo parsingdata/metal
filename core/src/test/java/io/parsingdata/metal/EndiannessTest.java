@@ -25,7 +25,7 @@ import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.SELF;
 import static io.parsingdata.metal.Shorthand.shr;
 import static io.parsingdata.metal.util.EncodingFactory.le;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
 

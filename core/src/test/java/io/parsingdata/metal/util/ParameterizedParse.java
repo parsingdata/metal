@@ -26,7 +26,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
@@ -36,13 +36,13 @@ public class ParameterizedParse {
 
     @Parameter(0) public String description;
     @Parameter(1) public Token token;
-    @Parameter(2) public Environment environment;
+    @Parameter(2) public ParseState parseState;
     @Parameter(3) public Encoding encoding;
     @Parameter(4) public boolean result;
 
     @Test
     public void test() throws IOException {
-        assertEquals(result, token.parse(environment, encoding).isPresent());
+        assertEquals(result, token.parse(parseState, encoding).isPresent());
     }
 
 }

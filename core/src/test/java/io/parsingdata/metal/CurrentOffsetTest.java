@@ -34,7 +34,7 @@ import java.util.Optional;
 
 import org.junit.Test;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
@@ -46,7 +46,7 @@ public class CurrentOffsetTest {
 
     private void checkCurrentOffset(final int size) throws IOException {
         final byte[] data = new byte[size];
-        final Optional<Environment> result = def("a", con(size)).parse(new Environment(new InMemoryByteStream(data)), enc());
+        final Optional<ParseState> result = def("a", con(size)).parse(new ParseState(new InMemoryByteStream(data)), enc());
         assertTrue(result.isPresent());
 
         final ImmutableList<Optional<Value>> offset = CURRENT_OFFSET.eval(result.get().order, enc());
@@ -73,12 +73,12 @@ public class CurrentOffsetTest {
         for (int i = 0; i < stream.length; i++) {
             stream[i] = (byte) i;
         }
-        final Environment environment = new Environment(new InMemoryByteStream(stream));
+        final ParseState parseState = new ParseState(new InMemoryByteStream(stream));
 
         // value - offset + 1 should be 0:
         final Token offsetValidation = rep(def("byte", con(1), eqNum(sub(SELF, sub(CURRENT_OFFSET, con(1))), con(0))));
 
-        final Optional<Environment> result = offsetValidation.parse(environment, new Encoding(Sign.UNSIGNED));
+        final Optional<ParseState> result = offsetValidation.parse(parseState, new Encoding(Sign.UNSIGNED));
         assertTrue(result.isPresent());
         assertEquals(256, result.get().offset.intValueExact());
     }

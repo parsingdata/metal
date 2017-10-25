@@ -34,7 +34,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
@@ -79,7 +79,7 @@ public class ArgumentsTest {
     final private static ValueExpression VALID_VE = con(1);
     final private static BinaryOperator<ValueExpression> VALID_REDUCER = (left, right) -> null;
     final private static Expression VALID_E = (graph, encoding) -> false;
-    final private static Token VALID_T = new Token("", null) { @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) { return null; } };
+    final private static Token VALID_T = new Token("", null) { @Override protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) { return null; } };
 
     private final Class<?> _class;
     private final Object[] _arguments;

@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal.expression;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 
@@ -24,7 +24,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * Interface for all Expression implementations.
  * <p>
  * An Expression is evaluated by calling the
- * {@link #eval(ParseGraph, Encoding)} method. Given an {@link Environment}
+ * {@link #eval(ParseGraph, Encoding)} method. Given an {@link ParseState}
  * and an {@link Encoding}, the evaluation either succeeds or fails. Main use
  * of expressions is to define predicates that are evaluated during parsing.
  *

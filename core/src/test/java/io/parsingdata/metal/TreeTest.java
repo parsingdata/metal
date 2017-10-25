@@ -30,7 +30,7 @@ import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
 
@@ -38,7 +38,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
@@ -66,8 +66,8 @@ public class TreeTest {
             )
         );
 
-    private final Environment regular;
-    private final Environment cyclic;
+    private final ParseState regular;
+    private final ParseState cyclic;
 
     public TreeTest() throws IOException {
         regular = TREE.parse(stream(HEAD, 0, 6, 10, 8, 8, HEAD, 1, 16, 20, HEAD, 2, 24, 28, 8, 8, HEAD, 3, 0, 0, HEAD, 4, 0, 0, HEAD, 5, 0, 0, HEAD, 6, 0, 0), enc()).get();
@@ -95,8 +95,8 @@ public class TreeTest {
         checkStructure(cyclic);
     }
 
-    private void checkStructure(final Environment environment) {
-        final ParseGraph input = environment.order.head.asGraph(); // order = top-level ParseGraph, head = top-level Seq
+    private void checkStructure(final ParseState parseState) {
+        final ParseGraph input = parseState.order.head.asGraph(); // order = top-level ParseGraph, head = top-level Seq
         checkStructure(input, input, 0);
     }
 

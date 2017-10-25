@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.callback.Callbacks;
@@ -46,7 +46,7 @@ public class TokenRef extends Token {
 
     private static final Token LOOKUP_FAILED = new Token("LOOKUP_FAILED", null) {
         @Override
-        protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
+        protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
             return failure();
         }
     };
@@ -62,8 +62,8 @@ public class TokenRef extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
-        return lookup(ImmutableList.create(environment.order), referenceName).computeResult().parse(scope, environment, callbacks, encoding);
+    protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
+        return lookup(ImmutableList.create(parseState.order), referenceName).computeResult().parse(scope, parseState, callbacks, encoding);
     }
 
     private Trampoline<Token> lookup(final ImmutableList<ParseItem> items, final String referenceName) {
@@ -81,8 +81,8 @@ public class TokenRef extends Token {
     }
 
     @Override
-    public Token getCanonical(final Environment environment) {
-        return lookup(ImmutableList.create(environment.order), referenceName).computeResult();
+    public Token getCanonical(final ParseState parseState) {
+        return lookup(ImmutableList.create(parseState.order), referenceName).computeResult();
     }
 
     @Override

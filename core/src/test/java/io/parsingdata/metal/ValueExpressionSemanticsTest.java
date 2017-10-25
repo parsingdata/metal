@@ -26,7 +26,7 @@ import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
@@ -36,7 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
@@ -62,7 +62,7 @@ public class ValueExpressionSemanticsTest {
 
     @Test
     public void callback() throws IOException {
-        final Environment data = stream(1, 2, 3, 4);
+        final ParseState data = stream(1, 2, 3, 4);
         def("a", 4, eq(new UnaryValueExpression(ref("a")) {
             @Override
             public Optional<Value> eval(Value value, ParseGraph graph, Encoding encoding) {

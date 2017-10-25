@@ -30,11 +30,10 @@ import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.data.selection.ByTypeTest.EMPTY_SOURCE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.Optional;
 
 import org.junit.Rule;
@@ -72,7 +71,7 @@ public class ParseGraphTest {
                 any("g"), any("empty"),
                 any("h"), any("empty")
             );
-       Optional<Environment> result = token.parse(stream(97, 0, 98, 0, 99, 0, 100, 0, 101, 0, 102, 0, 103, 0, 104, 0), enc());
+       Optional<ParseState> result = token.parse(stream(97, 0, 98, 0, 99, 0, 100, 0, 101, 0, 102, 0, 103, 0, 104, 0), enc());
         a = getValue(result.get().order, "a");
         b = getValue(result.get().order, "b");
         c = getValue(result.get().order, "c");

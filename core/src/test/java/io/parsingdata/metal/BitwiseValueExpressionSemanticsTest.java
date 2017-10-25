@@ -27,7 +27,7 @@ import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.shl;
 import static io.parsingdata.metal.Shorthand.shr;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.util.Arrays;
 import java.util.Collection;

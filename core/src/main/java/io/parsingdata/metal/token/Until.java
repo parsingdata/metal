@@ -31,7 +31,7 @@ import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.Slice;
@@ -49,12 +49,12 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * <code>terminator</code>(a {@link Token}). First <code>initialSize</code>,
  * <code>stepSize</code>, and <code>maxSize</code> are evaluated. Using this
  * token's name, a value of length <code>initialSize</code> is added to the
- * <code>Environment</code> and an attempt is made to parse the
- * <code>terminator</code>. If it succeeds, the resulting environment is
+ * <code>ParseState</code> and an attempt is made to parse the
+ * <code>terminator</code>. If it succeeds, the resulting parseState is
  * returned. Otherwise, <code>stepSize</code> is added to the
  * <code>initialSize</code> and if the resulting value is below
  * <code>maxSize</code>, a value with the resulting size is added to the
- * original <code>Environment</code> and a new attempt to parse the
+ * original <code>ParseState</code> and a new attempt to parse the
  * <code>terminator</code> is made. Parsing fails if no combination of any size
  * is found where the <code>terminator</code> parses successfully.
  * <p>
@@ -85,38 +85,38 @@ public class Until extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
-        return handleInterval(scope, environment, initialSize.eval(environment.order, encoding), stepSize.eval(environment.order, encoding), maxSize.eval(environment.order, encoding), callbacks, encoding).computeResult();
+    protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
+        return handleInterval(scope, parseState, initialSize.eval(parseState.order, encoding), stepSize.eval(parseState.order, encoding), maxSize.eval(parseState.order, encoding), callbacks, encoding).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> handleInterval(final String scope, final Environment environment, final ImmutableList<Optional<Value>> initialSizes, final ImmutableList<Optional<Value>> stepSizes, final ImmutableList<Optional<Value>> maxSizes, final Callbacks callbacks, final Encoding encoding) {
+    private Trampoline<Optional<ParseState>> handleInterval(final String scope, final ParseState parseState, final ImmutableList<Optional<Value>> initialSizes, final ImmutableList<Optional<Value>> stepSizes, final ImmutableList<Optional<Value>> maxSizes, final Callbacks callbacks, final Encoding encoding) {
         if (checkNotValidList(initialSizes) || checkNotValidList(stepSizes) || checkNotValidList(maxSizes)) {
             return complete(Util::failure);
         }
-        return iterate(scope, environment, getNumeric(initialSizes), getNumeric(stepSizes), getNumeric(maxSizes), callbacks, encoding)
+        return iterate(scope, parseState, getNumeric(initialSizes), getNumeric(stepSizes), getNumeric(maxSizes), callbacks, encoding)
             .computeResult()
-            .map(nextEnvironment -> complete(() -> success(nextEnvironment)))
-            .orElseGet(() -> intermediate(() -> handleInterval(scope, environment, initialSizes.tail, stepSizes.tail, maxSizes.tail, callbacks, encoding)));
+            .map(nextParseState -> complete(() -> success(nextParseState)))
+            .orElseGet(() -> intermediate(() -> handleInterval(scope, parseState, initialSizes.tail, stepSizes.tail, maxSizes.tail, callbacks, encoding)));
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final BigInteger currentSize, final BigInteger stepSize, final BigInteger maxSize, final Callbacks callbacks, final Encoding encoding) {
+    private Trampoline<Optional<ParseState>> iterate(final String scope, final ParseState parseState, final BigInteger currentSize, final BigInteger stepSize, final BigInteger maxSize, final Callbacks callbacks, final Encoding encoding) {
         if (stepSize.compareTo(ZERO) == 0 ||
             stepSize.compareTo(ZERO) > 0 && currentSize.compareTo(maxSize) > 0 ||
             stepSize.compareTo(ZERO) < 0 && currentSize.compareTo(maxSize) < 0) {
             return complete(Util::failure);
         }
-        return environment
+        return parseState
             .slice(currentSize)
-            .map(slice -> parseSlice(scope, environment, currentSize, stepSize, maxSize, callbacks, encoding, slice))
+            .map(slice -> parseSlice(scope, parseState, currentSize, stepSize, maxSize, callbacks, encoding, slice))
             .orElseGet(() -> complete(Util::failure));
     }
 
-    private Trampoline<Optional<Environment>> parseSlice(String scope, Environment environment, BigInteger currentSize, BigInteger stepSize, BigInteger maxSize, final Callbacks callbacks, Encoding encoding, Slice slice) {
-        return (currentSize.compareTo(ZERO) == 0 ? Optional.of(environment) : environment.add(new ParseValue(name, this, slice, encoding)).seek(environment.offset.add(currentSize)))
-            .map(preparedEnvironment -> terminator.parse(scope, preparedEnvironment, callbacks, encoding))
+    private Trampoline<Optional<ParseState>> parseSlice(String scope, ParseState parseState, BigInteger currentSize, BigInteger stepSize, BigInteger maxSize, final Callbacks callbacks, Encoding encoding, Slice slice) {
+        return (currentSize.compareTo(ZERO) == 0 ? Optional.of(parseState) : parseState.add(new ParseValue(name, this, slice, encoding)).seek(parseState.offset.add(currentSize)))
+            .map(preparedParseState -> terminator.parse(scope, preparedParseState, callbacks, encoding))
             .orElseGet(Util::failure)
-            .map(parsedEnvironment -> complete(() -> success(parsedEnvironment)))
-            .orElseGet(() -> intermediate(() -> iterate(scope, environment, currentSize.add(stepSize), stepSize, maxSize, callbacks, encoding)));
+            .map(parsedParseState -> complete(() -> success(parsedParseState)))
+            .orElseGet(() -> intermediate(() -> iterate(scope, parseState, currentSize.add(stepSize), stepSize, maxSize, callbacks, encoding)));
     }
 
     private boolean checkNotValidList(ImmutableList<Optional<Value>> list) {

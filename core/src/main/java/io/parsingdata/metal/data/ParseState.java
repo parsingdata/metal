@@ -29,48 +29,48 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 
-public class Environment {
+public class ParseState {
 
     public final ParseGraph order;
     public final BigInteger offset;
     public final Source source;
 
-    public Environment(final ParseGraph order, final Source source, final BigInteger offset) {
+    public ParseState(final ParseGraph order, final Source source, final BigInteger offset) {
         this.order = checkNotNull(order, "order");
         this.source = checkNotNull(source, "source");
         this.offset = checkNotNegative(offset, "offset");
     }
 
-    public Environment(final ByteStream input, final BigInteger offset) {
+    public ParseState(final ByteStream input, final BigInteger offset) {
         this(ParseGraph.EMPTY, new ByteStreamSource(input), offset);
     }
 
-    public Environment(final ByteStream input) {
+    public ParseState(final ByteStream input) {
         this(input, ZERO);
     }
 
-    public Environment addBranch(final Token token) {
-        return new Environment(order.addBranch(token), source, offset);
+    public ParseState addBranch(final Token token) {
+        return new ParseState(order.addBranch(token), source, offset);
     }
 
-    public Environment closeBranch() {
-        return new Environment(order.closeBranch(), source, offset);
+    public ParseState closeBranch() {
+        return new ParseState(order.closeBranch(), source, offset);
     }
 
-    public Environment add(final ParseValue parseValue) {
-        return new Environment(order.add(parseValue), source, offset);
+    public ParseState add(final ParseValue parseValue) {
+        return new ParseState(order.add(parseValue), source, offset);
     }
 
-    public Environment add(final ParseReference parseReference) {
-        return new Environment(order.add(parseReference), source, offset);
+    public ParseState add(final ParseReference parseReference) {
+        return new ParseState(order.add(parseReference), source, offset);
     }
 
-    public Optional<Environment> seek(final BigInteger newOffset) {
-        return newOffset.compareTo(ZERO) >= 0 ? Optional.of(new Environment(order, source, newOffset)) : Optional.empty();
+    public Optional<ParseState> seek(final BigInteger newOffset) {
+        return newOffset.compareTo(ZERO) >= 0 ? Optional.of(new ParseState(order, source, newOffset)) : Optional.empty();
     }
 
-    public Environment source(final ValueExpression dataExpression, final int index, final Environment environment, final Encoding encoding) {
-        return new Environment(order, new DataExpressionSource(dataExpression, index, environment.order, encoding), ZERO);
+    public ParseState source(final ValueExpression dataExpression, final int index, final ParseState parseState, final Encoding encoding) {
+        return new ParseState(order, new DataExpressionSource(dataExpression, index, parseState.order, encoding), ZERO);
     }
 
     public Optional<Slice> slice(final BigInteger length) {

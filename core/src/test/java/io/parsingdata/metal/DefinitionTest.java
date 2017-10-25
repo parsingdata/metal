@@ -36,14 +36,14 @@ import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.whl;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.Test;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.token.Token;
 
@@ -62,7 +62,7 @@ public class DefinitionTest {
 
     @Test
     public void composed() throws IOException {
-        final Optional<Environment> result = COMPOSED.parse(stream(1, 1, 1, 2, 2, 1, 2), enc());
+        final Optional<ParseState> result = COMPOSED.parse(stream(1, 1, 1, 2, 2, 1, 2), enc());
         assertTrue(result.isPresent());
         final ParseGraph graph = result.get().order;
         assertEquals(NONE, graph.getDefinition());

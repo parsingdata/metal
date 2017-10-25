@@ -22,7 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Util.inflate;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.util.Optional;
 

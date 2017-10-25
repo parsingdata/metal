@@ -32,14 +32,14 @@ import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.shl;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
 
 import org.junit.Test;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
@@ -64,8 +64,8 @@ public class PITestCasesTest {
         parse(SHL, stream(85, 170), enc());
     }
 
-    private void parse(final Token token, final Environment environment, final Encoding encoding) throws IOException {
-        assertTrue(token.parse(environment, encoding).isPresent());
+    private void parse(final Token token, final ParseState parseState, final Encoding encoding) throws IOException {
+        assertTrue(token.parse(parseState, encoding).isPresent());
     }
 
 }

@@ -37,7 +37,7 @@ import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.math.BigInteger;
 import java.util.Optional;
@@ -56,11 +56,11 @@ public class SliceTest {
     @Test
     public void lazyRead() {
         final ReadTrackingByteStream stream = new ReadTrackingByteStream(new InMemoryByteStream(toByteArray(1, 2, 3, 0, 0, 4, 1)));
-        final Optional<Environment> result =
+        final Optional<ParseState> result =
             seq(def("a", con(3)),
                 post(def("b", con(2)), eq(con(0, 0))),
                 def("c", con(1)),
-                post(def("d", con(1)), eq(con(1)))).parse(new Environment(stream), enc());
+                post(def("d", con(1)), eq(con(1)))).parse(new ParseState(stream), enc());
         assertTrue(result.isPresent());
         assertTrue(stream.containsAll(3, 4, 6));
         assertTrue(stream.containsNone(0, 1, 2, 5));
@@ -69,11 +69,11 @@ public class SliceTest {
     @Test
     public void lazyLength() {
         final ReadTrackingByteStream stream = new ReadTrackingByteStream(new InMemoryByteStream(toByteArray(1, 2, 3, 0, 0, 0, 4, 1)));
-        final Optional<Environment> result =
+        final Optional<ParseState> result =
             seq(def("a", con(3)),
                 post(def("b", len(last(ref("a")))), eq(con(0, 0, 0))),
                 def("c", con(1)),
-                post(def("d", len(last(ref("c")))), eq(con(1)))).parse(new Environment(stream), enc());
+                post(def("d", len(last(ref("c")))), eq(con(1)))).parse(new ParseState(stream), enc());
         assertTrue(result.isPresent());
         assertTrue(stream.containsAll(3, 4, 5, 7));
         assertTrue(stream.containsNone(0, 1, 2, 6));
@@ -97,9 +97,9 @@ public class SliceTest {
     public void sliceToString() {
         final ParseValue pv1 = new ParseValue("name", NONE, createFromBytes(new byte[]{1, 2}), enc());
         assertEquals("Slice(ConstantSource(0x0102)@0:2)", pv1.slice.toString());
-        final Environment oneValueEnvironment = stream().add(pv1);
-        final Environment twoValueEnvironment = oneValueEnvironment.add(new ParseValue("name2", NONE, Slice.createFromSource(new DataExpressionSource(ref("name"), 0, oneValueEnvironment.order, enc()), ZERO, BigInteger.valueOf(2)).get(), enc()));
-        final String dataExpressionSliceString = getValue(twoValueEnvironment.order, "name2").slice.toString();
+        final ParseState oneValueParseState = stream().add(pv1);
+        final ParseState twoValueParseState = oneValueParseState.add(new ParseValue("name2", NONE, Slice.createFromSource(new DataExpressionSource(ref("name"), 0, oneValueParseState.order, enc()), ZERO, BigInteger.valueOf(2)).get(), enc()));
+        final String dataExpressionSliceString = getValue(twoValueParseState.order, "name2").slice.toString();
         assertTrue(dataExpressionSliceString.startsWith("Slice(DataExpressionSource(NameRef(name)[0]("));
         assertTrue(dataExpressionSliceString.endsWith(")@0:2)"));
     }

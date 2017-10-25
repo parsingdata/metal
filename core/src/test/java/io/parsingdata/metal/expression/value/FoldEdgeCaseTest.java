@@ -31,7 +31,7 @@ import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
@@ -43,7 +43,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.Shorthand;
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
@@ -66,9 +66,9 @@ public class FoldEdgeCaseTest {
 
     @Test
     public void foldToEmpty() throws IOException {
-        final Environment environment = rep(any("value")).parse(stream(1, 0), enc()).get();
-        assertFalse(foldLeft(ref("value"), Shorthand::div).eval(environment.order, enc()).head.isPresent());
-        assertFalse(foldRight(ref("value"), Shorthand::div).eval(environment.order, enc()).head.isPresent());
+        final ParseState parseState = rep(any("value")).parse(stream(1, 0), enc()).get();
+        assertFalse(foldLeft(ref("value"), Shorthand::div).eval(parseState.order, enc()).head.isPresent());
+        assertFalse(foldRight(ref("value"), Shorthand::div).eval(parseState.order, enc()).head.isPresent());
     }
 
     @Test
@@ -83,7 +83,7 @@ public class FoldEdgeCaseTest {
 
     @Test
     public void multipleInits() throws IOException {
-        final Optional<Environment> parseResult =
+        final Optional<ParseState> parseResult =
             seq(
                 def("init", 1),
                 def("init", 1),
@@ -100,7 +100,7 @@ public class FoldEdgeCaseTest {
 
     @Test
     public void noValues() throws IOException {
-        final Optional<Environment> parseResult =
+        final Optional<ParseState> parseResult =
             cho(
                 def("folded", 1, eq(foldLeft(ref("toFold"), Shorthand::add))),
                 def("folded", 1, eq(foldRight(ref("toFold"), Shorthand::add)))

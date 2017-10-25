@@ -26,14 +26,14 @@ import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.Test;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 
@@ -51,7 +51,7 @@ public class BytesTest {
 
     @Test
     public void bytesListContainsEmpty() throws IOException {
-        Optional<Environment> result =
+        Optional<ParseState> result =
             seq(def("value", con(2)),
                 def("value", con(2)),
                 def("value", con(2)),

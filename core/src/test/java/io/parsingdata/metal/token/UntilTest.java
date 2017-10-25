@@ -35,14 +35,14 @@ import static io.parsingdata.metal.Shorthand.until;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.Test;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -56,9 +56,9 @@ public class UntilTest {
 
     @Test
     public void threeNewLines() throws IOException {
-        final Optional<Environment> environment = createToken(con(0), post(def("newline", con(1)), eq(con('\n')))).parse(stream(INPUT, US_ASCII), enc());
-        assertTrue(environment.isPresent());
-        ImmutableList<ParseValue> values = getAllValues(environment.get().order, "line");
+        final Optional<ParseState> parseState = createToken(con(0), post(def("newline", con(1)), eq(con('\n')))).parse(stream(INPUT, US_ASCII), enc());
+        assertTrue(parseState.isPresent());
+        ImmutableList<ParseValue> values = getAllValues(parseState.get().order, "line");
         assertEquals(3, values.size);
         assertEquals(values.head.asString(), INPUT_3);
         assertEquals(values.tail.head.asString(), INPUT_2);
@@ -67,9 +67,9 @@ public class UntilTest {
 
     @Test
     public void untilInclusive() throws IOException {
-        final Optional<Environment> environment = createToken(con(1), post(EMPTY, eq(mod(last(ref("line")), con(256)), con('\n')))).parse(stream(INPUT, US_ASCII), enc());
-        assertTrue(environment.isPresent());
-        ImmutableList<ParseValue> values = getAllValues(environment.get().order, "line");
+        final Optional<ParseState> parseState = createToken(con(1), post(EMPTY, eq(mod(last(ref("line")), con(256)), con('\n')))).parse(stream(INPUT, US_ASCII), enc());
+        assertTrue(parseState.isPresent());
+        ImmutableList<ParseValue> values = getAllValues(parseState.get().order, "line");
         assertEquals(3, values.size);
         assertEquals(values.head.asString(), INPUT_3 + '\n');
         assertEquals(values.tail.head.asString(), INPUT_2 + '\n');

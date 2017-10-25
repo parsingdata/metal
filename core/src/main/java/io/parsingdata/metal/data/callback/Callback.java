@@ -16,12 +16,12 @@
 
 package io.parsingdata.metal.data.callback;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.token.Token;
 
 public interface Callback {
 
-    void handleSuccess(Token token, Environment before, Environment after);
-    void handleFailure(Token token, Environment before);
+    void handleSuccess(Token token, ParseState before, ParseState after);
+    void handleFailure(Token token, ParseState before);
 
 }

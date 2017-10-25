@@ -29,7 +29,7 @@ import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.callback.Callbacks;
@@ -63,33 +63,33 @@ public class Sub extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> addresses = address.eval(environment.order, encoding);
+    protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
+        final ImmutableList<Optional<Value>> addresses = address.eval(parseState.order, encoding);
         if (addresses.isEmpty()) {
             return failure();
         }
-        return iterate(scope, addresses, environment.addBranch(this), callbacks, encoding)
+        return iterate(scope, addresses, parseState.addBranch(this), callbacks, encoding)
             .computeResult()
-            .flatMap(nextEnvironment -> nextEnvironment.seek(environment.offset));
+            .flatMap(nextParseState -> nextParseState.seek(parseState.offset));
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> addresses, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
+    private Trampoline<Optional<ParseState>> iterate(final String scope, final ImmutableList<Optional<Value>> addresses, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
         if (addresses.isEmpty()) {
-            return complete(() -> success(environment.closeBranch()));
+            return complete(() -> success(parseState.closeBranch()));
         }
         return addresses.head
-            .flatMap(address -> parse(scope, address.asNumeric(), environment, callbacks, encoding))
-            .map(nextEnvironment -> intermediate(() -> iterate(scope, addresses.tail, nextEnvironment, callbacks, encoding)))
+            .flatMap(address -> parse(scope, address.asNumeric(), parseState, callbacks, encoding))
+            .map(nextParseState -> intermediate(() -> iterate(scope, addresses.tail, nextParseState, callbacks, encoding)))
             .orElseGet(() -> complete(Util::failure));
     }
 
-    private Optional<Environment> parse(final String scope, final BigInteger offset, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
-        if (hasRootAtOffset(environment.order, token.getCanonical(environment), offset, environment.source)) {
-            return success(environment.add(new ParseReference(offset, environment.source, token.getCanonical(environment))));
+    private Optional<ParseState> parse(final String scope, final BigInteger offset, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
+        if (hasRootAtOffset(parseState.order, token.getCanonical(parseState), offset, parseState.source)) {
+            return success(parseState.add(new ParseReference(offset, parseState.source, token.getCanonical(parseState))));
         }
-        return environment
+        return parseState
             .seek(offset)
-            .map(newEnvironment -> token.parse(scope, newEnvironment, callbacks, encoding))
+            .map(newParseState -> token.parse(scope, newParseState, callbacks, encoding))
             .orElseGet(Util::failure);
     }
 

@@ -27,14 +27,14 @@ import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.Test;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.token.Token;
 
@@ -51,7 +51,7 @@ public class SubStructTableTest {
 
     @Test
     public void table() throws IOException {
-        final Environment environment = stream(3, 6, 4, 9, 42, 84, 42, 84, 0, 42, 84);
+        final ParseState parseState = stream(3, 6, 4, 9, 42, 84, 42, 84, 0, 42, 84);
                                     /* offset: 0, 1, 2, 3,  4,  5,  6,  7, 8,  9, 10
                                      * count:  ^
                                      * pointers:  ^, ^, ^
@@ -59,7 +59,7 @@ public class SubStructTableTest {
                                      * ref2:         +-----^^--^^
                                      * ref3:            +---------------------^^--^^
                                      */
-        final Optional<Environment> result = table.parse(environment, enc());
+        final Optional<ParseState> result = table.parse(parseState, enc());
         assertTrue(result.isPresent());
         assertEquals(4, result.get().offset.intValueExact());
         final ParseGraph graph = result.get().order;
@@ -70,7 +70,7 @@ public class SubStructTableTest {
 
     @Test
     public void tableWithDuplicate() throws IOException {
-        final Environment environment = stream(4, 7, 5, 5, 10, 42, 84, 42, 84, 0, 42, 84);
+        final ParseState parseState = stream(4, 7, 5, 5, 10, 42, 84, 42, 84, 0, 42, 84);
                                     /* offset: 0, 1, 2, 3,  4,  5,  6,  7, 8,  9, 10, 11
                                      * count:  ^
                                      * pointers:  ^, ^, ^, ^^
@@ -79,7 +79,7 @@ public class SubStructTableTest {
                                      * ref3:         +---------^^--^^ duplicate!
                                      * ref4:               ++---------------------^^--^^
                                      */
-        final Optional<Environment> result = table.parse(environment, enc());
+        final Optional<ParseState> result = table.parse(parseState, enc());
         assertTrue(result.isPresent());
         assertEquals(5, result.get().offset.intValueExact());
         final ParseGraph graph = result.get().order;

@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
 
@@ -48,15 +48,15 @@ public class Rep extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
-        return iterate(scope, environment.addBranch(this), callbacks, encoding).computeResult();
+    protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
+        return iterate(scope, parseState.addBranch(this), callbacks, encoding).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
+    private Trampoline<Optional<ParseState>> iterate(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
         return token
-            .parse(scope, environment, callbacks, encoding)
-            .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, callbacks, encoding)))
-            .orElseGet(() -> complete(() -> success(environment.closeBranch())));
+            .parse(scope, parseState, callbacks, encoding)
+            .map(nextParseState -> intermediate(() -> iterate(scope, nextParseState, callbacks, encoding)))
+            .orElseGet(() -> complete(() -> success(parseState.closeBranch())));
     }
 
     @Override

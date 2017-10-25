@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
@@ -106,11 +106,11 @@ public final class Util {
         };
     }
 
-    public static Optional<Environment> success(final Environment environment) {
-        return Optional.of(environment);
+    public static Optional<ParseState> success(final ParseState parseState) {
+        return Optional.of(parseState);
     }
 
-    public static Optional<Environment> failure() {
+    public static Optional<ParseState> failure() {
         return Optional.empty();
     }
 

@@ -24,20 +24,20 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 
-public class EnvironmentFactory {
+public class ParseStateFactory {
 
-    public static Environment stream(final int... bytes) {
-        return new Environment(new InMemoryByteStream(toByteArray(bytes)));
+    public static ParseState stream(final int... bytes) {
+        return new ParseState(new InMemoryByteStream(toByteArray(bytes)));
     }
 
-    public static Environment stream(final URI resource) throws IOException {
-        return new Environment(new InMemoryByteStream(Files.readAllBytes(Paths.get(resource))));
+    public static ParseState stream(final URI resource) throws IOException {
+        return new ParseState(new InMemoryByteStream(Files.readAllBytes(Paths.get(resource))));
     }
 
-    public static Environment stream(final String value, final Charset charset) {
-        return new Environment(new InMemoryByteStream(value.getBytes(charset)));
+    public static ParseState stream(final String value, final Charset charset) {
+        return new ParseState(new InMemoryByteStream(value.getBytes(charset)));
     }
 
 }

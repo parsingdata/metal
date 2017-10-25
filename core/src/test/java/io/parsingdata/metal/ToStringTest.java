@@ -68,7 +68,7 @@ import static io.parsingdata.metal.Shorthand.whl;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.nio.charset.StandardCharsets;
@@ -77,7 +77,7 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.callback.Callback;
@@ -157,11 +157,11 @@ public class ToStringTest {
 
     @Test
     public void data() {
-        final Environment environment = stream(1, 2);
-        final String envString = "Environment(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(EMPTY))";
-        assertEquals(envString, environment.toString());
-        final Optional<Environment> result = Optional.of(environment);
-        assertEquals("Optional[" + environment + "]", result.toString());
+        final ParseState parseState = stream(1, 2);
+        final String parseStateString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(EMPTY))";
+        assertEquals(parseStateString, parseState.toString());
+        final Optional<ParseState> result = Optional.of(parseState);
+        assertEquals("Optional[" + parseState + "]", result.toString());
         final ParseValue pv1 = new ParseValue("name", NONE, createFromBytes(new byte[]{1, 2}), enc());
         final String pv1String = "pval(name:0x0102)";
         final Optional<Value> ov1 = Optional.of(pv1);
@@ -191,15 +191,15 @@ public class ToStringTest {
 
     private Token makeToken(final String name) {
         return new Token(name, enc()) {
-            @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) { return null; }
+            @Override protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) { return null; }
             @Override public String toString() { return name; }
         };
     }
 
     private Callback makeCallback(final String name) {
         return new Callback() {
-            @Override public void handleSuccess(final Token token, final Environment before, final Environment after) {}
-            @Override public void handleFailure(Token token, Environment before) {}
+            @Override public void handleSuccess(final Token token, final ParseState before, final ParseState after) {}
+            @Override public void handleFailure(Token token, ParseState before) {}
             @Override public String toString() { return name; }
         };
     }

@@ -29,7 +29,7 @@ import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
@@ -39,7 +39,7 @@ import java.util.Optional;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.ByteStream;
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
@@ -57,7 +57,7 @@ public class DefSizeTest {
             0x00, 0x00, 0x00, 0x02, // length = 2
             0x04, 0x08
         });
-        final Optional<Environment> result = FORMAT.parse(new Environment(stream), new Encoding());
+        final Optional<ParseState> result = FORMAT.parse(new ParseState(stream), new Encoding());
 
         assertTrue(result.isPresent());
         assertArrayEquals(
@@ -72,7 +72,7 @@ public class DefSizeTest {
             (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, // length = -1
             0x04, 0x08
         });
-        final Optional<Environment> result = FORMAT.parse(new Environment(stream), signed());
+        final Optional<ParseState> result = FORMAT.parse(new ParseState(stream), signed());
 
         assertFalse(result.isPresent());
     }

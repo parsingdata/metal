@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.Util;
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
 
@@ -37,7 +37,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * Specifies the two fields that all tokens share: <code>name</code> (a
  * String) and <code>encoding</code> (an {@link Encoding}). A Token is parsed
  * by calling one of the <code>parse</code> methods. Parsing a Token succeeds
- * if the returned {@link Optional} contains an {@link Environment}, otherwise
+ * if the returned {@link Optional} contains an {@link ParseState}, otherwise
  * parsing has failed.
  * <p>
  * The <code>name</code> field is used during parsing to construct a scope, by
@@ -64,28 +64,28 @@ public abstract class Token {
         this.encoding = encoding;
     }
 
-    public Optional<Environment> parse(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
+    public Optional<ParseState> parse(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
         final Encoding activeEncoding = this.encoding != null ? this.encoding : encoding;
-        final Optional<Environment> result = parseImpl(makeScope(checkNotNull(scope, "scope")), checkNotNull(environment, "environment"), callbacks, activeEncoding);
+        final Optional<ParseState> result = parseImpl(makeScope(checkNotNull(scope, "scope")), checkNotNull(parseState, "parseState"), callbacks, activeEncoding);
         callbacks.handle(this, result
-            .map(after -> success(this, environment, after))
-            .orElseGet(() -> failure(this, environment)));
+            .map(after -> success(this, parseState, after))
+            .orElseGet(() -> failure(this, parseState)));
         return result;
     }
 
-    public Optional<Environment> parse(final String scope, final Environment environment, final Encoding encoding) {
-        return parse(scope, environment, Callbacks.NONE, encoding);
+    public Optional<ParseState> parse(final String scope, final ParseState parseState, final Encoding encoding) {
+        return parse(scope, parseState, Callbacks.NONE, encoding);
     }
 
-    public Optional<Environment> parse(final Environment environment, final Callbacks callbacks, final Encoding encoding) {
-        return parse(NO_NAME, environment, callbacks, encoding);
+    public Optional<ParseState> parse(final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
+        return parse(NO_NAME, parseState, callbacks, encoding);
     }
 
-    public Optional<Environment> parse(final Environment environment, final Encoding encoding) {
-        return parse(environment, Callbacks.NONE, encoding);
+    public Optional<ParseState> parse(final ParseState parseState, final Encoding encoding) {
+        return parse(parseState, Callbacks.NONE, encoding);
     }
 
-    protected abstract Optional<Environment> parseImpl(String scope, Environment environment, Callbacks callbacks, Encoding encoding);
+    protected abstract Optional<ParseState> parseImpl(String scope, ParseState parseState, Callbacks callbacks, Encoding encoding);
 
     private String makeScope(final String scope) {
         return scope + (scope.isEmpty() || name.isEmpty() ? NO_NAME : SEPARATOR) + name;
@@ -95,7 +95,7 @@ public abstract class Token {
         return true;
     }
 
-    public Token getCanonical(final Environment environment) {
+    public Token getCanonical(final ParseState parseState) {
         return this;
     }
 

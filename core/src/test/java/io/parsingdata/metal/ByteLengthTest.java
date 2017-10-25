@@ -38,7 +38,7 @@ import java.util.Optional;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.ByteStream;
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
@@ -65,8 +65,8 @@ public class ByteLengthTest {
         final byte[] text2 = "Metal".getBytes(UTF_8);
 
         final ByteStream stream = new InMemoryByteStream(concat(text1, text2));
-        final Environment environment = new Environment(stream);
-        final Optional<Environment> result = STRING.parse(environment, ENCODING);
+        final ParseState parseState = new ParseState(stream);
+        final Optional<ParseState> result = STRING.parse(parseState, ENCODING);
 
         assertTrue(result.isPresent());
         final ParseGraph graph = result.get().order;
@@ -78,8 +78,8 @@ public class ByteLengthTest {
     @Test
     public void testLenNull() throws IOException {
         final ByteStream stream = new InMemoryByteStream(string("Joe"));
-        final Environment environment = new Environment(stream);
-        final Optional<Environment> result = NAME.parse(environment, ENCODING);
+        final ParseState parseState = new ParseState(stream);
+        final Optional<ParseState> result = NAME.parse(parseState, ENCODING);
         assertFalse(result.isPresent());
     }
 

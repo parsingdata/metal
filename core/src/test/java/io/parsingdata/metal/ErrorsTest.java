@@ -28,7 +28,7 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
@@ -39,8 +39,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.parsingdata.metal.data.ByteStream;
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.token.Token;
 
 public class ErrorsTest {
@@ -73,15 +72,15 @@ public class ErrorsTest {
                 any("b"),
                 repn(dummy, ref("b"))
             );
-       Optional<Environment> result = multiRepN.parse(stream(2, 2, 2, 2), enc());
+       Optional<ParseState> result = multiRepN.parse(stream(2, 2, 2, 2), enc());
        assertFalse(result.isPresent());
     }
 
     @Test
-    public void environmentWithNegativeOffset() {
+    public void parseStateWithNegativeOffset() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Argument offset may not be negative.");
-        new Environment(DUMMY_STREAM, BigInteger.valueOf(-1));
+        new ParseState(DUMMY_STREAM, BigInteger.valueOf(-1));
     }
 
 }

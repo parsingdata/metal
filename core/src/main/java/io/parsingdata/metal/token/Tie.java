@@ -27,7 +27,7 @@ import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
@@ -60,24 +60,24 @@ public class Tie extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> dataResult = dataExpression.eval(environment.order, encoding);
+    protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
+        final ImmutableList<Optional<Value>> dataResult = dataExpression.eval(parseState.order, encoding);
         if (dataResult.isEmpty()) {
             return failure();
         }
-        return iterate(scope, dataResult, 0, environment, environment.addBranch(this), callbacks, encoding).computeResult();
+        return iterate(scope, dataResult, 0, parseState, parseState.addBranch(this), callbacks, encoding).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> values, final int index, final Environment returnEnvironment, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
+    private Trampoline<Optional<ParseState>> iterate(final String scope, final ImmutableList<Optional<Value>> values, final int index, final ParseState returnParseState, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
         if (values.isEmpty()) {
-            return complete(() -> success(new Environment(environment.closeBranch().order, returnEnvironment.source, returnEnvironment.offset)));
+            return complete(() -> success(new ParseState(parseState.closeBranch().order, returnParseState.source, returnParseState.offset)));
         }
         if (!values.head.isPresent()) {
             return complete(Util::failure);
         }
         return token
-            .parse(scope, environment.source(dataExpression, index, environment, encoding), callbacks, encoding)
-            .map(nextEnvironment -> intermediate(() -> iterate(scope, values.tail, index + 1, returnEnvironment, nextEnvironment, callbacks, encoding)))
+            .parse(scope, parseState.source(dataExpression, index, parseState, encoding), callbacks, encoding)
+            .map(nextParseState -> intermediate(() -> iterate(scope, values.tail, index + 1, returnParseState, nextParseState, callbacks, encoding)))
             .orElseGet(() -> complete(Util::failure));
     }
 

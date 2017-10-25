@@ -47,7 +47,7 @@ import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.tie;
 import static io.parsingdata.metal.expression.value.ExpandTest.createParseValue;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static junit.framework.TestCase.assertFalse;
 
@@ -58,7 +58,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseValue;
@@ -105,7 +105,7 @@ public class ShorthandsTest {
     }
 
     private void runChoice(final int data, final String matched) throws IOException {
-        final Optional<Environment> result = multiChoice.parse(stream(data), enc());
+        final Optional<ParseState> result = multiChoice.parse(stream(data), enc());
         assertTrue(result.isPresent());
         assertTrue(result.get().order.current().get().matches(matched));
     }
@@ -135,7 +135,7 @@ public class ShorthandsTest {
 
     @Test
     public void allTokensNamed() throws IOException {
-        final Optional<Environment> result =
+        final Optional<ParseState> result =
             rep("rep",
                 repn("repn",
                     seq("seq",
@@ -162,8 +162,8 @@ public class ShorthandsTest {
         checkNameAndValue("rep.repn.seq.tie.def3", 1, result.get());
     }
 
-    private void checkNameAndValue(final String name, final int value, final Environment env) {
-        ImmutableList<Optional<Value>> values = ref(name).eval(env.order, enc());
+    private void checkNameAndValue(final String name, final int value, final ParseState parseState) {
+        ImmutableList<Optional<Value>> values = ref(name).eval(parseState.order, enc());
         assertFalse(values.isEmpty());
         assertEquals(1, values.size);
         assertEquals(value, values.head.get().asNumeric().intValueExact());
@@ -200,7 +200,7 @@ public class ShorthandsTest {
         assertEquals(DEFB, seq.tokens.tail.head);
     }
 
-    final ParseGraph PARSEGRAPH = new Environment(DUMMY_STREAM).add(createParseValue("a", 126)).add(createParseValue("a", 84)).add(createParseValue("a", 42)).order;
+    final ParseGraph PARSEGRAPH = new ParseState(DUMMY_STREAM).add(createParseValue("a", 126)).add(createParseValue("a", 84)).add(createParseValue("a", 42)).order;
 
     @Test
     public void mapLeftWithSub() {

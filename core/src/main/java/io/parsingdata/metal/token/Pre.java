@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.Util;
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
@@ -53,13 +53,13 @@ public class Pre extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Callbacks callbacks, final Encoding encoding) {
-        if (!predicate.eval(environment.order, encoding)) {
+    protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
+        if (!predicate.eval(parseState.order, encoding)) {
             return failure();
         }
         return token
-            .parse(scope, environment.addBranch(this), callbacks, encoding)
-            .map(resultEnvironment -> success(resultEnvironment.closeBranch()))
+            .parse(scope, parseState.addBranch(this), callbacks, encoding)
+            .map(resultParseState -> success(resultParseState.closeBranch()))
             .orElseGet(Util::failure);
     }
 

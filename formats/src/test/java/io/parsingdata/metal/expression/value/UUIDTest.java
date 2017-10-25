@@ -24,7 +24,7 @@ import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.expression.value.UUID.uuid;
 import static io.parsingdata.metal.util.ClassDefinition.checkUtilityClass;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import org.junit.Test;
 
