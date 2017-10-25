@@ -23,6 +23,7 @@ import java.util.Optional;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -35,8 +36,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 public class Self implements ValueExpression {
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        return ImmutableList.create(graph.current().map(identity()));
+    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        return ImmutableList.create(parseState.order.current().map(identity()));
     }
 
     @Override

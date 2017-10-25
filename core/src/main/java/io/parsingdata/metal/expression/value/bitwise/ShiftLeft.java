@@ -20,6 +20,7 @@ import java.util.BitSet;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.BinaryValueExpression;
 import io.parsingdata.metal.expression.value.ConstantFactory;
@@ -37,7 +38,7 @@ public class ShiftLeft extends BinaryValueExpression {
     }
 
     @Override
-    public Optional<Value> eval(final Value operand, final Value positions, final ParseGraph graph, final Encoding encoding) {
+    public Optional<Value> eval(final Value operand, final Value positions, final ParseState parseState, final Encoding encoding) {
         final BitSet leftBits = operand.asBitSet();
         final int shiftLeft = positions.asNumeric().intValueExact();
         final int bitCount = leftBits.length() + shiftLeft;

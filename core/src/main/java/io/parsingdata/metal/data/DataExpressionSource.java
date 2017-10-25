@@ -35,13 +35,13 @@ public class DataExpressionSource extends Source {
 
     public final ValueExpression dataExpression;
     public final int index;
-    public final ParseGraph graph;
+    public final ParseState parseState;
     public final Encoding encoding;
 
-    public DataExpressionSource(final ValueExpression dataExpression, final int index, final ParseGraph graph, final Encoding encoding) {
+    public DataExpressionSource(final ValueExpression dataExpression, final int index, final ParseState parseState, final Encoding encoding) {
         this.dataExpression = checkNotNull(dataExpression, "dataExpression");
         this.index = index;
-        this.graph = checkNotNull(graph, "graph");
+        this.parseState = checkNotNull(parseState, "parseState");
         this.encoding = checkNotNull(encoding, "encoding");
     }
 
@@ -63,7 +63,7 @@ public class DataExpressionSource extends Source {
     }
 
     private Value getValue() {
-        final ImmutableList<Optional<Value>> results = dataExpression.eval(graph, encoding);
+        final ImmutableList<Optional<Value>> results = dataExpression.eval(parseState, encoding);
         if (results.size <= index) {
             throw new IllegalStateException("ValueExpression dataExpression yields " + results.size + " result(s) (expected at least " + (index + 1) + ").");
         }
@@ -81,7 +81,7 @@ public class DataExpressionSource extends Source {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + dataExpression.toString() + "[" + index + "](" + graph + "," + encoding + "))";
+        return getClass().getSimpleName() + "(" + dataExpression.toString() + "[" + index + "](" + parseState + "," + encoding + "))";
     }
 
     @Override
@@ -89,13 +89,13 @@ public class DataExpressionSource extends Source {
         return Util.notNullAndSameClass(this, obj)
             && Objects.equals(dataExpression, ((DataExpressionSource)obj).dataExpression)
             && Objects.equals(index, ((DataExpressionSource)obj).index)
-            && Objects.equals(graph, ((DataExpressionSource)obj).graph)
+            && Objects.equals(parseState, ((DataExpressionSource)obj).parseState)
             && Objects.equals(encoding, ((DataExpressionSource)obj).encoding);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), dataExpression, index, graph, encoding);
+        return Objects.hash(getClass().hashCode(), dataExpression, index, parseState, encoding);
     }
 
 }

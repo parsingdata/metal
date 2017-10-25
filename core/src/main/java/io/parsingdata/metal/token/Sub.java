@@ -64,7 +64,7 @@ public class Sub extends Token {
 
     @Override
     protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> addresses = address.eval(parseState.order, encoding);
+        final ImmutableList<Optional<Value>> addresses = address.eval(parseState, encoding);
         if (addresses.isEmpty()) {
             return failure();
         }

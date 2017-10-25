@@ -17,6 +17,7 @@
 package io.parsingdata.metal;
 
 import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.TEN;
 import static java.math.BigInteger.ZERO;
 
 import static org.junit.Assert.assertEquals;
@@ -28,10 +29,10 @@ import static io.parsingdata.metal.Shorthand.TRUE;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.not;
 import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.data.ByteStreamSourceTest.DUMMY_BYTE_STREAM_SOURCE;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
@@ -125,7 +126,7 @@ public class AutoEqualityTest {
         @Override public boolean isAvailable(BigInteger offset, int length) { return false; }
     };
 
-    private static final ParseValue PARSEVALUE = new ParseValue("a", any("a"), createFromBytes(new byte[]{1, 2}), enc());
+    private static final ParseValue PARSE_VALUE = new ParseValue("a", any("a"), createFromBytes(new byte[]{1, 2}), enc());
     private static final ParseGraph GRAPH_WITH_REFERENCE = createFromByteStream(DUMMY_STREAM).add(new ParseReference(ZERO, new ConstantSource(new byte[]{1, 2}), any("a"))).order;
     private static final ParseGraph BRANCHED_GRAPH = createFromByteStream(DUMMY_STREAM).addBranch(any("a")).order;
     private static final ParseGraph CLOSED_BRANCHED_GRAPH = createFromByteStream(DUMMY_STREAM).addBranch(any("a")).closeBranch().order;
@@ -138,15 +139,16 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> EXPRESSIONS = Arrays.asList(() -> TRUE, () -> not(TRUE));
     private static final List<Supplier<Object>> VALUES = Arrays.asList(() -> ConstantFactory.createFromString("a", enc()), () -> ConstantFactory.createFromString("b", enc()), () -> ConstantFactory.createFromNumeric(1L, signed()));
     private static final List<Supplier<Object>> REDUCERS = Arrays.asList(() -> (BinaryOperator<ValueExpression>) Shorthand::cat, () -> (BinaryOperator<ValueExpression>) Shorthand::div);
-    private static final List<Supplier<Object>> SLICES = Arrays.asList(() -> createFromBytes(new byte[] { 1, 2 }), () -> Slice.createFromSource(new DataExpressionSource(ref("a"), 1, createFromByteStream(DUMMY_STREAM).add(PARSEVALUE).add(PARSEVALUE).order, enc()), ZERO, BigInteger.valueOf(2)).get());
+    private static final List<Supplier<Object>> SLICES = Arrays.asList(() -> createFromBytes(new byte[] { 1, 2 }), () -> Slice.createFromSource(new DataExpressionSource(ref("a"), 1, createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE).add(PARSE_VALUE), enc()), ZERO, BigInteger.valueOf(2)).get());
     private static final List<Supplier<Object>> BYTE_ARRAYS = Arrays.asList(() -> new byte[] { 0 }, () -> new byte[] { 1, 2 }, () -> new byte[] {});
-    private static final List<Supplier<Object>> SOURCES = Arrays.asList(() -> new ConstantSource(new byte[] {}), () -> new DataExpressionSource(ref("x"), 8, createFromByteStream(DUMMY_STREAM).add(PARSEVALUE).order, signed()));
+    private static final List<Supplier<Object>> SOURCES = Arrays.asList(() -> new ConstantSource(new byte[] {}), () -> new DataExpressionSource(ref("x"), 8, createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE), signed()));
     private static final List<Supplier<Object>> LONGS = Arrays.asList(() -> 0L, () -> 1L, () -> 31L, () -> 100000L);
     private static final List<Supplier<Object>> INTEGERS = Arrays.asList(() -> 0, () -> 1, () -> 17, () -> 21212121);
-    private static final List<Supplier<Object>> PARSEGRAPHS = Arrays.asList(() -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE);
-    private static final List<Supplier<Object>> PARSEITEMS = Arrays.asList(() -> CLOSED_BRANCHED_GRAPH, () -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE, () -> createFromByteStream(DUMMY_STREAM).add(PARSEVALUE).order, () -> createFromByteStream(DUMMY_STREAM).add(PARSEVALUE).add(PARSEVALUE).order, () -> BRANCHED_GRAPH);
-    private static final List<Supplier<Object>> BYTESTREAMS = Arrays.asList(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> DUMMY_STREAM);
+    private static final List<Supplier<Object>> PARSE_GRAPHS = Arrays.asList(() -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE);
+    private static final List<Supplier<Object>> PARSE_ITEMS = Arrays.asList(() -> CLOSED_BRANCHED_GRAPH, () -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE, () -> createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE).order, () -> createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE).add(PARSE_VALUE).order, () -> BRANCHED_GRAPH);
+    private static final List<Supplier<Object>> BYTE_STREAMS = Arrays.asList(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> DUMMY_STREAM);
     private static final List<Supplier<Object>> BIG_INTEGERS = Arrays.asList(() -> ONE, () -> BigInteger.valueOf(3));
+    private static final List<Supplier<Object>> PARSE_STATES = Arrays.asList(() -> createFromByteStream(DUMMY_STREAM), () -> createFromByteStream(DUMMY_STREAM, ONE), () -> new ParseState(GRAPH_WITH_REFERENCE, DUMMY_BYTE_STREAM_SOURCE, TEN));
     private static final Map<Class, List<Supplier<Object>>> mapping = new HashMap<Class, List<Supplier<Object>>>() {{
         put(String.class, STRINGS);
         put(Encoding.class, ENCODINGS);
@@ -161,10 +163,11 @@ public class AutoEqualityTest {
         put(Source.class, SOURCES);
         put(long.class, LONGS);
         put(int.class, INTEGERS);
-        put(ParseGraph.class, PARSEGRAPHS);
-        put(ParseItem.class, PARSEITEMS);
-        put(ByteStream.class, BYTESTREAMS);
+        put(ParseGraph.class, PARSE_GRAPHS);
+        put(ParseItem.class, PARSE_ITEMS);
+        put(ByteStream.class, BYTE_STREAMS);
         put(BigInteger.class, BIG_INTEGERS);
+        put(ParseState.class, PARSE_STATES);
     }};
 
     @Parameterized.Parameters(name="{0}")

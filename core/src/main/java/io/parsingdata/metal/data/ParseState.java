@@ -72,7 +72,7 @@ public class ParseState {
     }
 
     public ParseState source(final ValueExpression dataExpression, final int index, final ParseState parseState, final Encoding encoding) {
-        return new ParseState(order, new DataExpressionSource(dataExpression, index, parseState.order, encoding), ZERO);
+        return new ParseState(order, new DataExpressionSource(dataExpression, index, parseState, encoding), ZERO);
     }
 
     public Optional<Slice> slice(final BigInteger length) {

@@ -50,7 +50,7 @@ public class ValueExpressionEvalEmptyTest {
     }
 
     private void parse(final ValueExpression expression) {
-        final ImmutableList<Optional<Value>> output = expression.eval(stream(0).order, enc());
+        final ImmutableList<Optional<Value>> output = expression.eval(stream(0), enc());
         assertEquals(1, output.size);
         assertFalse(output.head.isPresent());
     }

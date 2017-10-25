@@ -28,6 +28,7 @@ import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -53,8 +54,8 @@ public class Elvis implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        return reverse(eval(new ImmutableList<>(), left.eval(graph, encoding), right.eval(graph, encoding)).computeResult());
+    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        return reverse(eval(new ImmutableList<>(), left.eval(parseState, encoding), right.eval(parseState, encoding)).computeResult());
     }
 
     private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> result, final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues) {

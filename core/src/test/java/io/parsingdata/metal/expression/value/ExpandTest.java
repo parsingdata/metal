@@ -26,6 +26,7 @@ import static io.parsingdata.metal.Shorthand.exp;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
+import static io.parsingdata.metal.expression.value.BytesTest.EMPTY_PARSE_STATE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
@@ -52,7 +53,7 @@ public class ExpandTest {
 
     @Test
     public void expandEmpty() {
-        final ImmutableList<Optional<Value>> result = exp(ref("a"), con(5)).eval(ParseGraph.EMPTY, enc());
+        final ImmutableList<Optional<Value>> result = exp(ref("a"), con(5)).eval(EMPTY_PARSE_STATE, enc());
         assertTrue(result.isEmpty());
     }
 
@@ -60,25 +61,25 @@ public class ExpandTest {
     public void expandEmptyTimes() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Count must evaluate to a single non-empty value.");
-        exp(con(1), div(con(1), con(0))).eval(ParseGraph.EMPTY, enc());
+        exp(con(1), div(con(1), con(0))).eval(EMPTY_PARSE_STATE, enc());
     }
 
     @Test
     public void expandListTimes() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Count must evaluate to a single non-empty value.");
-        exp(con(1), ref("a")).eval(createFromByteStream(DUMMY_STREAM).add(PARSEVALUE_1).add(PARSEVALUE_2).order, enc());
+        exp(con(1), ref("a")).eval(createFromByteStream(DUMMY_STREAM).add(PARSEVALUE_1).add(PARSEVALUE_2), enc());
     }
 
     @Test
     public void expandZeroTimes() {
-        final ImmutableList<Optional<Value>> result = exp(con(1), con(0)).eval(ParseGraph.EMPTY, enc());
+        final ImmutableList<Optional<Value>> result = exp(con(1), con(0)).eval(EMPTY_PARSE_STATE, enc());
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void expandValue() {
-        ImmutableList<Optional<Value>> result = exp(con(VALUE_1), con(SIZE)).eval(ParseGraph.EMPTY, enc());
+        ImmutableList<Optional<Value>> result = exp(con(VALUE_1), con(SIZE)).eval(EMPTY_PARSE_STATE, enc());
         assertEquals(SIZE, result.size);
         for (int i = 0; i < SIZE; i++) {
             assertTrue(result.head.isPresent());
@@ -89,7 +90,7 @@ public class ExpandTest {
 
     @Test
     public void expandList() {
-        ImmutableList<Optional<Value>> result = exp(ref("a"), con(SIZE)).eval(createFromByteStream(DUMMY_STREAM).add(PARSEVALUE_2).add(PARSEVALUE_1).order, enc());
+        ImmutableList<Optional<Value>> result = exp(ref("a"), con(SIZE)).eval(createFromByteStream(DUMMY_STREAM).add(PARSEVALUE_2).add(PARSEVALUE_1), enc());
         assertEquals(2 * SIZE, result.size);
         for (int i = 0; i < SIZE; i++) {
             assertTrue(result.head.isPresent());

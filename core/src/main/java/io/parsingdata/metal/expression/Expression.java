@@ -24,9 +24,9 @@ import io.parsingdata.metal.encoding.Encoding;
  * Interface for all Expression implementations.
  * <p>
  * An Expression is evaluated by calling the
- * {@link #eval(ParseGraph, Encoding)} method. Given an {@link ParseState}
- * and an {@link Encoding}, the evaluation either succeeds or fails. Main use
- * of expressions is to define predicates that are evaluated during parsing.
+ * {@link #eval(ParseState, Encoding)} method. Given a {@link ParseState} and
+ * an {@link Encoding}, the evaluation either succeeds or fails. Main use of
+ * expressions is to define predicates that are evaluated during parsing.
  *
  * @see io.parsingdata.metal.token.Def
  * @see io.parsingdata.metal.token.Pre
@@ -35,6 +35,6 @@ import io.parsingdata.metal.encoding.Encoding;
 @FunctionalInterface
 public interface Expression {
 
-    boolean eval(ParseGraph graph, Encoding encoding);
+    boolean eval(ParseState parseState, Encoding encoding);
 
 }

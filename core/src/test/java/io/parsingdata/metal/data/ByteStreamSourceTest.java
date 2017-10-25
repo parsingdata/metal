@@ -29,16 +29,18 @@ import org.junit.rules.ExpectedException;
 
 public class ByteStreamSourceTest {
 
+    public static final ByteStreamSource DUMMY_BYTE_STREAM_SOURCE = new ByteStreamSource(new ByteStream() {
+        @Override public byte[] read(BigInteger offset, int length) throws IOException { throw new IOException("Always fails."); }
+        @Override public boolean isAvailable(BigInteger offset, int length) { return true; }
+    });
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void brokenByteStream() {
         thrown.expect(UncheckedIOException.class);
-        Slice.createFromSource(new ByteStreamSource(new ByteStream() {
-            @Override public byte[] read(BigInteger offset, int length) throws IOException { throw new IOException("Always fails."); }
-            @Override public boolean isAvailable(BigInteger offset, int length) { return true; }
-        }), ZERO, TEN).get().getData();
+        Slice.createFromSource(DUMMY_BYTE_STREAM_SOURCE, ZERO, TEN).get().getData();
     }
 
 }

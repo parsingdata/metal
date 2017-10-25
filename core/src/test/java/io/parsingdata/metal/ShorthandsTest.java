@@ -164,7 +164,7 @@ public class ShorthandsTest {
     }
 
     private void checkNameAndValue(final String name, final int value, final ParseState parseState) {
-        ImmutableList<Optional<Value>> values = ref(name).eval(parseState.order, enc());
+        ImmutableList<Optional<Value>> values = ref(name).eval(parseState, enc());
         assertFalse(values.isEmpty());
         assertEquals(1, values.size);
         assertEquals(value, values.head.get().asNumeric().intValueExact());
@@ -201,11 +201,11 @@ public class ShorthandsTest {
         assertEquals(DEFB, seq.tokens.tail.head);
     }
 
-    final ParseGraph PARSEGRAPH = createFromByteStream(DUMMY_STREAM).add(createParseValue("a", 126)).add(createParseValue("a", 84)).add(createParseValue("a", 42)).order;
+    final ParseState PARSESTATE = createFromByteStream(DUMMY_STREAM).add(createParseValue("a", 126)).add(createParseValue("a", 84)).add(createParseValue("a", 42));
 
     @Test
     public void mapLeftWithSub() {
-        ImmutableList<Optional<Value>> result = mapLeft(Shorthand::sub, ref("a"), con(2)).eval(PARSEGRAPH, enc());
+        ImmutableList<Optional<Value>> result = mapLeft(Shorthand::sub, ref("a"), con(2)).eval(PARSESTATE, enc());
         assertEquals(3, result.size);
         for (int i = 0; i < 3; i++) {
             assertTrue(result.head.isPresent());
@@ -216,7 +216,7 @@ public class ShorthandsTest {
 
     @Test
     public void mapRightWithSub() {
-        ImmutableList<Optional<Value>> result = mapRight(Shorthand::sub, con(126), ref("a")).eval(PARSEGRAPH, enc());
+        ImmutableList<Optional<Value>> result = mapRight(Shorthand::sub, con(126), ref("a")).eval(PARSESTATE, enc());
         assertEquals(3, result.size);
         for (int i = 0; i < 3; i++) {
             assertTrue(result.head.isPresent());

@@ -62,7 +62,7 @@ public class While extends Token {
     }
 
     private Trampoline<Optional<ParseState>> iterate(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
-        if (predicate.eval(parseState.order, encoding)) {
+        if (predicate.eval(parseState, encoding)) {
             return token
                 .parse(scope, parseState, callbacks, encoding)
                 .map(nextParseState -> intermediate(() -> iterate(scope, nextParseState, callbacks, encoding)))

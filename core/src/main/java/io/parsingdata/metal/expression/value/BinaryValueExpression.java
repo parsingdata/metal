@@ -28,6 +28,7 @@ import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -45,7 +46,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * size of the longest list.
  * <p>
  * To implement a BinaryValueExpression, only the
- * {@link #eval(Value, Value, ParseGraph, Encoding)} must be implemented,
+ * {@link #eval(Value, Value, ParseState, Encoding)} must be implemented,
  * handling the case of evaluating two values. This base class takes care of
  * evaluating the operands and handling list semantics.
  *
@@ -62,19 +63,19 @@ public abstract class BinaryValueExpression implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        return evalLists(left.eval(graph, encoding), right.eval(graph, encoding), graph, encoding);
+    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        return evalLists(left.eval(parseState, encoding), right.eval(parseState, encoding), parseState, encoding);
     }
 
-    private ImmutableList<Optional<Value>> evalLists(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues, final ParseGraph graph, final Encoding encoding) {
-        return reverse(padList(evalLists(leftValues, rightValues, graph, encoding, new ImmutableList<>()).computeResult(), Math.abs(leftValues.size - rightValues.size)).computeResult());
+    private ImmutableList<Optional<Value>> evalLists(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues, final ParseState parseState, final Encoding encoding) {
+        return reverse(padList(evalLists(leftValues, rightValues, parseState, encoding, new ImmutableList<>()).computeResult(), Math.abs(leftValues.size - rightValues.size)).computeResult());
     }
 
-    private Trampoline<ImmutableList<Optional<Value>>> evalLists(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues, final ParseGraph graph, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
+    private Trampoline<ImmutableList<Optional<Value>>> evalLists(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues, final ParseState parseState, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
         if (leftValues.isEmpty() || rightValues.isEmpty()) {
             return complete(() -> result);
         }
-        return intermediate(() -> evalLists(leftValues.tail, rightValues.tail, graph, encoding, result.add(leftValues.head.flatMap(left -> rightValues.head.flatMap(right -> eval(left, right, graph, encoding))))));
+        return intermediate(() -> evalLists(leftValues.tail, rightValues.tail, parseState, encoding, result.add(leftValues.head.flatMap(left -> rightValues.head.flatMap(right -> eval(left, right, parseState, encoding))))));
     }
 
     private Trampoline<ImmutableList<Optional<Value>>> padList(final ImmutableList<Optional<Value>> list, final long size) {
@@ -84,7 +85,7 @@ public abstract class BinaryValueExpression implements ValueExpression {
         return intermediate(() -> padList(list.add(Optional.empty()), size - 1));
     }
 
-    public abstract Optional<Value> eval(final Value left, final Value right, final ParseGraph graph, final Encoding encoding);
+    public abstract Optional<Value> eval(final Value left, final Value right, final ParseState parseState, final Encoding encoding);
 
     @Override
     public String toString() {

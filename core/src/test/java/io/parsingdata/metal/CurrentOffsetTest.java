@@ -50,7 +50,7 @@ public class CurrentOffsetTest {
         final Optional<ParseState> result = def("a", con(size)).parse(createFromByteStream(new InMemoryByteStream(data)), enc());
         assertTrue(result.isPresent());
 
-        final ImmutableList<Optional<Value>> offset = CURRENT_OFFSET.eval(result.get().order, enc());
+        final ImmutableList<Optional<Value>> offset = CURRENT_OFFSET.eval(result.get(), enc());
 
         assertNotNull(offset);
         assertEquals(1, offset.size);

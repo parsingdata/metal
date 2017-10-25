@@ -18,6 +18,7 @@ package io.parsingdata.metal.expression;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -27,7 +28,7 @@ import io.parsingdata.metal.encoding.Encoding;
 public class True implements Expression {
 
     @Override
-    public boolean eval(final ParseGraph graph, final Encoding encoding) {
+    public boolean eval(final ParseState parseState, final Encoding encoding) {
         return true;
     }
 

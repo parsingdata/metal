@@ -12,6 +12,7 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.tie;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
+import static io.parsingdata.metal.expression.value.BytesTest.EMPTY_PARSE_STATE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
@@ -54,7 +55,7 @@ public class DataExpressionSourceTest {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("ValueExpression dataExpression yields 1 result(s) (expected at least 2).");
         final Optional<ParseState> result = setupResult();
-        final DataExpressionSource source = new DataExpressionSource(ref("a"), 1, result.get().order, enc());
+        final DataExpressionSource source = new DataExpressionSource(ref("a"), 1, result.get(), enc());
         source.getData(ZERO, BigInteger.valueOf(4));
     }
 
@@ -62,7 +63,7 @@ public class DataExpressionSourceTest {
     public void emptyValue() {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("ValueExpression dataExpression yields empty Value at index 0.");
-        new DataExpressionSource(div(con(1), con(0)), 0, ParseGraph.EMPTY, enc()).isAvailable(ZERO, ZERO);
+        new DataExpressionSource(div(con(1), con(0)), 0, EMPTY_PARSE_STATE, enc()).isAvailable(ZERO, ZERO);
     }
 
 }

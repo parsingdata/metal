@@ -23,6 +23,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.expression.value.BytesTest.EMPTY_PARSE_STATE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import java.io.IOException;
@@ -53,7 +54,7 @@ public class SourceAndSliceTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
             { new ConstantSource(DATA) },
-            { new DataExpressionSource(con(DATA), 0, ParseGraph.EMPTY, enc()) },
+            { new DataExpressionSource(con(DATA), 0, EMPTY_PARSE_STATE, enc()) },
             { new ByteStreamSource(new InMemoryByteStream(DATA) ) }
         });
     }

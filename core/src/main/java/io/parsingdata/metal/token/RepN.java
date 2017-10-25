@@ -59,7 +59,7 @@ public class RepN extends Token {
 
     @Override
     protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> counts = n.eval(parseState.order, encoding);
+        final ImmutableList<Optional<Value>> counts = n.eval(parseState, encoding);
         if (counts.size != 1 || !counts.head.isPresent()) {
             return failure();
         }

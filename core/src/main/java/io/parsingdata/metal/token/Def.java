@@ -58,7 +58,7 @@ public class Def extends Token {
 
     @Override
     protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> sizes = size.eval(parseState.order, encoding);
+        final ImmutableList<Optional<Value>> sizes = size.eval(parseState, encoding);
         if (sizes.size != 1 || !sizes.head.isPresent()) {
             return failure();
         }

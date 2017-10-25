@@ -27,6 +27,7 @@ import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -51,12 +52,12 @@ public class Expand implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> base = this.base.eval(graph, encoding);
+    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        final ImmutableList<Optional<Value>> base = this.base.eval(parseState, encoding);
         if (base.isEmpty()) {
             return base;
         }
-        final ImmutableList<Optional<Value>> count = this.count.eval(graph, encoding);
+        final ImmutableList<Optional<Value>> count = this.count.eval(parseState, encoding);
         if (count.size != 1 || !count.head.isPresent()) {
             throw new IllegalArgumentException("Count must evaluate to a single non-empty value.");
         }

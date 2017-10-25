@@ -99,7 +99,7 @@ public class SliceTest {
         final ParseValue pv1 = new ParseValue("name", NONE, createFromBytes(new byte[]{1, 2}), enc());
         assertEquals("Slice(ConstantSource(0x0102)@0:2)", pv1.slice.toString());
         final ParseState oneValueParseState = stream().add(pv1);
-        final ParseState twoValueParseState = oneValueParseState.add(new ParseValue("name2", NONE, Slice.createFromSource(new DataExpressionSource(ref("name"), 0, oneValueParseState.order, enc()), ZERO, BigInteger.valueOf(2)).get(), enc()));
+        final ParseState twoValueParseState = oneValueParseState.add(new ParseValue("name2", NONE, Slice.createFromSource(new DataExpressionSource(ref("name"), 0, oneValueParseState, enc()), ZERO, BigInteger.valueOf(2)).get(), enc()));
         final String dataExpressionSliceString = getValue(twoValueParseState.order, "name2").slice.toString();
         assertTrue(dataExpressionSliceString.startsWith("Slice(DataExpressionSource(NameRef(name)[0]("));
         assertTrue(dataExpressionSliceString.endsWith(")@0:2)"));

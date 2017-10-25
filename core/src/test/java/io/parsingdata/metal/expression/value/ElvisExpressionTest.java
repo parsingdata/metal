@@ -31,6 +31,8 @@ import static io.parsingdata.metal.Shorthand.elvis;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.data.ParseState.createFromByteStream;
+import static io.parsingdata.metal.expression.value.BytesTest.EMPTY_PARSE_STATE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -44,6 +46,7 @@ import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class ElvisExpressionTest {
 
@@ -57,7 +60,7 @@ public class ElvisExpressionTest {
     @Test
     public void elvisLeft() throws IOException { // the building
         final Optional<ParseState> result = choice.parse(stream(1), enc());
-        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(result.get().order, enc());
+        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(result.get(), enc());
 
         assertNotNull(eval);
         assertEquals(1, eval.size);
@@ -67,7 +70,7 @@ public class ElvisExpressionTest {
     @Test
     public void elvisRight() throws IOException {
         final Optional<ParseState> result = choice.parse(stream(2), enc());
-        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(result.get().order, enc());
+        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(result.get(), enc());
 
         assertNotNull(eval);
         assertEquals(1, eval.size);
@@ -76,7 +79,7 @@ public class ElvisExpressionTest {
 
     @Test
     public void elvisNone() throws IOException {
-        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(ParseGraph.EMPTY, enc());
+        final ImmutableList<Optional<Value>> eval = elvisExpression.eval(EMPTY_PARSE_STATE, enc());
 
         assertNotNull(eval);
         assertTrue(eval.isEmpty());
@@ -87,7 +90,7 @@ public class ElvisExpressionTest {
         final Optional<ParseState> result = seq(any("a"), any("a"), any("b"), any("b")).parse(stream(1, 2, 3, 4), enc());
         assertTrue(result.isPresent());
         final ValueExpression elvis = elvis(ref("a"), ref("b"));
-        final ImmutableList<Optional<Value>> eval = elvis.eval(result.get().order, enc());
+        final ImmutableList<Optional<Value>> eval = elvis.eval(result.get(), enc());
         assertEquals(2, eval.size);
         assertEquals(2, eval.head.get().asNumeric().intValueExact());
         assertEquals(1, eval.tail.head.get().asNumeric().intValueExact());
@@ -98,7 +101,7 @@ public class ElvisExpressionTest {
         final Optional<ParseState> result = seq(any("a"), any("a"), any("b"), any("b")).parse(stream(1, 2, 3, 4), enc());
         assertTrue(result.isPresent());
         final ValueExpression elvis = elvis(ref("c"), ref("b"));
-        final ImmutableList<Optional<Value>> eval = elvis.eval(result.get().order, enc());
+        final ImmutableList<Optional<Value>> eval = elvis.eval(result.get(), enc());
         assertEquals(2, eval.size);
         assertEquals(4, eval.head.get().asNumeric().intValueExact());
         assertEquals(3, eval.tail.head.get().asNumeric().intValueExact());
@@ -109,7 +112,7 @@ public class ElvisExpressionTest {
         final Optional<ParseState> result = seq(any("a"), any("a"), any("b"), any("b"), any("b")).parse(stream(1, 2, 3, 4, 5), enc());
         assertTrue(result.isPresent());
         final ValueExpression elvis = elvis(ref("a"), ref("b"));
-        final ImmutableList<Optional<Value>> eval = elvis.eval(result.get().order, enc());
+        final ImmutableList<Optional<Value>> eval = elvis.eval(result.get(), enc());
         assertEquals(3, eval.size);
         assertEquals(2, eval.head.get().asNumeric().intValueExact());
         assertEquals(1, eval.tail.head.get().asNumeric().intValueExact());
@@ -119,14 +122,14 @@ public class ElvisExpressionTest {
     @Test
     public void elvisListEmpty() {
         final ValueExpression elvis = elvis(ref("a"), ref("b"));
-        final ImmutableList<Optional<Value>> eval = elvis.eval(stream(0).order, enc());
+        final ImmutableList<Optional<Value>> eval = elvis.eval(stream(0), enc());
         assertEquals(0, eval.size);
     }
 
     @Test
     public void elvisLeftNone() {
         final ValueExpression elvis = elvis(div(con(1), con(0)), con(1));
-        final ImmutableList<Optional<Value>> eval = elvis.eval(stream(0).order, enc());
+        final ImmutableList<Optional<Value>> eval = elvis.eval(stream(0), enc());
         assertEquals(1, eval.size);
         assertEquals(1, eval.head.get().asNumeric().intValueExact());
     }

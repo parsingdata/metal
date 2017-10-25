@@ -17,6 +17,7 @@
 package io.parsingdata.metal.expression.logical;
 
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 
@@ -30,8 +31,8 @@ public class Not extends UnaryLogicalExpression {
     }
 
     @Override
-    public boolean eval(final ParseGraph graph, final Encoding encoding) {
-        return !operand.eval(graph, encoding);
+    public boolean eval(final ParseState parseState, final Encoding encoding) {
+        return !operand.eval(parseState, encoding);
     }
 
 }

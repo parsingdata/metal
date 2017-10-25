@@ -86,7 +86,7 @@ public class Until extends Token {
 
     @Override
     protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
-        return handleInterval(scope, parseState, initialSize.eval(parseState.order, encoding), stepSize.eval(parseState.order, encoding), maxSize.eval(parseState.order, encoding), callbacks, encoding).computeResult();
+        return handleInterval(scope, parseState, initialSize.eval(parseState, encoding), stepSize.eval(parseState, encoding), maxSize.eval(parseState, encoding), callbacks, encoding).computeResult();
     }
 
     private Trampoline<Optional<ParseState>> handleInterval(final String scope, final ParseState parseState, final ImmutableList<Optional<Value>> initialSizes, final ImmutableList<Optional<Value>> stepSizes, final ImmutableList<Optional<Value>> maxSizes, final Callbacks callbacks, final Encoding encoding) {

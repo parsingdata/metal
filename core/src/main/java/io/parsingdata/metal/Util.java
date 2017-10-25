@@ -88,7 +88,7 @@ public final class Util {
     public static ValueExpression inflate(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public Optional<Value> eval(final Value value, final ParseGraph graph, final Encoding encoding) {
+            public Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding) {
                 final Inflater inf = new Inflater(true);
                 inf.setInput(value.getValue());
                 final byte[] dataReceiver = new byte[512];

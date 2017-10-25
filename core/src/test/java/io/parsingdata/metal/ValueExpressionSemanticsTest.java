@@ -65,7 +65,7 @@ public class ValueExpressionSemanticsTest {
         final ParseState data = stream(1, 2, 3, 4);
         def("a", 4, eq(new UnaryValueExpression(ref("a")) {
             @Override
-            public Optional<Value> eval(Value value, ParseGraph graph, Encoding encoding) {
+            public Optional<Value> eval(Value value, ParseState parseState, Encoding encoding) {
                 return Optional.of(value);
             }
         })).parse(data, enc());

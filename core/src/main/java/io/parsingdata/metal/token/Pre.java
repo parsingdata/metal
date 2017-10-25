@@ -54,7 +54,7 @@ public class Pre extends Token {
 
     @Override
     protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
-        if (!predicate.eval(parseState.order, encoding)) {
+        if (!predicate.eval(parseState, encoding)) {
             return failure();
         }
         return token

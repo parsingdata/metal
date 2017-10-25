@@ -60,25 +60,20 @@ public class FoldEdgeCaseTest {
 
     @Test
     public void valuesContainsEmpty() {
-        assertTrue(foldLeft(div(con(1), con(0)), Shorthand::add).eval(stream(0).order, enc()).isEmpty());
-        assertTrue(foldRight(div(con(1), con(0)), Shorthand::add).eval(stream(0).order, enc()).isEmpty());
+        assertTrue(foldLeft(div(con(1), con(0)), Shorthand::add).eval(stream(0), enc()).isEmpty());
+        assertTrue(foldRight(div(con(1), con(0)), Shorthand::add).eval(stream(0), enc()).isEmpty());
     }
 
     @Test
     public void foldToEmpty() throws IOException {
         final ParseState parseState = rep(any("value")).parse(stream(1, 0), enc()).get();
-        assertFalse(foldLeft(ref("value"), Shorthand::div).eval(parseState.order, enc()).head.isPresent());
-        assertFalse(foldRight(ref("value"), Shorthand::div).eval(parseState.order, enc()).head.isPresent());
+        assertFalse(foldLeft(ref("value"), Shorthand::div).eval(parseState, enc()).head.isPresent());
+        assertFalse(foldRight(ref("value"), Shorthand::div).eval(parseState, enc()).head.isPresent());
     }
 
     @Test
     public void inputContainsEmptyInTail() {
-        assertTrue(foldRight(new ValueExpression() {
-            @Override
-            public ImmutableList<Optional<Value>> eval(ParseGraph graph, Encoding encoding) {
-                return ImmutableList.create(Optional.<Value>empty()).add(Optional.of(new Value(createFromBytes(new byte[] { 1, 2 }), enc())));
-            }
-        }, Shorthand::add).eval(stream(0).order, enc()).isEmpty());
+        assertTrue(foldRight((parseState, encoding) -> ImmutableList.create(Optional.<Value>empty()).add(Optional.of(new Value(createFromBytes(new byte[] { 1, 2 }), enc()))), Shorthand::add).eval(stream(0), enc()).isEmpty());
     }
 
     @Test

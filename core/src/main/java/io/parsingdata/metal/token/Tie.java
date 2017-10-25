@@ -61,7 +61,7 @@ public class Tie extends Token {
 
     @Override
     protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> dataResult = dataExpression.eval(parseState.order, encoding);
+        final ImmutableList<Optional<Value>> dataResult = dataExpression.eval(parseState, encoding);
         if (dataResult.isEmpty()) {
             return failure();
         }

@@ -55,7 +55,7 @@ public class Post extends Token {
     protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
         return token
             .parse(scope, parseState.addBranch(this), callbacks, encoding)
-            .map(nextParseState -> predicate.eval(nextParseState.order, encoding) ? success(nextParseState.closeBranch()) : failure())
+            .map(nextParseState -> predicate.eval(nextParseState, encoding) ? success(nextParseState.closeBranch()) : failure())
             .orElseGet(Util::failure);
     }
 
