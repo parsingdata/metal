@@ -23,8 +23,10 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Slice.createFromSource;
 
 import java.math.BigInteger;
+import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
@@ -80,6 +82,19 @@ public class ParseState {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(source:" + source + ";offset:" + offset + ";order:" + order + ")";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Objects.equals(order, ((ParseState)obj).order)
+            && Objects.equals(offset, ((ParseState)obj).offset)
+            && Objects.equals(source, ((ParseState)obj).source);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getClass().hashCode(), order, offset, source);
     }
 
 }
