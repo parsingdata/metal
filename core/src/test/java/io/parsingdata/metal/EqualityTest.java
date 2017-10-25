@@ -34,6 +34,7 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.token;
+import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
@@ -167,10 +168,10 @@ public class EqualityTest {
     @Test
     public void parseGraph() {
         final ParseValue value = new ParseValue("a", any("a"), createFromBytes(new byte[]{1, 2}), enc());
-        final ParseGraph object = new ParseState(DUMMY_STREAM).add(value).order;
+        final ParseGraph object = createFromByteStream(DUMMY_STREAM).add(value).order;
         assertFalse(object.equals(null));
         assertFalse(object.equals("a"));
-        final ParseState parseState = new ParseState(DUMMY_STREAM);
+        final ParseState parseState = createFromByteStream(DUMMY_STREAM);
         assertNotEquals(parseState.addBranch(any("a")).add(value).add(value).closeBranch().addBranch(any("a")).order, parseState.addBranch(any("a")).closeBranch().addBranch(any("a")).order);
         assertNotEquals(parseState.addBranch(any("a")).order, parseState.addBranch(any("a")).closeBranch().order);
         assertNotEquals(parseState.addBranch(any("a")).order, parseState.addBranch(any("b")).order);

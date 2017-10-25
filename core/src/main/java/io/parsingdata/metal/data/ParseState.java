@@ -41,12 +41,12 @@ public class ParseState {
         this.offset = checkNotNegative(offset, "offset");
     }
 
-    public ParseState(final ByteStream input, final BigInteger offset) {
-        this(ParseGraph.EMPTY, new ByteStreamSource(input), offset);
+    public static ParseState createFromByteStream(final ByteStream input, final BigInteger offset) {
+        return new ParseState(ParseGraph.EMPTY, new ByteStreamSource(input), offset);
     }
 
-    public ParseState(final ByteStream input) {
-        this(input, ZERO);
+    public static ParseState createFromByteStream(final ByteStream input) {
+        return createFromByteStream(input, ZERO);
     }
 
     public ParseState addBranch(final Token token) {

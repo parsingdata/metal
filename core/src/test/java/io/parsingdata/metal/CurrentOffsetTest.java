@@ -27,6 +27,7 @@ import static io.parsingdata.metal.Shorthand.eqNum;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.SELF;
 import static io.parsingdata.metal.Shorthand.sub;
+import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class CurrentOffsetTest {
 
     private void checkCurrentOffset(final int size) throws IOException {
         final byte[] data = new byte[size];
-        final Optional<ParseState> result = def("a", con(size)).parse(new ParseState(new InMemoryByteStream(data)), enc());
+        final Optional<ParseState> result = def("a", con(size)).parse(createFromByteStream(new InMemoryByteStream(data)), enc());
         assertTrue(result.isPresent());
 
         final ImmutableList<Optional<Value>> offset = CURRENT_OFFSET.eval(result.get().order, enc());
@@ -73,7 +74,7 @@ public class CurrentOffsetTest {
         for (int i = 0; i < stream.length; i++) {
             stream[i] = (byte) i;
         }
-        final ParseState parseState = new ParseState(new InMemoryByteStream(stream));
+        final ParseState parseState = createFromByteStream(new InMemoryByteStream(stream));
 
         // value - offset + 1 should be 0:
         final Token offsetValidation = rep(def("byte", con(1), eqNum(sub(SELF, sub(CURRENT_OFFSET, con(1))), con(0))));

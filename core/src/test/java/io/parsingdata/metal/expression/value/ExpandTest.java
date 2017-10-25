@@ -24,6 +24,7 @@ import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.exp;
 import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -34,7 +35,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseValue;
@@ -67,7 +67,7 @@ public class ExpandTest {
     public void expandListTimes() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Count must evaluate to a single non-empty value.");
-        exp(con(1), ref("a")).eval(new ParseState(DUMMY_STREAM).add(PARSEVALUE_1).add(PARSEVALUE_2).order, enc());
+        exp(con(1), ref("a")).eval(createFromByteStream(DUMMY_STREAM).add(PARSEVALUE_1).add(PARSEVALUE_2).order, enc());
     }
 
     @Test
@@ -89,7 +89,7 @@ public class ExpandTest {
 
     @Test
     public void expandList() {
-        ImmutableList<Optional<Value>> result = exp(ref("a"), con(SIZE)).eval(new ParseState(DUMMY_STREAM).add(PARSEVALUE_2).add(PARSEVALUE_1).order, enc());
+        ImmutableList<Optional<Value>> result = exp(ref("a"), con(SIZE)).eval(createFromByteStream(DUMMY_STREAM).add(PARSEVALUE_2).add(PARSEVALUE_1).order, enc());
         assertEquals(2 * SIZE, result.size);
         for (int i = 0; i < SIZE; i++) {
             assertTrue(result.head.isPresent());

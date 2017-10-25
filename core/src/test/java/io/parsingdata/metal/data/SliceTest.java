@@ -33,6 +33,7 @@ import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.toByteArray;
+import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
@@ -60,7 +61,7 @@ public class SliceTest {
             seq(def("a", con(3)),
                 post(def("b", con(2)), eq(con(0, 0))),
                 def("c", con(1)),
-                post(def("d", con(1)), eq(con(1)))).parse(new ParseState(stream), enc());
+                post(def("d", con(1)), eq(con(1)))).parse(createFromByteStream(stream), enc());
         assertTrue(result.isPresent());
         assertTrue(stream.containsAll(3, 4, 6));
         assertTrue(stream.containsNone(0, 1, 2, 5));
@@ -73,7 +74,7 @@ public class SliceTest {
             seq(def("a", con(3)),
                 post(def("b", len(last(ref("a")))), eq(con(0, 0, 0))),
                 def("c", con(1)),
-                post(def("d", len(last(ref("c")))), eq(con(1)))).parse(new ParseState(stream), enc());
+                post(def("d", len(last(ref("c")))), eq(con(1)))).parse(createFromByteStream(stream), enc());
         assertTrue(result.isPresent());
         assertTrue(stream.containsAll(3, 4, 5, 7));
         assertTrue(stream.containsNone(0, 1, 2, 6));

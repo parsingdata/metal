@@ -27,6 +27,7 @@ import static io.parsingdata.metal.Shorthand.neg;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -80,7 +81,7 @@ public class ErrorsTest {
     public void parseStateWithNegativeOffset() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Argument offset may not be negative.");
-        new ParseState(DUMMY_STREAM, BigInteger.valueOf(-1));
+        createFromByteStream(DUMMY_STREAM, BigInteger.valueOf(-1));
     }
 
 }

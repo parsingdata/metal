@@ -28,6 +28,7 @@ import static io.parsingdata.metal.Shorthand.len;
 import static io.parsingdata.metal.Shorthand.ltNum;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.encoding.ByteOrder.LITTLE_ENDIAN;
 import static io.parsingdata.metal.encoding.Sign.UNSIGNED;
@@ -65,7 +66,7 @@ public class ByteLengthTest {
         final byte[] text2 = "Metal".getBytes(UTF_8);
 
         final ByteStream stream = new InMemoryByteStream(concat(text1, text2));
-        final ParseState parseState = new ParseState(stream);
+        final ParseState parseState = createFromByteStream(stream);
         final Optional<ParseState> result = STRING.parse(parseState, ENCODING);
 
         assertTrue(result.isPresent());
@@ -78,7 +79,7 @@ public class ByteLengthTest {
     @Test
     public void testLenNull() throws IOException {
         final ByteStream stream = new InMemoryByteStream(string("Joe"));
-        final ParseState parseState = new ParseState(stream);
+        final ParseState parseState = createFromByteStream(stream);
         final Optional<ParseState> result = NAME.parse(parseState, ENCODING);
         assertFalse(result.isPresent());
     }

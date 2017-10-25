@@ -29,6 +29,7 @@ import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.data.Selection.getAllRoots;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
@@ -77,7 +78,7 @@ public class CallbackTest {
                 .add(POST_TWO, countingCallback)
                 .add(cho, countingCallback)
                 .add(sequence, countingCallback);
-        final ParseState parseState = new ParseState(new InMemoryByteStream(new byte[] { 2, 1 }));
+        final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 2, 1 }));
         assertTrue(sequence.parse(parseState, callbacks, enc()).isPresent());
         countingCallback.assertCounts(4, 1);
     }
@@ -103,14 +104,14 @@ public class CallbackTest {
     @Test
     public void testSimpleCallback() throws IOException {
         final Callbacks callbacks = createCallbackList(SIMPLE_SEQ, 0L);
-        final ParseState parseState = new ParseState(new InMemoryByteStream(new byte[] { 1, 2 }));
+        final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 1, 2 }));
         assertTrue(SIMPLE_SEQ.parse(parseState, callbacks, enc()).isPresent());
     }
 
     @Test
     public void testRepSimpleCallback() throws IOException {
         final Callbacks callbacks = createCallbackList(SIMPLE_SEQ, 0L, 2L);
-        final ParseState parseState = new ParseState(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }));
+        final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }));
         assertTrue(rep(SIMPLE_SEQ).parse(parseState, callbacks, enc()).isPresent());
     }
 
@@ -136,7 +137,7 @@ public class CallbackTest {
                     @Override
                     public void handleFailure(Token token, ParseState before) {}
                 });
-        final ParseState parseState = new ParseState(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }));
+        final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }));
         assertTrue(repeatingSeq.parse(parseState, callbacks, enc()).isPresent());
     }
 
@@ -151,7 +152,7 @@ public class CallbackTest {
             @Override
             public void handleFailure(Token token, ParseState before) {}
         });
-        final ParseState parseState = new ParseState(new InMemoryByteStream(new byte[] { 0, 3, 1, 0, 0, 1 }));
+        final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 0, 3, 1, 0, 0, 1 }));
         assertTrue(SubStructTest.LINKED_LIST.parse(parseState, callbacks, enc()).isPresent());
         // The ParseReference does not trigger the callback:
         assertEquals(2, linkedListCount);
@@ -170,7 +171,7 @@ public class CallbackTest {
             expectedFailureDefinitions);
 
         final Callbacks callbacks = Callbacks.create().add(genericCallback);
-        final ParseState parseState = new ParseState(new InMemoryByteStream(new byte[] { 1, 2, 4 }));
+        final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 1, 2, 4 }));
         final Optional<ParseState> parse = CHOICE.parse(parseState, callbacks, enc());
         assertTrue(parse.isPresent());
         genericCallback.assertAllHandled();
@@ -201,7 +202,7 @@ public class CallbackTest {
             .add(cho, countingCallback);
         final long expectedSuccessCount = expectedSuccessDefinitions.size();
         final long expectedFailureCount = expectedFailureDefinitions.size();
-        final ParseState parseState = new ParseState(new InMemoryByteStream(new byte[] { 2 }));
+        final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 2 }));
         assertTrue(cho.parse(parseState, callbacks, enc()).isPresent());
         genericCallback.assertAllHandled();
         countingCallback.assertCounts(expectedSuccessCount, expectedFailureCount);

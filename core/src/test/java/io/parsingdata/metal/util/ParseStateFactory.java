@@ -17,6 +17,7 @@
 package io.parsingdata.metal.util;
 
 import static io.parsingdata.metal.Shorthand.toByteArray;
+import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 
 import java.io.IOException;
 import java.net.URI;
@@ -29,15 +30,15 @@ import io.parsingdata.metal.data.ParseState;
 public class ParseStateFactory {
 
     public static ParseState stream(final int... bytes) {
-        return new ParseState(new InMemoryByteStream(toByteArray(bytes)));
+        return createFromByteStream(new InMemoryByteStream(toByteArray(bytes)));
     }
 
     public static ParseState stream(final URI resource) throws IOException {
-        return new ParseState(new InMemoryByteStream(Files.readAllBytes(Paths.get(resource))));
+        return createFromByteStream(new InMemoryByteStream(Files.readAllBytes(Paths.get(resource))));
     }
 
     public static ParseState stream(final String value, final Charset charset) {
-        return new ParseState(new InMemoryByteStream(value.getBytes(charset)));
+        return createFromByteStream(new InMemoryByteStream(value.getBytes(charset)));
     }
 
 }

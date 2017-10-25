@@ -39,6 +39,7 @@ import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.tie;
 import static io.parsingdata.metal.Util.inflate;
+import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
@@ -93,7 +94,7 @@ public class TieTest {
     }
 
     private Optional<ParseState> checkFullParse(Token token, byte[] data) throws IOException {
-        final Optional<ParseState> result = token.parse(new ParseState(new InMemoryByteStream(data)), enc());
+        final Optional<ParseState> result = token.parse(createFromByteStream(new InMemoryByteStream(data)), enc());
         assertTrue(result.isPresent());
         assertEquals(data.length, result.get().offset.intValueExact());
         return result;

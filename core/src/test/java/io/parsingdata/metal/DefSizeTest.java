@@ -26,6 +26,7 @@ import static io.parsingdata.metal.Shorthand.EMPTY;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
@@ -57,7 +58,7 @@ public class DefSizeTest {
             0x00, 0x00, 0x00, 0x02, // length = 2
             0x04, 0x08
         });
-        final Optional<ParseState> result = FORMAT.parse(new ParseState(stream), new Encoding());
+        final Optional<ParseState> result = FORMAT.parse(createFromByteStream(stream), new Encoding());
 
         assertTrue(result.isPresent());
         assertArrayEquals(
@@ -72,7 +73,7 @@ public class DefSizeTest {
             (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, // length = -1
             0x04, 0x08
         });
-        final Optional<ParseState> result = FORMAT.parse(new ParseState(stream), signed());
+        final Optional<ParseState> result = FORMAT.parse(createFromByteStream(stream), signed());
 
         assertFalse(result.isPresent());
     }

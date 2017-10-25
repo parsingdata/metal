@@ -45,6 +45,7 @@ import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.tie;
+import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.expression.value.ExpandTest.createParseValue;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
@@ -200,7 +201,7 @@ public class ShorthandsTest {
         assertEquals(DEFB, seq.tokens.tail.head);
     }
 
-    final ParseGraph PARSEGRAPH = new ParseState(DUMMY_STREAM).add(createParseValue("a", 126)).add(createParseValue("a", 84)).add(createParseValue("a", 42)).order;
+    final ParseGraph PARSEGRAPH = createFromByteStream(DUMMY_STREAM).add(createParseValue("a", 126)).add(createParseValue("a", 84)).add(createParseValue("a", 42)).order;
 
     @Test
     public void mapLeftWithSub() {
