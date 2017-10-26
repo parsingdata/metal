@@ -145,6 +145,8 @@ public class ToStringTest {
     public void specialExpressions() {
         assertTrue(v().toString().contains("Self"));
         assertEquals("Self", SELF.toString());
+        assertTrue(v().toString().contains("CurrentOffset"));
+        assertEquals("CurrentOffset", CURRENT_OFFSET.toString());
     }
 
     @Test
