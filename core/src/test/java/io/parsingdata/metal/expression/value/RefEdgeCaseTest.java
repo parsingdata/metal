@@ -22,6 +22,7 @@ import static io.parsingdata.metal.Shorthand.exp;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
@@ -32,7 +33,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseState;
 
 public class RefEdgeCaseTest {
@@ -44,7 +44,7 @@ public class RefEdgeCaseTest {
 
     @Before
     public void before() throws IOException {
-        parseState = rep(any("a")).parse(stream(1, 2, 3), enc()).get();
+        parseState = rep(any("a")).parse(env(stream(1, 2, 3))).get();
     }
 
     @Test

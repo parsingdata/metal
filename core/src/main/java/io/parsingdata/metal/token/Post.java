@@ -24,8 +24,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.Util;
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseState;
-import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 
@@ -52,10 +52,10 @@ public class Post extends Token {
     }
 
     @Override
-    protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
+    protected Optional<ParseState> parseImpl(final Environment environment) {
         return token
-            .parse(scope, parseState.addBranch(this), callbacks, encoding)
-            .map(nextParseState -> predicate.eval(nextParseState, encoding) ? success(nextParseState.closeBranch()) : failure())
+            .parse(environment.withParseState(environment.parseState.addBranch(this)))
+            .map(nextParseState -> predicate.eval(nextParseState, environment.encoding) ? success(nextParseState.closeBranch()) : failure())
             .orElseGet(Util::failure);
     }
 

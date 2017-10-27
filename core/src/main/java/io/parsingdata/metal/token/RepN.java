@@ -27,9 +27,9 @@ import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
-import io.parsingdata.metal.data.ParseState;
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.callback.Callbacks;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -58,21 +58,21 @@ public class RepN extends Token {
     }
 
     @Override
-    protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> counts = n.eval(parseState, encoding);
+    protected Optional<ParseState> parseImpl(final Environment environment) {
+        final ImmutableList<Optional<Value>> counts = n.eval(environment.parseState, environment.encoding);
         if (counts.size != 1 || !counts.head.isPresent()) {
             return failure();
         }
-        return iterate(scope, parseState.addBranch(this), callbacks, encoding, counts.head.get().asNumeric().longValueExact()).computeResult();
+        return iterate(environment.withParseState(environment.parseState.addBranch(this)), counts.head.get().asNumeric().longValueExact()).computeResult();
     }
 
-    private Trampoline<Optional<ParseState>> iterate(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding, final long count) {
+    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final long count) {
         if (count <= 0) {
-            return complete(() -> success(parseState.closeBranch()));
+            return complete(() -> success(environment.parseState.closeBranch()));
         }
         return token
-            .parse(scope, parseState, callbacks, encoding)
-            .map(nextParseState -> intermediate(() -> iterate(scope, nextParseState, callbacks, encoding, count - 1)))
+            .parse(environment)
+            .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState), count - 1)))
             .orElseGet(() -> complete(Util::failure));
     }
 

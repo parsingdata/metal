@@ -43,6 +43,7 @@ import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
@@ -82,7 +83,7 @@ public class TieTest {
     }
 
     private Optional<ParseState> parseContainer() throws IOException {
-        final Optional<ParseState> result = CONTAINER.parse(stream(2, 3, 7, 5, 9, 3, 4, 1, 2, 5, 6), enc());
+        final Optional<ParseState> result = CONTAINER.parse(env(stream(2, 3, 7, 5, 9, 3, 4, 1, 2, 5, 6)));
         assertTrue(result.isPresent());
         return result;
     }
@@ -94,7 +95,7 @@ public class TieTest {
     }
 
     private Optional<ParseState> checkFullParse(Token token, byte[] data) throws IOException {
-        final Optional<ParseState> result = token.parse(createFromByteStream(new InMemoryByteStream(data)), enc());
+        final Optional<ParseState> result = token.parse(env(createFromByteStream(new InMemoryByteStream(data)), enc()));
         assertTrue(result.isPresent());
         assertEquals(data.length, result.get().offset.intValueExact());
         return result;
@@ -174,7 +175,7 @@ public class TieTest {
             seq(def("d", con(3)),
                 tie(SIMPLE_SEQ, ref("d")),
                 sub(SIMPLE_SEQ, con(0)));
-        final Optional<ParseState> result = nestedSeq.parse(stream(1, 2, 3), enc());
+        final Optional<ParseState> result = nestedSeq.parse(env(stream(1, 2, 3)));
         assertTrue(result.isPresent());
         assertEquals(0, getReferences(result.get().order).size);
     }
@@ -185,7 +186,7 @@ public class TieTest {
             seq(def("d", con(3)),
                 def("d", con(3)),
                 tie(SIMPLE_SEQ, ref("d")));
-        final Optional<ParseState> result = multiTie.parse(stream(1, 2, 3, 1, 2, 3), enc());
+        final Optional<ParseState> result = multiTie.parse(env(stream(1, 2, 3, 1, 2, 3)));
         assertTrue(result.isPresent());
         assertEquals(0, getReferences(result.get().order).size);
         final String[] names = { "a", "b", "c", "d" };
@@ -202,7 +203,7 @@ public class TieTest {
             seq(def("d", con(3)),
                 tie(SIMPLE_SEQ, refD),
                 tie(SIMPLE_SEQ, refD));
-        final Optional<ParseState> result = duplicateTie.parse(stream(1, 2, 3), enc());
+        final Optional<ParseState> result = duplicateTie.parse(env(stream(1, 2, 3)));
         assertTrue(result.isPresent());
         assertEquals(0, getReferences(result.get().order).size);
         assertEquals(1, getAllValues(result.get().order, "d").size);
@@ -216,19 +217,19 @@ public class TieTest {
     @Test
     public void tieWithEmptyListFromDataExpression() throws IOException {
         final Token token = seq(any("a"), tie(any("b"), last(ref("c"))));
-        assertFalse(token.parse(stream(0), enc()).isPresent());
+        assertFalse(token.parse(env(stream(0))).isPresent());
     }
 
     @Test
     public void tieFail() throws IOException {
         final Token token = seq(def("a", con(1), eq(con(0))), tie(def("b", con(1), eq(con(1))), last(ref("a"))));
-        assertFalse(token.parse(stream(0), enc()).isPresent());
+        assertFalse(token.parse(env(stream(0))).isPresent());
     }
 
     @Test
     public void tieWithEmptyValueFromDataExpression() throws IOException {
         final Token token = seq(any("a"), tie(any("b"), div(con(1), con(0))));
-        assertFalse(token.parse(stream(0), enc()).isPresent());
+        assertFalse(token.parse(env(stream(0))).isPresent());
     }
 
     @Test
@@ -237,8 +238,8 @@ public class TieTest {
             seq(def("a", con(1), eq(con(1))),
                 def("b", con(1), eq(con(2))),
                 def("c", con(1), eq(con(3))));
-        assertTrue(tie(strictSeq, con(1, 2, 3)).parse(stream(), enc()).isPresent());
-        assertFalse(tie(strictSeq, con(1, 2, 4)).parse(stream(), enc()).isPresent());
+        assertTrue(tie(strictSeq, con(1, 2, 3)).parse(env(stream())).isPresent());
+        assertFalse(tie(strictSeq, con(1, 2, 4)).parse(env(stream())).isPresent());
     }
 
 }

@@ -27,6 +27,7 @@ import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
@@ -59,7 +60,7 @@ public class SubStructTableTest {
                                      * ref2:         +-----^^--^^
                                      * ref3:            +---------------------^^--^^
                                      */
-        final Optional<ParseState> result = table.parse(parseState, enc());
+        final Optional<ParseState> result = table.parse(env(parseState, enc()));
         assertTrue(result.isPresent());
         assertEquals(4, result.get().offset.intValueExact());
         final ParseGraph graph = result.get().order;
@@ -79,7 +80,7 @@ public class SubStructTableTest {
                                      * ref3:         +---------^^--^^ duplicate!
                                      * ref4:               ++---------------------^^--^^
                                      */
-        final Optional<ParseState> result = table.parse(parseState, enc());
+        final Optional<ParseState> result = table.parse(env(parseState, enc()));
         assertTrue(result.isPresent());
         assertEquals(5, result.get().offset.intValueExact());
         final ParseGraph graph = result.get().order;

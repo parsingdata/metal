@@ -32,6 +32,7 @@ import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.encoding.ByteOrder.LITTLE_ENDIAN;
 import static io.parsingdata.metal.encoding.Sign.UNSIGNED;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -67,7 +68,7 @@ public class ByteLengthTest {
 
         final ByteStream stream = new InMemoryByteStream(concat(text1, text2));
         final ParseState parseState = createFromByteStream(stream);
-        final Optional<ParseState> result = STRING.parse(parseState, ENCODING);
+        final Optional<ParseState> result = STRING.parse(env(parseState, ENCODING));
 
         assertTrue(result.isPresent());
         final ParseGraph graph = result.get().order;
@@ -80,7 +81,7 @@ public class ByteLengthTest {
     public void testLenNull() throws IOException {
         final ByteStream stream = new InMemoryByteStream(string("Joe"));
         final ParseState parseState = createFromByteStream(stream);
-        final Optional<ParseState> result = NAME.parse(parseState, ENCODING);
+        final Optional<ParseState> result = NAME.parse(env(parseState, ENCODING));
         assertFalse(result.isPresent());
     }
 

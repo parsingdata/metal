@@ -30,6 +30,7 @@ import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
@@ -70,19 +71,19 @@ public class TreeTest {
     private final ParseState cyclic;
 
     public TreeTest() throws IOException {
-        regular = TREE.parse(stream(HEAD, 0, 6, 10, 8, 8, HEAD, 1, 16, 20, HEAD, 2, 24, 28, 8, 8, HEAD, 3, 0, 0, HEAD, 4, 0, 0, HEAD, 5, 0, 0, HEAD, 6, 0, 0), enc()).get();
-                                 /* *--------+---+        *---------+---+  *---------+---+        *--------*--*  *--------*--*  *--------*--*  *--------*--*
-                                  *          \---|--------/         \---|--|---------|---|--------/              |              |              |
-                                  *              \----------------------|--/         \---|-----------------------|--------------/              |
-                                  *                                     \----------------|-----------------------/                             |
-                                  *                                                      \-----------------------------------------------------/
-                                  */
-        cyclic = TREE.parse(stream(HEAD, 0, 4, 8, HEAD, 1, 8, 0, HEAD, 2, 4, 0), enc()).get();
-                                /* *--------+--+  *--------+--*  *--------+--*
-                                 *          \--|--/        \-----/        |
-                                 *             \--|--------------/        |
-                                 *                \-----------------------/
-                                 */
+        regular = TREE.parse(env(stream(HEAD, 0, 6, 10, 8, 8, HEAD, 1, 16, 20, HEAD, 2, 24, 28, 8, 8, HEAD, 3, 0, 0, HEAD, 4, 0, 0, HEAD, 5, 0, 0, HEAD, 6, 0, 0))).get();
+                                     /* *--------+---+        *---------+---+  *---------+---+        *--------*--*  *--------*--*  *--------*--*  *--------*--*
+                                      *          \---|--------/         \---|--|---------|---|--------/              |              |              |
+                                      *              \----------------------|--/         \---|-----------------------|--------------/              |
+                                      *                                     \----------------|-----------------------/                             |
+                                      *                                                      \-----------------------------------------------------/
+                                      */
+        cyclic = TREE.parse(env(stream(HEAD, 0, 4, 8, HEAD, 1, 8, 0, HEAD, 2, 4, 0))).get();
+                                    /* *--------+--+  *--------+--*  *--------+--*
+                                     *          \--|--/        \-----/        |
+                                     *             \--|--------------/        |
+                                     *                \-----------------------/
+                                     */
     }
 
     @Test

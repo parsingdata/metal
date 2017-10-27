@@ -23,6 +23,7 @@ import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
@@ -43,25 +44,25 @@ public class SimpleTest {
     @Test
     public void correct() throws IOException {
         final Token token = buildSimpleToken("r1", 1, 1);
-        assertTrue(token.parse(stream(1, 2, 3, 4), enc()).isPresent());
+        assertTrue(token.parse(env(stream(1, 2, 3, 4))).isPresent());
     }
 
     @Test
     public void sizeError() throws IOException {
         final Token token = buildSimpleToken("r1", 2, 1);
-        assertFalse(token.parse(stream(1, 2, 3, 4), enc()).isPresent());
+        assertFalse(token.parse(env(stream(1, 2, 3, 4))).isPresent());
     }
 
     @Test
     public void predicateError() throws IOException {
         final Token token = buildSimpleToken("r1", 1, 2);
-        assertFalse(token.parse(stream(1, 2, 3, 4), enc()).isPresent());
+        assertFalse(token.parse(env(stream(1, 2, 3, 4))).isPresent());
     }
 
     @Test
     public void sourceError() throws IOException {
         final Token token = buildSimpleToken("r1", 1, 1);
-        assertFalse(token.parse(stream(2, 2, 2, 2), enc()).isPresent());
+        assertFalse(token.parse(env(stream(2, 2, 2, 2))).isPresent());
     }
 
 }

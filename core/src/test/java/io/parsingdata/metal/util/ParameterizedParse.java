@@ -18,6 +18,8 @@ package io.parsingdata.metal.util;
 
 import static org.junit.Assert.assertEquals;
 
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
+
 import java.io.IOException;
 
 import org.junit.Ignore;
@@ -42,7 +44,7 @@ public class ParameterizedParse {
 
     @Test
     public void test() throws IOException {
-        assertEquals(result, token.parse(parseState, encoding).isPresent());
+        assertEquals(result, token.parse(env(parseState, encoding)).isPresent());
     }
 
 }

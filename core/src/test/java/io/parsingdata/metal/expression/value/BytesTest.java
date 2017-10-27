@@ -27,6 +27,7 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
@@ -34,9 +35,8 @@ import java.util.Optional;
 
 import org.junit.Test;
 
-import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class BytesTest {
@@ -61,7 +61,7 @@ public class BytesTest {
                 def("value", con(2)),
                 def("divider", con(1)),
                 def("divider", con(1)),
-                def("divider", con(1))).parse(stream(1, 0, 127, 127, 127, 0, 255, 0, 1), enc());
+                def("divider", con(1))).parse(env(stream(1, 0, 127, 127, 127, 0, 255, 0, 1)));
         assertTrue(result.isPresent());
         final ImmutableList<Optional<Value>> bytesAfterDivision = bytes(div(ref("value"), ref("divider"))).eval(result.get(), enc());
         assertEquals(3, bytesAfterDivision.size); // 1 of the first division, 0 of the second, 2 of the third

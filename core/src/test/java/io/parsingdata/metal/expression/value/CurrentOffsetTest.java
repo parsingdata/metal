@@ -30,6 +30,7 @@ import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.tie;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.util.Optional;
@@ -50,7 +51,7 @@ public class CurrentOffsetTest {
                 prePostDef("one", 1),
                 tie(prePostDef("zeroInOne", 0), last(ref("one"))),
                 prePostDef("two", 2)
-            ).parse(stream(0, 1, 2, 3, 4), enc());
+            ).parse(env(stream(0, 1, 2, 3, 4)));
         assertTrue(result.isPresent());
     }
 

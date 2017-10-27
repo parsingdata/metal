@@ -27,6 +27,7 @@ import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
@@ -46,7 +47,7 @@ public class PostTest {
 
     @Test
     public void postconditionTrue() throws IOException {
-        final Optional<ParseState> result = SEQUENCE.parse(stream(1, 1), enc());
+        final Optional<ParseState> result = SEQUENCE.parse(env(stream(1, 1)));
 
         // token parses and postcondition is true
         assertThat(result.isPresent(), is(true));
@@ -55,7 +56,7 @@ public class PostTest {
 
     @Test
     public void postconditionFalse() throws IOException {
-        final Optional<ParseState> result = SEQUENCE.parse(stream(0, 1), enc());
+        final Optional<ParseState> result = SEQUENCE.parse(env(stream(0, 1)));
 
         // token parses, but postcondition is false
         assertThat(result.isPresent(), is(false));
@@ -63,7 +64,7 @@ public class PostTest {
 
     @Test
     public void postconditionParseFails() throws IOException {
-        final Optional<ParseState> result = SEQUENCE.parse(stream(1, 2), enc());
+        final Optional<ParseState> result = SEQUENCE.parse(env(stream(1, 2)));
 
         // parse fails
         assertThat(result.isPresent(), is(false));

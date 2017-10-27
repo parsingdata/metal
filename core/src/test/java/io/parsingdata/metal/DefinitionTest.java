@@ -36,6 +36,7 @@ import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.whl;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
@@ -62,7 +63,7 @@ public class DefinitionTest {
 
     @Test
     public void composed() throws IOException {
-        final Optional<ParseState> result = COMPOSED.parse(stream(1, 1, 1, 2, 2, 1, 2), enc());
+        final Optional<ParseState> result = COMPOSED.parse(env(stream(1, 1, 1, 2, 2, 1, 2)));
         assertTrue(result.isPresent());
         final ParseGraph graph = result.get().order;
         assertEquals(NONE, graph.getDefinition());

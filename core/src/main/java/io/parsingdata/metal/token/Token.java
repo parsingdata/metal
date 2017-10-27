@@ -24,8 +24,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.Util;
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseState;
-import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -64,28 +64,16 @@ public abstract class Token {
         this.encoding = encoding;
     }
 
-    public Optional<ParseState> parse(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
-        final Encoding activeEncoding = this.encoding != null ? this.encoding : encoding;
-        final Optional<ParseState> result = parseImpl(makeScope(checkNotNull(scope, "scope")), checkNotNull(parseState, "parseState"), callbacks, activeEncoding);
-        callbacks.handle(this, result
-            .map(after -> success(this, parseState, after))
-            .orElseGet(() -> failure(this, parseState)));
+    public Optional<ParseState> parse(final Environment environment) {
+        final Environment activeEnvironment = this.encoding != null ? environment.withEncoding(this.encoding) : environment;
+        final Optional<ParseState> result = parseImpl(activeEnvironment.withScope(makeScope(environment.scope)));
+        environment.callbacks.handle(this, result
+            .map(after -> success(this, environment.parseState, after))
+            .orElseGet(() -> failure(this, environment.parseState)));
         return result;
     }
 
-    public Optional<ParseState> parse(final String scope, final ParseState parseState, final Encoding encoding) {
-        return parse(scope, parseState, Callbacks.NONE, encoding);
-    }
-
-    public Optional<ParseState> parse(final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
-        return parse(NO_NAME, parseState, callbacks, encoding);
-    }
-
-    public Optional<ParseState> parse(final ParseState parseState, final Encoding encoding) {
-        return parse(parseState, Callbacks.NONE, encoding);
-    }
-
-    protected abstract Optional<ParseState> parseImpl(String scope, ParseState parseState, Callbacks callbacks, Encoding encoding);
+    protected abstract Optional<ParseState> parseImpl(final Environment environment);
 
     private String makeScope(final String scope) {
         return scope + (scope.isEmpty() || name.isEmpty() ? NO_NAME : SEPARATOR) + name;
