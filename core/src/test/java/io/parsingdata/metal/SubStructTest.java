@@ -62,12 +62,12 @@ public class SubStructTest {
     @Test
     public void linkedList() throws IOException {
         final ParseState parseState = stream(0, 8, 1, 42, 0, 12, 1, 84, 0, 4, 1);
-                                    /* offset: 0, 1, 2,  3, 4,  5, 6,  7, 8, 9,10
-                                     * struct: -------      --------      -------
-                                     * ref 1:     +-----------------------^
-                                     * ref 2:               ^----------------+
-                                     * ref 3:                   +----------------*
-                                     */
+                                  /* offset: 0, 1, 2,  3, 4,  5, 6,  7, 8, 9,10
+                                   * struct: -------      --------      -------
+                                   * ref 1:     +-----------------------^
+                                   * ref 2:               ^----------------+
+                                   * ref 3:                   +----------------*
+                                   */
         final Optional<ParseState> result = LINKED_LIST.parse(env(parseState, enc()));
         assertTrue(result.isPresent());
         final ParseGraph graph = result.get().order;

@@ -56,10 +56,6 @@ public class Environment {
         return new Environment(scope, parseState, callbacks, encoding);
     }
 
-    public Environment withCallbacks(final Callbacks callbacks) {
-        return new Environment(scope, parseState, callbacks, encoding);
-    }
-
     public Environment withEncoding(final Encoding encoding) {
         return new Environment(scope, parseState, callbacks, encoding);
     }
