@@ -71,7 +71,7 @@ public class Encoding {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), sign, charset, byteOrder);
+        return Objects.hash(getClass(), sign, charset, byteOrder);
     }
 
 }

@@ -85,7 +85,7 @@ public class Expand implements ValueExpression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), base, count);
+        return Objects.hash(getClass(), base, count);
     }
 
 }

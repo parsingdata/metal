@@ -144,7 +144,7 @@ public class ParseGraph implements ParseItem {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), head, tail, branched, definition);
+        return Objects.hash(getClass(), head, tail, branched, definition);
     }
 
 }

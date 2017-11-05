@@ -58,7 +58,7 @@ public class InMemoryByteStream implements ByteStream {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), Arrays.hashCode(data));
+        return Objects.hash(getClass(), Arrays.hashCode(data));
     }
 
 }

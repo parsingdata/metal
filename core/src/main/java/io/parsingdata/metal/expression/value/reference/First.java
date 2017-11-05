@@ -67,7 +67,7 @@ public class First implements ValueExpression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), operand);
+        return Objects.hash(getClass(), operand);
     }
 
 }

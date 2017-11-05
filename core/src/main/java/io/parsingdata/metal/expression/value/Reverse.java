@@ -60,7 +60,7 @@ public class Reverse implements ValueExpression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), values);
+        return Objects.hash(getClass(), values);
     }
 
 }

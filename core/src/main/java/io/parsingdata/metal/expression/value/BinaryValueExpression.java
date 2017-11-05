@@ -101,7 +101,7 @@ public abstract class BinaryValueExpression implements ValueExpression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), left, right);
+        return Objects.hash(getClass(), left, right);
     }
 
 }

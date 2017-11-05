@@ -105,7 +105,7 @@ public class Ref<T> implements ValueExpression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), reference, limit);
+        return Objects.hash(getClass(), reference, limit);
     }
 
 }

@@ -57,7 +57,7 @@ public class Const implements ValueExpression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), value);
+        return Objects.hash(getClass(), value);
     }
 
 }

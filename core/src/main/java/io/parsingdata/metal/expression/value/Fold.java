@@ -113,7 +113,7 @@ public abstract class Fold implements ValueExpression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), values, reducer, initial);
+        return Objects.hash(getClass(), values, reducer, initial);
     }
 
 }

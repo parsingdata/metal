@@ -97,7 +97,7 @@ public abstract class ComparisonExpression implements Expression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), value, predicate);
+        return Objects.hash(getClass(), value, predicate);
     }
 
 }

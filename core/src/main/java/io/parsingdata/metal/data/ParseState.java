@@ -94,7 +94,7 @@ public class ParseState {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), order, offset, source);
+        return Objects.hash(getClass(), order, offset, source);
     }
 
 }
