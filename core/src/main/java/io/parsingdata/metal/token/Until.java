@@ -111,7 +111,7 @@ public class Until extends Token {
             .orElseGet(() -> complete(Util::failure));
     }
 
-    private Trampoline<Optional<ParseState>> parseSlice(final Environment environment, BigInteger currentSize, BigInteger stepSize, BigInteger maxSize, Slice slice) {
+    private Trampoline<Optional<ParseState>> parseSlice(final Environment environment, final BigInteger currentSize, final BigInteger stepSize, final BigInteger maxSize, final Slice slice) {
         return (currentSize.compareTo(ZERO) == 0 ? Optional.of(environment.parseState) : environment.parseState.add(new ParseValue(name, this, slice, environment.encoding)).seek(environment.parseState.offset.add(currentSize)))
             .map(preparedParseState -> terminator.parse(environment.withParseState(preparedParseState)))
             .orElseGet(Util::failure)
@@ -119,11 +119,11 @@ public class Until extends Token {
             .orElseGet(() -> intermediate(() -> iterate(environment, currentSize.add(stepSize), stepSize, maxSize)));
     }
 
-    private boolean checkNotValidList(ImmutableList<Optional<Value>> list) {
+    private boolean checkNotValidList(final ImmutableList<Optional<Value>> list) {
         return list.isEmpty() || !list.head.isPresent();
     }
 
-    private BigInteger getNumeric(ImmutableList<Optional<Value>> list) {
+    private BigInteger getNumeric(final ImmutableList<Optional<Value>> list) {
         return list.head.get().asNumeric();
     }
 
