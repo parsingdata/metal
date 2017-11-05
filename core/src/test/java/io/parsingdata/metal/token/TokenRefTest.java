@@ -27,7 +27,8 @@ import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
@@ -38,25 +39,25 @@ public class TokenRefTest {
 
     @Test
     public void nonExistingRefToken() throws IOException {
-        assertFalse(token("a").parse(stream(0), enc()).isPresent());
-        assertFalse(seq("a", any("b"), token("c")).parse(stream(0), enc()).isPresent());
-        assertFalse(sub(token("a"), con(0)).parse(stream(0), enc()).isPresent());
+        assertFalse(token("a").parse(env(stream(0))).isPresent());
+        assertFalse(seq("a", any("b"), token("c")).parse(env(stream(0))).isPresent());
+        assertFalse(sub(token("a"), con(0)).parse(env(stream(0))).isPresent());
     }
 
     @Test
     public void findRightDefinition() throws IOException {
         // Clearly reference the second:
-        assertTrue(createNamedTokens("out", "in", "in").parse(stream(21, 42), enc()).isPresent());
-        assertTrue(createNamedTokens("out", "in", "in").parse(stream(21, 21, 42), enc()).isPresent());
-        assertTrue(createNamedTokens("out", "in", "in").parse(stream(21, 21, 21, 42), enc()).isPresent());
+        assertTrue(createNamedTokens("out", "in", "in").parse(env(stream(21, 42))).isPresent());
+        assertTrue(createNamedTokens("out", "in", "in").parse(env(stream(21, 21, 42))).isPresent());
+        assertTrue(createNamedTokens("out", "in", "in").parse(env(stream(21, 21, 21, 42))).isPresent());
         // Clearly reference the first:
-        assertTrue(createNamedTokens("in", "out", "in").parse(stream(21, 42), enc()).isPresent());
-        assertTrue(createNamedTokens("in", "out", "in").parse(stream(21, 42, 21, 42), enc()).isPresent());
+        assertTrue(createNamedTokens("in", "out", "in").parse(env(stream(21, 42))).isPresent());
+        assertTrue(createNamedTokens("in", "out", "in").parse(env(stream(21, 42, 21, 42))).isPresent());
         // Reference the first:
-        assertTrue(createNamedTokens("in", "in", "in").parse(stream(21, 42), enc()).isPresent());
-        assertTrue(createNamedTokens("in", "in", "in").parse(stream(21, 42, 21, 42), enc()).isPresent());
+        assertTrue(createNamedTokens("in", "in", "in").parse(env(stream(21, 42))).isPresent());
+        assertTrue(createNamedTokens("in", "in", "in").parse(env(stream(21, 42, 21, 42))).isPresent());
         // So that this will fail:
-        assertFalse(createNamedTokens("in", "in", "in").parse(stream(21, 21, 42), enc()).isPresent());
+        assertFalse(createNamedTokens("in", "in", "in").parse(env(stream(21, 21, 42))).isPresent());
     }
 
     private Token createNamedTokens(String firstSeq, String secondSeq, String refName) {

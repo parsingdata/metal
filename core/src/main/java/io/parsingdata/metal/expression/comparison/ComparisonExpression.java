@@ -27,7 +27,7 @@ import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
@@ -45,7 +45,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * <p>
  * The {@link #value} argument may be <code>null</code>, in which case it is
  * not evaluated and the output value is substituted with a list containing
- * only the {@link Value} most recently added to the {@link Environment}.
+ * only the {@link Value} most recently added to the {@link ParseState}.
  */
 public abstract class ComparisonExpression implements Expression {
 
@@ -58,12 +58,12 @@ public abstract class ComparisonExpression implements Expression {
     }
 
     @Override
-    public boolean eval(final ParseGraph graph, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> values = value == null ? ImmutableList.create(graph.current().map(identity())) : value.eval(graph, encoding);
+    public boolean eval(final ParseState parseState, final Encoding encoding) {
+        final ImmutableList<Optional<Value>> values = value == null ? ImmutableList.create(parseState.order.current().map(identity())) : value.eval(parseState, encoding);
         if (values.isEmpty()) {
             return false;
         }
-        final ImmutableList<Optional<Value>> predicates = predicate.eval(graph, encoding);
+        final ImmutableList<Optional<Value>> predicates = predicate.eval(parseState, encoding);
         if (values.size != predicates.size) {
             return false;
         }
@@ -97,7 +97,7 @@ public abstract class ComparisonExpression implements Expression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), value, predicate);
+        return Objects.hash(getClass(), value, predicate);
     }
 
 }

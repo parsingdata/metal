@@ -65,10 +65,10 @@ import static io.parsingdata.metal.Shorthand.tie;
 import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.Shorthand.until;
 import static io.parsingdata.metal.Shorthand.whl;
-import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
+import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.nio.charset.StandardCharsets;
@@ -79,6 +79,7 @@ import org.junit.Test;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.callback.Callback;
 import io.parsingdata.metal.data.callback.Callbacks;
@@ -89,7 +90,6 @@ import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
-import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class ToStringTest {
 
@@ -146,6 +146,8 @@ public class ToStringTest {
     public void specialExpressions() {
         assertTrue(v().toString().contains("Self"));
         assertEquals("Self", SELF.toString());
+        assertTrue(v().toString().contains("CurrentOffset"));
+        assertEquals("CurrentOffset", CURRENT_OFFSET.toString());
     }
 
     @Test
@@ -158,11 +160,11 @@ public class ToStringTest {
 
     @Test
     public void data() {
-        final Environment environment = stream(1, 2);
-        final String envString = "Environment(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(EMPTY);callbacks:)";
-        assertEquals(envString, environment.toString());
-        final Optional<Environment> result = Optional.of(environment);
-        assertEquals("Optional[" + environment + "]", result.toString());
+        final ParseState parseState = stream(1, 2);
+        final String parseStateString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(EMPTY))";
+        assertEquals(parseStateString, parseState.toString());
+        final Optional<ParseState> result = Optional.of(parseState);
+        assertEquals("Optional[" + parseState + "]", result.toString());
         final ParseValue pv1 = new ParseValue("name", NONE, createFromBytes(new byte[]{1, 2}), enc());
         final String pv1String = "pval(name:0x0102)";
         final Optional<Value> ov1 = Optional.of(pv1);
@@ -176,39 +178,31 @@ public class ToStringTest {
 
     @Test
     public void callback() {
-        final String emptyStreamName = "ByteStreamSource(InMemoryByteStream(0))";
-        final String emptyGraphName = "pg(EMPTY)";
-        final InMemoryByteStream emptyStream = new InMemoryByteStream(new byte[] {});
-        final Environment empty = new Environment(emptyStream);
-        final String prefix = "Environment(source:" + emptyStreamName + ";offset:0;order:" + emptyGraphName + ";callbacks:";
+        assertEquals("", Callbacks.NONE.toString());
         final String genericPrefix = "generic: ";
         final String tokenPrefix = "token: ";
-        final String suffix = ")";
-        assertEquals(prefix + suffix, empty.toString());
         final String genericCallbackName = "genericName";
         final Callbacks singleCallbacks = Callbacks.create().add(makeToken("a"), makeCallback("first")).add(makeCallback(genericCallbackName));
-        final Environment one = new Environment(emptyStream, singleCallbacks);
         final String tokenCallback1Name = ">a->first";
-        final String oneName = prefix + genericPrefix + genericCallbackName + "; " + tokenPrefix + tokenCallback1Name + suffix;
-        assertEquals(oneName, one.toString());
+        final String oneName = genericPrefix + genericCallbackName + "; " + tokenPrefix + tokenCallback1Name;
+        assertEquals(oneName, singleCallbacks.toString());
         final Callbacks doubleCallbacks = Callbacks.create().add(makeToken("a"), makeCallback("first")).add(makeToken("b"), makeCallback("second"));
-        final Environment two = new Environment(emptyStream, doubleCallbacks);
         final String tokenCallback2Name = ">b->second";
-        final String twoName = prefix + tokenPrefix + tokenCallback2Name + tokenCallback1Name + suffix;
-        assertEquals(twoName, two.toString());
+        final String twoName = tokenPrefix + tokenCallback2Name + tokenCallback1Name;
+        assertEquals(twoName, doubleCallbacks.toString());
     }
 
     private Token makeToken(final String name) {
         return new Token(name, enc()) {
-            @Override protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) { return null; }
+            @Override protected Optional<ParseState> parseImpl(final Environment environment) { return null; }
             @Override public String toString() { return name; }
         };
     }
 
     private Callback makeCallback(final String name) {
         return new Callback() {
-            @Override public void handleSuccess(final Token token, final Environment before, final Environment after) {}
-            @Override public void handleFailure(Token token, Environment before) {}
+            @Override public void handleSuccess(final Token token, final ParseState before, final ParseState after) {}
+            @Override public void handleFailure(Token token, ParseState before) {}
             @Override public String toString() { return name; }
         };
     }

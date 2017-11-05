@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
@@ -88,7 +88,7 @@ public final class Util {
     public static ValueExpression inflate(final ValueExpression target) {
         return new UnaryValueExpression(target) {
             @Override
-            public Optional<Value> eval(final Value value, final ParseGraph graph, final Encoding encoding) {
+            public Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding) {
                 final Inflater inf = new Inflater(true);
                 inf.setInput(value.getValue());
                 final byte[] dataReceiver = new byte[512];
@@ -106,11 +106,11 @@ public final class Util {
         };
     }
 
-    public static Optional<Environment> success(final Environment environment) {
-        return Optional.of(environment);
+    public static Optional<ParseState> success(final ParseState parseState) {
+        return Optional.of(parseState);
     }
 
-    public static Optional<Environment> failure() {
+    public static Optional<ParseState> failure() {
         return Optional.empty();
     }
 

@@ -19,6 +19,7 @@ package io.parsingdata.metal.expression.value.arithmetic;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ConstantFactory;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
@@ -35,7 +36,7 @@ public class Neg extends UnaryValueExpression {
     }
 
     @Override
-    public Optional<Value> eval(final Value value, final ParseGraph graph, final Encoding encoding) {
+    public Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding) {
         return Optional.of(ConstantFactory.createFromNumeric(value.asNumeric().negate(), encoding));
     }
 

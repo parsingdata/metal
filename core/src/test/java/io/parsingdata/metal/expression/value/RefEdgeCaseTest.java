@@ -22,7 +22,8 @@ import static io.parsingdata.metal.Shorthand.exp;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
@@ -32,32 +33,32 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 
 public class RefEdgeCaseTest {
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
 
-    ParseGraph parseGraph;
+    ParseState parseState;
 
     @Before
     public void before() throws IOException {
-        parseGraph = rep(any("a")).parse(stream(1, 2, 3), enc()).get().order;
+        parseState = rep(any("a")).parse(env(stream(1, 2, 3))).get();
     }
 
     @Test
     public void multiLimit() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Limit must evaluate to a single non-empty value.");
-        ref("a", exp(con(1), con(3))).eval(parseGraph, enc());
+        ref("a", exp(con(1), con(3))).eval(parseState, enc());
     }
 
     @Test
     public void emptyLimit() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Limit must evaluate to a single non-empty value.");
-        ref("a", div(con(1), con(0))).eval(parseGraph, enc());
+        ref("a", div(con(1), con(0))).eval(parseState, enc());
     }
 
 }

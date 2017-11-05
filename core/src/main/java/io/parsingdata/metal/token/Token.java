@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -36,7 +37,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * Specifies the two fields that all tokens share: <code>name</code> (a
  * String) and <code>encoding</code> (an {@link Encoding}). A Token is parsed
  * by calling one of the <code>parse</code> methods. Parsing a Token succeeds
- * if the returned {@link Optional} contains an {@link Environment}, otherwise
+ * if the returned {@link Optional} contains an {@link ParseState}, otherwise
  * parsing has failed.
  * <p>
  * The <code>name</code> field is used during parsing to construct a scope, by
@@ -63,30 +64,22 @@ public abstract class Token {
         this.encoding = encoding;
     }
 
-    public Optional<Environment> parse(final String scope, final Environment environment, final Encoding encoding) {
-        final Encoding activeEncoding = this.encoding != null ? this.encoding : encoding;
-        final Optional<Environment> result = parseImpl(makeScope(checkNotNull(scope, "scope")), checkNotNull(environment, "environment"), activeEncoding);
+    public Optional<ParseState> parse(final Environment environment) {
+        final Environment activeEnvironment = this.encoding != null ? environment.withEncoding(this.encoding) : environment;
+        final Optional<ParseState> result = parseImpl(activeEnvironment.extendScope(name));
         environment.callbacks.handle(this, result
-            .map(after -> success(this, environment, after))
-            .orElseGet(() -> failure(this, environment)));
+            .map(after -> success(this, environment.parseState, after))
+            .orElseGet(() -> failure(this, environment.parseState)));
         return result;
     }
 
-    public Optional<Environment> parse(final Environment environment, final Encoding encoding) {
-        return parse(NO_NAME, environment, encoding);
-    }
-
-    protected abstract Optional<Environment> parseImpl(String scope, Environment environment, Encoding encoding);
-
-    private String makeScope(final String scope) {
-        return scope + (scope.isEmpty() || name.isEmpty() ? NO_NAME : SEPARATOR) + name;
-    }
+    protected abstract Optional<ParseState> parseImpl(final Environment environment);
 
     public boolean isLocal() {
         return true;
     }
 
-    public Token getCanonical(final Environment environment) {
+    public Token getCanonical(final ParseState parseState) {
         return this;
     }
 
@@ -103,7 +96,7 @@ public abstract class Token {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), name, encoding);
+        return Objects.hash(getClass(), name, encoding);
     }
 
 }

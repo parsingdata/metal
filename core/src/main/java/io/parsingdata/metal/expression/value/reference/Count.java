@@ -24,6 +24,7 @@ import java.util.Optional;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.value.ConstantFactory;
@@ -43,8 +44,8 @@ public class Count implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> values = operand.eval(graph, encoding);
+    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        final ImmutableList<Optional<Value>> values = operand.eval(parseState, encoding);
         return ImmutableList.create(Optional.of(fromNumeric(values.size)));
     }
 
@@ -65,7 +66,7 @@ public class Count implements ValueExpression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), operand);
+        return Objects.hash(getClass(), operand);
     }
 
 }

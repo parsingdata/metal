@@ -29,6 +29,7 @@ import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -59,24 +60,24 @@ public class Tie extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> dataResult = dataExpression.eval(environment.order, encoding);
+    protected Optional<ParseState> parseImpl(final Environment environment) {
+        final ImmutableList<Optional<Value>> dataResult = dataExpression.eval(environment.parseState, environment.encoding);
         if (dataResult.isEmpty()) {
             return failure();
         }
-        return iterate(scope, dataResult, 0, environment, environment.addBranch(this), encoding).computeResult();
+        return iterate(environment.addBranch(this), dataResult, 0, environment.parseState).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final ImmutableList<Optional<Value>> values, final int index, final Environment returnEnvironment, final Environment environment, final Encoding encoding) {
+    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Optional<Value>> values, final int index, final ParseState returnParseState) {
         if (values.isEmpty()) {
-            return complete(() -> success(new Environment(environment.closeBranch().order, returnEnvironment.source, returnEnvironment.offset, returnEnvironment.callbacks)));
+            return complete(() -> success(new ParseState(environment.parseState.closeBranch().order, returnParseState.source, returnParseState.offset)));
         }
         if (!values.head.isPresent()) {
             return complete(Util::failure);
         }
         return token
-            .parse(scope, environment.source(dataExpression, index, environment, encoding), encoding)
-            .map(nextEnvironment -> intermediate(() -> iterate(scope, values.tail, index + 1, returnEnvironment, nextEnvironment, encoding)))
+            .parse(environment.withParseState(environment.parseState.source(dataExpression, index, environment.parseState, environment.encoding)))
+            .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState), values.tail, index + 1, returnParseState)))
             .orElseGet(() -> complete(Util::failure));
     }
 

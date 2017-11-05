@@ -31,7 +31,8 @@ import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
@@ -43,10 +44,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.Shorthand;
-import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.data.ParseState;
 
 /**
  * See {@link io.parsingdata.metal.ReducersTest} for other fold tests.
@@ -60,30 +59,25 @@ public class FoldEdgeCaseTest {
 
     @Test
     public void valuesContainsEmpty() {
-        assertTrue(foldLeft(div(con(1), con(0)), Shorthand::add).eval(stream(0).order, enc()).isEmpty());
-        assertTrue(foldRight(div(con(1), con(0)), Shorthand::add).eval(stream(0).order, enc()).isEmpty());
+        assertTrue(foldLeft(div(con(1), con(0)), Shorthand::add).eval(stream(0), enc()).isEmpty());
+        assertTrue(foldRight(div(con(1), con(0)), Shorthand::add).eval(stream(0), enc()).isEmpty());
     }
 
     @Test
     public void foldToEmpty() throws IOException {
-        final Environment environment = rep(any("value")).parse(stream(1, 0), enc()).get();
-        assertFalse(foldLeft(ref("value"), Shorthand::div).eval(environment.order, enc()).head.isPresent());
-        assertFalse(foldRight(ref("value"), Shorthand::div).eval(environment.order, enc()).head.isPresent());
+        final ParseState parseState = rep(any("value")).parse(env(stream(1, 0))).get();
+        assertFalse(foldLeft(ref("value"), Shorthand::div).eval(parseState, enc()).head.isPresent());
+        assertFalse(foldRight(ref("value"), Shorthand::div).eval(parseState, enc()).head.isPresent());
     }
 
     @Test
     public void inputContainsEmptyInTail() {
-        assertTrue(foldRight(new ValueExpression() {
-            @Override
-            public ImmutableList<Optional<Value>> eval(ParseGraph graph, Encoding encoding) {
-                return ImmutableList.create(Optional.<Value>empty()).add(Optional.of(new Value(createFromBytes(new byte[] { 1, 2 }), enc())));
-            }
-        }, Shorthand::add).eval(stream(0).order, enc()).isEmpty());
+        assertTrue(foldRight((parseState, encoding) -> ImmutableList.create(Optional.<Value>empty()).add(Optional.of(new Value(createFromBytes(new byte[] { 1, 2 }), enc()))), Shorthand::add).eval(stream(0), enc()).isEmpty());
     }
 
     @Test
     public void multipleInits() throws IOException {
-        final Optional<Environment> parseResult =
+        final Optional<ParseState> parseResult =
             seq(
                 def("init", 1),
                 def("init", 1),
@@ -93,18 +87,18 @@ public class FoldEdgeCaseTest {
                     def("folded", 1, eq(foldLeft(ref("toFold"), Shorthand::add, ref("init")))),
                     def("folded", 1, eq(foldRight(ref("toFold"), Shorthand::add, ref("init"))))
                 )
-            ).parse(stream(1, 2, 1, 2, 3), enc());
+            ).parse(env(stream(1, 2, 1, 2, 3)));
 
         assertFalse(parseResult.isPresent());
     }
 
     @Test
     public void noValues() throws IOException {
-        final Optional<Environment> parseResult =
+        final Optional<ParseState> parseResult =
             cho(
                 def("folded", 1, eq(foldLeft(ref("toFold"), Shorthand::add))),
                 def("folded", 1, eq(foldRight(ref("toFold"), Shorthand::add)))
-            ).parse(stream(1), enc());
+            ).parse(env(stream(1)));
 
         assertFalse(parseResult.isPresent());
     }
@@ -119,7 +113,7 @@ public class FoldEdgeCaseTest {
             def("toFold", 1),
             def("toFold", 1),
             def("folded", 1, eq(expression))
-        ).parse(stream(1, 2, 1, 2, 3), enc());
+        ).parse(env(stream(1, 2, 1, 2, 3)));
     }
 
     @Test

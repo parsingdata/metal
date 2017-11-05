@@ -28,7 +28,8 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static io.parsingdata.metal.util.TokenDefinitions.eq;
 import static io.parsingdata.metal.util.TokenDefinitions.eqRef;
@@ -53,22 +54,22 @@ public class BackTrackNameBindTest {
 
     @Test
     public void choiceRefLeft() throws IOException {
-        assertTrue(_choiceRef.parse(stream(1, 2, 2), enc()).isPresent());
+        assertTrue(_choiceRef.parse(env(stream(1, 2, 2))).isPresent());
     }
 
     @Test
     public void choiceRefRight() throws IOException {
-        assertTrue(_choiceRef.parse(stream(1, 2, 3), enc()).isPresent());
+        assertTrue(_choiceRef.parse(env(stream(1, 2, 3))).isPresent());
     }
 
     @Test
     public void choiceRefNone() throws IOException {
-        assertFalse(_choiceRef.parse(stream(1, 1, 2), enc()).isPresent());
+        assertFalse(_choiceRef.parse(env(stream(1, 1, 2))).isPresent());
     }
 
     @Test
     public void repeatRef() throws IOException {
-        assertTrue(_repeatRef.parse(stream(42, 42, 42, 21, 21, 21), enc()).isPresent());
+        assertTrue(_repeatRef.parse(env(stream(42, 42, 42, 21, 21, 21))).isPresent());
     }
 
 }

@@ -16,28 +16,29 @@
 
 package io.parsingdata.metal.util;
 
-import static io.parsingdata.metal.Shorthand.toByteArray;
-
-import java.io.IOException;
-import java.net.URI;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
+import io.parsingdata.metal.data.callback.Callbacks;
+import io.parsingdata.metal.encoding.Encoding;
 
 public class EnvironmentFactory {
 
-    public static Environment stream(final int... bytes) {
-        return new Environment(new InMemoryByteStream(toByteArray(bytes)));
+    public static Environment env(final String scope, final ParseState parseState, final Encoding encoding) {
+        return new Environment(scope, parseState, encoding);
     }
 
-    public static Environment stream(final URI resource) throws IOException {
-        return new Environment(new InMemoryByteStream(Files.readAllBytes(Paths.get(resource))));
+    public static Environment env(final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
+        return new Environment(parseState, callbacks, encoding);
     }
 
-    public static Environment stream(final String value, final Charset charset) {
-        return new Environment(new InMemoryByteStream(value.getBytes(charset)));
+    public static Environment env(final ParseState parseState, final Encoding encoding) {
+        return new Environment(parseState, encoding);
+    }
+
+    public static Environment env(final ParseState parseState) {
+        return new Environment(parseState, enc());
     }
 
 }

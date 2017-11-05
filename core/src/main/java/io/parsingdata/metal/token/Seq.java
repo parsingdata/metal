@@ -30,6 +30,7 @@ import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -51,17 +52,17 @@ public class Seq extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
-        return iterate(scope, environment.addBranch(this), encoding, tokens).computeResult();
+    protected Optional<ParseState> parseImpl(final Environment environment) {
+        return iterate(environment.addBranch(this), tokens).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding, final ImmutableList<Token> list) {
+    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Token> list) {
         if (list.isEmpty()) {
-            return complete(() -> success(environment.closeBranch()));
+            return complete(() -> success(environment.parseState.closeBranch()));
         }
         return list.head
-            .parse(scope, environment, encoding)
-            .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, encoding, list.tail)))
+            .parse(environment)
+            .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState), list.tail)))
             .orElseGet(() -> complete(Util::failure));
     }
 

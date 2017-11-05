@@ -22,7 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Util.inflate;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.util.Optional;
 
@@ -35,7 +35,7 @@ public class UtilInflateTest {
 
     @Test
     public void inflateDataFormatError() {
-        final ImmutableList<Optional<Value>> result = inflate(con(0xffffffff)).eval(stream().order, enc());
+        final ImmutableList<Optional<Value>> result = inflate(con(0xffffffff)).eval(stream(), enc());
         assertEquals(1, result.size);
         assertFalse(result.head.isPresent());
     }

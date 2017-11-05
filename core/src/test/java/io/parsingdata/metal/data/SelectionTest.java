@@ -25,7 +25,8 @@ import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.data.Selection.findItemAtOffset;
 import static io.parsingdata.metal.data.Selection.getAllValues;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
@@ -54,10 +55,10 @@ public class SelectionTest {
 
     @Test
     public void limit() throws IOException {
-        Optional<Environment> environment = rep(any("a")).parse(stream(1, 2, 3, 4, 5), enc());
-        Assert.assertTrue(environment.isPresent());
+        Optional<ParseState> parseState = rep(any("a")).parse(env(stream(1, 2, 3, 4, 5)));
+        Assert.assertTrue(parseState.isPresent());
         for (int i = 0; i < 7; i++) {
-            assertEquals(Math.min(5, i), getAllValues(environment.get().order, (value) -> value.matches("a"), i).size);
+            assertEquals(Math.min(5, i), getAllValues(parseState.get().order, (value) -> value.matches("a"), i).size);
         }
     }
 

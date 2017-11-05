@@ -28,6 +28,7 @@ import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -57,30 +58,30 @@ public abstract class Fold implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> initial = this.initial != null ? this.initial.eval(graph, encoding) : new ImmutableList<>();
+    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        final ImmutableList<Optional<Value>> initial = this.initial != null ? this.initial.eval(parseState, encoding) : new ImmutableList<>();
         if (initial.size > 1) {
             return new ImmutableList<>();
         }
-        final ImmutableList<Optional<Value>> values = prepareValues(this.values.eval(graph, encoding));
+        final ImmutableList<Optional<Value>> values = prepareValues(this.values.eval(parseState, encoding));
         if (values.isEmpty() || containsEmpty(values).computeResult()) {
             return initial;
         }
         if (!initial.isEmpty()) {
-            return ImmutableList.create(fold(graph, encoding, reducer, initial.head, values).computeResult());
+            return ImmutableList.create(fold(parseState, encoding, reducer, initial.head, values).computeResult());
         }
-        return ImmutableList.create(fold(graph, encoding, reducer, values.head, values.tail).computeResult());
+        return ImmutableList.create(fold(parseState, encoding, reducer, values.head, values.tail).computeResult());
     }
 
-    private Trampoline<Optional<Value>> fold(final ParseGraph graph, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Optional<Value> head, final ImmutableList<Optional<Value>> tail) {
+    private Trampoline<Optional<Value>> fold(final ParseState parseState, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Optional<Value> head, final ImmutableList<Optional<Value>> tail) {
         if (!head.isPresent() || tail.isEmpty()) {
             return complete(() -> head);
         }
-        final ImmutableList<Optional<Value>> reducedValue = reduce(reducer, head.get(), tail.head.get()).eval(graph, encoding);
+        final ImmutableList<Optional<Value>> reducedValue = reduce(reducer, head.get(), tail.head.get()).eval(parseState, encoding);
         if (reducedValue.size != 1) {
             throw new IllegalArgumentException("Reducer must evaluate to a single value.");
         }
-        return intermediate(() -> fold(graph, encoding, reducer, reducedValue.head, tail.tail));
+        return intermediate(() -> fold(parseState, encoding, reducer, reducedValue.head, tail.tail));
     }
 
     private Trampoline<Boolean> containsEmpty(final ImmutableList<Optional<Value>> list) {
@@ -112,7 +113,7 @@ public abstract class Fold implements ValueExpression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), values, reducer, initial);
+        return Objects.hash(getClass(), values, reducer, initial);
     }
 
 }

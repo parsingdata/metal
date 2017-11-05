@@ -23,7 +23,8 @@ import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static io.parsingdata.metal.util.TokenDefinitions.eq;
 
@@ -59,42 +60,42 @@ public class BackTrackOffsetTest {
 
     @Test
     public void choiceLeft() throws IOException {
-        assertTrue(_backTrackChoice.parse(stream(1, 2), enc()).isPresent());
+        assertTrue(_backTrackChoice.parse(env(stream(1, 2))).isPresent());
     }
 
     @Test
     public void choiceRight() throws IOException {
-        assertTrue(_backTrackChoice.parse(stream(1, 3), enc()).isPresent());
+        assertTrue(_backTrackChoice.parse(env(stream(1, 3))).isPresent());
     }
 
     @Test
     public void choiceNone() throws IOException {
-        assertFalse(_backTrackChoice.parse(stream(1, 4), enc()).isPresent());
+        assertFalse(_backTrackChoice.parse(env(stream(1, 4))).isPresent());
     }
 
     @Test
     public void repeatZero() throws IOException {
-        assertTrue(_backTrackRepeat.parse(stream(1, 3), enc()).isPresent());
+        assertTrue(_backTrackRepeat.parse(env(stream(1, 3))).isPresent());
     }
 
     @Test
     public void repeatOnce() throws IOException {
-        assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 3), enc()).isPresent());
+        assertTrue(_backTrackRepeat.parse(env(stream(1, 2, 1, 3))).isPresent());
     }
 
     @Test
     public void repeatTwice() throws IOException {
-        assertTrue(_backTrackRepeat.parse(stream(1, 2, 1, 2, 1, 3), enc()).isPresent());
+        assertTrue(_backTrackRepeat.parse(env(stream(1, 2, 1, 2, 1, 3))).isPresent());
     }
 
     @Test
     public void repeatNone() throws IOException {
-        assertFalse(_backTrackRepeat.parse(stream(1, 4), enc()).isPresent());
+        assertFalse(_backTrackRepeat.parse(env(stream(1, 4))).isPresent());
     }
 
     @Test
     public void deepMatch() throws IOException {
-        assertTrue(_backTrackDeep.parse(stream(1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 84), enc()).isPresent());
+        assertTrue(_backTrackDeep.parse(env(stream(1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 84))).isPresent());
     }
 
 }

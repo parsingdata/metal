@@ -45,9 +45,11 @@ import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.tie;
+import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.expression.value.ExpandTest.createParseValue;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static junit.framework.TestCase.assertFalse;
 
@@ -58,9 +60,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Cho;
@@ -76,12 +77,12 @@ public class ShorthandsTest {
 
     @Test
     public void sequenceMultiMatch() throws IOException {
-        assertTrue(multiSequence.parse(stream(1, 2, 3), enc()).isPresent());
+        assertTrue(multiSequence.parse(env(stream(1, 2, 3))).isPresent());
     }
 
     @Test
     public void sequenceMultiNoMatch() throws IOException {
-        assertFalse(multiSequence.parse(stream(1, 2, 2), enc()).isPresent());
+        assertFalse(multiSequence.parse(env(stream(1, 2, 2))).isPresent());
     }
 
     private static final Token multiChoice =
@@ -105,14 +106,14 @@ public class ShorthandsTest {
     }
 
     private void runChoice(final int data, final String matched) throws IOException {
-        final Optional<Environment> result = multiChoice.parse(stream(data), enc());
+        final Optional<ParseState> result = multiChoice.parse(env(stream(data)));
         assertTrue(result.isPresent());
         assertTrue(result.get().order.current().get().matches(matched));
     }
 
     @Test
     public void choiceMultiNoMatch() throws IOException {
-        assertFalse(multiChoice.parse(stream(0), enc()).isPresent());
+        assertFalse(multiChoice.parse(env(stream(0))).isPresent());
     }
 
     private static final Token nonLocalCompare =
@@ -130,12 +131,12 @@ public class ShorthandsTest {
 
     @Test
     public void nonLocalCompare() throws IOException {
-        assertTrue(nonLocalCompare.parse(stream(1, 'a', 'b', 'c', 0, 0), enc()).isPresent());
+        assertTrue(nonLocalCompare.parse(env(stream(1, 'a', 'b', 'c', 0, 0))).isPresent());
     }
 
     @Test
     public void allTokensNamed() throws IOException {
-        final Optional<Environment> result =
+        final Optional<ParseState> result =
             rep("rep",
                 repn("repn",
                     seq("seq",
@@ -154,7 +155,7 @@ public class ShorthandsTest {
                             last(ref("def1")))
                     ), con(1)
                 )
-            ).parse(stream(2, 1, 2), enc());
+            ).parse(env(stream(2, 1, 2)));
         assertTrue(result.isPresent());
         checkNameAndValue("rep.repn.seq.pre.opt.a", 2, result.get());
         checkNameAndValue("rep.repn.seq.cho.def1", 1, result.get());
@@ -162,8 +163,8 @@ public class ShorthandsTest {
         checkNameAndValue("rep.repn.seq.tie.def3", 1, result.get());
     }
 
-    private void checkNameAndValue(final String name, final int value, final Environment env) {
-        ImmutableList<Optional<Value>> values = ref(name).eval(env.order, enc());
+    private void checkNameAndValue(final String name, final int value, final ParseState parseState) {
+        ImmutableList<Optional<Value>> values = ref(name).eval(parseState, enc());
         assertFalse(values.isEmpty());
         assertEquals(1, values.size);
         assertEquals(value, values.head.get().asNumeric().intValueExact());
@@ -200,11 +201,11 @@ public class ShorthandsTest {
         assertEquals(DEFB, seq.tokens.tail.head);
     }
 
-    final ParseGraph PARSEGRAPH = new Environment(DUMMY_STREAM).add(createParseValue("a", 126)).add(createParseValue("a", 84)).add(createParseValue("a", 42)).order;
+    final ParseState PARSESTATE = createFromByteStream(DUMMY_STREAM).add(createParseValue("a", 126)).add(createParseValue("a", 84)).add(createParseValue("a", 42));
 
     @Test
     public void mapLeftWithSub() {
-        ImmutableList<Optional<Value>> result = mapLeft(Shorthand::sub, ref("a"), con(2)).eval(PARSEGRAPH, enc());
+        ImmutableList<Optional<Value>> result = mapLeft(Shorthand::sub, ref("a"), con(2)).eval(PARSESTATE, enc());
         assertEquals(3, result.size);
         for (int i = 0; i < 3; i++) {
             assertTrue(result.head.isPresent());
@@ -215,7 +216,7 @@ public class ShorthandsTest {
 
     @Test
     public void mapRightWithSub() {
-        ImmutableList<Optional<Value>> result = mapRight(Shorthand::sub, con(126), ref("a")).eval(PARSEGRAPH, enc());
+        ImmutableList<Optional<Value>> result = mapRight(Shorthand::sub, con(126), ref("a")).eval(PARSESTATE, enc());
         assertEquals(3, result.size);
         for (int i = 0; i < 3; i++) {
             assertTrue(result.head.isPresent());

@@ -30,6 +30,7 @@ import java.util.Optional;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
@@ -56,21 +57,21 @@ public class Def extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> sizes = size.eval(environment.order, encoding);
+    protected Optional<ParseState> parseImpl(final Environment environment) {
+        final ImmutableList<Optional<Value>> sizes = size.eval(environment.parseState, environment.encoding);
         if (sizes.size != 1 || !sizes.head.isPresent()) {
             return failure();
         }
         return sizes.head
             .filter(dataSize -> dataSize.asNumeric().compareTo(ZERO) != 0)
-            .map(dataSize -> slice(scope, environment, encoding, dataSize.asNumeric()))
-            .orElseGet(() -> success(environment));
+            .map(dataSize -> slice(environment, dataSize.asNumeric()))
+            .orElseGet(() -> success(environment.parseState));
     }
 
-    private Optional<Environment> slice(final String scope, final Environment environment, final Encoding encoding, final BigInteger dataSize) {
-        return environment
+    private Optional<ParseState> slice(final Environment environment, final BigInteger dataSize) {
+        return environment.parseState
             .slice(dataSize)
-            .map(slice -> environment.add(new ParseValue(scope, this, slice, encoding)).seek(dataSize.add(environment.offset)))
+            .map(slice -> environment.parseState.add(new ParseValue(environment.scope, this, slice, environment.encoding)).seek(dataSize.add(environment.parseState.offset)))
             .orElseGet(Util::failure);
     }
 

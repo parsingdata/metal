@@ -20,23 +20,23 @@ import java.util.Optional;
 
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
  * Interface for all ValueExpression implementations.
  * <p>
  * A ValueExpression is an expression that is evaluated by executing its
- * {@link #eval(ParseGraph, Encoding)} method. It yields a list of
+ * {@link #eval(ParseState, Encoding)} method. It yields a list of
  * {@link Value} objects encapsulated in {@link Optional} objects (to guard
  * against <code>null</code>s).
  * <p>
- * As context, it receives the current <code>graph</code> object that
- * describes the parse state as well as the current <code>encoding</code>
- * object that describes the encoding to use when reading data from the input.
+ * As context, it receives the current <code>parseState</code> object that as
+ * well as the current <code>encoding</code> object.
  */
 @FunctionalInterface
 public interface ValueExpression {
 
-    ImmutableList<Optional<Value>> eval(ParseGraph graph, Encoding encoding);
+    ImmutableList<Optional<Value>> eval(ParseState parseState, Encoding encoding);
 
 }

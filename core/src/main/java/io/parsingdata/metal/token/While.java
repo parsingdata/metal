@@ -28,6 +28,7 @@ import java.util.Optional;
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 
@@ -56,18 +57,18 @@ public class While extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
-        return iterate(scope, environment.addBranch(this), encoding).computeResult();
+    protected Optional<ParseState> parseImpl(final Environment environment) {
+        return iterate(environment.addBranch(this)).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding) {
-        if (predicate.eval(environment.order, encoding)) {
+    private Trampoline<Optional<ParseState>> iterate(final Environment environment) {
+        if (predicate.eval(environment.parseState, environment.encoding)) {
             return token
-                .parse(scope, environment, encoding)
-                .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, encoding)))
+                .parse(environment)
+                .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState))))
                 .orElseGet(() -> complete(Util::failure));
         }
-        return complete(() -> success(environment.closeBranch()));
+        return complete(() -> success(environment.parseState.closeBranch()));
     }
 
     @Override

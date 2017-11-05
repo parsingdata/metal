@@ -28,6 +28,7 @@ import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -39,7 +40,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * ValueExpression itself will be that as well.
  * <p>
  * To implement a UnaryValueExpression, only the
- * {@link #eval(Value, ParseGraph, Encoding)} must be implemented, handling
+ * {@link #eval(Value, ParseState, Encoding)} must be implemented, handling
  * the case of evaluating one value. This base class takes care of evaluating
  * the operand and handling list semantics.
  *
@@ -54,18 +55,18 @@ public abstract class UnaryValueExpression implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        return reverse(eval(operand.eval(graph, encoding), graph, encoding, new ImmutableList<>()).computeResult());
+    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        return reverse(eval(operand.eval(parseState, encoding), parseState, encoding, new ImmutableList<>()).computeResult());
     }
 
-    private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ParseGraph graph, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
+    private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ParseState parseState, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
         if (values.isEmpty()) {
             return complete(() -> result);
         }
-        return intermediate(() -> eval(values.tail, graph, encoding, result.add(values.head.flatMap(value -> eval(value, graph, encoding)))));
+        return intermediate(() -> eval(values.tail, parseState, encoding, result.add(values.head.flatMap(value -> eval(value, parseState, encoding)))));
     }
 
-    public abstract Optional<Value> eval(final Value value, final ParseGraph graph, final Encoding encoding);
+    public abstract Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding);
 
     @Override
     public String toString() {
@@ -80,7 +81,7 @@ public abstract class UnaryValueExpression implements ValueExpression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), operand);
+        return Objects.hash(getClass(), operand);
     }
 
 }

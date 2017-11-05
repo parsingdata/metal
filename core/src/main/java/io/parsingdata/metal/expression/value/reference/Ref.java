@@ -30,6 +30,7 @@ import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
@@ -68,19 +69,19 @@ public class Ref<T> implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
+    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
         if (limit == null) {
-            return evalImpl(graph, NO_LIMIT);
+            return evalImpl(parseState, NO_LIMIT);
         }
-        ImmutableList<Optional<Value>> evaluatedLimit = limit.eval(graph, encoding);
+        ImmutableList<Optional<Value>> evaluatedLimit = limit.eval(parseState, encoding);
         if (evaluatedLimit.size != 1 || !evaluatedLimit.head.isPresent()) {
             throw new IllegalArgumentException("Limit must evaluate to a single non-empty value.");
         }
-        return evalImpl(graph, evaluatedLimit.head.get().asNumeric().intValueExact());
+        return evalImpl(parseState, evaluatedLimit.head.get().asNumeric().intValueExact());
     }
 
-    private ImmutableList<Optional<Value>> evalImpl(final ParseGraph graph, final int limit) {
-        return wrap(getAllValues(graph, predicate, limit), new ImmutableList<Optional<Value>>()).computeResult();
+    private ImmutableList<Optional<Value>> evalImpl(final ParseState parseState, final int limit) {
+        return wrap(getAllValues(parseState.order, predicate, limit), new ImmutableList<Optional<Value>>()).computeResult();
     }
 
     private static <T, U extends T> Trampoline<ImmutableList<Optional<T>>> wrap(final ImmutableList<U> input, final ImmutableList<Optional<T>> output) {
@@ -104,7 +105,7 @@ public class Ref<T> implements ValueExpression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), reference, limit);
+        return Objects.hash(getClass(), reference, limit);
     }
 
 }

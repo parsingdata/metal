@@ -20,6 +20,7 @@ import java.util.BitSet;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ConstantFactory;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
@@ -36,7 +37,7 @@ public class Not extends UnaryValueExpression {
     }
 
     @Override
-    public Optional<Value> eval(final Value value, final ParseGraph graph, final Encoding encoding) {
+    public Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding) {
         final BitSet bits = value.asBitSet();
         bits.flip(0, value.getValue().length * 8);
         return Optional.of(ConstantFactory.createFromBitSet(bits, value.getValue().length, encoding));

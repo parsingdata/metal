@@ -24,7 +24,7 @@ import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.mod;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.util.Optional;
 
@@ -50,7 +50,7 @@ public class ValueExpressionEvalEmptyTest {
     }
 
     private void parse(final ValueExpression expression) {
-        final ImmutableList<Optional<Value>> output = expression.eval(stream(0).order, enc());
+        final ImmutableList<Optional<Value>> output = expression.eval(stream(0), enc());
         assertEquals(1, output.size);
         assertFalse(output.head.isPresent());
     }

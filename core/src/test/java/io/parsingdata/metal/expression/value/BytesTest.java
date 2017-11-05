@@ -25,41 +25,45 @@ import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.Test;
 
-import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
+import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class BytesTest {
 
+    public static final ParseState EMPTY_PARSE_STATE = createFromByteStream(new InMemoryByteStream(new byte[] {}));
+
     @Test
     public void bytesEmpty() {
-        assertEquals(0, bytes(ref("random")).eval(ParseGraph.EMPTY, enc()).size);
+        assertEquals(0, bytes(ref("random")).eval(EMPTY_PARSE_STATE, enc()).size);
     }
 
     @Test
     public void bytesListContainsOnlyEmpty() {
-        assertEquals(0, bytes(div(con(1), con(0))).eval(ParseGraph.EMPTY, enc()).size);
+        assertEquals(0, bytes(div(con(1), con(0))).eval(EMPTY_PARSE_STATE, enc()).size);
     }
 
     @Test
     public void bytesListContainsEmpty() throws IOException {
-        Optional<Environment> result =
+        Optional<ParseState> result =
             seq(def("value", con(2)),
                 def("value", con(2)),
                 def("value", con(2)),
                 def("divider", con(1)),
                 def("divider", con(1)),
-                def("divider", con(1))).parse(stream(1, 0, 127, 127, 127, 0, 255, 0, 1), enc());
+                def("divider", con(1))).parse(env(stream(1, 0, 127, 127, 127, 0, 255, 0, 1)));
         assertTrue(result.isPresent());
-        final ImmutableList<Optional<Value>> bytesAfterDivision = bytes(div(ref("value"), ref("divider"))).eval(result.get().order, enc());
+        final ImmutableList<Optional<Value>> bytesAfterDivision = bytes(div(ref("value"), ref("divider"))).eval(result.get(), enc());
         assertEquals(3, bytesAfterDivision.size); // 1 of the first division, 0 of the second, 2 of the third
         assertEquals(1, bytesAfterDivision.head.get().asNumeric().intValueExact()); // first value (0x0100) / first divider (0xFF)
         // second division result is missing because of division by zero

@@ -17,7 +17,7 @@
 package io.parsingdata.metal.format;
 
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -26,7 +26,7 @@ import java.util.Collection;
 
 import org.junit.runners.Parameterized;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.util.ParameterizedParse;
 
 public class FormatTest extends ParameterizedParse {
@@ -34,14 +34,14 @@ public class FormatTest extends ParameterizedParse {
     @Parameterized.Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() throws URISyntaxException, IOException {
         return Arrays.asList(new Object[][] {
-            { "PNG", PNG.FORMAT, env("/test.png"), enc(), true },
-            { "ZIP", ZIP.FORMAT, env("/singlefile-zip30-ubuntu.zip"), enc(), true },
-            { "ZIP2", ZIP.FORMAT, env("/multifile-zip30-ubuntu.zip"), enc(), true },
-            { "JPEG", JPEG.FORMAT, env("/test.jpg"), enc(), true },
+            { "PNG", PNG.FORMAT, parseState("/test.png"), enc(), true },
+            { "ZIP", ZIP.FORMAT, parseState("/singlefile-zip30-ubuntu.zip"), enc(), true },
+            { "ZIP2", ZIP.FORMAT, parseState("/multifile-zip30-ubuntu.zip"), enc(), true },
+            { "JPEG", JPEG.FORMAT, parseState("/test.jpg"), enc(), true },
         });
     }
 
-    private static Environment env(final String path) throws URISyntaxException, IOException {
+    private static ParseState parseState(final String path) throws URISyntaxException, IOException {
         return stream(FormatTest.class.getResource(path).toURI());
     }
 

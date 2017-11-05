@@ -16,81 +16,54 @@
 
 package io.parsingdata.metal.data;
 
-import static java.math.BigInteger.ZERO;
-
-import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.Slice.createFromSource;
-
-import java.math.BigInteger;
-import java.util.Optional;
+import static io.parsingdata.metal.token.Token.NO_NAME;
+import static io.parsingdata.metal.token.Token.SEPARATOR;
 
 import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 
 public class Environment {
 
-    public final ParseGraph order;
-    public final BigInteger offset;
-    public final Source source;
+    public final String scope;
+    public final ParseState parseState;
     public final Callbacks callbacks;
+    public final Encoding encoding;
 
-    public Environment(final ParseGraph order, final Source source, final BigInteger offset, final Callbacks callbacks) {
-        this.order = checkNotNull(order, "order");
-        this.source = checkNotNull(source, "source");
-        this.offset = checkNotNegative(offset, "offset");
+    public Environment(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
+        this.scope = checkNotNull(scope, "scope");
+        this.parseState = checkNotNull(parseState, "parseState");
         this.callbacks = checkNotNull(callbacks, "callbacks");
+        this.encoding = checkNotNull(encoding, "encoding");
     }
 
-    public Environment(final ByteStream input, final BigInteger offset, final Callbacks callbacks) {
-        this(ParseGraph.EMPTY, new ByteStreamSource(input), offset, callbacks);
+    public Environment(final String scope, final ParseState parseState, final Encoding encoding) {
+        this(scope, parseState, Callbacks.NONE, encoding);
     }
 
-    public Environment(final ByteStream input, final BigInteger offset) {
-        this(input, offset, Callbacks.NONE);
+    public Environment(final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
+        this(NO_NAME, parseState, callbacks, encoding);
     }
 
-    public Environment(final ByteStream input, final Callbacks callbacks) {
-        this(input, ZERO, callbacks);
+    public Environment(final ParseState parseState, final Encoding encoding) {
+        this(parseState, Callbacks.NONE, encoding);
     }
 
-    public Environment(final ByteStream input) {
-        this(input, ZERO);
+    public Environment withParseState(final ParseState parseState) {
+        return new Environment(scope, parseState, callbacks, encoding);
+    }
+
+    public Environment withEncoding(final Encoding encoding) {
+        return new Environment(scope, parseState, callbacks, encoding);
     }
 
     public Environment addBranch(final Token token) {
-        return new Environment(order.addBranch(token), source, offset, callbacks);
+        return withParseState(parseState.addBranch(token));
     }
 
-    public Environment closeBranch() {
-        return new Environment(order.closeBranch(), source, offset, callbacks);
-    }
-
-    public Environment add(final ParseValue parseValue) {
-        return new Environment(order.add(parseValue), source, offset, callbacks);
-    }
-
-    public Environment add(final ParseReference parseReference) {
-        return new Environment(order.add(parseReference), source, offset, callbacks);
-    }
-
-    public Optional<Environment> seek(final BigInteger newOffset) {
-        return newOffset.compareTo(ZERO) >= 0 ? Optional.of(new Environment(order, source, newOffset, callbacks)) : Optional.empty();
-    }
-
-    public Environment source(final ValueExpression dataExpression, final int index, final Environment environment, final Encoding encoding) {
-        return new Environment(order, new DataExpressionSource(dataExpression, index, environment.order, encoding), ZERO, callbacks);
-    }
-
-    public Optional<Slice> slice(final BigInteger length) {
-        return createFromSource(source, offset, length);
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(source:" + source + ";offset:" + offset + ";order:" + order + ";callbacks:" + callbacks + ")";
+    public Environment extendScope(final String name) {
+        return new Environment(scope + (scope.isEmpty() || name.isEmpty() ? NO_NAME : SEPARATOR) + name, parseState, callbacks, encoding);
     }
 
 }

@@ -24,7 +24,8 @@ import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
 
@@ -39,12 +40,12 @@ public class DefTest {
 
     @Test
     public void scopeWithoutEncoding() throws IOException {
-        assertEquals(1, getValue(def("a", 1).parse("scope", stream(1), enc()).get().order, "scope.a").asNumeric().intValueExact());
+        assertEquals(1, getValue(def("a", 1).parse(env("scope", stream(1), enc())).get().order, "scope.a").asNumeric().intValueExact());
     }
 
     @Test
     public void scopeWithEncoding() throws IOException {
-        assertEquals(1, getValue(def("a", 1, signed()).parse("scope", stream(1), enc()).get().order, "scope.a").asNumeric().intValueExact());
+        assertEquals(1, getValue(def("a", 1, signed()).parse(env("scope", stream(1), enc())).get().order, "scope.a").asNumeric().intValueExact());
     }
 
     @Test
@@ -56,7 +57,7 @@ public class DefTest {
 
     @Test
     public void errorNegativeSize() {
-        assertFalse(def("negativeSize", con(-1, signed())).parse(stream(1), enc()).isPresent());
+        assertFalse(def("negativeSize", con(-1, signed())).parse(env(stream(1))).isPresent());
     }
 
 }

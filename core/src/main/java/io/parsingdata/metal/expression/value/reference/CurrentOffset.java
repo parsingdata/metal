@@ -14,22 +14,28 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal.expression;
+package io.parsingdata.metal.expression.value.reference;
+
+import static io.parsingdata.metal.expression.value.ConstantFactory.createFromNumeric;
+
+import java.util.Optional;
 
 import io.parsingdata.metal.Util;
-import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.Value;
+import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * An {@link Expression} that always evaluates to <code>true</code>. Generally
- * used as default on undefined predicates.
+ * A {@link ValueExpression} that represents the current offset in the
+ * {@link ParseState}.
  */
-public class True implements Expression {
+public class CurrentOffset implements ValueExpression {
 
     @Override
-    public boolean eval(final ParseState parseState, final Encoding encoding) {
-        return true;
+    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        return ImmutableList.create(Optional.of(createFromNumeric(parseState.offset, new Encoding())));
     }
 
     @Override

@@ -23,7 +23,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import java.util.function.Consumer;
 
 import io.parsingdata.metal.Trampoline;
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.token.Token;
 
@@ -51,11 +51,11 @@ public class Callbacks {
         return new Callbacks(genericCallback, tokenCallbacks.add(new TokenCallback(token, callback)));
     }
 
-    public static Consumer<Callback> success(final Token token, final Environment before, final Environment after) {
+    public static Consumer<Callback> success(final Token token, final ParseState before, final ParseState after) {
         return callback -> callback.handleSuccess(token, before, after);
     }
 
-    public static Consumer<Callback> failure(final Token token, final Environment before) {
+    public static Consumer<Callback> failure(final Token token, final ParseState before) {
         return callback -> callback.handleFailure(token, before);
     }
 

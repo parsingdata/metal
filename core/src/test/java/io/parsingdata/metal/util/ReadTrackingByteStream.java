@@ -78,7 +78,7 @@ public class ReadTrackingByteStream implements ByteStream {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), Objects.hashCode(byteStream));
+        return Objects.hash(getClass(), Objects.hashCode(byteStream));
     }
 
 }

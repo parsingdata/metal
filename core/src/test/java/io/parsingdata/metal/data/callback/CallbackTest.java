@@ -29,9 +29,11 @@ import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.data.Selection.getAllRoots;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
@@ -44,7 +46,7 @@ import java.util.Optional;
 import org.junit.Test;
 
 import io.parsingdata.metal.SubStructTest;
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.token.Token;
@@ -77,8 +79,8 @@ public class CallbackTest {
                 .add(POST_TWO, countingCallback)
                 .add(cho, countingCallback)
                 .add(sequence, countingCallback);
-        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 2, 1 }), callbacks);
-        assertTrue(sequence.parse(environment, enc()).isPresent());
+        final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 2, 1 }));
+        assertTrue(sequence.parse(env(parseState, callbacks, enc())).isPresent());
         countingCallback.assertCounts(4, 1);
     }
 
@@ -90,28 +92,28 @@ public class CallbackTest {
             private int count = 0;
 
             @Override
-            public void handleSuccess(Token token, Environment before, Environment after) {
+            public void handleSuccess(Token token, ParseState before, ParseState after) {
                 final ImmutableList<ParseItem> roots = getAllRoots(after.order, token);
                 assertEquals(offsets[count++], roots.head.asGraph().tail.head.asValue().slice.offset.longValueExact());
             }
 
             @Override
-            public void handleFailure(Token token, Environment before) {}
+            public void handleFailure(Token token, ParseState before) {}
         });
     }
 
     @Test
     public void testSimpleCallback() throws IOException {
         final Callbacks callbacks = createCallbackList(SIMPLE_SEQ, 0L);
-        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2 }), callbacks);
-        assertTrue(SIMPLE_SEQ.parse(environment, enc()).isPresent());
+        final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 1, 2 }));
+        assertTrue(SIMPLE_SEQ.parse(env(parseState, callbacks, enc())).isPresent());
     }
 
     @Test
     public void testRepSimpleCallback() throws IOException {
         final Callbacks callbacks = createCallbackList(SIMPLE_SEQ, 0L, 2L);
-        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }), callbacks);
-        assertTrue(rep(SIMPLE_SEQ).parse(environment, enc()).isPresent());
+        final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }));
+        assertTrue(rep(SIMPLE_SEQ).parse(env(parseState, callbacks, enc())).isPresent());
     }
 
     @Test
@@ -120,7 +122,7 @@ public class CallbackTest {
         final Callbacks callbacks = createCallbackList(SIMPLE_SEQ, 0L, 2L)
                 .add(repeatingSeq, new Callback() {
                     @Override
-                    public void handleSuccess(Token token, Environment before, Environment after) {
+                    public void handleSuccess(Token token, ParseState before, ParseState after) {
                         final ImmutableList<ParseItem> repRoots = getAllRoots(after.order, token);
                         assertEquals(1, repRoots.size);
 
@@ -134,25 +136,25 @@ public class CallbackTest {
                     }
 
                     @Override
-                    public void handleFailure(Token token, Environment before) {}
+                    public void handleFailure(Token token, ParseState before) {}
                 });
-        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }), callbacks);
-        assertTrue(repeatingSeq.parse(environment, enc()).isPresent());
+        final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }));
+        assertTrue(repeatingSeq.parse(env(parseState, callbacks, enc())).isPresent());
     }
 
     @Test
     public void refInCallback() throws IOException {
         final Callbacks callbacks = Callbacks.create().add(SubStructTest.LINKED_LIST, new Callback() {
             @Override
-            public void handleSuccess(Token token, Environment before, Environment after) {
+            public void handleSuccess(Token token, ParseState before, ParseState after) {
                 linkedListCount++;
             }
 
             @Override
-            public void handleFailure(Token token, Environment before) {}
+            public void handleFailure(Token token, ParseState before) {}
         });
-        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 0, 3, 1, 0, 0, 1 }), callbacks);
-        assertTrue(SubStructTest.LINKED_LIST.parse(environment, enc()).isPresent());
+        final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 0, 3, 1, 0, 0, 1 }));
+        assertTrue(SubStructTest.LINKED_LIST.parse(env(parseState, callbacks, enc())).isPresent());
         // The ParseReference does not trigger the callback:
         assertEquals(2, linkedListCount);
     }
@@ -170,8 +172,8 @@ public class CallbackTest {
             expectedFailureDefinitions);
 
         final Callbacks callbacks = Callbacks.create().add(genericCallback);
-        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 1, 2, 4 }), callbacks);
-        final Optional<Environment> parse = CHOICE.parse(environment, enc());
+        final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 1, 2, 4 }));
+        final Optional<ParseState> parse = CHOICE.parse(env(parseState, callbacks, enc()));
         assertTrue(parse.isPresent());
         genericCallback.assertAllHandled();
     }
@@ -201,8 +203,8 @@ public class CallbackTest {
             .add(cho, countingCallback);
         final long expectedSuccessCount = expectedSuccessDefinitions.size();
         final long expectedFailureCount = expectedFailureDefinitions.size();
-        final Environment environment = new Environment(new InMemoryByteStream(new byte[] { 2 }), callbacks);
-        assertTrue(cho.parse(environment, enc()).isPresent());
+        final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 2 }));
+        assertTrue(cho.parse(env(parseState, callbacks, enc())).isPresent());
         genericCallback.assertAllHandled();
         countingCallback.assertCounts(expectedSuccessCount, expectedFailureCount);
     }
@@ -221,13 +223,13 @@ public class CallbackTest {
         }
 
         @Override
-        public void handleSuccess(Token token, Environment before, Environment after) {
+        public void handleSuccess(Token token, ParseState before, ParseState after) {
             assertThat(after.offset.longValueExact(), is(equalTo(expectedSuccessOffsets.pop())));
             assertThat(token, is(equalTo(expectedSuccessDefinitions.pop())));
         }
 
         @Override
-        public void handleFailure(Token token, Environment before) {
+        public void handleFailure(Token token, ParseState before) {
             assertThat(before.offset.longValueExact(), is(equalTo(expectedFailureOffsets.pop())));
             assertThat(token, is(equalTo(expectedFailureDefinitions.pop())));
         }
@@ -245,12 +247,12 @@ public class CallbackTest {
         private int failureCount = 0;
 
         @Override
-        public void handleSuccess(final Token token, Environment before, Environment after) {
+        public void handleSuccess(final Token token, ParseState before, ParseState after) {
             successCount++;
         }
 
         @Override
-        public void handleFailure(Token token, Environment before) {
+        public void handleFailure(Token token, ParseState before) {
             failureCount++;
         }
 

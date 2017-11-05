@@ -17,6 +17,7 @@
 package io.parsingdata.metal;
 
 import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.TEN;
 import static java.math.BigInteger.ZERO;
 
 import static org.junit.Assert.assertEquals;
@@ -28,9 +29,10 @@ import static io.parsingdata.metal.Shorthand.TRUE;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.not;
 import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.data.ByteStreamSourceTest.DUMMY_BYTE_STREAM_SOURCE;
+import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
@@ -57,10 +59,10 @@ import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.ByteStreamSource;
 import io.parsingdata.metal.data.ConstantSource;
 import io.parsingdata.metal.data.DataExpressionSource;
-import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseReference;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.data.Source;
@@ -95,6 +97,7 @@ import io.parsingdata.metal.expression.value.bitwise.Or;
 import io.parsingdata.metal.expression.value.bitwise.ShiftLeft;
 import io.parsingdata.metal.expression.value.bitwise.ShiftRight;
 import io.parsingdata.metal.expression.value.reference.Count;
+import io.parsingdata.metal.expression.value.reference.CurrentOffset;
 import io.parsingdata.metal.expression.value.reference.First;
 import io.parsingdata.metal.expression.value.reference.Last;
 import io.parsingdata.metal.expression.value.reference.Len;
@@ -113,6 +116,7 @@ import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.token.TokenRef;
 import io.parsingdata.metal.token.Until;
 import io.parsingdata.metal.token.While;
+import io.parsingdata.metal.util.EncodingFactory;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
 @RunWith(Parameterized.class)
@@ -123,28 +127,29 @@ public class AutoEqualityTest {
         @Override public boolean isAvailable(BigInteger offset, int length) { return false; }
     };
 
-    private static final ParseValue PARSEVALUE = new ParseValue("a", any("a"), createFromBytes(new byte[]{1, 2}), enc());
-    private static final ParseGraph GRAPH_WITH_REFERENCE = new Environment(DUMMY_STREAM).add(new ParseReference(ZERO, new ConstantSource(new byte[]{1, 2}), any("a"))).order;
-    private static final ParseGraph BRANCHED_GRAPH = new Environment(DUMMY_STREAM).addBranch(any("a")).order;
-    private static final ParseGraph CLOSED_BRANCHED_GRAPH = new Environment(DUMMY_STREAM).addBranch(any("a")).closeBranch().order;
+    private static final ParseValue PARSE_VALUE = new ParseValue("a", any("a"), createFromBytes(new byte[]{1, 2}), enc());
+    private static final ParseGraph GRAPH_WITH_REFERENCE = createFromByteStream(DUMMY_STREAM).add(new ParseReference(ZERO, new ConstantSource(new byte[]{1, 2}), any("a"))).order;
+    private static final ParseGraph BRANCHED_GRAPH = createFromByteStream(DUMMY_STREAM).addBranch(any("a")).order;
+    private static final ParseGraph CLOSED_BRANCHED_GRAPH = createFromByteStream(DUMMY_STREAM).addBranch(any("a")).closeBranch().order;
 
     private static final List<Supplier<Object>> STRINGS = Arrays.asList(() -> "a", () -> "b");
-    private static final List<Supplier<Object>> ENCODINGS = Arrays.asList(() -> enc(), () -> signed(), () -> le(), () -> new Encoding(Charset.forName("UTF-8")));
+    private static final List<Supplier<Object>> ENCODINGS = Arrays.asList(EncodingFactory::enc, EncodingFactory::signed, EncodingFactory::le, () -> new Encoding(Charset.forName("UTF-8")));
     private static final List<Supplier<Object>> TOKENS = Arrays.asList(() -> any("a"), () -> any("b"));
     private static final List<Supplier<Object>> TOKEN_ARRAYS = Arrays.asList(() -> new Token[] { any("a"), any("b")}, () -> new Token[] { any("b"), any("c") }, () -> new Token[] { any("a"), any("b"), any("c") });
     private static final List<Supplier<Object>> VALUE_EXPRESSIONS = Arrays.asList(() -> con(1), () -> con(2));
     private static final List<Supplier<Object>> EXPRESSIONS = Arrays.asList(() -> TRUE, () -> not(TRUE));
     private static final List<Supplier<Object>> VALUES = Arrays.asList(() -> ConstantFactory.createFromString("a", enc()), () -> ConstantFactory.createFromString("b", enc()), () -> ConstantFactory.createFromNumeric(1L, signed()));
     private static final List<Supplier<Object>> REDUCERS = Arrays.asList(() -> (BinaryOperator<ValueExpression>) Shorthand::cat, () -> (BinaryOperator<ValueExpression>) Shorthand::div);
-    private static final List<Supplier<Object>> SLICES = Arrays.asList(() -> createFromBytes(new byte[] { 1, 2 }), () -> Slice.createFromSource(new DataExpressionSource(ref("a"), 1, new Environment(DUMMY_STREAM).add(PARSEVALUE).add(PARSEVALUE).order, enc()), ZERO, BigInteger.valueOf(2)).get());
+    private static final List<Supplier<Object>> SLICES = Arrays.asList(() -> createFromBytes(new byte[] { 1, 2 }), () -> Slice.createFromSource(new DataExpressionSource(ref("a"), 1, createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE).add(PARSE_VALUE), enc()), ZERO, BigInteger.valueOf(2)).get());
     private static final List<Supplier<Object>> BYTE_ARRAYS = Arrays.asList(() -> new byte[] { 0 }, () -> new byte[] { 1, 2 }, () -> new byte[] {});
-    private static final List<Supplier<Object>> SOURCES = Arrays.asList(() -> new ConstantSource(new byte[] {}), () -> new DataExpressionSource(ref("x"), 8, new Environment(DUMMY_STREAM).add(PARSEVALUE).order, signed()));
+    private static final List<Supplier<Object>> SOURCES = Arrays.asList(() -> new ConstantSource(new byte[] {}), () -> new DataExpressionSource(ref("x"), 8, createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE), signed()));
     private static final List<Supplier<Object>> LONGS = Arrays.asList(() -> 0L, () -> 1L, () -> 31L, () -> 100000L);
     private static final List<Supplier<Object>> INTEGERS = Arrays.asList(() -> 0, () -> 1, () -> 17, () -> 21212121);
-    private static final List<Supplier<Object>> PARSEGRAPHS = Arrays.asList(() -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE);
-    private static final List<Supplier<Object>> PARSEITEMS = Arrays.asList(() -> CLOSED_BRANCHED_GRAPH, () -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE, () -> new Environment(DUMMY_STREAM).add(PARSEVALUE).order, () -> new Environment(DUMMY_STREAM).add(PARSEVALUE).add(PARSEVALUE).order, () -> BRANCHED_GRAPH);
-    private static final List<Supplier<Object>> BYTESTREAMS = Arrays.asList(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> DUMMY_STREAM);
-    private static final List<Supplier<Object>> BIGINTEGERS = Arrays.asList(() -> ONE, () -> BigInteger.valueOf(3));
+    private static final List<Supplier<Object>> PARSE_GRAPHS = Arrays.asList(() -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE);
+    private static final List<Supplier<Object>> PARSE_ITEMS = Arrays.asList(() -> CLOSED_BRANCHED_GRAPH, () -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE, () -> createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE).order, () -> createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE).add(PARSE_VALUE).order, () -> BRANCHED_GRAPH);
+    private static final List<Supplier<Object>> BYTE_STREAMS = Arrays.asList(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> DUMMY_STREAM);
+    private static final List<Supplier<Object>> BIG_INTEGERS = Arrays.asList(() -> ONE, () -> BigInteger.valueOf(3));
+    private static final List<Supplier<Object>> PARSE_STATES = Arrays.asList(() -> createFromByteStream(DUMMY_STREAM), () -> createFromByteStream(DUMMY_STREAM, ONE), () -> new ParseState(GRAPH_WITH_REFERENCE, DUMMY_BYTE_STREAM_SOURCE, TEN));
     private static final Map<Class, List<Supplier<Object>>> mapping = new HashMap<Class, List<Supplier<Object>>>() {{
         put(String.class, STRINGS);
         put(Encoding.class, ENCODINGS);
@@ -159,10 +164,11 @@ public class AutoEqualityTest {
         put(Source.class, SOURCES);
         put(long.class, LONGS);
         put(int.class, INTEGERS);
-        put(ParseGraph.class, PARSEGRAPHS);
-        put(ParseItem.class, PARSEITEMS);
-        put(ByteStream.class, BYTESTREAMS);
-        put(BigInteger.class, BIGINTEGERS);
+        put(ParseGraph.class, PARSE_GRAPHS);
+        put(ParseItem.class, PARSE_ITEMS);
+        put(ByteStream.class, BYTE_STREAMS);
+        put(BigInteger.class, BIG_INTEGERS);
+        put(ParseState.class, PARSE_STATES);
     }};
 
     @Parameterized.Parameters(name="{0}")
@@ -175,13 +181,13 @@ public class AutoEqualityTest {
             Len.class, Offset.class, Neg.class, Not.class, Count.class, First.class, Last.class, Reverse.class,
             And.class, Or.class, ShiftLeft.class, ShiftRight.class, Add.class, Div.class, Mod.class, Mul.class,
             io.parsingdata.metal.expression.value.arithmetic.Sub.class, Cat.class, Nth.class, Elvis.class,
-            FoldLeft.class, FoldRight.class, Const.class, Expand.class, Bytes.class,
+            FoldLeft.class, FoldRight.class, Const.class, Expand.class, Bytes.class, CurrentOffset.class,
             // Expressions
             Eq.class, EqNum.class, EqStr.class, GtEqNum.class, GtNum.class, LtEqNum.class, LtNum.class,
             io.parsingdata.metal.expression.logical.And.class, io.parsingdata.metal.expression.logical.Or.class,
             io.parsingdata.metal.expression.logical.Not.class,
             // Data structures
-            Value.class, ParseValue.class, ParseReference.class,
+            Value.class, ParseValue.class, ParseReference.class, ParseState.class,
             // Inputs
             ConstantSource.class, DataExpressionSource.class, ByteStreamSource.class
             );

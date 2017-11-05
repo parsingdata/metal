@@ -24,6 +24,7 @@ import java.util.Optional;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -41,8 +42,8 @@ public class Last implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseGraph graph, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> list = operand.eval(graph, encoding);
+    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        final ImmutableList<Optional<Value>> list = operand.eval(parseState, encoding);
         return list.isEmpty() ? list : ImmutableList.create(list.head);
     }
 
@@ -59,7 +60,7 @@ public class Last implements ValueExpression {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), operand);
+        return Objects.hash(getClass(), operand);
     }
 
 }

@@ -97,7 +97,7 @@ public class ImmutableList<T> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass().hashCode(), head, tail);
+        return Objects.hash(getClass(), head, tail);
     }
 
 }

@@ -26,6 +26,7 @@ import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -47,15 +48,15 @@ public class Rep extends Token {
     }
 
     @Override
-    protected Optional<Environment> parseImpl(final String scope, final Environment environment, final Encoding encoding) {
-        return iterate(scope, environment.addBranch(this), encoding).computeResult();
+    protected Optional<ParseState> parseImpl(final Environment environment) {
+        return iterate(environment.addBranch(this)).computeResult();
     }
 
-    private Trampoline<Optional<Environment>> iterate(final String scope, final Environment environment, final Encoding encoding) {
+    private Trampoline<Optional<ParseState>> iterate(final Environment environment) {
         return token
-            .parse(scope, environment, encoding)
-            .map(nextEnvironment -> intermediate(() -> iterate(scope, nextEnvironment, encoding)))
-            .orElseGet(() -> complete(() -> success(environment.closeBranch())));
+            .parse(environment)
+            .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState))))
+            .orElseGet(() -> complete(() -> success(environment.parseState.closeBranch())));
     }
 
     @Override

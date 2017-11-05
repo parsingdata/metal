@@ -16,7 +16,9 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -26,7 +28,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.data.ParseState;
 
 public class TokenTest {
 
@@ -34,23 +36,23 @@ public class TokenTest {
     public ExpectedException thrown = ExpectedException.none();
     private final Token token = new Token("", null) {
         @Override
-        protected Optional<Environment> parseImpl(String scope, Environment environment, Encoding encoding) {
+        protected Optional<ParseState> parseImpl(final Environment environment) {
             return null;
         }
     };
 
     @Test
-    public void parseNullEnvironment() throws IOException {
+    public void parseNullParseState() throws IOException {
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Argument environment may not be null.");
-        token.parse("", null, new Encoding());
+        thrown.expectMessage("Argument parseState may not be null.");
+        token.parse(env(null, enc()));
     }
 
     @Test
     public void parseNullScope() throws IOException {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Argument scope may not be null.");
-        token.parse(null, stream(), new Encoding());
+        token.parse(env(null, stream(), enc()));
     }
 
 }

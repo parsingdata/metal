@@ -61,6 +61,7 @@ import io.parsingdata.metal.expression.value.arithmetic.Sub;
 import io.parsingdata.metal.expression.value.bitwise.ShiftLeft;
 import io.parsingdata.metal.expression.value.bitwise.ShiftRight;
 import io.parsingdata.metal.expression.value.reference.Count;
+import io.parsingdata.metal.expression.value.reference.CurrentOffset;
 import io.parsingdata.metal.expression.value.reference.First;
 import io.parsingdata.metal.expression.value.reference.Last;
 import io.parsingdata.metal.expression.value.reference.Len;
@@ -86,7 +87,7 @@ public final class Shorthand {
 
     public static final Token EMPTY = def(EMPTY_NAME, 0L);
     public static final ValueExpression SELF = new Self();
-    public static final ValueExpression CURRENT_OFFSET = elvis(add(offset(SELF), len(SELF)), con(0));
+    public static final ValueExpression CURRENT_OFFSET = new CurrentOffset();
     public static final Expression TRUE = new True();
 
     private Shorthand() {}

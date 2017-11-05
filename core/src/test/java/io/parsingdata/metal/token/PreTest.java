@@ -27,14 +27,15 @@ import static io.parsingdata.metal.Shorthand.pre;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static io.parsingdata.metal.util.EnvironmentFactory.stream;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.Test;
 
-import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
 
 public class PreTest {
 
@@ -43,7 +44,7 @@ public class PreTest {
 
     @Test
     public void preconditionTrue() throws IOException {
-        final Optional<Environment> result = SEQUENCE.parse(stream(1, 1), enc());
+        final Optional<ParseState> result = SEQUENCE.parse(env(stream(1, 1)));
 
         // precondition is true, token is parsed
         assertThat(result.get().offset.longValueExact(), is(2L));
@@ -51,7 +52,7 @@ public class PreTest {
 
     @Test
     public void preconditionFalse() throws IOException {
-        final Optional<Environment> result = SEQUENCE.parse(stream(0, 1), enc());
+        final Optional<ParseState> result = SEQUENCE.parse(env(stream(0, 1)));
 
         // precondition is false, token is not parsed
         assertThat(result.isPresent(), is(false));
@@ -59,7 +60,7 @@ public class PreTest {
 
     @Test
     public void preconditionTrueParseFails() throws IOException {
-        final Optional<Environment> result = SEQUENCE.parse(stream(1, 2), enc());
+        final Optional<ParseState> result = SEQUENCE.parse(env(stream(1, 2)));
 
         // precondition is true, but token can't be parsed
         assertThat(result.isPresent(), is(false));
