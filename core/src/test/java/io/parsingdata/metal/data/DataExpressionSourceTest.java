@@ -14,6 +14,7 @@ import static io.parsingdata.metal.Shorthand.tie;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.expression.value.BytesTest.EMPTY_PARSE_STATE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.math.BigInteger;
@@ -40,7 +41,7 @@ public class DataExpressionSourceTest {
         final Token token =
             seq(def("a", con(4)),
                 tie(def("b", con(2)), ref("a")));
-        return token.parse(stream(1, 2, 3, 4), enc());
+        return token.parse(env(stream(1, 2, 3, 4)));
     }
 
     @Test

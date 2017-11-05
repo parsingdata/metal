@@ -26,6 +26,7 @@ import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
@@ -37,7 +38,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import io.parsingdata.metal.data.ParseState;
-import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
@@ -52,12 +52,12 @@ public class ValueExpressionSemanticsTest {
 
     @Test
     public void Cat() throws IOException {
-        assertTrue(cat.parse(stream(1, 2, 1, 2), enc()).isPresent());
+        assertTrue(cat.parse(env(stream(1, 2, 1, 2))).isPresent());
     }
 
     @Test
     public void CatNoMatch() throws IOException {
-        assertFalse(cat.parse(stream(1, 2, 12, 12), enc()).isPresent());
+        assertFalse(cat.parse(env(stream(1, 2, 12, 12))).isPresent());
     }
 
     @Test
@@ -68,7 +68,7 @@ public class ValueExpressionSemanticsTest {
             public Optional<Value> eval(Value value, ParseState parseState, Encoding encoding) {
                 return Optional.of(value);
             }
-        })).parse(data, enc());
+        })).parse(env(data, enc()));
     }
 
 }

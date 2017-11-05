@@ -28,10 +28,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.Util;
-import io.parsingdata.metal.data.ParseState;
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -57,21 +57,21 @@ public class Def extends Token {
     }
 
     @Override
-    protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> sizes = size.eval(parseState, encoding);
+    protected Optional<ParseState> parseImpl(final Environment environment) {
+        final ImmutableList<Optional<Value>> sizes = size.eval(environment.parseState, environment.encoding);
         if (sizes.size != 1 || !sizes.head.isPresent()) {
             return failure();
         }
         return sizes.head
             .filter(dataSize -> dataSize.asNumeric().compareTo(ZERO) != 0)
-            .map(dataSize -> slice(scope, parseState, encoding, dataSize.asNumeric()))
-            .orElseGet(() -> success(parseState));
+            .map(dataSize -> slice(environment, dataSize.asNumeric()))
+            .orElseGet(() -> success(environment.parseState));
     }
 
-    private Optional<ParseState> slice(final String scope, final ParseState parseState, final Encoding encoding, final BigInteger dataSize) {
-        return parseState
+    private Optional<ParseState> slice(final Environment environment, final BigInteger dataSize) {
+        return environment.parseState
             .slice(dataSize)
-            .map(slice -> parseState.add(new ParseValue(scope, this, slice, encoding)).seek(dataSize.add(parseState.offset)))
+            .map(slice -> environment.parseState.add(new ParseValue(environment.scope, this, slice, environment.encoding)).seek(dataSize.add(environment.parseState.offset)))
             .orElseGet(Util::failure);
     }
 

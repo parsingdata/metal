@@ -41,6 +41,7 @@ import static io.parsingdata.metal.data.selection.ByType.getReferences;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
@@ -83,7 +84,7 @@ public class EqualityTest {
 
     @Test
     public void cycleWithIdenticalTokens() throws IOException {
-        final Optional<ParseState> result = LINKED_LIST_COMPOSED_IDENTICAL.parse(stream(0, 0, 1), enc());
+        final Optional<ParseState> result = LINKED_LIST_COMPOSED_IDENTICAL.parse(env(stream(0, 0, 1)));
         assertTrue(result.isPresent());
         assertEquals(1, getAllValues(result.get().order, "header").size);
         assertEquals(2, getReferences(result.get().order).size);
@@ -103,7 +104,7 @@ public class EqualityTest {
 
     @Test
     public void cycleWithEqualTokens() throws IOException {
-        final Optional<ParseState> result = LINKED_LIST_COMPOSED_EQUAL.parse(stream(0, 0, 1), enc());
+        final Optional<ParseState> result = LINKED_LIST_COMPOSED_EQUAL.parse(env(stream(0, 0, 1)));
         assertTrue(result.isPresent());
         assertEquals(1, getAllValues(result.get().order, "header").size);
         assertEquals(2, getReferences(result.get().order).size);

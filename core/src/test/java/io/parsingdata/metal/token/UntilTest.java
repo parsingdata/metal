@@ -35,6 +35,7 @@ import static io.parsingdata.metal.Shorthand.until;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.io.IOException;
@@ -56,7 +57,7 @@ public class UntilTest {
 
     @Test
     public void threeNewLines() throws IOException {
-        final Optional<ParseState> parseState = createToken(con(0), post(def("newline", con(1)), eq(con('\n')))).parse(stream(INPUT, US_ASCII), enc());
+        final Optional<ParseState> parseState = createToken(con(0), post(def("newline", con(1)), eq(con('\n')))).parse(env(stream(INPUT, US_ASCII)));
         assertTrue(parseState.isPresent());
         ImmutableList<ParseValue> values = getAllValues(parseState.get().order, "line");
         assertEquals(3, values.size);
@@ -67,7 +68,7 @@ public class UntilTest {
 
     @Test
     public void untilInclusive() throws IOException {
-        final Optional<ParseState> parseState = createToken(con(1), post(EMPTY, eq(mod(last(ref("line")), con(256)), con('\n')))).parse(stream(INPUT, US_ASCII), enc());
+        final Optional<ParseState> parseState = createToken(con(1), post(EMPTY, eq(mod(last(ref("line")), con(256)), con('\n')))).parse(env(stream(INPUT, US_ASCII)));
         assertTrue(parseState.isPresent());
         ImmutableList<ParseValue> values = getAllValues(parseState.get().order, "line");
         assertEquals(3, values.size);
@@ -78,12 +79,12 @@ public class UntilTest {
 
     @Test
     public void allDefaultValueExpressions() throws IOException {
-        assertTrue(until("value", def("terminator", 1, eq(con(0)))).parse(stream(1, 2, 3, 0), enc()).isPresent());
+        assertTrue(until("value", def("terminator", 1, eq(con(0)))).parse(env(stream(1, 2, 3, 0))).isPresent());
     }
 
     @Test
     public void errorNegativeSize() {
-        assertFalse(until("value", con(-1, signed()), def("terminator", 1, eq(con(0)))).parse(stream(1, 2, 3, 0), enc()).isPresent());
+        assertFalse(until("value", con(-1, signed()), def("terminator", 1, eq(con(0)))).parse(env(stream(1, 2, 3, 0))).isPresent());
     }
 
     private Token createToken(final ValueExpression initialSize, final Token terminator) {

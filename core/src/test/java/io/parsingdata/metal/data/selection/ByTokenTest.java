@@ -40,6 +40,7 @@ import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.data.selection.ByToken.get;
 import static io.parsingdata.metal.data.selection.ByToken.getAll;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
@@ -52,14 +53,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.parsingdata.metal.data.ParseState;
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.Selection;
-import io.parsingdata.metal.data.callback.Callbacks;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
 public class ByTokenTest {
@@ -77,8 +77,8 @@ public class ByTokenTest {
     private static final Token MUT_REC_1 = seq(DEF1, new Token("", enc()) {
 
         @Override
-        protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
-            return MUT_REC_2.parse(scope, parseState, encoding);
+        protected Optional<ParseState> parseImpl(final Environment environment) {
+            return MUT_REC_2.parse(environment);
         }
     });
 
@@ -227,7 +227,7 @@ public class ByTokenTest {
     }
 
     private ParseGraph parseResultGraph(final ParseState parseState, final Token def) {
-        return def.parse(parseState, enc()).get().order;
+        return def.parse(env(parseState, enc())).get().order;
     }
 
     @Test
@@ -235,7 +235,7 @@ public class ByTokenTest {
         final Token smallSub = sub(DEF2, last(ref("value1")));
         final Token extraSub = sub(any("x"), last(ref("value1")));
         final Token composition = seq(DEF1, smallSub, extraSub, smallSub, extraSub);
-        final Optional<ParseState> result = composition.parse(stream(0), enc());
+        final Optional<ParseState> result = composition.parse(env(stream(0)));
         assertTrue(result.isPresent());
         final ImmutableList<ParseItem> items = getAll(result.get().order, DEF2);
         // should return the ParseGraph created by the Sub and the ParseReference that refers to the existing ParseItem
@@ -249,7 +249,7 @@ public class ByTokenTest {
     @Test
     public void getAllRootsSingle() throws IOException {
         final Token topSeq = seq(any("a"), smallSeq);
-        final Optional<ParseState> result = topSeq.parse(stream(1, 2, 3), enc());
+        final Optional<ParseState> result = topSeq.parse(env(stream(1, 2, 3)));
         assertTrue(result.isPresent());
         final ImmutableList<ParseItem> seqItems = getAllRoots(result.get().order, smallSeq);
         assertEquals(1, seqItems.size);
@@ -262,7 +262,7 @@ public class ByTokenTest {
     @Test
     public void getAllRootsMulti() throws IOException {
         final Token topSeq = seq(any("a"), smallSeq, smallSeq);
-        final Optional<ParseState> result = topSeq.parse(stream(1, 2, 3, 2, 3), enc());
+        final Optional<ParseState> result = topSeq.parse(env(stream(1, 2, 3, 2, 3)));
         assertTrue(result.isPresent());
         final ImmutableList<ParseItem> seqItems = getAllRoots(result.get().order, smallSeq);
         assertEquals(2, seqItems.size);
@@ -285,7 +285,7 @@ public class ByTokenTest {
 
     @Test
     public void getAllRootsMultiSub() throws IOException {
-        final Optional<ParseState> result = rep(seq(smallSeq, sub(smallSeq, CURRENT_OFFSET))).parse(stream(1, 2, 1, 2, 1, 2, 1, 2), enc());
+        final Optional<ParseState> result = rep(seq(smallSeq, sub(smallSeq, CURRENT_OFFSET))).parse(env(stream(1, 2, 1, 2, 1, 2, 1, 2)));
                                                                                            /* 1: +--------+
                                                                                            /* 2:       +--------+
                                                                                            /* 3:             +--------+ */
@@ -311,15 +311,15 @@ public class ByTokenTest {
         }
 
         @Override
-        protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
-            return token.parse(scope, parseState, encoding);
+        protected Optional<ParseState> parseImpl(final Environment environment) {
+            return token.parse(environment);
         }
     }
 
     @Test
     public void getAllRootsMultiSelf() throws IOException {
         final CustomToken customToken = new CustomToken();
-        final Optional<ParseState> result = customToken.parse(stream(1, 2, 3), enc());
+        final Optional<ParseState> result = customToken.parse(env(stream(1, 2, 3)));
         assertTrue(result.isPresent());
         final ImmutableList<ParseItem> seqItems = getAllRoots(result.get().order, customToken.token);
         assertEquals(3, seqItems.size);

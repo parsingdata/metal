@@ -77,8 +77,9 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 
-import io.parsingdata.metal.data.ParseState;
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.callback.Callback;
 import io.parsingdata.metal.data.callback.Callbacks;
@@ -193,7 +194,7 @@ public class ToStringTest {
 
     private Token makeToken(final String name) {
         return new Token(name, enc()) {
-            @Override protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) { return null; }
+            @Override protected Optional<ParseState> parseImpl(final Environment environment) { return null; }
             @Override public String toString() { return name; }
         };
     }

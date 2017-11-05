@@ -29,6 +29,7 @@ import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
@@ -53,16 +54,16 @@ public class ErrorsTest {
         thrown = ExpectedException.none();
         // Basic division by zero.
         final Token token = def("a", div(con(1), con(0)));
-        assertFalse(token.parse(stream(1), enc()).isPresent());
+        assertFalse(token.parse(env(stream(1))).isPresent());
         // Try to negate division by zero.
         final Token token2 = def("a", neg(div(con(1), con(0))));
-        assertFalse(token2.parse(stream(1), enc()).isPresent());
+        assertFalse(token2.parse(env(stream(1))).isPresent());
         // Add one to division by zero.
         final Token token3 = def("a", add(div(con(1), con(0)), con(1)));
-        assertFalse(token3.parse(stream(1), enc()).isPresent());
+        assertFalse(token3.parse(env(stream(1))).isPresent());
         // Add division by zero to one.
         final Token token4 = def("a", add(con(1), div(con(1), con(0))));
-        assertFalse(token4.parse(stream(1), enc()).isPresent());
+        assertFalse(token4.parse(env(stream(1))).isPresent());
     }
 
     @Test
@@ -73,7 +74,7 @@ public class ErrorsTest {
                 any("b"),
                 repn(dummy, ref("b"))
             );
-       Optional<ParseState> result = multiRepN.parse(stream(2, 2, 2, 2), enc());
+       Optional<ParseState> result = multiRepN.parse(env(stream(2, 2, 2, 2)));
        assertFalse(result.isPresent());
     }
 

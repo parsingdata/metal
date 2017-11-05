@@ -25,10 +25,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
-import io.parsingdata.metal.data.ParseState;
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseItem;
-import io.parsingdata.metal.data.callback.Callbacks;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -46,7 +46,7 @@ public class TokenRef extends Token {
 
     private static final Token LOOKUP_FAILED = new Token("LOOKUP_FAILED", null) {
         @Override
-        protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
+        protected Optional<ParseState> parseImpl(final Environment environment) {
             return failure();
         }
     };
@@ -62,8 +62,8 @@ public class TokenRef extends Token {
     }
 
     @Override
-    protected Optional<ParseState> parseImpl(final String scope, final ParseState parseState, final Callbacks callbacks, final Encoding encoding) {
-        return lookup(ImmutableList.create(parseState.order), referenceName).computeResult().parse(scope, parseState, callbacks, encoding);
+    protected Optional<ParseState> parseImpl(final Environment environment) {
+        return lookup(ImmutableList.create(environment.parseState.order), referenceName).computeResult().parse(environment);
     }
 
     private Trampoline<Token> lookup(final ImmutableList<ParseItem> items, final String referenceName) {

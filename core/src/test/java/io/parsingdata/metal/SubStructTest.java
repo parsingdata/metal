@@ -31,6 +31,7 @@ import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -61,13 +62,13 @@ public class SubStructTest {
     @Test
     public void linkedList() throws IOException {
         final ParseState parseState = stream(0, 8, 1, 42, 0, 12, 1, 84, 0, 4, 1);
-                                    /* offset: 0, 1, 2,  3, 4,  5, 6,  7, 8, 9,10
-                                     * struct: -------      --------      -------
-                                     * ref 1:     +-----------------------^
-                                     * ref 2:               ^----------------+
-                                     * ref 3:                   +----------------*
-                                     */
-        final Optional<ParseState> result = LINKED_LIST.parse(parseState, enc());
+                                  /* offset: 0, 1, 2,  3, 4,  5, 6,  7, 8, 9,10
+                                   * struct: -------      --------      -------
+                                   * ref 1:     +-----------------------^
+                                   * ref 2:               ^----------------+
+                                   * ref 3:                   +----------------*
+                                   */
+        final Optional<ParseState> result = LINKED_LIST.parse(env(parseState, enc()));
         assertTrue(result.isPresent());
         final ParseGraph graph = result.get().order;
         assertEquals(0, getReferences(graph).size); // No cycles
@@ -85,7 +86,7 @@ public class SubStructTest {
     @Test
     public void linkedListWithSelfReference() throws IOException {
         final ParseState parseState = stream(0, 0, 1);
-        final Optional<ParseState> result = LINKED_LIST.parse(parseState, enc());
+        final Optional<ParseState> result = LINKED_LIST.parse(env(parseState, enc()));
         assertTrue(result.isPresent());
         final ParseGraph graph = result.get().order;
         assertEquals(1, getReferences(graph).size);
@@ -99,7 +100,7 @@ public class SubStructTest {
 
     private ParseGraph startCycle(final int offset) throws IOException {
         final ParseState parseState = stream(0, 4, 1, 21, 0, 0, 1).seek(BigInteger.valueOf(offset)).get();
-        final Optional<ParseState> result = LINKED_LIST.parse(parseState, enc());
+        final Optional<ParseState> result = LINKED_LIST.parse(env(parseState, enc()));
         assertTrue(result.isPresent());
         assertEquals(1, getReferences(result.get().order).size);
         return result.get().order;
@@ -153,17 +154,17 @@ public class SubStructTest {
 
     @Test
     public void errorEmptyAddressList() throws IOException {
-        assertFalse(sub(any("a"), ref("b")).parse(stream(1, 2, 3, 4), enc()).isPresent());
+        assertFalse(sub(any("a"), ref("b")).parse(env(stream(1, 2, 3, 4))).isPresent());
     }
 
     @Test
     public void errorEmptyAddress() throws IOException {
-        assertFalse(sub(any("a"), EMPTY_VE).parse(stream(1, 2, 3, 4), enc()).isPresent());
+        assertFalse(sub(any("a"), EMPTY_VE).parse(env(stream(1, 2, 3, 4))).isPresent());
     }
 
     @Test
     public void errorNegativeAddress() {
-        assertFalse(sub(any("a"), con(-1, signed())).parse(stream(1, 2, 3, 4), enc()).isPresent());
+        assertFalse(sub(any("a"), con(-1, signed())).parse(env(stream(1, 2, 3, 4))).isPresent());
     }
 
 }

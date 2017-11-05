@@ -29,6 +29,7 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.whl;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static junit.framework.TestCase.assertFalse;
 
@@ -51,14 +52,14 @@ public class WhileTest {
     public void parseAll() throws IOException {
         // two sequences of two bytes would be parsed: [0,9] and [1,10]
         // the while stops because the second 'value' is >= 1
-        final Optional<ParseState> result = WHILE.parse(stream(0, 9, 1, 10, 2, 11), enc());
+        final Optional<ParseState> result = WHILE.parse(env(stream(0, 9, 1, 10, 2, 11)));
 
         assertThat(result.get().offset.longValueExact(), is(4L));
     }
 
     @Test
     public void parseFails() throws IOException {
-        final Optional<ParseState> result = WHILE.parse(stream(0, 9, 0, 8), enc());
+        final Optional<ParseState> result = WHILE.parse(env(stream(0, 9, 0, 8)));
 
         // parsing fails because the nested token couldn't be parsed ('value2' <= 9)
         assertFalse(result.isPresent());
@@ -68,7 +69,7 @@ public class WhileTest {
     public void whileWithoutExpression() throws IOException {
         // passing null as predicate make this a while(true):
         final Token trueWhile = whl(def("value", 1), null, enc());
-        final Optional<ParseState> result = trueWhile.parse(stream(0), enc());
+        final Optional<ParseState> result = trueWhile.parse(env(stream(0)));
 
         // parsing fails because the nested def fails at the end of the stream
         assertFalse(result.isPresent());

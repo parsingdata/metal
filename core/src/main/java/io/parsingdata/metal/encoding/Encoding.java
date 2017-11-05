@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.encoding;
 
+import static io.parsingdata.metal.Util.checkNotNull;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -49,9 +51,9 @@ public class Encoding {
     }
 
     public Encoding(final Sign sign, final Charset charset, final ByteOrder byteOrder) {
-        this.sign = sign;
-        this.charset = charset;
-        this.byteOrder = byteOrder;
+        this.sign = checkNotNull(sign, "sign");
+        this.charset = checkNotNull(charset, "charset");
+        this.byteOrder = checkNotNull(byteOrder, "byteOrder");
     }
 
     @Override

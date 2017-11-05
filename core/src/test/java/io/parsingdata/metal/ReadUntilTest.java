@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.eq;
 import static io.parsingdata.metal.util.TokenDefinitions.notEq;
@@ -42,17 +43,17 @@ public class ReadUntilTest {
 
     @Test
     public void readUntilConstant() throws IOException {
-        assertTrue(_readUntil.parse(stream(1, 2, 3, 4, 42), enc()).isPresent());
+        assertTrue(_readUntil.parse(env(stream(1, 2, 3, 4, 42))).isPresent());
     }
 
     @Test
     public void readUntilNoSkipping() throws IOException {
-        assertTrue(_readUntil.parse(stream(42), enc()).isPresent());
+        assertTrue(_readUntil.parse(env(stream(42))).isPresent());
     }
 
     @Test
     public void readUntilErrorNoTerminator() throws IOException {
-        assertFalse(_readUntil.parse(stream(1, 2, 3, 4), enc()).isPresent());
+        assertFalse(_readUntil.parse(env(stream(1, 2, 3, 4))).isPresent());
     }
 
 }

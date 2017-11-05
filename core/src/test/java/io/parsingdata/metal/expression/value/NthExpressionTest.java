@@ -29,6 +29,7 @@ import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
@@ -65,7 +66,7 @@ public class NthExpressionTest {
     @Test
     public void testNanIndex() throws IOException {
         // 5 values = [1, 2, 3, 4, 5], 1 index = [Nan], result = [Nan]
-        final Optional<ParseState> result = format.parse(stream(5, 1, 2, 3, 4, 5, 0), enc());
+        final Optional<ParseState> result = format.parse(env(stream(5, 1, 2, 3, 4, 5, 0)));
         final ImmutableList<Optional<Value>> values = nth(ref("value"), div(con(0), con(0))).eval(result.get(), enc());
         assertThat(values.size, is(equalTo(1L)));
         assertThat(values.head.isPresent(), is(equalTo(false)));
@@ -142,7 +143,7 @@ public class NthExpressionTest {
     }
 
     private ImmutableList<Optional<Value>> makeList(final ParseState parseState, final long listSize) throws IOException {
-        final Optional<ParseState> result = format.parse(parseState, signed());
+        final Optional<ParseState> result = format.parse(env(parseState, signed()));
         assertTrue(result.isPresent());
         final ImmutableList<Optional<Value>> values = nth.eval(result.get(), signed());
         assertThat(values.size, is(equalTo(listSize)));

@@ -33,6 +33,7 @@ import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.data.Selection.getAllRoots;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.io.IOException;
@@ -79,7 +80,7 @@ public class CallbackTest {
                 .add(cho, countingCallback)
                 .add(sequence, countingCallback);
         final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 2, 1 }));
-        assertTrue(sequence.parse(parseState, callbacks, enc()).isPresent());
+        assertTrue(sequence.parse(env(parseState, callbacks, enc())).isPresent());
         countingCallback.assertCounts(4, 1);
     }
 
@@ -105,14 +106,14 @@ public class CallbackTest {
     public void testSimpleCallback() throws IOException {
         final Callbacks callbacks = createCallbackList(SIMPLE_SEQ, 0L);
         final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 1, 2 }));
-        assertTrue(SIMPLE_SEQ.parse(parseState, callbacks, enc()).isPresent());
+        assertTrue(SIMPLE_SEQ.parse(env(parseState, callbacks, enc())).isPresent());
     }
 
     @Test
     public void testRepSimpleCallback() throws IOException {
         final Callbacks callbacks = createCallbackList(SIMPLE_SEQ, 0L, 2L);
         final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }));
-        assertTrue(rep(SIMPLE_SEQ).parse(parseState, callbacks, enc()).isPresent());
+        assertTrue(rep(SIMPLE_SEQ).parse(env(parseState, callbacks, enc())).isPresent());
     }
 
     @Test
@@ -138,7 +139,7 @@ public class CallbackTest {
                     public void handleFailure(Token token, ParseState before) {}
                 });
         final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }));
-        assertTrue(repeatingSeq.parse(parseState, callbacks, enc()).isPresent());
+        assertTrue(repeatingSeq.parse(env(parseState, callbacks, enc())).isPresent());
     }
 
     @Test
@@ -153,7 +154,7 @@ public class CallbackTest {
             public void handleFailure(Token token, ParseState before) {}
         });
         final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 0, 3, 1, 0, 0, 1 }));
-        assertTrue(SubStructTest.LINKED_LIST.parse(parseState, callbacks, enc()).isPresent());
+        assertTrue(SubStructTest.LINKED_LIST.parse(env(parseState, callbacks, enc())).isPresent());
         // The ParseReference does not trigger the callback:
         assertEquals(2, linkedListCount);
     }
@@ -172,7 +173,7 @@ public class CallbackTest {
 
         final Callbacks callbacks = Callbacks.create().add(genericCallback);
         final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 1, 2, 4 }));
-        final Optional<ParseState> parse = CHOICE.parse(parseState, callbacks, enc());
+        final Optional<ParseState> parse = CHOICE.parse(env(parseState, callbacks, enc()));
         assertTrue(parse.isPresent());
         genericCallback.assertAllHandled();
     }
@@ -203,7 +204,7 @@ public class CallbackTest {
         final long expectedSuccessCount = expectedSuccessDefinitions.size();
         final long expectedFailureCount = expectedFailureDefinitions.size();
         final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 2 }));
-        assertTrue(cho.parse(parseState, callbacks, enc()).isPresent());
+        assertTrue(cho.parse(env(parseState, callbacks, enc())).isPresent());
         genericCallback.assertAllHandled();
         countingCallback.assertCounts(expectedSuccessCount, expectedFailureCount);
     }
