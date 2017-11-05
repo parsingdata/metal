@@ -53,7 +53,7 @@ public class Cho extends Token {
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        return iterate(environment.withParseState(environment.parseState.addBranch(this)), tokens).computeResult();
+        return iterate(environment.addBranch(this), tokens).computeResult();
     }
 
     private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Token> list) {

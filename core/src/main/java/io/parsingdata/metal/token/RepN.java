@@ -63,7 +63,7 @@ public class RepN extends Token {
         if (counts.size != 1 || !counts.head.isPresent()) {
             return failure();
         }
-        return iterate(environment.withParseState(environment.parseState.addBranch(this)), counts.head.get().asNumeric().longValueExact()).computeResult();
+        return iterate(environment.addBranch(this), counts.head.get().asNumeric().longValueExact()).computeResult();
     }
 
     private Trampoline<Optional<ParseState>> iterate(final Environment environment, final long count) {

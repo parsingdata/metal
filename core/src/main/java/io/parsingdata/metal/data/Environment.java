@@ -21,6 +21,7 @@ import static io.parsingdata.metal.token.Token.NO_NAME;
 
 import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
 
 public class Environment {
 
@@ -58,6 +59,10 @@ public class Environment {
 
     public Environment withEncoding(final Encoding encoding) {
         return new Environment(scope, parseState, callbacks, encoding);
+    }
+
+    public Environment addBranch(final Token token) {
+        return withParseState(parseState.addBranch(token));
     }
 
 }

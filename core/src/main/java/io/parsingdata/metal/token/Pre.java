@@ -58,7 +58,7 @@ public class Pre extends Token {
             return failure();
         }
         return token
-            .parse(environment.withParseState(environment.parseState.addBranch(this)))
+            .parse(environment.addBranch(this))
             .map(resultParseState -> success(resultParseState.closeBranch()))
             .orElseGet(Util::failure);
     }

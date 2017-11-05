@@ -68,7 +68,7 @@ public class Sub extends Token {
         if (addresses.isEmpty()) {
             return failure();
         }
-        return iterate(environment.withParseState(environment.parseState.addBranch(this)), addresses)
+        return iterate(environment.addBranch(this), addresses)
             .computeResult()
             .flatMap(nextParseState -> nextParseState.seek(environment.parseState.offset));
     }

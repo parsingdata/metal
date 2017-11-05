@@ -58,7 +58,7 @@ public class While extends Token {
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        return iterate(environment.withParseState(environment.parseState.addBranch(this))).computeResult();
+        return iterate(environment.addBranch(this)).computeResult();
     }
 
     private Trampoline<Optional<ParseState>> iterate(final Environment environment) {

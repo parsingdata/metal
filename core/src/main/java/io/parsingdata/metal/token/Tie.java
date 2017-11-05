@@ -65,7 +65,7 @@ public class Tie extends Token {
         if (dataResult.isEmpty()) {
             return failure();
         }
-        return iterate(environment.withParseState(environment.parseState.addBranch(this)), dataResult, 0, environment.parseState).computeResult();
+        return iterate(environment.addBranch(this), dataResult, 0, environment.parseState).computeResult();
     }
 
     private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Optional<Value>> values, final int index, final ParseState returnParseState) {
