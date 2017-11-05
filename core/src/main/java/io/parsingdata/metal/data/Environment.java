@@ -18,6 +18,7 @@ package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.token.Token.NO_NAME;
+import static io.parsingdata.metal.token.Token.SEPARATOR;
 
 import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
@@ -49,10 +50,6 @@ public class Environment {
         this(parseState, Callbacks.NONE, encoding);
     }
 
-    public Environment withScope(final String scope) {
-        return new Environment(scope, parseState, callbacks, encoding);
-    }
-
     public Environment withParseState(final ParseState parseState) {
         return new Environment(scope, parseState, callbacks, encoding);
     }
@@ -63,6 +60,10 @@ public class Environment {
 
     public Environment addBranch(final Token token) {
         return withParseState(parseState.addBranch(token));
+    }
+
+    public Environment extendScope(final String name) {
+        return new Environment(scope + (scope.isEmpty() || name.isEmpty() ? NO_NAME : SEPARATOR) + name, parseState, callbacks, encoding);
     }
 
 }

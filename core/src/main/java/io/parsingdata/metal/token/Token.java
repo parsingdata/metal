@@ -66,7 +66,7 @@ public abstract class Token {
 
     public Optional<ParseState> parse(final Environment environment) {
         final Environment activeEnvironment = this.encoding != null ? environment.withEncoding(this.encoding) : environment;
-        final Optional<ParseState> result = parseImpl(activeEnvironment.withScope(makeScope(environment.scope)));
+        final Optional<ParseState> result = parseImpl(activeEnvironment.extendScope(name));
         environment.callbacks.handle(this, result
             .map(after -> success(this, environment.parseState, after))
             .orElseGet(() -> failure(this, environment.parseState)));
@@ -74,10 +74,6 @@ public abstract class Token {
     }
 
     protected abstract Optional<ParseState> parseImpl(final Environment environment);
-
-    private String makeScope(final String scope) {
-        return scope + (scope.isEmpty() || name.isEmpty() ? NO_NAME : SEPARATOR) + name;
-    }
 
     public boolean isLocal() {
         return true;
