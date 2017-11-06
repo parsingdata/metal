@@ -102,8 +102,8 @@ public class TreeTest {
 
     private void checkStructure(final ParseGraph graph, final ParseGraph root, final int offset) {
         checkHeader(graph.tail.tail, offset); // tail = Seq, tail = Seq
-        checkBranch(graph.tail, root, "left", offset); // left
-        checkBranch(graph, root, "right", offset); // right
+        checkBranch(graph.tail, root, "left"); // left
+        checkBranch(graph, root, "right"); // right
     }
 
     private void checkHeader(final ParseGraph header, final int offset) {
