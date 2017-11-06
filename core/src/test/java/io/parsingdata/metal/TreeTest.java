@@ -118,7 +118,7 @@ public class TreeTest {
         assertTrue(nr.asValue().matches("nr"));
     }
 
-    private void checkBranch(final ParseGraph branch, final ParseGraph root, final String name, final int offset) {
+    private void checkBranch(final ParseGraph branch, final ParseGraph root, final String name) {
         assertTrue(branch.isGraph()); // Seq
         assertTrue(branch.asGraph().definition.name.endsWith("tree"));
         assertTrue(branch.head.isGraph()); // Cho

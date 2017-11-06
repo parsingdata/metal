@@ -16,7 +16,6 @@
 
 package io.parsingdata.metal.util;
 
-import static io.parsingdata.metal.Shorthand.TRUE;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.div;
@@ -24,7 +23,6 @@ import static io.parsingdata.metal.Shorthand.not;
 import static io.parsingdata.metal.Shorthand.ref;
 
 import io.parsingdata.metal.Shorthand;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 
@@ -36,10 +34,6 @@ public class TokenDefinitions {
 
     public static Token any(final String name) {
         return def(name, con(1));
-    }
-
-    public static Token any(final String name, final Encoding encoding) {
-        return def(name, con(1), TRUE, encoding);
     }
 
     public static Token eq(final String name, final int value) {
