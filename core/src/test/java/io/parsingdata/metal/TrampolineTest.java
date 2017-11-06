@@ -36,7 +36,7 @@ import io.parsingdata.metal.Trampoline.IntermediateTrampoline;
 public class TrampolineTest {
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void resultOnIntermediateTrampoline() {

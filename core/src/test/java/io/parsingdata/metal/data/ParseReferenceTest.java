@@ -29,8 +29,6 @@ import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.data.selection.ByTypeTest.EMPTY_SOURCE;
 import static junit.framework.TestCase.assertFalse;
 
-import java.math.BigInteger;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -41,7 +39,7 @@ import io.parsingdata.metal.token.Token;
 public class ParseReferenceTest {
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
 
     private Token definition;
     private ParseReference reference;

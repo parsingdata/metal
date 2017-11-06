@@ -33,7 +33,7 @@ import io.parsingdata.metal.data.ParseState;
 public class TokenTest {
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
     private final Token token = new Token("", null) {
         @Override
         protected Optional<ParseState> parseImpl(final Environment environment) {

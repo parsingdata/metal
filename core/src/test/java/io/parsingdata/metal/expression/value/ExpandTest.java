@@ -37,7 +37,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseValue;
 
 public class ExpandTest {
@@ -47,7 +46,7 @@ public class ExpandTest {
     public static final int VALUE_2 = 84;
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
     public static final ParseValue PARSEVALUE_1 = createParseValue("a", VALUE_1);
     public static final ParseValue PARSEVALUE_2 = createParseValue("a", VALUE_2);
 

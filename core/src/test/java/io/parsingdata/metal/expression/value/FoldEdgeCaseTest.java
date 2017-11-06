@@ -55,7 +55,7 @@ public class FoldEdgeCaseTest {
     private static final BinaryOperator<ValueExpression> MULTIPLE_VALUE_REDUCER = (left, right) -> ref("value");
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void valuesContainsEmpty() {
