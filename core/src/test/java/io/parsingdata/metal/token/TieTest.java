@@ -190,8 +190,8 @@ public class TieTest {
         assertTrue(result.isPresent());
         assertEquals(0, getReferences(result.get().order).size);
         final String[] names = { "a", "b", "c", "d" };
-        for (int i = 0; i < names.length; i++) {
-            ImmutableList<ParseValue> values = getAllValues(result.get().order, names[i]);
+        for (String name : names) {
+            ImmutableList<ParseValue> values = getAllValues(result.get().order, name);
             assertEquals(2, values.size);
         }
     }
@@ -208,8 +208,8 @@ public class TieTest {
         assertEquals(0, getReferences(result.get().order).size);
         assertEquals(1, getAllValues(result.get().order, "d").size);
         final String[] names = { "a", "b", "c" };
-        for (int i = 0; i < names.length; i++) {
-            ImmutableList<ParseValue> values = getAllValues(result.get().order, names[i]);
+        for (String name : names) {
+            ImmutableList<ParseValue> values = getAllValues(result.get().order, name);
             assertEquals(2, values.size);
         }
     }
