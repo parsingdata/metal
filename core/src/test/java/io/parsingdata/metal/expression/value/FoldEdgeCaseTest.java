@@ -103,7 +103,7 @@ public class FoldEdgeCaseTest {
         assertFalse(parseResult.isPresent());
     }
 
-    private void faultyReducer(final ValueExpression expression) throws IOException {
+    private void faultyReducer(final ValueExpression expression) {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Reducer must evaluate to a single value.");
 

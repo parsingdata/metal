@@ -142,7 +142,7 @@ public class NthExpressionTest {
         }
     }
 
-    private ImmutableList<Optional<Value>> makeList(final ParseState parseState, final long listSize) throws IOException {
+    private ImmutableList<Optional<Value>> makeList(final ParseState parseState, final long listSize) {
         final Optional<ParseState> result = format.parse(env(parseState, signed()));
         assertTrue(result.isPresent());
         final ImmutableList<Optional<Value>> values = nth.eval(result.get(), signed());

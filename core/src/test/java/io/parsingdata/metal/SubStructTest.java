@@ -98,7 +98,7 @@ public class SubStructTest {
         checkBranch(reference.resolve(graph).get().asGraph(), 0, 0); // Check cycle
     }
 
-    private ParseGraph startCycle(final int offset) throws IOException {
+    private ParseGraph startCycle(final int offset) {
         final ParseState parseState = stream(0, 4, 1, 21, 0, 0, 1).seek(BigInteger.valueOf(offset)).get();
         final Optional<ParseState> result = LINKED_LIST.parse(env(parseState, enc()));
         assertTrue(result.isPresent());
