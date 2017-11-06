@@ -19,7 +19,6 @@ package io.parsingdata.metal.expression.value.reference;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;

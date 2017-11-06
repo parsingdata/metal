@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
