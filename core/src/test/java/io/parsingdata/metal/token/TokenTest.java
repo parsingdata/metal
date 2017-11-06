@@ -37,7 +37,7 @@ public class TokenTest {
     private final Token token = new Token("", null) {
         @Override
         protected Optional<ParseState> parseImpl(final Environment environment) {
-            return null;
+            return Optional.empty();
         }
     };
 

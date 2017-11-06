@@ -194,7 +194,7 @@ public class ToStringTest {
 
     private Token makeToken(final String name) {
         return new Token(name, enc()) {
-            @Override protected Optional<ParseState> parseImpl(final Environment environment) { return null; }
+            @Override protected Optional<ParseState> parseImpl(final Environment environment) { return Optional.empty(); }
             @Override public String toString() { return name; }
         };
     }
