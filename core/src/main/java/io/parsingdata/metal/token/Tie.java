@@ -73,7 +73,7 @@ public class Tie extends Token {
             return complete(() -> success(new ParseState(environment.parseState.closeBranch().order, returnParseState.source, returnParseState.offset)));
         }
         return values.head
-            .map(t -> token
+            .map(value -> token
                 .parse(environment.withParseState(environment.parseState.source(dataExpression, index, environment.parseState, environment.encoding)))
                 .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState), values.tail, index + 1, returnParseState)))
                 .orElseGet(() -> complete(Util::failure)))
