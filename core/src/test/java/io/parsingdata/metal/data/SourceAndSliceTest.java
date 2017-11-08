@@ -44,7 +44,7 @@ import io.parsingdata.metal.util.InMemoryByteStream;
 @RunWith(Parameterized.class)
 public class SourceAndSliceTest {
 
-    @Rule public ExpectedException thrown = ExpectedException.none();
+    @Rule public final ExpectedException thrown = ExpectedException.none();
 
     @Parameter public Source source;
 

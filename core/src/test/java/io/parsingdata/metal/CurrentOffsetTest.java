@@ -46,7 +46,7 @@ import io.parsingdata.metal.util.InMemoryByteStream;
 
 public class CurrentOffsetTest {
 
-    private void checkCurrentOffset(final int size) throws IOException {
+    private void checkCurrentOffset(final int size) {
         final byte[] data = new byte[size];
         final Optional<ParseState> result = def("a", con(size)).parse(env(createFromByteStream(new InMemoryByteStream(data)), enc()));
         assertTrue(result.isPresent());

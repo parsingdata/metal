@@ -25,7 +25,6 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
 import io.parsingdata.metal.data.ParseState;
-import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;

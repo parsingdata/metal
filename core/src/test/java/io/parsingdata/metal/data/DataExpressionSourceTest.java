@@ -29,7 +29,7 @@ import io.parsingdata.metal.token.Token;
 public class DataExpressionSourceTest {
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
 
     public ParseValue setupValue() {
         final Optional<ParseState> result = setupResult();

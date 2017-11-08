@@ -37,7 +37,7 @@ public class OptionalValueTest {
     private static final Optional<Value> EMPTY = Optional.empty();
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void withValue() {

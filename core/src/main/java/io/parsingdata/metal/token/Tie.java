@@ -72,12 +72,11 @@ public class Tie extends Token {
         if (values.isEmpty()) {
             return complete(() -> success(new ParseState(environment.parseState.closeBranch().order, returnParseState.source, returnParseState.offset)));
         }
-        if (!values.head.isPresent()) {
-            return complete(Util::failure);
-        }
-        return token
-            .parse(environment.withParseState(environment.parseState.source(dataExpression, index, environment.parseState, environment.encoding)))
-            .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState), values.tail, index + 1, returnParseState)))
+        return values.head
+            .map(value -> token
+                .parse(environment.withParseState(environment.parseState.source(dataExpression, index, environment.parseState, environment.encoding)))
+                .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState), values.tail, index + 1, returnParseState)))
+                .orElseGet(() -> complete(Util::failure)))
             .orElseGet(() -> complete(Util::failure));
     }
 

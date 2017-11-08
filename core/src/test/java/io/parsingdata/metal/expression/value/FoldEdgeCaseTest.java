@@ -55,7 +55,7 @@ public class FoldEdgeCaseTest {
     private static final BinaryOperator<ValueExpression> MULTIPLE_VALUE_REDUCER = (left, right) -> ref("value");
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void valuesContainsEmpty() {
@@ -103,7 +103,7 @@ public class FoldEdgeCaseTest {
         assertFalse(parseResult.isPresent());
     }
 
-    private void faultyReducer(final ValueExpression expression) throws IOException {
+    private void faultyReducer(final ValueExpression expression) {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Reducer must evaluate to a single value.");
 

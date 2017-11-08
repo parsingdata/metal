@@ -243,9 +243,9 @@ public class AutoEqualityTest {
         return output;
     }
 
-    public static Object OTHER_TYPE = new Object() {};
+    public static final Object OTHER_TYPE = new Object() {};
 
-    @Parameter(0) public Object object;
+    @Parameter public Object object;
     @Parameter(1) public Object same;
     @Parameter(2) public Object[] other;
 

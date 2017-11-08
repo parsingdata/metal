@@ -27,7 +27,6 @@ import java.util.function.BinaryOperator;
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
@@ -88,10 +87,9 @@ public abstract class Fold implements ValueExpression {
         if (list.isEmpty()) {
             return complete(() -> false);
         }
-        if (!list.head.isPresent()) {
-            return complete(() -> true);
-        }
-        return intermediate(() -> containsEmpty(list.tail));
+        return list.head
+            .map(t -> intermediate(() -> containsEmpty(list.tail)))
+            .orElseGet(() -> complete(() -> true));
     }
 
     protected abstract ImmutableList<Optional<Value>> prepareValues(ImmutableList<Optional<Value>> values);

@@ -92,7 +92,7 @@ public class ByTokenTest {
                  token("selfRec"), last(ref("childCount"))));
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void nullCheck() {

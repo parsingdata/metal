@@ -65,7 +65,7 @@ public class PITestCasesTest {
         parse(SHL, stream(85, 170), enc());
     }
 
-    private void parse(final Token token, final ParseState parseState, final Encoding encoding) throws IOException {
+    private void parse(final Token token, final ParseState parseState, final Encoding encoding) {
         assertTrue(token.parse(env(parseState, encoding)).isPresent());
     }
 

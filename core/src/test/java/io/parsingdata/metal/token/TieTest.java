@@ -82,7 +82,7 @@ public class TieTest {
         assertEquals(6, getAllValues(result.get().order, "value").size);
     }
 
-    private Optional<ParseState> parseContainer() throws IOException {
+    private Optional<ParseState> parseContainer() {
         final Optional<ParseState> result = CONTAINER.parse(env(stream(2, 3, 7, 5, 9, 3, 4, 1, 2, 5, 6)));
         assertTrue(result.isPresent());
         return result;
@@ -94,7 +94,7 @@ public class TieTest {
         checkFullParse(INC_PREV_MOD_100, fold(ref("value"), Shorthand::cat).eval(result.get(), enc()).head.get().getValue());
     }
 
-    private Optional<ParseState> checkFullParse(Token token, byte[] data) throws IOException {
+    private Optional<ParseState> checkFullParse(Token token, byte[] data) {
         final Optional<ParseState> result = token.parse(env(createFromByteStream(new InMemoryByteStream(data)), enc()));
         assertTrue(result.isPresent());
         assertEquals(data.length, result.get().offset.intValueExact());
@@ -190,8 +190,8 @@ public class TieTest {
         assertTrue(result.isPresent());
         assertEquals(0, getReferences(result.get().order).size);
         final String[] names = { "a", "b", "c", "d" };
-        for (int i = 0; i < names.length; i++) {
-            ImmutableList<ParseValue> values = getAllValues(result.get().order, names[i]);
+        for (String name : names) {
+            ImmutableList<ParseValue> values = getAllValues(result.get().order, name);
             assertEquals(2, values.size);
         }
     }
@@ -208,8 +208,8 @@ public class TieTest {
         assertEquals(0, getReferences(result.get().order).size);
         assertEquals(1, getAllValues(result.get().order, "d").size);
         final String[] names = { "a", "b", "c" };
-        for (int i = 0; i < names.length; i++) {
-            ImmutableList<ParseValue> values = getAllValues(result.get().order, names[i]);
+        for (String name : names) {
+            ImmutableList<ParseValue> values = getAllValues(result.get().order, name);
             assertEquals(2, values.size);
         }
     }

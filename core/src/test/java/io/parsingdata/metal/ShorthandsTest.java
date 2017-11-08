@@ -105,7 +105,7 @@ public class ShorthandsTest {
         runChoice(1, "c");
     }
 
-    private void runChoice(final int data, final String matched) throws IOException {
+    private void runChoice(final int data, final String matched) {
         final Optional<ParseState> result = multiChoice.parse(env(stream(data)));
         assertTrue(result.isPresent());
         assertTrue(result.get().order.current().get().matches(matched));

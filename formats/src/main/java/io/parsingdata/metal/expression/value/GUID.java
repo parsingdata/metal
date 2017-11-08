@@ -25,11 +25,7 @@ import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Arrays;
-import java.util.Optional;
 
-import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -53,22 +49,17 @@ public final class GUID {
         if (parts.length != 5) {
             throw new IllegalArgumentException("Invalid GUID string: " + guid);
         }
-        return new ValueExpression() {
-
-            @Override
-            public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-                // Note that GUID bytes differ from UUID bytes, as the first 3 parts can be reversed
-                return cat(
+        return (parseState, encoding) ->
+            // Note that GUID bytes differ from UUID bytes, as the first 3 parts can be reversed
+            cat(
+                cat(
                     cat(
-                        cat(
-                            four(parts[0], encoding),
-                            two(parts[1], encoding)),
-                        two(parts[2], encoding)),
-                    cat(
-                        two(parts[3], BIG_ENDIAN),
-                        six(parts[4], BIG_ENDIAN))).eval(parseState, encoding);
-            }
-        };
+                        four(parts[0], encoding),
+                        two(parts[1], encoding)),
+                    two(parts[2], encoding)),
+                cat(
+                    two(parts[3], BIG_ENDIAN),
+                    six(parts[4], BIG_ENDIAN))).eval(parseState, encoding);
     }
 
     private static ValueExpression four(final String part, final Encoding encoding) {

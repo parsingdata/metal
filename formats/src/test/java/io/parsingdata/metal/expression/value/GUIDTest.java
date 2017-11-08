@@ -22,7 +22,6 @@ import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.expression.value.GUID.guid;
 import static io.parsingdata.metal.util.ClassDefinition.checkUtilityClass;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
@@ -39,7 +38,7 @@ import io.parsingdata.metal.token.Token;
 public class GUIDTest {
 
     @Rule
-    public ExpectedException _exception = ExpectedException.none();
+    public final ExpectedException _exception = ExpectedException.none();
 
     @Test
     public void checkUtility() throws ReflectiveOperationException {

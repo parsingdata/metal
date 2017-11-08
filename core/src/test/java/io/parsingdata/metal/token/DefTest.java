@@ -36,7 +36,7 @@ import org.junit.rules.ExpectedException;
 public class DefTest {
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void scopeWithoutEncoding() throws IOException {

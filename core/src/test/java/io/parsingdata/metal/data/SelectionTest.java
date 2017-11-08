@@ -24,7 +24,6 @@ import static org.junit.Assert.assertEquals;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.data.Selection.findItemAtOffset;
 import static io.parsingdata.metal.data.Selection.getAllValues;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;

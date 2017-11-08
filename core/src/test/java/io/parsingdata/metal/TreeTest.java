@@ -29,7 +29,6 @@ import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
@@ -103,8 +102,8 @@ public class TreeTest {
 
     private void checkStructure(final ParseGraph graph, final ParseGraph root, final int offset) {
         checkHeader(graph.tail.tail, offset); // tail = Seq, tail = Seq
-        checkBranch(graph.tail, root, "left", offset); // left
-        checkBranch(graph, root, "right", offset); // right
+        checkBranch(graph.tail, root, "left"); // left
+        checkBranch(graph, root, "right"); // right
     }
 
     private void checkHeader(final ParseGraph header, final int offset) {
@@ -118,7 +117,7 @@ public class TreeTest {
         assertTrue(nr.asValue().matches("nr"));
     }
 
-    private void checkBranch(final ParseGraph branch, final ParseGraph root, final String name, final int offset) {
+    private void checkBranch(final ParseGraph branch, final ParseGraph root, final String name) {
         assertTrue(branch.isGraph()); // Seq
         assertTrue(branch.asGraph().definition.name.endsWith("tree"));
         assertTrue(branch.head.isGraph()); // Cho

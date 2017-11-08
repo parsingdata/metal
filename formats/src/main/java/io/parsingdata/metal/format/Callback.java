@@ -21,7 +21,6 @@ import static io.parsingdata.metal.data.Slice.createFromBytes;
 import java.util.Optional;
 import java.util.zip.CRC32;
 
-import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;

@@ -96,13 +96,13 @@ public class ArithmeticValueExpressionSemanticsTest extends ParameterizedParse {
         });
     }
 
-    private static Token add = binaryValueExpressionToken(add(ref("a"), ref("b")), 1);
-    private static Token div = binaryValueExpressionToken(div(ref("a"), ref("b")), 1);
-    private static Token mul = binaryValueExpressionToken(mul(ref("a"), ref("b")), 1);
-    private static Token mul2 = binaryValueExpressionToken(mul(ref("a"), ref("b")), 2);
-    private static Token sub = binaryValueExpressionToken(sub(ref("a"), ref("b")), 1);
-    private static Token mod = binaryValueExpressionToken(mod(ref("a"), ref("b")), 1);
-    private static Token neg = unaryValueExpressionToken(neg(ref("a")));
+    private static final Token add = binaryValueExpressionToken(add(ref("a"), ref("b")), 1);
+    private static final Token div = binaryValueExpressionToken(div(ref("a"), ref("b")), 1);
+    private static final Token mul = binaryValueExpressionToken(mul(ref("a"), ref("b")), 1);
+    private static final Token mul2 = binaryValueExpressionToken(mul(ref("a"), ref("b")), 2);
+    private static final Token sub = binaryValueExpressionToken(sub(ref("a"), ref("b")), 1);
+    private static final Token mod = binaryValueExpressionToken(mod(ref("a"), ref("b")), 1);
+    private static final Token neg = unaryValueExpressionToken(neg(ref("a")));
 
     private static Token singleToken(final String firstName, final String secondName, final int resultSize, final ValueExpression valueExpression) {
         return seq(any(firstName),

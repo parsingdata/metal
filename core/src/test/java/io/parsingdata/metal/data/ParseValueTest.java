@@ -37,7 +37,7 @@ import io.parsingdata.metal.token.Token;
 public class ParseValueTest {
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
 
     private Token definition;
     private ParseValue value;
