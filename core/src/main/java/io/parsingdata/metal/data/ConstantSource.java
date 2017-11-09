@@ -36,7 +36,7 @@ public class ConstantSource extends Source {
 
     @Override
     protected byte[] getData(final BigInteger offset, final BigInteger length) {
-        if (!isAvailable(checkNotNegative(offset, "offset"), length)) {
+        if (!isAvailable(checkNotNegative(offset, "offset"), checkNotNegative(length, "length"))) {
             throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ").");
         }
         final byte[] outputData = new byte[length.intValueExact()];
@@ -46,7 +46,7 @@ public class ConstantSource extends Source {
 
     @Override
     protected boolean isAvailable(final BigInteger offset, final BigInteger length) {
-        return length.add(offset).compareTo(BigInteger.valueOf(data.length)) <= 0;
+        return checkNotNegative(length, "length").add((checkNotNegative(offset, "offset"))).compareTo(BigInteger.valueOf(data.length)) <= 0;
     }
 
     @Override
