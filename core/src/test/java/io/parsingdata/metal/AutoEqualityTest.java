@@ -57,6 +57,7 @@ import org.junit.runners.Parameterized.Parameter;
 
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.ByteStreamSource;
+import io.parsingdata.metal.data.ConcatenatedValueSource;
 import io.parsingdata.metal.data.ConstantSource;
 import io.parsingdata.metal.data.DataExpressionSource;
 import io.parsingdata.metal.data.ParseGraph;
@@ -189,7 +190,7 @@ public class AutoEqualityTest {
             // Data structures
             Value.class, ParseValue.class, ParseReference.class, ParseState.class,
             // Inputs
-            ConstantSource.class, DataExpressionSource.class, ByteStreamSource.class
+            ConstantSource.class, DataExpressionSource.class, ByteStreamSource.class, ConcatenatedValueSource.class
             );
     }
 
