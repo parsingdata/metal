@@ -16,11 +16,14 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static java.math.BigInteger.ONE;
+
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.Slice.createFromBytes;
+import static io.parsingdata.metal.data.Slice.createFromSource;
 
+import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -63,16 +66,16 @@ public class Bytes implements ValueExpression {
 
     private Trampoline<ImmutableList<Optional<Value>>> toBytes(final ImmutableList<Optional<Value>> output, final Optional<Value> head, final ImmutableList<Optional<Value>> tail, final Encoding encoding) {
         final ImmutableList<Optional<Value>> result = output.add(
-            head.map(value -> bytesToValues(new ImmutableList<>(), value.getValue(), 0, encoding).computeResult())
+            head.map(value -> bytesToValues(new ImmutableList<>(), value, 0, encoding).computeResult())
                 .orElseGet(ImmutableList::new));
         return tail.isEmpty() ? complete(() -> result) : intermediate(() -> toBytes(result, tail.head, tail.tail, encoding));
     }
 
-    private Trampoline<ImmutableList<Optional<Value>>> bytesToValues(final ImmutableList<Optional<Value>> output, final byte[] value, final int i, final Encoding encoding) {
-        if (i >= value.length) {
+    private Trampoline<ImmutableList<Optional<Value>>> bytesToValues(final ImmutableList<Optional<Value>> output, final Value value, final int i, final Encoding encoding) {
+        if (BigInteger.valueOf(i).compareTo(value.getLength()) >= 0) {
             return complete(() -> output);
         }
-        return intermediate(() -> bytesToValues(output.add(Optional.of(new Value(createFromBytes(new byte[] { value[i] }), encoding))), value, i + 1, encoding));
+        return intermediate(() -> bytesToValues(output.add(Optional.of(new Value(createFromSource(value.slice.source, value.slice.offset.add(BigInteger.valueOf(i)), ONE).get(), encoding))), value, i + 1, encoding));
     }
 
     @Override
