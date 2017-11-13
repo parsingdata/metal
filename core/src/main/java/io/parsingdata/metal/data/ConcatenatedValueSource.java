@@ -16,22 +16,23 @@
 
 package io.parsingdata.metal.data;
 
-import static io.parsingdata.metal.Util.bytesToHexString;
 import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.Objects;
 
 import io.parsingdata.metal.Util;
+import io.parsingdata.metal.expression.value.Value;
 
-public class ConstantSource extends Source {
+public class ConcatenatedValueSource extends Source {
 
-    private final byte[] data; // Private because array content is mutable.
+    public final Value left;
+    public final Value right;
 
-    public ConstantSource(final byte[] data) {
-        this.data = checkNotNull(data, "data");
+    public ConcatenatedValueSource(final Value left, final Value right) {
+        this.left = checkNotNull(left, "left");
+        this.right = checkNotNull(right, "right");
     }
 
     @Override
@@ -40,29 +41,38 @@ public class ConstantSource extends Source {
             throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ").");
         }
         final byte[] outputData = new byte[length.intValueExact()];
-        System.arraycopy(data, offset.intValueExact(), outputData, 0, outputData.length);
+        if (offset.add(length).compareTo(left.getLength()) <= 0) {
+            System.arraycopy(left.getValue(), offset.intValueExact(), outputData, 0, length.intValueExact());
+        } else if (offset.compareTo(left.getLength()) >= 0) {
+            System.arraycopy(right.getValue(), offset.subtract(left.getLength()).intValueExact(), outputData, 0, length.intValueExact());
+        } else {
+            final BigInteger leftPartLength = left.getLength().subtract(offset);
+            System.arraycopy(left.getValue(), offset.intValueExact(), outputData, 0, leftPartLength.intValueExact());
+            System.arraycopy(right.getValue(), 0, outputData, leftPartLength.intValueExact(), length.subtract(leftPartLength).intValueExact());
+        }
         return outputData;
     }
 
     @Override
     protected boolean isAvailable(final BigInteger offset, final BigInteger length) {
-        return checkNotNegative(length, "length").add((checkNotNegative(offset, "offset"))).compareTo(BigInteger.valueOf(data.length)) <= 0;
+        return checkNotNegative(length, "length").add(checkNotNegative(offset, "offset")).compareTo(left.getLength().add(right.getLength())) <= 0;
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(0x" + bytesToHexString(data) + ")";
+        return getClass().getSimpleName() + "(" + left + "," + right + "))";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Arrays.equals(data, ((ConstantSource)obj).data);
+            && Objects.equals(left, ((ConcatenatedValueSource)obj).left)
+            && Objects.equals(right, ((ConcatenatedValueSource)obj).right);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass(), Arrays.hashCode(data));
+        return Objects.hash(getClass(), left, right);
     }
 
 }

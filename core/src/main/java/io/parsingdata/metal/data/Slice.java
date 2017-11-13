@@ -18,6 +18,7 @@ package io.parsingdata.metal.data;
 
 import static java.math.BigInteger.ZERO;
 
+import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
@@ -39,7 +40,7 @@ public class Slice {
     }
 
     public static Optional<Slice> createFromSource(final Source source, final BigInteger offset, final BigInteger length) {
-        if (offset.compareTo(ZERO) < 0 ||
+        if (checkNotNull(offset, "offset").compareTo(ZERO) < 0 ||
             checkNotNull(length, "length").compareTo(ZERO) < 0 ||
             !checkNotNull(source, "source").isAvailable(offset, length)) {
             return Optional.empty();
@@ -56,10 +57,7 @@ public class Slice {
     }
 
     public byte[] getData(final BigInteger limit) {
-        if (limit.compareTo(ZERO) < 0) {
-            throw new IllegalArgumentException("Argument limit may not be negative.");
-        }
-        final BigInteger calculatedLength = limit.compareTo(length) > 0 ? length : limit;
+        final BigInteger calculatedLength = checkNotNegative(limit, "limit").compareTo(length) > 0 ? length : limit;
         return source.getData(offset, calculatedLength);
     }
 

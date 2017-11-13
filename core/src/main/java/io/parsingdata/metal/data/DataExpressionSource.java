@@ -49,7 +49,7 @@ public class DataExpressionSource extends Source {
     protected byte[] getData(final BigInteger offset, final BigInteger length) {
         checkNotNegative(offset, "offset");
         final Value inputValue = getValue();
-        if (length.add(offset).compareTo(inputValue.slice.length) > 0) {
+        if (checkNotNegative(length, "length").add(offset).compareTo(inputValue.slice.length) > 0) {
             throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ").");
         }
         final byte[] outputData = new byte[length.intValueExact()];
@@ -59,7 +59,7 @@ public class DataExpressionSource extends Source {
 
     @Override
     protected boolean isAvailable(final BigInteger offset, final BigInteger length) {
-        return offset.add(length).compareTo(getValue().slice.length) <= 0;
+        return checkNotNegative(offset, "offset").add(checkNotNegative(length, "length")).compareTo(getValue().slice.length) <= 0;
     }
 
     private Value getValue() {

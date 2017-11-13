@@ -23,6 +23,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.data.Slice.createFromSource;
 import static io.parsingdata.metal.expression.value.BytesTest.EMPTY_PARSE_STATE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
@@ -39,6 +40,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
+import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
 @RunWith(Parameterized.class)
@@ -55,7 +57,8 @@ public class SourceAndSliceTest {
         return Arrays.asList(new Object[][] {
             { new ConstantSource(DATA) },
             { new DataExpressionSource(con(DATA), 0, EMPTY_PARSE_STATE, enc()) },
-            { new ByteStreamSource(new InMemoryByteStream(DATA) ) }
+            { new ByteStreamSource(new InMemoryByteStream(DATA)) },
+            { new ConcatenatedValueSource(new Value(createFromSource(new ConstantSource(DATA), ZERO, BigInteger.valueOf(2)).get(), enc()), new Value(createFromSource(new ConstantSource(DATA), BigInteger.valueOf(2), BigInteger.valueOf(2)).get(), enc())) }
         });
     }
 
@@ -73,14 +76,16 @@ public class SourceAndSliceTest {
 
     @Test
     public void validSlice() {
+        checkSlice(ZERO, 2);
         checkSlice(ZERO, 4);
         checkSlice(ONE, 3);
         checkSlice(BigInteger.valueOf(2), 1);
+        checkSlice(BigInteger.valueOf(2), 2);
         checkSlice(BigInteger.valueOf(4), 0);
     }
 
     private void checkSlice(final BigInteger offset, final int length) {
-        assertTrue(compareDataSlices(Slice.createFromSource(source, offset, BigInteger.valueOf(length)).get().getData(), offset.intValueExact()));
+        assertTrue(compareDataSlices(createFromSource(source, offset, BigInteger.valueOf(length)).get().getData(), offset.intValueExact()));
     }
 
     private boolean compareDataSlices(byte[] data, int offset) {
@@ -100,7 +105,7 @@ public class SourceAndSliceTest {
 
     @Test
     public void readBeyondEndOfSlice() {
-        assertFalse(Slice.createFromSource(source, ONE, BigInteger.valueOf(4)).isPresent());
+        assertFalse(createFromSource(source, ONE, BigInteger.valueOf(4)).isPresent());
     }
 
     @Test
@@ -111,7 +116,7 @@ public class SourceAndSliceTest {
 
     @Test
     public void startReadBeyondEndOfSlice() {
-        assertFalse(Slice.createFromSource(source, BigInteger.valueOf(5), ZERO).isPresent());
+        assertFalse(createFromSource(source, BigInteger.valueOf(5), ZERO).isPresent());
     }
 
     @Test
@@ -122,7 +127,7 @@ public class SourceAndSliceTest {
 
     @Test
     public void startReadAtNegativeOffsetSlice() {
-        assertFalse(Slice.createFromSource(source, BigInteger.valueOf(-1L), ONE).isPresent());
+        assertFalse(createFromSource(source, BigInteger.valueOf(-1L), ONE).isPresent());
     }
 
 }
