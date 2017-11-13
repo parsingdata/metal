@@ -61,21 +61,21 @@ public class Bytes implements ValueExpression {
         if (input.isEmpty()) {
             return input;
         }
-        return toBytes(new ImmutableList<>(), input.head, input.tail, encoding).computeResult();
+        return toByteValues(new ImmutableList<>(), input.head, input.tail, encoding).computeResult();
     }
 
-    private Trampoline<ImmutableList<Optional<Value>>> toBytes(final ImmutableList<Optional<Value>> output, final Optional<Value> head, final ImmutableList<Optional<Value>> tail, final Encoding encoding) {
+    private Trampoline<ImmutableList<Optional<Value>>> toByteValues(final ImmutableList<Optional<Value>> output, final Optional<Value> head, final ImmutableList<Optional<Value>> tail, final Encoding encoding) {
         final ImmutableList<Optional<Value>> result = output.add(
-            head.map(value -> bytesToValues(new ImmutableList<>(), value, 0, encoding).computeResult())
+            head.map(value -> extractByteValues(new ImmutableList<>(), value, 0, encoding).computeResult())
                 .orElseGet(ImmutableList::new));
-        return tail.isEmpty() ? complete(() -> result) : intermediate(() -> toBytes(result, tail.head, tail.tail, encoding));
+        return tail.isEmpty() ? complete(() -> result) : intermediate(() -> toByteValues(result, tail.head, tail.tail, encoding));
     }
 
-    private Trampoline<ImmutableList<Optional<Value>>> bytesToValues(final ImmutableList<Optional<Value>> output, final Value value, final int i, final Encoding encoding) {
+    private Trampoline<ImmutableList<Optional<Value>>> extractByteValues(final ImmutableList<Optional<Value>> output, final Value value, final int i, final Encoding encoding) {
         if (BigInteger.valueOf(i).compareTo(value.getLength()) >= 0) {
             return complete(() -> output);
         }
-        return intermediate(() -> bytesToValues(output.add(Optional.of(new Value(createFromSource(value.slice.source, value.slice.offset.add(BigInteger.valueOf(i)), ONE).get(), encoding))), value, i + 1, encoding));
+        return intermediate(() -> extractByteValues(output.add(Optional.of(new Value(createFromSource(value.slice.source, value.slice.offset.add(BigInteger.valueOf(i)), ONE).get(), encoding))), value, i + 1, encoding));
     }
 
     @Override

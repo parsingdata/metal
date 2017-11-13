@@ -17,12 +17,9 @@
 package io.parsingdata.metal.expression.value;
 
 import static java.math.BigInteger.ZERO;
-import static java.util.Optional.empty;
 
-import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.data.Slice.createFromSource;
 
-import java.math.BigInteger;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.ConcatenatedValueSource;
@@ -41,7 +38,7 @@ public class Cat extends BinaryValueExpression {
     @Override
     public Optional<Value> eval(final Value left, final Value right, final ParseState parseState, final Encoding encoding) {
         return createFromSource(new ConcatenatedValueSource(left, right), ZERO, left.getLength().add(right.getLength()))
-            .flatMap(source -> Optional.of(new Value(source, encoding)));
+            .map(source -> new Value(source, encoding));
     }
 
 }

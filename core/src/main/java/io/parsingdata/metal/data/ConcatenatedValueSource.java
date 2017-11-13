@@ -27,8 +27,8 @@ import io.parsingdata.metal.expression.value.Value;
 
 public class ConcatenatedValueSource extends Source {
 
-    private final Value left;
-    private final Value right;
+    public final Value left;
+    public final Value right;
 
     public ConcatenatedValueSource(final Value left, final Value right) {
         this.left = checkNotNull(left, "left");
@@ -60,7 +60,7 @@ public class ConcatenatedValueSource extends Source {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + left.toString() + "," + right.toString() + "))";
+        return getClass().getSimpleName() + "(" + left + "," + right + "))";
     }
 
     @Override
