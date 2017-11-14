@@ -18,11 +18,11 @@ package io.parsingdata.metal;
 
 import static org.junit.Assert.assertTrue;
 
+import static io.parsingdata.metal.Shorthand.SELF;
 import static io.parsingdata.metal.Shorthand.and;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
-import static io.parsingdata.metal.Shorthand.SELF;
 import static io.parsingdata.metal.Shorthand.shr;
 import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;

@@ -54,8 +54,8 @@ import java.util.zip.Deflater;
 import org.junit.Test;
 
 import io.parsingdata.metal.Shorthand;
-import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.util.InMemoryByteStream;

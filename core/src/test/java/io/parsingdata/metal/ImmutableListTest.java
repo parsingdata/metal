@@ -21,10 +21,10 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.data.selection.ByName.get;
-import static io.parsingdata.metal.data.selection.ByName.getAll;
 import static io.parsingdata.metal.data.Selection.reverse;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
+import static io.parsingdata.metal.data.selection.ByName.get;
+import static io.parsingdata.metal.data.selection.ByName.getAll;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import org.junit.Test;

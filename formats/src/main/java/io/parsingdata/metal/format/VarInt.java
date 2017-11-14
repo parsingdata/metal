@@ -16,10 +16,10 @@
 
 package io.parsingdata.metal.format;
 
+import static io.parsingdata.metal.Shorthand.EMPTY;
 import static io.parsingdata.metal.Shorthand.and;
 import static io.parsingdata.metal.Shorthand.bytes;
 import static io.parsingdata.metal.Shorthand.con;
-import static io.parsingdata.metal.Shorthand.EMPTY;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.foldLeft;
 import static io.parsingdata.metal.Shorthand.last;

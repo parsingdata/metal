@@ -35,8 +35,8 @@ import java.util.Optional;
 
 import org.junit.Test;
 
-import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.token.Token;
 
 public class SubStructTableTest {

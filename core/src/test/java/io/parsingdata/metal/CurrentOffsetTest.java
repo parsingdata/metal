@@ -20,12 +20,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
+import static io.parsingdata.metal.Shorthand.SELF;
+import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eqNum;
 import static io.parsingdata.metal.Shorthand.rep;
-import static io.parsingdata.metal.Shorthand.SELF;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
@@ -36,8 +36,8 @@ import java.util.Optional;
 
 import org.junit.Test;
 
-import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.value.Value;

@@ -40,8 +40,8 @@ import java.util.Optional;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.ByteStream;
-import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;

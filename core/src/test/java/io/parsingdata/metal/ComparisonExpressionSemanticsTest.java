@@ -18,6 +18,7 @@ package io.parsingdata.metal;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
+import static io.parsingdata.metal.Shorthand.SELF;
 import static io.parsingdata.metal.Shorthand.TRUE;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
@@ -30,7 +31,6 @@ import static io.parsingdata.metal.Shorthand.gtNum;
 import static io.parsingdata.metal.Shorthand.ltEqNum;
 import static io.parsingdata.metal.Shorthand.ltNum;
 import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.SELF;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;

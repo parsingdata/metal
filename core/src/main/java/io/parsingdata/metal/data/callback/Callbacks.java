@@ -23,8 +23,8 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import java.util.function.Consumer;
 
 import io.parsingdata.metal.Trampoline;
-import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.token.Token;
 
 public class Callbacks {

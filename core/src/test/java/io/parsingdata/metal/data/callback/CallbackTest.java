@@ -30,8 +30,8 @@ import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
-import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.data.Selection.getAllRoots;
+import static io.parsingdata.metal.data.selection.ByName.getValue;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -46,9 +46,9 @@ import java.util.Optional;
 import org.junit.Test;
 
 import io.parsingdata.metal.SubStructTest;
-import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseItem;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
 

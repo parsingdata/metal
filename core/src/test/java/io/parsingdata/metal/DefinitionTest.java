@@ -19,10 +19,10 @@ package io.parsingdata.metal;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.count;
-import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.eqNum;
@@ -43,8 +43,8 @@ import java.util.Optional;
 
 import org.junit.Test;
 
-import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.token.Token;
 
 public class DefinitionTest {

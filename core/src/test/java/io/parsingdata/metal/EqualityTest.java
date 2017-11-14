@@ -55,9 +55,9 @@ import java.util.Optional;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.ConstantSource;
-import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
