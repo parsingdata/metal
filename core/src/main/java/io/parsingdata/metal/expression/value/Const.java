@@ -45,7 +45,7 @@ public class Const implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + value.toString() + ")";
+        return getClass().getSimpleName() + "(" + value + ")";
     }
 
     @Override

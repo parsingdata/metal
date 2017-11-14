@@ -80,7 +80,7 @@ public class Bytes implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + operand.toString() + ")";
+        return getClass().getSimpleName() + "(" + operand + ")";
     }
 
     @Override

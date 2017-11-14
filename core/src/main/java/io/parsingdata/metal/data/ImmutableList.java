@@ -84,7 +84,7 @@ public class ImmutableList<T> {
 
     @Override
     public String toString() {
-        return isEmpty() ? "" : ">" + head + tail.toString();
+        return isEmpty() ? "" : ">" + head + tail;
     }
 
     @Override

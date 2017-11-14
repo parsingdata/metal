@@ -78,8 +78,8 @@ public class Callbacks {
 
     @Override
     public String toString() {
-        return (genericCallback == null ? "" : "generic: " + genericCallback.toString() + "; ") +
-            (tokenCallbacks.isEmpty() ? "" : "token: " + tokenCallbacks.toString());
+        return (genericCallback == null ? "" : "generic: " + genericCallback + "; ") +
+            (tokenCallbacks.isEmpty() ? "" : "token: " + tokenCallbacks);
     }
 
 }
