@@ -20,9 +20,11 @@ import static java.math.BigInteger.ZERO;
 
 import static io.parsingdata.metal.data.Slice.createFromSource;
 
+import java.math.BigInteger;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.ConcatenatedValueSource;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
@@ -37,7 +39,8 @@ public class Cat extends BinaryValueExpression {
 
     @Override
     public Optional<Value> eval(final Value left, final Value right, final ParseState parseState, final Encoding encoding) {
-        return createFromSource(new ConcatenatedValueSource(left, right), ZERO, left.getLength().add(right.getLength()))
+        final BigInteger length = left.getLength().add(right.getLength());
+        return createFromSource(new ConcatenatedValueSource(ImmutableList.create(right).add(left), length), ZERO, length)
             .map(source -> new Value(source, encoding));
     }
 

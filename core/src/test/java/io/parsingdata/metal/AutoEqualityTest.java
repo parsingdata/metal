@@ -60,6 +60,7 @@ import io.parsingdata.metal.data.ByteStreamSource;
 import io.parsingdata.metal.data.ConcatenatedValueSource;
 import io.parsingdata.metal.data.ConstantSource;
 import io.parsingdata.metal.data.DataExpressionSource;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseReference;
@@ -151,6 +152,7 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> BYTE_STREAMS = Arrays.asList(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> DUMMY_STREAM);
     private static final List<Supplier<Object>> BIG_INTEGERS = Arrays.asList(() -> ONE, () -> BigInteger.valueOf(3));
     private static final List<Supplier<Object>> PARSE_STATES = Arrays.asList(() -> createFromByteStream(DUMMY_STREAM), () -> createFromByteStream(DUMMY_STREAM, ONE), () -> new ParseState(GRAPH_WITH_REFERENCE, DUMMY_BYTE_STREAM_SOURCE, TEN));
+    private static final List<Supplier<Object>> IMMUTABLE_LISTS = Arrays.asList(ImmutableList::new, () -> ImmutableList.create("TEST"), () -> ImmutableList.create(1), () -> ImmutableList.create(1).add(2));
     private static final Map<Class, List<Supplier<Object>>> mapping = new HashMap<Class, List<Supplier<Object>>>() {{
         put(String.class, STRINGS);
         put(Encoding.class, ENCODINGS);
@@ -170,6 +172,7 @@ public class AutoEqualityTest {
         put(ByteStream.class, BYTE_STREAMS);
         put(BigInteger.class, BIG_INTEGERS);
         put(ParseState.class, PARSE_STATES);
+        put(ImmutableList.class, IMMUTABLE_LISTS);
     }};
 
     @Parameterized.Parameters(name="{0}")

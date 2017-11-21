@@ -48,6 +48,7 @@ import io.parsingdata.metal.expression.value.Elvis;
 import io.parsingdata.metal.expression.value.Expand;
 import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
+import io.parsingdata.metal.expression.value.CatList;
 import io.parsingdata.metal.expression.value.Reverse;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
@@ -184,6 +185,7 @@ public final class Shorthand {
     public static ValueExpression nth(final ValueExpression values, final ValueExpression indices) { return new Nth(values, indices); }
     public static ValueExpression offset(final ValueExpression operand) { return new Offset(operand); }
     public static ValueExpression cat(final ValueExpression left, final ValueExpression right) { return new Cat(left, right); }
+    public static ValueExpression catList(final ValueExpression operand) { return new CatList(operand); }
     public static ValueExpression elvis(final ValueExpression left, final ValueExpression right) { return new Elvis(left, right); }
     public static ValueExpression count(final ValueExpression operand) { return new Count(operand); }
     public static ValueExpression foldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return new FoldLeft(values, reducer, null); }

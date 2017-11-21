@@ -16,23 +16,28 @@
 
 package io.parsingdata.metal.data;
 
+import static java.math.BigInteger.ZERO;
+
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
 import java.util.Objects;
 
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.expression.value.Value;
 
 public class ConcatenatedValueSource extends Source {
 
-    public final Value left;
-    public final Value right;
+    public final ImmutableList<Value> values;
+    public final BigInteger length;
 
-    public ConcatenatedValueSource(final Value left, final Value right) {
-        this.left = checkNotNull(left, "left");
-        this.right = checkNotNull(right, "right");
+    public ConcatenatedValueSource(final ImmutableList<Value> values, final BigInteger length) {
+        this.values = checkNotNull(values, "values");
+        this.length = checkNotNegative(length, "length");
     }
 
     @Override
@@ -40,39 +45,45 @@ public class ConcatenatedValueSource extends Source {
         if (!isAvailable(offset, length)) {
             throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ").");
         }
-        final byte[] outputData = new byte[length.intValueExact()];
-        if (offset.add(length).compareTo(left.getLength()) <= 0) {
-            System.arraycopy(left.getValue(), offset.intValueExact(), outputData, 0, length.intValueExact());
-        } else if (offset.compareTo(left.getLength()) >= 0) {
-            System.arraycopy(right.getValue(), offset.subtract(left.getLength()).intValueExact(), outputData, 0, length.intValueExact());
-        } else {
-            final BigInteger leftPartLength = left.getLength().subtract(offset);
-            System.arraycopy(left.getValue(), offset.intValueExact(), outputData, 0, leftPartLength.intValueExact());
-            System.arraycopy(right.getValue(), 0, outputData, leftPartLength.intValueExact(), length.subtract(leftPartLength).intValueExact());
+        return getData(values, ZERO, ZERO, offset, length, new byte[length.intValueExact()]).computeResult();
+    }
+
+    private Trampoline<byte[]> getData(ImmutableList<Value> values, BigInteger currentOffset, BigInteger currentDest, BigInteger offset, BigInteger length, byte[] output) {
+        if (length.compareTo(ZERO) <= 0) {
+            return complete(() -> output);
         }
-        return outputData;
+        if (values.isEmpty()) {
+            throw new IllegalStateException("Data to read is not available ([offset =" + offset + "; length=" + length + ";source=" + this + ").");
+        }
+        if (currentOffset.add(values.head.slice.length).compareTo(offset) <= 0) {
+            return intermediate(() -> getData(values.tail, currentOffset.add(values.head.slice.length), currentDest, offset, length, output));
+        }
+        final BigInteger localOffset = offset.subtract(currentOffset).compareTo(ZERO) < 0 ? ZERO : offset.subtract(currentOffset);
+        final BigInteger toCopy = length.compareTo(values.head.slice.length.subtract(localOffset)) > 0 ? values.head.slice.length.subtract(localOffset) : length;
+        System.arraycopy(values.head.slice.getData(), localOffset.intValueExact(), output, currentDest.intValueExact(), toCopy.intValueExact());
+        return intermediate(() -> getData(values.tail, currentOffset.add(values.head.slice.length), currentDest.add(toCopy), offset, length.subtract(toCopy), output));
     }
 
     @Override
     protected boolean isAvailable(final BigInteger offset, final BigInteger length) {
-        return checkNotNegative(length, "length").add(checkNotNegative(offset, "offset")).compareTo(left.getLength().add(right.getLength())) <= 0;
+        return checkNotNegative(length, "length").add(checkNotNegative(offset, "offset")).compareTo(this.length) <= 0;
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + left + "," + right + "))";
+        return getClass().getSimpleName() + "(" + values + "(" + length + ")))";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(left, ((ConcatenatedValueSource)obj).left)
-            && Objects.equals(right, ((ConcatenatedValueSource)obj).right);
+            && Objects.equals(values, ((ConcatenatedValueSource)obj).values)
+            && Objects.equals(length, ((ConcatenatedValueSource)obj).length);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass(), left, right);
+        return Objects.hash(getClass(), values, length);
     }
 
 }

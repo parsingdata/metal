@@ -58,7 +58,7 @@ public class SourceAndSliceTest {
             { new ConstantSource(DATA) },
             { new DataExpressionSource(con(DATA), 0, EMPTY_PARSE_STATE, enc()) },
             { new ByteStreamSource(new InMemoryByteStream(DATA)) },
-            { new ConcatenatedValueSource(new Value(createFromSource(new ConstantSource(DATA), ZERO, BigInteger.valueOf(2)).get(), enc()), new Value(createFromSource(new ConstantSource(DATA), BigInteger.valueOf(2), BigInteger.valueOf(2)).get(), enc())) }
+            { new ConcatenatedValueSource(ImmutableList.create(new Value(createFromSource(new ConstantSource(DATA), BigInteger.valueOf(2), BigInteger.valueOf(2)).get(), enc())).add(new Value(createFromSource(new ConstantSource(DATA), ZERO, BigInteger.valueOf(2)).get(), enc())), BigInteger.valueOf(DATA.length)) }
         });
     }
 
