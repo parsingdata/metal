@@ -22,6 +22,7 @@ import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -38,6 +39,8 @@ public class DataExpressionSource extends Source {
     public final ParseState parseState;
     public final Encoding encoding;
 
+    private byte[] cache = null;
+
     public DataExpressionSource(final ValueExpression dataExpression, final int index, final ParseState parseState, final Encoding encoding) {
         this.dataExpression = checkNotNull(dataExpression, "dataExpression");
         this.index = index;
@@ -48,28 +51,32 @@ public class DataExpressionSource extends Source {
     @Override
     protected byte[] getData(final BigInteger offset, final BigInteger length) {
         checkNotNegative(offset, "offset");
-        final Value inputValue = getValue();
-        if (checkNotNegative(length, "length").add(offset).compareTo(inputValue.slice.length) > 0) {
+        final byte[] data = getValue();
+        if (checkNotNegative(length, "length").add(offset).compareTo(BigInteger.valueOf(data.length)) > 0) {
             throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ").");
         }
         final byte[] outputData = new byte[length.intValueExact()];
-        System.arraycopy(inputValue.getValue(), offset.intValueExact(), outputData, 0, outputData.length);
+        System.arraycopy(data, offset.intValueExact(), outputData, 0, outputData.length);
         return outputData;
     }
 
     @Override
     protected boolean isAvailable(final BigInteger offset, final BigInteger length) {
-        return checkNotNegative(offset, "offset").add(checkNotNegative(length, "length")).compareTo(getValue().slice.length) <= 0;
+        return checkNotNegative(offset, "offset").add(checkNotNegative(length, "length")).compareTo(BigInteger.valueOf(getValue().length)) <= 0;
     }
 
-    private Value getValue() {
-        final ImmutableList<Optional<Value>> results = dataExpression.eval(parseState, encoding);
-        if (results.size <= index) {
-            throw new IllegalStateException("ValueExpression dataExpression yields " + results.size + " result(s) (expected at least " + (index + 1) + ").");
+    private synchronized byte[] getValue() {
+        if (cache == null) {
+            final ImmutableList<Optional<Value>> results = dataExpression.eval(parseState, encoding);
+            if (results.size <= index) {
+                throw new IllegalStateException("ValueExpression dataExpression yields " + results.size + " result(s) (expected at least " + (index + 1) + ").");
+            }
+            cache = getValueAtIndex(results, index, 0)
+                .computeResult()
+                .map(Value::getValue)
+                .orElseThrow(() -> new IllegalStateException("ValueExpression dataExpression yields empty Value at index " + index + "."));
         }
-        return getValueAtIndex(results, index, 0)
-            .computeResult()
-            .orElseThrow(() -> new IllegalStateException("ValueExpression dataExpression yields empty Value at index " + index + "."));
+        return Arrays.copyOf(cache, cache.length);
     }
 
     private Trampoline<Optional<Value>> getValueAtIndex(final ImmutableList<Optional<Value>> results, final int index, final int current) {
