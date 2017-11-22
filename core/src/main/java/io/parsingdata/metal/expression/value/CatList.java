@@ -23,9 +23,11 @@ import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.data.Slice.createFromSource;
 
 import java.math.BigInteger;
+import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ConcatenatedValueSource;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
@@ -66,6 +68,22 @@ public class CatList implements ValueExpression {
             return complete(() -> size);
         }
         return intermediate(() -> calculateTotalSize(values.tail, size.add(values.head.slice.length)));
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + operand + ")";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Objects.equals(operand, ((CatList)obj).operand);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getClass(), operand);
     }
 
 }
