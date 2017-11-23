@@ -33,11 +33,18 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
-public class CatList implements ValueExpression {
+/**
+ * A {@link ValueExpression} that represents an optimized version of a
+ * {@link FoldLeft} operation with a {@link Cat} ValueExpression as reducer.
+ *
+ * @see FoldLeft
+ * @see Cat
+ */
+public class FoldCat implements ValueExpression {
 
     public final ValueExpression operand;
 
-    public CatList(final ValueExpression operand) {
+    public FoldCat(final ValueExpression operand) {
         this.operand = operand;
     }
 
@@ -78,7 +85,7 @@ public class CatList implements ValueExpression {
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(operand, ((CatList)obj).operand);
+            && Objects.equals(operand, ((FoldCat)obj).operand);
     }
 
     @Override
