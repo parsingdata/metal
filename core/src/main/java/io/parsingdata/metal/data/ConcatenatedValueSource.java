@@ -43,7 +43,7 @@ public class ConcatenatedValueSource extends Source {
     @Override
     protected byte[] getData(final BigInteger offset, final BigInteger length) {
         if (!isAvailable(offset, length)) {
-            throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ").");
+            throw new IllegalStateException("Data to read is not available (offset=" + offset + ";length=" + length + ";source=" + this + ").");
         }
         return getData(values, ZERO, ZERO, offset, length, new byte[length.intValueExact()]).computeResult();
     }
@@ -53,7 +53,7 @@ public class ConcatenatedValueSource extends Source {
             return complete(() -> output);
         }
         if (values.isEmpty()) {
-            throw new IllegalStateException("Data to read is not available ([offset =" + offset + "; length=" + length + ";source=" + this + ").");
+            throw new IllegalStateException("Data to read is not available (offset=" + offset + ";length=" + length + ";source=" + this + ").");
         }
         if (currentOffset.add(values.head.slice.length).compareTo(offset) <= 0) {
             return intermediate(() -> getData(values.tail, currentOffset.add(values.head.slice.length), currentDest, offset, length, output));
@@ -71,7 +71,7 @@ public class ConcatenatedValueSource extends Source {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + values + "(" + length + ")))";
+        return getClass().getSimpleName() + "(" + values + "(" + length + "))";
     }
 
     @Override
