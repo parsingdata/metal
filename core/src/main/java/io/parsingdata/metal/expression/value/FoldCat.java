@@ -49,7 +49,7 @@ public class FoldCat implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(ParseState parseState, Encoding encoding) {
+    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
         final ImmutableList<Value> values = unwrap(operand.eval(parseState, encoding), new ImmutableList<>()).computeResult();
         final BigInteger length = calculateTotalSize(values);
         if (length.compareTo(ZERO) == 0) {
