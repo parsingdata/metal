@@ -52,6 +52,9 @@ public class FoldCat implements ValueExpression {
     public ImmutableList<Optional<Value>> eval(ParseState parseState, Encoding encoding) {
         final ImmutableList<Value> values = unwrap(operand.eval(parseState, encoding), new ImmutableList<>()).computeResult();
         final BigInteger length = calculateTotalSize(values);
+        if (length.compareTo(ZERO) == 0) {
+            return ImmutableList.create(Optional.empty());
+        }
         return createFromSource(new ConcatenatedValueSource(values, length), ZERO, length)
             .map(source -> new ImmutableList<Optional<Value>>().add(Optional.of(new Value(source, encoding))))
             .orElseGet(ImmutableList::new);
