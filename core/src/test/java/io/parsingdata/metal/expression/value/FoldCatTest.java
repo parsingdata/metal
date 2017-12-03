@@ -47,7 +47,7 @@ public class FoldCatTest {
 
     @Test
     public void foldCatEmpty() {
-        assertEquals(Optional.empty(), foldString("b"));
+        assertEquals(Optional.empty(), foldString("other"));
     }
 
     private Optional<Value> foldString(final String name) {
