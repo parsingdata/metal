@@ -76,7 +76,7 @@ public class DataExpressionSource extends Source {
                 .map(Value::getValue)
                 .orElseThrow(() -> new IllegalStateException("ValueExpression dataExpression yields empty Value at index " + index + "."));
         }
-        return Arrays.copyOf(cache, cache.length);
+        return cache.clone();
     }
 
     private Trampoline<Optional<Value>> getValueAtIndex(final ImmutableList<Optional<Value>> results, final int index, final int current) {

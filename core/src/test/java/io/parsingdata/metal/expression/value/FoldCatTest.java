@@ -40,14 +40,9 @@ import io.parsingdata.metal.data.ParseState;
 
 public class FoldCatTest {
 
-    public static final Optional<ParseState> RESULT =
-        seq(any("a"),
-            any("a"),
-            any("a")).parse(new Environment(stream("abc", StandardCharsets.US_ASCII), enc()));
-
     @Test
     public void foldCatRegular() {
-        assertEquals("abc", foldString("a").get().asString());
+        assertEquals("abc", foldString("any").get().asString());
     }
 
     @Test
@@ -56,8 +51,12 @@ public class FoldCatTest {
     }
 
     private Optional<Value> foldString(final String name) {
-        assertTrue(RESULT.isPresent());
-        ImmutableList<Optional<Value>> values = cat(ref(name)).eval(RESULT.get(), enc());
+        final Optional<ParseState> result =
+            seq(any("any"),
+                any("any"),
+                any("any")).parse(new Environment(stream("abc", StandardCharsets.US_ASCII), enc()));
+        assertTrue(result.isPresent());
+        ImmutableList<Optional<Value>> values = cat(ref(name)).eval(result.get(), enc());
         assertEquals(1, values.size);
         return values.head;
     }

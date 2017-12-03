@@ -20,21 +20,17 @@ import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.TEN;
 import static java.math.BigInteger.ZERO;
 
+import static org.junit.Assert.assertFalse;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 public class ConcatenatedValueSourceErrorTest {
 
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void emptyConcatenatedValueSource() {
-        final ConcatenatedValueSource cvs = new ConcatenatedValueSource(new ImmutableList<>(), TEN);
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("Data to read is not available (offset=0;length=1;source=ConcatenatedValueSource((10))).");
-        Slice.createFromSource(cvs, ZERO, ONE).get().getData();
+        assertFalse(ConcatenatedValueSource.create(new ImmutableList<>()).isPresent());
     }
 
 }

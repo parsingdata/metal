@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -58,7 +59,7 @@ public class SourceAndSliceTest {
             { new ConstantSource(DATA) },
             { new DataExpressionSource(con(DATA), 0, EMPTY_PARSE_STATE, enc()) },
             { new ByteStreamSource(new InMemoryByteStream(DATA)) },
-            { new ConcatenatedValueSource(ImmutableList.create(new Value(createFromSource(new ConstantSource(DATA), BigInteger.valueOf(2), BigInteger.valueOf(2)).get(), enc())).add(new Value(createFromSource(new ConstantSource(DATA), ZERO, BigInteger.valueOf(2)).get(), enc())), BigInteger.valueOf(DATA.length)) }
+            { ConcatenatedValueSource.create(ImmutableList.create(Optional.of(new Value(createFromSource(new ConstantSource(DATA), ZERO, BigInteger.valueOf(2)).get(), enc()))).add(Optional.of(new Value(createFromSource(new ConstantSource(DATA), BigInteger.valueOf(2), BigInteger.valueOf(2)).get(), enc())))).get() }
         });
     }
 

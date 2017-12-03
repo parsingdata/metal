@@ -22,9 +22,11 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.Slice.createFromSource;
 
 import java.math.BigInteger;
 import java.util.Objects;
+import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
@@ -35,9 +37,38 @@ public class ConcatenatedValueSource extends Source {
     public final ImmutableList<Value> values;
     public final BigInteger length;
 
-    public ConcatenatedValueSource(final ImmutableList<Value> values, final BigInteger length) {
+    private ConcatenatedValueSource(final ImmutableList<Value> values, final BigInteger length) {
         this.values = checkNotNull(values, "values");
         this.length = checkNotNegative(length, "length");
+    }
+
+    public static Optional<ConcatenatedValueSource> create(final ImmutableList<Optional<Value>> optionalValues) {
+        final ImmutableList<Value> values = unwrap(optionalValues, new ImmutableList<>()).computeResult();
+        final BigInteger length = calculateTotalSize(values);
+        if (length.compareTo(ZERO) == 0) {
+            return Optional.empty();
+        }
+        return Optional.of(new ConcatenatedValueSource(values, length));
+    }
+
+    private static <T> Trampoline<ImmutableList<T>> unwrap(final ImmutableList<Optional<T>> input, final ImmutableList<T> output) {
+        if (input.isEmpty()) {
+            return complete(() -> output);
+        }
+        return input.head
+            .map(value -> intermediate(() -> unwrap(input.tail, output.add(value))))
+            .orElseGet(() -> intermediate(() -> unwrap(input.tail, output)));
+    }
+
+    private static BigInteger calculateTotalSize(final ImmutableList<Value> values) {
+        return calculateTotalSize(values, ZERO).computeResult();
+    }
+
+    private static Trampoline<BigInteger> calculateTotalSize(final ImmutableList<Value> values, final BigInteger size) {
+        if (values.isEmpty()) {
+            return complete(() -> size);
+        }
+        return intermediate(() -> calculateTotalSize(values.tail, size.add(values.head.slice.length)));
     }
 
     @Override
@@ -48,12 +79,9 @@ public class ConcatenatedValueSource extends Source {
         return getData(values, ZERO, ZERO, offset, length, new byte[length.intValueExact()]).computeResult();
     }
 
-    private Trampoline<byte[]> getData(ImmutableList<Value> values, BigInteger currentOffset, BigInteger currentDest, BigInteger offset, BigInteger length, byte[] output) {
+    private Trampoline<byte[]> getData(final ImmutableList<Value> values, final BigInteger currentOffset, final BigInteger currentDest, final BigInteger offset, final BigInteger length, final byte[] output) {
         if (length.compareTo(ZERO) <= 0) {
             return complete(() -> output);
-        }
-        if (values.isEmpty()) {
-            throw new IllegalStateException("Data to read is not available (offset=" + offset + ";length=" + length + ";source=" + this + ").");
         }
         if (currentOffset.add(values.head.slice.length).compareTo(offset) <= 0) {
             return intermediate(() -> getData(values.tail, currentOffset.add(values.head.slice.length), currentDest, offset, length, output));

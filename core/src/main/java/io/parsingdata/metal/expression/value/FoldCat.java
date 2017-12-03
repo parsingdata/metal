@@ -31,6 +31,7 @@ import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ConcatenatedValueSource;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
+import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
@@ -50,34 +51,10 @@ public class FoldCat implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Value> values = unwrap(operand.eval(parseState, encoding), new ImmutableList<>()).computeResult();
-        final BigInteger length = calculateTotalSize(values);
-        if (length.compareTo(ZERO) == 0) {
-            return ImmutableList.create(Optional.empty());
-        }
-        return createFromSource(new ConcatenatedValueSource(values, length), ZERO, length)
-            .map(source -> new ImmutableList<Optional<Value>>().add(Optional.of(new Value(source, encoding))))
-            .orElseGet(ImmutableList::new);
-    }
-
-    private static <T, U extends T> Trampoline<ImmutableList<T>> unwrap(final ImmutableList<Optional<U>> input, final ImmutableList<T> output) {
-        if (input.isEmpty()) {
-            return complete(() -> output);
-        }
-        return input.head
-            .map(value -> intermediate(() -> unwrap(input.tail, output.add(value))))
-            .orElseGet(() -> intermediate(() -> unwrap(input.tail, output)));
-    }
-
-    private BigInteger calculateTotalSize(final ImmutableList<Value> values) {
-        return calculateTotalSize(values, ZERO).computeResult();
-    }
-
-    private Trampoline<BigInteger> calculateTotalSize(final ImmutableList<Value> values, final BigInteger size) {
-        if (values.isEmpty()) {
-            return complete(() -> size);
-        }
-        return intermediate(() -> calculateTotalSize(values.tail, size.add(values.head.slice.length)));
+        return ConcatenatedValueSource.create(operand.eval(parseState, encoding))
+            .flatMap(source -> createFromSource(source, ZERO, source.length))
+            .map(slice -> new ImmutableList<Optional<Value>>().add(Optional.of(new Value(slice, encoding))))
+            .orElseGet(() -> ImmutableList.create(Optional.empty()));
     }
 
     @Override

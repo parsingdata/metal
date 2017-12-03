@@ -25,6 +25,7 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,17 +37,16 @@ import io.parsingdata.metal.expression.value.Value;
 @RunWith(Parameterized.class)
 public class ConcatenatedValueSourceTest {
 
-    public static final BigInteger SIZE = BigInteger.valueOf(25);
-    public static final ConcatenatedValueSource cvs = new ConcatenatedValueSource(createValues(), SIZE);
+    public static final ConcatenatedValueSource cvs = ConcatenatedValueSource.create(createValues()).get();
 
-    private static ImmutableList<Value> createValues() {
+    private static ImmutableList<Optional<Value>> createValues() {
         final byte[] twoSliceSource = new byte[] { -1, -1, 5, 6, 7, 8, 9, -1, -1, 10, 11, 12, 13, 14, -1, -1 };
         return ImmutableList
-            .create(createFromBytes(new byte[] { 20, 21, 22, 23, 24 }, enc()))
-            .add(createFromBytes(new byte[] { 15, 16, 17, 18, 19 }, enc()))
-            .add(new Value(createFromSource(new ConstantSource(twoSliceSource), BigInteger.valueOf(9), BigInteger.valueOf(5)).get(), enc()))
-            .add(new Value(createFromSource(new ConstantSource(twoSliceSource), BigInteger.valueOf(2), BigInteger.valueOf(5)).get(), enc()))
-            .add(createFromBytes(new byte[] { 0, 1, 2, 3, 4 }, enc()));
+            .create(Optional.of(createFromBytes(new byte[] { 0, 1, 2, 3, 4 }, enc())))
+            .add(Optional.of(new Value(createFromSource(new ConstantSource(twoSliceSource), BigInteger.valueOf(2), BigInteger.valueOf(5)).get(), enc())))
+            .add(Optional.of(new Value(createFromSource(new ConstantSource(twoSliceSource), BigInteger.valueOf(9), BigInteger.valueOf(5)).get(), enc())))
+            .add(Optional.of(createFromBytes(new byte[] { 15, 16, 17, 18, 19 }, enc())))
+            .add(Optional.of(createFromBytes(new byte[] { 20, 21, 22, 23, 24 }, enc())));
     }
 
     @Parameter public String description;
@@ -56,31 +56,31 @@ public class ConcatenatedValueSourceTest {
     @Parameterized.Parameters(name="{0}")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-            { "full", 0, SIZE.intValueExact() }, // [XXXXX][XXXXX][XXXXX][XXXXX][XXXXX]
-            { "none", 0, 0 },                    // [.....][.....][.....][.....][.....]
-            { "full(0)", 0, 5 },                 // [XXXXX][.....][.....][.....][.....]
-            { "part(1)", 1, 3 },                 // [.XXX.][.....][.....][.....][.....]
-            { "full(0) to part(1)", 0, 8 },      // [XXXXX][XXX..][.....][.....][.....]
-            { "part(0) to part(1)", 2, 6 },      // [..XXX][XXX..][.....][.....][.....]
-            { "part(0) to full(1)", 2, 8 },      // [..XXX][XXXXX][.....][.....][.....]
-            { "full(0) to part(2)", 0, 12 },     // [XXXXX][XXXXX][XX...][.....][.....]
-            { "full(0) to full(2)", 0, 15 },     // [XXXXX][XXXXX][XXXXX][.....][.....]
-            { "part(0) to part(2)", 3, 8 },      // [...XX][XXXXX][X....][.....][.....]
-            { "part(0) to full(2)", 3, 12 },     // [...XX][XXXXX][XXXXX][.....][.....]
-            { "full(0) to part(3)", 0, 17 },     // [XXXXX][XXXXX][XXXXX][XX...][.....]
-            { "part(0) to full(3)", 4, 16 },     // [....X][XXXXX][XXXXX][XXXXX][.....]
-            { "full(0) to part(4)", 0, 22 },     // [XXXXX][XXXXX][XXXXX][XXXXX][XX...]
-            { "part(0) to part(4)", 3, 20 },     // [...XX][XXXXX][XXXXX][XXXXX][XXX..]
-            { "part(0) to full(4)", 4, 21 },     // [....X][XXXXX][XXXXX][XXXXX][XXXXX]
-            { "full(1) to full(3)", 5, 15 },     // [.....][XXXXX][XXXXX][XXXXX][.....]
-            { "part(1) to full(3)", 7, 13 },     // [.....][..XXX][XXXXX][XXXXX][.....]
-            { "part(1) to part(3)", 8, 11 },     // [.....][...XX][XXXXX][XXXX.][.....]
-            { "full(2) to full(4)", 10, 15 },    // [.....][.....][XXXXX][XXXXX][XXXXX]
-            { "full(2) to part(4)", 10, 12 },    // [.....][.....][XXXXX][XXXXX][XX...]
-            { "part(2) to full(4)", 12, 13 },    // [.....][.....][..XXX][XXXXX][XXXXX]
-            { "part(2) to part(4)", 11, 11 },    // [.....][.....][.XXXX][XXXXX][XX...]
-            { "full(4)", 20, 5 },                // [.....][.....][.....][.....][XXXXX]
-            { "part(4)", 21, 4 }                 // [.....][.....][.....][.....][.XXXX]
+            { "full", 0, 25 },                // [XXXXX][XXXXX][XXXXX][XXXXX][XXXXX]
+            { "none", 0, 0 },                 // [.....][.....][.....][.....][.....]
+            { "full(0)", 0, 5 },              // [XXXXX][.....][.....][.....][.....]
+            { "part(1)", 1, 3 },              // [.XXX.][.....][.....][.....][.....]
+            { "full(0) to part(1)", 0, 8 },   // [XXXXX][XXX..][.....][.....][.....]
+            { "part(0) to part(1)", 2, 6 },   // [..XXX][XXX..][.....][.....][.....]
+            { "part(0) to full(1)", 2, 8 },   // [..XXX][XXXXX][.....][.....][.....]
+            { "full(0) to part(2)", 0, 12 },  // [XXXXX][XXXXX][XX...][.....][.....]
+            { "full(0) to full(2)", 0, 15 },  // [XXXXX][XXXXX][XXXXX][.....][.....]
+            { "part(0) to part(2)", 3, 8 },   // [...XX][XXXXX][X....][.....][.....]
+            { "part(0) to full(2)", 3, 12 },  // [...XX][XXXXX][XXXXX][.....][.....]
+            { "full(0) to part(3)", 0, 17 },  // [XXXXX][XXXXX][XXXXX][XX...][.....]
+            { "part(0) to full(3)", 4, 16 },  // [....X][XXXXX][XXXXX][XXXXX][.....]
+            { "full(0) to part(4)", 0, 22 },  // [XXXXX][XXXXX][XXXXX][XXXXX][XX...]
+            { "part(0) to part(4)", 3, 20 },  // [...XX][XXXXX][XXXXX][XXXXX][XXX..]
+            { "part(0) to full(4)", 4, 21 },  // [....X][XXXXX][XXXXX][XXXXX][XXXXX]
+            { "full(1) to full(3)", 5, 15 },  // [.....][XXXXX][XXXXX][XXXXX][.....]
+            { "part(1) to full(3)", 7, 13 },  // [.....][..XXX][XXXXX][XXXXX][.....]
+            { "part(1) to part(3)", 8, 11 },  // [.....][...XX][XXXXX][XXXX.][.....]
+            { "full(2) to full(4)", 10, 15 }, // [.....][.....][XXXXX][XXXXX][XXXXX]
+            { "full(2) to part(4)", 10, 12 }, // [.....][.....][XXXXX][XXXXX][XX...]
+            { "part(2) to full(4)", 12, 13 }, // [.....][.....][..XXX][XXXXX][XXXXX]
+            { "part(2) to part(4)", 11, 11 }, // [.....][.....][.XXXX][XXXXX][XX...]
+            { "full(4)", 20, 5 },             // [.....][.....][.....][.....][XXXXX]
+            { "part(4)", 21, 4 }              // [.....][.....][.....][.....][.XXXX]
         });
     }
 
