@@ -37,6 +37,7 @@ import static io.parsingdata.metal.Shorthand.ltEqNum;
 import static io.parsingdata.metal.Shorthand.ltNum;
 import static io.parsingdata.metal.Shorthand.mapLeft;
 import static io.parsingdata.metal.Shorthand.mapRight;
+import static io.parsingdata.metal.Shorthand.not;
 import static io.parsingdata.metal.Shorthand.opt;
 import static io.parsingdata.metal.Shorthand.pre;
 import static io.parsingdata.metal.Shorthand.ref;
@@ -45,6 +46,7 @@ import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.tie;
+import static io.parsingdata.metal.Shorthand.when;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.expression.value.ExpandTest.createParseValue;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
@@ -53,7 +55,6 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static junit.framework.TestCase.assertFalse;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.Rule;
@@ -76,12 +77,12 @@ public class ShorthandsTest {
             def("c", con(1), eq(con(3))));
 
     @Test
-    public void sequenceMultiMatch() throws IOException {
+    public void sequenceMultiMatch() {
         assertTrue(multiSequence.parse(env(stream(1, 2, 3))).isPresent());
     }
 
     @Test
-    public void sequenceMultiNoMatch() throws IOException {
+    public void sequenceMultiNoMatch() {
         assertFalse(multiSequence.parse(env(stream(1, 2, 2))).isPresent());
     }
 
@@ -91,17 +92,17 @@ public class ShorthandsTest {
             def("c", con(1), gtNum(con(0))));
 
     @Test
-    public void choiceMultiMatchA() throws IOException {
+    public void choiceMultiMatchA() {
         runChoice(3, "a");
     }
 
     @Test
-    public void choiceMultiMatchB() throws IOException {
+    public void choiceMultiMatchB() {
         runChoice(2, "b");
     }
 
     @Test
-    public void choiceMultiMatchC() throws IOException {
+    public void choiceMultiMatchC() {
         runChoice(1, "c");
     }
 
@@ -112,7 +113,7 @@ public class ShorthandsTest {
     }
 
     @Test
-    public void choiceMultiNoMatch() throws IOException {
+    public void choiceMultiNoMatch() {
         assertFalse(multiChoice.parse(env(stream(0))).isPresent());
     }
 
@@ -130,37 +131,37 @@ public class ShorthandsTest {
         );
 
     @Test
-    public void nonLocalCompare() throws IOException {
+    public void nonLocalCompare() {
         assertTrue(nonLocalCompare.parse(env(stream(1, 'a', 'b', 'c', 0, 0))).isPresent());
     }
 
     @Test
-    public void allTokensNamed() throws IOException {
+    public void allTokensNamed() {
         final Optional<ParseState> result =
-            rep("rep",
-                repn("repn",
-                    seq("seq",
-                        pre("pre",
-                            opt("opt",
-                                any("a")),
-                            TRUE),
-                        cho("cho",
-                            def("def0", con(1), eq(con(0))),
-                            def("def1", con(1), eq(con(1)))),
-                        sub("sub",
-                            def("def2", con(1), eq(con(2))),
-                            con(2)),
-                        tie("tie",
-                            def("def3", con(1), eq(con(1))),
-                            last(ref("def1")))
-                    ), con(1)
-                )
-            ).parse(env(stream(2, 1, 2)));
+            when("when",
+                rep("rep",
+                    repn("repn",
+                        seq("seq",
+                            pre("pre",
+                                opt("opt",
+                                    any("a")), TRUE),
+                            cho("cho",
+                                def("def0", con(1), eq(con(0))),
+                                def("def1", con(1), eq(con(1)))),
+                            sub("sub",
+                                def("def2", con(1), eq(con(2))),
+                                con(2)),
+                            tie("tie",
+                                def("def3", con(1), eq(con(1))),
+                                last(ref("def1")))
+                        ), con(1)
+                    )
+                ), TRUE).parse(env(stream(2, 1, 2)));
         assertTrue(result.isPresent());
-        checkNameAndValue("rep.repn.seq.pre.opt.a", 2, result.get());
-        checkNameAndValue("rep.repn.seq.cho.def1", 1, result.get());
-        checkNameAndValue("rep.repn.seq.sub.def2", 2, result.get());
-        checkNameAndValue("rep.repn.seq.tie.def3", 1, result.get());
+        checkNameAndValue("when.rep.repn.seq.pre.opt.a", 2, result.get());
+        checkNameAndValue("when.rep.repn.seq.cho.def1", 1, result.get());
+        checkNameAndValue("when.rep.repn.seq.sub.def2", 2, result.get());
+        checkNameAndValue("when.rep.repn.seq.tie.def3", 1, result.get());
     }
 
     private void checkNameAndValue(final String name, final int value, final ParseState parseState) {
@@ -180,32 +181,32 @@ public class ShorthandsTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    public static final Token DEFA = any("a");
-    public static final Token DEFB = any("b");
+    public static final Token DEF_A = any("a");
+    public static final Token DEF_B = any("b");
 
     @Test
     public void checkChoTokens() {
-        final Token choToken = cho(DEFA, DEFB);
+        final Token choToken = cho(DEF_A, DEF_B);
         final Cho cho = (Cho)choToken;
         assertEquals(2, cho.tokens.size);
-        assertEquals(DEFA, cho.tokens.head);
-        assertEquals(DEFB, cho.tokens.tail.head);
+        assertEquals(DEF_A, cho.tokens.head);
+        assertEquals(DEF_B, cho.tokens.tail.head);
     }
 
     @Test
     public void checkSeqTokens() {
-        final Token seqToken = seq(DEFA, DEFB);
+        final Token seqToken = seq(DEF_A, DEF_B);
         final Seq seq = (Seq)seqToken;
         assertEquals(2, seq.tokens.size);
-        assertEquals(DEFA, seq.tokens.head);
-        assertEquals(DEFB, seq.tokens.tail.head);
+        assertEquals(DEF_A, seq.tokens.head);
+        assertEquals(DEF_B, seq.tokens.tail.head);
     }
 
-    final ParseState PARSESTATE = createFromByteStream(DUMMY_STREAM).add(createParseValue("a", 126)).add(createParseValue("a", 84)).add(createParseValue("a", 42));
+    final ParseState PARSE_STATE = createFromByteStream(DUMMY_STREAM).add(createParseValue("a", 126)).add(createParseValue("a", 84)).add(createParseValue("a", 42));
 
     @Test
     public void mapLeftWithSub() {
-        ImmutableList<Optional<Value>> result = mapLeft(Shorthand::sub, ref("a"), con(2)).eval(PARSESTATE, enc());
+        ImmutableList<Optional<Value>> result = mapLeft(Shorthand::sub, ref("a"), con(2)).eval(PARSE_STATE, enc());
         assertEquals(3, result.size);
         for (int i = 0; i < 3; i++) {
             assertTrue(result.head.isPresent());
@@ -216,13 +217,30 @@ public class ShorthandsTest {
 
     @Test
     public void mapRightWithSub() {
-        ImmutableList<Optional<Value>> result = mapRight(Shorthand::sub, con(126), ref("a")).eval(PARSESTATE, enc());
+        ImmutableList<Optional<Value>> result = mapRight(Shorthand::sub, con(126), ref("a")).eval(PARSE_STATE, enc());
         assertEquals(3, result.size);
         for (int i = 0; i < 3; i++) {
             assertTrue(result.head.isPresent());
             assertEquals(((3 - i) * 42) - 42, result.head.get().asNumeric().intValueExact());
             result = result.tail;
         }
+    }
+
+    @Test
+    public void whenTrue() {
+        Optional<ParseState> result = when(def("name", con(1), eq(con(1))), TRUE).parse(env(stream(1)));
+        assertTrue(result.isPresent());
+        assertEquals(1, result.get().offset.intValueExact());
+    }
+
+    @Test
+    public void whenFalse() {
+        Optional<ParseState> result =
+            seq(
+                when(def("name1", con(1), eq(con(1))), not(TRUE)),
+                def("name2", con(1), eq(con(2)))).parse(env(stream(2)));
+        assertTrue(result.isPresent());
+        assertEquals(1, result.get().offset.intValueExact());
     }
 
 }
