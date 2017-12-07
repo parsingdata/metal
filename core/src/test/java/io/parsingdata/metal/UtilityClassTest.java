@@ -42,6 +42,7 @@ public class UtilityClassTest {
         checkUtilityClass(ByType.class);
         checkUtilityClass(ConstantFactory.class);
         checkUtilityClass(Selection.class);
+        checkUtilityClass(Lazily.class);
     }
 
     // Metal uses enums to prevent the use of difficult to understand boolean arguments.
