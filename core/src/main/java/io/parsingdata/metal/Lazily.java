@@ -17,7 +17,9 @@ package io.parsingdata.metal;
 
 import java.util.function.Supplier;
 
-public class Lazily {
+public final class Lazily {
+
+    private Lazily() {}
 
     /**
      * Constructs a lazily calculated value (of type T) the first time it is retrieved.  <br/><br/>
