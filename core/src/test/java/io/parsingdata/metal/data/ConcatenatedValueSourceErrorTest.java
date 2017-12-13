@@ -16,15 +16,9 @@
 
 package io.parsingdata.metal.data;
 
-import static java.math.BigInteger.ONE;
-import static java.math.BigInteger.TEN;
-import static java.math.BigInteger.ZERO;
-
 import static org.junit.Assert.assertFalse;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class ConcatenatedValueSourceErrorTest {
 

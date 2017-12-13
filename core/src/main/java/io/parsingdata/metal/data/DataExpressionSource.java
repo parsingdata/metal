@@ -22,7 +22,6 @@ import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 

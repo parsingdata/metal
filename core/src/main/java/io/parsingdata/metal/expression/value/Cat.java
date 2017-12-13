@@ -20,7 +20,6 @@ import static java.math.BigInteger.ZERO;
 
 import static io.parsingdata.metal.data.Slice.createFromSource;
 
-import java.math.BigInteger;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.ConcatenatedValueSource;
