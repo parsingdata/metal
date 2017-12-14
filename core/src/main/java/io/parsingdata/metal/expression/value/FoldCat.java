@@ -18,20 +18,15 @@ package io.parsingdata.metal.expression.value;
 
 import static java.math.BigInteger.ZERO;
 
-import static io.parsingdata.metal.Trampoline.complete;
-import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.data.Slice.createFromSource;
 
-import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ConcatenatedValueSource;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
-import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**

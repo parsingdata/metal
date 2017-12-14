@@ -152,6 +152,10 @@ public final class Shorthand {
     public static Token until(final String name, final ValueExpression initialSize, final Token terminator) { return until(name, initialSize, null, terminator, null); }
     public static Token until(final String name, final Token terminator, final Encoding encoding) { return until(name, null, terminator, encoding); }
     public static Token until(final String name, final Token terminator) { return until(name, terminator, null); }
+    public static Token when(final String name, final Token token, final Expression predicate, final Encoding encoding) { return cho(name, encoding, pre(def(EMPTY_NAME, 0), not(predicate)), token); }
+    public static Token when(final String name, final Token token, final Expression predicate) { return when(name, token, predicate, null); }
+    public static Token when(final Token token, final Expression predicate, final Encoding encoding) { return when(EMPTY_NAME, token, predicate, encoding); }
+    public static Token when(final Token token, final Expression predicate) { return when(token, predicate, null); }
 
     public static BinaryValueExpression add(final ValueExpression left, final ValueExpression right) { return new Add(left, right); }
     public static BinaryValueExpression div(final ValueExpression left, final ValueExpression right) { return new Div(left, right); }

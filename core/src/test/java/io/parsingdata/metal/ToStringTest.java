@@ -25,7 +25,6 @@ import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.and;
 import static io.parsingdata.metal.Shorthand.bytes;
 import static io.parsingdata.metal.Shorthand.cat;
-import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.count;

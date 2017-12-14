@@ -22,7 +22,6 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.Slice.createFromSource;
 
 import java.math.BigInteger;
 import java.util.Objects;
