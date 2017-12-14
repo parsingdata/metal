@@ -64,6 +64,7 @@ import org.junit.rules.ExpectedException;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.Selection;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Seq;
@@ -231,6 +232,7 @@ public class ShorthandsTest {
         Optional<ParseState> result = when(def("name", con(1), eq(con(1))), TRUE).parse(env(stream(1)));
         assertTrue(result.isPresent());
         assertEquals(1, result.get().offset.intValueExact());
+        assertEquals(1, Selection.getAllValues(result.get().order, parseValue -> parseValue.matches("name") && parseValue.getValue().length == 1 && parseValue.getValue()[0] == 1).size);
     }
 
     @Test
@@ -241,6 +243,7 @@ public class ShorthandsTest {
                 def("name2", con(1), eq(con(2)))).parse(env(stream(2)));
         assertTrue(result.isPresent());
         assertEquals(1, result.get().offset.intValueExact());
+        assertEquals(1, Selection.getAllValues(result.get().order, parseValue -> parseValue.matches("name2") && parseValue.getValue().length == 1 && parseValue.getValue()[0] == 2).size);
     }
 
 }
