@@ -154,27 +154,31 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> BIG_INTEGERS = Arrays.asList(() -> ONE, () -> BigInteger.valueOf(3));
     private static final List<Supplier<Object>> PARSE_STATES = Arrays.asList(() -> createFromByteStream(DUMMY_STREAM), () -> createFromByteStream(DUMMY_STREAM, ONE), () -> new ParseState(GRAPH_WITH_REFERENCE, DUMMY_BYTE_STREAM_SOURCE, TEN));
     private static final List<Supplier<Object>> IMMUTABLE_LISTS = Arrays.asList(ImmutableList::new, () -> ImmutableList.create("TEST"), () -> ImmutableList.create(1), () -> ImmutableList.create(1).add(2));
-    private static final Map<Class, List<Supplier<Object>>> mapping = new HashMap<Class, List<Supplier<Object>>>() {{
-        put(String.class, STRINGS);
-        put(Encoding.class, ENCODINGS);
-        put(Token.class, TOKENS);
-        put(Token[].class, TOKEN_ARRAYS);
-        put(ValueExpression.class, VALUE_EXPRESSIONS);
-        put(Expression.class, EXPRESSIONS);
-        put(Value.class, VALUES);
-        put(BinaryOperator.class, REDUCERS);
-        put(Slice.class, SLICES);
-        put(byte[].class, BYTE_ARRAYS);
-        put(Source.class, SOURCES);
-        put(long.class, LONGS);
-        put(int.class, INTEGERS);
-        put(ParseGraph.class, PARSE_GRAPHS);
-        put(ParseItem.class, PARSE_ITEMS);
-        put(ByteStream.class, BYTE_STREAMS);
-        put(BigInteger.class, BIG_INTEGERS);
-        put(ParseState.class, PARSE_STATES);
-        put(ImmutableList.class, IMMUTABLE_LISTS);
-    }};
+    private static final Map<Class, List<Supplier<Object>>> mapping = buildMap();
+
+    private static Map<Class, List<Supplier<Object>>> buildMap() {
+        final Map<Class, List<Supplier<Object>>> result = new HashMap<>();
+        result.put(String.class, STRINGS);
+        result.put(Encoding.class, ENCODINGS);
+        result.put(Token.class, TOKENS);
+        result.put(Token[].class, TOKEN_ARRAYS);
+        result.put(ValueExpression.class, VALUE_EXPRESSIONS);
+        result.put(Expression.class, EXPRESSIONS);
+        result.put(Value.class, VALUES);
+        result.put(BinaryOperator.class, REDUCERS);
+        result.put(Slice.class, SLICES);
+        result.put(byte[].class, BYTE_ARRAYS);
+        result.put(Source.class, SOURCES);
+        result.put(long.class, LONGS);
+        result.put(int.class, INTEGERS);
+        result.put(ParseGraph.class, PARSE_GRAPHS);
+        result.put(ParseItem.class, PARSE_ITEMS);
+        result.put(ByteStream.class, BYTE_STREAMS);
+        result.put(BigInteger.class, BIG_INTEGERS);
+        result.put(ParseState.class, PARSE_STATES);
+        result.put(ImmutableList.class, IMMUTABLE_LISTS);
+        return result;
+    }
 
     @Parameterized.Parameters(name="{0}")
     public static Collection<Object[]> data() throws IllegalAccessException, InvocationTargetException, InstantiationException {
