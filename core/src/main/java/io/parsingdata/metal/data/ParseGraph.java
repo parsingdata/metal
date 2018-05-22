@@ -123,7 +123,7 @@ public class ParseGraph implements ParseItem {
 
     @Override
     public String toString() {
-        if (this == EMPTY) {
+        if (this.equals(EMPTY)) {
             return "pg(EMPTY)";
         }
         if (head == null) {
