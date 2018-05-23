@@ -43,9 +43,9 @@ public class ParseReference implements ParseItem {
         return findItemAtOffset(getAllRoots(root, definition), location, source).computeResult();
     }
 
-    public boolean isReference() { return true; }
-    public ParseReference asReference() { return this; }
-    public Token getDefinition() { return definition; }
+    @Override public boolean isReference() { return true; }
+    @Override public ParseReference asReference() { return this; }
+    @Override public Token getDefinition() { return definition; }
 
     @Override
     public String toString() {

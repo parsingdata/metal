@@ -40,9 +40,9 @@ public class ParseValue extends Value implements ParseItem {
         return this.name.equals(name) || this.name.endsWith(Token.SEPARATOR + name);
     }
 
-    public boolean isValue() { return true; }
-    public ParseValue asValue() { return this; }
-    public Token getDefinition() { return definition; }
+    @Override public boolean isValue() { return true; }
+    @Override public ParseValue asValue() { return this; }
+    @Override public Token getDefinition() { return definition; }
 
     @Override
     public String toString() {

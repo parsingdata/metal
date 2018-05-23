@@ -242,7 +242,7 @@ public class CallbackTest {
         }
     }
 
-    private class CountingCallback implements Callback {
+    private static class CountingCallback implements Callback {
         private int successCount = 0;
         private int failureCount = 0;
 

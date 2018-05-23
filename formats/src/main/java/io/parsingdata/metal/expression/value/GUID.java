@@ -45,7 +45,7 @@ public final class GUID {
      * @return expression to use as predicate
      */
     public static ValueExpression guid(final String guid) {
-        final String[] parts = checkNotNull(guid, "guid").split("-");
+        final String[] parts = checkNotNull(guid, "guid").split("-", -1);
         if (parts.length != 5) {
             throw new IllegalArgumentException("Invalid GUID string: " + guid);
         }

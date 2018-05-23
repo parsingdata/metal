@@ -301,7 +301,7 @@ public class ByTokenTest {
         }
     }
 
-    private class CustomToken extends Token {
+    private static class CustomToken extends Token {
 
         public final Token token;
 

@@ -67,6 +67,9 @@
     <source-plugin.version>3.0.1</source-plugin.version>
     <pitest-maven.version>1.2.4</pitest-maven.version>
     <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
+    <errorprone.maven.compiler.version>3.3</errorprone.maven.compiler.version>
+    <errorprone.plexus.javac.version>2.8.3</errorprone.plexus.javac.version>
+    <errorprone.core.version>2.3.1</errorprone.core.version>
   </properties>
 
   <profiles>
@@ -98,6 +101,30 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${errorprone.maven.compiler.version}</version>
+        <configuration>
+          <compilerId>javac-with-errorprone</compilerId>
+          <forceJavacCompilerUse>true</forceJavacCompilerUse>
+          <showWarnings>true</showWarnings>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-compiler-javac-errorprone</artifactId>
+            <version>${errorprone.plexus.javac.version}</version>
+          </dependency>
+          <!-- override plexus-compiler-javac-errorprone's dependency on
+               Error Prone with the latest version -->
+          <dependency>
+            <groupId>com.google.errorprone</groupId>
+            <artifactId>error_prone_core</artifactId>
+            <version>${errorprone.core.version}</version>
+          </dependency>
+        </dependencies>
+      </plugin>
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>

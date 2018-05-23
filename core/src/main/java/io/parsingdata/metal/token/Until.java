@@ -101,8 +101,8 @@ public class Until extends Token {
 
     private Trampoline<Optional<ParseState>> iterate(final Environment environment, final BigInteger currentSize, final BigInteger stepSize, final BigInteger maxSize) {
         if (stepSize.compareTo(ZERO) == 0 ||
-            stepSize.compareTo(ZERO) > 0 && currentSize.compareTo(maxSize) > 0 ||
-            stepSize.compareTo(ZERO) < 0 && currentSize.compareTo(maxSize) < 0) {
+            (stepSize.compareTo(ZERO) > 0 && currentSize.compareTo(maxSize) > 0) ||
+            (stepSize.compareTo(ZERO) < 0 && currentSize.compareTo(maxSize) < 0)) {
             return complete(Util::failure);
         }
         return environment.parseState

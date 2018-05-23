@@ -44,10 +44,12 @@ public interface Trampoline<T> {
     @FunctionalInterface
     interface CompletedTrampoline<T> extends Trampoline<T> {
 
+        @Override
         default boolean hasNext() {
             return false;
         }
 
+        @Override
         default Trampoline<T> next() {
             throw new UnsupportedOperationException("A CompletedTrampoline does not have a next computation.");
         }
@@ -61,10 +63,12 @@ public interface Trampoline<T> {
     @FunctionalInterface
     interface IntermediateTrampoline<T> extends Trampoline<T> {
 
+        @Override
         default T result() {
             throw new UnsupportedOperationException("An IntermediateTrampoline does not have a result.");
         }
 
+        @Override
         default boolean hasNext() {
             return true;
         }

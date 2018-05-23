@@ -117,13 +117,13 @@ public class ParseGraph implements ParseItem {
         return intermediate(() -> current(items.tail));
     }
 
-    public boolean isGraph() { return true; }
-    public ParseGraph asGraph() { return this; }
-    public Token getDefinition() { return definition; }
+    @Override public boolean isGraph() { return true; }
+    @Override public ParseGraph asGraph() { return this; }
+    @Override public Token getDefinition() { return definition; }
 
     @Override
     public String toString() {
-        if (this == EMPTY) {
+        if (this.equals(EMPTY)) {
             return "pg(EMPTY)";
         }
         if (head == null) {
