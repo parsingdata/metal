@@ -44,6 +44,7 @@ import io.parsingdata.metal.expression.value.Bytes;
 import io.parsingdata.metal.expression.value.Cat;
 import io.parsingdata.metal.expression.value.Const;
 import io.parsingdata.metal.expression.value.ConstantFactory;
+import io.parsingdata.metal.expression.value.reference.CurrentIndex;
 import io.parsingdata.metal.expression.value.Elvis;
 import io.parsingdata.metal.expression.value.Expand;
 import io.parsingdata.metal.expression.value.FoldLeft;
@@ -89,6 +90,7 @@ public final class Shorthand {
     public static final Token EMPTY = def(EMPTY_NAME, 0L);
     public static final ValueExpression SELF = new Self();
     public static final ValueExpression CURRENT_OFFSET = new CurrentOffset();
+    public static final ValueExpression CURRENT_INDEX = new CurrentIndex();
     public static final Expression TRUE = new True();
 
     private Shorthand() {}
