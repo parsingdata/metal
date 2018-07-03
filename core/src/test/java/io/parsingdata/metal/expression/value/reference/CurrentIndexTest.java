@@ -20,9 +20,11 @@ import static io.parsingdata.metal.Shorthand.CURRENT_INDEX;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.ltNum;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.whl;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
@@ -43,6 +45,7 @@ public class CurrentIndexTest extends ParameterizedParse {
         return Arrays.asList(new Object[][] {
             { "[0, 1, 2, 3] rep(CURRENT_INDEX)", rep(VALUE_EQ_INDEX), stream(0, 1, 2, 3), enc(), true },
             { "[0, 1, 2, 3] repn(4, CURRENT_INDEX)", repn(VALUE_EQ_INDEX, con(4)), stream(0, 1, 2, 3), enc(), true },
+            { "[0, 0, 1, 2, 3] def(0), while(<3, CURRENT_INDEX)", seq(def("value", con(1)), whl(VALUE_EQ_INDEX, ltNum(con(3)))), stream(0, 0, 1, 2, 3), enc(), true },
             { "[0, 1, 2, 3] seq(CURRENT_INDEX, ...)", seq(VALUE_EQ_INDEX, VALUE_EQ_INDEX, VALUE_EQ_INDEX, VALUE_EQ_INDEX), stream(0, 1, 2, 3), enc(), true }
         });
     }
