@@ -79,6 +79,10 @@ public abstract class Token {
         return true;
     }
 
+    public boolean isIterable() {
+        return false;
+    }
+
     public Token getCanonical(final ParseState parseState) {
         return this;
     }

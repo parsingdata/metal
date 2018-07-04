@@ -43,10 +43,10 @@ public class CurrentIndexTest extends ParameterizedParse {
     @Parameterized.Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-            { "[0, 1, 2, 3] rep(CURRENT_INDEX)", rep(VALUE_EQ_INDEX), stream(0, 1, 2, 3), enc(), true },
+            { "[0, 1, 2, 3, 255] rep(CURRENT_INDEX), def(255)", seq(rep(VALUE_EQ_INDEX), def("value", con(1), eq(con(255)))), stream(0, 1, 2, 3, 255), enc(), true },
             { "[0, 1, 2, 3] repn(4, CURRENT_INDEX)", repn(VALUE_EQ_INDEX, con(4)), stream(0, 1, 2, 3), enc(), true },
-            { "[0, 0, 1, 2, 3] def(0), while(<3, CURRENT_INDEX)", seq(def("value", con(1)), whl(VALUE_EQ_INDEX, ltNum(con(3)))), stream(0, 0, 1, 2, 3), enc(), true },
-            { "[0, 1, 2, 3] seq(CURRENT_INDEX, ...)", seq(VALUE_EQ_INDEX, VALUE_EQ_INDEX, VALUE_EQ_INDEX, VALUE_EQ_INDEX), stream(0, 1, 2, 3), enc(), true }
+            { "[255, 0, 1, 2, 3] def(255), while(<3, CURRENT_INDEX)", seq(def("value", con(1), eq(con(255))), whl(VALUE_EQ_INDEX, ltNum(con(3)))), stream(255, 0, 1, 2, 3), enc(), true },
+            //{ "[0, 1, 2, 3] seq(CURRENT_INDEX, ...)", seq(VALUE_EQ_INDEX, VALUE_EQ_INDEX, VALUE_EQ_INDEX, VALUE_EQ_INDEX), stream(0, 1, 2, 3), enc(), true }
         });
     }
 

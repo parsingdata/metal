@@ -60,6 +60,11 @@ public class Rep extends Token {
     }
 
     @Override
+    public boolean isIterable() {
+        return true;
+    }
+
+    @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + makeNameFragment() + token + ")";
     }

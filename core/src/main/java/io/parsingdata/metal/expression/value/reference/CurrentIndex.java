@@ -16,10 +16,18 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
+
+import static io.parsingdata.metal.expression.value.ConstantFactory.createFromNumeric;
+
+import java.math.BigInteger;
 import java.util.Optional;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
@@ -34,7 +42,21 @@ public class CurrentIndex implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return null;
+        final Optional<ParseGraph> result = findIterable(parseState.order);
+        if (!result.isPresent()) { return ImmutableList.create(Optional.empty()); }
+        return ImmutableList.create(Optional.of(createFromNumeric(countIterables(result.get(), ZERO), new Encoding())));
+    }
+
+    private Optional<ParseGraph> findIterable(final ParseItem item) {
+        if (!item.isGraph() || item.asGraph().isEmpty()) { return Optional.empty(); }
+        if (!item.getDefinition().isIterable()) { return findIterable(item.asGraph().head); }
+        return Optional.of(item.asGraph());
+    }
+
+    private BigInteger countIterables(final ParseGraph graph, final BigInteger count) {
+        if (graph.isEmpty()) { return count.subtract(ONE); }
+        if (graph.tail.getDefinition().equals(graph.getDefinition())) { return countIterables(graph.tail, count.add(ONE)); }
+        return count.subtract(ONE);
     }
 
     @Override
