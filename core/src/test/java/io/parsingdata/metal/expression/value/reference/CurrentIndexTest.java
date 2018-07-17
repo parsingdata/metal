@@ -47,6 +47,7 @@ public class CurrentIndexTest extends ParameterizedParse {
             { "[0, 1, 2, 3] repn=3(CURRENT_INDEX)", repn(VALUE_EQ_INDEX, con(4)), stream(0, 1, 2, 3), enc(), true },
             { "[255, 0, 1, 2, 3] def(255), while<3(CURRENT_INDEX)", seq(def("value", con(1), eq(con(255))), whl(VALUE_EQ_INDEX, ltNum(con(3)))), stream(255, 0, 1, 2, 3), enc(), true },
             { "[0, 0, 1, 2, 1, 0, 1, 2] repn=2(CURRENT_INDEX, repn=3(CURRENT_INDEX))", repn(seq(VALUE_EQ_INDEX, repn(VALUE_EQ_INDEX, con(3))), con(2)), stream(0, 0, 1, 2, 1, 0, 1, 2), enc(), true },
+            { "[0, 1, 2, 3] seq(CURRENT_INDEX, ...)", seq(VALUE_EQ_INDEX, VALUE_EQ_INDEX), stream(0, 0), enc(), true }
             //{ "[0, 1, 2, 3] seq(CURRENT_INDEX, ...)", seq(VALUE_EQ_INDEX, VALUE_EQ_INDEX, VALUE_EQ_INDEX, VALUE_EQ_INDEX), stream(0, 1, 2, 3), enc(), true }
         });
     }

@@ -42,15 +42,16 @@ public class CurrentIndex implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final Optional<ParseGraph> result = findIterable(parseState.order);
-        if (!result.isPresent()) { return ImmutableList.create(Optional.empty()); }
-        return ImmutableList.create(Optional.of(createFromNumeric(countIterables(result.get(), ZERO), new Encoding())));
+        final BigInteger currentIndex = findCurrentOffset(parseState.order, ZERO);
+        return ImmutableList.create(Optional.of(createFromNumeric(currentIndex, new Encoding())));
     }
 
-    private Optional<ParseGraph> findIterable(final ParseItem item) {
-        if (!item.isGraph() || item.asGraph().isEmpty()) { return Optional.empty(); }
-        if (!item.getDefinition().isIterable()) { return findIterable(item.asGraph().head); }
-        return Optional.of(item.asGraph());
+    private BigInteger findCurrentOffset(final ParseItem item, final BigInteger currentIndex) {
+        if (!item.isGraph() || item.asGraph().isEmpty()) { return currentIndex; }
+        if (item.getDefinition().isIterable()) {
+            return findCurrentOffset(item.asGraph().head, countIterables(item.asGraph(), ZERO));
+        }
+        return findCurrentOffset(item.asGraph().head, currentIndex);
     }
 
     private BigInteger countIterables(final ParseGraph graph, final BigInteger count) {
