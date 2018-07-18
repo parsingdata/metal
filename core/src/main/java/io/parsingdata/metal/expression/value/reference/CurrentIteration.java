@@ -34,24 +34,25 @@ import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * A {@link ValueExpression} that represents the current index in an iteration
- * (e.g. when inside a {@link io.parsingdata.metal.token.Rep} or
+ * A {@link ValueExpression} that represents the current iteration in an
+ * iterable {@link io.parsingdata.metal.token.Token} (e.g. when inside a
+ * {@link io.parsingdata.metal.token.Rep} or
  * {@link io.parsingdata.metal.token.RepN}).
  */
-public class CurrentIndex implements ValueExpression {
+public class CurrentIteration implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final BigInteger currentIndex = findCurrentOffset(parseState.order, ZERO);
+        final BigInteger currentIndex = findCurrentIteration(parseState.order, ZERO);
         return ImmutableList.create(Optional.of(createFromNumeric(currentIndex, new Encoding())));
     }
 
-    private BigInteger findCurrentOffset(final ParseItem item, final BigInteger currentIndex) {
+    private BigInteger findCurrentIteration(final ParseItem item, final BigInteger currentIndex) {
         if (!item.isGraph() || item.asGraph().isEmpty()) { return currentIndex; }
         if (item.getDefinition().isIterable()) {
-            return findCurrentOffset(item.asGraph().head, countIterables(item.asGraph(), ZERO));
+            return findCurrentIteration(item.asGraph().head, countIterables(item.asGraph(), ZERO));
         }
-        return findCurrentOffset(item.asGraph().head, currentIndex);
+        return findCurrentIteration(item.asGraph().head, currentIndex);
     }
 
     private BigInteger countIterables(final ParseGraph graph, final BigInteger count) {
