@@ -48,7 +48,7 @@ public class CurrentIteration implements ValueExpression {
     }
 
     private BigInteger findCurrentIteration(final ParseItem item, final BigInteger currentIndex) {
-        if (!item.isGraph() || item.asGraph().isEmpty()) { return currentIndex; }
+        if (!item.isGraph()) { return currentIndex; }
         if (item.getDefinition().isIterable()) {
             return findCurrentIteration(item.asGraph().head, countIterables(item.asGraph(), ZERO));
         }
@@ -56,8 +56,7 @@ public class CurrentIteration implements ValueExpression {
     }
 
     private BigInteger countIterables(final ParseGraph graph, final BigInteger count) {
-        if (graph.isEmpty()) { return count.subtract(ONE); }
-        if (graph.tail.getDefinition().equals(graph.getDefinition())) { return countIterables(graph.tail, count.add(ONE)); }
+        if (!graph.isEmpty()) { return countIterables(graph.tail, count.add(ONE)); }
         return count.subtract(ONE);
     }
 
