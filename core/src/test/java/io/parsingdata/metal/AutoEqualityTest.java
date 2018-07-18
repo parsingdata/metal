@@ -100,6 +100,7 @@ import io.parsingdata.metal.expression.value.bitwise.Or;
 import io.parsingdata.metal.expression.value.bitwise.ShiftLeft;
 import io.parsingdata.metal.expression.value.bitwise.ShiftRight;
 import io.parsingdata.metal.expression.value.reference.Count;
+import io.parsingdata.metal.expression.value.reference.CurrentIteration;
 import io.parsingdata.metal.expression.value.reference.CurrentOffset;
 import io.parsingdata.metal.expression.value.reference.First;
 import io.parsingdata.metal.expression.value.reference.Last;
@@ -191,7 +192,7 @@ public class AutoEqualityTest {
             And.class, Or.class, ShiftLeft.class, ShiftRight.class, Add.class, Div.class, Mod.class, Mul.class,
             io.parsingdata.metal.expression.value.arithmetic.Sub.class, Cat.class, Nth.class, Elvis.class,
             FoldLeft.class, FoldRight.class, Const.class, Expand.class, Bytes.class, CurrentOffset.class,
-            FoldCat.class,
+            FoldCat.class, CurrentIteration.class,
             // Expressions
             Eq.class, EqNum.class, EqStr.class, GtEqNum.class, GtNum.class, LtEqNum.class, LtNum.class,
             io.parsingdata.metal.expression.logical.And.class, io.parsingdata.metal.expression.logical.Or.class,
