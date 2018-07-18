@@ -19,11 +19,14 @@ package io.parsingdata.metal.expression.value.reference;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.expression.value.ConstantFactory.createFromNumeric;
 
 import java.math.BigInteger;
 import java.util.Optional;
 
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
@@ -43,21 +46,21 @@ public class CurrentIteration implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final BigInteger currentIndex = findCurrentIteration(parseState.order, ZERO);
+        final BigInteger currentIndex = findCurrentIteration(parseState.order, ZERO).computeResult();
         return ImmutableList.create(Optional.of(createFromNumeric(currentIndex, new Encoding())));
     }
 
-    private BigInteger findCurrentIteration(final ParseItem item, final BigInteger currentIndex) {
-        if (!item.isGraph()) { return currentIndex; }
+    private Trampoline<BigInteger> findCurrentIteration(final ParseItem item, final BigInteger currentIndex) {
+        if (!item.isGraph()) { return complete(() -> currentIndex); }
         if (item.getDefinition().isIterable()) {
-            return findCurrentIteration(item.asGraph().head, countIterables(item.asGraph(), ZERO));
+            return intermediate(() -> findCurrentIteration(item.asGraph().head, countIterables(item.asGraph(), ZERO).computeResult()));
         }
-        return findCurrentIteration(item.asGraph().head, currentIndex);
+        return intermediate(() -> findCurrentIteration(item.asGraph().head, currentIndex));
     }
 
-    private BigInteger countIterables(final ParseGraph graph, final BigInteger count) {
-        if (!graph.isEmpty()) { return countIterables(graph.tail, count.add(ONE)); }
-        return count.subtract(ONE);
+    private Trampoline<BigInteger> countIterables(final ParseGraph graph, final BigInteger count) {
+        if (!graph.isEmpty()) { return intermediate(() -> countIterables(graph.tail, count.add(ONE))); }
+        return complete(() -> count.subtract(ONE));
     }
 
     @Override
