@@ -45,10 +45,11 @@ public class CurrentIterationTest extends ParameterizedParse {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
             { "[0, 1, 2, 3, 255] rep(CURRENT_ITERATION), def(255)", seq(rep(VALUE_EQ_ITERATION), VALUE_EQ_255), stream(0, 1, 2, 3, 255), enc(), true },
-            { "[0, 1, 2, 3] repn=3(CURRENT_ITERATION)", repn(VALUE_EQ_ITERATION, con(4)), stream(0, 1, 2, 3), enc(), true },
+            { "[0, 1, 2, 3] repn=4(CURRENT_ITERATION)", repn(VALUE_EQ_ITERATION, con(4)), stream(0, 1, 2, 3), enc(), true },
             { "[255, 0, 1, 2, 3, 255] def(255), while<3(CURRENT_ITERATION), def (255)", seq(VALUE_EQ_255, whl(VALUE_EQ_ITERATION, not(eq(con(3)))), VALUE_EQ_255), stream(255, 0, 1, 2, 3, 255), enc(), true },
             { "[0, 0, 1, 2, 1, 0, 1, 2] repn=2(CURRENT_ITERATION, repn=3(CURRENT_ITERATION))", repn(seq(VALUE_EQ_ITERATION, repn(VALUE_EQ_ITERATION, con(3))), con(2)), stream(0, 0, 1, 2, 1, 0, 1, 2), enc(), true },
-            { "[0, 0] seq(CURRENT_ITERATION, ...)", seq(VALUE_EQ_ITERATION, VALUE_EQ_ITERATION), stream(0, 0), enc(), true }
+            { "[0, 0] seq(CURRENT_ITERATION, ...)", seq(VALUE_EQ_ITERATION, VALUE_EQ_ITERATION), stream(0, 0), enc(), true },
+            { "[0] CURRENT_ITERATION", VALUE_EQ_ITERATION, stream(0), enc(), true }
         });
     }
 
