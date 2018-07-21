@@ -46,22 +46,22 @@ public class CurrentIteration implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ParseGraph iterable = findIterable(parseState.order, ParseGraph.EMPTY).computeResult();
-        final BigInteger iteration = countIterable(iterable, ZERO).computeResult().max(ZERO);
-        return ImmutableList.create(Optional.of(createFromNumeric(iteration, new Encoding())));
+        final ParseGraph currentIterable = findCurrentIterable(parseState.order, ParseGraph.EMPTY).computeResult();
+        final BigInteger currentIteration = countIterable(currentIterable, ZERO).computeResult();
+        return ImmutableList.create(Optional.of(createFromNumeric(currentIteration, new Encoding())));
     }
 
-    private Trampoline<ParseGraph> findIterable(final ParseItem item, final ParseGraph iterableCandidate) {
+    private Trampoline<ParseGraph> findCurrentIterable(final ParseItem item, final ParseGraph iterableCandidate) {
         if (!item.isGraph()) { return complete(() -> iterableCandidate); }
         if (item.getDefinition().isIterable()) {
-            return intermediate(() -> findIterable(item.asGraph().head, item.asGraph()));
+            return intermediate(() -> findCurrentIterable(item.asGraph().head, item.asGraph()));
         }
-        return intermediate(() -> findIterable(item.asGraph().head, iterableCandidate));
+        return intermediate(() -> findCurrentIterable(item.asGraph().head, iterableCandidate));
     }
 
     private Trampoline<BigInteger> countIterable(final ParseGraph graph, final BigInteger count) {
         if (!graph.isEmpty()) { return intermediate(() -> countIterable(graph.tail, count.add(ONE))); }
-        return complete(() -> count.subtract(ONE));
+        return complete(() -> count.subtract(ONE).max(ZERO));
     }
 
     @Override
