@@ -52,6 +52,12 @@ public class CurrentIterationEdgeCaseTest {
         iteration(last(ref("b"))).eval(parseState, enc());
     }
 
+    @Test
+    public void emptyLevelHead() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Level must evaluate to a single non-empty value.");
+        iteration(div(con(1), con(0))).eval(parseState, enc());
+    }
 
     @Test
     public void negativeLevel() {
