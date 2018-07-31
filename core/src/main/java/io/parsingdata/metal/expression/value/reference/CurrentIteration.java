@@ -22,9 +22,13 @@ import static java.math.BigInteger.ZERO;
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.expression.value.ConstantFactory.createFromNumeric;
+import static java.util.Collections.nCopies;
 
 import java.math.BigInteger;
+import java.util.ArrayDeque;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Queue;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
@@ -44,21 +48,36 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  */
 public class CurrentIteration implements ValueExpression {
 
+    private final ValueExpression level;
+
+    public CurrentIteration(final ValueExpression level) {
+        this.level = level;
+    }
+
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ParseGraph currentIterable = findCurrentIterable(parseState.order, ParseGraph.EMPTY).computeResult();
+        final int level = getLevel(parseState, encoding);
+        final ParseGraph currentIterable = findCurrentIterable(parseState.order, new ParseGraphCandidates(level + 1)).computeResult().head();
         if (currentIterable.isEmpty()) { return ImmutableList.create(Optional.empty()); }
 
         final BigInteger currentIteration = countIterable(currentIterable, ZERO).computeResult();
         return ImmutableList.create(Optional.of(createFromNumeric(currentIteration, new Encoding())));
     }
 
-    private Trampoline<ParseGraph> findCurrentIterable(final ParseItem item, final ParseGraph iterableCandidate) {
-        if (!item.isGraph()) { return complete(() -> iterableCandidate); }
-        if (item.getDefinition().isIterable()) {
-            return intermediate(() -> findCurrentIterable(item.asGraph().head, item.asGraph()));
+    private int getLevel(final ParseState parseState, final Encoding encoding) {
+        ImmutableList<Optional<Value>> evaluatedLevel = level.eval(parseState, encoding);
+        if (evaluatedLevel.size != 1 || !evaluatedLevel.head.isPresent()) {
+            throw new IllegalArgumentException("Level must evaluate to a single non-empty value.");
         }
-        return intermediate(() -> findCurrentIterable(item.asGraph().head, iterableCandidate));
+        return evaluatedLevel.head.get().asNumeric().intValueExact();
+    }
+
+    private Trampoline<ParseGraphCandidates> findCurrentIterable(final ParseItem item, final ParseGraphCandidates iterableCandidates) {
+        if (!item.isGraph()) { return complete(() -> iterableCandidates); }
+        if (item.getDefinition().isIterable()) {
+            return intermediate(() -> findCurrentIterable(item.asGraph().head, iterableCandidates.add(item.asGraph())));
+        }
+        return intermediate(() -> findCurrentIterable(item.asGraph().head, iterableCandidates));
     }
 
     private Trampoline<BigInteger> countIterable(final ParseGraph graph, final BigInteger count) {
@@ -73,12 +92,35 @@ public class CurrentIteration implements ValueExpression {
 
     @Override
     public boolean equals(final Object obj) {
-        return Util.notNullAndSameClass(this, obj);
+        return Util.notNullAndSameClass(this, obj)
+                && Objects.equals(level, ((CurrentIteration)obj).level);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(getClass(), level);
+    }
+
+    /**
+     * ParseGraphCandidates keeps track of the last n ParseGraphs.
+     */
+    private class ParseGraphCandidates {
+
+        private final Queue<ParseGraph> list;
+
+        ParseGraphCandidates(final int n) {
+            list = new ArrayDeque<>(nCopies(n, ParseGraph.EMPTY));
+        }
+
+        ParseGraphCandidates add(ParseGraph parseGraph) {
+            list.add(parseGraph);
+            list.remove();
+            return this;
+        }
+
+        ParseGraph head() {
+            return list.element();
+        }
     }
 
 }
