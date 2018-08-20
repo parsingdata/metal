@@ -17,7 +17,6 @@
 package io.parsingdata.metal.data;
 
 import static java.math.BigInteger.ONE;
-import static java.math.BigInteger.TEN;
 import static java.math.BigInteger.ZERO;
 
 import static io.parsingdata.metal.Util.checkNotNegative;
