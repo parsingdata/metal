@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 Netherlands Forensic Institute
+ * Copyright 2013-2018 Netherlands Forensic Institute
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,35 +16,23 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
-import static java.math.BigInteger.ONE;
-import static java.math.BigInteger.ZERO;
-
-import static io.parsingdata.metal.Trampoline.complete;
-import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.expression.value.ConstantFactory.createFromNumeric;
-import static java.util.Collections.nCopies;
 
-import java.math.BigInteger;
-import java.util.ArrayDeque;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Queue;
 
-import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseGraph;
-import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.token.Rep;
+import io.parsingdata.metal.token.RepN;
+import io.parsingdata.metal.token.Token;
 
 /**
- * A {@link ValueExpression} that represents the current iteration in an
- * iterable {@link io.parsingdata.metal.token.Token} (e.g. when inside a
- * {@link io.parsingdata.metal.token.Rep} or
- * {@link io.parsingdata.metal.token.RepN}).
+ * A {@link ValueExpression} that represents the 0-based current iteration in an
+ * iterable {@link Token} (e.g. when inside a {@link Rep} or {@link RepN}).
  */
 public class CurrentIteration implements ValueExpression {
 
@@ -57,11 +45,10 @@ public class CurrentIteration implements ValueExpression {
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
         final int level = getLevel(parseState, encoding);
-        final ParseGraph currentIterable = findCurrentIterable(parseState.order, new ParseGraphCandidates(level + 1)).computeResult().head();
-        if (currentIterable.isEmpty()) { return ImmutableList.create(Optional.empty()); }
-
-        final BigInteger currentIteration = countIterable(currentIterable, ZERO).computeResult();
-        return ImmutableList.create(Optional.of(createFromNumeric(currentIteration, new Encoding())));
+        if (parseState.iterations.head == null) {
+            return ImmutableList.create(Optional.empty());
+        }
+        return ImmutableList.create(Optional.of(createFromNumeric(parseState.iterations.head, new Encoding())));
     }
 
     private int getLevel(final ParseState parseState, final Encoding encoding) {
@@ -70,19 +57,6 @@ public class CurrentIteration implements ValueExpression {
             throw new IllegalArgumentException("Level must evaluate to a single non-empty value.");
         }
         return evaluatedLevel.head.get().asNumeric().intValueExact();
-    }
-
-    private Trampoline<ParseGraphCandidates> findCurrentIterable(final ParseItem item, final ParseGraphCandidates iterableCandidates) {
-        if (!item.isGraph()) { return complete(() -> iterableCandidates); }
-        if (item.getDefinition().isIterable()) {
-            return intermediate(() -> findCurrentIterable(item.asGraph().head, iterableCandidates.add(item.asGraph())));
-        }
-        return intermediate(() -> findCurrentIterable(item.asGraph().head, iterableCandidates));
-    }
-
-    private Trampoline<BigInteger> countIterable(final ParseGraph graph, final BigInteger count) {
-        if (!graph.isEmpty()) { return intermediate(() -> countIterable(graph.tail, count.add(ONE))); }
-        return complete(() -> count.subtract(ONE));
     }
 
     @Override
@@ -99,28 +73,6 @@ public class CurrentIteration implements ValueExpression {
     @Override
     public int hashCode() {
         return Objects.hash(getClass(), level);
-    }
-
-    /**
-     * ParseGraphCandidates keeps track of the last n ParseGraphs.
-     */
-    private class ParseGraphCandidates {
-
-        private final Queue<ParseGraph> list;
-
-        ParseGraphCandidates(final int n) {
-            list = new ArrayDeque<>(nCopies(n, ParseGraph.EMPTY));
-        }
-
-        ParseGraphCandidates add(ParseGraph parseGraph) {
-            list.add(parseGraph);
-            list.remove();
-            return this;
-        }
-
-        ParseGraph head() {
-            return list.element();
-        }
     }
 
 }

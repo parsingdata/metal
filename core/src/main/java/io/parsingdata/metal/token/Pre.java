@@ -59,7 +59,7 @@ public class Pre extends Token {
         }
         return token
             .parse(environment.addBranch(this))
-            .map(resultParseState -> success(resultParseState.closeBranch()))
+            .map(resultParseState -> success(resultParseState.closeBranch(this)))
             .orElseGet(Util::failure);
     }
 

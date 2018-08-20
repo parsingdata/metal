@@ -58,7 +58,7 @@ public class Seq extends Token {
 
     private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Token> list) {
         if (list.isEmpty()) {
-            return complete(() -> success(environment.parseState.closeBranch()));
+            return complete(() -> success(environment.parseState.closeBranch(this)));
         }
         return list.head
             .parse(environment)
