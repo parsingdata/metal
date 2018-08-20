@@ -18,6 +18,8 @@ package io.parsingdata.metal.expression.value.reference;
 
 import static io.parsingdata.metal.expression.value.ConstantFactory.createFromNumeric;
 
+import java.math.BigInteger;
+import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.Util;
@@ -44,11 +46,17 @@ public class CurrentIteration implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final int level = getLevel(parseState, encoding);
-        if (parseState.iterations.head == null) {
+        int level = getLevel(parseState, encoding);
+        ImmutableList<BigInteger> iterations = parseState.iterations;
+        while (level > 0 && iterations.tail != null) {
+            iterations = iterations.tail;
+            level--;
+        }
+
+        if (iterations.head == null || level > 0) {
             return ImmutableList.create(Optional.empty());
         }
-        return ImmutableList.create(Optional.of(createFromNumeric(parseState.iterations.head, new Encoding())));
+        return ImmutableList.create(Optional.of(createFromNumeric(iterations.head, new Encoding())));
     }
 
     private int getLevel(final ParseState parseState, final Encoding encoding) {
