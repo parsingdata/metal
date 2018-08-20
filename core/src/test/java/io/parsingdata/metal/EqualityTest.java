@@ -173,8 +173,8 @@ public class EqualityTest {
         assertFalse(object.equals(null));
         assertFalse(object.equals("a"));
         final ParseState parseState = createFromByteStream(DUMMY_STREAM);
-        assertNotEquals(parseState.addBranch(any("a")).add(value).add(value).closeBranch().addBranch(any("a")).order, parseState.addBranch(any("a")).closeBranch().addBranch(any("a")).order);
-        assertNotEquals(parseState.addBranch(any("a")).order, parseState.addBranch(any("a")).closeBranch().order);
+        assertNotEquals(parseState.addBranch(any("a")).add(value).add(value).closeBranch(any("a")).addBranch(any("a")).order, parseState.addBranch(any("a")).closeBranch(any("a")).addBranch(any("a")).order);
+        assertNotEquals(parseState.addBranch(any("a")).order, parseState.addBranch(any("a")).closeBranch(any("a")).order);
         assertNotEquals(parseState.addBranch(any("a")).order, parseState.addBranch(any("b")).order);
     }
 

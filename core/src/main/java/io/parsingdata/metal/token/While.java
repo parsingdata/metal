@@ -17,16 +17,11 @@
 package io.parsingdata.metal.token;
 
 import static io.parsingdata.metal.Shorthand.TRUE;
-import static io.parsingdata.metal.Trampoline.complete;
-import static io.parsingdata.metal.Trampoline.intermediate;
-import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.Util.success;
+import static io.parsingdata.metal.Util.failure;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.Trampoline;
-import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
@@ -45,35 +40,18 @@ import io.parsingdata.metal.expression.Expression;
  *
  * @see Expression
  */
-public class While extends Token {
+public class While extends IterableToken {
 
-    public final Token token;
     public final Expression predicate;
 
     public While(final String name, final Token token, final Expression predicate, final Encoding encoding) {
-        super(name, encoding);
-        this.token = checkNotNull(token, "token");
+        super(name, token, encoding);
         this.predicate = predicate == null ? TRUE : predicate;
     }
 
     @Override
-    protected Optional<ParseState> parseImpl(final Environment environment) {
-        return iterate(environment.addBranch(this)).computeResult();
-    }
-
-    private Trampoline<Optional<ParseState>> iterate(final Environment environment) {
-        if (predicate.eval(environment.parseState, environment.encoding)) {
-            return token
-                .parse(environment)
-                .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState))))
-                .orElseGet(() -> complete(Util::failure));
-        }
-        return complete(() -> success(environment.parseState.closeBranch()));
-    }
-
-    @Override
-    public boolean isIterable() {
-        return true;
+    protected Optional<ParseState> parseImpl(Environment environment) {
+        return super.parse(environment, env -> !predicate.eval(env.parseState, env.encoding), env -> failure());
     }
 
     @Override
@@ -84,13 +62,12 @@ public class While extends Token {
     @Override
     public boolean equals(final Object obj) {
         return super.equals(obj)
-            && Objects.equals(token, ((While)obj).token)
             && Objects.equals(predicate, ((While)obj).predicate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), token, predicate);
+        return Objects.hash(super.hashCode(), predicate);
     }
 
 }

@@ -75,7 +75,7 @@ public class Sub extends Token {
 
     private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Optional<Value>> addresses) {
         if (addresses.isEmpty()) {
-            return complete(() -> success(environment.parseState.closeBranch()));
+            return complete(() -> success(environment.parseState.closeBranch(this)));
         }
         return addresses.head
             .flatMap(address -> parse(environment, address.asNumeric()))
