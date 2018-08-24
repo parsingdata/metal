@@ -75,6 +75,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
+import io.parsingdata.metal.token.Rep;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -166,6 +167,9 @@ public class ToStringTest {
         final ParseState parseState = stream(1, 2);
         final String parseStateString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(EMPTY))";
         assertEquals(parseStateString, parseState.toString());
+        final ParseState parseStateWithIterations = parseState.addBranch(rep(def("a",1))).iter();
+        final String parseStateWithIterationsString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(pg(terminator:Rep),pg(EMPTY),true);iterations:>1)";
+        assertEquals(parseStateWithIterationsString, parseStateWithIterations.toString());
         final Optional<ParseState> result = Optional.of(parseState);
         assertEquals("Optional[" + parseState + "]", result.toString());
         final ParseValue pv1 = new ParseValue("name", NONE, createFromBytes(new byte[]{1, 2}), enc());
