@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
+import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.expression.value.ConstantFactory.createFromNumeric;
 
 import java.math.BigInteger;
@@ -41,30 +42,35 @@ public class CurrentIteration implements ValueExpression {
     private final ValueExpression level;
 
     public CurrentIteration(final ValueExpression level) {
-        this.level = level;
+        this.level = checkNotNull(level, "level");
     }
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        int level = getLevel(parseState, encoding);
-        ImmutableList<BigInteger> iterations = parseState.iterations;
-        while (level > 0 && iterations.tail != null) {
-            iterations = iterations.tail;
-            level--;
-        }
-
-        if (iterations.head == null || level > 0) {
-            return ImmutableList.create(Optional.empty());
-        }
-        return ImmutableList.create(Optional.of(createFromNumeric(iterations.head, new Encoding())));
+        return ImmutableList.create(getIteration(parseState, encoding));
     }
 
-    private int getLevel(final ParseState parseState, final Encoding encoding) {
-        ImmutableList<Optional<Value>> evaluatedLevel = level.eval(parseState, encoding);
+    private Optional<Value> getIteration(final ParseState parseState, final Encoding encoding) {
+        final BigInteger level = getLevel(parseState, encoding);
+        if (parseState.iterations.size <= level.longValue()) {
+            return Optional.empty();
+        }
+        return getIterationRecursive(parseState.iterations, level);
+    }
+
+    private BigInteger getLevel(final ParseState parseState, final Encoding encoding) {
+        final ImmutableList<Optional<Value>> evaluatedLevel = level.eval(parseState, encoding);
         if (evaluatedLevel.size != 1 || !evaluatedLevel.head.isPresent()) {
             throw new IllegalArgumentException("Level must evaluate to a single non-empty value.");
         }
-        return evaluatedLevel.head.get().asNumeric().intValueExact();
+        return evaluatedLevel.head.get().asNumeric();
+    }
+
+    private Optional<Value> getIterationRecursive(final ImmutableList<BigInteger> iterations, final BigInteger level) {
+        if (level.compareTo(BigInteger.ZERO) == 0) {
+            return Optional.of(createFromNumeric(iterations.head, new Encoding()));
+        }
+        return getIterationRecursive(iterations.tail, level.subtract(BigInteger.ONE));
     }
 
     @Override
