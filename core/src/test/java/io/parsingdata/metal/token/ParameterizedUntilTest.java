@@ -44,25 +44,31 @@ import io.parsingdata.metal.util.ParameterizedParse;
 
 public class ParameterizedUntilTest extends ParameterizedParse {
 
+    private static final Token ABC = def("abc", 3, eq(con("abc")));
+
     @Parameters(name = "{0} ({4})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-            { "[a,b,c] i=0,s=1,m=3 ab",            untilToken(0, 1, 3, con('c'), con("ab")),     stream("abc", US_ASCII), enc(), true },
-            { "[a,b,c,a,b,c] i=3,s=1,m=6 abcab",   untilToken(3, 1, 6, con('c'), con("abcab")),  stream("abcabc", US_ASCII), enc(), true },
-            { "[a,b,c] i=0,s=2,m=3 ab",            untilToken(0, 2, 3, con('c'), con("ab")),     stream("abc", US_ASCII), enc(), true },
-            { "[a,b,c,a,b,c] i=1,s=2,m=6 abcab",   untilToken(1, 2, 6, con('c'), con("abcab")),  stream("abcabc", US_ASCII), enc(), true },
-            { "[a,b,c,a,b,c] i=0,s=3,m=6",         untilToken(0, 3, 6, con('c'), con("")),       stream("abcabc", US_ASCII), enc(), false },
-            { "[a,b,c,a,b,c] i=0,s=0,m=6",         untilToken(0, 0, 6, con(""), con("")),        stream("abcabc", US_ASCII), enc(), false },
-            { "[a,b,c,a,b,c] i=6,s=-1,m=0 abcab",  untilToken(6, -1, 0, con('c'), con("abcab")), stream("abcabc", US_ASCII), enc(), true },
-            { "[] i=0,s=-1,m=6",                   untilToken(0, -1, 6, con(""), con("")),       stream("", US_ASCII), enc(), false },
-            { "[] i=6,s=1,m=0",                    untilToken(6, 1, 0, con(""), con("")),        stream("", US_ASCII), enc(), false },
+            { "[a,b,c,a,b,c] i=0,s=1,m=6 ab",      untilToken(0, 1, 6, con('c'), con("ab"), ABC), stream("abcabc", US_ASCII), enc(), true },
+            { "[a,b,c,a,b,c] i=3,s=1,m=6 abcab",   untilToken(3, 1, 6, con('c'), con("abcab")),   stream("abcabc", US_ASCII), enc(), true },
+            { "[a,b,c,a,b,c] i=0,s=2,m=6 ab",      untilToken(0, 2, 6, con('c'), con("ab"), ABC), stream("abcabc", US_ASCII), enc(), true },
+            { "[a,b,c,a,b,c] i=1,s=2,m=6 abcab",   untilToken(1, 2, 6, con('c'), con("abcab")),   stream("abcabc", US_ASCII), enc(), true },
+            { "[a,b,c,a,b,c] i=0,s=3,m=6",         untilToken(0, 3, 6, con('c'), con("")),        stream("abcabc", US_ASCII), enc(), false },
+            { "[a,b,c,a,b,c] i=0,s=0,m=6",         untilToken(0, 0, 6, con(""), con("")),         stream("abcabc", US_ASCII), enc(), false },
+            { "[a,b,c,a,b,c] i=6,s=-1,m=0 abcab",  untilToken(6, -1, 0, con('c'), con("abcab")),  stream("abcabc", US_ASCII), enc(), true },
+            { "[] i=0,s=-1,m=6",                   untilToken(0, -1, 6, con(""), con("")),        stream("", US_ASCII), enc(), false },
+            { "[] i=6,s=1,m=0",                    untilToken(6, 1, 0, con(""), con("")),         stream("", US_ASCII), enc(), false },
             { "[a,b,c,a,b,c] i=(0,0),s=3,m=6",     untilToken(exp(con(0), con(2)), con(3), con(6), con('c'), con("")), stream("abcabc", US_ASCII), enc(), false },
             { "[a,b,c,a,b,c] i=(0,0),s=(3,3),m=6", untilToken(exp(con(0), con(2)), exp(con(3), con(2)), con(6), con('c'), con("")), stream("abcabc", US_ASCII), enc(), false },
             { "[] i=NaN",                          untilToken(div(con(1), con(0)), con(1), con(1), con(""), con("")), stream("", US_ASCII), enc(), false },
-            { "[a,b,c] i=0,s=1 ab",                untilToken(0, 1, con('c'), con("ab")),        stream("abc", US_ASCII), enc(), true },
-            { "[a,b,c] i=0 ab",                    untilToken(0, con('c'), con("ab")),           stream("abc", US_ASCII), enc(), true },
-            { "[a] i=2,s=1,m=6",                   untilTokenAlwaysTrueTerminator(2, 1, 6),      stream("a", US_ASCII), enc(), false },
+            { "[a,b,c,a,b,c] i=0,s=1 ab",          untilToken(0, 1, con('c'), con("ab"), ABC),    stream("abcabc", US_ASCII), enc(), true },
+            { "[a,b,c,a,b,c] i=0 ab",              untilToken(0, con('c'), con("ab"), ABC),       stream("abcabc", US_ASCII), enc(), true },
+            { "[a] i=2,s=1,m=6",                   untilTokenAlwaysTrueTerminator(2, 1, 6),       stream("a", US_ASCII), enc(), false },
         });
+    }
+
+    private static Token untilToken(final int initial, final int step, final int max, final ValueExpression terminator, final ValueExpression expectedValue, final Token expectedTail) {
+        return seq(post(until("value", con(initial), con(step, signed()), con(max), def("terminator", 1, eq(terminator))), eq(last(ref("value")), expectedValue)), expectedTail);
     }
 
     private static Token untilToken(final int initial, final int step, final int max, final ValueExpression terminator, final ValueExpression expectedValue) {
@@ -77,8 +83,16 @@ public class ParameterizedUntilTest extends ParameterizedParse {
         return post(until("value", con(initial), con(step, signed()), def("terminator", 1, eq(terminator))), eq(last(ref("value")), expectedValue));
     }
 
+    private static Token untilToken(final int initial, final int step, final ValueExpression terminator, final ValueExpression expectedValue, final Token expectedTail) {
+        return seq(post(until("value", con(initial), con(step, signed()), def("terminator", 1, eq(terminator))), eq(last(ref("value")), expectedValue)), expectedTail);
+    }
+
     private static Token untilToken(final int initial, final ValueExpression terminator, final ValueExpression expectedValue) {
         return post(until("value", con(initial), def("terminator", 1, eq(terminator))), eq(last(ref("value")), expectedValue));
+    }
+
+    private static Token untilToken(final int initial, final ValueExpression terminator, final ValueExpression expectedValue, final Token expectedTail) {
+        return seq(post(until("value", con(initial), def("terminator", 1, eq(terminator))), eq(last(ref("value")), expectedValue)), expectedTail);
     }
 
     private static Token untilTokenAlwaysTrueTerminator(final int initial, final int step, final int max) {
