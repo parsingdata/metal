@@ -18,6 +18,8 @@ package io.parsingdata.metal.expression.value.reference;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.expression.value.ConstantFactory.createFromNumeric;
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -67,10 +69,10 @@ public class CurrentIteration implements ValueExpression {
     }
 
     private Optional<Value> getIterationRecursive(final ImmutableList<BigInteger> iterations, final BigInteger level) {
-        if (level.compareTo(BigInteger.ZERO) == 0) {
+        if (level.compareTo(ZERO) == 0) {
             return Optional.of(createFromNumeric(iterations.head, new Encoding()));
         }
-        return getIterationRecursive(iterations.tail, level.subtract(BigInteger.ONE));
+        return getIterationRecursive(iterations.tail, level.subtract(ONE));
     }
 
     @Override
