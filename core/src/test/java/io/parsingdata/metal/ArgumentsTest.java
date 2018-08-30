@@ -101,7 +101,7 @@ public class ArgumentsTest {
             // Derived from BinaryValueExpression
             { Cat.class, new Object[] { VALID_VE, null } },
             { Cat.class, new Object[] { null, VALID_VE } },
-            // Derived from UnaryValueExpression
+            // Derived from OneToManyValueExpression
             { Neg.class, new Object[] { null } },
             { Len.class, new Object[] { null } },
             // Derived from BinaryLogicalExpression

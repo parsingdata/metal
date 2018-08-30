@@ -44,6 +44,7 @@ import io.parsingdata.metal.expression.value.Bytes;
 import io.parsingdata.metal.expression.value.Cat;
 import io.parsingdata.metal.expression.value.Const;
 import io.parsingdata.metal.expression.value.ConstantFactory;
+import io.parsingdata.metal.expression.value.OneToManyValueExpression;
 import io.parsingdata.metal.expression.value.reference.CurrentIteration;
 import io.parsingdata.metal.expression.value.Elvis;
 import io.parsingdata.metal.expression.value.Expand;
@@ -51,7 +52,6 @@ import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
 import io.parsingdata.metal.expression.value.FoldCat;
 import io.parsingdata.metal.expression.value.Reverse;
-import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.expression.value.arithmetic.Add;
@@ -164,10 +164,10 @@ public final class Shorthand {
     public static BinaryValueExpression mul(final ValueExpression left, final ValueExpression right) { return new Mul(left, right); }
     public static BinaryValueExpression sub(final ValueExpression left, final ValueExpression right) { return new Sub(left, right); }
     public static BinaryValueExpression mod(final ValueExpression left, final ValueExpression right) { return new Mod(left, right); }
-    public static UnaryValueExpression neg(final ValueExpression operand) { return new Neg(operand); }
+    public static OneToManyValueExpression neg(final ValueExpression operand) { return new Neg(operand); }
     public static BinaryValueExpression and(final ValueExpression left, final ValueExpression right) { return new io.parsingdata.metal.expression.value.bitwise.And(left, right); }
     public static BinaryValueExpression or(final ValueExpression left, final ValueExpression right) { return new io.parsingdata.metal.expression.value.bitwise.Or(left, right); }
-    public static UnaryValueExpression not(final ValueExpression operand) { return new io.parsingdata.metal.expression.value.bitwise.Not(operand); }
+    public static OneToManyValueExpression not(final ValueExpression operand) { return new io.parsingdata.metal.expression.value.bitwise.Not(operand); }
     public static BinaryValueExpression shl(final ValueExpression left, final ValueExpression right) { return new ShiftLeft(left, right); }
     public static BinaryValueExpression shr(final ValueExpression left, final ValueExpression right) { return new ShiftRight(left, right); }
     public static ValueExpression con(final long value) { return con(value, new Encoding()); }

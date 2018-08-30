@@ -23,7 +23,7 @@ import java.util.zip.CRC32;
 
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.UnaryValueExpression;
+import io.parsingdata.metal.expression.value.OneToManyValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
@@ -32,7 +32,7 @@ public final class Callback {
     private Callback() {}
 
     public static ValueExpression crc32(final ValueExpression target) {
-        return new UnaryValueExpression(target) {
+        return new OneToManyValueExpression(target) {
             @Override
             public Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding) {
                 final CRC32 crc = new CRC32();

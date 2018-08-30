@@ -23,15 +23,15 @@ import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.value.ConstantFactory;
-import io.parsingdata.metal.expression.value.UnaryValueExpression;
+import io.parsingdata.metal.expression.value.OneToManyValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * A {@link UnaryValueExpression} that represents the sizes (in bytes) of all
+ * A {@link OneToManyValueExpression} that represents the sizes (in bytes) of all
  * {@link Value}s returned by evaluating its <code>operand</code>.
  */
-public class Len extends UnaryValueExpression {
+public class Len extends OneToManyValueExpression {
 
     public Len(final ValueExpression operand) {
         super(operand);

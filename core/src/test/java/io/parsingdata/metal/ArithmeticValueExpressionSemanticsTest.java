@@ -36,10 +36,10 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import java.util.Arrays;
 import java.util.Collection;
 
+import io.parsingdata.metal.expression.value.OneToManyValueExpression;
 import org.junit.runners.Parameterized.Parameters;
 
 import io.parsingdata.metal.expression.value.BinaryValueExpression;
-import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
@@ -102,7 +102,7 @@ public class ArithmeticValueExpressionSemanticsTest extends ParameterizedParse {
     private static final Token mul2 = binaryValueExpressionToken(mul(ref("a"), ref("b")), 2);
     private static final Token sub = binaryValueExpressionToken(sub(ref("a"), ref("b")), 1);
     private static final Token mod = binaryValueExpressionToken(mod(ref("a"), ref("b")), 1);
-    private static final Token neg = unaryValueExpressionToken(neg(ref("a")));
+    private static final Token neg = oneToManyValueExpression(neg(ref("a")));
 
     private static Token singleToken(final String firstName, final String secondName, final int resultSize, final ValueExpression valueExpression) {
         return seq(any(firstName),
@@ -114,7 +114,7 @@ public class ArithmeticValueExpressionSemanticsTest extends ParameterizedParse {
                    singleToken("b", "c", resultSize, binaryValueExpression));
     }
 
-    private static Token unaryValueExpressionToken(final UnaryValueExpression unaryValueExpression) {
+    private static Token oneToManyValueExpression(final OneToManyValueExpression unaryValueExpression) {
         return singleToken("a", "b", 1, unaryValueExpression);
     }
 

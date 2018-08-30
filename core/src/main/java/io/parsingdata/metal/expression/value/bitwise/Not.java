@@ -22,14 +22,14 @@ import java.util.Optional;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ConstantFactory;
-import io.parsingdata.metal.expression.value.UnaryValueExpression;
+import io.parsingdata.metal.expression.value.OneToManyValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * A {@link UnaryValueExpression} that implements the bitwise NOT operator.
+ * A {@link OneToManyValueExpression} that implements the bitwise NOT operator.
  */
-public class Not extends UnaryValueExpression {
+public class Not extends OneToManyValueExpression {
 
     public Not(final ValueExpression operand) {
         super(operand);

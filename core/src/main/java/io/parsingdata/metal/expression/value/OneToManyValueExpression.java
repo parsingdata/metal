@@ -33,23 +33,23 @@ import io.parsingdata.metal.encoding.Encoding;
 /**
  * Base class for {@link ValueExpression}s with one operand.
  * <p>
- * A UnaryValueExpression implements a ValueExpression that has one
+ * A OneToManyValueExpression implements a ValueExpression that has one
  * <code>operand</code> (a {@link ValueExpression}). The operand is first
  * evaluated. If it evaluates to {@link Optional#empty()}, the result of the
  * ValueExpression itself will be that as well.
  * <p>
- * To implement a UnaryValueExpression, only the
+ * To implement a OneToManyValueExpression, only the
  * {@link #eval(Value, ParseState, Encoding)} must be implemented, handling
  * the case of evaluating one value. This base class takes care of evaluating
  * the operand and handling list semantics.
  *
  * @see BinaryValueExpression
  */
-public abstract class UnaryValueExpression implements ValueExpression {
+public abstract class OneToManyValueExpression implements ValueExpression {
 
     public final ValueExpression operand;
 
-    public UnaryValueExpression(final ValueExpression operand) {
+    public OneToManyValueExpression(final ValueExpression operand) {
         this.operand = checkNotNull(operand, "operand");
     }
 
@@ -75,7 +75,7 @@ public abstract class UnaryValueExpression implements ValueExpression {
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(operand, ((UnaryValueExpression)obj).operand);
+            && Objects.equals(operand, ((OneToManyValueExpression)obj).operand);
     }
 
     @Override

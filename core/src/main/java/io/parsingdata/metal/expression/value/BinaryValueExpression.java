@@ -49,7 +49,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * handling the case of evaluating two values. This base class takes care of
  * evaluating the operands and handling list semantics.
  *
- * @see UnaryValueExpression
+ * @see OneToManyValueExpression
  */
 public abstract class BinaryValueExpression implements ValueExpression {
 

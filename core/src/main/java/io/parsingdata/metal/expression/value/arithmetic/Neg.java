@@ -21,14 +21,14 @@ import java.util.Optional;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ConstantFactory;
-import io.parsingdata.metal.expression.value.UnaryValueExpression;
+import io.parsingdata.metal.expression.value.OneToManyValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * A {@link UnaryValueExpression} that implements integer negation.
+ * A {@link OneToManyValueExpression} that implements integer negation.
  */
-public class Neg extends UnaryValueExpression {
+public class Neg extends OneToManyValueExpression {
 
     public Neg(final ValueExpression operand) {
         super(operand);
