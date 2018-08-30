@@ -16,15 +16,11 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static io.parsingdata.metal.Trampoline.complete;
-import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.Selection.reverse;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
@@ -32,41 +28,35 @@ import io.parsingdata.metal.encoding.Encoding;
 
 /**
  * Base class for {@link ValueExpression}s with one operand that evaluates
- * to multiple values.
+ * to a single value.
  * <p>
- * A OneToManyValueExpression implements a ValueExpression that has one
+ * A OneToOneValueExpression implements a ValueExpression that has one
  * <code>operand</code> (a {@link ValueExpression}). The operand is first
  * evaluated. If it evaluates to {@link Optional#empty()}, the result of the
  * ValueExpression itself will be that as well.
  * <p>
- * To implement a OneToManyValueExpression, only the
- * {@link #eval(Value, ParseState, Encoding)} must be implemented, handling
- * the case of evaluating one value. This base class takes care of evaluating
- * the operand and handling list semantics.
+ * To implement a OneToOneValueExpression, only the
+ * {@link #eval(ImmutableList, ParseState, Encoding)} must
+ * be implemented, handling the case of evaluating a list of values. This
+ * base class takes care of evaluating the operand and handling list
+ * semantics.
  *
  * @see BinaryValueExpression
  */
-public abstract class OneToManyValueExpression implements ValueExpression {
+public abstract class OneToOneValueExpression implements ValueExpression {
 
     public final ValueExpression operand;
 
-    public OneToManyValueExpression(final ValueExpression operand) {
+    public OneToOneValueExpression(final ValueExpression operand) {
         this.operand = checkNotNull(operand, "operand");
     }
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return reverse(eval(operand.eval(parseState, encoding), parseState, encoding, new ImmutableList<>()).computeResult());
+        return ImmutableList.create(eval(operand.eval(parseState, encoding), parseState, encoding));
     }
 
-    private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ParseState parseState, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
-        if (values.isEmpty()) {
-            return complete(() -> result);
-        }
-        return intermediate(() -> eval(values.tail, parseState, encoding, result.add(values.head.flatMap(value -> eval(value, parseState, encoding)))));
-    }
-
-    public abstract Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding);
+    public abstract Optional<Value> eval(final ImmutableList<Optional<Value>> list, final ParseState parseState, final Encoding encoding);
 
     @Override
     public String toString() {
@@ -76,7 +66,7 @@ public abstract class OneToManyValueExpression implements ValueExpression {
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(operand, ((OneToManyValueExpression)obj).operand);
+                && Objects.equals(operand, ((OneToOneValueExpression)obj).operand);
     }
 
     @Override

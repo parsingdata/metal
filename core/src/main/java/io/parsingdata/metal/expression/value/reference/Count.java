@@ -16,17 +16,14 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-
-import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.value.ConstantFactory;
+import io.parsingdata.metal.expression.value.OneToOneValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
@@ -34,38 +31,19 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * A {@link ValueExpression} that represents the amount of {@link Value}s
  * returned by evaluating its <code>operand</code>.
  */
-public class Count implements ValueExpression {
-
-    public final ValueExpression operand;
+public class Count extends OneToOneValueExpression {
 
     public Count(final ValueExpression operand) {
-        this.operand = checkNotNull(operand, "operand");
+        super(operand);
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> values = operand.eval(parseState, encoding);
-        return ImmutableList.create(Optional.of(fromNumeric(values.size)));
+    public Optional<Value> eval(final ImmutableList<Optional<Value>> list, final ParseState parseState, final Encoding encoding) {
+        return Optional.of(fromNumeric(list.size));
     }
 
     private static Value fromNumeric(final long length) {
         return ConstantFactory.createFromNumeric(length, new Encoding(Sign.SIGNED));
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" + operand + ")";
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(operand, ((Count)obj).operand);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getClass(), operand);
     }
 
 }

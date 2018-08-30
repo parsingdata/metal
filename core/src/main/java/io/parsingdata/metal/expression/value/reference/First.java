@@ -18,16 +18,14 @@ package io.parsingdata.metal.expression.value.reference;
 
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
-import static io.parsingdata.metal.Util.checkNotNull;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
-import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.OneToOneValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
@@ -35,38 +33,19 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * A {@link ValueExpression} that represents the first {@link Value} returned
  * by evaluating its <code>operand</code>.
  */
-public class First implements ValueExpression {
-
-    public final ValueExpression operand;
+public class First extends OneToOneValueExpression {
 
     public First(final ValueExpression operand) {
-        this.operand = checkNotNull(operand, "operand");
+        super(operand);
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> list = operand.eval(parseState, encoding);
-        return list.isEmpty() ? list : ImmutableList.create(getFirst(list).computeResult());
+    public Optional<Value> eval(final ImmutableList<Optional<Value>> list, final ParseState parseState, final Encoding encoding) {
+        return list.isEmpty() ? Optional.empty() : getFirst(list).computeResult();
     }
 
     private Trampoline<Optional<Value>> getFirst(final ImmutableList<Optional<Value>> values) {
         return values.tail.isEmpty() ? complete(() -> values.head) : intermediate(() -> getFirst(values.tail));
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" + operand + ")";
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(operand, ((First)obj).operand);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getClass(), operand);
     }
 
 }
