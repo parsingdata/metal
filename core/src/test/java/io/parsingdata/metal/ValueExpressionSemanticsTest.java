@@ -33,13 +33,13 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import java.io.IOException;
 import java.util.Optional;
 
-import io.parsingdata.metal.expression.value.OneToManyValueExpression;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.OneToManyValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Token;
 

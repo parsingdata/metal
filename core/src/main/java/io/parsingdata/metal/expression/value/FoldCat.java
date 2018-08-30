@@ -16,8 +16,9 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static io.parsingdata.metal.data.Slice.createFromSource;
 import static java.math.BigInteger.ZERO;
+
+import static io.parsingdata.metal.data.Slice.createFromSource;
 
 import java.util.Optional;
 

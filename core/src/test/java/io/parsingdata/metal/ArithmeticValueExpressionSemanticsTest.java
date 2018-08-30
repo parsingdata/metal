@@ -36,10 +36,10 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import java.util.Arrays;
 import java.util.Collection;
 
-import io.parsingdata.metal.expression.value.OneToManyValueExpression;
 import org.junit.runners.Parameterized.Parameters;
 
 import io.parsingdata.metal.expression.value.BinaryValueExpression;
+import io.parsingdata.metal.expression.value.OneToManyValueExpression;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
