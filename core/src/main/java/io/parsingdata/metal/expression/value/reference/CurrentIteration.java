@@ -32,7 +32,8 @@ import io.parsingdata.metal.token.Token;
 
 /**
  * A {@link ValueExpression} that represents the 0-based current iteration in an
- * iterable {@link Token} (e.g. when inside a {@link Rep} or {@link RepN}).
+ * iterable {@link Token} (when {@link Token#isIterable()} returns true, e.g. when
+ * inside a {@link Rep} or {@link RepN})
  */
 public class CurrentIteration implements ValueExpression {
 
@@ -41,7 +42,7 @@ public class CurrentIteration implements ValueExpression {
         if (parseState.iterations.head == null) {
             return ImmutableList.create(Optional.empty());
         }
-        return ImmutableList.create(Optional.of(createFromNumeric(parseState.iterations.head, new Encoding())));
+        return ImmutableList.create(Optional.of(createFromNumeric(parseState.iterations.head.getValue(), new Encoding())));
     }
 
     @Override

@@ -58,7 +58,7 @@ public class RepN extends IterableToken {
             return failure();
         }
         final BigInteger count = counts.head.get().asNumeric();
-        return parse(environment, env -> env.parseState.iterations.head.compareTo(count) >= 0, env -> failure());
+        return parse(environment, env -> env.parseState.iterations.head.getValue().compareTo(count) >= 0, env -> failure());
     }
 
     @Override

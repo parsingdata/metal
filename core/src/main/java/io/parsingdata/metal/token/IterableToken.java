@@ -23,6 +23,7 @@ import io.parsingdata.metal.encoding.Encoding;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
@@ -33,12 +34,12 @@ public abstract class IterableToken extends Token {
 
     public final Token token;
 
-    IterableToken(String name, final Token token, Encoding encoding) {
+    IterableToken(final String name, final Token token, final Encoding encoding) {
         super(name, encoding);
         this.token = checkNotNull(token, "token");
     }
 
-    protected final Optional<ParseState> parse(final Environment environment, final Function<Environment, Boolean> stopCondition, final Function<Environment, Optional<ParseState>> ifIterationFails) {
+    protected final Optional<ParseState> parse(final Environment environment, final Predicate<Environment> stopCondition, final Function<Environment, Optional<ParseState>> ifIterationFails) {
         return iterate(environment.addBranch(this), stopCondition, ifIterationFails).computeResult();
     }
 
@@ -50,13 +51,13 @@ public abstract class IterableToken extends Token {
      * @param ifIterationFails a function to determine how to handle a failed parse
      * @return a trampolined {@code Optional<ParseState>}
      */
-    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final Function<Environment, Boolean> stopCondition, final Function<Environment, Optional<ParseState>> ifIterationFails) {
-        if (stopCondition.apply(environment)) {
+    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final Predicate<Environment> stopCondition, final Function<Environment, Optional<ParseState>> ifIterationFails) {
+        if (stopCondition.test(environment)) {
             return complete(() -> success(environment.parseState.closeBranch(this)));
         }
         return token
                 .parse(environment)
-                .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState.iter()), stopCondition, ifIterationFails)))
+                .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState.iterate()), stopCondition, ifIterationFails)))
                 .orElseGet(() -> complete(() -> ifIterationFails.apply(environment)));
     }
 
