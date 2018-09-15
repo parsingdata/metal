@@ -58,7 +58,7 @@ public class CurrentIterationTest extends ParameterizedParse {
             { "[0, 1] seq(!CURRENT_ITERATION, ...)", seq(VALUE_NOT_EQ_ITERATION, VALUE_NOT_EQ_ITERATION), stream(0, 1), enc(), true },
             { "[0] !CURRENT_ITERATION", VALUE_NOT_EQ_ITERATION, stream(0), enc(), true },
             { "[0 | 0, 1 | 0, 0, 2 | 0, 0, 0, 3] rep(CURRENT_ITERATION)", rep(def("value", add(CURRENT_ITERATION, con(1)), eqNum(CURRENT_ITERATION))), stream(0, 0, 1, 0, 0, 2, 0, 0, 0, 3), enc(), true },
-            { "[1, 1, 0, 1 | 0 | 2 | 3] repn=4(size), rep(def(any, sizeRef(CURRENT_INDEX)))", seq(repn(def("size", 1), con(4)), rep(def("value", nth(ref("size"), CURRENT_ITERATION)))), stream(1, 1, 0, 1, 0, 2, 3), enc(), true },
+            { "[1, 1, 0, 1 | 0 | 1 | 3] repn=4(size), rep(def(any, sizeRef(CURRENT_INDEX)))", seq(repn(def("size", 1), con(4)), repn(def("value", nth(ref("size"), CURRENT_ITERATION)), con(4))), stream(1, 1, 0, 1, 0, 1, 3), enc(), true },
         });
     }
 
