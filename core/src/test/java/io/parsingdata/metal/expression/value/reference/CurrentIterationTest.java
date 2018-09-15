@@ -28,6 +28,7 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.when;
 import static io.parsingdata.metal.Shorthand.whl;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
@@ -58,7 +59,7 @@ public class CurrentIterationTest extends ParameterizedParse {
             { "[0, 1] seq(!CURRENT_ITERATION, ...)", seq(VALUE_NOT_EQ_ITERATION, VALUE_NOT_EQ_ITERATION), stream(0, 1), enc(), true },
             { "[0] !CURRENT_ITERATION", VALUE_NOT_EQ_ITERATION, stream(0), enc(), true },
             { "[0 | 0, 1 | 0, 0, 2 | 0, 0, 0, 3] rep(CURRENT_ITERATION)", rep(def("value", add(CURRENT_ITERATION, con(1)), eqNum(CURRENT_ITERATION))), stream(0, 0, 1, 0, 0, 2, 0, 0, 0, 3), enc(), true },
-            { "[1, 1, 0, 1 | 0 | 1 | 3] repn=4(size), rep(def(any, sizeRef(CURRENT_INDEX)))", seq(repn(def("size", 1), con(4)), repn(def("value", nth(ref("size"), CURRENT_ITERATION)), con(4))), stream(1, 1, 0, 1, 0, 1, 3), enc(), true },
+            { "[1, 1, 0, 1 | 0 | 1 | 3] repn=4(def(size)), repn=4(if(sizeRef(CURRENT_ITERATION) != 0, def(CURRENT_ITERATION)))", seq(repn(def("size", 1), con(4)), repn(when(def("value", con(1), eq(CURRENT_ITERATION)), not(eq(nth(ref("size"), CURRENT_ITERATION), con(0)))), con(4))), stream(1, 1, 0, 1, 0, 1, 3), enc(), true },
         });
     }
 
