@@ -29,17 +29,18 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Rep;
 import io.parsingdata.metal.token.RepN;
 import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.token.While;
 
 /**
  * A {@link ValueExpression} that represents the 0-based current iteration in an
  * iterable {@link Token} (when {@link Token#isIterable()} returns true, e.g. when
- * inside a {@link Rep} or {@link RepN})
+ * inside a {@link Rep}, {@link RepN}) or {@link While}).
  */
 public class CurrentIteration implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        if (parseState.iterations.head == null) {
+        if (parseState.iterations.isEmpty()) {
             return ImmutableList.create(Optional.empty());
         }
         return ImmutableList.create(Optional.of(createFromNumeric(parseState.iterations.head.getValue(), new Encoding())));
