@@ -43,7 +43,7 @@ public class CurrentIteration implements ValueExpression {
         if (parseState.iterations.isEmpty()) {
             return ImmutableList.create(Optional.empty());
         }
-        return ImmutableList.create(Optional.of(createFromNumeric(parseState.iterations.head.getValue(), new Encoding())));
+        return ImmutableList.create(Optional.of(createFromNumeric(parseState.iterations.head.right, new Encoding())));
     }
 
     @Override

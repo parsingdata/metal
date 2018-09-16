@@ -16,20 +16,20 @@
 
 package io.parsingdata.metal.token;
 
-import io.parsingdata.metal.Trampoline;
-import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ParseState;
-import io.parsingdata.metal.encoding.Encoding;
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
+import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.Util.success;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import static io.parsingdata.metal.Trampoline.complete;
-import static io.parsingdata.metal.Trampoline.intermediate;
-import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.Util.success;
+import io.parsingdata.metal.Trampoline;
+import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseState;
+import io.parsingdata.metal.encoding.Encoding;
 
 public abstract class IterableToken extends Token {
 

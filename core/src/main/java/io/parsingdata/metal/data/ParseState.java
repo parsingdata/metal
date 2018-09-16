@@ -31,16 +31,15 @@ import io.parsingdata.metal.Util;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
-import javafx.util.Pair;
 
 public class ParseState {
 
     public final ParseGraph order;
     public final BigInteger offset;
     public final Source source;
-    public final ImmutableList<Pair<Token, BigInteger>> iterations;
+    public final ImmutableList<ImmutablePair<Token, BigInteger>> iterations;
 
-    public ParseState(final ParseGraph order, final Source source, final BigInteger offset, final ImmutableList<Pair<Token, BigInteger>> iterations) {
+    public ParseState(final ParseGraph order, final Source source, final BigInteger offset, final ImmutableList<ImmutablePair<Token, BigInteger>> iterations) {
         this.order = checkNotNull(order, "order");
         this.source = checkNotNull(source, "source");
         this.offset = checkNotNegative(offset, "offset");
@@ -56,12 +55,12 @@ public class ParseState {
     }
 
     public ParseState addBranch(final Token token) {
-        return new ParseState(order.addBranch(token), source, offset, token.isIterable() ? iterations.add(new Pair<>(token, ZERO)) : iterations);
+        return new ParseState(order.addBranch(token), source, offset, token.isIterable() ? iterations.add(new ImmutablePair<>(token, ZERO)) : iterations);
     }
 
     public ParseState closeBranch(final Token token) {
-        if (token.isIterable() && !iterations.head.getKey().equals(token)) {
-            throw new IllegalStateException(String.format("Cannot close branch for iterable token %s. Current iteration state is for token %s.", token.name, iterations.head.getKey().name));
+        if (token.isIterable() && !iterations.head.left.equals(token)) {
+            throw new IllegalStateException(String.format("Cannot close branch for iterable token %s. Current iteration state is for token %s.", token.name, iterations.head.left.name));
         }
         return new ParseState(order.closeBranch(), source, offset, token.isIterable() ? iterations.tail : iterations);
     }
@@ -75,7 +74,7 @@ public class ParseState {
     }
 
     public ParseState iterate() {
-        return new ParseState(order, source, offset, iterations.tail.add(new Pair<>(iterations.head.getKey(), iterations.head.getValue().add(ONE))));
+        return new ParseState(order, source, offset, iterations.tail.add(new ImmutablePair<>(iterations.head.left, iterations.head.right.add(ONE))));
     }
 
     public Optional<ParseState> seek(final BigInteger newOffset) {
