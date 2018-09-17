@@ -16,12 +16,22 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
+
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
+import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.expression.value.ConstantFactory.createFromNumeric;
 
+import java.math.BigInteger;
+import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ImmutablePair;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
@@ -38,12 +48,38 @@ import io.parsingdata.metal.token.While;
  */
 public class CurrentIteration implements ValueExpression {
 
+    private final ValueExpression level;
+
+    public CurrentIteration(final ValueExpression level) {
+        this.level = checkNotNull(level, "level");
+    }
+
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        if (parseState.iterations.isEmpty()) {
-            return ImmutableList.create(Optional.empty());
+        return ImmutableList.create(getIteration(parseState, encoding));
+    }
+
+    private Optional<Value> getIteration(final ParseState parseState, final Encoding encoding) {
+        final BigInteger level = getLevel(parseState, encoding);
+        if (parseState.iterations.size <= level.longValue()) {
+            return Optional.empty();
         }
-        return ImmutableList.create(Optional.of(createFromNumeric(parseState.iterations.head.right, new Encoding())));
+        return getIterationRecursive(parseState.iterations, level).computeResult();
+    }
+
+    private BigInteger getLevel(final ParseState parseState, final Encoding encoding) {
+        final ImmutableList<Optional<Value>> evaluatedLevel = level.eval(parseState, encoding);
+        if (evaluatedLevel.size != 1 || !evaluatedLevel.head.isPresent()) {
+            throw new IllegalArgumentException("Level must evaluate to a single non-empty value.");
+        }
+        return evaluatedLevel.head.get().asNumeric();
+    }
+
+    private Trampoline<Optional<Value>> getIterationRecursive(final ImmutableList<ImmutablePair<Token, BigInteger>> iterations, final BigInteger level) {
+        if (level.compareTo(ZERO) == 0) {
+            return complete(() -> Optional.of(createFromNumeric(iterations.head.right, new Encoding())));
+        }
+        return intermediate(() -> getIterationRecursive(iterations.tail, level.subtract(ONE)));
     }
 
     @Override
@@ -53,12 +89,13 @@ public class CurrentIteration implements ValueExpression {
 
     @Override
     public boolean equals(final Object obj) {
-        return Util.notNullAndSameClass(this, obj);
+        return Util.notNullAndSameClass(this, obj)
+                && Objects.equals(level, ((CurrentIteration)obj).level);
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(getClass(), level);
     }
 
 }

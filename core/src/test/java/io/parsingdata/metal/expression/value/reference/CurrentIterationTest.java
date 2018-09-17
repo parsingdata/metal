@@ -22,6 +22,7 @@ import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.eqNum;
+import static io.parsingdata.metal.Shorthand.iteration;
 import static io.parsingdata.metal.Shorthand.not;
 import static io.parsingdata.metal.Shorthand.nth;
 import static io.parsingdata.metal.Shorthand.ref;
@@ -45,6 +46,8 @@ public class CurrentIterationTest extends ParameterizedParse {
 
     public static final Token VALUE_EQ_ITERATION = def("value", con(1), eq(CURRENT_ITERATION));
     public static final Token VALUE_NOT_EQ_ITERATION = def("value", con(1), not(eq(CURRENT_ITERATION)));
+    public static final Token VALUE_EQ_ITERATION_PARENT = def("value", con(1), eq(iteration(1)));
+    public static final Token VALUE_EQ_ITERATION_GRANDPARENT = def("value", con(1), eq(iteration(2)));
     public static final Token VALUE_EQ_255 = def("value", con(1), eq(con(255)));
 
     @Parameterized.Parameters(name="{0} ({4})")
@@ -54,6 +57,7 @@ public class CurrentIterationTest extends ParameterizedParse {
             { "[0, 1, 2, 3] repn=4(CURRENT_ITERATION)", repn(VALUE_EQ_ITERATION, con(4)), stream(0, 1, 2, 3), enc(), true },
             { "[255, 0, 1, 2, 3, 255] def(255), while!=3(CURRENT_ITERATION), def (255)", seq(VALUE_EQ_255, whl(VALUE_EQ_ITERATION, not(eq(con(3)))), VALUE_EQ_255), stream(255, 0, 1, 2, 3, 255), enc(), true },
             { "[0, 0, 1, 2, 255, 1, 0, 1, 2, 255] repn=2(CURRENT_ITERATION, repn=3(CURRENT_ITERATION))", repn(seq(VALUE_EQ_ITERATION, repn(VALUE_EQ_ITERATION, con(3)), VALUE_EQ_255), con(2)), stream(0, 0, 1, 2, 255, 1, 0, 1, 2, 255), enc(), true },
+            { "[0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2] repn=2(CURRENT_ITERATION, repn=1(PARENT_ITERATION, repn=3(GRANDPARENT_ITERATION)))", repn(seq(VALUE_EQ_ITERATION, repn(seq(VALUE_EQ_ITERATION_PARENT, repn(VALUE_EQ_ITERATION_GRANDPARENT, con(2))), con(1))), con(3)), stream(0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2), enc(), true },
             { "[0, 1] seq(CURRENT_ITERATION, ...)", seq(VALUE_EQ_ITERATION, VALUE_EQ_ITERATION), stream(0, 1), enc(), false },
             { "[0] CURRENT_ITERATION", VALUE_EQ_ITERATION, stream(0), enc(), false },
             { "[0, 1] seq(!CURRENT_ITERATION, ...)", seq(VALUE_NOT_EQ_ITERATION, VALUE_NOT_EQ_ITERATION), stream(0, 1), enc(), true },
