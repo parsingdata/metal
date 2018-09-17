@@ -16,15 +16,19 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.expression.value.ConstantFactory.createFromNumeric;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
+
+import static io.parsingdata.metal.Trampoline.complete;
+import static io.parsingdata.metal.Trampoline.intermediate;
+import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.expression.value.ConstantFactory.createFromNumeric;
 
 import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
@@ -57,7 +61,7 @@ public class CurrentIteration implements ValueExpression {
         if (parseState.iterations.size <= level.longValue()) {
             return Optional.empty();
         }
-        return getIterationRecursive(parseState.iterations, level);
+        return getIterationRecursive(parseState.iterations, level).computeResult();
     }
 
     private BigInteger getLevel(final ParseState parseState, final Encoding encoding) {
@@ -68,11 +72,11 @@ public class CurrentIteration implements ValueExpression {
         return evaluatedLevel.head.get().asNumeric();
     }
 
-    private Optional<Value> getIterationRecursive(final ImmutableList<BigInteger> iterations, final BigInteger level) {
+    private Trampoline<Optional<Value>> getIterationRecursive(final ImmutableList<BigInteger> iterations, final BigInteger level) {
         if (level.compareTo(ZERO) == 0) {
-            return Optional.of(createFromNumeric(iterations.head, new Encoding()));
+            return complete(() -> Optional.of(createFromNumeric(iterations.head, new Encoding())));
         }
-        return getIterationRecursive(iterations.tail, level.subtract(ONE));
+        return intermediate(() -> getIterationRecursive(iterations.tail, level.subtract(ONE)));
     }
 
     @Override
