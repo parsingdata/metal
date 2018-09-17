@@ -56,6 +56,7 @@ import org.junit.Test;
 
 import io.parsingdata.metal.data.ConstantSource;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ImmutablePair;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
@@ -155,7 +156,7 @@ public class EqualityTest {
 
     @Test
     public void immutableList() {
-        final ImmutableList<String> object = ImmutableList.create("a");
+        final ImmutableList object = ImmutableList.create("a");
         assertFalse(object.equals(null));
         assertTrue(object.equals(ImmutableList.create("a")));
         assertTrue(object.equals(new ImmutableList<>().add("a")));
@@ -167,14 +168,28 @@ public class EqualityTest {
     }
 
     @Test
+    public void immutablePair() {
+        final ImmutablePair object = new ImmutablePair("a", ONE);
+        assertFalse(object.equals(null));
+        assertTrue(object.equals(new ImmutablePair("a", ONE)));
+        assertEquals(object.hashCode(), new ImmutablePair("a", ONE).hashCode());
+        assertFalse(object.equals("a"));
+        assertNotEquals(object.hashCode(), "a".hashCode());
+        assertFalse(object.equals(new ImmutablePair("b", ONE)));
+        assertNotEquals(object.hashCode(), new ImmutablePair("b", ONE).hashCode());
+        assertFalse(object.equals(new ImmutablePair("a", ZERO)));
+        assertNotEquals(object.hashCode(), new ImmutablePair("a", ZERO).hashCode());
+    }
+
+    @Test
     public void parseGraph() {
         final ParseValue value = new ParseValue("a", any("a"), createFromBytes(new byte[]{1, 2}), enc());
         final ParseGraph object = createFromByteStream(DUMMY_STREAM).add(value).order;
         assertFalse(object.equals(null));
         assertFalse(object.equals("a"));
         final ParseState parseState = createFromByteStream(DUMMY_STREAM);
-        assertNotEquals(parseState.addBranch(any("a")).add(value).add(value).closeBranch().addBranch(any("a")).order, parseState.addBranch(any("a")).closeBranch().addBranch(any("a")).order);
-        assertNotEquals(parseState.addBranch(any("a")).order, parseState.addBranch(any("a")).closeBranch().order);
+        assertNotEquals(parseState.addBranch(any("a")).add(value).add(value).closeBranch(any("a")).addBranch(any("a")).order, parseState.addBranch(any("a")).closeBranch(any("a")).addBranch(any("a")).order);
+        assertNotEquals(parseState.addBranch(any("a")).order, parseState.addBranch(any("a")).closeBranch(any("a")).order);
         assertNotEquals(parseState.addBranch(any("a")).order, parseState.addBranch(any("b")).order);
     }
 
