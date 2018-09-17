@@ -29,6 +29,7 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.when;
 import static io.parsingdata.metal.Shorthand.whl;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
@@ -54,7 +55,7 @@ public class CurrentIterationTest extends ParameterizedParse {
         return Arrays.asList(new Object[][] {
             { "[0, 1, 2, 3, 255] rep(CURRENT_ITERATION), def(255)", seq(rep(VALUE_EQ_ITERATION), VALUE_EQ_255), stream(0, 1, 2, 3, 255), enc(), true },
             { "[0, 1, 2, 3] repn=4(CURRENT_ITERATION)", repn(VALUE_EQ_ITERATION, con(4)), stream(0, 1, 2, 3), enc(), true },
-            { "[255, 0, 1, 2, 3, 255] def(255), while<3(CURRENT_ITERATION), def (255)", seq(VALUE_EQ_255, whl(VALUE_EQ_ITERATION, not(eq(con(3)))), VALUE_EQ_255), stream(255, 0, 1, 2, 3, 255), enc(), true },
+            { "[255, 0, 1, 2, 3, 255] def(255), while!=3(CURRENT_ITERATION), def (255)", seq(VALUE_EQ_255, whl(VALUE_EQ_ITERATION, not(eq(con(3)))), VALUE_EQ_255), stream(255, 0, 1, 2, 3, 255), enc(), true },
             { "[0, 0, 1, 2, 255, 1, 0, 1, 2, 255] repn=2(CURRENT_ITERATION, repn=3(CURRENT_ITERATION))", repn(seq(VALUE_EQ_ITERATION, repn(VALUE_EQ_ITERATION, con(3)), VALUE_EQ_255), con(2)), stream(0, 0, 1, 2, 255, 1, 0, 1, 2, 255), enc(), true },
             { "[0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2] repn=2(CURRENT_ITERATION, repn=1(PARENT_ITERATION, repn=3(GRANDPARENT_ITERATION)))", repn(seq(VALUE_EQ_ITERATION, repn(seq(VALUE_EQ_ITERATION_PARENT, repn(VALUE_EQ_ITERATION_GRANDPARENT, con(2))), con(1))), con(3)), stream(0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2), enc(), true },
             { "[0, 1] seq(CURRENT_ITERATION, ...)", seq(VALUE_EQ_ITERATION, VALUE_EQ_ITERATION), stream(0, 1), enc(), false },
@@ -62,7 +63,7 @@ public class CurrentIterationTest extends ParameterizedParse {
             { "[0, 1] seq(!CURRENT_ITERATION, ...)", seq(VALUE_NOT_EQ_ITERATION, VALUE_NOT_EQ_ITERATION), stream(0, 1), enc(), true },
             { "[0] !CURRENT_ITERATION", VALUE_NOT_EQ_ITERATION, stream(0), enc(), true },
             { "[0 | 0, 1 | 0, 0, 2 | 0, 0, 0, 3] rep(CURRENT_ITERATION)", rep(def("value", add(CURRENT_ITERATION, con(1)), eqNum(CURRENT_ITERATION))), stream(0, 0, 1, 0, 0, 2, 0, 0, 0, 3), enc(), true },
-            { "[1, 1, 0, 1 | 0 | 2 | 3] repn=4(size), rep(def(any, sizeRef(CURRENT_INDEX)))", seq(repn(def("size", 1), con(4)), rep(def("value", nth(ref("size"), CURRENT_ITERATION)))), stream(1, 1, 0, 1, 0, 2, 3), enc(), true },
+            { "[1, 1, 0, 1 | 0 | 1 | 3] repn=4(def(size)), repn=4(if(sizeRef(CURRENT_ITERATION) != 0, def(CURRENT_ITERATION)))", seq(repn(def("size", 1), con(4)), repn(when(def("value", con(1), eq(CURRENT_ITERATION)), not(eq(nth(ref("size"), CURRENT_ITERATION), con(0)))), con(4))), stream(1, 1, 0, 1, 0, 1, 3), enc(), true },
         });
     }
 

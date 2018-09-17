@@ -38,10 +38,12 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Rep;
 import io.parsingdata.metal.token.RepN;
 import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.token.While;
 
 /**
  * A {@link ValueExpression} that represents the 0-based current iteration in an
- * iterable {@link Token} (e.g. when inside a {@link Rep} or {@link RepN}).
+ * iterable {@link Token} (when {@link Token#isIterable()} returns true, e.g. when
+ * inside a {@link Rep}, {@link RepN}) or {@link While}).
  */
 public class CurrentIteration implements ValueExpression {
 

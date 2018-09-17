@@ -56,6 +56,7 @@ import org.junit.Test;
 
 import io.parsingdata.metal.data.ConstantSource;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ImmutablePair;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
@@ -155,7 +156,7 @@ public class EqualityTest {
 
     @Test
     public void immutableList() {
-        final ImmutableList<String> object = ImmutableList.create("a");
+        final ImmutableList object = ImmutableList.create("a");
         assertFalse(object.equals(null));
         assertTrue(object.equals(ImmutableList.create("a")));
         assertTrue(object.equals(new ImmutableList<>().add("a")));
@@ -164,6 +165,20 @@ public class EqualityTest {
         assertTrue(object.add("b").add("c").equals(ImmutableList.create("a").add("b").add("c")));
         assertFalse(object.add("b").equals(ImmutableList.create("a").add("c")));
         assertFalse(object.add("b").add("c").equals(ImmutableList.create("a").add("c").add("c")));
+    }
+
+    @Test
+    public void immutablePair() {
+        final ImmutablePair object = new ImmutablePair("a", ONE);
+        assertFalse(object.equals(null));
+        assertTrue(object.equals(new ImmutablePair("a", ONE)));
+        assertEquals(object.hashCode(), new ImmutablePair("a", ONE).hashCode());
+        assertFalse(object.equals("a"));
+        assertNotEquals(object.hashCode(), "a".hashCode());
+        assertFalse(object.equals(new ImmutablePair("b", ONE)));
+        assertNotEquals(object.hashCode(), new ImmutablePair("b", ONE).hashCode());
+        assertFalse(object.equals(new ImmutablePair("a", ZERO)));
+        assertNotEquals(object.hashCode(), new ImmutablePair("a", ZERO).hashCode());
     }
 
     @Test
