@@ -31,6 +31,7 @@ import java.util.Optional;
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ImmutablePair;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.Value;
@@ -74,9 +75,9 @@ public class CurrentIteration implements ValueExpression {
         return evaluatedLevel.head.get().asNumeric();
     }
 
-    private Trampoline<Optional<Value>> getIterationRecursive(final ImmutableList<BigInteger> iterations, final BigInteger level) {
+    private Trampoline<Optional<Value>> getIterationRecursive(final ImmutableList<ImmutablePair<Token, BigInteger>> iterations, final BigInteger level) {
         if (level.compareTo(ZERO) == 0) {
-            return complete(() -> Optional.of(createFromNumeric(iterations.head, new Encoding())));
+            return complete(() -> Optional.of(createFromNumeric(iterations.head.right, new Encoding())));
         }
         return intermediate(() -> getIterationRecursive(iterations.tail, level.subtract(ONE)));
     }
