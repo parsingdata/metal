@@ -16,11 +16,14 @@
 
 package io.parsingdata.metal.util;
 
+import static java.math.BigInteger.ONE;
 import static org.junit.Assert.assertEquals;
 
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
+import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -44,7 +47,13 @@ public class ParameterizedParse {
 
     @Test
     public void test() throws IOException {
-        assertEquals(result, token.parse(env(parseState, encoding)).isPresent());
+        Optional<ParseState> endState = token.parse(env(parseState, encoding));
+        assertEquals(result, endState.isPresent());
+
+        endState.ifPresent(state -> {
+            // In case parsing succeeded we expect to have parsed the whole stream and we shouldn't be able to slice 1 byte.
+            assertFalse("The test has not parsed the whole stream. It ended at offset " + state.offset + ".", state.slice(ONE).isPresent());
+        });
     }
 
 }
