@@ -16,17 +16,13 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Trampoline.complete;
-import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
-import static io.parsingdata.metal.Util.success;
 
+import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.Trampoline;
-import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
@@ -46,14 +42,12 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * @see Rep
  * @see ValueExpression
  */
-public class RepN extends Token {
+public class RepN extends IterableToken {
 
-    public final Token token;
     public final ValueExpression n;
 
     public RepN(final String name, final Token token, final ValueExpression n, final Encoding encoding) {
-        super(name, encoding);
-        this.token = checkNotNull(token, "token");
+        super(name, token, encoding);
         this.n = checkNotNull(n, "n");
     }
 
@@ -63,17 +57,8 @@ public class RepN extends Token {
         if (counts.size != 1 || !counts.head.isPresent()) {
             return failure();
         }
-        return iterate(environment.addBranch(this), counts.head.get().asNumeric().longValueExact()).computeResult();
-    }
-
-    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final long count) {
-        if (count <= 0) {
-            return complete(() -> success(environment.parseState.closeBranch()));
-        }
-        return token
-            .parse(environment)
-            .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState), count - 1)))
-            .orElseGet(() -> complete(Util::failure));
+        final BigInteger count = counts.head.get().asNumeric();
+        return parse(environment, env -> env.parseState.iterations.head.right.compareTo(count) >= 0, env -> failure());
     }
 
     @Override
@@ -84,13 +69,12 @@ public class RepN extends Token {
     @Override
     public boolean equals(final Object obj) {
         return super.equals(obj)
-            && Objects.equals(token, ((RepN)obj).token)
             && Objects.equals(n, ((RepN)obj).n);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), token, n);
+        return Objects.hash(super.hashCode(), n);
     }
 
 }

@@ -16,15 +16,10 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Trampoline.complete;
-import static io.parsingdata.metal.Trampoline.intermediate;
-import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.success;
 
-import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
@@ -38,41 +33,20 @@ import io.parsingdata.metal.encoding.Encoding;
  *
  * @see RepN
  */
-public class Rep extends Token {
-
-    public final Token token;
+public class Rep extends IterableToken {
 
     public Rep(final String name, final Token token, final Encoding encoding) {
-        super(name, encoding);
-        this.token = checkNotNull(token, "token");
+        super(name, token, encoding);
     }
 
     @Override
-    protected Optional<ParseState> parseImpl(final Environment environment) {
-        return iterate(environment.addBranch(this)).computeResult();
-    }
-
-    private Trampoline<Optional<ParseState>> iterate(final Environment environment) {
-        return token
-            .parse(environment)
-            .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState))))
-            .orElseGet(() -> complete(() -> success(environment.parseState.closeBranch())));
+    protected Optional<ParseState> parseImpl(Environment environment) {
+        return parse(environment, env -> false, env -> success(env.parseState.closeBranch(this)));
     }
 
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + makeNameFragment() + token + ")";
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        return super.equals(obj)
-            && Objects.equals(token, ((Rep)obj).token);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), token);
     }
 
 }

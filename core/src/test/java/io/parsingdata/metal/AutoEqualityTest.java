@@ -79,11 +79,11 @@ import io.parsingdata.metal.expression.comparison.LtEqNum;
 import io.parsingdata.metal.expression.comparison.LtNum;
 import io.parsingdata.metal.expression.value.Bytes;
 import io.parsingdata.metal.expression.value.Cat;
-import io.parsingdata.metal.expression.value.FoldCat;
 import io.parsingdata.metal.expression.value.Const;
 import io.parsingdata.metal.expression.value.ConstantFactory;
 import io.parsingdata.metal.expression.value.Elvis;
 import io.parsingdata.metal.expression.value.Expand;
+import io.parsingdata.metal.expression.value.FoldCat;
 import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
 import io.parsingdata.metal.expression.value.Reverse;
@@ -100,6 +100,7 @@ import io.parsingdata.metal.expression.value.bitwise.Or;
 import io.parsingdata.metal.expression.value.bitwise.ShiftLeft;
 import io.parsingdata.metal.expression.value.bitwise.ShiftRight;
 import io.parsingdata.metal.expression.value.reference.Count;
+import io.parsingdata.metal.expression.value.reference.CurrentIteration;
 import io.parsingdata.metal.expression.value.reference.CurrentOffset;
 import io.parsingdata.metal.expression.value.reference.First;
 import io.parsingdata.metal.expression.value.reference.Last;
@@ -133,7 +134,7 @@ public class AutoEqualityTest {
     private static final ParseValue PARSE_VALUE = new ParseValue("a", any("a"), createFromBytes(new byte[]{1, 2}), enc());
     private static final ParseGraph GRAPH_WITH_REFERENCE = createFromByteStream(DUMMY_STREAM).add(new ParseReference(ZERO, new ConstantSource(new byte[]{1, 2}), any("a"))).order;
     private static final ParseGraph BRANCHED_GRAPH = createFromByteStream(DUMMY_STREAM).addBranch(any("a")).order;
-    private static final ParseGraph CLOSED_BRANCHED_GRAPH = createFromByteStream(DUMMY_STREAM).addBranch(any("a")).closeBranch().order;
+    private static final ParseGraph CLOSED_BRANCHED_GRAPH = createFromByteStream(DUMMY_STREAM).addBranch(any("a")).closeBranch(any("a")).order;
 
     private static final List<Supplier<Object>> STRINGS = Arrays.asList(() -> "a", () -> "b");
     private static final List<Supplier<Object>> ENCODINGS = Arrays.asList(EncodingFactory::enc, EncodingFactory::signed, EncodingFactory::le, () -> new Encoding(Charset.forName("UTF-8")));
@@ -152,7 +153,7 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> PARSE_ITEMS = Arrays.asList(() -> CLOSED_BRANCHED_GRAPH, () -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE, () -> createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE).order, () -> createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE).add(PARSE_VALUE).order, () -> BRANCHED_GRAPH);
     private static final List<Supplier<Object>> BYTE_STREAMS = Arrays.asList(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> DUMMY_STREAM);
     private static final List<Supplier<Object>> BIG_INTEGERS = Arrays.asList(() -> ONE, () -> BigInteger.valueOf(3));
-    private static final List<Supplier<Object>> PARSE_STATES = Arrays.asList(() -> createFromByteStream(DUMMY_STREAM), () -> createFromByteStream(DUMMY_STREAM, ONE), () -> new ParseState(GRAPH_WITH_REFERENCE, DUMMY_BYTE_STREAM_SOURCE, TEN));
+    private static final List<Supplier<Object>> PARSE_STATES = Arrays.asList(() -> createFromByteStream(DUMMY_STREAM), () -> createFromByteStream(DUMMY_STREAM, ONE), () -> new ParseState(GRAPH_WITH_REFERENCE, DUMMY_BYTE_STREAM_SOURCE, TEN, new ImmutableList<>()));
     private static final List<Supplier<Object>> IMMUTABLE_LISTS = Arrays.asList(ImmutableList::new, () -> ImmutableList.create("TEST"), () -> ImmutableList.create(1), () -> ImmutableList.create(1).add(2));
     private static final Map<Class, List<Supplier<Object>>> mapping = buildMap();
 
@@ -191,7 +192,7 @@ public class AutoEqualityTest {
             And.class, Or.class, ShiftLeft.class, ShiftRight.class, Add.class, Div.class, Mod.class, Mul.class,
             io.parsingdata.metal.expression.value.arithmetic.Sub.class, Cat.class, Nth.class, Elvis.class,
             FoldLeft.class, FoldRight.class, Const.class, Expand.class, Bytes.class, CurrentOffset.class,
-            FoldCat.class,
+            FoldCat.class, CurrentIteration.class,
             // Expressions
             Eq.class, EqNum.class, EqStr.class, GtEqNum.class, GtNum.class, LtEqNum.class, LtNum.class,
             io.parsingdata.metal.expression.logical.And.class, io.parsingdata.metal.expression.logical.Or.class,

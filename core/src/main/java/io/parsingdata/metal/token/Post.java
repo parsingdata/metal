@@ -55,7 +55,7 @@ public class Post extends Token {
     protected Optional<ParseState> parseImpl(final Environment environment) {
         return token
             .parse(environment.addBranch(this))
-            .map(nextParseState -> predicate.eval(nextParseState, environment.encoding) ? success(nextParseState.closeBranch()) : failure())
+            .map(nextParseState -> predicate.eval(nextParseState, environment.encoding) ? success(nextParseState.closeBranch(this)) : failure())
             .orElseGet(Util::failure);
     }
 

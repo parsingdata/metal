@@ -19,6 +19,7 @@ package io.parsingdata.metal;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import static io.parsingdata.metal.Shorthand.CURRENT_ITERATION;
 import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
 import static io.parsingdata.metal.Shorthand.SELF;
 import static io.parsingdata.metal.Shorthand.add;
@@ -121,7 +122,7 @@ public class ToStringTest {
     }
 
     private ValueExpression v() {
-        return fold(foldLeft(foldRight(rev(bytes(neg(add(div(mod(mul(sub(cat(last(ref(n()))), first(nth(exp(ref(n()), con(1)), con(1)))), con(1)), cat(ref(n()), ref(t()))), add(SELF, add(offset(ref(n())), add(CURRENT_OFFSET, count(ref(n())))))), elvis(ref(n()), ref(n())))))), Shorthand::add, ref(n())), Shorthand::add), Shorthand::add, ref(n()));
+        return fold(foldLeft(foldRight(rev(bytes(neg(add(div(mod(mul(sub(cat(last(ref(n()))), first(nth(exp(ref(n()), con(1)), con(1)))), sub(CURRENT_ITERATION, con(1))), cat(ref(n()), ref(t()))), add(SELF, add(offset(ref(n())), add(CURRENT_OFFSET, count(ref(n())))))), elvis(ref(n()), ref(n())))))), Shorthand::add, ref(n())), Shorthand::add), Shorthand::add, ref(n()));
     }
 
     @Test
@@ -148,6 +149,8 @@ public class ToStringTest {
         assertEquals("Self", SELF.toString());
         assertTrue(v().toString().contains("CurrentOffset"));
         assertEquals("CurrentOffset", CURRENT_OFFSET.toString());
+        assertTrue(v().toString().contains("CurrentIteration"));
+        assertEquals("CurrentIteration", CURRENT_ITERATION.toString());
     }
 
     @Test
@@ -163,6 +166,9 @@ public class ToStringTest {
         final ParseState parseState = stream(1, 2);
         final String parseStateString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(EMPTY))";
         assertEquals(parseStateString, parseState.toString());
+        final ParseState parseStateWithIterations = parseState.addBranch(rep(def("a",1))).iterate();
+        final String parseStateWithIterationsString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(pg(terminator:Rep),pg(EMPTY),true);iterations:>Rep(Def(a,Const(0x01)))=1)";
+        assertEquals(parseStateWithIterationsString, parseStateWithIterations.toString());
         final Optional<ParseState> result = Optional.of(parseState);
         assertEquals("Optional[" + parseState + "]", result.toString());
         final ParseValue pv1 = new ParseValue("name", NONE, createFromBytes(new byte[]{1, 2}), enc());

@@ -62,7 +62,7 @@ public class Cho extends Token {
         }
         return list.head
             .parse(environment)
-            .map(result -> complete(() -> success(result.closeBranch())))
+            .map(result -> complete(() -> success(result.closeBranch(this))))
             .orElseGet(() -> intermediate(() -> iterate(environment, list.tail)));
     }
 

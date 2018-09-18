@@ -46,9 +46,9 @@ import io.parsingdata.metal.expression.value.Const;
 import io.parsingdata.metal.expression.value.ConstantFactory;
 import io.parsingdata.metal.expression.value.Elvis;
 import io.parsingdata.metal.expression.value.Expand;
+import io.parsingdata.metal.expression.value.FoldCat;
 import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
-import io.parsingdata.metal.expression.value.FoldCat;
 import io.parsingdata.metal.expression.value.Reverse;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
@@ -62,6 +62,7 @@ import io.parsingdata.metal.expression.value.arithmetic.Sub;
 import io.parsingdata.metal.expression.value.bitwise.ShiftLeft;
 import io.parsingdata.metal.expression.value.bitwise.ShiftRight;
 import io.parsingdata.metal.expression.value.reference.Count;
+import io.parsingdata.metal.expression.value.reference.CurrentIteration;
 import io.parsingdata.metal.expression.value.reference.CurrentOffset;
 import io.parsingdata.metal.expression.value.reference.First;
 import io.parsingdata.metal.expression.value.reference.Last;
@@ -89,6 +90,7 @@ public final class Shorthand {
     public static final Token EMPTY = def(EMPTY_NAME, 0L);
     public static final ValueExpression SELF = new Self();
     public static final ValueExpression CURRENT_OFFSET = new CurrentOffset();
+    public static final ValueExpression CURRENT_ITERATION = new CurrentIteration(con(0));
     public static final Expression TRUE = new True();
 
     private Shorthand() {}
@@ -188,6 +190,8 @@ public final class Shorthand {
     public static ValueExpression last(final DefinitionRef operand) { return new Last(new DefinitionRef(operand.reference, con(1))); }
     public static ValueExpression nth(final ValueExpression values, final ValueExpression indices) { return new Nth(values, indices); }
     public static ValueExpression offset(final ValueExpression operand) { return new Offset(operand); }
+    public static ValueExpression iteration(final int level) { return iteration(con(level)); }
+    public static ValueExpression iteration(final ValueExpression level) { return new CurrentIteration(level); }
     public static ValueExpression cat(final ValueExpression left, final ValueExpression right) { return new Cat(left, right); }
     public static ValueExpression cat(final ValueExpression operand) { return new FoldCat(operand); }
     public static ValueExpression elvis(final ValueExpression left, final ValueExpression right) { return new Elvis(left, right); }
