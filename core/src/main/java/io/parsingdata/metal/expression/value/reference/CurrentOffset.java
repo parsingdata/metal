@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
+import static io.parsingdata.metal.encoding.Encoding.DEFAULT_ENCODING;
 import static io.parsingdata.metal.expression.value.ConstantFactory.createFromNumeric;
 
 import java.util.Optional;
@@ -35,7 +36,7 @@ public class CurrentOffset implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return ImmutableList.create(Optional.of(createFromNumeric(parseState.offset, new Encoding())));
+        return ImmutableList.create(Optional.of(createFromNumeric(parseState.offset, DEFAULT_ENCODING)));
     }
 
     @Override

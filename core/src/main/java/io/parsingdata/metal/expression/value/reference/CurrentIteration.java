@@ -22,6 +22,7 @@ import static java.math.BigInteger.ZERO;
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.encoding.Encoding.DEFAULT_ENCODING;
 import static io.parsingdata.metal.expression.value.ConstantFactory.createFromNumeric;
 
 import java.math.BigInteger;
@@ -77,7 +78,7 @@ public class CurrentIteration implements ValueExpression {
 
     private Trampoline<Optional<Value>> getIterationRecursive(final ImmutableList<ImmutablePair<Token, BigInteger>> iterations, final BigInteger level) {
         if (level.compareTo(ZERO) == 0) {
-            return complete(() -> Optional.of(createFromNumeric(iterations.head.right, new Encoding())));
+            return complete(() -> Optional.of(createFromNumeric(iterations.head.right, DEFAULT_ENCODING)));
         }
         return intermediate(() -> getIterationRecursive(iterations.tail, level.subtract(ONE)));
     }

@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.util;
 
+import static io.parsingdata.metal.encoding.Encoding.DEFAULT_ENCODING;
+
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
@@ -23,7 +25,7 @@ import io.parsingdata.metal.encoding.Sign;
 public class EncodingFactory {
 
     public static Encoding enc() {
-        return new Encoding();
+        return DEFAULT_ENCODING;
     }
 
     public static Encoding signed() {

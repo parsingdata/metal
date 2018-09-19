@@ -130,7 +130,7 @@ public class EqualityTest {
 
     @Test
     public void multiConstructorTypes() {
-        final Encoding object = new Encoding();
+        final Encoding object = enc();
         final Encoding same = new Encoding(Encoding.DEFAULT_SIGN, Encoding.DEFAULT_CHARSET, Encoding.DEFAULT_BYTE_ORDER);
         final List<Encoding> other = Arrays.asList(signed(), le(), new Encoding(Charset.forName("UTF-8")));
         assertFalse(object.equals(null));

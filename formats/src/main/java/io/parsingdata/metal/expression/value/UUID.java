@@ -19,6 +19,7 @@ package io.parsingdata.metal.expression.value;
 import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.encoding.Encoding.DEFAULT_ENCODING;
 
 import java.math.BigInteger;
 
@@ -28,7 +29,8 @@ import io.parsingdata.metal.encoding.Encoding;
  * {@link UUID#uuid(String)} creates a ValueExpression to be used as predicate for 16 byte definitions;
  */
 public final class UUID {
-    private static final Encoding BIG_ENDIAN = new Encoding();
+
+    private static final Encoding BIG_ENDIAN = DEFAULT_ENCODING;
 
     private UUID() {}
 

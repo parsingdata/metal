@@ -23,6 +23,7 @@ import static java.nio.ByteBuffer.allocate;
 import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.encoding.Encoding.DEFAULT_ENCODING;
 
 import java.util.Arrays;
 
@@ -33,7 +34,7 @@ import io.parsingdata.metal.encoding.Encoding;
  */
 public final class GUID {
 
-    private static final Encoding BIG_ENDIAN = new Encoding();
+    private static final Encoding BIG_ENDIAN = DEFAULT_ENCODING;
 
     private GUID() {}
 

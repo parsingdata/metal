@@ -28,6 +28,7 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.data.selection.ByName.getValue;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
@@ -41,7 +42,6 @@ import org.junit.Test;
 
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.ParseState;
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
@@ -58,7 +58,7 @@ public class DefSizeTest {
             0x00, 0x00, 0x00, 0x02, // length = 2
             0x04, 0x08
         });
-        final Optional<ParseState> result = FORMAT.parse(env(createFromByteStream(stream), new Encoding()));
+        final Optional<ParseState> result = FORMAT.parse(env(createFromByteStream(stream), enc()));
 
         assertTrue(result.isPresent());
         assertArrayEquals(
