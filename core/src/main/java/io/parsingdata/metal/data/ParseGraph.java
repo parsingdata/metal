@@ -126,7 +126,7 @@ public class ParseGraph implements ParseItem {
         if (this.equals(EMPTY)) {
             return "pg(EMPTY)";
         }
-        if (head == null) {
+        if (isEmpty()) {
             return "pg(terminator:" + definition.getClass().getSimpleName() + ")";
         }
         return "pg(" + head + "," + tail + "," + branched + ")";
