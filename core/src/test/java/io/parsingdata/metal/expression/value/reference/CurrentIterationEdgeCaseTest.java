@@ -15,20 +15,12 @@
  */
 package io.parsingdata.metal.expression.value.reference;
 
-import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseState;
-import io.parsingdata.metal.expression.value.Value;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.io.IOException;
-import java.util.Optional;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.div;
-import static io.parsingdata.metal.Shorthand.exp;
 import static io.parsingdata.metal.Shorthand.iteration;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.ref;
@@ -37,9 +29,18 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+
+import java.io.IOException;
+import java.util.Optional;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseState;
+import io.parsingdata.metal.expression.value.Value;
 
 public class CurrentIterationEdgeCaseTest {
 

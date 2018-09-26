@@ -17,10 +17,11 @@
 package io.parsingdata.metal.util;
 
 import static java.math.BigInteger.ONE;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
-import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
 import java.util.Optional;

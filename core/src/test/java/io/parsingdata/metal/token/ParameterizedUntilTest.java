@@ -16,7 +16,6 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Shorthand.seq;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
 import static io.parsingdata.metal.Shorthand.EMPTY;
@@ -29,6 +28,7 @@ import static io.parsingdata.metal.Shorthand.exp;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.until;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
