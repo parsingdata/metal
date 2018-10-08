@@ -286,7 +286,7 @@ public class AutoEqualityTest {
 
     @Test
     public void notEquals() {
-        for (Object o : Arrays.asList(other)) {
+        for (Object o : other) {
             assertFalse(o.equals(object));
             assertFalse(object.equals(o));
             assertFalse(o.equals(same));

@@ -156,7 +156,7 @@ public class EqualityTest {
 
     @Test
     public void immutableList() {
-        final ImmutableList object = ImmutableList.create("a");
+        final ImmutableList<Object> object = ImmutableList.create("a");
         assertFalse(object.equals(null));
         assertTrue(object.equals(ImmutableList.create("a")));
         assertTrue(object.equals(new ImmutableList<>().add("a")));
@@ -169,7 +169,7 @@ public class EqualityTest {
 
     @Test
     public void immutablePair() {
-        final ImmutablePair object = new ImmutablePair("a", ONE);
+        final ImmutablePair<String, BigInteger> object = new ImmutablePair("a", ONE);
         assertFalse(object.equals(null));
         assertTrue(object.equals(new ImmutablePair("a", ONE)));
         assertEquals(object.hashCode(), new ImmutablePair("a", ONE).hashCode());
