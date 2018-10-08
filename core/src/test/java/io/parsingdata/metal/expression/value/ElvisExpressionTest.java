@@ -56,7 +56,7 @@ public class ElvisExpressionTest {
     private final ValueExpression elvisExpression = elvis(ref("a"), ref("b"));
 
     @Test
-    public void elvisLeft() throws IOException { // the building
+    public void elvisLeft() { // the building
         final Optional<ParseState> result = choice.parse(env(stream(1)));
         final ImmutableList<Optional<Value>> eval = elvisExpression.eval(result.get(), enc());
 
@@ -66,7 +66,7 @@ public class ElvisExpressionTest {
     }
 
     @Test
-    public void elvisRight() throws IOException {
+    public void elvisRight() {
         final Optional<ParseState> result = choice.parse(env(stream(2)));
         final ImmutableList<Optional<Value>> eval = elvisExpression.eval(result.get(), enc());
 
@@ -76,7 +76,7 @@ public class ElvisExpressionTest {
     }
 
     @Test
-    public void elvisNone() throws IOException {
+    public void elvisNone() {
         final ImmutableList<Optional<Value>> eval = elvisExpression.eval(EMPTY_PARSE_STATE, enc());
 
         assertNotNull(eval);
@@ -84,7 +84,7 @@ public class ElvisExpressionTest {
     }
 
     @Test
-    public void elvisList() throws IOException {
+    public void elvisList() {
         final Optional<ParseState> result = seq(any("a"), any("a"), any("b"), any("b")).parse(env(stream(1, 2, 3, 4)));
         assertTrue(result.isPresent());
         final ValueExpression elvis = elvis(ref("a"), ref("b"));
@@ -95,7 +95,7 @@ public class ElvisExpressionTest {
     }
 
     @Test
-    public void elvisListWithEmpty() throws IOException {
+    public void elvisListWithEmpty() {
         final Optional<ParseState> result = seq(any("a"), any("a"), any("b"), any("b")).parse(env(stream(1, 2, 3, 4)));
         assertTrue(result.isPresent());
         final ValueExpression elvis = elvis(ref("c"), ref("b"));
@@ -106,7 +106,7 @@ public class ElvisExpressionTest {
     }
 
     @Test
-    public void elvisListDifferentLengths() throws IOException {
+    public void elvisListDifferentLengths() {
         final Optional<ParseState> result = seq(any("a"), any("a"), any("b"), any("b"), any("b")).parse(env(stream(1, 2, 3, 4, 5)));
         assertTrue(result.isPresent());
         final ValueExpression elvis = elvis(ref("a"), ref("b"));

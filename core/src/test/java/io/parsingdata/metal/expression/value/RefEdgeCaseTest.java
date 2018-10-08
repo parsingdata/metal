@@ -43,7 +43,7 @@ public class RefEdgeCaseTest {
     ParseState parseState;
 
     @Before
-    public void before() throws IOException {
+    public void before() {
         parseState = rep(any("a")).parse(env(stream(1, 2, 3))).get();
     }
 

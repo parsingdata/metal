@@ -69,7 +69,7 @@ public class CallbackTest {
     private long linkedListCount = 0;
 
     @Test
-    public void testHandleCallback() throws IOException {
+    public void testHandleCallback() {
         final CountingCallback countingCallback = new CountingCallback();
 
         final Token cho = cho("cho", POST_ONE, POST_TWO);
@@ -103,21 +103,21 @@ public class CallbackTest {
     }
 
     @Test
-    public void testSimpleCallback() throws IOException {
+    public void testSimpleCallback() {
         final Callbacks callbacks = createCallbackList(SIMPLE_SEQ, 0L);
         final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 1, 2 }));
         assertTrue(SIMPLE_SEQ.parse(env(parseState, callbacks, enc())).isPresent());
     }
 
     @Test
-    public void testRepSimpleCallback() throws IOException {
+    public void testRepSimpleCallback() {
         final Callbacks callbacks = createCallbackList(SIMPLE_SEQ, 0L, 2L);
         final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }));
         assertTrue(rep(SIMPLE_SEQ).parse(env(parseState, callbacks, enc())).isPresent());
     }
 
     @Test
-    public void seqAndRepCallbacks() throws IOException {
+    public void seqAndRepCallbacks() {
         final Token repeatingSeq = rep(SIMPLE_SEQ);
         final Callbacks callbacks = createCallbackList(SIMPLE_SEQ, 0L, 2L)
                 .add(repeatingSeq, new Callback() {
@@ -143,7 +143,7 @@ public class CallbackTest {
     }
 
     @Test
-    public void refInCallback() throws IOException {
+    public void refInCallback() {
         final Callbacks callbacks = Callbacks.create().add(SubStructTest.LINKED_LIST, new Callback() {
             @Override
             public void handleSuccess(Token token, ParseState before, ParseState after) {
@@ -160,7 +160,7 @@ public class CallbackTest {
     }
 
     @Test
-    public void genericCallback() throws IOException {
+    public void genericCallback() {
         final Deque<Token> expectedSuccessDefinitions = new ArrayDeque<>(Arrays.asList(DEF_ONE, POST_ONE, DEF_TWO, POST_TWO, DEF_THREE, DEF_ONE, POST_ONE, DEF_TWO, POST_TWO, DEF_FOUR, POST_FOUR, SEQ124, CHOICE));
         final Deque<Long> expectedSuccessOffsets = new ArrayDeque<>(Arrays.asList(1L, 1L, 2L, 2L, 3L, 1L, 1L, 2L, 2L, 3L, 3L, 3L, 3L));
         final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(Arrays.asList(POST_THREE, SEQ123));
@@ -179,7 +179,7 @@ public class CallbackTest {
     }
 
     @Test
-    public void tokenAndGenericCallbacks() throws IOException {
+    public void tokenAndGenericCallbacks() {
         final CountingCallback countingCallback = new CountingCallback();
 
         final Token cho = cho(POST_ONE, POST_TWO);

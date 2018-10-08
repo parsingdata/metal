@@ -37,13 +37,13 @@ import io.parsingdata.metal.token.Token;
 public class EndiannessTest {
 
     @Test
-    public void andAcrossByteBoundaryLE() throws IOException {
+    public void andAcrossByteBoundaryLE() {
         final Token token = def("x", con(2), eq(and(SELF, con(0x03, 0xff)), con(0x01, 0x1b)));
         assertTrue(token.parse(env(stream(0x1b, 0x81), le())).isPresent());
     }
 
     @Test
-    public void constructIntermediateConstantLE() throws IOException {
+    public void constructIntermediateConstantLE() {
         final Token token = def("x", con(2), eq(and(shr(con(0x82, 0x1b), con(1)), con(0x03, 0xff)), con(0x01, 0x0d)));
         assertTrue(token.parse(env(stream(0x00, 0x00), le())).isPresent());
     }

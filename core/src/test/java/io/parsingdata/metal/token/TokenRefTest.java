@@ -37,14 +37,14 @@ import org.junit.Test;
 public class TokenRefTest {
 
     @Test
-    public void nonExistingRefToken() throws IOException {
+    public void nonExistingRefToken() {
         assertFalse(token("a").parse(env(stream(0))).isPresent());
         assertFalse(seq("a", any("b"), token("c")).parse(env(stream(0))).isPresent());
         assertFalse(sub(token("a"), con(0)).parse(env(stream(0))).isPresent());
     }
 
     @Test
-    public void findRightDefinition() throws IOException {
+    public void findRightDefinition() {
         // Clearly reference the second:
         assertTrue(createNamedTokens("out", "in", "in").parse(env(stream(21, 42))).isPresent());
         assertTrue(createNamedTokens("out", "in", "in").parse(env(stream(21, 21, 42))).isPresent());

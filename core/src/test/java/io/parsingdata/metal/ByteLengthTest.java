@@ -62,7 +62,7 @@ public class ByteLengthTest {
         def("name", 4, ltNum(len(ref("no_such_ref")), con(0)));
 
     @Test
-    public void testLen() throws IOException {
+    public void testLen() {
         final byte[] text1 = string("Hello");
         final byte[] text2 = "Metal".getBytes(UTF_8);
 
@@ -78,7 +78,7 @@ public class ByteLengthTest {
     }
 
     @Test
-    public void testLenNull() throws IOException {
+    public void testLenNull() {
         final ByteStream stream = new InMemoryByteStream(string("Joe"));
         final ParseState parseState = createFromByteStream(stream);
         final Optional<ParseState> result = NAME.parse(env(parseState, ENCODING));

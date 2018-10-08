@@ -42,7 +42,7 @@ public class PreTest {
     private static final Token SEQUENCE = seq(def("header", 1), PRECONDITION);
 
     @Test
-    public void preconditionTrue() throws IOException {
+    public void preconditionTrue() {
         final Optional<ParseState> result = SEQUENCE.parse(env(stream(1, 1)));
 
         // precondition is true, token is parsed
@@ -50,7 +50,7 @@ public class PreTest {
     }
 
     @Test
-    public void preconditionFalse() throws IOException {
+    public void preconditionFalse() {
         final Optional<ParseState> result = SEQUENCE.parse(env(stream(0, 1)));
 
         // precondition is false, token is not parsed
@@ -58,7 +58,7 @@ public class PreTest {
     }
 
     @Test
-    public void preconditionTrueParseFails() throws IOException {
+    public void preconditionTrueParseFails() {
         final Optional<ParseState> result = SEQUENCE.parse(env(stream(1, 2)));
 
         // precondition is true, but token can't be parsed

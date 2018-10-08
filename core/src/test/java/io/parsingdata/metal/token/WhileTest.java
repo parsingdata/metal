@@ -49,7 +49,7 @@ public class WhileTest {
     private static final Token WHILE = seq(VALUES, whl(VALUES, ltNum(ref("value"), con(1))));
 
     @Test
-    public void parseAll() throws IOException {
+    public void parseAll() {
         // two sequences of two bytes would be parsed: [0,9] and [1,10]
         // the while stops because the second 'value' is >= 1
         final Optional<ParseState> result = WHILE.parse(env(stream(0, 9, 1, 10, 2, 11)));
@@ -58,7 +58,7 @@ public class WhileTest {
     }
 
     @Test
-    public void parseFails() throws IOException {
+    public void parseFails() {
         final Optional<ParseState> result = WHILE.parse(env(stream(0, 9, 0, 8)));
 
         // parsing fails because the nested token couldn't be parsed ('value2' <= 9)
@@ -66,7 +66,7 @@ public class WhileTest {
     }
 
     @Test
-    public void whileWithoutExpression() throws IOException {
+    public void whileWithoutExpression() {
         // passing null as predicate make this a while(true):
         final Token trueWhile = whl(def("value", 1), null, enc());
         final Optional<ParseState> result = trueWhile.parse(env(stream(0)));

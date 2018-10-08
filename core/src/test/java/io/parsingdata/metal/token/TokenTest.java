@@ -42,14 +42,14 @@ public class TokenTest {
     };
 
     @Test
-    public void parseNullParseState() throws IOException {
+    public void parseNullParseState() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Argument parseState may not be null.");
         token.parse(env(null, enc()));
     }
 
     @Test
-    public void parseNullScope() throws IOException {
+    public void parseNullScope() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Argument scope may not be null.");
         token.parse(env(null, stream(), enc()));

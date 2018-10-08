@@ -127,7 +127,7 @@ import io.parsingdata.metal.util.InMemoryByteStream;
 public class AutoEqualityTest {
 
     public static final ByteStream DUMMY_STREAM = new ByteStream() {
-        @Override public byte[] read(BigInteger offset, int length) throws IOException { return new byte[0]; }
+        @Override public byte[] read(BigInteger offset, int length) { return new byte[0]; }
         @Override public boolean isAvailable(BigInteger offset, int length) { return false; }
     };
 

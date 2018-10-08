@@ -59,18 +59,18 @@ public class CurrentOffsetTest {
     }
 
     @Test
-    public void currentOffset() throws IOException {
+    public void currentOffset() {
         checkCurrentOffset(42);
     }
 
     @Test
-    public void currentOffsetLarger() throws IOException {
+    public void currentOffsetLarger() {
         // offset would flip signed bit if interpreted as signed integer:
         checkCurrentOffset(128);
     }
 
     @Test
-    public void currentOffsetInCalculations() throws IOException {
+    public void currentOffsetInCalculations() {
         final byte[] stream = new byte[256];
         for (int i = 0; i < stream.length; i++) {
             stream[i] = (byte) i;

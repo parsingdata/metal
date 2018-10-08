@@ -69,7 +69,7 @@ public class TreeTest {
     private final ParseState regular;
     private final ParseState cyclic;
 
-    public TreeTest() throws IOException {
+    public TreeTest() {
         regular = TREE.parse(env(stream(HEAD, 0, 6, 10, 8, 8, HEAD, 1, 16, 20, HEAD, 2, 24, 28, 8, 8, HEAD, 3, 0, 0, HEAD, 4, 0, 0, HEAD, 5, 0, 0, HEAD, 6, 0, 0))).get();
                                      /* *--------+---+        *---------+---+  *---------+---+        *--------*--*  *--------*--*  *--------*--*  *--------*--*
                                       *          \---|--------/         \---|--|---------|---|--------/              |              |              |

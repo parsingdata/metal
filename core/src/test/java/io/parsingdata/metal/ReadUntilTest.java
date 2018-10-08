@@ -41,17 +41,17 @@ public class ReadUntilTest {
                                          eq("terminator", 42));
 
     @Test
-    public void readUntilConstant() throws IOException {
+    public void readUntilConstant() {
         assertTrue(_readUntil.parse(env(stream(1, 2, 3, 4, 42))).isPresent());
     }
 
     @Test
-    public void readUntilNoSkipping() throws IOException {
+    public void readUntilNoSkipping() {
         assertTrue(_readUntil.parse(env(stream(42))).isPresent());
     }
 
     @Test
-    public void readUntilErrorNoTerminator() throws IOException {
+    public void readUntilErrorNoTerminator() {
         assertFalse(_readUntil.parse(env(stream(1, 2, 3, 4))).isPresent());
     }
 

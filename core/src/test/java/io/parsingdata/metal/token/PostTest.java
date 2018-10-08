@@ -45,7 +45,7 @@ public class PostTest {
                  eq(ref("header"), con(1)));
 
     @Test
-    public void postconditionTrue() throws IOException {
+    public void postconditionTrue() {
         final Optional<ParseState> result = SEQUENCE.parse(env(stream(1, 1)));
 
         // token parses and postcondition is true
@@ -54,7 +54,7 @@ public class PostTest {
     }
 
     @Test
-    public void postconditionFalse() throws IOException {
+    public void postconditionFalse() {
         final Optional<ParseState> result = SEQUENCE.parse(env(stream(0, 1)));
 
         // token parses, but postcondition is false
@@ -62,7 +62,7 @@ public class PostTest {
     }
 
     @Test
-    public void postconditionParseFails() throws IOException {
+    public void postconditionParseFails() {
         final Optional<ParseState> result = SEQUENCE.parse(env(stream(1, 2)));
 
         // parse fails

@@ -51,7 +51,7 @@ public class SubStructTableTest {
             sub(struct, ref("pointer")));
 
     @Test
-    public void table() throws IOException {
+    public void table() {
         final ParseState parseState = stream(3, 6, 4, 9, 42, 84, 42, 84, 0, 42, 84);
                                   /* offset: 0, 1, 2, 3,  4,  5,  6,  7, 8,  9, 10
                                    * count:  ^
@@ -70,7 +70,7 @@ public class SubStructTableTest {
     }
 
     @Test
-    public void tableWithDuplicate() throws IOException {
+    public void tableWithDuplicate() {
         final ParseState parseState = stream(4, 7, 5, 5, 10, 42, 84, 42, 84, 0, 42, 84);
                                   /* offset: 0, 1, 2, 3,  4,  5,  6,  7, 8,  9, 10, 11
                                    * count:  ^

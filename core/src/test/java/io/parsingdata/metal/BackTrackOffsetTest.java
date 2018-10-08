@@ -58,42 +58,42 @@ public class BackTrackOffsetTest {
                                                  eq("f", 84)));
 
     @Test
-    public void choiceLeft() throws IOException {
+    public void choiceLeft() {
         assertTrue(_backTrackChoice.parse(env(stream(1, 2))).isPresent());
     }
 
     @Test
-    public void choiceRight() throws IOException {
+    public void choiceRight() {
         assertTrue(_backTrackChoice.parse(env(stream(1, 3))).isPresent());
     }
 
     @Test
-    public void choiceNone() throws IOException {
+    public void choiceNone() {
         assertFalse(_backTrackChoice.parse(env(stream(1, 4))).isPresent());
     }
 
     @Test
-    public void repeatZero() throws IOException {
+    public void repeatZero() {
         assertTrue(_backTrackRepeat.parse(env(stream(1, 3))).isPresent());
     }
 
     @Test
-    public void repeatOnce() throws IOException {
+    public void repeatOnce() {
         assertTrue(_backTrackRepeat.parse(env(stream(1, 2, 1, 3))).isPresent());
     }
 
     @Test
-    public void repeatTwice() throws IOException {
+    public void repeatTwice() {
         assertTrue(_backTrackRepeat.parse(env(stream(1, 2, 1, 2, 1, 3))).isPresent());
     }
 
     @Test
-    public void repeatNone() throws IOException {
+    public void repeatNone() {
         assertFalse(_backTrackRepeat.parse(env(stream(1, 4))).isPresent());
     }
 
     @Test
-    public void deepMatch() throws IOException {
+    public void deepMatch() {
         assertTrue(_backTrackDeep.parse(env(stream(1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 1, 2, 21, 1, 2, 42, 84))).isPresent());
     }
 

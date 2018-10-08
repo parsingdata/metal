@@ -54,7 +54,7 @@ public class BytesTest {
     }
 
     @Test
-    public void bytesListContainsEmpty() throws IOException {
+    public void bytesListContainsEmpty() {
         Optional<ParseState> result =
             seq(def("value", con(2)),
                 def("value", con(2)),

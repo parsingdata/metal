@@ -51,17 +51,17 @@ public class ValueExpressionSemanticsTest {
                                   def("c", con(2), eq(cat(ref("a"), ref("b")))));
 
     @Test
-    public void Cat() throws IOException {
+    public void Cat() {
         assertTrue(cat.parse(env(stream(1, 2, 1, 2))).isPresent());
     }
 
     @Test
-    public void CatNoMatch() throws IOException {
+    public void CatNoMatch() {
         assertFalse(cat.parse(env(stream(1, 2, 12, 12))).isPresent());
     }
 
     @Test
-    public void callback() throws IOException {
+    public void callback() {
         final ParseState data = stream(1, 2, 3, 4);
         def("a", 4, eq(new UnaryValueExpression(ref("a")) {
             @Override

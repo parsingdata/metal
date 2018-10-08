@@ -47,7 +47,7 @@ public class ParameterizedParse {
     @Parameter(4) public boolean result;
 
     @Test
-    public void test() throws IOException {
+    public void test() {
         Optional<ParseState> endState = token.parse(env(parseState, encoding));
         assertEquals(result, endState.isPresent());
 

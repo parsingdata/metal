@@ -99,7 +99,7 @@ public class SourceAndSliceTest {
     }
 
     @Test
-    public void readBeyondEndOfSource() throws IOException {
+    public void readBeyondEndOfSource() {
         thrown.expect(IllegalStateException.class);
         source.getData(ONE, BigInteger.valueOf(4));
     }
@@ -110,7 +110,7 @@ public class SourceAndSliceTest {
     }
 
     @Test
-    public void startReadBeyondEndOfSource() throws IOException {
+    public void startReadBeyondEndOfSource() {
         thrown.expect(IllegalStateException.class);
         source.getData(BigInteger.valueOf(5), ZERO);
     }

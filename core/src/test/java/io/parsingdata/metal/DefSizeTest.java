@@ -53,7 +53,7 @@ public class DefSizeTest {
         );
 
     @Test
-    public void testValidLength() throws IOException {
+    public void testValidLength() {
         final ByteStream stream = new InMemoryByteStream(new byte[]{
             0x00, 0x00, 0x00, 0x02, // length = 2
             0x04, 0x08
@@ -68,7 +68,7 @@ public class DefSizeTest {
     }
 
     @Test
-    public void testInvalidLength() throws IOException {
+    public void testInvalidLength() {
         final ByteStream stream = new InMemoryByteStream(new byte[]{
             (byte) 0xff, (byte) 0xff, (byte) 0xff, (byte) 0xff, // length = -1
             0x04, 0x08
@@ -79,14 +79,14 @@ public class DefSizeTest {
     }
 
     @Test
-    public void testEmptyLengthInList() throws IOException {
+    public void testEmptyLengthInList() {
         assertFalse(def("a", EMPTY_VE).parse(env(stream(1, 2, 3, 4))).isPresent());
         final Token aList = seq(any("a"), any("a"));
         assertFalse(seq(aList, def("b", ref("a"))).parse(env(stream(1, 2, 3, 4))).isPresent());
     }
 
     @Test
-    public void zeroSizeDef() throws IOException {
+    public void zeroSizeDef() {
         assertTrue(seq(
             def("twentyone", con(1), eq(con(21))),
             EMPTY,

@@ -52,7 +52,7 @@ public class SelectionTest {
     }
 
     @Test
-    public void limit() throws IOException {
+    public void limit() {
         Optional<ParseState> parseState = rep(any("a")).parse(env(stream(1, 2, 3, 4, 5)));
         Assert.assertTrue(parseState.isPresent());
         for (int i = 0; i < 7; i++) {

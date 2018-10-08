@@ -58,13 +58,13 @@ public class NthExpressionTest {
     private final ValueExpression nth = nth(ref("value"), ref("index"));
 
     @Test
-    public void testEmtpyIndices() throws IOException {
+    public void testEmtpyIndices() {
         // 5 values = [1, 2, 3, 4, 5], 0 indices = [], result = []
         makeList(stream(5, 1, 2, 3, 4, 5, 0), 0);
     }
 
     @Test
-    public void testNanIndex() throws IOException {
+    public void testNanIndex() {
         // 5 values = [1, 2, 3, 4, 5], 1 index = [Nan], result = [Nan]
         final Optional<ParseState> result = format.parse(env(stream(5, 1, 2, 3, 4, 5, 0)));
         final ImmutableList<Optional<Value>> values = nth(ref("value"), div(con(0), con(0))).eval(result.get(), enc());
@@ -73,35 +73,35 @@ public class NthExpressionTest {
     }
 
     @Test
-    public void testEmptyValuesSingleIndex() throws IOException {
+    public void testEmptyValuesSingleIndex() {
         // 0 values = [], 1 index = [0], result = [Nan]
         final ImmutableList<Optional<Value>> values = makeList(stream(0, 1, 0), 1);
         assertThat(values.head.isPresent(), is(equalTo(false)));
     }
 
     @Test
-    public void testNonExistingValueAtIndex() throws IOException {
+    public void testNonExistingValueAtIndex() {
         // 5 values = [1, 2, 3, 4, 5], 1 index = [42], result = [Nan]
         final ImmutableList<Optional<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 1, 42), 1);
         assertThat(values.head.isPresent(), is(equalTo(false)));
     }
 
     @Test
-    public void testNegativeIndex() throws IOException {
+    public void testNegativeIndex() {
         // 5 values = [1, 2, 3, 4, 5], 1 index = [-1], result = [Nan]
         final ImmutableList<Optional<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 1, -1), 1);
         assertThat(values.head.isPresent(), is(equalTo(false)));
     }
 
     @Test
-    public void testSingleIndex() throws IOException {
+    public void testSingleIndex() {
         // 5 values = [1, 2, 3, 4, 5], 1 index = [0], result = [1]
         final ImmutableList<Optional<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 1, 0), 1);
         assertThat(values.head.get().asNumeric().intValueExact(), is(equalTo(1)));
     }
 
     @Test
-    public void testMultipleIndices() throws IOException {
+    public void testMultipleIndices() {
         // 5 values = [1, 2, 3, 4, 5], 2 indices = [0, 2], result = [1, 3]
         final ImmutableList<Optional<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 2, 0, 2), 2);
         assertThat(values.head.get().asNumeric().intValueExact(), is(equalTo(3)));
@@ -109,7 +109,7 @@ public class NthExpressionTest {
     }
 
     @Test
-    public void testMultipleIndicesMixedOrder() throws IOException {
+    public void testMultipleIndicesMixedOrder() {
         // 5 values = [5, 6, 7, 8, 9], 4 indices = [3, 2, 0, 4], result = [8, 7, 5, 9]
         final ImmutableList<Optional<Value>> values = makeList(stream(5, 5, 6, 7, 8, 9, 4, 3, 2, 0, 4), 4);
         assertThat(values.head.get().asNumeric().intValueExact(), is(equalTo(9)));
@@ -119,7 +119,7 @@ public class NthExpressionTest {
     }
 
     @Test
-    public void testMixedExistingNonExistingIndices() throws IOException {
+    public void testMixedExistingNonExistingIndices() {
         // 5 values = [1, 2, 3, 4, 5], 3 indices = [0, 42, 2], result = [1, Nan, 3]
         final ImmutableList<Optional<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 3, 0, 42, 2), 3);
         assertThat(values.head.get().asNumeric().intValueExact(), is(equalTo(3)));
@@ -128,7 +128,7 @@ public class NthExpressionTest {
     }
 
     @Test
-    public void testResultLengthEqualsIndicesLength() throws IOException {
+    public void testResultLengthEqualsIndicesLength() {
         // 1 value = [1], 8 indices = [1, 2, 3, 4, 5, 6, 7, 8], result = [Nan, Nan, Nan, Nan, Nan]
         final ImmutableList<Optional<Value>> values = makeList(stream(1, 1, 5, 1, 2, 3, 4, 5), 5);
         assertNonePresent(values);

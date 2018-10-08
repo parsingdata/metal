@@ -45,7 +45,7 @@ public class ConstantSliceTest {
     }
 
     @Test
-    public void readBeyondSourceSize() throws IOException {
+    public void readBeyondSourceSize() {
         final byte[] input = { 1, 2, 3, 4 };
         final Slice slice = createFromBytes(input);
         thrown.expect(IllegalStateException.class);
@@ -62,7 +62,7 @@ public class ConstantSliceTest {
     }
 
     @Test
-    public void checkSource() throws IOException {
+    public void checkSource() {
         final byte[] input = { 1, 2, 3, 4 };
         final Slice slice = createFromBytes(input);
         final byte[] output = slice.source.getData(ZERO, BigInteger.valueOf(4));

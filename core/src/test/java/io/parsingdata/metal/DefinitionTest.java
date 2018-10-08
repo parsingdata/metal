@@ -61,7 +61,7 @@ public class DefinitionTest {
     public static final Token COMPOSED = seq(WHL_1, REPN_1, REP_1, CHO_12, OPT_2, PRE_1, SUB_2);
 
     @Test
-    public void composed() throws IOException {
+    public void composed() {
         final Optional<ParseState> result = COMPOSED.parse(env(stream(1, 1, 1, 2, 2, 1, 2)));
         assertTrue(result.isPresent());
         final ParseGraph graph = result.get().order;
