@@ -37,7 +37,6 @@ import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static junit.framework.TestCase.assertFalse;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Optional;
 

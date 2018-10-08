@@ -31,7 +31,6 @@ import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.Test;

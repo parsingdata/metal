@@ -34,7 +34,6 @@ import static io.parsingdata.metal.encoding.ByteOrder.LITTLE_ENDIAN;
 import static io.parsingdata.metal.encoding.Sign.UNSIGNED;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.Test;

@@ -79,16 +79,8 @@ public class ParameterizedUntilTest extends ParameterizedParse {
         return post(until("value", initial, step, max, def("terminator", 1, eq(terminator))), eq(last(ref("value")), expectedValue));
     }
 
-    private static Token untilToken(final int initial, final int step, final ValueExpression terminator, final ValueExpression expectedValue) {
-        return post(until("value", con(initial), con(step, signed()), def("terminator", 1, eq(terminator))), eq(last(ref("value")), expectedValue));
-    }
-
     private static Token untilToken(final int initial, final int step, final ValueExpression terminator, final ValueExpression expectedValue, final Token expectedTail) {
         return seq(post(until("value", con(initial), con(step, signed()), def("terminator", 1, eq(terminator))), eq(last(ref("value")), expectedValue)), expectedTail);
-    }
-
-    private static Token untilToken(final int initial, final ValueExpression terminator, final ValueExpression expectedValue) {
-        return post(until("value", con(initial), def("terminator", 1, eq(terminator))), eq(last(ref("value")), expectedValue));
     }
 
     private static Token untilToken(final int initial, final ValueExpression terminator, final ValueExpression expectedValue, final Token expectedTail) {

@@ -23,7 +23,6 @@ import static org.junit.Assert.assertFalse;
 
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.Ignore;

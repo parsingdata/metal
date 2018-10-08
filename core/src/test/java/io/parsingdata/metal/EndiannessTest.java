@@ -28,8 +28,6 @@ import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
-import java.io.IOException;
-
 import org.junit.Test;
 
 import io.parsingdata.metal.token.Token;
