@@ -169,16 +169,16 @@ public class EqualityTest {
 
     @Test
     public void immutablePair() {
-        final ImmutablePair<String, BigInteger> object = new ImmutablePair("a", ONE);
+        final ImmutablePair<String, BigInteger> object = new ImmutablePair<>("a", ONE);
         assertFalse(object.equals(null));
-        assertTrue(object.equals(new ImmutablePair("a", ONE)));
-        assertEquals(object.hashCode(), new ImmutablePair("a", ONE).hashCode());
+        assertTrue(object.equals(new ImmutablePair<>("a", ONE)));
+        assertEquals(object.hashCode(), new ImmutablePair<>("a", ONE).hashCode());
         assertFalse(object.equals("a"));
         assertNotEquals(object.hashCode(), "a".hashCode());
-        assertFalse(object.equals(new ImmutablePair("b", ONE)));
-        assertNotEquals(object.hashCode(), new ImmutablePair("b", ONE).hashCode());
-        assertFalse(object.equals(new ImmutablePair("a", ZERO)));
-        assertNotEquals(object.hashCode(), new ImmutablePair("a", ZERO).hashCode());
+        assertFalse(object.equals(new ImmutablePair<>("b", ONE)));
+        assertNotEquals(object.hashCode(), new ImmutablePair<>("b", ONE).hashCode());
+        assertFalse(object.equals(new ImmutablePair<>("a", ZERO)));
+        assertNotEquals(object.hashCode(), new ImmutablePair<>("a", ZERO).hashCode());
     }
 
     @Test
