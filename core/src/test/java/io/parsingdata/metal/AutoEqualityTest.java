@@ -270,38 +270,38 @@ public class AutoEqualityTest {
 
     @Test
     public void equalsItselfIdentity() {
-        assertTrue(object.equals(object));
-        assertTrue(same.equals(same));
+        assertEquals(object, object);
+        assertEquals(same, same);
         for (Object o : other) {
-            assertTrue(o.equals(o));
+            assertEquals(o, o);
         }
     }
 
     @Test
     public void equalsItself() {
-        assertTrue(object.equals(same));
-        assertTrue(same.equals(object));
+        assertEquals(object, same);
+        assertEquals(same, object);
     }
 
     @Test
     public void notEquals() {
         for (Object o : other) {
-            assertFalse(o.equals(object));
-            assertFalse(object.equals(o));
-            assertFalse(o.equals(same));
-            assertFalse(same.equals(o));
+            assertNotEquals(o, object);
+            assertNotEquals(object, o);
+            assertNotEquals(o, same);
+            assertNotEquals(same, o);
         }
     }
 
     @Test
     public void notEqualsType() {
-        assertFalse(object.equals(OTHER_TYPE));
-        assertFalse(OTHER_TYPE.equals(object));
-        assertFalse(other.equals(OTHER_TYPE));
-        assertFalse(OTHER_TYPE.equals(other));
+        assertNotEquals(object, OTHER_TYPE);
+        assertNotEquals(OTHER_TYPE, object);
+        assertNotEquals(other, OTHER_TYPE);
+        assertNotEquals(OTHER_TYPE, other);
         for (Object o : other) {
-            assertFalse(o.equals(OTHER_TYPE));
-            assertFalse(OTHER_TYPE.equals(o));
+            assertNotEquals(o, OTHER_TYPE);
+            assertNotEquals(OTHER_TYPE, o);
         }
     }
 
