@@ -27,8 +27,6 @@ import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
-import java.io.IOException;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -39,12 +37,12 @@ public class DefTest {
     public final ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void scopeWithoutEncoding() throws IOException {
+    public void scopeWithoutEncoding() {
         assertEquals(1, getValue(def("a", 1).parse(env("scope", stream(1), enc())).get().order, "scope.a").asNumeric().intValueExact());
     }
 
     @Test
-    public void scopeWithEncoding() throws IOException {
+    public void scopeWithEncoding() {
         assertEquals(1, getValue(def("a", 1, signed()).parse(env("scope", stream(1), enc())).get().order, "scope.a").asNumeric().intValueExact());
     }
 

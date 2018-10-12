@@ -23,7 +23,6 @@ import static java.math.BigInteger.ZERO;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.TRUE;
 import static io.parsingdata.metal.Shorthand.con;
@@ -36,7 +35,6 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
@@ -127,7 +125,7 @@ import io.parsingdata.metal.util.InMemoryByteStream;
 public class AutoEqualityTest {
 
     public static final ByteStream DUMMY_STREAM = new ByteStream() {
-        @Override public byte[] read(BigInteger offset, int length) throws IOException { return new byte[0]; }
+        @Override public byte[] read(BigInteger offset, int length) { return new byte[0]; }
         @Override public boolean isAvailable(BigInteger offset, int length) { return false; }
     };
 
@@ -271,38 +269,38 @@ public class AutoEqualityTest {
 
     @Test
     public void equalsItselfIdentity() {
-        assertTrue(object.equals(object));
-        assertTrue(same.equals(same));
+        assertEquals(object, object);
+        assertEquals(same, same);
         for (Object o : other) {
-            assertTrue(o.equals(o));
+            assertEquals(o, o);
         }
     }
 
     @Test
     public void equalsItself() {
-        assertTrue(object.equals(same));
-        assertTrue(same.equals(object));
+        assertEquals(object, same);
+        assertEquals(same, object);
     }
 
     @Test
     public void notEquals() {
-        for (Object o : Arrays.asList(other)) {
-            assertFalse(o.equals(object));
-            assertFalse(object.equals(o));
-            assertFalse(o.equals(same));
-            assertFalse(same.equals(o));
+        for (Object o : other) {
+            assertNotEquals(o, object);
+            assertNotEquals(object, o);
+            assertNotEquals(o, same);
+            assertNotEquals(same, o);
         }
     }
 
     @Test
     public void notEqualsType() {
-        assertFalse(object.equals(OTHER_TYPE));
-        assertFalse(OTHER_TYPE.equals(object));
-        assertFalse(other.equals(OTHER_TYPE));
-        assertFalse(OTHER_TYPE.equals(other));
+        assertNotEquals(object, OTHER_TYPE);
+        assertNotEquals(OTHER_TYPE, object);
+        assertNotEquals(other, OTHER_TYPE);
+        assertNotEquals(OTHER_TYPE, other);
         for (Object o : other) {
-            assertFalse(o.equals(OTHER_TYPE));
-            assertFalse(OTHER_TYPE.equals(o));
+            assertNotEquals(o, OTHER_TYPE);
+            assertNotEquals(OTHER_TYPE, o);
         }
     }
 

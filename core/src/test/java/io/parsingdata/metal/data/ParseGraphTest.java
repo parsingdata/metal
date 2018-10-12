@@ -33,7 +33,6 @@ import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.Rule;
@@ -59,7 +58,7 @@ public class ParseGraphTest {
     private final ParseValue g;
     private final ParseValue h;
 
-    public ParseGraphTest() throws IOException {
+    public ParseGraphTest() {
         aDef = any("a");
         Token token =
             seq(aDef, any("empty"),
@@ -209,7 +208,7 @@ public class ParseGraphTest {
     public final ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void testNone() throws IOException {
+    public void testNone() {
         assertEquals("None", NONE.toString());
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("This placeholder may not be invoked.");

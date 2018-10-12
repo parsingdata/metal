@@ -33,8 +33,6 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static io.parsingdata.metal.util.TokenDefinitions.eq;
 import static io.parsingdata.metal.util.TokenDefinitions.eqRef;
 
-import java.io.IOException;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -52,22 +50,22 @@ public class BackTrackNameBindTest {
                                          rep(def("b", con(1), not(Shorthand.eq(last(ref("a")))))));
 
     @Test
-    public void choiceRefLeft() throws IOException {
+    public void choiceRefLeft() {
         assertTrue(_choiceRef.parse(env(stream(1, 2, 2))).isPresent());
     }
 
     @Test
-    public void choiceRefRight() throws IOException {
+    public void choiceRefRight() {
         assertTrue(_choiceRef.parse(env(stream(1, 2, 3))).isPresent());
     }
 
     @Test
-    public void choiceRefNone() throws IOException {
+    public void choiceRefNone() {
         assertFalse(_choiceRef.parse(env(stream(1, 1, 2))).isPresent());
     }
 
     @Test
-    public void repeatRef() throws IOException {
+    public void repeatRef() {
         assertTrue(_repeatRef.parse(env(stream(42, 42, 42, 21, 21, 21))).isPresent());
     }
 

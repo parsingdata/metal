@@ -37,7 +37,6 @@ import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static junit.framework.TestCase.assertFalse;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Optional;
 
@@ -60,7 +59,7 @@ public class SubStructTest {
         );
 
     @Test
-    public void linkedList() throws IOException {
+    public void linkedList() {
         final ParseState parseState = stream(0, 8, 1, 42, 0, 12, 1, 84, 0, 4, 1);
                                   /* offset: 0, 1, 2,  3, 4,  5, 6,  7, 8, 9,10
                                    * struct: -------      --------      -------
@@ -84,7 +83,7 @@ public class SubStructTest {
     }
 
     @Test
-    public void linkedListWithSelfReference() throws IOException {
+    public void linkedListWithSelfReference() {
         final ParseState parseState = stream(0, 0, 1);
         final Optional<ParseState> result = LINKED_LIST.parse(env(parseState, enc()));
         assertTrue(result.isPresent());
@@ -107,7 +106,7 @@ public class SubStructTest {
     }
 
     @Test
-    public void linkedListWithCycle() throws IOException {
+    public void linkedListWithCycle() {
         final ParseGraph graph = startCycle(0);
 
         final ParseGraph first = graph.head.asGraph();
@@ -121,7 +120,7 @@ public class SubStructTest {
     }
 
     @Test
-    public void linkedListWithCycleToLowerOffset() throws IOException {
+    public void linkedListWithCycleToLowerOffset() {
         final ParseGraph graph = startCycle(4);
 
         final ParseGraph first = graph.head.asGraph();
@@ -153,12 +152,12 @@ public class SubStructTest {
     }
 
     @Test
-    public void errorEmptyAddressList() throws IOException {
+    public void errorEmptyAddressList() {
         assertFalse(sub(any("a"), ref("b")).parse(env(stream(1, 2, 3, 4))).isPresent());
     }
 
     @Test
-    public void errorEmptyAddress() throws IOException {
+    public void errorEmptyAddress() {
         assertFalse(sub(any("a"), EMPTY_VE).parse(env(stream(1, 2, 3, 4))).isPresent());
     }
 

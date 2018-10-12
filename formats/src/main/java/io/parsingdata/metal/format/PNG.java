@@ -26,9 +26,9 @@ import static io.parsingdata.metal.Shorthand.not;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.encoding.Encoding.DEFAULT_ENCODING;
 import static io.parsingdata.metal.format.Callback.crc32;
 
-import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
 public final class PNG {
@@ -55,7 +55,7 @@ public final class PNG {
                 def("crc32", con(4), eq(crc32(cat(last(ref("chunktype")), last(ref("chunkdata")))))));
 
     public static final Token FORMAT =
-            seq("PNG", new Encoding(),
+            seq("PNG", DEFAULT_ENCODING,
                 HEADER,
                 rep(STRUCT),
                 FOOTER);

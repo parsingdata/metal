@@ -16,7 +16,6 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Shorthand.seq;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
 import static io.parsingdata.metal.Shorthand.EMPTY;
@@ -29,6 +28,7 @@ import static io.parsingdata.metal.Shorthand.exp;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.until;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
@@ -79,16 +79,8 @@ public class ParameterizedUntilTest extends ParameterizedParse {
         return post(until("value", initial, step, max, def("terminator", 1, eq(terminator))), eq(last(ref("value")), expectedValue));
     }
 
-    private static Token untilToken(final int initial, final int step, final ValueExpression terminator, final ValueExpression expectedValue) {
-        return post(until("value", con(initial), con(step, signed()), def("terminator", 1, eq(terminator))), eq(last(ref("value")), expectedValue));
-    }
-
     private static Token untilToken(final int initial, final int step, final ValueExpression terminator, final ValueExpression expectedValue, final Token expectedTail) {
         return seq(post(until("value", con(initial), con(step, signed()), def("terminator", 1, eq(terminator))), eq(last(ref("value")), expectedValue)), expectedTail);
-    }
-
-    private static Token untilToken(final int initial, final ValueExpression terminator, final ValueExpression expectedValue) {
-        return post(until("value", con(initial), def("terminator", 1, eq(terminator))), eq(last(ref("value")), expectedValue));
     }
 
     private static Token untilToken(final int initial, final ValueExpression terminator, final ValueExpression expectedValue, final Token expectedTail) {

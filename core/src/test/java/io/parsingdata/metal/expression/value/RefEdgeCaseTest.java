@@ -26,8 +26,6 @@ import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
-import java.io.IOException;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,7 +41,7 @@ public class RefEdgeCaseTest {
     ParseState parseState;
 
     @Before
-    public void before() throws IOException {
+    public void before() {
         parseState = rep(any("a")).parse(env(stream(1, 2, 3))).get();
     }
 

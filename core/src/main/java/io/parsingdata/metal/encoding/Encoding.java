@@ -30,13 +30,11 @@ public class Encoding {
     public static final Charset DEFAULT_CHARSET = StandardCharsets.US_ASCII;
     public static final ByteOrder DEFAULT_BYTE_ORDER = ByteOrder.BIG_ENDIAN;
 
+    public static final Encoding DEFAULT_ENCODING = new Encoding(DEFAULT_SIGN, DEFAULT_CHARSET, DEFAULT_BYTE_ORDER);
+
     public final Sign sign;
     public final Charset charset;
     public final ByteOrder byteOrder;
-
-    public Encoding() {
-        this(DEFAULT_SIGN, DEFAULT_CHARSET, DEFAULT_BYTE_ORDER);
-    }
 
     public Encoding(final Sign signed) {
         this(signed, DEFAULT_CHARSET, DEFAULT_BYTE_ORDER);

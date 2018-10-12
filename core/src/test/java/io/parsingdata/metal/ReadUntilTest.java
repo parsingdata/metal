@@ -26,8 +26,6 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.eq;
 import static io.parsingdata.metal.util.TokenDefinitions.notEq;
 
-import java.io.IOException;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -41,17 +39,17 @@ public class ReadUntilTest {
                                          eq("terminator", 42));
 
     @Test
-    public void readUntilConstant() throws IOException {
+    public void readUntilConstant() {
         assertTrue(_readUntil.parse(env(stream(1, 2, 3, 4, 42))).isPresent());
     }
 
     @Test
-    public void readUntilNoSkipping() throws IOException {
+    public void readUntilNoSkipping() {
         assertTrue(_readUntil.parse(env(stream(42))).isPresent());
     }
 
     @Test
-    public void readUntilErrorNoTerminator() throws IOException {
+    public void readUntilErrorNoTerminator() {
         assertFalse(_readUntil.parse(env(stream(1, 2, 3, 4))).isPresent());
     }
 

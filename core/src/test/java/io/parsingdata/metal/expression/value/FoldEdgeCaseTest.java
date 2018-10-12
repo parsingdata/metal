@@ -35,7 +35,6 @@ import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
-import java.io.IOException;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 
@@ -64,7 +63,7 @@ public class FoldEdgeCaseTest {
     }
 
     @Test
-    public void foldToEmpty() throws IOException {
+    public void foldToEmpty() {
         final ParseState parseState = rep(any("value")).parse(env(stream(1, 0))).get();
         assertFalse(foldLeft(ref("value"), Shorthand::div).eval(parseState, enc()).head.isPresent());
         assertFalse(foldRight(ref("value"), Shorthand::div).eval(parseState, enc()).head.isPresent());
@@ -76,7 +75,7 @@ public class FoldEdgeCaseTest {
     }
 
     @Test
-    public void multipleInits() throws IOException {
+    public void multipleInits() {
         final Optional<ParseState> parseResult =
             seq(
                 def("init", 1),
@@ -93,7 +92,7 @@ public class FoldEdgeCaseTest {
     }
 
     @Test
-    public void noValues() throws IOException {
+    public void noValues() {
         final Optional<ParseState> parseResult =
             cho(
                 def("folded", 1, eq(foldLeft(ref("toFold"), Shorthand::add))),
@@ -117,12 +116,12 @@ public class FoldEdgeCaseTest {
     }
 
     @Test
-    public void faultyReducerFoldLeft() throws IOException {
+    public void faultyReducerFoldLeft() {
         faultyReducer(foldLeft(ref("toFold"), MULTIPLE_VALUE_REDUCER));
     }
 
     @Test
-    public void faultyReducerFoldRight() throws IOException {
+    public void faultyReducerFoldRight() {
         faultyReducer(foldRight(ref("toFold"), MULTIPLE_VALUE_REDUCER));
     }
 

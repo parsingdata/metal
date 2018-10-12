@@ -27,7 +27,6 @@ import static io.parsingdata.metal.data.Slice.createFromSource;
 import static io.parsingdata.metal.expression.value.BytesTest.EMPTY_PARSE_STATE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
@@ -99,7 +98,7 @@ public class SourceAndSliceTest {
     }
 
     @Test
-    public void readBeyondEndOfSource() throws IOException {
+    public void readBeyondEndOfSource() {
         thrown.expect(IllegalStateException.class);
         source.getData(ONE, BigInteger.valueOf(4));
     }
@@ -110,7 +109,7 @@ public class SourceAndSliceTest {
     }
 
     @Test
-    public void startReadBeyondEndOfSource() throws IOException {
+    public void startReadBeyondEndOfSource() {
         thrown.expect(IllegalStateException.class);
         source.getData(BigInteger.valueOf(5), ZERO);
     }

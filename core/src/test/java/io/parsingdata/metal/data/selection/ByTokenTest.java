@@ -44,7 +44,6 @@ import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -231,7 +230,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void getSubRef() throws IOException {
+    public void getSubRef() {
         final Token smallSub = sub(DEF2, last(ref("value1")));
         final Token extraSub = sub(any("x"), last(ref("value1")));
         final Token composition = seq(DEF1, smallSub, extraSub, smallSub, extraSub);
@@ -247,7 +246,7 @@ public class ByTokenTest {
     private final Token smallSeq = seq(any("b"), any("c"));
 
     @Test
-    public void getAllRootsSingle() throws IOException {
+    public void getAllRootsSingle() {
         final Token topSeq = seq(any("a"), smallSeq);
         final Optional<ParseState> result = topSeq.parse(env(stream(1, 2, 3)));
         assertTrue(result.isPresent());
@@ -260,7 +259,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void getAllRootsMulti() throws IOException {
+    public void getAllRootsMulti() {
         final Token topSeq = seq(any("a"), smallSeq, smallSeq);
         final Optional<ParseState> result = topSeq.parse(env(stream(1, 2, 3, 2, 3)));
         assertTrue(result.isPresent());
@@ -284,7 +283,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void getAllRootsMultiSub() throws IOException {
+    public void getAllRootsMultiSub() {
         final Optional<ParseState> result = rep(seq(smallSeq, sub(smallSeq, CURRENT_OFFSET))).parse(env(stream(1, 2, 1, 2, 1, 2, 1, 2)));
                                                                                            /* 1: +--------+
                                                                                            /* 2:       +--------+
@@ -317,7 +316,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void getAllRootsMultiSelf() throws IOException {
+    public void getAllRootsMultiSelf() {
         final CustomToken customToken = new CustomToken();
         final Optional<ParseState> result = customToken.parse(env(stream(1, 2, 3)));
         assertTrue(result.isPresent());
@@ -334,7 +333,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void getAllRootsOrderRepDef() throws IOException {
+    public void getAllRootsOrderRepDef() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2), rep(DEF1));
         final ImmutableList<ParseItem> items = getAllRoots(graph, DEF1);
         assertThat(items.size, is(equalTo(3L)));
@@ -370,7 +369,7 @@ public class ByTokenTest {
     }
 
     @Test
-    public void getAllRootsSelfRecursive() throws IOException {
+    public void getAllRootsSelfRecursive() {
         final ParseGraph graph = parseResultGraph(stream(0xA, 3, 0xB, 2, 0xC, 0, 0xD, 0, 0xE, 0, 0xF, 0), SELF_REC);
         ImmutableList<ParseItem> items = Selection.getAllRoots(graph, SELF_REC);
         assertThat(items.size, is(equalTo(6L)));

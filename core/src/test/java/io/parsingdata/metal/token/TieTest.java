@@ -47,7 +47,6 @@ import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
-import java.io.IOException;
 import java.util.Optional;
 import java.util.zip.Deflater;
 
@@ -76,7 +75,7 @@ public class TieTest {
     private static final Token SIMPLE_SEQ = seq(any("a"), any("b"), any("c"));
 
     @Test
-    public void smallContainer() throws IOException {
+    public void smallContainer() {
         final Optional<ParseState> result = parseContainer();
         assertEquals(5, result.get().offset.intValueExact());
         assertEquals(6, getAllValues(result.get().order, "value").size);
@@ -89,7 +88,7 @@ public class TieTest {
     }
 
     @Test
-    public void checkContainerSource() throws IOException {
+    public void checkContainerSource() {
         final Optional<ParseState> result = parseContainer();
         checkFullParse(INC_PREV_MOD_100, fold(ref("value"), Shorthand::cat).eval(result.get(), enc()).head.get().getValue());
     }
@@ -102,7 +101,7 @@ public class TieTest {
     }
 
     @Test
-    public void increasing() throws IOException {
+    public void increasing() {
         checkFullParse(INC_PREV_MOD_100, generateIncreasing(1024));
     }
 
@@ -115,7 +114,7 @@ public class TieTest {
     }
 
     @Test
-    public void multiLevelContainers() throws IOException {
+    public void multiLevelContainers() {
         final byte[] l3Data = generateIncreasing(880);
         final Token l3Token = INC_PREV_MOD_100;
         checkFullParse(l3Token, l3Data);
@@ -170,7 +169,7 @@ public class TieTest {
     }
 
     @Test
-    public void tieAndSubOnSameData() throws IOException {
+    public void tieAndSubOnSameData() {
         final Token nestedSeq =
             seq(def("d", con(3)),
                 tie(SIMPLE_SEQ, ref("d")),
@@ -181,7 +180,7 @@ public class TieTest {
     }
 
     @Test
-    public void multiTie() throws IOException {
+    public void multiTie() {
         final Token multiTie =
             seq(def("d", con(3)),
                 def("d", con(3)),
@@ -197,7 +196,7 @@ public class TieTest {
     }
 
     @Test
-    public void tieWithDuplicate() throws IOException {
+    public void tieWithDuplicate() {
         final ValueExpression refD = ref("d");
         final Token duplicateTie =
             seq(def("d", con(3)),
@@ -215,25 +214,25 @@ public class TieTest {
     }
 
     @Test
-    public void tieWithEmptyListFromDataExpression() throws IOException {
+    public void tieWithEmptyListFromDataExpression() {
         final Token token = seq(any("a"), tie(any("b"), last(ref("c"))));
         assertFalse(token.parse(env(stream(0))).isPresent());
     }
 
     @Test
-    public void tieFail() throws IOException {
+    public void tieFail() {
         final Token token = seq(def("a", con(1), eq(con(0))), tie(def("b", con(1), eq(con(1))), last(ref("a"))));
         assertFalse(token.parse(env(stream(0))).isPresent());
     }
 
     @Test
-    public void tieWithEmptyValueFromDataExpression() throws IOException {
+    public void tieWithEmptyValueFromDataExpression() {
         final Token token = seq(any("a"), tie(any("b"), div(con(1), con(0))));
         assertFalse(token.parse(env(stream(0))).isPresent());
     }
 
     @Test
-    public void tieOnConstant() throws IOException {
+    public void tieOnConstant() {
         final Token strictSeq =
             seq(def("a", con(1), eq(con(1))),
                 def("b", con(1), eq(con(2))),

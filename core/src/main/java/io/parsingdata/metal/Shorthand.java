@@ -17,6 +17,7 @@
 package io.parsingdata.metal;
 
 import static io.parsingdata.metal.data.Slice.createFromBytes;
+import static io.parsingdata.metal.encoding.Encoding.DEFAULT_ENCODING;
 import static io.parsingdata.metal.token.Token.EMPTY_NAME;
 import static io.parsingdata.metal.token.Token.NO_NAME;
 
@@ -170,14 +171,14 @@ public final class Shorthand {
     public static UnaryValueExpression not(final ValueExpression operand) { return new io.parsingdata.metal.expression.value.bitwise.Not(operand); }
     public static BinaryValueExpression shl(final ValueExpression left, final ValueExpression right) { return new ShiftLeft(left, right); }
     public static BinaryValueExpression shr(final ValueExpression left, final ValueExpression right) { return new ShiftRight(left, right); }
-    public static ValueExpression con(final long value) { return con(value, new Encoding()); }
+    public static ValueExpression con(final long value) { return con(value, DEFAULT_ENCODING); }
     public static ValueExpression con(final long value, final Encoding encoding) { return con(ConstantFactory.createFromNumeric(value, encoding)); }
-    public static ValueExpression con(final String value) { return con(value, new Encoding()); }
+    public static ValueExpression con(final String value) { return con(value, DEFAULT_ENCODING); }
     public static ValueExpression con(final String value, final Encoding encoding) { return con(ConstantFactory.createFromString(value, encoding)); }
     public static ValueExpression con(final Value value) { return new Const(value); }
     public static ValueExpression con(final Encoding encoding, final int... values) { return new Const(new Value(createFromBytes(toByteArray(values)), encoding)); }
-    public static ValueExpression con(final int... values) { return con(new Encoding(), values); }
-    public static ValueExpression con(final byte[] value) { return con(value, new Encoding()); }
+    public static ValueExpression con(final int... values) { return con(DEFAULT_ENCODING, values); }
+    public static ValueExpression con(final byte[] value) { return con(value, DEFAULT_ENCODING); }
     public static ValueExpression con(final byte[] value, final Encoding encoding) { return con(ConstantFactory.createFromBytes(value, encoding)); }
     public static ValueExpression len(final ValueExpression operand) { return new Len(operand); }
     public static NameRef ref(final String name) { return ref(name, null); }

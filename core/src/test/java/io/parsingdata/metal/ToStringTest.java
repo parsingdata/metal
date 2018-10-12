@@ -155,7 +155,7 @@ public class ToStringTest {
 
     @Test
     public void encoding() {
-        assertEquals("Encoding(UNSIGNED,US-ASCII,BIG_ENDIAN)", new Encoding().toString());
+        assertEquals("Encoding(UNSIGNED,US-ASCII,BIG_ENDIAN)", enc().toString());
         assertEquals("Encoding(SIGNED,US-ASCII,BIG_ENDIAN)", new Encoding(Sign.SIGNED).toString());
         assertEquals("Encoding(UNSIGNED,UTF-8,BIG_ENDIAN)", new Encoding(StandardCharsets.UTF_8).toString());
         assertEquals("Encoding(UNSIGNED,US-ASCII,LITTLE_ENDIAN)", new Encoding(ByteOrder.LITTLE_ENDIAN).toString());

@@ -32,7 +32,6 @@ import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Optional;
 
@@ -49,7 +48,7 @@ public class ErrorsTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void noValueForSize() throws IOException {
+    public void noValueForSize() {
         thrown = ExpectedException.none();
         // Basic division by zero.
         final Token token = def("a", div(con(1), con(0)));
@@ -66,7 +65,7 @@ public class ErrorsTest {
     }
 
     @Test
-    public void multiValueInRepN() throws IOException {
+    public void multiValueInRepN() {
         final Token dummy = any("a");
         final Token multiRepN =
             seq(any("b"),

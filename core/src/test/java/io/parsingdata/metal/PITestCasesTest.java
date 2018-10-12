@@ -36,8 +36,6 @@ import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
-import java.io.IOException;
-
 import org.junit.Test;
 
 import io.parsingdata.metal.data.ParseState;
@@ -54,7 +52,7 @@ public class PITestCasesTest {
     public static final Token SHL = seq(any("a"), def("shl(a,1)", con(1), eq(shl(ref("a"), con(1)))));
 
     @Test
-    public void handlePITestIssue() throws IOException {
+    public void handlePITestIssue() {
         // Taken from ArithmeticValueExpressionSemanticsTest:
         parse(MUL, stream(2, 2, 4), signed());
         parse(MOD, stream(10, 4, 2), signed());

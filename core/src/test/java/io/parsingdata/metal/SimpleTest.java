@@ -25,8 +25,6 @@ import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
-import java.io.IOException;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -41,25 +39,25 @@ public class SimpleTest {
     }
 
     @Test
-    public void correct() throws IOException {
+    public void correct() {
         final Token token = buildSimpleToken("r1", 1, 1);
         assertTrue(token.parse(env(stream(1, 2, 3, 4))).isPresent());
     }
 
     @Test
-    public void sizeError() throws IOException {
+    public void sizeError() {
         final Token token = buildSimpleToken("r1", 2, 1);
         assertFalse(token.parse(env(stream(1, 2, 3, 4))).isPresent());
     }
 
     @Test
-    public void predicateError() throws IOException {
+    public void predicateError() {
         final Token token = buildSimpleToken("r1", 1, 2);
         assertFalse(token.parse(env(stream(1, 2, 3, 4))).isPresent());
     }
 
     @Test
-    public void sourceError() throws IOException {
+    public void sourceError() {
         final Token token = buildSimpleToken("r1", 1, 1);
         assertFalse(token.parse(env(stream(2, 2, 2, 2))).isPresent());
     }

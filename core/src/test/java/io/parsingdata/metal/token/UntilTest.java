@@ -37,7 +37,6 @@ import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -55,7 +54,7 @@ public class UntilTest {
     private static final String INPUT = INPUT_1 + "\n" + INPUT_2 + "\n" + INPUT_3 + "\n";
 
     @Test
-    public void threeNewLines() throws IOException {
+    public void threeNewLines() {
         final Optional<ParseState> parseState = createToken(con(0), post(def("newline", con(1)), eq(con('\n')))).parse(env(stream(INPUT, US_ASCII)));
         assertTrue(parseState.isPresent());
         ImmutableList<ParseValue> values = getAllValues(parseState.get().order, "line");
@@ -66,7 +65,7 @@ public class UntilTest {
     }
 
     @Test
-    public void untilInclusive() throws IOException {
+    public void untilInclusive() {
         final Optional<ParseState> parseState = createToken(con(1), post(EMPTY, eq(mod(last(ref("line")), con(256)), con('\n')))).parse(env(stream(INPUT, US_ASCII)));
         assertTrue(parseState.isPresent());
         ImmutableList<ParseValue> values = getAllValues(parseState.get().order, "line");
@@ -77,7 +76,7 @@ public class UntilTest {
     }
 
     @Test
-    public void allDefaultValueExpressions() throws IOException {
+    public void allDefaultValueExpressions() {
         assertTrue(until("value", def("terminator", 1, eq(con(0)))).parse(env(stream(1, 2, 3, 0))).isPresent());
     }
 

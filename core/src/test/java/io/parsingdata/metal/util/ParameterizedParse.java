@@ -17,12 +17,12 @@
 package io.parsingdata.metal.util;
 
 import static java.math.BigInteger.ONE;
-import static org.junit.Assert.assertEquals;
 
-import static io.parsingdata.metal.util.EnvironmentFactory.env;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import java.io.IOException;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
+
 import java.util.Optional;
 
 import org.junit.Ignore;
@@ -46,7 +46,7 @@ public class ParameterizedParse {
     @Parameter(4) public boolean result;
 
     @Test
-    public void test() throws IOException {
+    public void test() {
         Optional<ParseState> endState = token.parse(env(parseState, encoding));
         assertEquals(result, endState.isPresent());
 

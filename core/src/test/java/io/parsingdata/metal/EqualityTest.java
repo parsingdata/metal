@@ -45,7 +45,6 @@ import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -84,7 +83,7 @@ public class EqualityTest {
             sub(LINKED_LIST_1, con(0)));
 
     @Test
-    public void cycleWithIdenticalTokens() throws IOException {
+    public void cycleWithIdenticalTokens() {
         final Optional<ParseState> result = LINKED_LIST_COMPOSED_IDENTICAL.parse(env(stream(0, 0, 1)));
         assertTrue(result.isPresent());
         assertEquals(1, getAllValues(result.get().order, "header").size);
@@ -104,7 +103,7 @@ public class EqualityTest {
             sub(LINKED_LIST_2, con(0)));
 
     @Test
-    public void cycleWithEqualTokens() throws IOException {
+    public void cycleWithEqualTokens() {
         final Optional<ParseState> result = LINKED_LIST_COMPOSED_EQUAL.parse(env(stream(0, 0, 1)));
         assertTrue(result.isPresent());
         assertEquals(1, getAllValues(result.get().order, "header").size);
@@ -120,35 +119,36 @@ public class EqualityTest {
     private void checkSingleton(final Object object, final Object same) {
         assertFalse(object.equals(null));
         assertFalse(same.equals(null));
-        assertTrue(object.equals(object));
-        assertTrue(same.equals(same));
-        assertTrue(object.equals(same));
-        assertTrue(same.equals(object));
-        assertFalse(object.equals(new Object() {}));
+        assertEquals(object, object);
+        assertEquals(same, same);
+        assertEquals(object, same);
+        assertEquals(same, object);
+        assertNotEquals(object, new Object() {
+        });
         assertEquals(object.hashCode(), same.hashCode());
     }
 
     @Test
     public void multiConstructorTypes() {
-        final Encoding object = new Encoding();
+        final Encoding object = enc();
         final Encoding same = new Encoding(Encoding.DEFAULT_SIGN, Encoding.DEFAULT_CHARSET, Encoding.DEFAULT_BYTE_ORDER);
         final List<Encoding> other = Arrays.asList(signed(), le(), new Encoding(Charset.forName("UTF-8")));
         assertFalse(object.equals(null));
         assertFalse(same.equals(null));
-        assertTrue(object.equals(same));
-        assertTrue(same.equals(object));
+        assertEquals(object, same);
+        assertEquals(same, object);
         final Object otherType = new Object() {};
-        assertFalse(object.equals(otherType));
-        assertFalse(same.equals(otherType));
+        assertNotEquals(object, otherType);
+        assertNotEquals(same, otherType);
         assertEquals(object.hashCode(), same.hashCode());
         for (Encoding e : other) {
-            assertFalse(e.equals(null));
-            assertTrue(e.equals(e));
-            assertFalse(e.equals(object));
-            assertFalse(object.equals(e));
-            assertFalse(e.equals(same));
-            assertFalse(same.equals(e));
-            assertFalse(e.equals(otherType));
+            assertNotEquals(null, e);
+            assertEquals(e, e);
+            assertNotEquals(e, object);
+            assertNotEquals(object, e);
+            assertNotEquals(e, same);
+            assertNotEquals(same, e);
+            assertNotEquals(e, otherType);
             assertNotEquals(object.hashCode(), e.hashCode());
             assertNotEquals(same.hashCode(), e.hashCode());
         }
@@ -156,29 +156,29 @@ public class EqualityTest {
 
     @Test
     public void immutableList() {
-        final ImmutableList object = ImmutableList.create("a");
+        final ImmutableList<Object> object = ImmutableList.create("a");
         assertFalse(object.equals(null));
-        assertTrue(object.equals(ImmutableList.create("a")));
-        assertTrue(object.equals(new ImmutableList<>().add("a")));
-        assertFalse(object.equals("a"));
-        assertTrue(object.add("b").equals(ImmutableList.create("a").add("b")));
-        assertTrue(object.add("b").add("c").equals(ImmutableList.create("a").add("b").add("c")));
-        assertFalse(object.add("b").equals(ImmutableList.create("a").add("c")));
-        assertFalse(object.add("b").add("c").equals(ImmutableList.create("a").add("c").add("c")));
+        assertEquals(object, ImmutableList.create("a"));
+        assertEquals(object, new ImmutableList<>().add("a"));
+        assertNotEquals("a", object);
+        assertEquals(object.add("b"), ImmutableList.create("a").add("b"));
+        assertEquals(object.add("b").add("c"), ImmutableList.create("a").add("b").add("c"));
+        assertNotEquals(object.add("b"), ImmutableList.create("a").add("c"));
+        assertNotEquals(object.add("b").add("c"), ImmutableList.create("a").add("c").add("c"));
     }
 
     @Test
     public void immutablePair() {
-        final ImmutablePair object = new ImmutablePair("a", ONE);
+        final ImmutablePair<String, BigInteger> object = new ImmutablePair<>("a", ONE);
         assertFalse(object.equals(null));
-        assertTrue(object.equals(new ImmutablePair("a", ONE)));
-        assertEquals(object.hashCode(), new ImmutablePair("a", ONE).hashCode());
-        assertFalse(object.equals("a"));
+        assertEquals(object, new ImmutablePair<>("a", ONE));
+        assertEquals(object.hashCode(), new ImmutablePair<>("a", ONE).hashCode());
+        assertNotEquals("a", object);
         assertNotEquals(object.hashCode(), "a".hashCode());
-        assertFalse(object.equals(new ImmutablePair("b", ONE)));
-        assertNotEquals(object.hashCode(), new ImmutablePair("b", ONE).hashCode());
-        assertFalse(object.equals(new ImmutablePair("a", ZERO)));
-        assertNotEquals(object.hashCode(), new ImmutablePair("a", ZERO).hashCode());
+        assertNotEquals(object, new ImmutablePair<>("b", ONE));
+        assertNotEquals(object.hashCode(), new ImmutablePair<>("b", ONE).hashCode());
+        assertNotEquals(object, new ImmutablePair<>("a", ZERO));
+        assertNotEquals(object.hashCode(), new ImmutablePair<>("a", ZERO).hashCode());
     }
 
     @Test
@@ -186,7 +186,7 @@ public class EqualityTest {
         final ParseValue value = new ParseValue("a", any("a"), createFromBytes(new byte[]{1, 2}), enc());
         final ParseGraph object = createFromByteStream(DUMMY_STREAM).add(value).order;
         assertFalse(object.equals(null));
-        assertFalse(object.equals("a"));
+        assertNotEquals("a", object);
         final ParseState parseState = createFromByteStream(DUMMY_STREAM);
         assertNotEquals(parseState.addBranch(any("a")).add(value).add(value).closeBranch(any("a")).addBranch(any("a")).order, parseState.addBranch(any("a")).closeBranch(any("a")).addBranch(any("a")).order);
         assertNotEquals(parseState.addBranch(any("a")).order, parseState.addBranch(any("a")).closeBranch(any("a")).order);
@@ -197,7 +197,7 @@ public class EqualityTest {
     public void stringRef() {
         final Ref object = new NameRef("name");
         assertFalse(object.equals(null));
-        assertFalse(object.equals("name"));
+        assertNotEquals("name", object);
         assertEquals(object, new NameRef("name"));
         assertNotEquals(object, new NameRef("otherName"));
         assertNotEquals(object, new DefinitionRef(any("name")));
@@ -208,7 +208,7 @@ public class EqualityTest {
     public void definitionRef() {
         final Ref object = new DefinitionRef(any("name"));
         assertFalse(object.equals(null));
-        assertFalse(object.equals("name"));
+        assertNotEquals("name", object);
         assertEquals(object, new DefinitionRef(any("name")));
         assertNotEquals(object, new DefinitionRef(any("otherName")));
         assertNotEquals(object, new NameRef("name"));
@@ -219,7 +219,7 @@ public class EqualityTest {
     public void slice() {
         final Slice object = Slice.createFromBytes(new byte[] { 0, 1, 2, 3 });
         assertFalse(object.equals(null));
-        assertFalse(object.equals("name"));
+        assertNotEquals("name", object);
         assertEquals(object, Slice.createFromBytes(new byte[] { 0, 1, 2, 3 }));
         assertNotEquals(object, Slice.createFromBytes(new byte[] { 0, 1, 2, 4 }));
         assertNotEquals(object, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), ONE, BigInteger.valueOf(2)).get());

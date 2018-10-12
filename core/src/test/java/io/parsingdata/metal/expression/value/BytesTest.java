@@ -30,7 +30,6 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
-import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -54,7 +53,7 @@ public class BytesTest {
     }
 
     @Test
-    public void bytesListContainsEmpty() throws IOException {
+    public void bytesListContainsEmpty() {
         Optional<ParseState> result =
             seq(def("value", con(2)),
                 def("value", con(2)),
