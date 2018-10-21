@@ -36,6 +36,7 @@ import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.token;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
+import static io.parsingdata.metal.data.Slice.createFromSource;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
 import static io.parsingdata.metal.data.selection.ByType.getReferences;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
@@ -217,13 +218,13 @@ public class EqualityTest {
 
     @Test
     public void slice() {
-        final Slice object = Slice.createFromBytes(new byte[] { 0, 1, 2, 3 });
+        final Slice object = createFromBytes(new byte[] { 0, 1, 2, 3 });
         assertFalse(object.equals(null));
         assertNotEquals("name", object);
-        assertEquals(object, Slice.createFromBytes(new byte[] { 0, 1, 2, 3 }));
-        assertNotEquals(object, Slice.createFromBytes(new byte[] { 0, 1, 2, 4 }));
-        assertNotEquals(object, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), ONE, BigInteger.valueOf(2)).get());
-        assertNotEquals(object, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), ZERO, BigInteger.valueOf(2)).get());
+        assertEquals(object, createFromBytes(new byte[] { 0, 1, 2, 3 }));
+        assertNotEquals(object, createFromBytes(new byte[] { 0, 1, 2, 4 }));
+        assertNotEquals(object, createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), ONE, BigInteger.valueOf(2)).get());
+        assertNotEquals(object, createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), ZERO, BigInteger.valueOf(2)).get());
     }
 
 }

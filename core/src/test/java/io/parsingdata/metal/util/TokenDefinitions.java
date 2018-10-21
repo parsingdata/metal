@@ -37,7 +37,7 @@ public class TokenDefinitions {
     }
 
     public static Token eq(final String name, final int value) {
-        return Shorthand.def(name, con(1), Shorthand.eq(con(value)));
+        return def(name, con(1), Shorthand.eq(con(value)));
     }
 
     public static Token notEq(final String name, final int value) {

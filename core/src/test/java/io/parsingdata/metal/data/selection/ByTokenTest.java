@@ -371,7 +371,7 @@ public class ByTokenTest {
     @Test
     public void getAllRootsSelfRecursive() {
         final ParseGraph graph = parseResultGraph(stream(0xA, 3, 0xB, 2, 0xC, 0, 0xD, 0, 0xE, 0, 0xF, 0), SELF_REC);
-        ImmutableList<ParseItem> items = Selection.getAllRoots(graph, SELF_REC);
+        ImmutableList<ParseItem> items = getAllRoots(graph, SELF_REC);
         assertThat(items.size, is(equalTo(6L)));
 
         for (int value = 0xF; value >= 0xA; value--) {
