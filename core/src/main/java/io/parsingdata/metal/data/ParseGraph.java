@@ -62,28 +62,28 @@ public class ParseGraph implements ParseItem {
         this(head, tail, definition, false);
     }
 
-    ParseGraph add(final ParseValue head) {
+    protected ParseGraph add(final ParseValue head) {
         if (branched) {
             return new ParseGraph(this.head.asGraph().add(head), tail, definition, true);
         }
         return new ParseGraph(head, this, definition);
     }
 
-    ParseGraph add(final ParseReference parseReference) {
+    protected ParseGraph add(final ParseReference parseReference) {
         if (branched) {
             return new ParseGraph(head.asGraph().add(parseReference), tail, definition, true);
         }
         return new ParseGraph(parseReference, this, definition);
     }
 
-    ParseGraph addBranch(final Token definition) {
+    protected ParseGraph addBranch(final Token definition) {
         if (branched) {
             return new ParseGraph(head.asGraph().addBranch(definition), tail, this.definition, true);
         }
         return new ParseGraph(new ParseGraph(definition), this, this.definition, true);
     }
 
-    ParseGraph closeBranch() {
+    protected ParseGraph closeBranch() {
         if (!branched) {
             throw new IllegalStateException("Cannot close branch that is not open.");
         }

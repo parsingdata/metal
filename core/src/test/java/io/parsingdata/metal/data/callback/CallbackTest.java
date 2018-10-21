@@ -97,7 +97,7 @@ public class CallbackTest {
             }
 
             @Override
-            public void handleFailure(Token token, ParseState before) {}
+            public void handleFailure(Token token, ParseState before) { /* empty */ }
         });
     }
 
@@ -233,7 +233,7 @@ public class CallbackTest {
             assertThat(token, is(equalTo(expectedFailureDefinitions.pop())));
         }
 
-        void assertAllHandled() {
+        public void assertAllHandled() {
             assertTrue(expectedSuccessOffsets.isEmpty());
             assertTrue(expectedSuccessDefinitions.isEmpty());
             assertTrue(expectedFailureOffsets.isEmpty());
@@ -255,7 +255,7 @@ public class CallbackTest {
             failureCount++;
         }
 
-        void assertCounts(final long expectedSuccessCount, final long expectedFailureCount) {
+        public void assertCounts(final long expectedSuccessCount, final long expectedFailureCount) {
             assertEquals(expectedSuccessCount, successCount);
             assertEquals(expectedFailureCount, failureCount);
         }

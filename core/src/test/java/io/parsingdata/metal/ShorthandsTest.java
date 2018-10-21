@@ -203,7 +203,7 @@ public class ShorthandsTest {
         assertEquals(DEF_B, seq.tokens.tail.head);
     }
 
-    final ParseState PARSE_STATE = createFromByteStream(DUMMY_STREAM).add(createParseValue("a", 126)).add(createParseValue("a", 84)).add(createParseValue("a", 42));
+    private final ParseState PARSE_STATE = createFromByteStream(DUMMY_STREAM).add(createParseValue("a", 126)).add(createParseValue("a", 84)).add(createParseValue("a", 42));
 
     @Test
     public void mapLeftWithSub() {

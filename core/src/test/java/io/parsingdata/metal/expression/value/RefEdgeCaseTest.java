@@ -38,7 +38,7 @@ public class RefEdgeCaseTest {
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
 
-    ParseState parseState;
+    private ParseState parseState;
 
     @Before
     public void before() {
