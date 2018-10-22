@@ -25,21 +25,14 @@ import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
-
-import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import io.parsingdata.metal.data.ParseState;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.UnaryValueExpression;
-import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Token;
 
 @RunWith(JUnit4.class)
@@ -57,17 +50,6 @@ public class ValueExpressionSemanticsTest {
     @Test
     public void catNoMatch() {
         assertFalse(cat.parse(env(stream(1, 2, 12, 12))).isPresent());
-    }
-
-    @Test
-    public void callback() {
-        final ParseState data = stream(1, 2, 3, 4);
-        def("a", 4, eq(new UnaryValueExpression(ref("a")) {
-            @Override
-            public Optional<Value> eval(Value value, ParseState parseState, Encoding encoding) {
-                return Optional.of(value);
-            }
-        })).parse(env(data, enc()));
     }
 
 }
