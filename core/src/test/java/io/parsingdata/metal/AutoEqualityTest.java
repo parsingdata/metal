@@ -259,7 +259,7 @@ public class AutoEqualityTest {
     @Parameter(2) public Object[] other;
 
     @Test
-    public void NotEqualsNull() {
+    public void notEqualsNull() {
         assertFalse(object.equals(null));
         assertFalse(other.equals(null));
         for (Object o : other) {

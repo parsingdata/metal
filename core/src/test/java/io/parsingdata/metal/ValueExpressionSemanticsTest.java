@@ -50,12 +50,12 @@ public class ValueExpressionSemanticsTest {
                                   def("c", con(2), eq(cat(ref("a"), ref("b")))));
 
     @Test
-    public void Cat() {
+    public void catWithMatch() {
         assertTrue(cat.parse(env(stream(1, 2, 1, 2))).isPresent());
     }
 
     @Test
-    public void CatNoMatch() {
+    public void catNoMatch() {
         assertFalse(cat.parse(env(stream(1, 2, 12, 12))).isPresent());
     }
 

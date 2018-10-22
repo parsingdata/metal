@@ -135,7 +135,7 @@ public class CallbackTest {
                     }
 
                     @Override
-                    public void handleFailure(Token token, ParseState before) {}
+                    public void handleFailure(Token token, ParseState before) { /* empty */ }
                 });
         final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }));
         assertTrue(repeatingSeq.parse(env(parseState, callbacks, enc())).isPresent());
