@@ -83,14 +83,6 @@ public class EqualityTest {
         seq(LINKED_LIST_1,
             sub(LINKED_LIST_1, con(0)));
 
-    @Test
-    public void cycleWithIdenticalTokens() {
-        final Optional<ParseState> result = LINKED_LIST_COMPOSED_IDENTICAL.parse(env(stream(0, 0, 1)));
-        assertTrue(result.isPresent());
-        assertEquals(1, getAllValues(result.get().order, "header").size);
-        assertEquals(2, getReferences(result.get().order).size);
-    }
-
     public static final Token LINKED_LIST_2 =
         seq("linkedlist",
             def("header", con(1), eq(con(0))),
@@ -102,6 +94,14 @@ public class EqualityTest {
     public static final Token LINKED_LIST_COMPOSED_EQUAL =
         seq(LINKED_LIST_1,
             sub(LINKED_LIST_2, con(0)));
+
+    @Test
+    public void cycleWithIdenticalTokens() {
+        final Optional<ParseState> result = LINKED_LIST_COMPOSED_IDENTICAL.parse(env(stream(0, 0, 1)));
+        assertTrue(result.isPresent());
+        assertEquals(1, getAllValues(result.get().order, "header").size);
+        assertEquals(2, getReferences(result.get().order).size);
+    }
 
     @Test
     public void cycleWithEqualTokens() {

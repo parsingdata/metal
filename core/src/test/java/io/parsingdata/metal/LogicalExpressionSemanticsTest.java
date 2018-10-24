@@ -41,6 +41,16 @@ import io.parsingdata.metal.util.ParameterizedParse;
 
 public class LogicalExpressionSemanticsTest extends ParameterizedParse {
 
+    private static final Token andEqGt = logicalExp(and(eqNum(ref("a")), gtNum(ref("b"))));
+    private static final Token orLtEq = logicalExp(or(ltNum(ref("a")), eqNum(ref("b"))));
+    private static final Token notAndNotEqNotGt = logicalExp(not(and(not(eqNum(ref("a"))), not(gtNum(ref("b"))))));
+
+    private static Token logicalExp(final LogicalExpression le) {
+        return seq(any("a"),
+            any("b"),
+            def("c", con(1), le));
+    }
+
     @Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
@@ -55,16 +65,6 @@ public class LogicalExpressionSemanticsTest extends ParameterizedParse {
             { "!(!(3 == 1) && !(3 > 2))", notAndNotEqNotGt, stream(1, 2, 3), enc(), true },
             { "!(!(2 == 1) && !(2 > 3))", notAndNotEqNotGt, stream(1, 3, 2), enc(), false }
         });
-    }
-
-    private static final Token andEqGt = logicalExp(and(eqNum(ref("a")), gtNum(ref("b"))));
-    private static final Token orLtEq = logicalExp(or(ltNum(ref("a")), eqNum(ref("b"))));
-    private static final Token notAndNotEqNotGt = logicalExp(not(and(not(eqNum(ref("a"))), not(gtNum(ref("b"))))));
-
-    private static Token logicalExp(final LogicalExpression le) {
-        return seq(any("a"),
-                   any("b"),
-                   def("c", con(1), le));
     }
 
 }

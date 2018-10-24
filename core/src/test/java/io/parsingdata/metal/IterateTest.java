@@ -39,6 +39,15 @@ import io.parsingdata.metal.util.ParameterizedParse;
 
 public class IterateTest extends ParameterizedParse {
 
+    private static final Token repNToken =
+        seq(any("n"),
+            repn(def("x", con(1), gtNum(con(1))), ref("n")),
+            def("f", con(1), eq(con(42))));
+
+    private static final Token repBrokenNToken =
+        seq(repn(any("x"), div(con(1), con(0))),
+            def("f", con(1), eq(con(42))));
+
     @Parameters(name = "{0} ({4})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
@@ -52,14 +61,5 @@ public class IterateTest extends ParameterizedParse {
             { "[0, 42], repN(x, 1/0), f", repBrokenNToken, stream(0, 42), enc(), false }
         });
     }
-
-    private static final Token repNToken =
-        seq(any("n"),
-            repn(def("x", con(1), gtNum(con(1))), ref("n")),
-            def("f", con(1), eq(con(42))));
-
-    private static final Token repBrokenNToken =
-        seq(repn(any("x"), div(con(1), con(0))),
-            def("f", con(1), eq(con(42))));
 
 }

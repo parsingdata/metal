@@ -45,6 +45,34 @@ import io.parsingdata.metal.util.ParameterizedParse;
 
 public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
 
+    private static final Token sequenceMatch2 = seq(any("a"),
+        eqRef("b", "a"));
+    private static final Token sequenceMatch3 = seq(sequenceMatch2,
+        eqRef("c", "a"));
+    private static final Token sequenceMatchTransitive3 = seq(sequenceMatch2,
+        eqRef("c", "b"));
+
+    private static Token refList(final String first, final String second, final ValueExpression exp) {
+        return seq(any(first),
+            any(second),
+            def("z", con(1), eq(exp)));
+    }
+
+    private static final Token refAny = any("a");
+
+    private static Token refMatch(final Expression pred) {
+        return
+            seq(repn(refAny, con(3)),
+                def("b", con(1), pred));
+    }
+
+    private static Token limitedSum(final int limit) {
+        return
+            seq(rep(def("a", con(1), not(eq(con(0))))),
+                def("zero", con(1), eq(con(0))),
+                def("sum", con(1), eq(fold(ref("a", con(limit)), Shorthand::add))));
+    }
+
     @Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
@@ -84,34 +112,6 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
             { "[1, 2, 3, 0, 6] a, a, a, 0, sum(ref(a, 3))", limitedSum(3), stream(1, 2, 3, 0, 6), enc(), true },
             { "[1, 2, 3, 0, 7] a, a, a, 0, sum(ref(a, 4))", limitedSum(4), stream(1, 2, 3, 0, 6), enc(), true }
         });
-    }
-
-    private static final Token sequenceMatch2 = seq(any("a"),
-                                                    eqRef("b", "a"));
-    private static final Token sequenceMatch3 = seq(sequenceMatch2,
-                                                    eqRef("c", "a"));
-    private static final Token sequenceMatchTransitive3 = seq(sequenceMatch2,
-                                                              eqRef("c", "b"));
-
-    private static Token refList(final String first, final String second, final ValueExpression exp) {
-        return seq(any(first),
-                   any(second),
-                   def("z", con(1), eq(exp)));
-    }
-
-    private static final Token refAny = any("a");
-
-    private static Token refMatch(final Expression pred) {
-        return
-            seq(repn(refAny, con(3)),
-                def("b", con(1), pred));
-    }
-
-    private static Token limitedSum(final int limit) {
-        return
-            seq(rep(def("a", con(1), not(eq(con(0))))),
-                def("zero", con(1), eq(con(0))),
-                def("sum", con(1), eq(fold(ref("a", con(limit)), Shorthand::add))));
     }
 
 }

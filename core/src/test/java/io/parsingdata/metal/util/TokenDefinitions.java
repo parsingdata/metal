@@ -28,9 +28,9 @@ import io.parsingdata.metal.token.Token;
 
 public class TokenDefinitions {
 
-    private TokenDefinitions() {}
-
     public static final ValueExpression EMPTY_VE = div(con(1), con(0)); // division by zero to wrap empty value
+
+    private TokenDefinitions() {}
 
     public static Token any(final String name) {
         return def(name, con(1));

@@ -67,6 +67,8 @@ public class CallbackTest {
 
     private long linkedListCount = 0;
 
+    private static final Token SIMPLE_SEQ = seq(any("a"), any("b"));
+
     @Test
     public void testHandleCallback() {
         final CountingCallback countingCallback = new CountingCallback();
@@ -82,8 +84,6 @@ public class CallbackTest {
         assertTrue(sequence.parse(env(parseState, callbacks, enc())).isPresent());
         countingCallback.assertCounts(4, 1);
     }
-
-    private static final Token SIMPLE_SEQ = seq(any("a"), any("b"));
 
     private Callbacks createCallbackList(Token token, final long... offsets) {
         return Callbacks.create().add(token, new Callback() {

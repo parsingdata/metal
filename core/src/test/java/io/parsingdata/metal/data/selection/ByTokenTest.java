@@ -73,6 +73,8 @@ public class ByTokenTest {
     private static final Token SEQ_SUB = seq(DEF1, sub(TWO_BYTES, ref("value1")), DEF2, sub(TWO_BYTES, ref("value2")));
     private static final Token REPN_DEF2 = repn(DEF2, con(2));
 
+    private static final Token SMALL_SEQ = seq(any("b"), any("c"));
+
     private static final Token MUT_REC_1 = seq(DEF1, new Token("", enc()) {
 
         @Override
@@ -243,16 +245,14 @@ public class ByTokenTest {
         assertTrue(items.tail.head.isValue());
     }
 
-    private final Token smallSeq = seq(any("b"), any("c"));
-
     @Test
     public void getAllRootsSingle() {
-        final Token topSeq = seq(any("a"), smallSeq);
+        final Token topSeq = seq(any("a"), SMALL_SEQ);
         final Optional<ParseState> result = topSeq.parse(env(stream(1, 2, 3)));
         assertTrue(result.isPresent());
-        final ImmutableList<ParseItem> seqItems = getAllRoots(result.get().order, smallSeq);
+        final ImmutableList<ParseItem> seqItems = getAllRoots(result.get().order, SMALL_SEQ);
         assertEquals(1, seqItems.size);
-        assertEquals(smallSeq, seqItems.head.getDefinition());
+        assertEquals(SMALL_SEQ, seqItems.head.getDefinition());
         final ParseValue c = seqItems.head.asGraph().head.asValue();
         assertEquals(3, c.asNumeric().intValueExact());
         assertEquals(2, c.slice.offset.intValueExact());
@@ -260,13 +260,13 @@ public class ByTokenTest {
 
     @Test
     public void getAllRootsMulti() {
-        final Token topSeq = seq(any("a"), smallSeq, smallSeq);
+        final Token topSeq = seq(any("a"), SMALL_SEQ, SMALL_SEQ);
         final Optional<ParseState> result = topSeq.parse(env(stream(1, 2, 3, 2, 3)));
         assertTrue(result.isPresent());
-        final ImmutableList<ParseItem> seqItems = getAllRoots(result.get().order, smallSeq);
+        final ImmutableList<ParseItem> seqItems = getAllRoots(result.get().order, SMALL_SEQ);
         assertEquals(2, seqItems.size);
-        assertEquals(smallSeq, seqItems.head.getDefinition());
-        assertEquals(smallSeq, seqItems.tail.head.getDefinition());
+        assertEquals(SMALL_SEQ, seqItems.head.getDefinition());
+        assertEquals(SMALL_SEQ, seqItems.tail.head.getDefinition());
         final ParseValue c1 = seqItems.head.asGraph().head.asValue();
         assertEquals(3, c1.asNumeric().intValueExact());
         final ParseValue c2 = seqItems.tail.head.asGraph().head.asValue();
@@ -284,12 +284,12 @@ public class ByTokenTest {
 
     @Test
     public void getAllRootsMultiSub() {
-        final Optional<ParseState> result = rep(seq(smallSeq, sub(smallSeq, CURRENT_OFFSET))).parse(env(stream(1, 2, 1, 2, 1, 2, 1, 2)));
+        final Optional<ParseState> result = rep(seq(SMALL_SEQ, sub(SMALL_SEQ, CURRENT_OFFSET))).parse(env(stream(1, 2, 1, 2, 1, 2, 1, 2)));
                                                                                            /* 1: +--------+
                                                                                            /* 2:       +--------+
                                                                                            /* 3:             +--------+ */
         assertTrue(result.isPresent());
-        final ImmutableList<ParseItem> seqItems = getAllRoots(result.get().order, smallSeq);
+        final ImmutableList<ParseItem> seqItems = getAllRoots(result.get().order, SMALL_SEQ);
         assertEquals(6, seqItems.size); // Three regular and three subs.
         final Set<ParseItem> items = makeSet(seqItems);
         assertEquals(4, items.size()); // Check that there are two duplicates.
