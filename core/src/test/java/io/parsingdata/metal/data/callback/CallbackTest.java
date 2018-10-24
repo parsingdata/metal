@@ -150,7 +150,7 @@ public class CallbackTest {
             }
 
             @Override
-            public void handleFailure(Token token, ParseState before) {}
+            public void handleFailure(Token token, ParseState before) { /* empty */ }
         });
         final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 0, 3, 1, 0, 0, 1 }));
         assertTrue(SubStructTest.LINKED_LIST.parse(env(parseState, callbacks, enc())).isPresent());
