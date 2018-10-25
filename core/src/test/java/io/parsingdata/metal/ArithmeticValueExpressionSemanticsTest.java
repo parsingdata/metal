@@ -46,6 +46,28 @@ import io.parsingdata.metal.util.ParameterizedParse;
 
 public class ArithmeticValueExpressionSemanticsTest extends ParameterizedParse {
 
+    private static final Token add = binaryValueExpressionToken(add(ref("a"), ref("b")), 1);
+    private static final Token div = binaryValueExpressionToken(div(ref("a"), ref("b")), 1);
+    private static final Token mul = binaryValueExpressionToken(mul(ref("a"), ref("b")), 1);
+    private static final Token mul2 = binaryValueExpressionToken(mul(ref("a"), ref("b")), 2);
+    private static final Token sub = binaryValueExpressionToken(sub(ref("a"), ref("b")), 1);
+    private static final Token mod = binaryValueExpressionToken(mod(ref("a"), ref("b")), 1);
+    private static final Token neg = unaryValueExpressionToken(neg(ref("a")));
+
+    private static Token singleToken(final String firstName, final String secondName, final int resultSize, final ValueExpression valueExpression) {
+        return seq(any(firstName),
+            def(secondName, con(resultSize), eqNum(valueExpression)));
+    }
+
+    private static Token binaryValueExpressionToken(final BinaryValueExpression binaryValueExpression, final int resultSize) {
+        return seq(any("a"),
+            singleToken("b", "c", resultSize, binaryValueExpression));
+    }
+
+    private static Token unaryValueExpressionToken(final UnaryValueExpression unaryValueExpression) {
+        return singleToken("a", "b", 1, unaryValueExpression);
+    }
+
     @Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
@@ -94,28 +116,6 @@ public class ArithmeticValueExpressionSemanticsTest extends ParameterizedParse {
             { "[signed] -(4) == 4", neg, stream(4, 4), signed(), false },
             { "[signed] -(-5) == -5", neg, stream(-5, -5), signed(), false }
         });
-    }
-
-    private static final Token add = binaryValueExpressionToken(add(ref("a"), ref("b")), 1);
-    private static final Token div = binaryValueExpressionToken(div(ref("a"), ref("b")), 1);
-    private static final Token mul = binaryValueExpressionToken(mul(ref("a"), ref("b")), 1);
-    private static final Token mul2 = binaryValueExpressionToken(mul(ref("a"), ref("b")), 2);
-    private static final Token sub = binaryValueExpressionToken(sub(ref("a"), ref("b")), 1);
-    private static final Token mod = binaryValueExpressionToken(mod(ref("a"), ref("b")), 1);
-    private static final Token neg = unaryValueExpressionToken(neg(ref("a")));
-
-    private static Token singleToken(final String firstName, final String secondName, final int resultSize, final ValueExpression valueExpression) {
-        return seq(any(firstName),
-                   def(secondName, con(resultSize), eqNum(valueExpression)));
-    }
-
-    private static Token binaryValueExpressionToken(final BinaryValueExpression binaryValueExpression, final int resultSize) {
-        return seq(any("a"),
-                   singleToken("b", "c", resultSize, binaryValueExpression));
-    }
-
-    private static Token unaryValueExpressionToken(final UnaryValueExpression unaryValueExpression) {
-        return singleToken("a", "b", 1, unaryValueExpression);
     }
 
 }

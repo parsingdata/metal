@@ -37,6 +37,10 @@ import io.parsingdata.metal.expression.value.Value;
 @RunWith(Parameterized.class)
 public class ConcatenatedValueSourceTest {
 
+    @Parameter public String description;
+    @Parameter(1) public int offset;
+    @Parameter(2) public int length;
+
     public static final ConcatenatedValueSource cvs = ConcatenatedValueSource.create(createValues()).get();
 
     private static ImmutableList<Optional<Value>> createValues() {
@@ -48,10 +52,6 @@ public class ConcatenatedValueSourceTest {
             .add(Optional.of(createFromBytes(new byte[] { 15, 16, 17, 18, 19 }, enc())))
             .add(Optional.of(createFromBytes(new byte[] { 20, 21, 22, 23, 24 }, enc())));
     }
-
-    @Parameter public String description;
-    @Parameter(1) public int offset;
-    @Parameter(2) public int length;
 
     @Parameterized.Parameters(name="{0}")
     public static Collection<Object[]> data() {

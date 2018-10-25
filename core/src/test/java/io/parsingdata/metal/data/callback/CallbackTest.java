@@ -67,6 +67,8 @@ public class CallbackTest {
 
     private long linkedListCount = 0;
 
+    private static final Token SIMPLE_SEQ = seq(any("a"), any("b"));
+
     @Test
     public void testHandleCallback() {
         final CountingCallback countingCallback = new CountingCallback();
@@ -83,8 +85,6 @@ public class CallbackTest {
         countingCallback.assertCounts(4, 1);
     }
 
-    private static final Token SIMPLE_SEQ = seq(any("a"), any("b"));
-
     private Callbacks createCallbackList(Token token, final long... offsets) {
         return Callbacks.create().add(token, new Callback() {
 
@@ -97,7 +97,7 @@ public class CallbackTest {
             }
 
             @Override
-            public void handleFailure(Token token, ParseState before) {}
+            public void handleFailure(Token token, ParseState before) { /* empty */ }
         });
     }
 
@@ -135,7 +135,7 @@ public class CallbackTest {
                     }
 
                     @Override
-                    public void handleFailure(Token token, ParseState before) {}
+                    public void handleFailure(Token token, ParseState before) { /* empty */ }
                 });
         final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 1, 2, 3, 4 }));
         assertTrue(repeatingSeq.parse(env(parseState, callbacks, enc())).isPresent());
@@ -150,7 +150,7 @@ public class CallbackTest {
             }
 
             @Override
-            public void handleFailure(Token token, ParseState before) {}
+            public void handleFailure(Token token, ParseState before) { /* empty */ }
         });
         final ParseState parseState = createFromByteStream(new InMemoryByteStream(new byte[] { 0, 3, 1, 0, 0, 1 }));
         assertTrue(SubStructTest.LINKED_LIST.parse(env(parseState, callbacks, enc())).isPresent());
@@ -233,7 +233,7 @@ public class CallbackTest {
             assertThat(token, is(equalTo(expectedFailureDefinitions.pop())));
         }
 
-        void assertAllHandled() {
+        public void assertAllHandled() {
             assertTrue(expectedSuccessOffsets.isEmpty());
             assertTrue(expectedSuccessDefinitions.isEmpty());
             assertTrue(expectedFailureOffsets.isEmpty());
@@ -255,7 +255,7 @@ public class CallbackTest {
             failureCount++;
         }
 
-        void assertCounts(final long expectedSuccessCount, final long expectedFailureCount) {
+        public void assertCounts(final long expectedSuccessCount, final long expectedFailureCount) {
             assertEquals(expectedSuccessCount, successCount);
             assertEquals(expectedFailureCount, failureCount);
         }

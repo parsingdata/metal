@@ -78,7 +78,7 @@ public final class GUID {
     private static ValueExpression six(final String part, final Encoding encoding) {
         return encode(Arrays.copyOfRange(
             allocate(8)
-                .putLong(0, Long.parseLong(part, 16))
+                .putLong(0, parseLong(part, 16))
                 .array(),
             2, 8), encoding);
     }

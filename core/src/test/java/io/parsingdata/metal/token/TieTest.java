@@ -135,7 +135,7 @@ public class TieTest {
     }
 
     private byte[] flipBlocks(byte[] input, int blockSize) {
-        if ((input.length % (blockSize * 2)) != 0) { throw new RuntimeException("Not supported."); }
+        if ((input.length % (blockSize * 2)) != 0) { throw new UnsupportedOperationException("Not supported."); }
         final byte[] output = input.clone();
         for (int i = 0; i < output.length; i+= blockSize * 2) {
             for (int j= 0; j < blockSize; j++) {

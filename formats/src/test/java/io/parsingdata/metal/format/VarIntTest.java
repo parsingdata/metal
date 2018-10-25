@@ -41,6 +41,18 @@ import io.parsingdata.metal.util.ParameterizedParse;
 
 public class VarIntTest extends ParameterizedParse {
 
+    public static Token varIntAndValue(final int size) {
+        return
+            seq(varInt("vint_name"), post(def("full_name", con(size)), eqNum(decodeVarInt(last(ref("vint_name"))))));
+    }
+
+    public static final Token REPN_AUTO_SIZE_VARINT =
+        repn(
+            seq(
+                varInt("varInt"),
+                post(def("decoded", len(decodeVarInt(last(ref("varInt"))))), eq(decodeVarInt(last(ref("varInt")))))
+            ), con(4));
+
     @Parameterized.Parameters(name = "{0} ({4})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
@@ -51,17 +63,5 @@ public class VarIntTest extends ParameterizedParse {
             { "[63, 63, 185, 10, 5, 57, 127, 127, 160, 141, 6, 1, 134, 160] 4x(varint) == 4x(decoded)", REPN_AUTO_SIZE_VARINT, stream(63, 63, 185, 10, 5, 57, 127, 127, 160, 141, 6, 1, 134, 160), enc(), true }
         });
     }
-
-    public static Token varIntAndValue(final int size) {
-        return
-        seq(varInt("vint_name"), post(def("full_name", con(size)), eqNum(decodeVarInt(last(ref("vint_name"))))));
-    }
-
-    public static final Token REPN_AUTO_SIZE_VARINT =
-        repn(
-            seq(
-                varInt("varInt"),
-                post(def("decoded", len(decodeVarInt(last(ref("varInt"))))), eq(decodeVarInt(last(ref("varInt")))))
-            ), con(4));
 
 }

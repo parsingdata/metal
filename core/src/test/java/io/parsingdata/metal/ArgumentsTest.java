@@ -78,7 +78,11 @@ public class ArgumentsTest {
     final private static ValueExpression VALID_VE = con(1);
     final private static BinaryOperator<ValueExpression> VALID_REDUCER = (left, right) -> null;
     final private static Expression VALID_E = (parseState, encoding) -> false;
-    final private static Token VALID_T = new Token("", null) { @Override protected Optional<ParseState> parseImpl(final Environment environment) { return Optional.empty(); } };
+    final private static Token VALID_T = new Token("", null) {
+        @Override protected Optional<ParseState> parseImpl(final Environment environment) {
+            return Optional.empty();
+        }
+    };
 
     private final Class<?> _class;
     private final Object[] _arguments;

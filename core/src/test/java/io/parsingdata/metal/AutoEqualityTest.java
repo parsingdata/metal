@@ -124,6 +124,12 @@ import io.parsingdata.metal.util.InMemoryByteStream;
 @RunWith(Parameterized.class)
 public class AutoEqualityTest {
 
+    @Parameter public Object object;
+    @Parameter(1) public Object same;
+    @Parameter(2) public Object[] other;
+
+    public static final Object OTHER_TYPE = new Object() {};
+
     public static final ByteStream DUMMY_STREAM = new ByteStream() {
         @Override public byte[] read(BigInteger offset, int length) { return new byte[0]; }
         @Override public boolean isAvailable(BigInteger offset, int length) { return false; }
@@ -252,14 +258,8 @@ public class AutoEqualityTest {
         return output;
     }
 
-    public static final Object OTHER_TYPE = new Object() {};
-
-    @Parameter public Object object;
-    @Parameter(1) public Object same;
-    @Parameter(2) public Object[] other;
-
     @Test
-    public void NotEqualsNull() {
+    public void notEqualsNull() {
         assertFalse(object.equals(null));
         assertFalse(other.equals(null));
         for (Object o : other) {

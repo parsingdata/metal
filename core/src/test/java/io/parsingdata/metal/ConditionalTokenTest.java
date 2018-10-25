@@ -44,6 +44,14 @@ import io.parsingdata.metal.util.ParameterizedParse;
 
 public class ConditionalTokenTest extends ParameterizedParse {
 
+    private static final Token preToken = seq(any("a"),
+        opt(pre(any("b"), eqNum(ref("a"), con(1)))),
+        def("c", con(1), eqNum(con(3))));
+
+    private static final Token whileToken = seq(any("size"),
+        whl(any("value"), ltNum(CURRENT_OFFSET, add(ref("size"), add(offset(last(ref("size"))), con(1))))),
+        def("footer", con(1), eq(con(0xff))));
+
     @Parameters(name = "{0} ({4})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
@@ -57,13 +65,5 @@ public class ConditionalTokenTest extends ParameterizedParse {
             { "[0, 0, -1] a (a x any) -1(error)", whileToken, stream(0, 0, -1), enc(), false }
         });
     }
-
-    private static final Token preToken = seq(any("a"),
-                                              opt(pre(any("b"), eqNum(ref("a"), con(1)))),
-                                              def("c", con(1), eqNum(con(3))));
-    
-    private static final Token whileToken = seq(any("size"),
-                                                whl(any("value"), ltNum(CURRENT_OFFSET, add(ref("size"), add(offset(last(ref("size"))), con(1))))),
-                                                def("footer", con(1), eq(con(0xff))));
 
 }

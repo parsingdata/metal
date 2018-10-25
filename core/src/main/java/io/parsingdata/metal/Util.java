@@ -33,9 +33,9 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 public final class Util {
 
-    private Util() {}
-
     final private static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray(); // Private because array content is mutable.
+
+    private Util() {}
 
     public static <T>T checkNotNull(final T argument, final String name) {
         if (argument == null) {

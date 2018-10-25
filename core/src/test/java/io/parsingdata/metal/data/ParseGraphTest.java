@@ -43,6 +43,9 @@ import io.parsingdata.metal.token.Token;
 
 public class ParseGraphTest {
 
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
+
     private final Token t = any("t");
 
     private final ParseGraph pg;
@@ -203,9 +206,6 @@ public class ParseGraphTest {
     public void testLongToString() {
         assertThat(pgl.toString(), is("pg(pg(pval(f:0x66),pg(terminator:Def),false),pg(pval(e:0x65),pg(pg(pg(pval(d:0x64),pg(terminator:Def),false),pg(pval(c:0x63),pg(pg(terminator:Def),pg(pg(pval(b:0x62),pg(terminator:Def),false),pg(terminator:Def),false),false),false),false),pg(pval(a:0x61),pg(EMPTY),false),false),false),false)"));
     }
-
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void testNone() {

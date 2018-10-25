@@ -45,6 +45,33 @@ import io.parsingdata.metal.util.ParameterizedParse;
 
 public class ReducersTest extends ParameterizedParse {
 
+    private final static Token reduceAddA = token(1, eq(fold(ref("a"), Shorthand::add)));
+    private final static Token reduceAddOffsetA = token(1, eq(fold(offset(ref("a")), Shorthand::add)));
+    private final static Token reduceAddAInit0 = token(1, eq(fold(ref("a"), Shorthand::add, con(0))));
+    private final static Token reduceAddAInit1 = token(1, eq(fold(ref("a"), Shorthand::add, con(1))));
+    private final static Token reduceMulA = token(1, eq(fold(ref("a"), Shorthand::mul)));
+    private final static Token reduceAllAplusMulA = token(1, eq(add(fold(ref("a"), Shorthand::add), fold(ref("a"), Shorthand::mul))));
+    private final static Token reduceCatA = token(3, eq(fold(ref("a"), Shorthand::cat)));
+    private final static Token reduceCatAToNumDefBEPostBE = token(3, eqNum(fold(ref("a"), Shorthand::cat)), enc(), enc());
+    private final static Token reduceCatAToNumDefBEPostLE = token(3, eqNum(fold(ref("a"), Shorthand::cat)), enc(), le());
+    private final static Token reduceCatAToNumDefLEPostBE = token(3, eqNum(fold(ref("a"), Shorthand::cat)), le(), enc());
+    private final static Token reduceCatAToNumDefLEPostLE = token(3, eqNum(fold(ref("a"), Shorthand::cat)), le(), le());
+    private final static Token foldLeftSubA = token(1, eq(foldLeft(ref("a"), Shorthand::sub)));
+    private final static Token foldLeftSubAInit2 = token(1, eq(foldLeft(ref("a"), Shorthand::sub, con(2))));
+    private final static Token foldRightSubA = token(1, eq(foldRight(ref("a"), Shorthand::sub)));
+    private final static Token foldRightSubAInit2 = token(1, eq(foldRight(ref("a"), Shorthand::sub, con(2))));
+
+    private static Token token(final long size, final Expression pred, final Encoding encDef, final Encoding encPost) {
+        return seq(any("a"),
+            any("a"),
+            any("a"),
+            post(def("b", con(size), encDef), pred, encPost));
+    }
+
+    private static Token token(final long size, final Expression pred) {
+        return token(size, pred, enc(), enc());
+    }
+
     @Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
@@ -74,33 +101,6 @@ public class ReducersTest extends ParameterizedParse {
             { "[10, 3, 2, 9] a, a, a, subAll(a) right", foldRightSubA, stream(10, 3, 2, 9), enc(), true },
             { "[10, 3, 2, 7] a, a, a, subAll(a, 2) right", foldRightSubAInit2, stream(10, 3, 2, 7), enc(), true }
         });
-    }
-
-    private final static Token reduceAddA = token(1, eq(fold(ref("a"), Shorthand::add)));
-    private final static Token reduceAddOffsetA = token(1, eq(fold(offset(ref("a")), Shorthand::add)));
-    private final static Token reduceAddAInit0 = token(1, eq(fold(ref("a"), Shorthand::add, con(0))));
-    private final static Token reduceAddAInit1 = token(1, eq(fold(ref("a"), Shorthand::add, con(1))));
-    private final static Token reduceMulA = token(1, eq(fold(ref("a"), Shorthand::mul)));
-    private final static Token reduceAllAplusMulA = token(1, eq(add(fold(ref("a"), Shorthand::add), fold(ref("a"), Shorthand::mul))));
-    private final static Token reduceCatA = token(3, eq(fold(ref("a"), Shorthand::cat)));
-    private final static Token reduceCatAToNumDefBEPostBE = token(3, eqNum(fold(ref("a"), Shorthand::cat)), enc(), enc());
-    private final static Token reduceCatAToNumDefBEPostLE = token(3, eqNum(fold(ref("a"), Shorthand::cat)), enc(), le());
-    private final static Token reduceCatAToNumDefLEPostBE = token(3, eqNum(fold(ref("a"), Shorthand::cat)), le(), enc());
-    private final static Token reduceCatAToNumDefLEPostLE = token(3, eqNum(fold(ref("a"), Shorthand::cat)), le(), le());
-    private final static Token foldLeftSubA = token(1, eq(foldLeft(ref("a"), Shorthand::sub)));
-    private final static Token foldLeftSubAInit2 = token(1, eq(foldLeft(ref("a"), Shorthand::sub, con(2))));
-    private final static Token foldRightSubA = token(1, eq(foldRight(ref("a"), Shorthand::sub)));
-    private final static Token foldRightSubAInit2 = token(1, eq(foldRight(ref("a"), Shorthand::sub, con(2))));
-
-    private static Token token(final long size, final Expression pred, final Encoding encDef, final Encoding encPost) {
-        return seq(any("a"),
-                   any("a"),
-                   any("a"),
-                   post(def("b", con(size), encDef), pred, encPost));
-    }
-
-    private static Token token(final long size, final Expression pred) {
-        return token(size, pred, enc(), enc());
     }
 
 }

@@ -28,16 +28,16 @@ import io.parsingdata.metal.token.Token;
 
 public class TokenDefinitions {
 
-    private TokenDefinitions() {}
-
     public static final ValueExpression EMPTY_VE = div(con(1), con(0)); // division by zero to wrap empty value
+
+    private TokenDefinitions() {}
 
     public static Token any(final String name) {
         return def(name, con(1));
     }
 
     public static Token eq(final String name, final int value) {
-        return Shorthand.def(name, con(1), Shorthand.eq(con(value)));
+        return def(name, con(1), Shorthand.eq(con(value)));
     }
 
     public static Token notEq(final String name, final int value) {

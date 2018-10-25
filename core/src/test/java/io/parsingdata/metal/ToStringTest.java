@@ -207,8 +207,8 @@ public class ToStringTest {
 
     private Callback makeCallback(final String name) {
         return new Callback() {
-            @Override public void handleSuccess(final Token token, final ParseState before, final ParseState after) {}
-            @Override public void handleFailure(Token token, ParseState before) {}
+            @Override public void handleSuccess(final Token token, final ParseState before, final ParseState after) { /* empty */ }
+            @Override public void handleFailure(Token token, ParseState before) { /* empty */ }
             @Override public String toString() { return name; }
         };
     }
