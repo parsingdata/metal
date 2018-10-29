@@ -28,12 +28,9 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static io.parsingdata.metal.util.TokenDefinitions.eq;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import io.parsingdata.metal.token.Token;
 
-@RunWith(JUnit4.class)
 public class BackTrackOffsetTest {
 
     private final Token _backTrackChoice = cho(seq(any("a"),
