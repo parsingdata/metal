@@ -27,12 +27,9 @@ import static io.parsingdata.metal.util.TokenDefinitions.eq;
 import static io.parsingdata.metal.util.TokenDefinitions.notEq;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import io.parsingdata.metal.token.Token;
 
-@RunWith(JUnit4.class)
 public class ReadUntilTest {
 
     private final Token _readUntil = seq(rep(notEq("other", 42)),

@@ -26,12 +26,9 @@ import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import io.parsingdata.metal.token.Token;
 
-@RunWith(JUnit4.class)
 public class SimpleTest {
 
     private Token buildSimpleToken(final String name, final int size, final int predicate) {

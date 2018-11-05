@@ -30,12 +30,9 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import io.parsingdata.metal.token.Token;
 
-@RunWith(JUnit4.class)
 public class ValueExpressionSemanticsTest {
 
     private final Token cat = seq(any("a"),
