@@ -3,6 +3,7 @@
 A Java library for parsing binary data formats, using declarative descriptions.
 
 [![Build Status](https://travis-ci.com/parsingdata/metal.svg?branch=master)](https://travis-ci.com/parsingdata/metal)
+[![Build status](https://ci.appveyor.com/api/projects/status/69hk2llxjjyatuyq/branch/master?svg=true)](https://ci.appveyor.com/project/parsingdata/metal/branch/master)
 [![codecov.io](https://codecov.io/github/parsingdata/metal/coverage.svg?branch=master)](https://codecov.io/github/parsingdata/metal?branch=master)
 [![CodeFactor](https://www.codefactor.io/repository/github/parsingdata/metal/badge)](https://www.codefactor.io/repository/github/parsingdata/metal)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/813955d55dbf49ceb3ab75bcfdecde30)](https://www.codacy.com/app/parsingdata/metal?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=parsingdata/metal&amp;utm_campaign=Badge_Grade)
