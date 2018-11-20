@@ -38,16 +38,16 @@ import io.parsingdata.metal.token.Token;
 public class LocalReferenceTest {
 
     private static final Token checkedRep =
-        seq("CheckedREP",
+        seq("checkedRep",
             def("magic", con(1), eq(con(42))),
             rep("items",
-                def("tens", con(1), eq(con(10)))
+                def("ten", con(1), eq(con(10)))
             ),
-            def("tensCount", con(1), eqNum(count(ref("tens"))))
+            def("tenCount", con(1), eqNum(count(ref("ten"))))
         );
 
     private static final Token repTwice =
-        seq("Container",
+        seq("container",
             checkedRep,
             checkedRep
     );
