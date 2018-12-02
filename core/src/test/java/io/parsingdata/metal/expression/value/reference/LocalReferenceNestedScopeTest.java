@@ -73,8 +73,13 @@ public class LocalReferenceNestedScopeTest {
     }
 
     @Test
-    public void nestedScopesCalculated() {
+    public void testNestedScopesCalculated() {
         nestedScopes(eq(nth(ref("left"), sub(count(ref("left")), count(ref("right"))))));
     }
+
+//    @Test
+//    public void testNestedScopesLocalReferenced() {
+//        nestedScopes(eq(last(lref("left"))));
+//    }
 
 }

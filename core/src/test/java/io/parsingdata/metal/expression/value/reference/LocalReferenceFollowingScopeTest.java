@@ -21,9 +21,12 @@ import static io.parsingdata.metal.Shorthand.count;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.eqNum;
+import static io.parsingdata.metal.Shorthand.fold;
+import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
@@ -32,32 +35,46 @@ import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Test;
 
+import io.parsingdata.metal.Shorthand;
 import io.parsingdata.metal.data.ParseState;
+import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.token.Token;
 
 public class LocalReferenceFollowingScopeTest {
 
-    private static final Token checkedRep =
-        seq("checkedRep",
-            def("magic", con(1), eq(con(42))),
-            rep("items",
-                def("ten", con(1), eq(con(10)))
-            ),
-            def("tenCount", con(1), eqNum(count(ref("ten"))))
-        );
+    private static Token followingScope(final Expression tenCountExpression) {
+        return
+            seq("checkedRep",
+                def("magic", con(1), eq(con(42))),
+                rep("items",
+                    def("ten", con(1), eq(con(10)))
+                ),
+                def("tenCount", con(1), tenCountExpression)
+            );
+    }
 
-    private static final Token repTwice =
-        seq("container",
-            checkedRep,
-            checkedRep
-    );
+    private static Token topLevelFollowingScopes(final Expression tenCountExpression) {
+        return
+            seq("container",
+                followingScope(tenCountExpression),
+                followingScope(tenCountExpression)
+            );
+    }
 
-    // Currently fails, should be resolved by implementing #250.
-    @Test
-    public void testLocalCount() {
-        Optional<ParseState> result = repTwice.parse(env(stream(42, 10, 10, 2, 42, 10, 10, 10, 3)));
+    public void followingScopes(final Expression tenCountExpression) {
+        Optional<ParseState> result = topLevelFollowingScopes(tenCountExpression).parse(env(stream(42, 10, 10, 2, 42, 10, 10, 10, 3)));
         Assert.assertTrue(result.isPresent());
         Assert.assertEquals(9, result.get().offset.intValueExact());
     }
+
+    @Test
+    public void testFollowingScopesCalculated() {
+        followingScopes(eqNum(sub(count(ref("ten")), sub(fold(ref("tenCount"), Shorthand::add), last(ref("tenCount"))))));
+    }
+
+//    @Test
+//    public void testFollowingScopesLocalReferenced() {
+//        followingScopes(eqNum(count(lref("ten"))));
+//    }
 
 }
