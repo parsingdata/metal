@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal;
+package io.parsingdata.metal.expression.value.reference;
 
 import static java.math.BigInteger.ONE;
 
@@ -43,31 +43,31 @@ import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.token.Token;
 
-public class ScopeTest {
+public class LocalReferenceNestedScopeTest {
 
-    private Token nested(final Expression rightExpression) {
+    private Token nestedScope(final Expression rightExpression) {
         return
-            seq("nested",
+            seq("nestedScope",
                 def("left", 1),
                 token("nestedOrTerminator"),
                 def("right", 1, rightExpression)
         );
     }
 
-    private Token formatNestedScopes(final Expression rightExpression) {
+    private Token topLevelNestedScopes(final Expression rightExpression) {
         return
             seq(
-                // We need to parse this cho with a "terminator" match before we attempt to parse "nested"
+                // We need to parse this cho with a "terminator" match before we attempt to parse "nestedScope"
                 // because of how TokenRef works, but this is just a workaround to simplify the test code.
                 cho("nestedOrTerminator",
-                    nested(rightExpression),
+                    nestedScope(rightExpression),
                     def("terminator", 1, eq(con(42)))),
-                nested(rightExpression)
+                nestedScope(rightExpression)
         );
     }
 
     private void nestedScopes(final Expression rightExpression) {
-        Optional<ParseState> parseState = formatNestedScopes(rightExpression).parse(env(stream(42, 1, 2, 3, 42, 3, 2, 1), enc()));
+        Optional<ParseState> parseState = topLevelNestedScopes(rightExpression).parse(env(stream(42, 1, 2, 3, 42, 3, 2, 1), enc()));
         assertTrue(parseState.isPresent());
         assertFalse("The test has not parsed the whole stream. It ended at offset " + parseState.get().offset + ".", parseState.get().slice(ONE).isPresent());
     }

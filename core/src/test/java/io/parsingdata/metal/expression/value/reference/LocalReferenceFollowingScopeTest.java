@@ -35,7 +35,7 @@ import org.junit.Test;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.token.Token;
 
-public class LocalReferenceTest {
+public class LocalReferenceFollowingScopeTest {
 
     private static final Token checkedRep =
         seq("checkedRep",
