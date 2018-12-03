@@ -61,7 +61,7 @@ public class LocalReferenceFollowingScopeTest {
             );
     }
 
-    public void followingScopes(final Expression tenCountExpression) {
+    private void followingScopes(final Expression tenCountExpression) {
         Optional<ParseState> result = topLevelFollowingScopes(tenCountExpression).parse(env(stream(42, 10, 10, 2, 42, 10, 10, 10, 3)));
         Assert.assertTrue(result.isPresent());
         Assert.assertEquals(9, result.get().offset.intValueExact());
