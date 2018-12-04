@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal;
+package io.parsingdata.metal.expression.value.reference;
 
 import static java.math.BigInteger.ONE;
 
@@ -40,38 +40,46 @@ import java.util.Optional;
 import org.junit.Test;
 
 import io.parsingdata.metal.data.ParseState;
+import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.token.Token;
 
-public class ScopeTest {
+public class LocalReferenceNestedScopeTest {
 
-    private final Token nested =
-        seq("nested",
-            def("left", 1),
-            token("nestedOrTerminator"),
-            def("right", 1, eq(nth(ref("left"), sub(count(ref("left")), count(ref("right"))))))
+    private Token nestedScope(final Expression rightExpression) {
+        return
+            seq("nestedScope",
+                def("left", 1),
+                token("nestedOrTerminator"),
+                def("right", 1, rightExpression)
         );
+    }
 
-    private final Token terminator =
-        def("terminator", 1, eq(con(42)));
-
-    private final Token nestedOrTerminator =
-        cho("nestedOrTerminator",
-            nested,
-            terminator);
-
-    private final Token format =
-        seq(
-            // We need to parse "nestedOrTerminator" with a "terminator" match before we attempt to parse "nested"
-            // because of how TokenRef works, but this is just a workaround to simplify the test code.
-            nestedOrTerminator,
-            nested
+    private Token topLevelNestedScopes(final Expression rightExpression) {
+        return
+            seq(
+                // We need to parse this cho with a "terminator" match before we attempt to parse "nestedScope"
+                // because of how TokenRef works, but this is just a workaround to simplify the test code.
+                cho("nestedOrTerminator",
+                    nestedScope(rightExpression),
+                    def("terminator", 1, eq(con(42)))),
+                nestedScope(rightExpression)
         );
+    }
 
-    @Test
-    public void nestedScopes() {
-        Optional<ParseState> parseState = format.parse(env(stream(42, 1, 2, 3, 42, 3, 2, 1), enc()));
+    private void nestedScopes(final Expression rightExpression) {
+        Optional<ParseState> parseState = topLevelNestedScopes(rightExpression).parse(env(stream(42, 1, 2, 3, 42, 3, 2, 1), enc()));
         assertTrue(parseState.isPresent());
         assertFalse("The test has not parsed the whole stream. It ended at offset " + parseState.get().offset + ".", parseState.get().slice(ONE).isPresent());
     }
+
+    @Test
+    public void testNestedScopesCalculated() {
+        nestedScopes(eq(nth(ref("left"), sub(count(ref("left")), count(ref("right"))))));
+    }
+
+//    @Test
+//    public void testNestedScopesLocalReferenced() {
+//        nestedScopes(eq(last(lref("left"))));
+//    }
 
 }
