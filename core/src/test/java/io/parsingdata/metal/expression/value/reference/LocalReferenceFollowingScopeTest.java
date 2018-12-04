@@ -16,6 +16,9 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.count;
 import static io.parsingdata.metal.Shorthand.def;
@@ -32,7 +35,6 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.util.Optional;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import io.parsingdata.metal.Shorthand;
@@ -63,8 +65,8 @@ public class LocalReferenceFollowingScopeTest {
 
     private void followingScopes(final Expression tenCountExpression) {
         Optional<ParseState> result = topLevelFollowingScopes(tenCountExpression).parse(env(stream(42, 10, 10, 2, 42, 10, 10, 10, 3)));
-        Assert.assertTrue(result.isPresent());
-        Assert.assertEquals(9, result.get().offset.intValueExact());
+        assertTrue(result.isPresent());
+        assertEquals(9, result.get().offset.intValueExact());
     }
 
     @Test
