@@ -46,7 +46,7 @@ public class ConstantSource extends Source {
 
     @Override
     protected boolean isAvailable(final BigInteger offset, final BigInteger length) {
-        return checkNotNegative(length, "length").add((checkNotNegative(offset, "offset"))).compareTo(BigInteger.valueOf(data.length)) <= 0;
+        return checkNotNegative(length, "length").add(checkNotNegative(offset, "offset")).compareTo(BigInteger.valueOf(data.length)) <= 0;
     }
 
     @Override
