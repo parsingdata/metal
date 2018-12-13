@@ -4,6 +4,7 @@ sudo: false # faster builds
 addons:
   sonarcloud:
     organization: "parsingdata"
+    projectKey: "parsingdata_metal"
 
 jdk:
   - oraclejdk8
