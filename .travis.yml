@@ -4,7 +4,6 @@ sudo: false # faster builds
 addons:
   sonarcloud:
     organization: "parsingdata"
-    projectKey: "parsingdata_metal"
 
 jdk:
   - oraclejdk8
@@ -12,6 +11,6 @@ jdk:
 
 before_install: pip install --user codecov
 
-script: mvn clean verify sonar:sonar
+script: mvn clean verify sonar:sonar -Dsonar.projectKey=parsingdata_metal
 
 after_success: codecov
