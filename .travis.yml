@@ -1,16 +1,18 @@
 language: java
 sudo: false # faster builds
 
-install: mvn clean install -DskipTests
-
-script: mvn clean verify
+addons:
+  sonarcloud:
+    organization: "parsingdata"
+    token:
+      secure: "OnPa4PdHvied13C0/uESBF7WxcuUxtVV4pbhjWu49cE9bABAuzwdFIHJWm/mArIVMymb6uZu7Ypl83CYOG3NGm7TBIs/jbp0bzw4NtZZD4FKnxhNewqkOdcJ+cvuZ7fyVRJN5xf9rdgivlJCKY6hrtxxOtS991yagHXFACPr5zo3DGFhq79BwE6JD9PLNSSXgzE1Iq0XAyty8sVuTALP4Cj5pWC/5rN4FwxyJOVwT19r7b3hYHsDhqpAYRBDuu4mnnMK5O6TgiMzR9VO/W9TdB/oZwOjDYfBTc1isBLMW/1aVHUGt9JQPvWrEak4r8PW+brSan+8GZbXYdaoMd3WTUU/Tz03YWOfNPNmQiyx0GrUvEs7X6zADhSSHGhDzV/5c39Y+xhOm4y55n/69xW98nmcV8Ff9CsMACGf1ZYAumFmBo+ZKoqJL5lpcfErsnGUA2PKQjgW6foxwuy744EhadZLdatA2e5PBpZFIMFV/e+/ahzeOQEICaM9gYjqp24XIDgDni1oJmi8CU9HZE8s1UxtrQGgvMDUH7xBaRTXGyqo3t2amBwLp0GvYddWmTXMYapgXdmIF2gTPUAzWE2jaGWyLSxyvVnK8L4pMG2nQcN1U4f51EPtUdOXxK2q76dEpMAQMHvmMmkBYKWXRmVYm66sCT1OAfjn+Hg31KPpXfI="
 
 jdk:
   - oraclejdk8
   - oraclejdk9
 
-before_install:
-    - pip install --user codecov
+before_install: pip install --user codecov
 
-after_success:
-    - codecov
+script: mvn clean verify sonar:sonar
+
+after_success: codecov
