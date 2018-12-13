@@ -86,7 +86,6 @@ import io.parsingdata.metal.token.TokenRef;
 import io.parsingdata.metal.token.Until;
 import io.parsingdata.metal.token.While;
 
-@SuppressWarnings("overloadmethodsdeclarationorder") // Suppress Checkstyle warning about overloaded methods ordering because of identical names for different things.
 public final class Shorthand {
 
     public static final Token EMPTY = def(EMPTY_NAME, 0L);
