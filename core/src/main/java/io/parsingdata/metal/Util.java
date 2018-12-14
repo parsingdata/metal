@@ -33,13 +33,13 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 public final class Util {
 
-    final private static char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray(); // Private because array content is mutable.
+    private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray(); // Private because array content is mutable.
 
     private Util() {}
 
     public static <T>T checkNotNull(final T argument, final String name) {
         if (argument == null) {
-            throw new IllegalArgumentException("Argument " + name + " may not be null.");
+            throw new IllegalArgumentException(String.format("Argument %s may not be null.", name));
         }
         return argument;
     }
@@ -48,7 +48,7 @@ public final class Util {
         checkNotNull(arguments, name);
         for (final T argument : arguments) {
             if (argument == null) {
-                throw new IllegalArgumentException("Value in array " + name + " may not be null.");
+                throw new IllegalArgumentException(String.format("Value in array %s may not be null.", name));
             }
         }
         return arguments;
@@ -56,7 +56,7 @@ public final class Util {
 
     public static String checkNotEmpty(final String argument, final String name) {
         if (checkNotNull(argument, name).isEmpty()) {
-            throw new IllegalArgumentException("Argument " + name + " may not be empty.");
+            throw new IllegalArgumentException(String.format("Argument %s may not be empty.", name));
         }
         return argument;
     }
@@ -68,7 +68,7 @@ public final class Util {
 
     public static BigInteger checkNotNegative(final BigInteger argument, final String name) {
         if (checkNotNull(argument, name).compareTo(ZERO) < 0) {
-            throw new IllegalArgumentException("Argument " + name + " may not be negative.");
+            throw new IllegalArgumentException(String.format("Argument %s may not be negative.", name));
         }
         return argument;
     }
