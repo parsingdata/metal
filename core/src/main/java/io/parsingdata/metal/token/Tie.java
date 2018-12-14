@@ -27,6 +27,7 @@ import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
+import io.parsingdata.metal.data.DataExpressionSource;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
@@ -74,7 +75,7 @@ public class Tie extends Token {
         }
         return values.head
             .map(value -> token
-                .parse(environment.withParseState(environment.parseState.source(dataExpression, index, environment.parseState, environment.encoding)))
+                .parse(environment.withParseState(environment.parseState.withSource(new DataExpressionSource(dataExpression, index, environment.parseState, environment.encoding))))
                 .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState), values.tail, index + 1, returnParseState)))
                 .orElseGet(() -> complete(Util::failure)))
             .orElseGet(() -> complete(Util::failure));
