@@ -69,6 +69,7 @@ import io.parsingdata.metal.expression.value.reference.Ref.NameRef;
 import io.parsingdata.metal.expression.value.reference.Self;
 import io.parsingdata.metal.token.Token;
 
+@SuppressWarnings("PMD.EqualsNull") // Suppressed because this class explicitly checks for correct equals(null) behaviour.
 public class EqualityTest {
 
     public static final Token LINKED_LIST_1 =

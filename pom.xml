@@ -70,6 +70,8 @@
     <errorprone.maven.compiler.version>3.8.0</errorprone.maven.compiler.version>
     <errorprone.plexus.javac.version>2.8.5</errorprone.plexus.javac.version>
     <errorprone.core.version>2.3.2</errorprone.core.version>
+    <maven-site-plugin.version>3.7.1</maven-site-plugin.version>
+    <maven-project-info-reports.version>3.0.0</maven-project-info-reports.version>
   </properties>
 
   <profiles>
@@ -220,37 +222,12 @@
           </targetTests>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>${maven-site-plugin.version}</version>
+      </plugin>
     </plugins>
-    <pluginManagement>
-      <plugins>
-        <!--This plugin's configuration is used to store Eclipse m2e settings 
-          only. It has no influence on the Maven build itself. -->
-        <plugin>
-          <groupId>org.eclipse.m2e</groupId>
-          <artifactId>lifecycle-mapping</artifactId>
-          <version>1.0.0</version>
-          <configuration>
-            <lifecycleMappingMetadata>
-              <pluginExecutions>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <versionRange>[${jacoco-plugin.version},)</versionRange>
-                    <goals>
-                      <goal>prepare-agent</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore />
-                  </action>
-                </pluginExecution>
-              </pluginExecutions>
-            </lifecycleMappingMetadata>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
   </build>
 
   <reporting>
@@ -269,23 +246,11 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
         <version>${pmd-plugin.version}</version>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>pmd</report>
-            </reports>
-            <configuration>
-              <rulesets>
-                <ruleset>${pom.basedir}/pmd-rules.xml</ruleset>
-              </rulesets>
-            </configuration>
-          </reportSet>
-          <reportSet>
-            <reports>
-              <report>cpd</report>
-            </reports>
-          </reportSet>
-        </reportSets>
+        <configuration>
+          <rulesets>
+            <ruleset>${maven.multiModuleProjectDirectory}/.pmd-rules.xml</ruleset>
+          </rulesets>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
@@ -315,6 +280,11 @@
             </reports>
           </reportSet>
         </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>${maven-project-info-reports.version}</version>
       </plugin>
     </plugins>
   </reporting>

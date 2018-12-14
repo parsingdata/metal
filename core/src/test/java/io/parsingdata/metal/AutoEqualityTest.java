@@ -121,6 +121,7 @@ import io.parsingdata.metal.token.While;
 import io.parsingdata.metal.util.EncodingFactory;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
+@SuppressWarnings("PMD.EqualsNull") // Suppressed because this class explicitly checks for correct equals(null) behaviour.
 @RunWith(Parameterized.class)
 public class AutoEqualityTest {
 
