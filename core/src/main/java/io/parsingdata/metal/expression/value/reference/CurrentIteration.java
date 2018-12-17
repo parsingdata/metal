@@ -43,7 +43,7 @@ import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.token.While;
 
 /**
- * A {@link ValueExpression} that represents the 0-based current iteration in an
+ * A {@link ValueExpression} that represents the zero-based current iteration in an
  * iterable {@link Token} (when {@link Token#isIterable()} returns true, e.g. when
  * inside a {@link Rep}, {@link RepN}) or {@link While}).
  */
@@ -61,11 +61,11 @@ public class CurrentIteration implements ValueExpression {
     }
 
     private Optional<Value> getIteration(final ParseState parseState, final Encoding encoding) {
-        final BigInteger level = getLevel(parseState, encoding);
-        if (parseState.iterations.size <= level.longValue()) {
+        final BigInteger levelValue = getLevel(parseState, encoding);
+        if (parseState.iterations.size <= levelValue.longValue()) {
             return Optional.empty();
         }
-        return getIterationRecursive(parseState.iterations, level).computeResult();
+        return getIterationRecursive(parseState.iterations, levelValue).computeResult();
     }
 
     private BigInteger getLevel(final ParseState parseState, final Encoding encoding) {
@@ -76,11 +76,11 @@ public class CurrentIteration implements ValueExpression {
         return evaluatedLevel.head.get().asNumeric();
     }
 
-    private Trampoline<Optional<Value>> getIterationRecursive(final ImmutableList<ImmutablePair<Token, BigInteger>> iterations, final BigInteger level) {
-        if (level.compareTo(ZERO) == 0) {
+    private Trampoline<Optional<Value>> getIterationRecursive(final ImmutableList<ImmutablePair<Token, BigInteger>> iterations, final BigInteger levelValue) {
+        if (levelValue.compareTo(ZERO) == 0) {
             return complete(() -> Optional.of(createFromNumeric(iterations.head.right, DEFAULT_ENCODING)));
         }
-        return intermediate(() -> getIterationRecursive(iterations.tail, level.subtract(ONE)));
+        return intermediate(() -> getIterationRecursive(iterations.tail, levelValue.subtract(ONE)));
     }
 
     @Override

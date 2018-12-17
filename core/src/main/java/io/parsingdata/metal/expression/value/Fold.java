@@ -58,18 +58,18 @@ public abstract class Fold implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> initial = this.initial != null ? this.initial.eval(parseState, encoding) : new ImmutableList<>();
-        if (initial.size > 1) {
+        final ImmutableList<Optional<Value>> evaluatedInitial = initial != null ? initial.eval(parseState, encoding) : new ImmutableList<>();
+        if (evaluatedInitial.size > 1) {
             return new ImmutableList<>();
         }
-        final ImmutableList<Optional<Value>> values = prepareValues(this.values.eval(parseState, encoding));
-        if (values.isEmpty() || containsEmpty(values).computeResult()) {
-            return initial;
+        final ImmutableList<Optional<Value>> preparedValues = prepareValues(this.values.eval(parseState, encoding));
+        if (preparedValues.isEmpty() || containsEmpty(preparedValues).computeResult()) {
+            return evaluatedInitial;
         }
-        if (!initial.isEmpty()) {
-            return ImmutableList.create(fold(parseState, encoding, reducer, initial.head, values).computeResult());
+        if (!evaluatedInitial.isEmpty()) {
+            return ImmutableList.create(fold(parseState, encoding, reducer, evaluatedInitial.head, preparedValues).computeResult());
         }
-        return ImmutableList.create(fold(parseState, encoding, reducer, values.head, values.tail).computeResult());
+        return ImmutableList.create(fold(parseState, encoding, reducer, preparedValues.head, preparedValues.tail).computeResult());
     }
 
     private Trampoline<Optional<Value>> fold(final ParseState parseState, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Optional<Value> head, final ImmutableList<Optional<Value>> tail) {

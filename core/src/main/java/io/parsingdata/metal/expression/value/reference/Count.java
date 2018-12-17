@@ -32,20 +32,20 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * A {@link ValueExpression} that represents the amount of {@link Value}s
- * returned by evaluating its <code>operand</code>.
+ * returned by evaluating its <code>operands</code> field.
  */
 public class Count implements ValueExpression {
 
-    public final ValueExpression operand;
+    public final ValueExpression operands;
 
-    public Count(final ValueExpression operand) {
-        this.operand = checkNotNull(operand, "operand");
+    public Count(final ValueExpression operands) {
+        this.operands = checkNotNull(operands, "operands");
     }
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> values = operand.eval(parseState, encoding);
-        return ImmutableList.create(Optional.of(fromNumeric(values.size)));
+        final ImmutableList<Optional<Value>> evaluatedOperands = operands.eval(parseState, encoding);
+        return ImmutableList.create(Optional.of(fromNumeric(evaluatedOperands.size)));
     }
 
     private static Value fromNumeric(final long length) {
@@ -54,18 +54,18 @@ public class Count implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + operand + ")";
+        return getClass().getSimpleName() + "(" + operands + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(operand, ((Count)obj).operand);
+            && Objects.equals(operands, ((Count)obj).operands);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass(), operand);
+        return Objects.hash(getClass(), operands);
     }
 
 }

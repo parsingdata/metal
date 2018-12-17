@@ -58,20 +58,20 @@ public class Def extends Token {
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        final ImmutableList<Optional<Value>> sizes = size.eval(environment.parseState, environment.encoding);
-        if (sizes.size != 1 || !sizes.head.isPresent()) {
+        final ImmutableList<Optional<Value>> evaluatedSize = size.eval(environment.parseState, environment.encoding);
+        if (evaluatedSize.size != 1 || !evaluatedSize.head.isPresent()) {
             return failure();
         }
-        return sizes.head
+        return evaluatedSize.head
             .filter(dataSize -> dataSize.asNumeric().compareTo(ZERO) != 0)
             .map(dataSize -> slice(environment, dataSize.asNumeric()))
             .orElseGet(() -> success(environment.parseState));
     }
 
-    private Optional<ParseState> slice(final Environment environment, final BigInteger dataSize) {
+    private Optional<ParseState> slice(final Environment environment, final BigInteger sizeValue) {
         return environment.parseState
-            .slice(dataSize)
-            .map(slice -> environment.parseState.add(new ParseValue(environment.scope, this, slice, environment.encoding)).seek(dataSize.add(environment.parseState.offset)))
+            .slice(sizeValue)
+            .map(slice -> environment.parseState.add(new ParseValue(environment.scope, this, slice, environment.encoding)).seek(sizeValue.add(environment.parseState.offset)))
             .orElseGet(Util::failure);
     }
 

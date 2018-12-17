@@ -32,14 +32,14 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  */
 public class ShiftLeft extends BinaryValueExpression {
 
-    public ShiftLeft(final ValueExpression operand, final ValueExpression positions) {
-        super(operand, positions);
+    public ShiftLeft(final ValueExpression operands, final ValueExpression positions) {
+        super(operands, positions);
     }
 
     @Override
-    public Optional<Value> eval(final Value operand, final Value positions, final ParseState parseState, final Encoding encoding) {
-        final BitSet leftBits = operand.asBitSet();
-        final int shiftLeft = positions.asNumeric().intValueExact();
+    public Optional<Value> eval(final Value operandValue, final Value positionsValue, final ParseState parseState, final Encoding encoding) {
+        final BitSet leftBits = operandValue.asBitSet();
+        final int shiftLeft = positionsValue.asNumeric().intValueExact();
         final int bitCount = leftBits.length() + shiftLeft;
         final BitSet out = new BitSet(bitCount);
         for (int i = leftBits.nextSetBit(0); i >= 0; i = leftBits.nextSetBit(i+1)) {

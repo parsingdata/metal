@@ -71,52 +71,52 @@ public class Until extends Token {
     public static final ValueExpression DEFAULT_STEP = con(1);
     public static final ValueExpression DEFAULT_MAX = con(Integer.MAX_VALUE);
 
-    public final ValueExpression initialSize;
-    public final ValueExpression stepSize;
-    public final ValueExpression maxSize;
+    public final ValueExpression initialSizes;
+    public final ValueExpression stepSizes;
+    public final ValueExpression maxSizes;
     public final Token terminator;
 
-    public Until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) {
+    public Until(final String name, final ValueExpression initialSizes, final ValueExpression stepSizes, final ValueExpression maxSizes, final Token terminator, final Encoding encoding) {
         super(checkNotEmpty(name, "name"), encoding);
-        this.initialSize = initialSize == null ? DEFAULT_INITIAL : initialSize;
-        this.stepSize = stepSize == null ? DEFAULT_STEP : stepSize;
-        this.maxSize = maxSize == null ? DEFAULT_MAX : maxSize;
+        this.initialSizes = initialSizes == null ? DEFAULT_INITIAL : initialSizes;
+        this.stepSizes = stepSizes == null ? DEFAULT_STEP : stepSizes;
+        this.maxSizes = maxSizes == null ? DEFAULT_MAX : maxSizes;
         this.terminator = checkNotNull(terminator, "terminator");
     }
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        return handleInterval(environment, initialSize.eval(environment.parseState, environment.encoding), stepSize.eval(environment.parseState, environment.encoding), maxSize.eval(environment.parseState, environment.encoding)).computeResult();
+        return handleInterval(environment, initialSizes.eval(environment.parseState, environment.encoding), stepSizes.eval(environment.parseState, environment.encoding), maxSizes.eval(environment.parseState, environment.encoding)).computeResult();
     }
 
-    private Trampoline<Optional<ParseState>> handleInterval(final Environment environment, final ImmutableList<Optional<Value>> initialSizes, final ImmutableList<Optional<Value>> stepSizes, final ImmutableList<Optional<Value>> maxSizes) {
-        if (checkNotValidList(initialSizes) || checkNotValidList(stepSizes) || checkNotValidList(maxSizes)) {
+    private Trampoline<Optional<ParseState>> handleInterval(final Environment environment, final ImmutableList<Optional<Value>> initialSizeValues, final ImmutableList<Optional<Value>> stepSizeValues, final ImmutableList<Optional<Value>> maxSizeValues) {
+        if (checkNotValidList(initialSizeValues) || checkNotValidList(stepSizeValues) || checkNotValidList(maxSizeValues)) {
             return complete(Util::failure);
         }
-        return iterate(environment, getNumeric(initialSizes), getNumeric(stepSizes), getNumeric(maxSizes))
+        return iterate(environment, getNumeric(initialSizeValues), getNumeric(stepSizeValues), getNumeric(maxSizeValues))
             .computeResult()
             .map(nextParseState -> complete(() -> success(nextParseState)))
-            .orElseGet(() -> intermediate(() -> handleInterval(environment, initialSizes.tail, stepSizes.tail, maxSizes.tail)));
+            .orElseGet(() -> intermediate(() -> handleInterval(environment, initialSizeValues.tail, stepSizeValues.tail, maxSizeValues.tail)));
     }
 
-    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final BigInteger currentSize, final BigInteger stepSize, final BigInteger maxSize) {
-        if (stepSize.compareTo(ZERO) == 0 ||
-            (stepSize.compareTo(ZERO) > 0 && currentSize.compareTo(maxSize) > 0) ||
-            (stepSize.compareTo(ZERO) < 0 && currentSize.compareTo(maxSize) < 0)) {
+    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final BigInteger currentSizeValue, final BigInteger stepSizeValue, final BigInteger maxSizeValue) {
+        if (stepSizeValue.compareTo(ZERO) == 0 ||
+            (stepSizeValue.compareTo(ZERO) > 0 && currentSizeValue.compareTo(maxSizeValue) > 0) ||
+            (stepSizeValue.compareTo(ZERO) < 0 && currentSizeValue.compareTo(maxSizeValue) < 0)) {
             return complete(Util::failure);
         }
         return environment.parseState
-            .slice(currentSize)
-            .map(slice -> parseSlice(environment, currentSize, stepSize, maxSize, slice))
+            .slice(currentSizeValue)
+            .map(slice -> parseSlice(environment, currentSizeValue, stepSizeValue, maxSizeValue, slice))
             .orElseGet(() -> complete(Util::failure));
     }
 
-    private Trampoline<Optional<ParseState>> parseSlice(final Environment environment, final BigInteger currentSize, final BigInteger stepSize, final BigInteger maxSize, final Slice slice) {
-        return (currentSize.compareTo(ZERO) == 0 ? Optional.of(environment.parseState) : environment.parseState.add(new ParseValue(name, this, slice, environment.encoding)).seek(environment.parseState.offset.add(currentSize)))
+    private Trampoline<Optional<ParseState>> parseSlice(final Environment environment, final BigInteger currentSizeValue, final BigInteger stepSizeValue, final BigInteger maxSizeValue, final Slice slice) {
+        return (currentSizeValue.compareTo(ZERO) == 0 ? Optional.of(environment.parseState) : environment.parseState.add(new ParseValue(name, this, slice, environment.encoding)).seek(environment.parseState.offset.add(currentSizeValue)))
             .map(preparedParseState -> terminator.parse(environment.withParseState(preparedParseState)))
             .orElseGet(Util::failure)
             .map(parsedParseState -> complete(() -> success(parsedParseState)))
-            .orElseGet(() -> intermediate(() -> iterate(environment, currentSize.add(stepSize), stepSize, maxSize)));
+            .orElseGet(() -> intermediate(() -> iterate(environment, currentSizeValue.add(stepSizeValue), stepSizeValue, maxSizeValue)));
     }
 
     private boolean checkNotValidList(final ImmutableList<Optional<Value>> list) {
@@ -129,21 +129,21 @@ public class Until extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + makeNameFragment() + initialSize + "," + stepSize + "," + maxSize + "," + terminator + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + initialSizes + "," + stepSizes + "," + maxSizes + "," + terminator + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return super.equals(obj)
-            && Objects.equals(initialSize, ((Until)obj).initialSize)
-            && Objects.equals(stepSize, ((Until)obj).stepSize)
-            && Objects.equals(maxSize, ((Until)obj).maxSize)
+            && Objects.equals(initialSizes, ((Until)obj).initialSizes)
+            && Objects.equals(stepSizes, ((Until)obj).stepSizes)
+            && Objects.equals(maxSizes, ((Until)obj).maxSizes)
             && Objects.equals(terminator, ((Until)obj).terminator);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), initialSize, stepSize, maxSize, terminator);
+        return Objects.hash(super.hashCode(), initialSizes, stepSizes, maxSizes, terminator);
     }
 
 }

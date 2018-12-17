@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Selection.reverse;
 
 import java.util.Objects;
@@ -38,7 +39,7 @@ public class Reverse implements ValueExpression {
     public final ValueExpression values;
 
     public Reverse(final ValueExpression values) {
-        this.values = values;
+        this.values = checkNotNull(values, "values");
     }
 
     @Override

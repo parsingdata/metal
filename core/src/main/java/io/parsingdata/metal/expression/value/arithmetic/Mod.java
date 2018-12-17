@@ -30,21 +30,21 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 /**
  * A {@link BinaryValueExpression} that implements the modulo operation.
  * <p>
- * If the value of the <code>right</code> operand is equal to or smaller than
- * zero, the result is empty.
+ * If one of the values resulting from evaluating <code>rights</code> is equal
+ * to or small than zero, the associated result will be empty.
  */
 public class Mod extends BinaryValueExpression {
 
-    public Mod(final ValueExpression left, final ValueExpression right) {
-        super(left, right);
+    public Mod(final ValueExpression lefts, final ValueExpression rights) {
+        super(lefts, rights);
     }
 
     @Override
-    public Optional<Value> eval(final Value left, final Value right, final ParseState parseState, final Encoding encoding) {
-        if (right.asNumeric().compareTo(ZERO) <= 0) {
+    public Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {
+        if (rightValue.asNumeric().compareTo(ZERO) <= 0) {
             return Optional.empty();
         }
-        return Optional.of(ConstantFactory.createFromNumeric(left.asNumeric().mod(right.asNumeric()), encoding));
+        return Optional.of(ConstantFactory.createFromNumeric(leftValue.asNumeric().mod(rightValue.asNumeric()), encoding));
     }
 
 }

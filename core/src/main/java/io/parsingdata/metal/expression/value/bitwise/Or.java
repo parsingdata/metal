@@ -31,15 +31,15 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  */
 public class Or extends BinaryValueExpression {
 
-    public Or(final ValueExpression left, final ValueExpression right) {
-        super(left, right);
+    public Or(final ValueExpression lefts, final ValueExpression rights) {
+        super(lefts, rights);
     }
 
     @Override
-    public Optional<Value> eval(final Value left, final Value right, final ParseState parseState, final Encoding encoding) {
-        final BitSet leftBits = left.asBitSet();
-        leftBits.or(right.asBitSet());
-        final int minSize = Math.max(left.getValue().length, right.getValue().length);
+    public Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {
+        final BitSet leftBits = leftValue.asBitSet();
+        leftBits.or(rightValue.asBitSet());
+        final int minSize = Math.max(leftValue.getValue().length, rightValue.getValue().length);
         return Optional.of(ConstantFactory.createFromBitSet(leftBits, minSize, encoding));
     }
 

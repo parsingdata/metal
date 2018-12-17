@@ -79,8 +79,8 @@ public class Ref<T> implements ValueExpression {
         return evalImpl(parseState, evaluatedLimit.head.get().asNumeric().intValueExact());
     }
 
-    private ImmutableList<Optional<Value>> evalImpl(final ParseState parseState, final int limit) {
-        return wrap(getAllValues(parseState.order, predicate, limit), new ImmutableList<Optional<Value>>()).computeResult();
+    private ImmutableList<Optional<Value>> evalImpl(final ParseState parseState, final int limitValue) {
+        return wrap(getAllValues(parseState.order, predicate, limitValue), new ImmutableList<Optional<Value>>()).computeResult();
     }
 
     private static <T, U extends T> Trampoline<ImmutableList<Optional<T>>> wrap(final ImmutableList<U> input, final ImmutableList<Optional<T>> output) {

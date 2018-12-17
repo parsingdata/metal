@@ -33,10 +33,11 @@ import io.parsingdata.metal.encoding.Encoding;
 /**
  * Base class for {@link ValueExpression}s with one operand.
  * <p>
- * A UnaryValueExpression implements a ValueExpression that has one
- * <code>operand</code> (a {@link ValueExpression}). The operand is first
- * evaluated. If it evaluates to {@link Optional#empty()}, the result of the
- * ValueExpression itself will be that as well.
+ * A UnaryValueExpression implements a ValueExpression that has a single
+ * <code>operands</code> field (a {@link ValueExpression}).
+ * <code>operands</code>is first evaluated. If it evaluates to
+ * {@link Optional#empty()}, the result of the ValueExpression itself will be
+ * that as well.
  * <p>
  * To implement a UnaryValueExpression, only the
  * {@link #eval(Value, ParseState, Encoding)} must be implemented, handling
@@ -47,40 +48,40 @@ import io.parsingdata.metal.encoding.Encoding;
  */
 public abstract class UnaryValueExpression implements ValueExpression {
 
-    public final ValueExpression operand;
+    public final ValueExpression operands;
 
-    public UnaryValueExpression(final ValueExpression operand) {
-        this.operand = checkNotNull(operand, "operand");
+    public UnaryValueExpression(final ValueExpression operands) {
+        this.operands = checkNotNull(operands, "operands");
     }
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return reverse(eval(operand.eval(parseState, encoding), parseState, encoding, new ImmutableList<>()).computeResult());
+        return reverse(eval(operands.eval(parseState, encoding), parseState, encoding, new ImmutableList<>()).computeResult());
     }
 
-    private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ParseState parseState, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
-        if (values.isEmpty()) {
+    private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> evaluatedValues, final ParseState parseState, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
+        if (evaluatedValues.isEmpty()) {
             return complete(() -> result);
         }
-        return intermediate(() -> eval(values.tail, parseState, encoding, result.add(values.head.flatMap(value -> eval(value, parseState, encoding)))));
+        return intermediate(() -> eval(evaluatedValues.tail, parseState, encoding, result.add(evaluatedValues.head.flatMap(value -> eval(value, parseState, encoding)))));
     }
 
     public abstract Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding);
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + operand + ")";
+        return getClass().getSimpleName() + "(" + operands + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(operand, ((UnaryValueExpression)obj).operand);
+            && Objects.equals(operands, ((UnaryValueExpression)obj).operands);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass(), operand);
+        return Objects.hash(getClass(), operands);
     }
 
 }

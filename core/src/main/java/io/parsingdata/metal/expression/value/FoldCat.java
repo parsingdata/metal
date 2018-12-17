@@ -18,6 +18,7 @@ package io.parsingdata.metal.expression.value;
 
 import static java.math.BigInteger.ZERO;
 
+import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Slice.createFromSource;
 
 import java.util.Objects;
@@ -38,15 +39,15 @@ import io.parsingdata.metal.encoding.Encoding;
  */
 public class FoldCat implements ValueExpression {
 
-    public final ValueExpression operand;
+    public final ValueExpression operands;
 
-    public FoldCat(final ValueExpression operand) {
-        this.operand = operand;
+    public FoldCat(final ValueExpression operands) {
+        this.operands = checkNotNull(operands, "operands");
     }
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return ConcatenatedValueSource.create(operand.eval(parseState, encoding))
+        return ConcatenatedValueSource.create(operands.eval(parseState, encoding))
             .flatMap(source -> createFromSource(source, ZERO, source.length))
             .map(slice -> new ImmutableList<Optional<Value>>().add(Optional.of(new Value(slice, encoding))))
             .orElseGet(() -> ImmutableList.create(Optional.empty()));
@@ -54,18 +55,18 @@ public class FoldCat implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + operand + ")";
+        return getClass().getSimpleName() + "(" + operands + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(operand, ((FoldCat)obj).operand);
+            && Objects.equals(operands, ((FoldCat)obj).operands);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass(), operand);
+        return Objects.hash(getClass(), operands);
     }
 
 }

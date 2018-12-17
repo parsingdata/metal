@@ -62,22 +62,22 @@ public class Nth implements ValueExpression {
         return reverse(eval(values.eval(parseState, encoding), indices.eval(parseState, encoding), new ImmutableList<>()).computeResult());
     }
 
-    private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ImmutableList<Optional<Value>> indices, final ImmutableList<Optional<Value>> result) {
-        if (indices.isEmpty()) {
+    private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ImmutableList<Optional<Value>> indicesValues, final ImmutableList<Optional<Value>> result) {
+        if (indicesValues.isEmpty()) {
             return complete(() -> result);
         }
         final BigInteger valueCount = BigInteger.valueOf(values.size);
-        final Optional<Value> nextResult = indices.head
+        final Optional<Value> nextResult = indicesValues.head
             .filter(index -> index.asNumeric().compareTo(valueCount) < 0 && index.asNumeric().compareTo(ZERO) >= 0)
             .flatMap(index -> nth(values, valueCount.subtract(index.asNumeric()).subtract(ONE)).computeResult());
-        return intermediate(() -> eval(values, indices.tail, result.add(nextResult)));
+        return intermediate(() -> eval(values, indicesValues.tail, result.add(nextResult)));
     }
 
-    private Trampoline<Optional<Value>> nth(final ImmutableList<Optional<Value>> values, final BigInteger index) {
-        if (index.equals(ZERO)) {
+    private Trampoline<Optional<Value>> nth(final ImmutableList<Optional<Value>> values, final BigInteger indexValue) {
+        if (indexValue.equals(ZERO)) {
             return complete(() -> values.head);
         }
-        return intermediate(() -> nth(values.tail, index.subtract(ONE)));
+        return intermediate(() -> nth(values.tail, indexValue.subtract(ONE)));
     }
 
     @Override

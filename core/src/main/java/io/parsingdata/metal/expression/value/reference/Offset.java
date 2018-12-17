@@ -28,7 +28,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * A {@link ValueExpression} that represents the offset of the {@link Value}s
- * returned by evaluating its <code>operand</code>.
+ * returned by evaluating its <code>operands</code> field.
  * <p>
  * Only {@link ParseValue}s have an offset, since they originate in the input.
  * If a result does not have an offset (such as the {@link Value}s returned by
@@ -36,7 +36,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  */
 public class Offset extends UnaryValueExpression {
 
-    public Offset(final ValueExpression operand) { super(operand); }
+    public Offset(final ValueExpression operands) { super(operands); }
 
     @Override
     public Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding) {

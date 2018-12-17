@@ -40,11 +40,11 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * provided {@link ValueExpression}.
  * <p>
  * A Tie consists of a <code>token</code> (a {@link Token}) and a
- * <code>dataExpression</code> (a {@link ValueExpression}). First
- * <code>dataExpression</code> is evaluated. Then each value is used as an
+ * <code>dataExpressions</code> (a {@link ValueExpression}). First
+ * <code>dataExpressions</code> is evaluated. Then each value is used as an
  * input to parse the token in. Tie succeeds if all parses of
  * <code>token</code> in all results succeed. Tie fails if
- * <code>dataExpression</code> evaluates to a list of values that is either
+ * <code>dataExpressions</code> evaluates to a list of values that is either
  * empty or contains an invalid value.
  *
  * @see ValueExpression
@@ -52,50 +52,50 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 public class Tie extends Token {
 
     public final Token token;
-    public final ValueExpression dataExpression;
+    public final ValueExpression dataExpressions;
 
-    public Tie(final String name, final Token token, final ValueExpression dataExpression, final Encoding encoding) {
+    public Tie(final String name, final Token token, final ValueExpression dataExpressions, final Encoding encoding) {
         super(name, encoding);
         this.token = checkNotNull(token, "token");
-        this.dataExpression = checkNotNull(dataExpression, "dataExpression");
+        this.dataExpressions = checkNotNull(dataExpressions, "dataExpressions");
     }
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        final ImmutableList<Optional<Value>> dataResult = dataExpression.eval(environment.parseState, environment.encoding);
-        if (dataResult.isEmpty()) {
+        final ImmutableList<Optional<Value>> evaluatedDataExpressions = dataExpressions.eval(environment.parseState, environment.encoding);
+        if (evaluatedDataExpressions.isEmpty()) {
             return failure();
         }
-        return iterate(environment.addBranch(this), dataResult, 0, environment.parseState).computeResult();
+        return iterate(environment.addBranch(this), evaluatedDataExpressions, 0, environment.parseState).computeResult();
     }
 
-    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Optional<Value>> values, final int index, final ParseState returnParseState) {
-        if (values.isEmpty()) {
+    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Optional<Value>> dataExpressionValues, final int index, final ParseState returnParseState) {
+        if (dataExpressionValues.isEmpty()) {
             return complete(() -> success(new ParseState(environment.parseState.closeBranch(this).order, returnParseState.source, returnParseState.offset, returnParseState.iterations)));
         }
-        return values.head
-            .map(value -> token
-                .parse(environment.withParseState(environment.parseState.withSource(new DataExpressionSource(dataExpression, index, environment.parseState, environment.encoding))))
-                .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState), values.tail, index + 1, returnParseState)))
+        return dataExpressionValues.head
+            .map(dataExpressionValue -> token
+                .parse(environment.withParseState(environment.parseState.withSource(new DataExpressionSource(dataExpressions, index, environment.parseState, environment.encoding))))
+                .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState), dataExpressionValues.tail, index + 1, returnParseState)))
                 .orElseGet(() -> complete(Util::failure)))
             .orElseGet(() -> complete(Util::failure));
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + makeNameFragment() + token + "," + dataExpression + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + token + "," + dataExpressions + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return super.equals(obj)
             && Objects.equals(token, ((Tie)obj).token)
-            && Objects.equals(dataExpression, ((Tie)obj).dataExpression);
+            && Objects.equals(dataExpressions, ((Tie)obj).dataExpressions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), token, dataExpression);
+        return Objects.hash(super.hashCode(), token, dataExpressions);
     }
 
 }

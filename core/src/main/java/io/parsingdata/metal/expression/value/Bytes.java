@@ -34,34 +34,35 @@ import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
- * A {@link ValueExpression} that splits the results of evaluating its operand
- * into individual bytes.
+ * A {@link ValueExpression} that splits the results of evaluating its
+ * <code>operands</code> field into individual bytes.
  * <p>
- * A Bytes expression has a single <code>operand</code> (a
- * {@link ValueExpression}). When evaluated, it evaluates <code>operand</code>
+ * A Bytes expression has a single <code>operands</code> field (a
+ * {@link ValueExpression}). When evaluated, it evaluates <code>operands</code>
  * and instead of returning the list of results, each result is split into
  * {@link Value} objects representing each individual byte of the original
  * result.
  * <p>
- * For example, if <code>operand</code> evaluates to a list of two values, of
- * 2 and 3 bytes respectively, the Bytes expression turns this into a list of
- * 5 values, representing the individual bytes of the original results.
+ * For example, if <code>operands</code> evaluates to a list of two values, of
+ * 2 and 3 bytes respectively, the <code>Bytes</code> expression turns this
+ * into a list of 5 values, representing the individual bytes of the original
+ * results.
  */
 public class Bytes implements ValueExpression {
 
-    public final ValueExpression operand;
+    public final ValueExpression operands;
 
-    public Bytes(final ValueExpression operand) {
-        this.operand = checkNotNull(operand, "operand");
+    public Bytes(final ValueExpression operands) {
+        this.operands = checkNotNull(operands, "operands");
     }
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> input = operand.eval(parseState, encoding);
-        if (input.isEmpty()) {
-            return input;
+        final ImmutableList<Optional<Value>> evaluatedOperands = operands.eval(parseState, encoding);
+        if (evaluatedOperands.isEmpty()) {
+            return evaluatedOperands;
         }
-        return toByteValues(new ImmutableList<>(), input.head, input.tail, encoding).computeResult();
+        return toByteValues(new ImmutableList<>(), evaluatedOperands.head, evaluatedOperands.tail, encoding).computeResult();
     }
 
     private Trampoline<ImmutableList<Optional<Value>>> toByteValues(final ImmutableList<Optional<Value>> output, final Optional<Value> head, final ImmutableList<Optional<Value>> tail, final Encoding encoding) {
@@ -80,18 +81,18 @@ public class Bytes implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + operand + ")";
+        return getClass().getSimpleName() + "(" + operands + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(operand, ((Bytes)obj).operand);
+            && Objects.equals(operands, ((Bytes)obj).operands);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass(), operand);
+        return Objects.hash(getClass(), operands);
     }
 
 }

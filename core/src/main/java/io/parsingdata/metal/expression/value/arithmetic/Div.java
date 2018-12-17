@@ -30,21 +30,21 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 /**
  * A {@link BinaryValueExpression} that implements integer division.
  * <p>
- * If the value of the <code>right</code> operand is equal to zero, the result
- * is empty.
+ * If one of the values resulting from evaluating <code>rights</code> is equal
+ * to zero, the associated result will be empty.
  */
 public class Div extends BinaryValueExpression {
 
-    public Div(final ValueExpression left, final ValueExpression right) {
-        super(left, right);
+    public Div(final ValueExpression lefts, final ValueExpression rights) {
+        super(lefts, rights);
     }
 
     @Override
-    public Optional<Value> eval(final Value left, final Value right, final ParseState parseState, final Encoding encoding) {
-        if (right.asNumeric().equals(ZERO)) {
+    public Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {
+        if (rightValue.asNumeric().equals(ZERO)) {
             return Optional.empty();
         }
-        return Optional.of(ConstantFactory.createFromNumeric(left.asNumeric().divide(right.asNumeric()), encoding));
+        return Optional.of(ConstantFactory.createFromNumeric(leftValue.asNumeric().divide(rightValue.asNumeric()), encoding));
     }
 
 }

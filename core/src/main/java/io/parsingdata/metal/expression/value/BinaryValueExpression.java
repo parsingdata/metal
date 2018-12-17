@@ -34,7 +34,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * Base class for {@link ValueExpression}s with two operands.
  * <p>
  * A BinaryValueExpression implements a ValueExpression that has two operands:
- * <code>left</code> and <code>right</code> (both {@link ValueExpression}s).
+ * <code>lefts</code> and <code>rights</code> (both {@link ValueExpression}s).
  * Both operands are themselves first evaluated. If at least one of the
  * operands evaluates to {@link Optional#empty()}, the result of the
  * ValueExpression itself will be empty as well.
@@ -45,7 +45,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * size of the longest list.
  * <p>
  * To implement a BinaryValueExpression, only the
- * {@link #eval(Value, Value, ParseState, Encoding)} must be implemented,
+ * {@link #eval(Value, Value, ParseState, Encoding)} method must be implemented,
  * handling the case of evaluating two values. This base class takes care of
  * evaluating the operands and handling list semantics.
  *
@@ -53,19 +53,19 @@ import io.parsingdata.metal.encoding.Encoding;
  */
 public abstract class BinaryValueExpression implements ValueExpression {
 
-    public final ValueExpression left;
-    public final ValueExpression right;
+    public final ValueExpression lefts;
+    public final ValueExpression rights;
 
-    public BinaryValueExpression(final ValueExpression left, final ValueExpression right) {
-        this.left = checkNotNull(left, "left");
-        this.right = checkNotNull(right, "right");
+    public BinaryValueExpression(final ValueExpression lefts, final ValueExpression rights) {
+        this.lefts = checkNotNull(lefts, "lefts");
+        this.rights = checkNotNull(rights, "rights");
     }
 
-    public abstract Optional<Value> eval(final Value left, final Value right, final ParseState parseState, final Encoding encoding);
+    public abstract Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding);
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return evalLists(left.eval(parseState, encoding), right.eval(parseState, encoding), parseState, encoding);
+        return evalLists(lefts.eval(parseState, encoding), rights.eval(parseState, encoding), parseState, encoding);
     }
 
     private ImmutableList<Optional<Value>> evalLists(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues, final ParseState parseState, final Encoding encoding) {
@@ -88,19 +88,19 @@ public abstract class BinaryValueExpression implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + left + "," + right + ")";
+        return getClass().getSimpleName() + "(" + lefts + "," + rights + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(left, ((BinaryValueExpression)obj).left)
-            && Objects.equals(right, ((BinaryValueExpression)obj).right);
+            && Objects.equals(lefts, ((BinaryValueExpression)obj).lefts)
+            && Objects.equals(rights, ((BinaryValueExpression)obj).rights);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass(), left, right);
+        return Objects.hash(getClass(), lefts, rights);
     }
 
 }
