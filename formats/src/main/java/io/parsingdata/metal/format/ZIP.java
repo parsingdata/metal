@@ -46,38 +46,53 @@ import io.parsingdata.metal.token.Token;
  */
 public final class ZIP {
 
+    public static final String CRC_32 = "crc32";
+    public static final String COMPRESSED_SIZE = "compressedsize";
+    public static final String FILE_NAME_SIZE = "filenamesize";
+    public static final String EXTRA_FIELD_SIZE = "extrafieldsize";
+    public static final String EXTRACT_VERSION = "extractversion";
+    public static final String BIT_FLAG = "bitflag";
+    public static final String COMPRESSION_METHOD = "compressionmethod";
+    public static final String LAST_MOD_TIME = "lastmodtime";
+    public static final String LAST_MOD_DATE = "lastmoddate";
+    public static final String UNCOMPRESSED_SIZE = "uncompressedsize";
+    public static final String FILE_NAME = "filename";
+    public static final String COMPRESSED_DATA = "compresseddata";
+    public static final String DIR_SIGNATURE = "dirsignature";
+    public static final String EXTRA_FIELD = "extrafield";
+
     private ZIP() {}
 
     private static Token localFileBody(final String name, final int cm, final Expression crc, final Expression cs, final Expression usp) {
         return
         seq(name,
             def("filesignature", con(4), eq(con(0x50, 0x4b, 0x03, 0x04))),
-            def("extractversion", con(2)),
-            def("bitflag", con(2)),
-            def("compressionmethod", con(2), eqNum(con(cm))),
-            def("lastmodtime", con(2)),
-            def("lastmoddate", con(2)),
-            def("crc32", con(4), crc),
-            def("compressedsize", con(4), cs),
-            def("uncompressedsize", con(4), usp),
-            def("filenamesize", con(2)),
-            def("extrafieldsize", con(2)),
-            def("filename", last(ref("filenamesize"))),
-            def("extrafield", last(ref("extrafieldsize"))));
+            def(EXTRACT_VERSION, con(2)),
+            def(BIT_FLAG, con(2)),
+            def(COMPRESSION_METHOD, con(2), eqNum(con(cm))),
+            def(LAST_MOD_TIME, con(2)),
+            def(LAST_MOD_DATE, con(2)),
+            def(CRC_32, con(4), crc),
+            def(COMPRESSED_SIZE, con(4), cs),
+            def(UNCOMPRESSED_SIZE, con(4), usp),
+            def(FILE_NAME_SIZE, con(2)),
+            def(EXTRA_FIELD_SIZE, con(2)),
+            def(FILE_NAME, last(ref(FILE_NAME_SIZE))),
+            def(EXTRA_FIELD, last(ref(EXTRA_FIELD_SIZE))));
     }
 
     private static final Token LOCAL_DEFLATED_FILE =
         seq("localdeflatedfile",
             localFileBody("", 8, TRUE, TRUE, TRUE),
-            def("compresseddata", last(ref("compressedsize")), eqNum(crc32(inflate(SELF)), last(ref("crc32")))));
+            def(COMPRESSED_DATA, last(ref(COMPRESSED_SIZE)), eqNum(crc32(inflate(SELF)), last(ref(CRC_32)))));
 
     private static final Token LOCAL_EMPTY_FILE =
         localFileBody("localemptyfile", 0, eqNum(con(0)), eqNum(con(0)), eqNum(con(0)));
 
     private static final Token LOCAL_STORED_FILE =
         seq("localstoredfile",
-            localFileBody("", 0, TRUE, TRUE, eq(last(ref("compressedsize")))),
-            def("compresseddata", last(ref("compressedsize")), eqNum(crc32(SELF), last(ref("crc32")))));
+            localFileBody("", 0, TRUE, TRUE, eq(last(ref(COMPRESSED_SIZE)))),
+            def(COMPRESSED_DATA, last(ref(COMPRESSED_SIZE)), eqNum(crc32(SELF), last(ref(CRC_32)))));
 
     private static final Token FILES =
         rep("files",
@@ -87,25 +102,25 @@ public final class ZIP {
 
     private static final Token DIR_ENTRY =
         seq("direntry",
-            def("dirsignature", con(4), eq(con(0x50, 0x4b, 0x01, 0x02))),
+            def(DIR_SIGNATURE, con(4), eq(con(0x50, 0x4b, 0x01, 0x02))),
             def("makeversion", con(2)),
-            def("extractversion", con(2)),
-            def("bitflag", con(2)),
-            def("compressionmethod", con(2)),
-            def("lastmodtime", con(2)),
-            def("lastmoddate", con(2)),
-            def("crc32", con(4)),
-            def("compressedsize", con(4)),
-            def("uncompressedsize", con(4)),
-            def("filenamesize", con(2)),
-            def("extrafieldsize", con(2)),
+            def(EXTRACT_VERSION, con(2)),
+            def(BIT_FLAG, con(2)),
+            def(COMPRESSION_METHOD, con(2)),
+            def(LAST_MOD_TIME, con(2)),
+            def(LAST_MOD_DATE, con(2)),
+            def(CRC_32, con(4)),
+            def(COMPRESSED_SIZE, con(4)),
+            def(UNCOMPRESSED_SIZE, con(4)),
+            def(FILE_NAME_SIZE, con(2)),
+            def(EXTRA_FIELD_SIZE, con(2)),
             def("filecommentsize", con(2)),
             def("filedisk", con(2), eqNum(con(0))),
             def("intfileattr", con(2)),
             def("extfileattr", con(4)),
             def("offset", con(4)),
-            def("filename", last(ref("filenamesize"))),
-            def("extrafield", last(ref("extrafieldsize"))),
+            def(FILE_NAME, last(ref(FILE_NAME_SIZE))),
+            def(EXTRA_FIELD, last(ref(EXTRA_FIELD_SIZE))),
             def("filecomment", last(ref("filecommentsize"))));
 
     private static final Token DIRS =
@@ -117,10 +132,10 @@ public final class ZIP {
             def("endofdirsignature", con(4), eq(con(0x50, 0x4b, 0x05, 0x06))),
             def("disknumber", con(2), eqNum(con(0))),
             def("dirdisk", con(2), eqNum(con(0))),
-            def("numlocaldirs", con(2), eqNum(count(ref("dirsignature")))),
+            def("numlocaldirs", con(2), eqNum(count(ref(DIR_SIGNATURE)))),
             def("numtotaldirs", con(2), eqNum(last(ref("numlocaldirs")))),
-            def("dirsize", con(4), eqNum(sub(offset(last(ref("endofdirsignature"))), offset(first(ref("dirsignature")))))),
-            def("diroffset", con(4), eqNum(offset(first(ref("dirsignature"))))),
+            def("dirsize", con(4), eqNum(sub(offset(last(ref("endofdirsignature"))), offset(first(ref(DIR_SIGNATURE)))))),
+            def("diroffset", con(4), eqNum(offset(first(ref(DIR_SIGNATURE))))),
             def("commentsize", con(2)),
             def("comment", last(ref("commentsize"))));
 
