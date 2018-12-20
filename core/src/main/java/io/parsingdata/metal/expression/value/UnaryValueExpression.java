@@ -33,16 +33,13 @@ import io.parsingdata.metal.encoding.Encoding;
 /**
  * Base class for {@link ValueExpression}s with one operand.
  * <p>
- * A UnaryValueExpression implements a ValueExpression that has a single
- * <code>operands</code> field (a {@link ValueExpression}).
- * <code>operands</code>is first evaluated. If it evaluates to
- * {@link Optional#empty()}, the result of the ValueExpression itself will be
- * that as well.
+ * A UnaryValueExpression implements a ValueExpression that has a single <code>operands</code>
+ * field (a {@link ValueExpression}). <code>operands</code> is first evaluated. If it evaluates
+ * to {@link Optional#empty()}, the result of the ValueExpression itself will be that as well.
  * <p>
- * To implement a UnaryValueExpression, only the
- * {@link #eval(Value, ParseState, Encoding)} must be implemented, handling
- * the case of evaluating one value. This base class takes care of evaluating
- * the operand and handling list semantics.
+ * To implement a UnaryValueExpression, only the {@link #eval(Value, ParseState, Encoding)}
+ * must be implemented, handling the case of evaluating one value. This base class takes care
+ * of evaluating the field and handling list semantics.
  *
  * @see BinaryValueExpression
  */

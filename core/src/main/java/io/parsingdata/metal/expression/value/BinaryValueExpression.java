@@ -33,16 +33,16 @@ import io.parsingdata.metal.encoding.Encoding;
 /**
  * Base class for {@link ValueExpression}s with two operands.
  * <p>
- * A BinaryValueExpression implements a ValueExpression that has two operands:
+ * A BinaryValueExpression implements a ValueExpression that has two fields:
  * <code>lefts</code> and <code>rights</code> (both {@link ValueExpression}s).
- * Both operands are themselves first evaluated. If at least one of the
- * operands evaluates to {@link Optional#empty()}, the result of the
- * ValueExpression itself will be empty as well.
+ * Both fields are first evaluated. If at least one of the operands evaluates to
+ * {@link Optional#empty()}, the result of the ValueExpression itself will be
+ * empty as well.
  * <p>
- * For lists, values with the same index are evaluated in this manner. If
- * lists are of unequal length, the result is a list with evaluated values the
- * same size as the shortest list, appended with empty values to match the
- * size of the longest list.
+ * For lists, values with the same index are evaluated in this manner. If lists
+ * are of unequal length, the result is a list with evaluated values the same
+ * size as the shortest list, appended with empty values to match the size of the
+ * longest list.
  * <p>
  * To implement a BinaryValueExpression, only the
  * {@link #eval(Value, Value, ParseState, Encoding)} method must be implemented,

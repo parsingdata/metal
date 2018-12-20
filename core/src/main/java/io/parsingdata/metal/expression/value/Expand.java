@@ -33,12 +33,12 @@ import io.parsingdata.metal.encoding.Encoding;
  * A {@link ValueExpression} that expands a result by copying and concatenating
  * it a specified amount of times.
  * <p>
- * An Expand expression has two operands: <code>bases</code> and
- * <code>count</code> (both {@link ValueExpression}s). Both operands are
- * evaluated. An <code>IllegalStateException</code> is thrown if evaluating
- * <code>count</code> yields more than a single value. Multiple copies of the
- * result of evaluating <code>bases</code> are concatenated. The amount of copies
- * equals the result of evaluating <code>count</code>.
+ * An Expand expression has two fields: <code>bases</code> and <code>count</code>
+ * (both {@link ValueExpression}s). Both fields are evaluated. An
+ * <code>IllegalStateException</code> is thrown if evaluating <code>count</code> yields
+ * more than a single value. Multiple copies of the result of evaluating
+ * <code>bases</code> are concatenated. The amount of copies equals the result of
+ * evaluating <code>count</code>.
  */
 public class Expand implements ValueExpression {
 

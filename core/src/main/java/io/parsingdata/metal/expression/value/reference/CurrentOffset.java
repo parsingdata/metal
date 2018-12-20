@@ -29,8 +29,7 @@ import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * A {@link ValueExpression} that represents the current offset in the
- * {@link ParseState}.
+ * A {@link ValueExpression} that represents the current offset in the {@link ParseState}.
  */
 public class CurrentOffset implements ValueExpression {
 

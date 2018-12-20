@@ -41,8 +41,9 @@ import io.parsingdata.metal.token.Token;
  * state that match a provided object. This class only has a private
  * constructor and instead must be instantiated through one of its subclasses:
  * {@link NameRef} (to match on name) and {@link DefinitionRef} (to match on
- * definition). A limit argument may be provided to specify an upper bound to
- * the amount of returned results.
+ * definition). The <code>limit</code> field is optional and is used to specify
+ * an upper bound to the amount of returned results.
+ *
  * @param <T> The type of reference to match on.
  */
 public class Ref<T> implements ValueExpression {

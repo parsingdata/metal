@@ -46,6 +46,9 @@ import io.parsingdata.metal.token.While;
  * A {@link ValueExpression} that represents the zero-based current iteration in an
  * iterable {@link Token} (when {@link Token#isIterable()} returns true, e.g. when
  * inside a {@link Rep}, {@link RepN}) or {@link While}).
+ *
+ * The <code>level</code> field must evaluate to a single value that represents the
+ * relative nesting level from the current parsing position in the {@link ParseState}.
  */
 public class CurrentIteration implements ValueExpression {
 
