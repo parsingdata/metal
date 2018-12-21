@@ -30,13 +30,13 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  */
 public class Sub extends BinaryValueExpression {
 
-    public Sub(final ValueExpression left, final ValueExpression right) {
-        super(left, right);
+    public Sub(final ValueExpression minuends, final ValueExpression subtrahends) {
+        super(minuends, subtrahends);
     }
 
     @Override
-    public Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {
-        return Optional.of(ConstantFactory.createFromNumeric(leftValue.asNumeric().subtract(rightValue.asNumeric()), encoding));
+    public Optional<Value> eval(final Value minuend, final Value subtrahend, final ParseState parseState, final Encoding encoding) {
+        return Optional.of(ConstantFactory.createFromNumeric(minuend.asNumeric().subtract(subtrahend.asNumeric()), encoding));
     }
 
 }
