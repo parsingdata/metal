@@ -39,7 +39,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 /**
  * A {@link ValueExpression} that returns an indexed list of {@link Value}s.
  * <p>
- * The Nth ValueExpression has two fields, <code>values</code> and
+ * The Nth ValueExpression has two operands, <code>values</code> and
  * <code>indices</code> (both {@link ValueExpression}s). Both operands are
  * evaluated. Next, the resulting values of evaluating <code>indices</code> is
  * used as a list of integer indices into the results of evaluating

@@ -33,7 +33,7 @@ import io.parsingdata.metal.encoding.Encoding;
 /**
  * Base class for {@link ValueExpression} implementations of the Fold operation.
  * <p>
- * Fold has three fields: <code>values</code> (a {@link ValueExpression}),
+ * Fold has three operands: <code>values</code> (a {@link ValueExpression}),
  * <code>reducer</code> (a {@link BinaryOperator}) and <code>initial</code> (a
  * {@link ValueExpression}). First <code>initial</code> is evaluated. If it does not
  * return a single value, the final result is an empty list. Next, <code>values</code>

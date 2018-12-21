@@ -35,9 +35,9 @@ import io.parsingdata.metal.encoding.Encoding;
 
 /**
  * A {@link ValueExpression} that splits the results of evaluating its
- * <code>operands</code> field into individual bytes.
+ * <code>operands</code> into individual bytes.
  * <p>
- * A Bytes expression has a single <code>operands</code> field (a
+ * A Bytes expression has a single <code>operands</code> (a
  * {@link ValueExpression}). When evaluated, it evaluates <code>operands</code>
  * and instead of returning the list of results, each result is split into
  * {@link Value} objects representing each individual byte of the original

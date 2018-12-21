@@ -30,7 +30,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * A {@link ValueExpression} that represents the last {@link Value} returned
- * by evaluating its <code>operands</code> field.
+ * by evaluating its <code>operands</code>.
  */
 public class Last implements ValueExpression {
 

@@ -33,9 +33,9 @@ import io.parsingdata.metal.encoding.Encoding;
 /**
  * Base class for {@link ValueExpression}s with two operands.
  * <p>
- * A BinaryValueExpression implements a ValueExpression that has two fields:
+ * A BinaryValueExpression implements a ValueExpression that has two operands:
  * <code>lefts</code> and <code>rights</code> (both {@link ValueExpression}s).
- * Both fields are first evaluated. If at least one of the operands evaluates to
+ * Both operands are first evaluated. If at least one of the operands evaluates to
  * {@link Optional#empty()}, the result of the ValueExpression itself will be
  * empty as well.
  * <p>

@@ -33,7 +33,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * A {@link ValueExpression} that represents the first {@link Value} returned
- * by evaluating its <code>operands</code> field.
+ * by evaluating its <code>operands</code>.
  */
 public class First implements ValueExpression {
 

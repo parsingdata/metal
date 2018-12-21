@@ -29,7 +29,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * A {@link UnaryValueExpression} that represents the sizes (in bytes) of all
- * {@link Value}s returned by evaluating its <code>operands</code> field.
+ * {@link Value}s returned by evaluating its <code>operands</code>.
  */
 public class Len extends UnaryValueExpression {
 

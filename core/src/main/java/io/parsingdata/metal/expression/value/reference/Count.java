@@ -32,7 +32,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * A {@link ValueExpression} that represents the amount of {@link Value}s
- * returned by evaluating its <code>operands</code> field.
+ * returned by evaluating its <code>operands</code>.
  */
 public class Count implements ValueExpression {
 

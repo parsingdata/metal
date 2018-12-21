@@ -34,8 +34,8 @@ import io.parsingdata.metal.encoding.Encoding;
  * A {@link ValueExpression} that implements the Elvis operator:
  * <pre>?:</pre>.
  * <p>
- * An Elvis expression has two fields: <code>lefts</code> and <code>rights</code>
- * (both {@link ValueExpression}s). Both fields are evaluated. The return value is
+ * An Elvis expression has two operands: <code>lefts</code> and <code>rights</code>
+ * (both {@link ValueExpression}s). Both operands are evaluated. The return value is
  * a list with the size of the longest list returned by the two evaluations. At
  * each index, the value at that index in the result returned by evaluating
  * <code>lefts</code> is placed, except if it does not exist or is {@link Optional#empty()},
