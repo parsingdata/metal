@@ -34,27 +34,27 @@ import io.parsingdata.metal.encoding.Encoding;
  * A {@link ValueExpression} that implements the Elvis operator:
  * <pre>?:</pre>.
  * <p>
- * An Elvis expression has two operands: <code>lefts</code> and <code>rights</code>
+ * An Elvis expression has two operands: <code>left</code> and <code>right</code>
  * (both {@link ValueExpression}s). Both operands are evaluated. The return value is
  * a list with the size of the longest list returned by the two evaluations. At
  * each index, the value at that index in the result returned by evaluating
- * <code>lefts</code> is placed, except if it does not exist or is {@link Optional#empty()},
- * in which case the value at that index in the result returned by evaluating rights is
+ * <code>left</code> is placed, except if it does not exist or is {@link Optional#empty()},
+ * in which case the value at that index in the result returned by evaluating right is
  * placed there.
  */
 public class Elvis implements ValueExpression {
 
-    public final ValueExpression lefts;
-    public final ValueExpression rights;
+    public final ValueExpression left;
+    public final ValueExpression right;
 
-    public Elvis(final ValueExpression lefts, final ValueExpression rights) {
-        this.lefts = checkNotNull(lefts, "lefts");
-        this.rights = checkNotNull(rights, "rights");
+    public Elvis(final ValueExpression left, final ValueExpression right) {
+        this.left = checkNotNull(left, "left");
+        this.right = checkNotNull(right, "right");
     }
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return reverse(eval(new ImmutableList<>(), lefts.eval(parseState, encoding), rights.eval(parseState, encoding)).computeResult());
+        return reverse(eval(new ImmutableList<>(), left.eval(parseState, encoding), right.eval(parseState, encoding)).computeResult());
     }
 
     private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> result, final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues) {
@@ -69,19 +69,19 @@ public class Elvis implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + lefts + "," + rights + ")";
+        return getClass().getSimpleName() + "(" + left + "," + right + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(lefts, ((Elvis)obj).lefts)
-            && Objects.equals(rights, ((Elvis)obj).rights);
+            && Objects.equals(left, ((Elvis)obj).left)
+            && Objects.equals(right, ((Elvis)obj).right);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass(), lefts, rights);
+        return Objects.hash(getClass(), left, right);
     }
 
 }

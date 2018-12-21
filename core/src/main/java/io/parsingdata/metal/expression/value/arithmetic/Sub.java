@@ -30,8 +30,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  */
 public class Sub extends BinaryValueExpression {
 
-    public Sub(final ValueExpression lefts, final ValueExpression rights) {
-        super(lefts, rights);
+    public Sub(final ValueExpression left, final ValueExpression right) {
+        super(left, right);
     }
 
     @Override

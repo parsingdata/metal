@@ -30,13 +30,13 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 /**
  * A {@link BinaryValueExpression} that implements integer division.
  * <p>
- * If one of the values resulting from evaluating <code>rights</code> is equal
+ * If one of the values resulting from evaluating <code>right</code> is equal
  * to zero, the associated result will be empty.
  */
 public class Div extends BinaryValueExpression {
 
-    public Div(final ValueExpression lefts, final ValueExpression rights) {
-        super(lefts, rights);
+    public Div(final ValueExpression left, final ValueExpression right) {
+        super(left, right);
     }
 
     @Override

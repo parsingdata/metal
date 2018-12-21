@@ -31,8 +31,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  */
 public class Or extends BinaryValueExpression {
 
-    public Or(final ValueExpression lefts, final ValueExpression rights) {
-        super(lefts, rights);
+    public Or(final ValueExpression left, final ValueExpression right) {
+        super(left, right);
     }
 
     @Override

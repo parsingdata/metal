@@ -32,8 +32,8 @@ import io.parsingdata.metal.encoding.Encoding;
  */
 public class Cat extends BinaryValueExpression {
 
-    public Cat(final ValueExpression lefts, final ValueExpression rights) {
-        super(lefts, rights);
+    public Cat(final ValueExpression left, final ValueExpression right) {
+        super(left, right);
     }
 
     @Override

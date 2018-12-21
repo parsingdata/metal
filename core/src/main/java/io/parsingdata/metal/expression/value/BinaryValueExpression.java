@@ -34,7 +34,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * Base class for {@link ValueExpression}s with two operands.
  * <p>
  * A BinaryValueExpression implements a ValueExpression that has two operands:
- * <code>lefts</code> and <code>rights</code> (both {@link ValueExpression}s).
+ * <code>left</code> and <code>right</code> (both {@link ValueExpression}s).
  * Both operands are first evaluated. If at least one of the operands evaluates to
  * {@link Optional#empty()}, the result of the ValueExpression itself will be
  * empty as well.
@@ -53,19 +53,19 @@ import io.parsingdata.metal.encoding.Encoding;
  */
 public abstract class BinaryValueExpression implements ValueExpression {
 
-    public final ValueExpression lefts;
-    public final ValueExpression rights;
+    public final ValueExpression left;
+    public final ValueExpression right;
 
-    public BinaryValueExpression(final ValueExpression lefts, final ValueExpression rights) {
-        this.lefts = checkNotNull(lefts, "lefts");
-        this.rights = checkNotNull(rights, "rights");
+    public BinaryValueExpression(final ValueExpression left, final ValueExpression right) {
+        this.left = checkNotNull(left, "left");
+        this.right = checkNotNull(right, "right");
     }
 
     public abstract Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding);
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return evalLists(lefts.eval(parseState, encoding), rights.eval(parseState, encoding), parseState, encoding);
+        return evalLists(left.eval(parseState, encoding), right.eval(parseState, encoding), parseState, encoding);
     }
 
     private ImmutableList<Optional<Value>> evalLists(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues, final ParseState parseState, final Encoding encoding) {
@@ -88,19 +88,19 @@ public abstract class BinaryValueExpression implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + lefts + "," + rights + ")";
+        return getClass().getSimpleName() + "(" + left + "," + right + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(lefts, ((BinaryValueExpression)obj).lefts)
-            && Objects.equals(rights, ((BinaryValueExpression)obj).rights);
+            && Objects.equals(left, ((BinaryValueExpression)obj).left)
+            && Objects.equals(right, ((BinaryValueExpression)obj).right);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass(), lefts, rights);
+        return Objects.hash(getClass(), left, right);
     }
 
 }
