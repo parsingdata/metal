@@ -32,8 +32,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  */
 public class ShiftLeft extends BinaryValueExpression {
 
-    public ShiftLeft(final ValueExpression operands, final ValueExpression positions) {
-        super(operands, positions);
+    public ShiftLeft(final ValueExpression operand, final ValueExpression positions) {
+        super(operand, positions);
     }
 
     @Override

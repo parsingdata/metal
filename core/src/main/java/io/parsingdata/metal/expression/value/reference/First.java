@@ -33,40 +33,40 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * A {@link ValueExpression} that represents the first {@link Value} returned
- * by evaluating its <code>operands</code>.
+ * by evaluating its <code>operand</code>.
  */
 public class First implements ValueExpression {
 
-    public final ValueExpression operands;
+    public final ValueExpression operand;
 
-    public First(final ValueExpression operands) {
-        this.operands = checkNotNull(operands, "operands");
+    public First(final ValueExpression operand) {
+        this.operand = checkNotNull(operand, "operand");
     }
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> evaluatedOperands = operands.eval(parseState, encoding);
+        final ImmutableList<Optional<Value>> evaluatedOperands = operand.eval(parseState, encoding);
         return evaluatedOperands.isEmpty() ? evaluatedOperands : ImmutableList.create(getFirst(evaluatedOperands).computeResult());
     }
 
-    private Trampoline<Optional<Value>> getFirst(final ImmutableList<Optional<Value>> operandsValues) {
-        return operandsValues.tail.isEmpty() ? complete(() -> operandsValues.head) : intermediate(() -> getFirst(operandsValues.tail));
+    private Trampoline<Optional<Value>> getFirst(final ImmutableList<Optional<Value>> operandValues) {
+        return operandValues.tail.isEmpty() ? complete(() -> operandValues.head) : intermediate(() -> getFirst(operandValues.tail));
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + operands + ")";
+        return getClass().getSimpleName() + "(" + operand + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(operands, ((First)obj).operands);
+            && Objects.equals(operand, ((First)obj).operand);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass(), operands);
+        return Objects.hash(getClass(), operand);
     }
 
 }

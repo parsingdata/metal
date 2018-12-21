@@ -35,30 +35,30 @@ import io.parsingdata.metal.encoding.Encoding;
 
 /**
  * A {@link ValueExpression} that splits the results of evaluating its
- * <code>operands</code> into individual bytes.
+ * <code>operand</code> into individual bytes.
  * <p>
- * A Bytes expression has a single <code>operands</code> (a
- * {@link ValueExpression}). When evaluated, it evaluates <code>operands</code>
+ * A Bytes expression has a single <code>operand</code> (a
+ * {@link ValueExpression}). When evaluated, it evaluates <code>operand</code>
  * and instead of returning the list of results, each result is split into
  * {@link Value} objects representing each individual byte of the original
  * result.
  * <p>
- * For example, if <code>operands</code> evaluates to a list of two values, of
+ * For example, if <code>operand</code> evaluates to a list of two values, of
  * 2 and 3 bytes respectively, the <code>Bytes</code> expression turns this
  * into a list of 5 values, representing the individual bytes of the original
  * results.
  */
 public class Bytes implements ValueExpression {
 
-    public final ValueExpression operands;
+    public final ValueExpression operand;
 
-    public Bytes(final ValueExpression operands) {
-        this.operands = checkNotNull(operands, "operands");
+    public Bytes(final ValueExpression operand) {
+        this.operand = checkNotNull(operand, "operand");
     }
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> evaluatedOperands = operands.eval(parseState, encoding);
+        final ImmutableList<Optional<Value>> evaluatedOperands = operand.eval(parseState, encoding);
         if (evaluatedOperands.isEmpty()) {
             return evaluatedOperands;
         }
@@ -81,18 +81,18 @@ public class Bytes implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + operands + ")";
+        return getClass().getSimpleName() + "(" + operand + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(operands, ((Bytes)obj).operands);
+            && Objects.equals(operand, ((Bytes)obj).operand);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass(), operands);
+        return Objects.hash(getClass(), operand);
     }
 
 }

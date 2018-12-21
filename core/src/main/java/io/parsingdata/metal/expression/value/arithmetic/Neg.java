@@ -30,8 +30,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  */
 public class Neg extends UnaryValueExpression {
 
-    public Neg(final ValueExpression operands) {
-        super(operands);
+    public Neg(final ValueExpression operand) {
+        super(operand);
     }
 
     @Override

@@ -30,36 +30,36 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * A {@link ValueExpression} that represents the last {@link Value} returned
- * by evaluating its <code>operands</code>.
+ * by evaluating its <code>operand</code>.
  */
 public class Last implements ValueExpression {
 
-    public final ValueExpression operands;
+    public final ValueExpression operand;
 
-    public Last(final ValueExpression operands) {
-        this.operands = checkNotNull(operands, "operands");
+    public Last(final ValueExpression operand) {
+        this.operand = checkNotNull(operand, "operand");
     }
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> list = operands.eval(parseState, encoding);
+        final ImmutableList<Optional<Value>> list = operand.eval(parseState, encoding);
         return list.isEmpty() ? list : ImmutableList.create(list.head);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + operands + ")";
+        return getClass().getSimpleName() + "(" + operand + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(operands, ((Last)obj).operands);
+            && Objects.equals(operand, ((Last)obj).operand);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass(), operands);
+        return Objects.hash(getClass(), operand);
     }
 
 }

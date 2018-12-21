@@ -33,8 +33,8 @@ import io.parsingdata.metal.encoding.Encoding;
 /**
  * Base class for {@link ValueExpression}s with one operand.
  * <p>
- * A UnaryValueExpression implements a ValueExpression that has a single <code>operands</code>
- * (a {@link ValueExpression}). <code>operands</code> is first evaluated. If it evaluates
+ * A UnaryValueExpression implements a ValueExpression that has a single <code>operand</code>
+ * (a {@link ValueExpression}). <code>operand</code> is first evaluated. If it evaluates
  * to {@link Optional#empty()}, the result of the ValueExpression itself will be that as well.
  * <p>
  * To implement a UnaryValueExpression, only the {@link #eval(Value, ParseState, Encoding)}
@@ -45,15 +45,15 @@ import io.parsingdata.metal.encoding.Encoding;
  */
 public abstract class UnaryValueExpression implements ValueExpression {
 
-    public final ValueExpression operands;
+    public final ValueExpression operand;
 
-    public UnaryValueExpression(final ValueExpression operands) {
-        this.operands = checkNotNull(operands, "operands");
+    public UnaryValueExpression(final ValueExpression operand) {
+        this.operand = checkNotNull(operand, "operand");
     }
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return reverse(eval(operands.eval(parseState, encoding), parseState, encoding, new ImmutableList<>()).computeResult());
+        return reverse(eval(operand.eval(parseState, encoding), parseState, encoding, new ImmutableList<>()).computeResult());
     }
 
     private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> evaluatedValues, final ParseState parseState, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
@@ -67,18 +67,18 @@ public abstract class UnaryValueExpression implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + operands + ")";
+        return getClass().getSimpleName() + "(" + operand + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(operands, ((UnaryValueExpression)obj).operands);
+            && Objects.equals(operand, ((UnaryValueExpression)obj).operand);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass(), operands);
+        return Objects.hash(getClass(), operand);
     }
 
 }

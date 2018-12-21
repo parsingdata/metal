@@ -31,8 +31,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  */
 public class Not extends UnaryValueExpression {
 
-    public Not(final ValueExpression operands) {
-        super(operands);
+    public Not(final ValueExpression operand) {
+        super(operand);
     }
 
     @Override
