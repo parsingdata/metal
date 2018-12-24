@@ -42,8 +42,8 @@ public class Last implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> list = operand.eval(parseState, encoding);
-        return list.isEmpty() ? list : ImmutableList.create(list.head);
+        final ImmutableList<Optional<Value>> evaluatedOperand = operand.eval(parseState, encoding);
+        return evaluatedOperand.isEmpty() ? evaluatedOperand : ImmutableList.create(evaluatedOperand.head);
     }
 
     @Override

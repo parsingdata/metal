@@ -45,8 +45,8 @@ public class First implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> evaluatedOperands = operand.eval(parseState, encoding);
-        return evaluatedOperands.isEmpty() ? evaluatedOperands : ImmutableList.create(getFirst(evaluatedOperands).computeResult());
+        final ImmutableList<Optional<Value>> evaluatedOperand = operand.eval(parseState, encoding);
+        return evaluatedOperand.isEmpty() ? evaluatedOperand : ImmutableList.create(getFirst(evaluatedOperand).computeResult());
     }
 
     private Trampoline<Optional<Value>> getFirst(final ImmutableList<Optional<Value>> operandValues) {

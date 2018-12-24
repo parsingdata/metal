@@ -58,11 +58,11 @@ public class Bytes implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> evaluatedOperands = operand.eval(parseState, encoding);
-        if (evaluatedOperands.isEmpty()) {
-            return evaluatedOperands;
+        final ImmutableList<Optional<Value>> evaluatedOperand = operand.eval(parseState, encoding);
+        if (evaluatedOperand.isEmpty()) {
+            return evaluatedOperand;
         }
-        return toByteValues(new ImmutableList<>(), evaluatedOperands.head, evaluatedOperands.tail, encoding).computeResult();
+        return toByteValues(new ImmutableList<>(), evaluatedOperand.head, evaluatedOperand.tail, encoding).computeResult();
     }
 
     private Trampoline<ImmutableList<Optional<Value>>> toByteValues(final ImmutableList<Optional<Value>> output, final Optional<Value> head, final ImmutableList<Optional<Value>> tail, final Encoding encoding) {

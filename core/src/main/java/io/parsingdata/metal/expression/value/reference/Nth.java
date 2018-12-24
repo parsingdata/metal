@@ -62,22 +62,22 @@ public class Nth implements ValueExpression {
         return reverse(eval(values.eval(parseState, encoding), indices.eval(parseState, encoding), new ImmutableList<>()).computeResult());
     }
 
-    private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ImmutableList<Optional<Value>> indicesValues, final ImmutableList<Optional<Value>> result) {
-        if (indicesValues.isEmpty()) {
+    private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> valuesList, final ImmutableList<Optional<Value>> indicesList, final ImmutableList<Optional<Value>> result) {
+        if (indicesList.isEmpty()) {
             return complete(() -> result);
         }
-        final BigInteger valueCount = BigInteger.valueOf(values.size);
-        final Optional<Value> nextResult = indicesValues.head
+        final BigInteger valueCount = BigInteger.valueOf(valuesList.size);
+        final Optional<Value> nextResult = indicesList.head
             .filter(index -> index.asNumeric().compareTo(valueCount) < 0 && index.asNumeric().compareTo(ZERO) >= 0)
-            .flatMap(index -> nth(values, valueCount.subtract(index.asNumeric()).subtract(ONE)).computeResult());
-        return intermediate(() -> eval(values, indicesValues.tail, result.add(nextResult)));
+            .flatMap(index -> nth(valuesList, valueCount.subtract(index.asNumeric()).subtract(ONE)).computeResult());
+        return intermediate(() -> eval(valuesList, indicesList.tail, result.add(nextResult)));
     }
 
-    private Trampoline<Optional<Value>> nth(final ImmutableList<Optional<Value>> values, final BigInteger indexValue) {
+    private Trampoline<Optional<Value>> nth(final ImmutableList<Optional<Value>> valuesList, final BigInteger indexValue) {
         if (indexValue.equals(ZERO)) {
-            return complete(() -> values.head);
+            return complete(() -> valuesList.head);
         }
-        return intermediate(() -> nth(values.tail, indexValue.subtract(ONE)));
+        return intermediate(() -> nth(valuesList.tail, indexValue.subtract(ONE)));
     }
 
     @Override
