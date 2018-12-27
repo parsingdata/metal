@@ -42,11 +42,11 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * in the input.
  * <p>
  * A Sub consists of a <code>token</code> (a {@link Token}) and an
- * <code>address</code> (a {@link ValueExpression}). First
- * <code>address</code> is evaluated. Then each resulting value is used as a
+ * <code>offsets</code> (a {@link ValueExpression}). First
+ * <code>offsets</code> is evaluated. Then each resulting value is used as a
  * location in the input to parse <code>token</code> at. Sub succeeds if all
  * parses of <code>token</code> at all locations succeed. Sub fails if
- * <code>address</code> evaluates to a list of locations that is either empty
+ * <code>offsets</code> evaluates to a list of locations that is either empty
  * or contains an invalid value.
  *
  * @see ValueExpression
@@ -54,41 +54,41 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 public class Sub extends Token {
 
     public final Token token;
-    public final ValueExpression address;
+    public final ValueExpression offsets;
 
-    public Sub(final String name, final Token token, final ValueExpression address, final Encoding encoding) {
+    public Sub(final String name, final Token token, final ValueExpression offsets, final Encoding encoding) {
         super(name, encoding);
         this.token = checkNotNull(token, "token");
-        this.address = checkNotNull(address, "address");
+        this.offsets = checkNotNull(offsets, "offsets");
     }
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        final ImmutableList<Optional<Value>> addresses = address.eval(environment.parseState, environment.encoding);
-        if (addresses.isEmpty()) {
+        final ImmutableList<Optional<Value>> offsetList = offsets.eval(environment.parseState, environment.encoding);
+        if (offsetList.isEmpty()) {
             return failure();
         }
-        return iterate(environment.addBranch(this), addresses)
+        return iterate(environment.addBranch(this), offsetList)
             .computeResult()
             .flatMap(nextParseState -> nextParseState.seek(environment.parseState.offset));
     }
 
-    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Optional<Value>> addresses) {
-        if (addresses.isEmpty()) {
+    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Optional<Value>> offsetList) {
+        if (offsetList.isEmpty()) {
             return complete(() -> success(environment.parseState.closeBranch(this)));
         }
-        return addresses.head
-            .flatMap(address -> parse(environment, address.asNumeric()))
-            .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState), addresses.tail)))
+        return offsetList.head
+            .flatMap(offsetValue -> parse(environment, offsetValue.asNumeric()))
+            .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState), offsetList.tail)))
             .orElseGet(() -> complete(Util::failure));
     }
 
-    private Optional<ParseState> parse(final Environment environment, final BigInteger offset) {
-        if (hasRootAtOffset(environment.parseState.order, token.getCanonical(environment.parseState), offset, environment.parseState.source)) {
-            return success(environment.parseState.add(new ParseReference(offset, environment.parseState.source, token.getCanonical(environment.parseState))));
+    private Optional<ParseState> parse(final Environment environment, final BigInteger offsetValue) {
+        if (hasRootAtOffset(environment.parseState.order, token.getCanonical(environment.parseState), offsetValue, environment.parseState.source)) {
+            return success(environment.parseState.add(new ParseReference(offsetValue, environment.parseState.source, token.getCanonical(environment.parseState))));
         }
         return environment.parseState
-            .seek(offset)
+            .seek(offsetValue)
             .map(newParseState -> token.parse(environment.withParseState(newParseState)))
             .orElseGet(Util::failure);
     }
@@ -100,19 +100,19 @@ public class Sub extends Token {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + makeNameFragment() + token + "," + address + ")";
+        return getClass().getSimpleName() + "(" + makeNameFragment() + token + "," + offsets + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return super.equals(obj)
             && Objects.equals(token, ((Sub)obj).token)
-            && Objects.equals(address, ((Sub)obj).address);
+            && Objects.equals(offsets, ((Sub)obj).offsets);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), token, address);
+        return Objects.hash(super.hashCode(), token, offsets);
     }
 
 }

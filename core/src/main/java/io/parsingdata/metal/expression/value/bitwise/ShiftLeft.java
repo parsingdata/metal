@@ -37,9 +37,9 @@ public class ShiftLeft extends BinaryValueExpression {
     }
 
     @Override
-    public Optional<Value> eval(final Value operand, final Value positions, final ParseState parseState, final Encoding encoding) {
-        final BitSet leftBits = operand.asBitSet();
-        final int shiftLeft = positions.asNumeric().intValueExact();
+    public Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {
+        final BitSet leftBits = leftValue.asBitSet();
+        final int shiftLeft = rightValue.asNumeric().intValueExact();
         final int bitCount = leftBits.length() + shiftLeft;
         final BitSet out = new BitSet(bitCount);
         for (int i = leftBits.nextSetBit(0); i >= 0; i = leftBits.nextSetBit(i+1)) {

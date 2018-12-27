@@ -38,8 +38,8 @@ public class FoldRight extends Fold {
     }
 
     @Override
-    protected ImmutableList<Optional<Value>> prepareValues(final ImmutableList<Optional<Value>> values) {
-        return values;
+    protected ImmutableList<Optional<Value>> prepareValues(final ImmutableList<Optional<Value>> valueList) {
+        return valueList;
     }
 
     @Override
