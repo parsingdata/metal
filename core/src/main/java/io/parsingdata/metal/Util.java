@@ -20,6 +20,7 @@ import static java.math.BigInteger.ZERO;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
@@ -71,6 +72,10 @@ public final class Util {
             throw new IllegalArgumentException(String.format("Argument %s may not be negative.", name));
         }
         return argument;
+    }
+
+    public static String format(final String format, Object... args) {
+        return String.format(Locale.ENGLISH, format, args);
     }
 
     public static String bytesToHexString(final byte[] bytes) {
