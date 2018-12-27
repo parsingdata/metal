@@ -63,11 +63,11 @@ public class Expand implements ValueExpression {
         return expand(baseList, countList.head.get().asNumeric().intValueExact(), new ImmutableList<>()).computeResult();
     }
 
-    private Trampoline<ImmutableList<Optional<Value>>> expand(final ImmutableList<Optional<Value>> baseValues, final int countValue, final ImmutableList<Optional<Value>> aggregate) {
+    private Trampoline<ImmutableList<Optional<Value>>> expand(final ImmutableList<Optional<Value>> baseList, final int countValue, final ImmutableList<Optional<Value>> aggregate) {
         if (countValue < 1) {
             return complete(() -> aggregate);
         }
-        return intermediate(() -> expand(baseValues, countValue - 1, aggregate.add(baseValues)));
+        return intermediate(() -> expand(baseList, countValue - 1, aggregate.add(baseList)));
     }
 
     @Override
