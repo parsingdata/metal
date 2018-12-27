@@ -22,6 +22,7 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.Util.format;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -73,7 +74,7 @@ public class ConcatenatedValueSource extends Source {
     @Override
     protected byte[] getData(final BigInteger offset, final BigInteger length) {
         if (!isAvailable(offset, length)) {
-            throw new IllegalStateException("Data to read is not available (offset=" + offset + ";length=" + length + ";source=" + this + ").");
+            throw new IllegalStateException(format("Data to read is not available (offset=%d;length=%d;source=%s).", offset, length, this));
         }
         return getData(values, ZERO, ZERO, offset, length, new byte[length.intValueExact()]).computeResult();
     }

@@ -40,11 +40,11 @@ public class Mod extends BinaryValueExpression {
     }
 
     @Override
-    public Optional<Value> eval(final Value left, final Value right, final ParseState parseState, final Encoding encoding) {
-        if (right.asNumeric().compareTo(ZERO) <= 0) {
+    public Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {
+        if (rightValue.asNumeric().compareTo(ZERO) <= 0) {
             return Optional.empty();
         }
-        return Optional.of(ConstantFactory.createFromNumeric(left.asNumeric().mod(right.asNumeric()), encoding));
+        return Optional.of(ConstantFactory.createFromNumeric(leftValue.asNumeric().mod(rightValue.asNumeric()), encoding));
     }
 
 }

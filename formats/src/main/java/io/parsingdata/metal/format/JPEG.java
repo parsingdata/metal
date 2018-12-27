@@ -39,31 +39,36 @@ import io.parsingdata.metal.token.Token;
  */
 public final class JPEG {
 
+    public static final String MARKER = "marker";
+    public static final String IDENTIFIER = "identifier";
+    public static final String LENGTH = "length";
+    public static final String PAYLOAD = "payload";
+
     private JPEG() {}
 
     private static final Token HEADER =
             seq("start of image",
-                def("marker", con(1), eq(con(0xff))),
-                def("identifier", con(1), eq(con(0xd8))));
+                def(MARKER, con(1), eq(con(0xff))),
+                def(IDENTIFIER, con(1), eq(con(0xd8))));
 
     private static final Token FOOTER =
             seq("end of image",
-                def("marker", con(1), eq(con(0xff))),
-                def("identifier", con(1), eq(con(0xd9))));
+                def(MARKER, con(1), eq(con(0xff))),
+                def(IDENTIFIER, con(1), eq(con(0xd9))));
 
     private static final Token SIZED_SEGMENT =
             seq("sized segment",
-                def("marker", con(1), eq(con(0xff))),
-                def("identifier", con(1), or(ltNum(con(0xd8)), gtNum(con(0xda)))),
-                def("length", con(2)),
-                def("payload", sub(last(ref("length")), con(2))));
+                def(MARKER, con(1), eq(con(0xff))),
+                def(IDENTIFIER, con(1), or(ltNum(con(0xd8)), gtNum(con(0xda)))),
+                def(LENGTH, con(2)),
+                def(PAYLOAD, sub(last(ref(LENGTH)), con(2))));
 
     private static final Token SCAN_SEGMENT =
             seq("scan segment",
-                def("marker", con(1), eq(con(0xff))),
-                def("identifier", con(1), eq(con(0xda))),
-                def("length", con(2)),
-                def("payload", sub(last(ref("length")), con(2))),
+                def(MARKER, con(1), eq(con(0xff))),
+                def(IDENTIFIER, con(1), eq(con(0xda))),
+                def(LENGTH, con(2)),
+                def(PAYLOAD, sub(last(ref(LENGTH)), con(2))),
                 rep(cho(def("scandata", con(1), not(eq(con(0xff)))),
                         def("escape", con(2), or(eq(con(0xff00)), and(gtNum(con(0xffcf)), ltNum(con(0xffd8))))))));
 

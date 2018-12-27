@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.Util.format;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -52,7 +53,7 @@ public class DataExpressionSource extends Source {
         checkNotNegative(offset, "offset");
         final byte[] data = getValue();
         if (checkNotNegative(length, "length").add(offset).compareTo(BigInteger.valueOf(data.length)) > 0) {
-            throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ").");
+            throw new IllegalStateException(format("Data to read is not available ([offset=%d;length=%d;source=%s).", offset, length, this));
         }
         final byte[] outputData = new byte[length.intValueExact()];
         System.arraycopy(data, offset.intValueExact(), outputData, 0, outputData.length);
@@ -68,12 +69,12 @@ public class DataExpressionSource extends Source {
         if (cache == null) {
             final ImmutableList<Optional<Value>> results = dataExpression.eval(parseState, encoding);
             if (results.size <= index) {
-                throw new IllegalStateException("ValueExpression dataExpression yields " + results.size + " result(s) (expected at least " + (index + 1) + ").");
+                throw new IllegalStateException(format("ValueExpression dataExpression yields %d result(s) (expected at least %d).", results.size, index+1));
             }
             cache = getValueAtIndex(results, index, 0)
                 .computeResult()
                 .map(Value::getValue)
-                .orElseThrow(() -> new IllegalStateException("ValueExpression dataExpression yields empty Value at index " + index + "."));
+                .orElseThrow(() -> new IllegalStateException(format("ValueExpression dataExpression yields empty Value at index %d.", index)));
         }
         return cache;
     }

@@ -58,18 +58,18 @@ public abstract class Fold implements ValueExpression {
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> initial = this.initial != null ? this.initial.eval(parseState, encoding) : new ImmutableList<>();
-        if (initial.size > 1) {
+        final ImmutableList<Optional<Value>> initialList = initial != null ? initial.eval(parseState, encoding) : new ImmutableList<>();
+        if (initialList.size > 1) {
             return new ImmutableList<>();
         }
-        final ImmutableList<Optional<Value>> values = prepareValues(this.values.eval(parseState, encoding));
-        if (values.isEmpty() || containsEmpty(values).computeResult()) {
-            return initial;
+        final ImmutableList<Optional<Value>> valueList = prepareValues(this.values.eval(parseState, encoding));
+        if (valueList.isEmpty() || containsEmpty(valueList).computeResult()) {
+            return initialList;
         }
-        if (!initial.isEmpty()) {
-            return ImmutableList.create(fold(parseState, encoding, reducer, initial.head, values).computeResult());
+        if (!initialList.isEmpty()) {
+            return ImmutableList.create(fold(parseState, encoding, reducer, initialList.head, valueList).computeResult());
         }
-        return ImmutableList.create(fold(parseState, encoding, reducer, values.head, values.tail).computeResult());
+        return ImmutableList.create(fold(parseState, encoding, reducer, valueList.head, valueList.tail).computeResult());
     }
 
     private Trampoline<Optional<Value>> fold(final ParseState parseState, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Optional<Value> head, final ImmutableList<Optional<Value>> tail) {
@@ -92,7 +92,7 @@ public abstract class Fold implements ValueExpression {
             .orElseGet(() -> complete(() -> true));
     }
 
-    protected abstract ImmutableList<Optional<Value>> prepareValues(ImmutableList<Optional<Value>> values);
+    protected abstract ImmutableList<Optional<Value>> prepareValues(ImmutableList<Optional<Value>> valueList);
 
     protected abstract ValueExpression reduce(BinaryOperator<ValueExpression> reducer, Value head, Value tail);
 

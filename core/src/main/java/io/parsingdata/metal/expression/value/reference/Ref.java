@@ -59,12 +59,12 @@ public class Ref<T> implements ValueExpression {
 
     public static class NameRef extends Ref<String> {
         public NameRef(final String reference) { this(reference, null); }
-        public NameRef(final String reference, final ValueExpression limit) { super(reference, (value) -> value.matches(reference), limit); }
+        public NameRef(final String reference, final ValueExpression limit) { super(reference, value -> value.matches(reference), limit); }
     }
 
     public static class DefinitionRef extends Ref<Token> {
         public DefinitionRef(final Token reference) { this(reference, null); }
-        public DefinitionRef(final Token reference, final ValueExpression limit) { super(reference, (value) -> value.definition.equals(reference), limit); }
+        public DefinitionRef(final Token reference, final ValueExpression limit) { super(reference, value -> value.definition.equals(reference), limit); }
     }
 
     @Override

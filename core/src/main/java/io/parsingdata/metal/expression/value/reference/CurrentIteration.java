@@ -61,26 +61,26 @@ public class CurrentIteration implements ValueExpression {
     }
 
     private Optional<Value> getIteration(final ParseState parseState, final Encoding encoding) {
-        final BigInteger level = getLevel(parseState, encoding);
-        if (parseState.iterations.size <= level.longValue()) {
+        final BigInteger levelValue = getLevel(parseState, encoding);
+        if (parseState.iterations.size <= levelValue.longValue()) {
             return Optional.empty();
         }
-        return getIterationRecursive(parseState.iterations, level).computeResult();
+        return getIterationRecursive(parseState.iterations, levelValue).computeResult();
     }
 
     private BigInteger getLevel(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> evaluatedLevel = level.eval(parseState, encoding);
-        if (evaluatedLevel.size != 1 || !evaluatedLevel.head.isPresent()) {
+        final ImmutableList<Optional<Value>> levelList = level.eval(parseState, encoding);
+        if (levelList.size != 1 || !levelList.head.isPresent()) {
             throw new IllegalArgumentException("Level must evaluate to a single non-empty value.");
         }
-        return evaluatedLevel.head.get().asNumeric();
+        return levelList.head.get().asNumeric();
     }
 
-    private Trampoline<Optional<Value>> getIterationRecursive(final ImmutableList<ImmutablePair<Token, BigInteger>> iterations, final BigInteger level) {
-        if (level.compareTo(ZERO) == 0) {
+    private Trampoline<Optional<Value>> getIterationRecursive(final ImmutableList<ImmutablePair<Token, BigInteger>> iterations, final BigInteger levelValue) {
+        if (levelValue.compareTo(ZERO) == 0) {
             return complete(() -> Optional.of(createFromNumeric(iterations.head.right, DEFAULT_ENCODING)));
         }
-        return intermediate(() -> getIterationRecursive(iterations.tail, level.subtract(ONE)));
+        return intermediate(() -> getIterationRecursive(iterations.tail, levelValue.subtract(ONE)));
     }
 
     @Override

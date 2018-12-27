@@ -23,6 +23,7 @@ import static java.nio.ByteBuffer.allocate;
 import static io.parsingdata.metal.Shorthand.cat;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.Util.format;
 import static io.parsingdata.metal.encoding.Encoding.DEFAULT_ENCODING;
 
 import java.util.Arrays;
@@ -48,7 +49,7 @@ public final class GUID {
     public static ValueExpression guid(final String guid) {
         final String[] parts = checkNotNull(guid, "guid").split("-", -1);
         if (parts.length != 5) {
-            throw new IllegalArgumentException("Invalid GUID string: " + guid);
+            throw new IllegalArgumentException(format("Invalid GUID string: %s", guid));
         }
         return (parseState, encoding) ->
             // Note that GUID bytes differ from UUID bytes, as the first 3 parts can be reversed

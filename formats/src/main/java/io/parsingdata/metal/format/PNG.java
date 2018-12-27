@@ -33,6 +33,12 @@ import io.parsingdata.metal.token.Token;
 
 public final class PNG {
 
+    public static final String LENGTH = "length";
+    public static final String TYPE = "type";
+    public static final String CRC_32 = "crc32";
+    public static final String IEND = "IEND";
+    public static final String DATA = "data";
+
     private PNG() {}
 
     private static final Token HEADER =
@@ -43,16 +49,16 @@ public final class PNG {
 
     private static final Token FOOTER =
             seq("footer",
-                def("footerlength", con(4), eqNum(con(0))),
-                def("footertype", con(4), eq(con("IEND"))),
-                def("footercrc32", con(4), eq(con(0xae, 0x42, 0x60, 0x82))));
+                def(LENGTH, con(4), eqNum(con(0))),
+                def(TYPE, con(4), eq(con(IEND))),
+                def(CRC_32, con(4), eq(con(0xae, 0x42, 0x60, 0x82))));
 
     private static final Token STRUCT =
             seq("chunk",
-                def("length", con(4)),
-                def("chunktype", con(4), not(eq(con("IEND")))),
-                def("chunkdata", last(ref("length"))),
-                def("crc32", con(4), eq(crc32(cat(last(ref("chunktype")), last(ref("chunkdata")))))));
+                def(LENGTH, con(4)),
+                def(TYPE, con(4), not(eq(con(IEND)))),
+                def(DATA, last(ref(LENGTH))),
+                def(CRC_32, con(4), eq(crc32(cat(last(ref(TYPE)), last(ref(DATA)))))));
 
     public static final Token FORMAT =
             seq("PNG", DEFAULT_ENCODING,

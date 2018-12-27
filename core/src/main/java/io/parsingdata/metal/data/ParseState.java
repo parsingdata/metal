@@ -21,6 +21,7 @@ import static java.math.BigInteger.ZERO;
 
 import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.Util.format;
 import static io.parsingdata.metal.data.Slice.createFromSource;
 
 import java.math.BigInteger;
@@ -28,8 +29,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.Util;
-import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 
 public class ParseState {
@@ -60,7 +59,7 @@ public class ParseState {
 
     public ParseState closeBranch(final Token token) {
         if (token.isIterable() && !iterations.head.left.equals(token)) {
-            throw new IllegalStateException(String.format("Cannot close branch for iterable token %s. Current iteration state is for token %s.", token.name, iterations.head.left.name));
+            throw new IllegalStateException(format("Cannot close branch for iterable token %s. Current iteration state is for token %s.", token.name, iterations.head.left.name));
         }
         return new ParseState(order.closeBranch(), source, offset, token.isIterable() ? iterations.tail : iterations);
     }
@@ -81,8 +80,8 @@ public class ParseState {
         return newOffset.compareTo(ZERO) >= 0 ? Optional.of(new ParseState(order, source, newOffset, iterations)) : Optional.empty();
     }
 
-    public ParseState source(final ValueExpression dataExpression, final int index, final ParseState parseState, final Encoding encoding) {
-        return new ParseState(order, new DataExpressionSource(dataExpression, index, parseState, encoding), ZERO, iterations);
+    public ParseState withSource(final Source source) {
+        return new ParseState(order, source, ZERO, iterations);
     }
 
     public Optional<Slice> slice(final BigInteger length) {

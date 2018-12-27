@@ -61,7 +61,7 @@ public abstract class BinaryValueExpression implements ValueExpression {
         this.right = checkNotNull(right, "right");
     }
 
-    public abstract Optional<Value> eval(final Value left, final Value right, final ParseState parseState, final Encoding encoding);
+    public abstract Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding);
 
     @Override
     public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {

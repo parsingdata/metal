@@ -40,11 +40,11 @@ public class Div extends BinaryValueExpression {
     }
 
     @Override
-    public Optional<Value> eval(final Value left, final Value right, final ParseState parseState, final Encoding encoding) {
-        if (right.asNumeric().equals(ZERO)) {
+    public Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {
+        if (rightValue.asNumeric().equals(ZERO)) {
             return Optional.empty();
         }
-        return Optional.of(ConstantFactory.createFromNumeric(left.asNumeric().divide(right.asNumeric()), encoding));
+        return Optional.of(ConstantFactory.createFromNumeric(leftValue.asNumeric().divide(rightValue.asNumeric()), encoding));
     }
 
 }

@@ -59,9 +59,9 @@ public class UntilTest {
         assertTrue(parseState.isPresent());
         ImmutableList<ParseValue> values = getAllValues(parseState.get().order, "line");
         assertEquals(3, values.size);
-        assertEquals(values.head.asString(), INPUT_3);
-        assertEquals(values.tail.head.asString(), INPUT_2);
-        assertEquals(values.tail.tail.head.asString(), INPUT_1);
+        assertEquals(INPUT_3, values.head.asString());
+        assertEquals(INPUT_2, values.tail.head.asString());
+        assertEquals(INPUT_1, values.tail.tail.head.asString());
     }
 
     @Test
@@ -70,9 +70,9 @@ public class UntilTest {
         assertTrue(parseState.isPresent());
         ImmutableList<ParseValue> values = getAllValues(parseState.get().order, "line");
         assertEquals(3, values.size);
-        assertEquals(values.head.asString(), INPUT_3 + '\n');
-        assertEquals(values.tail.head.asString(), INPUT_2 + '\n');
-        assertEquals(values.tail.tail.head.asString(), INPUT_1 + '\n');
+        assertEquals(INPUT_3 + '\n', values.head.asString());
+        assertEquals(INPUT_2 + '\n', values.tail.head.asString());
+        assertEquals(INPUT_1 + '\n', values.tail.tail.head.asString());
     }
 
     @Test

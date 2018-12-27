@@ -35,8 +35,8 @@ public class Sub extends BinaryValueExpression {
     }
 
     @Override
-    public Optional<Value> eval(final Value left, final Value right, final ParseState parseState, final Encoding encoding) {
-        return Optional.of(ConstantFactory.createFromNumeric(left.asNumeric().subtract(right.asNumeric()), encoding));
+    public Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {
+        return Optional.of(ConstantFactory.createFromNumeric(leftValue.asNumeric().subtract(rightValue.asNumeric()), encoding));
     }
 
 }

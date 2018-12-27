@@ -36,10 +36,10 @@ public class And extends BinaryValueExpression {
     }
 
     @Override
-    public Optional<Value> eval(final Value left, final Value right, final ParseState parseState, final Encoding encoding) {
-        final BitSet leftBits = left.asBitSet();
-        leftBits.and(right.asBitSet());
-        return Optional.of(ConstantFactory.createFromBitSet(leftBits, left.getValue().length, encoding));
+    public Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {
+        final BitSet leftBits = leftValue.asBitSet();
+        leftBits.and(rightValue.asBitSet());
+        return Optional.of(ConstantFactory.createFromBitSet(leftBits, leftValue.getValue().length, encoding));
     }
 
 }

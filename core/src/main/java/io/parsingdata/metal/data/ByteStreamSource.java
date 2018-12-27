@@ -18,6 +18,7 @@ package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.Util.format;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -37,7 +38,7 @@ public class ByteStreamSource extends Source {
     @Override
     protected byte[] getData(final BigInteger offset, final BigInteger length) {
         if (!isAvailable(offset, length)) {
-            throw new IllegalStateException("Data to read is not available ([offset=" + offset + ";length=" + length + ";source=" + this + ").");
+            throw new IllegalStateException(format("Data to read is not available ([offset=%d;length=%d;source=%s).", offset, length, this));
         }
         try {
             return input.read(offset, length.intValueExact());
