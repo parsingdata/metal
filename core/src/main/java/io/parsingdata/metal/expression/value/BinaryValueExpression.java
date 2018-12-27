@@ -76,7 +76,7 @@ public abstract class BinaryValueExpression implements ValueExpression {
         if (leftValues.isEmpty() || rightValues.isEmpty()) {
             return complete(() -> result);
         }
-        return intermediate(() -> evalLists(leftValues.tail, rightValues.tail, parseState, encoding, result.add(leftValues.head.flatMap(left -> rightValues.head.flatMap(right -> eval(left, right, parseState, encoding))))));
+        return intermediate(() -> evalLists(leftValues.tail, rightValues.tail, parseState, encoding, result.add(leftValues.head.flatMap(leftValue -> rightValues.head.flatMap(rightValue -> eval(leftValue, rightValue, parseState, encoding))))));
     }
 
     private Trampoline<ImmutableList<Optional<Value>>> padList(final ImmutableList<Optional<Value>> list, final long size) {
