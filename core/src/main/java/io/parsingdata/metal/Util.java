@@ -40,7 +40,7 @@ public final class Util {
 
     public static <T>T checkNotNull(final T argument, final String name) {
         if (argument == null) {
-            throw new IllegalArgumentException(String.format("Argument %s may not be null.", name));
+            throw new IllegalArgumentException(format("Argument %s may not be null.", name));
         }
         return argument;
     }
@@ -49,7 +49,7 @@ public final class Util {
         checkNotNull(arguments, name);
         for (final T argument : arguments) {
             if (argument == null) {
-                throw new IllegalArgumentException(String.format("Value in array %s may not be null.", name));
+                throw new IllegalArgumentException(format("Value in array %s may not be null.", name));
             }
         }
         return arguments;
@@ -57,7 +57,7 @@ public final class Util {
 
     public static String checkNotEmpty(final String argument, final String name) {
         if (checkNotNull(argument, name).isEmpty()) {
-            throw new IllegalArgumentException(String.format("Argument %s may not be empty.", name));
+            throw new IllegalArgumentException(format("Argument %s may not be empty.", name));
         }
         return argument;
     }
@@ -69,7 +69,7 @@ public final class Util {
 
     public static BigInteger checkNotNegative(final BigInteger argument, final String name) {
         if (checkNotNull(argument, name).compareTo(ZERO) < 0) {
-            throw new IllegalArgumentException(String.format("Argument %s may not be negative.", name));
+            throw new IllegalArgumentException(format("Argument %s may not be negative.", name));
         }
         return argument;
     }

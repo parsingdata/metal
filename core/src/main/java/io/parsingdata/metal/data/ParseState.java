@@ -21,6 +21,7 @@ import static java.math.BigInteger.ZERO;
 
 import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.Util.format;
 import static io.parsingdata.metal.data.Slice.createFromSource;
 
 import java.math.BigInteger;
@@ -58,7 +59,7 @@ public class ParseState {
 
     public ParseState closeBranch(final Token token) {
         if (token.isIterable() && !iterations.head.left.equals(token)) {
-            throw new IllegalStateException(String.format("Cannot close branch for iterable token %s. Current iteration state is for token %s.", token.name, iterations.head.left.name));
+            throw new IllegalStateException(format("Cannot close branch for iterable token %s. Current iteration state is for token %s.", token.name, iterations.head.left.name));
         }
         return new ParseState(order.closeBranch(), source, offset, token.isIterable() ? iterations.tail : iterations);
     }
