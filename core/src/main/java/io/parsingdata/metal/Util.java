@@ -74,7 +74,7 @@ public final class Util {
         return argument;
     }
 
-    public static String format(final String format, Object... args) {
+    public static String format(final String format, final Object... args) {
         return String.format(Locale.ENGLISH, format, args);
     }
 
