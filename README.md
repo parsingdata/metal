@@ -8,6 +8,7 @@ A Java library for parsing binary data formats, using declarative descriptions.
 [![CodeFactor](https://www.codefactor.io/repository/github/parsingdata/metal/badge)](https://www.codefactor.io/repository/github/parsingdata/metal)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/813955d55dbf49ceb3ab75bcfdecde30)](https://www.codacy.com/app/parsingdata/metal?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=parsingdata/metal&amp;utm_campaign=Badge_Grade)
 [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/parsingdata/metal.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/parsingdata/metal/context:java)
+[![SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=parsingdata_metal&metric=alert_status)](https://sonarcloud.io/dashboard?id=parsingdata_metal)
 
 ## License
 
