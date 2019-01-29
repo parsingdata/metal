@@ -39,8 +39,8 @@ public class Const implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return ImmutableList.create(Optional.of(value));
+    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        return Optional.of(ImmutableList.create(value));
     }
 
     @Override

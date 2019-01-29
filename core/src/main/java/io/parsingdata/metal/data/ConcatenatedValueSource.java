@@ -23,6 +23,8 @@ import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.format;
+import static io.parsingdata.metal.data.Selection.reverse;
+import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -42,22 +44,13 @@ public class ConcatenatedValueSource extends Source {
         this.length = checkNotNegative(length, "length");
     }
 
-    public static Optional<ConcatenatedValueSource> create(final ImmutableList<Optional<Value>> optionalValues) {
-        final ImmutableList<Value> values = unwrap(optionalValues, new ImmutableList<>()).computeResult();
+    public static Optional<ConcatenatedValueSource> create(final ImmutableList<Value> optionalValues) {
+        final ImmutableList<Value> values = reverse(optionalValues);
         final BigInteger length = calculateTotalSize(values);
         if (length.compareTo(ZERO) == 0) {
             return Optional.empty();
         }
         return Optional.of(new ConcatenatedValueSource(values, length));
-    }
-
-    private static <T> Trampoline<ImmutableList<T>> unwrap(final ImmutableList<Optional<T>> input, final ImmutableList<T> output) {
-        if (input.isEmpty()) {
-            return complete(() -> output);
-        }
-        return input.head
-            .map(value -> intermediate(() -> unwrap(input.tail, output.add(value))))
-            .orElseGet(() -> intermediate(() -> unwrap(input.tail, output)));
     }
 
     private static BigInteger calculateTotalSize(final ImmutableList<Value> values) {
@@ -67,6 +60,9 @@ public class ConcatenatedValueSource extends Source {
     private static Trampoline<BigInteger> calculateTotalSize(final ImmutableList<Value> values, final BigInteger size) {
         if (values.isEmpty()) {
             return complete(() -> size);
+        }
+        if (values.head == NOT_A_VALUE) {
+            return complete(() -> ZERO);
         }
         return intermediate(() -> calculateTotalSize(values.tail, size.add(values.head.slice.length)));
     }

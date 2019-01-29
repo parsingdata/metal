@@ -19,9 +19,9 @@ package io.parsingdata.metal.token;
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
 import static io.parsingdata.metal.data.Selection.hasRootAtOffset;
+import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -64,21 +64,20 @@ public class Sub extends Token {
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        final ImmutableList<Optional<Value>> offsetList = offsets.eval(environment.parseState, environment.encoding);
-        if (offsetList.isEmpty()) {
-            return failure();
-        }
-        return iterate(environment.addBranch(this), offsetList)
-            .computeResult()
-            .flatMap(nextParseState -> nextParseState.seek(environment.parseState.offset));
+        return offsets.eval(environment.parseState, environment.encoding)
+            .flatMap(offsetList -> iterate(environment.addBranch(this), offsetList)
+                .computeResult()
+                .flatMap(nextParseState -> nextParseState.seek(environment.parseState.offset)));
     }
 
-    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Optional<Value>> offsetList) {
+    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Value> offsetList) {
         if (offsetList.isEmpty()) {
             return complete(() -> success(environment.parseState.closeBranch(this)));
         }
-        return offsetList.head
-            .flatMap(offsetValue -> parse(environment, offsetValue.asNumeric()))
+        if (offsetList.head == NOT_A_VALUE) {
+            return complete(Util::failure);
+        }
+        return parse(environment, offsetList.head.asNumeric())
             .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState), offsetList.tail)))
             .orElseGet(() -> complete(Util::failure));
     }

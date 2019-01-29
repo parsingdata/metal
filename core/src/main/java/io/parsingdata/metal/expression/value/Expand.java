@@ -51,19 +51,19 @@ public class Expand implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> baseList = bases.eval(parseState, encoding);
-        if (baseList.isEmpty()) {
-            return baseList;
+    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        final Optional<ImmutableList<Value>> baseList = bases.eval(parseState, encoding);
+        if (!baseList.isPresent() || baseList.get().isEmpty()) {
+            return Optional.empty();
         }
-        final ImmutableList<Optional<Value>> countList = count.eval(parseState, encoding);
-        if (countList.size != 1 || !countList.head.isPresent()) {
+        final Optional<ImmutableList<Value>> countList = count.eval(parseState, encoding);
+        if (!countList.isPresent() || countList.get().size != 1) {
             throw new IllegalArgumentException("Count must evaluate to a single non-empty value.");
         }
-        return expand(baseList, countList.head.get().asNumeric().intValueExact(), new ImmutableList<>()).computeResult();
+        return Optional.of(expand(baseList.get(), countList.get().head.asNumeric().intValueExact(), new ImmutableList<>()).computeResult());
     }
 
-    private Trampoline<ImmutableList<Optional<Value>>> expand(final ImmutableList<Optional<Value>> baseList, final int countValue, final ImmutableList<Optional<Value>> aggregate) {
+    private Trampoline<ImmutableList<Value>> expand(final ImmutableList<Value> baseList, final int countValue, final ImmutableList<Value> aggregate) {
         if (countValue < 1) {
             return complete(() -> aggregate);
         }

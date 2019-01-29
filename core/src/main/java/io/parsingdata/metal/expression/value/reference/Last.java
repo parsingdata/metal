@@ -41,9 +41,11 @@ public class Last implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> list = operand.eval(parseState, encoding);
-        return list.isEmpty() ? list : ImmutableList.create(list.head);
+    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        return operand
+            .eval(parseState, encoding)
+            .filter(list -> !list.isEmpty())
+            .flatMap(list -> Optional.of(ImmutableList.create(list.head)));
     }
 
     @Override

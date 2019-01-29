@@ -22,6 +22,7 @@ import static io.parsingdata.metal.Util.checkNotEmpty;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
+import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -58,13 +59,13 @@ public class Def extends Token {
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        final ImmutableList<Optional<Value>> sizes = size.eval(environment.parseState, environment.encoding);
-        if (sizes.size != 1 || !sizes.head.isPresent()) {
+        final Optional<ImmutableList<Value>> sizes = size.eval(environment.parseState, environment.encoding);
+        if (!sizes.isPresent() || sizes.get().size != 1 || sizes.get().head == NOT_A_VALUE) {
             return failure();
         }
-        return sizes.head
-            .filter(dataSize -> dataSize.asNumeric().compareTo(ZERO) != 0)
-            .map(dataSize -> slice(environment, dataSize.asNumeric()))
+        return sizes
+            .filter(list -> list.head.asNumeric().compareTo(ZERO) != 0)
+            .map(list -> slice(environment, list.head.asNumeric()))
             .orElseGet(() -> success(environment.parseState));
     }
 

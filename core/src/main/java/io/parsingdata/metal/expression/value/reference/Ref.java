@@ -68,26 +68,25 @@ public class Ref<T> implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
+    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
         if (limit == null) {
             return evalImpl(parseState, NO_LIMIT);
         }
-        ImmutableList<Optional<Value>> evaluatedLimit = limit.eval(parseState, encoding);
-        if (evaluatedLimit.size != 1 || !evaluatedLimit.head.isPresent()) {
-            throw new IllegalArgumentException("Limit must evaluate to a single non-empty value.");
-        }
-        return evalImpl(parseState, evaluatedLimit.head.get().asNumeric().intValueExact());
+        final ImmutableList<Value> evaluatedLimit = limit.eval(parseState, encoding)
+            .filter(limitValue -> limitValue.size == 1)
+            .orElseThrow(() -> new IllegalArgumentException("Limit must evaluate to a single non-empty value."));
+        return evalImpl(parseState, evaluatedLimit.head.asNumeric().intValueExact());
     }
 
-    private ImmutableList<Optional<Value>> evalImpl(final ParseState parseState, final int limit) {
-        return wrap(getAllValues(parseState.order, predicate, limit), new ImmutableList<Optional<Value>>()).computeResult();
+    private Optional<ImmutableList<Value>> evalImpl(final ParseState parseState, final int limit) {
+        return Optional.of(wrap(getAllValues(parseState.order, predicate, limit), new ImmutableList<Value>()).computeResult());
     }
 
-    private static <T, U extends T> Trampoline<ImmutableList<Optional<T>>> wrap(final ImmutableList<U> input, final ImmutableList<Optional<T>> output) {
+    private static <T, U extends T> Trampoline<ImmutableList<T>> wrap(final ImmutableList<U> input, final ImmutableList<T> output) {
         if (input.isEmpty()) {
             return complete(() -> output);
         }
-        return intermediate(() -> wrap(input.tail, output.add(Optional.of(input.head))));
+        return intermediate(() -> wrap(input.tail, output.add(input.head)));
     }
 
     @Override

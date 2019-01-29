@@ -42,8 +42,8 @@ public class Reverse implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return reverse(values.eval(parseState, encoding));
+    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        return values.eval(parseState, encoding).flatMap(valuesList -> Optional.of(reverse(valuesList)));
     }
 
     @Override

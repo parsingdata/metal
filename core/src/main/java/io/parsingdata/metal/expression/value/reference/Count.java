@@ -43,9 +43,9 @@ public class Count implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> values = operand.eval(parseState, encoding);
-        return ImmutableList.create(Optional.of(fromNumeric(values.size)));
+    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        return operand.eval(parseState, encoding)
+            .flatMap(values -> Optional.of(ImmutableList.create(fromNumeric(values.size))));
     }
 
     private static Value fromNumeric(final long length) {

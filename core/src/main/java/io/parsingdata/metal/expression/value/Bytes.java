@@ -22,6 +22,7 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Slice.createFromSource;
+import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -56,26 +57,24 @@ public class Bytes implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> input = operand.eval(parseState, encoding);
-        if (input.isEmpty()) {
-            return input;
+    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        return operand.eval(parseState, encoding).filter(input -> !input.isEmpty()).flatMap(input -> Optional.of(toByteValues(new ImmutableList<>(), input.head, input.tail, encoding).computeResult()));
+    }
+
+    private Trampoline<ImmutableList<Value>> toByteValues(final ImmutableList<Value> output, final Value head, final ImmutableList<Value> tail, final Encoding encoding) {
+        final ImmutableList<Value> result = output.add(extractByteValues(new ImmutableList<>(), head, 0, encoding).computeResult());
+        if (tail.isEmpty()) {
+            return complete(() -> result);
+        } else {
+            return intermediate(() -> toByteValues(result, tail.head, tail.tail, encoding));
         }
-        return toByteValues(new ImmutableList<>(), input.head, input.tail, encoding).computeResult();
     }
 
-    private Trampoline<ImmutableList<Optional<Value>>> toByteValues(final ImmutableList<Optional<Value>> output, final Optional<Value> head, final ImmutableList<Optional<Value>> tail, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> result = output.add(
-            head.map(value -> extractByteValues(new ImmutableList<>(), value, 0, encoding).computeResult())
-                .orElseGet(ImmutableList::new));
-        return tail.isEmpty() ? complete(() -> result) : intermediate(() -> toByteValues(result, tail.head, tail.tail, encoding));
-    }
-
-    private Trampoline<ImmutableList<Optional<Value>>> extractByteValues(final ImmutableList<Optional<Value>> output, final Value value, final int i, final Encoding encoding) {
-        if (BigInteger.valueOf(i).compareTo(value.getLength()) >= 0) {
+    private Trampoline<ImmutableList<Value>> extractByteValues(final ImmutableList<Value> output, final Value value, final int i, final Encoding encoding) {
+        if (value == NOT_A_VALUE || BigInteger.valueOf(i).compareTo(value.getLength()) >= 0) {
             return complete(() -> output);
         }
-        return intermediate(() -> extractByteValues(output.add(Optional.of(new Value(createFromSource(value.slice.source, value.slice.offset.add(BigInteger.valueOf(i)), ONE).get(), encoding))), value, i + 1, encoding));
+        return intermediate(() -> extractByteValues(output.add(new Value(createFromSource(value.slice.source, value.slice.offset.add(BigInteger.valueOf(i)), ONE).get(), encoding)), value, i + 1, encoding));
     }
 
     @Override

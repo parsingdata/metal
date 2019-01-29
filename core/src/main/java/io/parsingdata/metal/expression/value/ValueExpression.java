@@ -27,15 +27,14 @@ import io.parsingdata.metal.encoding.Encoding;
  * <p>
  * A ValueExpression is an expression that is evaluated by executing its
  * {@link #eval(ParseState, Encoding)} method. It yields a list of
- * {@link Value} objects encapsulated in {@link Optional} objects (to guard
- * against <code>null</code>s).
+ * {@link Value} objects.
  * <p>
- * As context, it receives the current <code>parseState</code> object that as
- * well as the current <code>encoding</code> object.
+ * As context, it receives the current <code>ParseState</code> object as
+ * well as the current <code>Encoding</code> object.
  */
 @FunctionalInterface
 public interface ValueExpression {
 
-    ImmutableList<Optional<Value>> eval(ParseState parseState, Encoding encoding);
+    Optional<ImmutableList<Value>> eval(ParseState parseState, Encoding encoding);
 
 }

@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Selection.reverse;
+import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -53,18 +54,20 @@ public class Elvis implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return reverse(eval(new ImmutableList<>(), left.eval(parseState, encoding), right.eval(parseState, encoding)).computeResult());
+    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        return left.eval(parseState, encoding)
+            .flatMap(leftValues -> right.eval(parseState, encoding)
+                .flatMap(rightValues -> Optional.of(reverse(eval(new ImmutableList<>(), leftValues, rightValues).computeResult()))));
     }
 
-    private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> result, final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues) {
+    private Trampoline<ImmutableList<Value>> eval(final ImmutableList<Value> result, final ImmutableList<Value> leftValues, final ImmutableList<Value> rightValues) {
         if (leftValues.isEmpty()) {
             return complete(() -> result.add(reverse(rightValues)));
         }
         if (rightValues.isEmpty()) {
             return complete(() -> result.add(reverse(leftValues)));
         }
-        return intermediate(() -> eval(result.add(leftValues.head.isPresent() ? leftValues.head : rightValues.head), leftValues.tail, rightValues.tail));
+        return intermediate(() -> eval(result.add(leftValues.head != NOT_A_VALUE ? leftValues.head : rightValues.head), leftValues.tail, rightValues.tail));
     }
 
     @Override

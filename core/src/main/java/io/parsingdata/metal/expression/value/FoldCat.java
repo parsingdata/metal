@@ -45,11 +45,11 @@ public class FoldCat implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return ConcatenatedValueSource.create(operand.eval(parseState, encoding))
-            .flatMap(source -> createFromSource(source, ZERO, source.length))
-            .map(slice -> new ImmutableList<Optional<Value>>().add(Optional.of(new Value(slice, encoding))))
-            .orElseGet(() -> ImmutableList.create(Optional.empty()));
+    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        return operand.eval(parseState, encoding)
+            .flatMap(values -> ConcatenatedValueSource.create(values)
+                .flatMap(source -> createFromSource(source, ZERO, source.length))
+                .map(slice -> new ImmutableList<Value>().add(new Value(slice, encoding))));
     }
 
     @Override

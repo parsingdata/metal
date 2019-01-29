@@ -18,6 +18,7 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.bytesToHexString;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.encoding.Encoding.DEFAULT_ENCODING;
 
 import java.math.BigInteger;
 import java.util.BitSet;
@@ -31,6 +32,7 @@ import io.parsingdata.metal.encoding.Sign;
 
 public class Value {
 
+    public static final Value NOT_A_VALUE = new Value(Slice.createFromBytes(new byte[]{}), DEFAULT_ENCODING);
     public static final BigInteger TO_STRING_BYTE_COUNT = BigInteger.valueOf(4);
 
     public final Slice slice;

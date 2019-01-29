@@ -39,7 +39,7 @@ public class FoldLeft extends Fold {
     }
 
     @Override
-    protected ImmutableList<Optional<Value>> prepareValues(final ImmutableList<Optional<Value>> valueList) {
+    protected ImmutableList<Value> prepareValues(final ImmutableList<Value> valueList) {
         return reverse(valueList);
     }
 

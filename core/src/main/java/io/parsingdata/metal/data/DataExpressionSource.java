@@ -67,19 +67,19 @@ public class DataExpressionSource extends Source {
 
     private synchronized byte[] getValue() {
         if (cache == null) {
-            final ImmutableList<Optional<Value>> results = dataExpression.eval(parseState, encoding);
-            if (results.size <= index) {
-                throw new IllegalStateException(format("ValueExpression dataExpression yields %d result(s) (expected at least %d).", results.size, index+1));
+            final ImmutableList<Value> results = dataExpression.eval(parseState, encoding)
+                .filter(dataResults -> dataResults.size > index)
+                .orElseThrow(() -> new IllegalStateException(format("ValueExpression dataExpression must yield at least %d results.", index+1)));
+            final Value cacheValue = getValueAtIndex(results, index, 0).computeResult();
+            if (cacheValue == Value.NOT_A_VALUE) {
+                throw new IllegalStateException(format("ValueExpression dataExpression yields empty Value at index %d.", index));
             }
-            cache = getValueAtIndex(results, index, 0)
-                .computeResult()
-                .map(Value::getValue)
-                .orElseThrow(() -> new IllegalStateException(format("ValueExpression dataExpression yields empty Value at index %d.", index)));
+            cache = cacheValue.getValue();
         }
         return cache;
     }
 
-    private Trampoline<Optional<Value>> getValueAtIndex(final ImmutableList<Optional<Value>> results, final int index, final int current) {
+    private Trampoline<Value> getValueAtIndex(final ImmutableList<Value> results, final int index, final int current) {
         if (index == current) {
             return complete(() -> results.head);
         }

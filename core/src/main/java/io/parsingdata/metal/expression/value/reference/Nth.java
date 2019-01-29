@@ -23,6 +23,7 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Selection.reverse;
+import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -58,22 +59,25 @@ public class Nth implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return reverse(eval(values.eval(parseState, encoding), indices.eval(parseState, encoding), new ImmutableList<>()).computeResult());
+    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        return values.eval(parseState, encoding)
+            .flatMap(valueList -> indices.eval(parseState, encoding)
+                .flatMap(indicesList -> Optional.of(reverse(eval(valueList, indicesList, new ImmutableList<>()).computeResult()))));
     }
 
-    private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ImmutableList<Optional<Value>> indices, final ImmutableList<Optional<Value>> result) {
+    private Trampoline<ImmutableList<Value>> eval(final ImmutableList<Value> values, final ImmutableList<Value> indices, final ImmutableList<Value> result) {
         if (indices.isEmpty()) {
             return complete(() -> result);
         }
         final BigInteger valueCount = BigInteger.valueOf(values.size);
-        final Optional<Value> nextResult = indices.head
-            .filter(index -> index.asNumeric().compareTo(valueCount) < 0 && index.asNumeric().compareTo(ZERO) >= 0)
-            .flatMap(index -> nth(values, valueCount.subtract(index.asNumeric()).subtract(ONE)).computeResult());
+        final BigInteger index = indices.head.asNumeric();
+        final Value nextResult = index.compareTo(valueCount) < 0 && index.compareTo(ZERO) >= 0
+            ? nth(values, valueCount.subtract(index).subtract(ONE)).computeResult()
+            : NOT_A_VALUE;
         return intermediate(() -> eval(values, indices.tail, result.add(nextResult)));
     }
 
-    private Trampoline<Optional<Value>> nth(final ImmutableList<Optional<Value>> values, final BigInteger index) {
+    private Trampoline<Value> nth(final ImmutableList<Value> values, final BigInteger index) {
         if (index.equals(ZERO)) {
             return complete(() -> values.head);
         }

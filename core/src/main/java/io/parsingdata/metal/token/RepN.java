@@ -53,11 +53,11 @@ public class RepN extends IterableToken {
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        final ImmutableList<Optional<Value>> counts = n.eval(environment.parseState, environment.encoding);
-        if (counts.size != 1 || !counts.head.isPresent()) {
+        final Optional<ImmutableList<Value>> counts = n.eval(environment.parseState, environment.encoding);
+        if (!counts.isPresent() || counts.get().size != 1) {
             return failure();
         }
-        final BigInteger count = counts.head.get().asNumeric();
+        final BigInteger count = counts.get().head.asNumeric();
         return parse(environment, env -> env.parseState.iterations.head.right.compareTo(count) >= 0, env -> failure());
     }
 

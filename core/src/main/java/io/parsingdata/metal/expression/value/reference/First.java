@@ -44,12 +44,11 @@ public class First implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> list = operand.eval(parseState, encoding);
-        return list.isEmpty() ? list : ImmutableList.create(getFirst(list).computeResult());
+    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        return operand.eval(parseState, encoding).flatMap(list -> Optional.of(ImmutableList.create(getFirst(list).computeResult())));
     }
 
-    private Trampoline<Optional<Value>> getFirst(final ImmutableList<Optional<Value>> values) {
+    private Trampoline<Value> getFirst(final ImmutableList<Value> values) {
         return values.tail.isEmpty() ? complete(() -> values.head) : intermediate(() -> getFirst(values.tail));
     }
 

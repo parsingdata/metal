@@ -35,8 +35,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 public class Self implements ValueExpression {
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return ImmutableList.create(parseState.order.current().map(identity()));
+    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        return parseState.order.current().flatMap(self -> Optional.of(ImmutableList.create(self)));
     }
 
     @Override

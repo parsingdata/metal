@@ -58,22 +58,19 @@ public abstract class ComparisonExpression implements Expression {
 
     @Override
     public boolean eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> values = value == null ? ImmutableList.create(parseState.order.current().map(identity())) : value.eval(parseState, encoding);
-        if (values.isEmpty()) {
+        final Optional<ImmutableList<Value>> values = value == null ? parseState.order.current().flatMap(current -> Optional.of(ImmutableList.create(current))) : value.eval(parseState, encoding);
+        if (!values.isPresent() || values.get().isEmpty()) {
             return false;
         }
-        final ImmutableList<Optional<Value>> predicates = predicate.eval(parseState, encoding);
-        if (values.size != predicates.size) {
+        final Optional<ImmutableList<Value>> predicates = predicate.eval(parseState, encoding);
+        if (!predicates.isPresent() || values.get().size != predicates.get().size) {
             return false;
         }
-        return compare(values, predicates).computeResult();
+        return compare(values.get(), predicates.get()).computeResult();
     }
 
-    private Trampoline<Boolean> compare(final ImmutableList<Optional<Value>> currents, final ImmutableList<Optional<Value>> predicates) {
-        if (!currents.head.isPresent() || !predicates.head.isPresent()) {
-            return complete(() -> false);
-        }
-        final boolean headResult = compare(currents.head.get(), predicates.head.get());
+    private Trampoline<Boolean> compare(final ImmutableList<Value> currents, final ImmutableList<Value> predicates) {
+        final boolean headResult = compare(currents.head, predicates.head);
         if (!headResult || currents.tail.isEmpty()) {
             return complete(() -> headResult);
         }

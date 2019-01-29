@@ -19,6 +19,7 @@ package io.parsingdata.metal.expression.value;
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -57,42 +58,46 @@ public abstract class Fold implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> initialList = initial != null ? initial.eval(parseState, encoding) : new ImmutableList<>();
-        if (initialList.size > 1) {
-            return new ImmutableList<>();
+    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
+        final Optional<ImmutableList<Value>> initialList = initial != null ? initial.eval(parseState, encoding) : Optional.empty();
+        if (initialList.isPresent() && (initialList.get().size > 1 || initialList.get().head == NOT_A_VALUE)) {
+            return Optional.empty();
         }
-        final ImmutableList<Optional<Value>> valueList = prepareValues(this.values.eval(parseState, encoding));
-        if (valueList.isEmpty() || containsEmpty(valueList).computeResult()) {
+        final Optional<ImmutableList<Value>> unpreparedValues = this.values.eval(parseState, encoding);
+        if (!unpreparedValues.isPresent() || !containsNotAValue(unpreparedValues.get()).computeResult()) {
             return initialList;
         }
-        if (!initialList.isEmpty()) {
-            return ImmutableList.create(fold(parseState, encoding, reducer, initialList.head, valueList).computeResult());
-        }
-        return ImmutableList.create(fold(parseState, encoding, reducer, valueList.head, valueList.tail).computeResult());
+        final ImmutableList<Value> valueList = prepareValues(unpreparedValues.get());
+        return Optional.of(ImmutableList.create(initialList
+            .map(headList -> fold(parseState, encoding, reducer, headList.head, valueList).computeResult())
+            .orElseGet(() -> fold(parseState, encoding, reducer, valueList.head, valueList.tail).computeResult())));
     }
 
-    private Trampoline<Optional<Value>> fold(final ParseState parseState, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Optional<Value> head, final ImmutableList<Optional<Value>> tail) {
-        if (!head.isPresent() || tail.isEmpty()) {
+    private Trampoline<Value> fold(final ParseState parseState, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Value head, final ImmutableList<Value> tail) {
+        if (head == NOT_A_VALUE) {
+            return complete(() -> NOT_A_VALUE);
+        }
+        if (tail.isEmpty()) {
             return complete(() -> head);
         }
-        final ImmutableList<Optional<Value>> reducedValue = reduce(reducer, head.get(), tail.head.get()).eval(parseState, encoding);
-        if (reducedValue.size != 1) {
+        final Optional<ImmutableList<Value>> reducedValue = reduce(reducer, head, tail.head).eval(parseState, encoding);
+        if (!reducedValue.isPresent() || reducedValue.get().size != 1) {
             throw new IllegalArgumentException("Reducer must evaluate to a single value.");
         }
-        return intermediate(() -> fold(parseState, encoding, reducer, reducedValue.head, tail.tail));
+        return intermediate(() -> fold(parseState, encoding, reducer, reducedValue.get().head, tail.tail));
     }
 
-    private Trampoline<Boolean> containsEmpty(final ImmutableList<Optional<Value>> list) {
+    private Trampoline<Boolean> containsNotAValue(final ImmutableList<Value> list) {
         if (list.isEmpty()) {
             return complete(() -> false);
         }
-        return list.head
-            .map(t -> intermediate(() -> containsEmpty(list.tail)))
-            .orElseGet(() -> complete(() -> true));
+        if (list.head != NOT_A_VALUE) {
+            return intermediate(() -> containsNotAValue(list.tail));
+        }
+        return complete(() -> true);
     }
 
-    protected abstract ImmutableList<Optional<Value>> prepareValues(ImmutableList<Optional<Value>> valueList);
+    protected abstract ImmutableList<Value> prepareValues(ImmutableList<Value> valueList);
 
     protected abstract ValueExpression reduce(BinaryOperator<ValueExpression> reducer, Value head, Value tail);
 
