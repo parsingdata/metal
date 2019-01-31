@@ -18,6 +18,8 @@ package io.parsingdata.metal.expression.value;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -27,6 +29,7 @@ import static io.parsingdata.metal.Shorthand.nth;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
@@ -59,94 +62,97 @@ public class NthExpressionTest {
     @Test
     public void testEmtpyIndices() {
         // 5 values = [1, 2, 3, 4, 5], 0 indices = [], result = []
-        makeList(stream(5, 1, 2, 3, 4, 5, 0), 0);
+        assertFalse(makeList(stream(5, 1, 2, 3, 4, 5, 0)).isPresent());
     }
 
     @Test
     public void testNanIndex() {
         // 5 values = [1, 2, 3, 4, 5], 1 index = [Nan], result = [Nan]
         final Optional<ParseState> result = format.parse(env(stream(5, 1, 2, 3, 4, 5, 0)));
-        final ImmutableList<Optional<Value>> values = nth(ref("value"), div(con(0), con(0))).eval(result.get(), enc());
-        assertThat(values.size, is(equalTo(1L)));
-        assertThat(values.head.isPresent(), is(equalTo(false)));
+        final Optional<ImmutableList<Value>> values = nth(ref("value"), div(con(0), con(0))).eval(result.get(), enc());
+        assertFalse(values.isPresent());
     }
 
     @Test
     public void testEmptyValuesSingleIndex() {
         // 0 values = [], 1 index = [0], result = [Nan]
-        final ImmutableList<Optional<Value>> values = makeList(stream(0, 1, 0), 1);
-        assertThat(values.head.isPresent(), is(equalTo(false)));
+        final Optional<ImmutableList<Value>> values = makeList(stream(0, 1, 0));
+        assertFalse(values.isPresent());
     }
 
     @Test
     public void testNonExistingValueAtIndex() {
         // 5 values = [1, 2, 3, 4, 5], 1 index = [42], result = [Nan]
-        final ImmutableList<Optional<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 1, 42), 1);
-        assertThat(values.head.isPresent(), is(equalTo(false)));
+        final Optional<ImmutableList<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 1, 42));
+        assertFalse(values.isPresent());
     }
 
     @Test
     public void testNegativeIndex() {
         // 5 values = [1, 2, 3, 4, 5], 1 index = [-1], result = [Nan]
-        final ImmutableList<Optional<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 1, -1), 1);
-        assertThat(values.head.isPresent(), is(equalTo(false)));
+        final Optional<ImmutableList<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 1, -1));
+        assertFalse(values.isPresent());
     }
 
     @Test
     public void testSingleIndex() {
         // 5 values = [1, 2, 3, 4, 5], 1 index = [0], result = [1]
-        final ImmutableList<Optional<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 1, 0), 1);
-        assertThat(values.head.get().asNumeric().intValueExact(), is(equalTo(1)));
+        final Optional<ImmutableList<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 1, 0));
+        assertTrue(values.isPresent());
+        assertEquals(1, values.get().size);
+        assertEquals(1, values.get().head.asNumeric().intValueExact());
     }
 
     @Test
     public void testMultipleIndices() {
         // 5 values = [1, 2, 3, 4, 5], 2 indices = [0, 2], result = [1, 3]
-        final ImmutableList<Optional<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 2, 0, 2), 2);
-        assertThat(values.head.get().asNumeric().intValueExact(), is(equalTo(3)));
-        assertThat(values.tail.head.get().asNumeric().intValueExact(), is(equalTo(1)));
+        final Optional<ImmutableList<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 2, 0, 2));
+        assertTrue(values.isPresent());
+        assertEquals(2, values.get().size);
+        assertEquals(3, values.get().head.asNumeric().intValueExact());
+        assertEquals(1, values.get().tail.head.asNumeric().intValueExact());
     }
 
     @Test
     public void testMultipleIndicesMixedOrder() {
         // 5 values = [5, 6, 7, 8, 9], 4 indices = [3, 2, 0, 4], result = [8, 7, 5, 9]
-        final ImmutableList<Optional<Value>> values = makeList(stream(5, 5, 6, 7, 8, 9, 4, 3, 2, 0, 4), 4);
-        assertThat(values.head.get().asNumeric().intValueExact(), is(equalTo(9)));
-        assertThat(values.tail.head.get().asNumeric().intValueExact(), is(equalTo(5)));
-        assertThat(values.tail.tail.head.get().asNumeric().intValueExact(), is(equalTo(7)));
-        assertThat(values.tail.tail.tail.head.get().asNumeric().intValueExact(), is(equalTo(8)));
+        final Optional<ImmutableList<Value>> values = makeList(stream(5, 5, 6, 7, 8, 9, 4, 3, 2, 0, 4));
+        assertTrue(values.isPresent());
+        assertEquals(4, values.get().size);
+        assertEquals(9, values.get().head.asNumeric().intValueExact());
+        assertEquals(5, values.get().tail.head.asNumeric().intValueExact());
+        assertEquals(7, values.get().tail.tail.head.asNumeric().intValueExact());
+        assertEquals(8, values.get().tail.tail.tail.head.asNumeric().intValueExact());
     }
 
     @Test
     public void testMixedExistingNonExistingIndices() {
         // 5 values = [1, 2, 3, 4, 5], 3 indices = [0, 42, 2], result = [1, Nan, 3]
-        final ImmutableList<Optional<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 3, 0, 42, 2), 3);
-        assertThat(values.head.get().asNumeric().intValueExact(), is(equalTo(3)));
-        assertThat(values.tail.head.isPresent(), is(equalTo(false)));
-        assertThat(values.tail.tail.head.get().asNumeric().intValueExact(), is(equalTo(1)));
+        final Optional<ImmutableList<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 3, 0, 42, 2));
+        assertTrue(values.isPresent());
+        assertEquals(3, values.get().size);
+        assertEquals(3, values.get().head.asNumeric().intValueExact());
+        assertEquals(NOT_A_VALUE, values.get().tail.head);
+        assertEquals(1, values.get().tail.tail.head.asNumeric().intValueExact());
     }
 
     @Test
     public void testResultLengthEqualsIndicesLength() {
-        // 1 value = [1], 8 indices = [1, 2, 3, 4, 5, 6, 7, 8], result = [Nan, Nan, Nan, Nan, Nan]
-        final ImmutableList<Optional<Value>> values = makeList(stream(1, 1, 5, 1, 2, 3, 4, 5), 5);
-        assertNonePresent(values);
-    }
-
-    private void assertNonePresent(final ImmutableList<Optional<Value>> inputValues) {
-        ImmutableList<Optional<Value>> values = inputValues;
-        while (!values.isEmpty()) {
-            assertThat(values.head.isPresent(), is(equalTo(false)));
-            values = values.tail;
+        // 1 value = [1], 5 indices = [1, 2, 3, 4, 5], result = [Nan, Nan, Nan, Nan, Nan]
+        final Optional<ImmutableList<Value>> values = makeList(stream(1, 1, 5, 1, 2, 3, 4, 5));
+        assertTrue(values.isPresent());
+        assertEquals(5, values.get().size);
+        ImmutableList<Value> unpacked = values.get();
+        while (!unpacked.isEmpty()) {
+            assertEquals(NOT_A_VALUE, unpacked.head);
+            unpacked = unpacked.tail;
         }
     }
 
-    private ImmutableList<Optional<Value>> makeList(final ParseState parseState, final long listSize) {
+    private Optional<ImmutableList<Value>> makeList(final ParseState parseState) {
         final Optional<ParseState> result = format.parse(env(parseState, signed()));
         assertTrue(result.isPresent());
-        final ImmutableList<Optional<Value>> values = nth.eval(result.get(), signed());
-        assertThat(values.size, is(equalTo(listSize)));
-        return values;
+        return nth.eval(result.get(), signed());
     }
 
 }

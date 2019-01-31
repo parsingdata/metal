@@ -16,7 +16,6 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import static io.parsingdata.metal.Shorthand.con;
@@ -26,11 +25,7 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
-import java.util.Optional;
-
 import org.junit.Test;
-
-import io.parsingdata.metal.data.ImmutableList;
 
 public class ValueExpressionEvalEmptyTest {
 
@@ -50,9 +45,7 @@ public class ValueExpressionEvalEmptyTest {
     }
 
     private void parse(final ValueExpression expression) {
-        final ImmutableList<Optional<Value>> output = expression.eval(stream(0), enc());
-        assertEquals(1, output.size);
-        assertFalse(output.head.isPresent());
+        assertFalse(expression.eval(stream(0), enc()).isPresent());
     }
 
 }

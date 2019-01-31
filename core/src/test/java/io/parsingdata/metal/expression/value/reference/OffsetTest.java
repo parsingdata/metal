@@ -17,7 +17,6 @@
 package io.parsingdata.metal.expression.value.reference;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
@@ -36,11 +35,10 @@ public class OffsetTest {
 
     @Test
     public void definedValueOffset() {
-        final ImmutableList<Optional<Value>> offsetCon = offset(con(1)).eval(stream(), enc());
-        assertFalse(offsetCon.isEmpty());
-        assertEquals(1, offsetCon.size);
-        assertTrue(offsetCon.head.isPresent());
-        assertEquals(0, offsetCon.head.get().asNumeric().intValueExact());
+        final Optional<ImmutableList<Value>> offsetCon = offset(con(1)).eval(stream(), enc());
+        assertTrue(offsetCon.isPresent());
+        assertEquals(1, offsetCon.get().size);
+        assertEquals(0, offsetCon.get().head.asNumeric().intValueExact());
     }
 
 }

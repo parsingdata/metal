@@ -166,15 +166,16 @@ public class ShorthandsTest {
     }
 
     private void checkNameAndValue(final String name, final int value, final ParseState parseState) {
-        ImmutableList<Optional<Value>> values = ref(name).eval(parseState, enc());
-        assertFalse(values.isEmpty());
-        assertEquals(1, values.size);
-        assertEquals(value, values.head.get().asNumeric().intValueExact());
+        Optional<ImmutableList<Value>> optionalValues = ref(name).eval(parseState, enc());
+        assertTrue(optionalValues.isPresent());
+        assertEquals(1, optionalValues.get().size);
+        assertEquals(value, optionalValues.get().head.asNumeric().intValueExact());
 
+        ImmutableList<Value> values = optionalValues.get();
         while (!values.isEmpty()) {
-            final Value current = values.head.get();
+            final Value current = values.head;
             assertThat(current, is(instanceOf(ParseValue.class)));
-            assertEquals(name, ((ParseValue)values.head.get()).name);
+            assertEquals(name, ((ParseValue)values.head).name);
             values = values.tail;
         }
     }
@@ -207,22 +208,24 @@ public class ShorthandsTest {
 
     @Test
     public void mapLeftWithSub() {
-        ImmutableList<Optional<Value>> result = mapLeft(Shorthand::sub, ref("a"), con(2)).eval(PARSE_STATE, enc());
-        assertEquals(3, result.size);
+        Optional<ImmutableList<Value>> optionalResult = mapLeft(Shorthand::sub, ref("a"), con(2)).eval(PARSE_STATE, enc());
+        assertTrue(optionalResult.isPresent());
+        assertEquals(3, optionalResult.get().size);
+        ImmutableList<Value> result = optionalResult.get();
         for (int i = 0; i < 3; i++) {
-            assertTrue(result.head.isPresent());
-            assertEquals((i * 42) + 40, result.head.get().asNumeric().intValueExact());
+            assertEquals((i * 42) + 40, result.head.asNumeric().intValueExact());
             result = result.tail;
         }
     }
 
     @Test
     public void mapRightWithSub() {
-        ImmutableList<Optional<Value>> result = mapRight(Shorthand::sub, con(126), ref("a")).eval(PARSE_STATE, enc());
-        assertEquals(3, result.size);
+        Optional<ImmutableList<Value>> optionalResult = mapRight(Shorthand::sub, con(126), ref("a")).eval(PARSE_STATE, enc());
+        assertTrue(optionalResult.isPresent());
+        assertEquals(3, optionalResult.get().size);
+        ImmutableList<Value> result = optionalResult.get();
         for (int i = 0; i < 3; i++) {
-            assertTrue(result.head.isPresent());
-            assertEquals(((3 - i) * 42) - 42, result.head.get().asNumeric().intValueExact());
+            assertEquals(((3 - i) * 42) - 42, result.head.asNumeric().intValueExact());
             result = result.tail;
         }
     }

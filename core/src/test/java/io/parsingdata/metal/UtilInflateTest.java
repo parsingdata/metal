@@ -16,7 +16,6 @@
 
 package io.parsingdata.metal;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import static io.parsingdata.metal.Shorthand.con;
@@ -35,9 +34,8 @@ public class UtilInflateTest {
 
     @Test
     public void inflateDataFormatError() {
-        final ImmutableList<Optional<Value>> result = inflate(con(0xffffffff)).eval(stream(), enc());
-        assertEquals(1, result.size);
-        assertFalse(result.head.isPresent());
+        final Optional<ImmutableList<Value>> result = inflate(con(0xffffffff)).eval(stream(), enc());
+        assertFalse(result.isPresent());
     }
 
 }

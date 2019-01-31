@@ -17,6 +17,7 @@
 package io.parsingdata.metal.expression.value;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.bytes;
@@ -44,12 +45,12 @@ public class BytesTest {
 
     @Test
     public void bytesEmpty() {
-        assertEquals(0, bytes(ref("random")).eval(EMPTY_PARSE_STATE, enc()).size);
+        assertFalse(bytes(ref("random")).eval(EMPTY_PARSE_STATE, enc()).isPresent());
     }
 
     @Test
     public void bytesListContainsOnlyEmpty() {
-        assertEquals(0, bytes(div(con(1), con(0))).eval(EMPTY_PARSE_STATE, enc()).size);
+        assertFalse(bytes(div(con(1), con(0))).eval(EMPTY_PARSE_STATE, enc()).isPresent());
     }
 
     @Test
@@ -62,12 +63,13 @@ public class BytesTest {
                 def("divider", con(1)),
                 def("divider", con(1))).parse(env(stream(1, 0, 127, 127, 127, 0, 255, 0, 1)));
         assertTrue(result.isPresent());
-        final ImmutableList<Optional<Value>> bytesAfterDivision = bytes(div(ref("value"), ref("divider"))).eval(result.get(), enc());
-        assertEquals(3, bytesAfterDivision.size); // 1 of the first division, 0 of the second, 2 of the third
-        assertEquals(1, bytesAfterDivision.head.get().asNumeric().intValueExact()); // first value (0x0100) / first divider (0xFF)
+        final Optional<ImmutableList<Value>> bytesAfterDivision = bytes(div(ref("value"), ref("divider"))).eval(result.get(), enc());
+        assertTrue(bytesAfterDivision.isPresent());
+        assertEquals(3, bytesAfterDivision.get().size); // 1 of the first division, 0 of the second, 2 of the third
+        assertEquals(1, bytesAfterDivision.get().head.asNumeric().intValueExact()); // first value (0x0100) / first divider (0xFF)
         // second division result is missing because of division by zero
-        assertEquals(0, bytesAfterDivision.tail.head.get().asNumeric().intValueExact()); // third value (0x7F00) / third divider (0x01), right byte
-        assertEquals(127, bytesAfterDivision.tail.tail.head.get().asNumeric().intValueExact()); // left byte
+        assertEquals(0, bytesAfterDivision.get().tail.head.asNumeric().intValueExact()); // third value (0x7F00) / third divider (0x01), right byte
+        assertEquals(127, bytesAfterDivision.get().tail.tail.head.asNumeric().intValueExact()); // left byte
     }
 
 }

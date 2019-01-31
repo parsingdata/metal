@@ -15,9 +15,7 @@
  */
 package io.parsingdata.metal.expression.value.reference;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertFalse;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.div;
@@ -76,7 +74,7 @@ public class CurrentIterationEdgeCaseTest {
 
     @Test
     public void negativeLevel() {
-        ImmutableList<Optional<Value>> value = iteration(con(-1)).eval(parseState, enc());
-        assertThat(value.head.isPresent(), is(equalTo(false)));
+        Optional<ImmutableList<Value>> value = iteration(con(-1)).eval(parseState, enc());
+        assertFalse(value.isPresent());
     }
 }

@@ -30,6 +30,7 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
+import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
@@ -58,20 +59,20 @@ public class FoldEdgeCaseTest {
 
     @Test
     public void valuesContainsEmpty() {
-        assertTrue(foldLeft(div(con(1), con(0)), Shorthand::add).eval(stream(0), enc()).isEmpty());
-        assertTrue(foldRight(div(con(1), con(0)), Shorthand::add).eval(stream(0), enc()).isEmpty());
+        assertFalse(foldLeft(div(con(1), con(0)), Shorthand::add).eval(stream(0), enc()).isPresent());
+        assertFalse(foldRight(div(con(1), con(0)), Shorthand::add).eval(stream(0), enc()).isPresent());
     }
 
     @Test
     public void foldToEmpty() {
         final ParseState parseState = rep(any("value")).parse(env(stream(1, 0))).get();
-        assertFalse(foldLeft(ref("value"), Shorthand::div).eval(parseState, enc()).head.isPresent());
-        assertFalse(foldRight(ref("value"), Shorthand::div).eval(parseState, enc()).head.isPresent());
+        assertFalse(foldLeft(ref("value"), Shorthand::div).eval(parseState, enc()).isPresent());
+        assertFalse(foldRight(ref("value"), Shorthand::div).eval(parseState, enc()).isPresent());
     }
 
     @Test
     public void inputContainsEmptyInTail() {
-        assertTrue(foldRight((parseState, encoding) -> ImmutableList.create(Optional.<Value>empty()).add(Optional.of(new Value(createFromBytes(new byte[] { 1, 2 }), enc()))), Shorthand::add).eval(stream(0), enc()).isEmpty());
+        assertFalse(foldRight((parseState, encoding) -> Optional.of(ImmutableList.create(NOT_A_VALUE).add(new Value(createFromBytes(new byte[] { 1, 2 }), enc()))), Shorthand::add).eval(stream(0), enc()).isPresent());
     }
 
     @Test

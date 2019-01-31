@@ -37,18 +37,18 @@ public class CallbackTest {
 
     @Test
     public void crc32Good() {
-        final ImmutableList<Optional<Value>> result = crc32(con(0x01020304)).eval(stream(), enc());
-        assertEquals(1, result.size);
-        assertTrue(result.head.isPresent());
-        assertArrayEquals(new byte[] { -74, 60, -5, -51 }, result.head.get().getValue());
+        final Optional<ImmutableList<Value>> result = crc32(con(0x01020304)).eval(stream(), enc());
+        assertTrue(result.isPresent());
+        assertEquals(1, result.get().size);
+        assertArrayEquals(new byte[] { -74, 60, -5, -51 }, result.get().head.getValue());
     }
 
     @Test
     public void inflateGood() {
-        final ImmutableList<Optional<Value>> result = inflate(con(0xcb, 0x4d, 0x2d, 0x49, 0xcc, 0x01, 0x00)).eval(stream(), enc());
-        assertEquals(1, result.size);
-        assertTrue(result.head.isPresent());
-        assertEquals("metal", result.head.get().asString());
+        final Optional<ImmutableList<Value>> result = inflate(con(0xcb, 0x4d, 0x2d, 0x49, 0xcc, 0x01, 0x00)).eval(stream(), enc());
+        assertTrue(result.isPresent());
+        assertEquals(1, result.get().size);
+        assertEquals("metal", result.get().head.asString());
     }
 
 }

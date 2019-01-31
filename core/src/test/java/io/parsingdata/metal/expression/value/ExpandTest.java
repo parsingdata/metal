@@ -17,6 +17,7 @@
 package io.parsingdata.metal.expression.value;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.AutoEqualityTest.DUMMY_STREAM;
@@ -52,8 +53,8 @@ public class ExpandTest {
 
     @Test
     public void expandEmpty() {
-        final ImmutableList<Optional<Value>> result = exp(ref("a"), con(5)).eval(EMPTY_PARSE_STATE, enc());
-        assertTrue(result.isEmpty());
+        final Optional<ImmutableList<Value>> result = exp(ref("a"), con(5)).eval(EMPTY_PARSE_STATE, enc());
+        assertFalse(result.isPresent());
     }
 
     @Test
@@ -72,31 +73,32 @@ public class ExpandTest {
 
     @Test
     public void expandZeroTimes() {
-        final ImmutableList<Optional<Value>> result = exp(con(1), con(0)).eval(EMPTY_PARSE_STATE, enc());
-        assertTrue(result.isEmpty());
+        final Optional<ImmutableList<Value>> result = exp(con(1), con(0)).eval(EMPTY_PARSE_STATE, enc());
+        assertFalse(result.isPresent());
     }
 
     @Test
     public void expandValue() {
-        ImmutableList<Optional<Value>> result = exp(con(VALUE_1), con(SIZE)).eval(EMPTY_PARSE_STATE, enc());
+        Optional<ImmutableList<Value>> optionalResult = exp(con(VALUE_1), con(SIZE)).eval(EMPTY_PARSE_STATE, enc());
+        assertTrue(optionalResult.isPresent());
+        ImmutableList<Value> result = optionalResult.get();
         assertEquals(SIZE, result.size);
         for (int i = 0; i < SIZE; i++) {
-            assertTrue(result.head.isPresent());
-            assertEquals(VALUE_1, result.head.get().asNumeric().intValueExact());
+            assertEquals(VALUE_1, result.head.asNumeric().intValueExact());
             result = result.tail;
         }
     }
 
     @Test
     public void expandList() {
-        ImmutableList<Optional<Value>> result = exp(ref("a"), con(SIZE)).eval(createFromByteStream(DUMMY_STREAM).add(PARSEVALUE_2).add(PARSEVALUE_1), enc());
+        Optional<ImmutableList<Value>> optionalResult = exp(ref("a"), con(SIZE)).eval(createFromByteStream(DUMMY_STREAM).add(PARSEVALUE_2).add(PARSEVALUE_1), enc());
+        assertTrue(optionalResult.isPresent());
+        ImmutableList<Value> result = optionalResult.get();
         assertEquals(2 * SIZE, result.size);
         for (int i = 0; i < SIZE; i++) {
-            assertTrue(result.head.isPresent());
-            assertEquals(VALUE_1, result.head.get().asNumeric().intValueExact());
+            assertEquals(VALUE_1, result.head.asNumeric().intValueExact());
             result = result.tail;
-            assertTrue(result.head.isPresent());
-            assertEquals(VALUE_2, result.head.get().asNumeric().intValueExact());
+            assertEquals(VALUE_2, result.head.asNumeric().intValueExact());
             result = result.tail;
         }
     }
