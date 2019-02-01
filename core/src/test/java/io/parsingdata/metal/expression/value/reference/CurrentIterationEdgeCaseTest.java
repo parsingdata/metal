@@ -54,21 +54,21 @@ public class CurrentIterationEdgeCaseTest {
     @Test
     public void multiLevel() {
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Level must evaluate to a single non-empty value.");
+        thrown.expectMessage("Level must evaluate to a single value.");
         iteration(ref("a")).eval(parseState, enc());
     }
 
     @Test
     public void emptyLevel() {
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Level must evaluate to a single non-empty value.");
+        thrown.expectMessage("Level must evaluate to a single value.");
         iteration(last(ref("b"))).eval(parseState, enc());
     }
 
     @Test
     public void emptyLevelHead() {
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Level must evaluate to a single non-empty value.");
+        thrown.expectMessage("Level must evaluate to a single value.");
         iteration(div(con(1), con(0))).eval(parseState, enc());
     }
 

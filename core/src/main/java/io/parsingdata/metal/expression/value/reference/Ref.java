@@ -21,6 +21,7 @@ import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Selection.NO_LIMIT;
 import static io.parsingdata.metal.data.Selection.getAllValues;
+import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -75,6 +76,9 @@ public class Ref<T> implements ValueExpression {
         final ImmutableList<Value> evaluatedLimit = limit.eval(parseState, encoding)
             .filter(limitValue -> limitValue.size == 1)
             .orElseThrow(() -> new IllegalArgumentException("Limit must evaluate to a single non-empty value."));
+        if (evaluatedLimit.head == NOT_A_VALUE) {
+            return Optional.of(ImmutableList.create(NOT_A_VALUE));
+        }
         return evalImpl(parseState, evaluatedLimit.head.asNumeric().intValueExact());
     }
 

@@ -50,7 +50,9 @@ public class BytesTest {
 
     @Test
     public void bytesListContainsOnlyEmpty() {
-        assertFalse(bytes(div(con(1), con(0))).eval(EMPTY_PARSE_STATE, enc()).isPresent());
+        final Optional<ImmutableList<Value>> result = bytes(div(con(1), con(0))).eval(EMPTY_PARSE_STATE, enc());
+        assertTrue(result.isPresent());
+        assertEquals(0, result.get().size);
     }
 
     @Test

@@ -16,7 +16,9 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
@@ -65,8 +67,14 @@ public class FoldEdgeCaseTest {
     @Test
     public void foldToEmpty() {
         final ParseState parseState = rep(any("value")).parse(env(stream(1, 0))).get();
-        assertFalse(foldLeft(ref("value"), Shorthand::div).eval(parseState, enc()).isPresent());
-        assertFalse(foldRight(ref("value"), Shorthand::div).eval(parseState, enc()).isPresent());
+        final Optional<ImmutableList<Value>> foldLeftNan = foldLeft(ref("value"), Shorthand::div).eval(parseState, enc());
+        assertTrue(foldLeftNan.isPresent());
+        assertEquals(1, foldLeftNan.get().size);
+        assertEquals(NOT_A_VALUE, foldLeftNan.get().head);
+        final Optional<ImmutableList<Value>> foldRightNan = foldRight(ref("value"), Shorthand::div).eval(parseState, enc());
+        assertTrue(foldRightNan.isPresent());
+        assertEquals(1, foldRightNan.get().size);
+        assertEquals(NOT_A_VALUE, foldRightNan.get().head);
     }
 
     @Test

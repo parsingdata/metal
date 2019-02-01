@@ -18,6 +18,7 @@ package io.parsingdata.metal.token;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
+import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -54,7 +55,7 @@ public class RepN extends IterableToken {
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
         final Optional<ImmutableList<Value>> counts = n.eval(environment.parseState, environment.encoding);
-        if (!counts.isPresent() || counts.get().size != 1) {
+        if (!counts.isPresent() || counts.get().size != 1 || counts.get().head == NOT_A_VALUE) {
             return failure();
         }
         final BigInteger count = counts.get().head.asNumeric();

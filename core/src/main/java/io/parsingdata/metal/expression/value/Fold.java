@@ -64,7 +64,7 @@ public abstract class Fold implements ValueExpression {
             return Optional.empty();
         }
         final Optional<ImmutableList<Value>> unpreparedValues = this.values.eval(parseState, encoding);
-        if (!unpreparedValues.isPresent() || !containsNotAValue(unpreparedValues.get()).computeResult()) {
+        if (!unpreparedValues.isPresent() || containsNotAValue(unpreparedValues.get()).computeResult()) {
             return initialList;
         }
         final ImmutableList<Value> valueList = prepareValues(unpreparedValues.get());

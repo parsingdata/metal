@@ -74,7 +74,8 @@ public class ExpandTest {
     @Test
     public void expandZeroTimes() {
         final Optional<ImmutableList<Value>> result = exp(con(1), con(0)).eval(EMPTY_PARSE_STATE, enc());
-        assertFalse(result.isPresent());
+        assertTrue(result.isPresent());
+        assertEquals(0, result.get().size);
     }
 
     @Test

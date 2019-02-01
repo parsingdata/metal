@@ -67,7 +67,9 @@ public class NthExpressionTest {
         // 5 values = [1, 2, 3, 4, 5], 1 index = [Nan], result = [Nan]
         final Optional<ParseState> result = format.parse(env(stream(5, 1, 2, 3, 4, 5, 0)));
         final Optional<ImmutableList<Value>> values = nth(ref("value"), div(con(0), con(0))).eval(result.get(), enc());
-        assertFalse(values.isPresent());
+        assertTrue(values.isPresent());
+        assertEquals(1, values.get().size);
+        assertEquals(NOT_A_VALUE, values.get().head);
     }
 
     @Test
@@ -81,14 +83,18 @@ public class NthExpressionTest {
     public void testNonExistingValueAtIndex() {
         // 5 values = [1, 2, 3, 4, 5], 1 index = [42], result = [Nan]
         final Optional<ImmutableList<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 1, 42));
-        assertFalse(values.isPresent());
+        assertTrue(values.isPresent());
+        assertEquals(1, values.get().size);
+        assertEquals(NOT_A_VALUE, values.get().head);
     }
 
     @Test
     public void testNegativeIndex() {
         // 5 values = [1, 2, 3, 4, 5], 1 index = [-1], result = [Nan]
         final Optional<ImmutableList<Value>> values = makeList(stream(5, 1, 2, 3, 4, 5, 1, -1));
-        assertFalse(values.isPresent());
+        assertTrue(values.isPresent());
+        assertEquals(1, values.get().size);
+        assertEquals(NOT_A_VALUE, values.get().head);
     }
 
     @Test

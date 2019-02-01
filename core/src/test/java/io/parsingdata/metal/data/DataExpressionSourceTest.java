@@ -70,7 +70,7 @@ public class DataExpressionSourceTest {
     @Test
     public void indexOutOfBounds() {
         thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("ValueExpression dataExpression yields 1 result(s) (expected at least 2).");
+        thrown.expectMessage("ValueExpression dataExpression must yield at least 2 results.");
         final Optional<ParseState> result = setupResult();
         final DataExpressionSource source = new DataExpressionSource(ref("a"), 1, result.get(), enc());
         source.getData(ZERO, BigInteger.valueOf(4));

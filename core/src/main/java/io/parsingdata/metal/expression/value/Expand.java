@@ -19,6 +19,7 @@ package io.parsingdata.metal.expression.value;
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -57,7 +58,7 @@ public class Expand implements ValueExpression {
             return Optional.empty();
         }
         final Optional<ImmutableList<Value>> countList = count.eval(parseState, encoding);
-        if (!countList.isPresent() || countList.get().size != 1) {
+        if (!countList.isPresent() || countList.get().size != 1 || countList.get().head == NOT_A_VALUE) {
             throw new IllegalArgumentException("Count must evaluate to a single non-empty value.");
         }
         return Optional.of(expand(baseList.get(), countList.get().head.asNumeric().intValueExact(), new ImmutableList<>()).computeResult());

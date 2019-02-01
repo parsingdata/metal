@@ -19,7 +19,6 @@ package io.parsingdata.metal.expression.value;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -82,7 +81,8 @@ public class ElvisExpressionTest {
         final Optional<ImmutableList<Value>> eval = elvisExpression.eval(EMPTY_PARSE_STATE, enc());
 
         assertNotNull(eval);
-        assertFalse(eval.isPresent());
+        assertTrue(eval.isPresent());
+        assertEquals(0, eval.get().size);
     }
 
     @Test
@@ -120,13 +120,6 @@ public class ElvisExpressionTest {
         assertEquals(2, eval.get().head.asNumeric().intValueExact());
         assertEquals(1, eval.get().tail.head.asNumeric().intValueExact());
         assertEquals(3, eval.get().tail.tail.head.asNumeric().intValueExact());
-    }
-
-    @Test
-    public void elvisListEmpty() {
-        final ValueExpression elvis = elvis(ref("a"), ref("b"));
-        final Optional<ImmutableList<Value>> eval = elvis.eval(stream(0), enc());
-        assertFalse(eval.isPresent());
     }
 
     @Test
