@@ -25,7 +25,6 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -23,10 +23,12 @@ import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.div;
+import static io.parsingdata.metal.Shorthand.mul;
 import static io.parsingdata.metal.Shorthand.neg;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
@@ -51,17 +53,23 @@ public class ErrorsTest {
     public void noValueForSize() {
         thrown = ExpectedException.none();
         // Basic division by zero.
-        final Token token = def("a", div(con(1), con(0)));
-        assertFalse(token.parse(env(stream(1))).isPresent());
+        final Token nanSize = def("a", div(con(1), con(0)));
+        assertFalse(nanSize.parse(env(stream(1))).isPresent());
         // Try to negate division by zero.
-        final Token token2 = def("a", neg(div(con(1), con(0))));
-        assertFalse(token2.parse(env(stream(1))).isPresent());
+        final Token negNanSize = def("a", neg(div(con(1), con(0))));
+        assertFalse(negNanSize.parse(env(stream(1))).isPresent());
         // Add one to division by zero.
-        final Token token3 = def("a", add(div(con(1), con(0)), con(1)));
-        assertFalse(token3.parse(env(stream(1))).isPresent());
+        final Token addNanSize = def("a", add(div(con(1), con(0)), con(1)));
+        assertFalse(addNanSize.parse(env(stream(1))).isPresent());
         // Add division by zero to one.
-        final Token token4 = def("a", add(con(1), div(con(1), con(0))));
-        assertFalse(token4.parse(env(stream(1))).isPresent());
+        final Token addNanSize2 = def("a", add(con(1), div(con(1), con(0))));
+        assertFalse(addNanSize2.parse(env(stream(1))).isPresent());
+        // Subtract one from division by zero.
+        final Token subNanSize = def("a", sub(div(con(1), con(0)), con(1)));
+        assertFalse(subNanSize.parse(env(stream(1))).isPresent());
+        // Multiply division by zero with one.
+        final Token mulNanSize = def("a", mul(div(con(1), con(0)), con(1)));
+        assertFalse(mulNanSize.parse(env(stream(1))).isPresent());
     }
 
     @Test

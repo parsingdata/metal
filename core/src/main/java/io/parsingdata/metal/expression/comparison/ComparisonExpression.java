@@ -16,11 +16,10 @@
 
 package io.parsingdata.metal.expression.comparison;
 
-import static java.util.function.Function.identity;
-
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -70,6 +69,9 @@ public abstract class ComparisonExpression implements Expression {
     }
 
     private Trampoline<Boolean> compare(final ImmutableList<Value> currents, final ImmutableList<Value> predicates) {
+        if (currents.head == NOT_A_VALUE || predicates.head == NOT_A_VALUE) {
+            return complete(() -> false);
+        }
         final boolean headResult = compare(currents.head, predicates.head);
         if (!headResult || currents.tail.isEmpty()) {
             return complete(() -> headResult);

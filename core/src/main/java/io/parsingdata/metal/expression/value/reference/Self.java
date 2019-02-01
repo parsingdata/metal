@@ -16,8 +16,6 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
-import static java.util.function.Function.identity;
-
 import java.util.Optional;
 
 import io.parsingdata.metal.Util;

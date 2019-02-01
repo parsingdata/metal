@@ -24,7 +24,6 @@ import static io.parsingdata.metal.Util.format;
 
 import java.math.BigInteger;
 import java.util.Objects;
-import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;

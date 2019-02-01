@@ -18,7 +18,6 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Shorthand.con;
 
-import java.util.Optional;
 import java.util.function.BinaryOperator;
 
 import io.parsingdata.metal.data.ImmutableList;
