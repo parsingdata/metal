@@ -79,7 +79,9 @@ public class Ref<T> implements ValueExpression {
     }
 
     private Optional<ImmutableList<Value>> evalImpl(final ParseState parseState, final int limit) {
-        return Optional.of(wrap(getAllValues(parseState.order, predicate, limit), new ImmutableList<Value>()).computeResult());
+        final ImmutableList<ParseValue> values = getAllValues(parseState.order, predicate, limit);
+        if (values.isEmpty()) { return Optional.empty(); }
+        return Optional.of(wrap(values, new ImmutableList<Value>()).computeResult());
     }
 
     private static <T, U extends T> Trampoline<ImmutableList<T>> wrap(final ImmutableList<U> input, final ImmutableList<T> output) {
