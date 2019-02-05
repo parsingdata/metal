@@ -22,7 +22,6 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
@@ -52,16 +51,16 @@ public class Expand implements ValueExpression {
     }
 
     @Override
-    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final Optional<ImmutableList<Value>> baseList = bases.eval(parseState, encoding);
-        if (!baseList.isPresent() || baseList.get().isEmpty()) {
-            return Optional.empty();
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
+        final ImmutableList<Value> baseList = bases.eval(parseState, encoding);
+        if (baseList.isEmpty()) {
+            return baseList;
         }
-        final Optional<ImmutableList<Value>> countList = count.eval(parseState, encoding);
-        if (!countList.isPresent() || countList.get().size != 1 || countList.get().head == NOT_A_VALUE) {
+        final ImmutableList<Value> countList = count.eval(parseState, encoding);
+        if (countList.size != 1 || countList.head == NOT_A_VALUE) {
             throw new IllegalArgumentException("Count must evaluate to a single non-empty value.");
         }
-        return Optional.of(expand(baseList.get(), countList.get().head.asNumeric().intValueExact(), new ImmutableList<>()).computeResult());
+        return expand(baseList, countList.head.asNumeric().intValueExact(), new ImmutableList<>()).computeResult();
     }
 
     private Trampoline<ImmutableList<Value>> expand(final ImmutableList<Value> baseList, final int countValue, final ImmutableList<Value> aggregate) {

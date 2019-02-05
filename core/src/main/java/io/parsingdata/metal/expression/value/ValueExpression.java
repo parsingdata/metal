@@ -16,8 +16,6 @@
 
 package io.parsingdata.metal.expression.value;
 
-import java.util.Optional;
-
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
@@ -35,6 +33,6 @@ import io.parsingdata.metal.encoding.Encoding;
 @FunctionalInterface
 public interface ValueExpression {
 
-    Optional<ImmutableList<Value>> eval(ParseState parseState, Encoding encoding);
+    ImmutableList<Value> eval(ParseState parseState, Encoding encoding);
 
 }

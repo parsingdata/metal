@@ -24,7 +24,6 @@ import static io.parsingdata.metal.data.Selection.getAllValues;
 import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 import io.parsingdata.metal.Trampoline;
@@ -69,23 +68,24 @@ public class Ref<T> implements ValueExpression {
     }
 
     @Override
-    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
         if (limit == null) {
             return evalImpl(parseState, NO_LIMIT);
         }
-        final ImmutableList<Value> evaluatedLimit = limit.eval(parseState, encoding)
-            .filter(limitValue -> limitValue.size == 1)
-            .orElseThrow(() -> new IllegalArgumentException("Limit must evaluate to a single non-empty value."));
+        final ImmutableList<Value> evaluatedLimit = limit.eval(parseState, encoding);
+        if (evaluatedLimit.size != 1) {
+            throw new IllegalArgumentException("Limit must evaluate to a single non-empty value.");
+        }
         if (evaluatedLimit.head == NOT_A_VALUE) {
-            return Optional.of(ImmutableList.create(NOT_A_VALUE));
+            return ImmutableList.create(NOT_A_VALUE);
         }
         return evalImpl(parseState, evaluatedLimit.head.asNumeric().intValueExact());
     }
 
-    private Optional<ImmutableList<Value>> evalImpl(final ParseState parseState, final int limit) {
+    private ImmutableList<Value> evalImpl(final ParseState parseState, final int limit) {
         final ImmutableList<ParseValue> values = getAllValues(parseState.order, predicate, limit);
-        if (values.isEmpty()) { return Optional.empty(); }
-        return Optional.of(wrap(values, new ImmutableList<Value>()).computeResult());
+        if (values.isEmpty()) { new ImmutableList<>(); }
+        return wrap(values, new ImmutableList<Value>()).computeResult();
     }
 
     private static <T, U extends T> Trampoline<ImmutableList<T>> wrap(final ImmutableList<U> input, final ImmutableList<T> output) {

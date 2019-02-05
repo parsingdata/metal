@@ -19,7 +19,6 @@ package io.parsingdata.metal.expression.value.reference;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
@@ -43,10 +42,8 @@ public class Count implements ValueExpression {
     }
 
     @Override
-    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return Optional.of(ImmutableList.create(operand.eval(parseState, encoding)
-            .map(values -> fromNumeric(values.size))
-            .orElseGet(() -> fromNumeric(0))));
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
+        return ImmutableList.create(fromNumeric(operand.eval(parseState, encoding).size));
     }
 
     private static Value fromNumeric(final long length) {

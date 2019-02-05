@@ -65,10 +65,8 @@ public abstract class BinaryValueExpression implements ValueExpression {
     public abstract Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding);
 
     @Override
-    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return left.eval(parseState, encoding)
-            .flatMap(leftValues -> right.eval(parseState, encoding)
-                .flatMap(rightValues -> Optional.of(evalLists(leftValues, rightValues, parseState, encoding))));
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
+        return evalLists(left.eval(parseState, encoding), right.eval(parseState, encoding), parseState, encoding);
     }
 
     private ImmutableList<Value> evalLists(final ImmutableList<Value> leftValues, final ImmutableList<Value> rightValues, final ParseState parseState, final Encoding encoding) {

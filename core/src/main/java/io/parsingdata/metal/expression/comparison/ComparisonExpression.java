@@ -22,7 +22,6 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
@@ -57,15 +56,15 @@ public abstract class ComparisonExpression implements Expression {
 
     @Override
     public boolean eval(final ParseState parseState, final Encoding encoding) {
-        final Optional<ImmutableList<Value>> values = value == null ? parseState.order.current().flatMap(current -> Optional.of(ImmutableList.create(current))) : value.eval(parseState, encoding);
-        if (!values.isPresent() || values.get().isEmpty()) {
+        final ImmutableList<Value> values = value == null ? parseState.order.current().map(ImmutableList::<Value>create).orElseGet(ImmutableList::new) : value.eval(parseState, encoding);
+        if (values.isEmpty()) {
             return false;
         }
-        final Optional<ImmutableList<Value>> predicates = predicate.eval(parseState, encoding);
-        if (!predicates.isPresent() || values.get().size != predicates.get().size) {
+        final ImmutableList<Value> predicates = predicate.eval(parseState, encoding);
+        if (values.size != predicates.size) {
             return false;
         }
-        return compare(values.get(), predicates.get()).computeResult();
+        return compare(values, predicates).computeResult();
     }
 
     private Trampoline<Boolean> compare(final ImmutableList<Value> currents, final ImmutableList<Value> predicates) {

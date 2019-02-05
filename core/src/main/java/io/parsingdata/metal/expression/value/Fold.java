@@ -22,7 +22,6 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.BinaryOperator;
 
 import io.parsingdata.metal.Trampoline;
@@ -58,19 +57,17 @@ public abstract class Fold implements ValueExpression {
     }
 
     @Override
-    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final Optional<ImmutableList<Value>> initialList = initial != null ? initial.eval(parseState, encoding) : Optional.empty();
-        if (initialList.isPresent() && (initialList.get().size > 1 || initialList.get().head == NOT_A_VALUE)) {
-            return Optional.empty();
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
+        final ImmutableList<Value> initialList = initial != null ? initial.eval(parseState, encoding) : new ImmutableList<>();
+        if (initialList.size > 1 || initialList.head == NOT_A_VALUE) {
+            return new ImmutableList<>();
         }
-        final Optional<ImmutableList<Value>> unpreparedValues = this.values.eval(parseState, encoding);
-        if (!unpreparedValues.isPresent() || containsNotAValue(unpreparedValues.get()).computeResult()) {
+        final ImmutableList<Value> unpreparedValues = this.values.eval(parseState, encoding);
+        if (containsNotAValue(unpreparedValues).computeResult()) {
             return initialList;
         }
-        final ImmutableList<Value> valueList = prepareValues(unpreparedValues.get());
-        return Optional.of(ImmutableList.create(initialList
-            .map(headList -> fold(parseState, encoding, reducer, headList.head, valueList).computeResult())
-            .orElseGet(() -> fold(parseState, encoding, reducer, valueList.head, valueList.tail).computeResult())));
+        final ImmutableList<Value> valueList = prepareValues(unpreparedValues).add(initialList);
+        return ImmutableList.create(fold(parseState, encoding, reducer, valueList.head, valueList.tail).computeResult());
     }
 
     private Trampoline<Value> fold(final ParseState parseState, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Value head, final ImmutableList<Value> tail) {
@@ -80,11 +77,11 @@ public abstract class Fold implements ValueExpression {
         if (tail.isEmpty()) {
             return complete(() -> head);
         }
-        final Optional<ImmutableList<Value>> reducedValue = reduce(reducer, head, tail.head).eval(parseState, encoding);
-        if (!reducedValue.isPresent() || reducedValue.get().size != 1) {
+        final ImmutableList<Value> reducedValue = reduce(reducer, head, tail.head).eval(parseState, encoding);
+        if (reducedValue.size != 1) {
             throw new IllegalArgumentException("Reducer must evaluate to a single value.");
         }
-        return intermediate(() -> fold(parseState, encoding, reducer, reducedValue.get().head, tail.tail));
+        return intermediate(() -> fold(parseState, encoding, reducer, reducedValue.head, tail.tail));
     }
 
     private Trampoline<Boolean> containsNotAValue(final ImmutableList<Value> list) {

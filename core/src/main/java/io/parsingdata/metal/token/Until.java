@@ -87,10 +87,7 @@ public class Until extends Token {
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        return initialSize.eval(environment.parseState, environment.encoding)
-            .flatMap(initialSizeList -> stepSize.eval(environment.parseState, environment.encoding)
-                .flatMap(stepSizeList -> maxSize.eval(environment.parseState, environment.encoding)
-                    .flatMap(maxSizeList -> handleInterval(environment, initialSizeList, stepSizeList, maxSizeList).computeResult())));
+        return handleInterval(environment, initialSize.eval(environment.parseState, environment.encoding), stepSize.eval(environment.parseState, environment.encoding), maxSize.eval(environment.parseState, environment.encoding)).computeResult();
     }
 
     private Trampoline<Optional<ParseState>> handleInterval(final Environment environment, final ImmutableList<Value> initialSizes, final ImmutableList<Value> stepSizes, final ImmutableList<Value> maxSizes) {

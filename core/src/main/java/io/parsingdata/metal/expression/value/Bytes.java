@@ -26,7 +26,6 @@ import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 
 import java.math.BigInteger;
 import java.util.Objects;
-import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
@@ -57,10 +56,9 @@ public class Bytes implements ValueExpression {
     }
 
     @Override
-    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return operand.eval(parseState, encoding)
-            .filter(input -> !input.isEmpty())
-            .flatMap(input -> Optional.of(toByteValues(new ImmutableList<>(), input.head, input.tail, encoding).computeResult()));
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
+        final ImmutableList<Value> values = operand.eval(parseState, encoding);
+        return values.isEmpty() ? values : toByteValues(new ImmutableList<>(), values.head, values.tail, encoding).computeResult();
     }
 
     private Trampoline<ImmutableList<Value>> toByteValues(final ImmutableList<Value> output, final Value head, final ImmutableList<Value> tail, final Encoding encoding) {

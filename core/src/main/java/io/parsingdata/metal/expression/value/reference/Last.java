@@ -19,7 +19,6 @@ package io.parsingdata.metal.expression.value.reference;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
@@ -41,11 +40,9 @@ public class Last implements ValueExpression {
     }
 
     @Override
-    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return operand
-            .eval(parseState, encoding)
-            .filter(list -> !list.isEmpty())
-            .flatMap(list -> Optional.of(ImmutableList.create(list.head)));
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
+        final ImmutableList<Value> values = operand.eval(parseState, encoding);
+        return values.isEmpty() ? values : ImmutableList.create(values.head);
     }
 
     @Override

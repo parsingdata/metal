@@ -21,7 +21,6 @@ import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
@@ -44,8 +43,9 @@ public class First implements ValueExpression {
     }
 
     @Override
-    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return operand.eval(parseState, encoding).flatMap(list -> Optional.of(ImmutableList.create(getFirst(list).computeResult())));
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
+        final ImmutableList<Value> values = operand.eval(parseState, encoding);
+        return values.isEmpty() ? values : ImmutableList.create(getFirst(values).computeResult());
     }
 
     private Trampoline<Value> getFirst(final ImmutableList<Value> values) {

@@ -59,14 +59,11 @@ public class Def extends Token {
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        final Optional<ImmutableList<Value>> sizes = size.eval(environment.parseState, environment.encoding);
-        if (!sizes.isPresent() || sizes.get().size != 1 || sizes.get().head == NOT_A_VALUE) {
+        final ImmutableList<Value> sizes = size.eval(environment.parseState, environment.encoding);
+        if (sizes.size != 1 || sizes.head == NOT_A_VALUE) {
             return failure();
         }
-        return sizes
-            .filter(list -> list.head.asNumeric().compareTo(ZERO) != 0)
-            .map(list -> slice(environment, list.head.asNumeric()))
-            .orElseGet(() -> success(environment.parseState));
+        return sizes.head.asNumeric().compareTo(ZERO) != 0 ? slice(environment, sizes.head.asNumeric()) : success(environment.parseState);
     }
 
     private Optional<ParseState> slice(final Environment environment, final BigInteger dataSize) {

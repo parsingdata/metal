@@ -54,8 +54,8 @@ public class Elvis implements ValueExpression {
     }
 
     @Override
-    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return Optional.of(reverse(eval(new ImmutableList<>(), left.eval(parseState, encoding).orElseGet(ImmutableList::new), right.eval(parseState, encoding).orElseGet(ImmutableList::new)).computeResult()));
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
+        return reverse(eval(new ImmutableList<>(), left.eval(parseState, encoding), right.eval(parseState, encoding)).computeResult());
     }
 
     private Trampoline<ImmutableList<Value>> eval(final ImmutableList<Value> result, final ImmutableList<Value> leftValues, final ImmutableList<Value> rightValues) {

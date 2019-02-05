@@ -59,10 +59,8 @@ public class Nth implements ValueExpression {
     }
 
     @Override
-    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return values.eval(parseState, encoding)
-            .flatMap(valueList -> indices.eval(parseState, encoding)
-                .flatMap(indicesList -> Optional.of(reverse(eval(valueList, indicesList, new ImmutableList<>()).computeResult()))));
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
+        return reverse(eval(values.eval(parseState, encoding), indices.eval(parseState, encoding), new ImmutableList<>()).computeResult());
     }
 
     private Trampoline<ImmutableList<Value>> eval(final ImmutableList<Value> values, final ImmutableList<Value> indices, final ImmutableList<Value> result) {

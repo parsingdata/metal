@@ -55,9 +55,8 @@ public abstract class UnaryValueExpression implements ValueExpression {
     }
 
     @Override
-    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return operand.eval(parseState, encoding)
-            .flatMap(result -> Optional.of(reverse(eval(result, parseState, encoding, new ImmutableList<>()).computeResult())));
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
+        return reverse(eval(operand.eval(parseState, encoding), parseState, encoding, new ImmutableList<>()).computeResult());
     }
 
     private Trampoline<ImmutableList<Value>> eval(final ImmutableList<Value> values, final ParseState parseState, final Encoding encoding, final ImmutableList<Value> result) {
