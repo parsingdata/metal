@@ -60,7 +60,7 @@ public abstract class Fold implements ValueExpression {
     public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
         final ImmutableList<Value> initialList = initial != null ? initial.eval(parseState, encoding) : new ImmutableList<>();
         if (initialList.size > 1 || initialList.head == NOT_A_VALUE) {
-            return new ImmutableList<>();
+            return ImmutableList.create(NOT_A_VALUE);
         }
         final ImmutableList<Value> unpreparedValues = this.values.eval(parseState, encoding);
         if (unpreparedValues.isEmpty()) {

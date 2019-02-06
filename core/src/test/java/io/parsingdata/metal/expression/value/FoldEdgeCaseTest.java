@@ -24,12 +24,16 @@ import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.exp;
+import static io.parsingdata.metal.Shorthand.fold;
 import static io.parsingdata.metal.Shorthand.foldLeft;
 import static io.parsingdata.metal.Shorthand.foldRight;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
+import static io.parsingdata.metal.encoding.Encoding.DEFAULT_ENCODING;
+import static io.parsingdata.metal.expression.value.BytesTest.EMPTY_PARSE_STATE;
 import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
@@ -44,6 +48,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import io.parsingdata.metal.Shorthand;
+import io.parsingdata.metal.ShorthandsTest;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 
@@ -92,8 +97,21 @@ public class FoldEdgeCaseTest {
                     def("folded", 1, eq(foldRight(ref("toFold"), Shorthand::add, ref("init"))))
                 )
             ).parse(env(stream(1, 2, 1, 2, 3)));
-
         assertFalse(parseResult.isPresent());
+    }
+
+    @Test
+    public void twoInits() {
+        final ImmutableList<Value> result = fold(exp(con(1), con(2)), Shorthand::add, exp(con(1), con(2))).eval(EMPTY_PARSE_STATE, DEFAULT_ENCODING);
+        assertEquals(1, result.size);
+        assertEquals(NOT_A_VALUE, result.head);
+    }
+
+    @Test
+    public void notAValueInit() {
+        final ImmutableList<Value> result = fold(exp(con(1), con(2)), Shorthand::add, con(NOT_A_VALUE)).eval(EMPTY_PARSE_STATE, DEFAULT_ENCODING);
+        assertEquals(1, result.size);
+        assertEquals(NOT_A_VALUE, result.head);
     }
 
     @Test
