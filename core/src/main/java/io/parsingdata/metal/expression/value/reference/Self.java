@@ -16,8 +16,6 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
-import java.util.Optional;
-
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
@@ -33,8 +31,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 public class Self implements ValueExpression {
 
     @Override
-    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return parseState.order.current().flatMap(self -> Optional.of(ImmutableList.create(self)));
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
+        return parseState.order.current().map(ImmutableList::<Value>create).orElseGet(ImmutableList::new);
     }
 
     @Override

@@ -21,7 +21,6 @@ import static java.math.BigInteger.ZERO;
 import static io.parsingdata.metal.data.Slice.createFromSource;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ConcatenatedValueSource;
@@ -45,11 +44,11 @@ public class FoldCat implements ValueExpression {
     }
 
     @Override
-    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return operand.eval(parseState, encoding)
-            .flatMap(values -> ConcatenatedValueSource.create(values)
-                .flatMap(source -> createFromSource(source, ZERO, source.length))
-                .map(slice -> new ImmutableList<Value>().add(new Value(slice, encoding))));
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
+        return ConcatenatedValueSource.create(operand.eval(parseState, encoding))
+            .flatMap(source -> createFromSource(source, ZERO, source.length))
+            .map(slice -> ImmutableList.create(new Value(slice, encoding)))
+            .orElseGet(ImmutableList::new);
     }
 
     @Override

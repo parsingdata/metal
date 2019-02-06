@@ -61,8 +61,7 @@ public class Tie extends Token {
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        return dataExpression.eval(environment.parseState, environment.encoding)
-            .flatMap(dataResult -> iterate(environment.addBranch(this), dataResult, 0, environment.parseState).computeResult());
+        return iterate(environment.addBranch(this), dataExpression.eval(environment.parseState, environment.encoding), 0, environment.parseState).computeResult();
     }
 
     private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Value> values, final int index, final ParseState returnParseState) {

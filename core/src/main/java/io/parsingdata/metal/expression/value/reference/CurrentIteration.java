@@ -57,9 +57,10 @@ public class CurrentIteration implements ValueExpression {
     }
 
     @Override
-    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
         return getIteration(parseState, encoding)
-            .flatMap(iteration -> Optional.of(ImmutableList.create(iteration)));
+            .map(ImmutableList::create)
+            .orElseGet(ImmutableList::new);
     }
 
     private Optional<Value> getIteration(final ParseState parseState, final Encoding encoding) {
@@ -71,10 +72,11 @@ public class CurrentIteration implements ValueExpression {
     }
 
     private BigInteger getLevel(final ParseState parseState, final Encoding encoding) {
-        return level.eval(parseState, encoding)
-            .filter(levelList -> levelList.size == 1 && levelList.head != NOT_A_VALUE)
-            .map(levelList -> levelList.head.asNumeric())
-            .orElseThrow(() -> new IllegalArgumentException("Level must evaluate to a single value."));
+        final ImmutableList<Value> levelValues = level.eval(parseState, encoding);
+        if (levelValues.size != 1 || levelValues.head == NOT_A_VALUE) {
+            throw new IllegalArgumentException("Level must evaluate to a single value.");
+        }
+        return levelValues.head.asNumeric();
     }
 
     private Trampoline<Optional<Value>> getIterationRecursive(final ImmutableList<ImmutablePair<Token, BigInteger>> iterations, final BigInteger levelValue) {

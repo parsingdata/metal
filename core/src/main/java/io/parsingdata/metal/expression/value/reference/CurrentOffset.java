@@ -35,8 +35,8 @@ import io.parsingdata.metal.expression.value.ValueExpression;
 public class CurrentOffset implements ValueExpression {
 
     @Override
-    public Optional<ImmutableList<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return Optional.of(ImmutableList.create(createFromNumeric(parseState.offset, DEFAULT_ENCODING)));
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
+        return ImmutableList.create(createFromNumeric(parseState.offset, DEFAULT_ENCODING));
     }
 
     @Override

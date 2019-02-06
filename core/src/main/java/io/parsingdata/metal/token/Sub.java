@@ -64,10 +64,8 @@ public class Sub extends Token {
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        return offsets.eval(environment.parseState, environment.encoding)
-            .flatMap(offsetList -> iterate(environment.addBranch(this), offsetList)
-                .computeResult()
-                .flatMap(nextParseState -> nextParseState.seek(environment.parseState.offset)));
+        return iterate(environment.addBranch(this), offsets.eval(environment.parseState, environment.encoding)).computeResult()
+            .flatMap(nextParseState -> nextParseState.seek(environment.parseState.offset));
     }
 
     private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Value> offsetList) {
