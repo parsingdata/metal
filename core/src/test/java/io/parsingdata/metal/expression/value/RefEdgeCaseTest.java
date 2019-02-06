@@ -17,7 +17,6 @@
 package io.parsingdata.metal.expression.value;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.div;
@@ -29,8 +28,6 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
-
-import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -68,10 +65,9 @@ public class RefEdgeCaseTest {
 
     @Test
     public void nanLimit() {
-        final Optional<ImmutableList<Value>> result = ref("a", div(con(1), con(0))).eval(parseState, enc());
-        assertTrue(result.isPresent());
-        assertEquals(1, result.get().size);
-        assertEquals(NOT_A_VALUE, result.get().head);
+        final ImmutableList<Value> result = ref("a", div(con(1), con(0))).eval(parseState, enc());
+        assertEquals(1, result.size);
+        assertEquals(NOT_A_VALUE, result.head);
     }
 
 }

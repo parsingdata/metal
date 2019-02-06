@@ -63,8 +63,11 @@ public abstract class Fold implements ValueExpression {
             return new ImmutableList<>();
         }
         final ImmutableList<Value> unpreparedValues = this.values.eval(parseState, encoding);
-        if (containsNotAValue(unpreparedValues).computeResult()) {
+        if (unpreparedValues.isEmpty()) {
             return initialList;
+        }
+        if (containsNotAValue(unpreparedValues).computeResult()) {
+            return ImmutableList.create(NOT_A_VALUE);
         }
         final ImmutableList<Value> valueList = prepareValues(unpreparedValues).add(initialList);
         return ImmutableList.create(fold(parseState, encoding, reducer, valueList.head, valueList.tail).computeResult());

@@ -153,7 +153,11 @@ public class SubStructTest {
 
     @Test
     public void errorEmptyAddressList() {
-        assertFalse(sub(any("a"), ref("b")).parse(env(stream(1, 2, 3, 4))).isPresent());
+        final Optional<ParseState> result = sub(any("a"), ref("b")).parse(env(stream(1, 2, 3, 4)));
+        assertTrue(result.isPresent());
+        assertEquals(0, result.get().offset.intValueExact());
+        assertTrue(result.get().order.head.asGraph().isEmpty());
+        assertTrue(result.get().order.tail.asGraph().isEmpty());
     }
 
     @Test

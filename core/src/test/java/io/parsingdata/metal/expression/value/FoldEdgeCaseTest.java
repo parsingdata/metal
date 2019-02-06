@@ -18,7 +18,6 @@ package io.parsingdata.metal.expression.value;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
@@ -60,26 +59,24 @@ public class FoldEdgeCaseTest {
 
     @Test
     public void valuesContainsEmpty() {
-        assertFalse(foldLeft(div(con(1), con(0)), Shorthand::add).eval(stream(0), enc()).isPresent());
-        assertFalse(foldRight(div(con(1), con(0)), Shorthand::add).eval(stream(0), enc()).isPresent());
+        assertEquals(NOT_A_VALUE, foldLeft(div(con(1), con(0)), Shorthand::add).eval(stream(0), enc()).head);
+        assertEquals(NOT_A_VALUE, foldRight(div(con(1), con(0)), Shorthand::add).eval(stream(0), enc()).head);
     }
 
     @Test
     public void foldToEmpty() {
         final ParseState parseState = rep(any("value")).parse(env(stream(1, 0))).get();
-        final Optional<ImmutableList<Value>> foldLeftNan = foldLeft(ref("value"), Shorthand::div).eval(parseState, enc());
-        assertTrue(foldLeftNan.isPresent());
-        assertEquals(1, foldLeftNan.get().size);
-        assertEquals(NOT_A_VALUE, foldLeftNan.get().head);
-        final Optional<ImmutableList<Value>> foldRightNan = foldRight(ref("value"), Shorthand::div).eval(parseState, enc());
-        assertTrue(foldRightNan.isPresent());
-        assertEquals(1, foldRightNan.get().size);
-        assertEquals(NOT_A_VALUE, foldRightNan.get().head);
+        final ImmutableList<Value> foldLeftNan = foldLeft(ref("value"), Shorthand::div).eval(parseState, enc());
+        assertEquals(1, foldLeftNan.size);
+        assertEquals(NOT_A_VALUE, foldLeftNan.head);
+        final ImmutableList<Value> foldRightNan = foldRight(ref("value"), Shorthand::div).eval(parseState, enc());
+        assertEquals(1, foldRightNan.size);
+        assertEquals(NOT_A_VALUE, foldRightNan.head);
     }
 
     @Test
     public void inputContainsEmptyInTail() {
-        assertFalse(foldRight((parseState, encoding) -> Optional.of(ImmutableList.create(NOT_A_VALUE).add(new Value(createFromBytes(new byte[] { 1, 2 }), enc()))), Shorthand::add).eval(stream(0), enc()).isPresent());
+        assertEquals(NOT_A_VALUE, foldRight((parseState, encoding) -> ImmutableList.create(NOT_A_VALUE).add(new Value(createFromBytes(new byte[] { 1, 2 }), enc())), Shorthand::add).eval(stream(0), enc()).head);
     }
 
     @Test

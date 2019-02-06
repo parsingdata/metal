@@ -17,7 +17,6 @@
 package io.parsingdata.metal.expression.value;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.AutoEqualityTest.DUMMY_STREAM;
@@ -30,8 +29,6 @@ import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.expression.value.BytesTest.EMPTY_PARSE_STATE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
-
-import java.util.Optional;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -53,8 +50,8 @@ public class ExpandTest {
 
     @Test
     public void expandEmpty() {
-        final Optional<ImmutableList<Value>> result = exp(ref("a"), con(5)).eval(EMPTY_PARSE_STATE, enc());
-        assertFalse(result.isPresent());
+        final ImmutableList<Value> result = exp(ref("a"), con(5)).eval(EMPTY_PARSE_STATE, enc());
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -73,16 +70,14 @@ public class ExpandTest {
 
     @Test
     public void expandZeroTimes() {
-        final Optional<ImmutableList<Value>> result = exp(con(1), con(0)).eval(EMPTY_PARSE_STATE, enc());
-        assertTrue(result.isPresent());
-        assertEquals(0, result.get().size);
+        final ImmutableList<Value> result = exp(con(1), con(0)).eval(EMPTY_PARSE_STATE, enc());
+        assertTrue(result.isEmpty());
     }
 
     @Test
     public void expandValue() {
-        Optional<ImmutableList<Value>> optionalResult = exp(con(VALUE_1), con(SIZE)).eval(EMPTY_PARSE_STATE, enc());
-        assertTrue(optionalResult.isPresent());
-        ImmutableList<Value> result = optionalResult.get();
+        ImmutableList<Value> optionalResult = exp(con(VALUE_1), con(SIZE)).eval(EMPTY_PARSE_STATE, enc());
+        ImmutableList<Value> result = optionalResult;
         assertEquals(SIZE, result.size);
         for (int i = 0; i < SIZE; i++) {
             assertEquals(VALUE_1, result.head.asNumeric().intValueExact());
@@ -92,9 +87,8 @@ public class ExpandTest {
 
     @Test
     public void expandList() {
-        Optional<ImmutableList<Value>> optionalResult = exp(ref("a"), con(SIZE)).eval(createFromByteStream(DUMMY_STREAM).add(PARSEVALUE_2).add(PARSEVALUE_1), enc());
-        assertTrue(optionalResult.isPresent());
-        ImmutableList<Value> result = optionalResult.get();
+        ImmutableList<Value> optionalResult = exp(ref("a"), con(SIZE)).eval(createFromByteStream(DUMMY_STREAM).add(PARSEVALUE_2).add(PARSEVALUE_1), enc());
+        ImmutableList<Value> result = optionalResult;
         assertEquals(2 * SIZE, result.size);
         for (int i = 0; i < SIZE; i++) {
             assertEquals(VALUE_1, result.head.asNumeric().intValueExact());

@@ -17,7 +17,6 @@
 package io.parsingdata.metal.expression.value;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.cat;
@@ -43,19 +42,18 @@ public class FoldCatTest {
 
     @Test
     public void foldCatRegular() {
-        final Optional<ImmutableList<Value>> string = foldString("any");
-        assertTrue(string.isPresent());
-        assertEquals(1, string.get().size);
-        assertEquals("abc", string.get().head.asString());
+        final ImmutableList<Value> string = foldString("any");
+        assertEquals(1, string.size);
+        assertEquals("abc", string.head.asString());
     }
 
     @Test
     public void foldCatEmpty() {
-        final Optional<ImmutableList<Value>> noString = foldString("other");
-        assertFalse(noString.isPresent());
+        final ImmutableList<Value> noString = foldString("other");
+        assertTrue(noString.isEmpty());
     }
 
-    private Optional<ImmutableList<Value>> foldString(final String name) {
+    private ImmutableList<Value> foldString(final String name) {
         final Optional<ParseState> result =
             seq(any("any"),
                 any("any"),
@@ -66,8 +64,8 @@ public class FoldCatTest {
 
     @Test
     public void foldCatEmptyResult() {
-        Optional<ImmutableList<Value>> values = cat(div(con(1), con(0))).eval(EMPTY_PARSE_STATE, enc());
-        assertFalse(values.isPresent());
+        ImmutableList<Value> values = cat(div(con(1), con(0))).eval(EMPTY_PARSE_STATE, enc());
+        assertTrue(values.isEmpty());
     }
 
 }

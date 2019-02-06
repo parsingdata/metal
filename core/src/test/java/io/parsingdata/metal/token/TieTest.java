@@ -90,7 +90,7 @@ public class TieTest {
     @Test
     public void checkContainerSource() {
         final Optional<ParseState> result = parseContainer();
-        checkFullParse(INC_PREV_MOD_100, fold(ref("value"), Shorthand::cat).eval(result.get(), enc()).get().head.getValue());
+        checkFullParse(INC_PREV_MOD_100, fold(ref("value"), Shorthand::cat).eval(result.get(), enc()).head.getValue());
     }
 
     private Optional<ParseState> checkFullParse(Token token, byte[] data) {
@@ -216,7 +216,9 @@ public class TieTest {
     @Test
     public void tieWithEmptyListFromDataExpression() {
         final Token token = seq(any("a"), tie(any("b"), last(ref("c"))));
-        assertFalse(token.parse(env(stream(0))).isPresent());
+        final Optional<ParseState> result = token.parse(env(stream(0)));
+        assertTrue(result.isPresent());
+        assertTrue(result.get().order.head.asGraph().head.asGraph().isEmpty());
     }
 
     @Test

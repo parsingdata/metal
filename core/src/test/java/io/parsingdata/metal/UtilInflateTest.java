@@ -17,15 +17,12 @@
 package io.parsingdata.metal;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Util.inflate;
 import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
-
-import java.util.Optional;
 
 import org.junit.Test;
 
@@ -36,10 +33,9 @@ public class UtilInflateTest {
 
     @Test
     public void inflateDataFormatError() {
-        final Optional<ImmutableList<Value>> result = inflate(con(0xff)).eval(stream(), enc());
-        assertTrue(result.isPresent());
-        assertEquals(1, result.get().size);
-        assertEquals(NOT_A_VALUE, result.get().head);
+        final ImmutableList<Value> result = inflate(con(0xff)).eval(stream(), enc());
+        assertEquals(1, result.size);
+        assertEquals(NOT_A_VALUE, result.head);
     }
 
 }

@@ -166,12 +166,11 @@ public class ShorthandsTest {
     }
 
     private void checkNameAndValue(final String name, final int value, final ParseState parseState) {
-        Optional<ImmutableList<Value>> optionalValues = ref(name).eval(parseState, enc());
-        assertTrue(optionalValues.isPresent());
-        assertEquals(1, optionalValues.get().size);
-        assertEquals(value, optionalValues.get().head.asNumeric().intValueExact());
+        ImmutableList<Value> optionalValues = ref(name).eval(parseState, enc());
+        assertEquals(1, optionalValues.size);
+        assertEquals(value, optionalValues.head.asNumeric().intValueExact());
 
-        ImmutableList<Value> values = optionalValues.get();
+        ImmutableList<Value> values = optionalValues;
         while (!values.isEmpty()) {
             final Value current = values.head;
             assertThat(current, is(instanceOf(ParseValue.class)));
@@ -208,10 +207,8 @@ public class ShorthandsTest {
 
     @Test
     public void mapLeftWithSub() {
-        Optional<ImmutableList<Value>> optionalResult = mapLeft(Shorthand::sub, ref("a"), con(2)).eval(PARSE_STATE, enc());
-        assertTrue(optionalResult.isPresent());
-        assertEquals(3, optionalResult.get().size);
-        ImmutableList<Value> result = optionalResult.get();
+        ImmutableList<Value> result = mapLeft(Shorthand::sub, ref("a"), con(2)).eval(PARSE_STATE, enc());
+        assertEquals(3, result.size);
         for (int i = 0; i < 3; i++) {
             assertEquals((i * 42) + 40, result.head.asNumeric().intValueExact());
             result = result.tail;
@@ -220,10 +217,8 @@ public class ShorthandsTest {
 
     @Test
     public void mapRightWithSub() {
-        Optional<ImmutableList<Value>> optionalResult = mapRight(Shorthand::sub, con(126), ref("a")).eval(PARSE_STATE, enc());
-        assertTrue(optionalResult.isPresent());
-        assertEquals(3, optionalResult.get().size);
-        ImmutableList<Value> result = optionalResult.get();
+        ImmutableList<Value> result = mapRight(Shorthand::sub, con(126), ref("a")).eval(PARSE_STATE, enc());
+        assertEquals(3, result.size);
         for (int i = 0; i < 3; i++) {
             assertEquals(((3 - i) * 42) - 42, result.head.asNumeric().intValueExact());
             result = result.tail;

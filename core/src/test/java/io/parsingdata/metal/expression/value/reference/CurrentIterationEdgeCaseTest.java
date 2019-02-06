@@ -15,7 +15,7 @@
  */
 package io.parsingdata.metal.expression.value.reference;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.div;
@@ -27,8 +27,6 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
-
-import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -74,7 +72,7 @@ public class CurrentIterationEdgeCaseTest {
 
     @Test
     public void negativeLevel() {
-        Optional<ImmutableList<Value>> value = iteration(con(-1)).eval(parseState, enc());
-        assertFalse(value.isPresent());
+        ImmutableList<Value> value = iteration(con(-1)).eval(parseState, enc());
+        assertTrue(value.isEmpty());
     }
 }

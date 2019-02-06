@@ -19,8 +19,6 @@ package io.parsingdata.metal.expression.value.reference;
 import static io.parsingdata.metal.encoding.Encoding.DEFAULT_ENCODING;
 import static io.parsingdata.metal.expression.value.ConstantFactory.createFromNumeric;
 
-import java.util.Optional;
-
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;

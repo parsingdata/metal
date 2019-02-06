@@ -17,14 +17,11 @@
 package io.parsingdata.metal.expression.value.reference;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.offset;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
-
-import java.util.Optional;
 
 import org.junit.Test;
 
@@ -35,10 +32,9 @@ public class OffsetTest {
 
     @Test
     public void definedValueOffset() {
-        final Optional<ImmutableList<Value>> offsetCon = offset(con(1)).eval(stream(), enc());
-        assertTrue(offsetCon.isPresent());
-        assertEquals(1, offsetCon.get().size);
-        assertEquals(0, offsetCon.get().head.asNumeric().intValueExact());
+        final ImmutableList<Value> offsetCon = offset(con(1)).eval(stream(), enc());
+        assertEquals(1, offsetCon.size);
+        assertEquals(0, offsetCon.head.asNumeric().intValueExact());
     }
 
 }
