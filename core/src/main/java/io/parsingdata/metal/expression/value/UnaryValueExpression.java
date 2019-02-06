@@ -66,14 +66,14 @@ public abstract class UnaryValueExpression implements ValueExpression {
         return intermediate(() -> eval(values.tail, parseState, encoding, result.add(checkEval(values.head, parseState, encoding))));
     }
 
+    public abstract Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding);
+
     private Value checkEval(final Value value, final ParseState parseState, final Encoding encoding) {
         if (value == NOT_A_VALUE) {
             return NOT_A_VALUE;
         }
         return eval(value, parseState, encoding).orElse(NOT_A_VALUE);
     }
-
-    public abstract Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding);
 
     @Override
     public String toString() {
