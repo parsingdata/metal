@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Util.inflate;
-import static io.parsingdata.metal.expression.value.CoreValue.NOT_A_VALUE;
+import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 

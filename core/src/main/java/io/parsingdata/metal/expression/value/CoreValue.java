@@ -32,7 +32,6 @@ import io.parsingdata.metal.encoding.Sign;
 
 public class CoreValue implements Value {
 
-    public static final Value NOT_A_VALUE = new CoreValue(Slice.createFromBytes(new byte[]{}), DEFAULT_ENCODING);
     public static final BigInteger TO_STRING_BYTE_COUNT = BigInteger.valueOf(4);
 
     private final Slice slice;
