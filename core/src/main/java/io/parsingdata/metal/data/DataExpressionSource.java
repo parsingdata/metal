@@ -21,6 +21,7 @@ import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.format;
+import static io.parsingdata.metal.expression.value.CoreValue.NOT_A_VALUE;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -71,7 +72,7 @@ public class DataExpressionSource extends Source {
                 throw new IllegalStateException(format("ValueExpression dataExpression must yield at least %d results.", index+1));
             }
             final Value cacheValue = getValueAtIndex(results, index, 0).computeResult();
-            if (cacheValue == Value.NOT_A_VALUE) {
+            if (cacheValue == NOT_A_VALUE) {
                 throw new IllegalStateException(format("ValueExpression dataExpression yields empty Value at index %d.", index));
             }
             cache = cacheValue.getValue();

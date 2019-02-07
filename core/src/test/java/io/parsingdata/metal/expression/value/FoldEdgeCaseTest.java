@@ -34,7 +34,7 @@ import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.encoding.Encoding.DEFAULT_ENCODING;
 import static io.parsingdata.metal.expression.value.BytesTest.EMPTY_PARSE_STATE;
-import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
+import static io.parsingdata.metal.expression.value.CoreValue.NOT_A_VALUE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
@@ -80,7 +80,7 @@ public class FoldEdgeCaseTest {
 
     @Test
     public void inputContainsEmptyInTail() {
-        assertEquals(NOT_A_VALUE, foldRight((parseState, encoding) -> ImmutableList.create(NOT_A_VALUE).add(new Value(createFromBytes(new byte[] { 1, 2 }), enc())), Shorthand::add).eval(stream(0), enc()).head);
+        assertEquals(NOT_A_VALUE, foldRight((parseState, encoding) -> ImmutableList.create(NOT_A_VALUE).add(new CoreValue(createFromBytes(new byte[] { 1, 2 }), enc())), Shorthand::add).eval(stream(0), enc()).head);
     }
 
     @Test

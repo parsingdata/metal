@@ -24,9 +24,8 @@ import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * A {@link ValueExpression} that represents the
- * {@link io.parsingdata.metal.expression.value.Value} most recently added to
- * the parse state.
+ * A {@link ValueExpression} that represents the {@link Value} most recently
+ * added to the parse state.
  */
 public class Self implements ValueExpression {
 

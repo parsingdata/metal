@@ -22,7 +22,7 @@ import static io.parsingdata.metal.Util.checkNotEmpty;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
-import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
+import static io.parsingdata.metal.expression.value.CoreValue.NOT_A_VALUE;
 
 import java.math.BigInteger;
 import java.util.Objects;

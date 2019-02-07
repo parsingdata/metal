@@ -57,7 +57,7 @@ public final class Selection {
     }
 
     private static boolean matchesLocation(final ParseValue value, final BigInteger offset, final Source source) {
-        return value.slice.offset.compareTo(offset) == 0 && value.slice.source.equals(source);
+        return value.getSlice().offset.compareTo(offset) == 0 && value.getSlice().source.equals(source);
     }
 
     private static Trampoline<ParseValue> getLowestOffsetValue(final ImmutableList<ParseGraph> graphList, final ParseValue lowest) {
@@ -77,7 +77,7 @@ public final class Selection {
     }
 
     private static ParseValue getLowest(final ParseValue lowest, final ParseValue value) {
-        return lowest == null || lowest.slice.offset.compareTo(value.slice.offset) > 0 ? value : lowest;
+        return lowest == null || lowest.getSlice().offset.compareTo(value.getSlice().offset) > 0 ? value : lowest;
     }
 
     private static ImmutableList<ParseGraph> addIfGraph(final ImmutableList<ParseGraph> graphList, final ParseItem head) {

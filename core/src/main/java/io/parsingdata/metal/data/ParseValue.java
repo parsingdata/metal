@@ -22,10 +22,10 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import java.util.Objects;
 
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.Value;
+import io.parsingdata.metal.expression.value.CoreValue;
 import io.parsingdata.metal.token.Token;
 
-public class ParseValue extends Value implements ParseItem {
+public class ParseValue extends CoreValue implements ParseItem {
 
     public final String name;
     public final Token definition;

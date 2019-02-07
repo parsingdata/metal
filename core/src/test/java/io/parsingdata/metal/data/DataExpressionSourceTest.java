@@ -63,8 +63,8 @@ public class DataExpressionSourceTest {
     @Test
     public void createSliceFromParseValue() {
         final ParseValue value = setupValue();
-        assertTrue(value.slice.source.isAvailable(ZERO, BigInteger.valueOf(4)));
-        assertFalse(value.slice.source.isAvailable(ZERO, BigInteger.valueOf(5)));
+        assertTrue(value.getSlice().source.isAvailable(ZERO, BigInteger.valueOf(4)));
+        assertFalse(value.getSlice().source.isAvailable(ZERO, BigInteger.valueOf(5)));
     }
 
     @Test

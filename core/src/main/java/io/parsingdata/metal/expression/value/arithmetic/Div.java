@@ -18,7 +18,7 @@ package io.parsingdata.metal.expression.value.arithmetic;
 
 import static java.math.BigInteger.ZERO;
 
-import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
+import static io.parsingdata.metal.expression.value.CoreValue.NOT_A_VALUE;
 
 import java.util.Optional;
 

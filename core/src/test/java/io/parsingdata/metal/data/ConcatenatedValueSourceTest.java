@@ -31,6 +31,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 
+import io.parsingdata.metal.expression.value.CoreValue;
 import io.parsingdata.metal.expression.value.Value;
 
 @RunWith(Parameterized.class)
@@ -46,8 +47,8 @@ public class ConcatenatedValueSourceTest {
         final byte[] twoSliceSource = new byte[] { -1, -1, 5, 6, 7, 8, 9, -1, -1, 10, 11, 12, 13, 14, -1, -1 };
         return ImmutableList
             .create(createFromBytes(new byte[] { 0, 1, 2, 3, 4 }, enc()))
-            .add(new Value(createFromSource(new ConstantSource(twoSliceSource), BigInteger.valueOf(2), BigInteger.valueOf(5)).get(), enc()))
-            .add(new Value(createFromSource(new ConstantSource(twoSliceSource), BigInteger.valueOf(9), BigInteger.valueOf(5)).get(), enc()))
+            .add(new CoreValue(createFromSource(new ConstantSource(twoSliceSource), BigInteger.valueOf(2), BigInteger.valueOf(5)).get(), enc()))
+            .add(new CoreValue(createFromSource(new ConstantSource(twoSliceSource), BigInteger.valueOf(9), BigInteger.valueOf(5)).get(), enc()))
             .add(createFromBytes(new byte[] { 15, 16, 17, 18, 19 }, enc()))
             .add(createFromBytes(new byte[] { 20, 21, 22, 23, 24 }, enc()));
     }

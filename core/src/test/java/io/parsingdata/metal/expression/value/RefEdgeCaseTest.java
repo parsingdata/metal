@@ -23,7 +23,7 @@ import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.exp;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
-import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
+import static io.parsingdata.metal.expression.value.CoreValue.NOT_A_VALUE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;

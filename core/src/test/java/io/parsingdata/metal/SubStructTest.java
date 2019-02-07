@@ -148,7 +148,7 @@ public class SubStructTest {
     private void checkValue(final ParseItem item, final int value, final int offset) {
         assertTrue(item.isValue());
         assertEquals(value, item.asValue().asNumeric().intValueExact());
-        assertEquals(offset, item.asValue().slice.offset.intValueExact());
+        assertEquals(offset, item.asValue().getSlice().offset.intValueExact());
     }
 
     @Test

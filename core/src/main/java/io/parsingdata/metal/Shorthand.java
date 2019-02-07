@@ -45,6 +45,7 @@ import io.parsingdata.metal.expression.value.Bytes;
 import io.parsingdata.metal.expression.value.Cat;
 import io.parsingdata.metal.expression.value.Const;
 import io.parsingdata.metal.expression.value.ConstantFactory;
+import io.parsingdata.metal.expression.value.CoreValue;
 import io.parsingdata.metal.expression.value.Elvis;
 import io.parsingdata.metal.expression.value.Expand;
 import io.parsingdata.metal.expression.value.FoldCat;
@@ -176,7 +177,7 @@ public final class Shorthand {
     public static ValueExpression con(final String value) { return con(value, DEFAULT_ENCODING); }
     public static ValueExpression con(final String value, final Encoding encoding) { return con(ConstantFactory.createFromString(value, encoding)); }
     public static ValueExpression con(final Value value) { return new Const(value); }
-    public static ValueExpression con(final Encoding encoding, final int... values) { return new Const(new Value(createFromBytes(toByteArray(values)), encoding)); }
+    public static ValueExpression con(final Encoding encoding, final int... values) { return new Const(new CoreValue(createFromBytes(toByteArray(values)), encoding)); }
     public static ValueExpression con(final int... values) { return con(DEFAULT_ENCODING, values); }
     public static ValueExpression con(final byte[] value) { return con(value, DEFAULT_ENCODING); }
     public static ValueExpression con(final byte[] value, final Encoding encoding) { return con(ConstantFactory.createFromBytes(value, encoding)); }

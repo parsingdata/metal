@@ -28,6 +28,7 @@ import java.util.zip.Inflater;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.CoreValue;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -105,7 +106,7 @@ public final class Util {
                         return Optional.empty();
                     }
                 }
-                return Optional.of(new Value(Slice.createFromBytes(out.toByteArray()), encoding));
+                return Optional.of(new CoreValue(Slice.createFromBytes(out.toByteArray()), encoding));
             }
         };
     }

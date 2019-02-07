@@ -47,7 +47,7 @@ public class FoldCat implements ValueExpression {
     public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
         return ConcatenatedValueSource.create(operand.eval(parseState, encoding))
             .flatMap(source -> createFromSource(source, ZERO, source.length))
-            .map(slice -> ImmutableList.create(new Value(slice, encoding)))
+            .map(slice -> ImmutableList.<Value>create(new CoreValue(slice, encoding)))
             .orElseGet(ImmutableList::new);
     }
 

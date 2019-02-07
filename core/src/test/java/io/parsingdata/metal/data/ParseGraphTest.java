@@ -132,7 +132,7 @@ public class ParseGraphTest {
             .add(a)
             .addBranch(t)
             .add(b)
-            .add(new ParseReference(a.slice.offset, a.slice.source, aDef))
+            .add(new ParseReference(a.getSlice().offset, a.getSlice().source, aDef))
             .closeBranch();
     }
 

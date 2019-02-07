@@ -79,6 +79,7 @@ import io.parsingdata.metal.expression.value.Bytes;
 import io.parsingdata.metal.expression.value.Cat;
 import io.parsingdata.metal.expression.value.Const;
 import io.parsingdata.metal.expression.value.ConstantFactory;
+import io.parsingdata.metal.expression.value.CoreValue;
 import io.parsingdata.metal.expression.value.Elvis;
 import io.parsingdata.metal.expression.value.Expand;
 import io.parsingdata.metal.expression.value.FoldCat;
@@ -203,7 +204,7 @@ public class AutoEqualityTest {
             io.parsingdata.metal.expression.logical.And.class, io.parsingdata.metal.expression.logical.Or.class,
             io.parsingdata.metal.expression.logical.Not.class,
             // Data structures
-            Value.class, ParseValue.class, ParseReference.class, ParseState.class,
+            CoreValue.class, ParseValue.class, ParseReference.class, ParseState.class,
             // Inputs
             ConstantSource.class, DataExpressionSource.class, ByteStreamSource.class, ConcatenatedValueSource.class
             );
