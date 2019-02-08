@@ -72,7 +72,7 @@ public class Sub extends Token {
         if (offsetList.isEmpty()) {
             return complete(() -> success(environment.parseState.closeBranch(this)));
         }
-        if (offsetList.head == NOT_A_VALUE) {
+        if (offsetList.head.equals(NOT_A_VALUE)) {
             return complete(Util::failure);
         }
         return parse(environment, offsetList.head.asNumeric())

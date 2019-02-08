@@ -73,7 +73,7 @@ public class CurrentIteration implements ValueExpression {
 
     private BigInteger getLevel(final ParseState parseState, final Encoding encoding) {
         final ImmutableList<Value> levelValues = level.eval(parseState, encoding);
-        if (levelValues.size != 1 || levelValues.head == NOT_A_VALUE) {
+        if (levelValues.size != 1 || levelValues.head.equals(NOT_A_VALUE)) {
             throw new IllegalArgumentException("Level must evaluate to a single value.");
         }
         return levelValues.head.asNumeric();

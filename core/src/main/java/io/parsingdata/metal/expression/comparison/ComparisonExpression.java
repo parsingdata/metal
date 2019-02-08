@@ -68,7 +68,7 @@ public abstract class ComparisonExpression implements Expression {
     }
 
     private Trampoline<Boolean> compare(final ImmutableList<Value> currents, final ImmutableList<Value> predicates) {
-        if (currents.head == NOT_A_VALUE || predicates.head == NOT_A_VALUE) {
+        if (currents.head.equals(NOT_A_VALUE) || predicates.head.equals(NOT_A_VALUE)) {
             return complete(() -> false);
         }
         final boolean headResult = compare(currents.head, predicates.head);

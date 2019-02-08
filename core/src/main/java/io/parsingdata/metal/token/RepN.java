@@ -55,7 +55,7 @@ public class RepN extends IterableToken {
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
         final ImmutableList<Value> counts = n.eval(environment.parseState, environment.encoding);
-        if (counts.size != 1 || counts.head == NOT_A_VALUE) {
+        if (counts.size != 1 || counts.head.equals(NOT_A_VALUE)) {
             return failure();
         }
         final BigInteger count = counts.head.asNumeric();

@@ -88,7 +88,7 @@ public abstract class BinaryValueExpression implements ValueExpression {
     }
 
     private Value checkEval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {
-        if (leftValue == NOT_A_VALUE || rightValue == NOT_A_VALUE) {
+        if (leftValue.equals(NOT_A_VALUE) || rightValue.equals(NOT_A_VALUE)) {
             return NOT_A_VALUE;
         }
         return eval(leftValue, rightValue, parseState, encoding).orElse(NOT_A_VALUE);

@@ -65,7 +65,7 @@ public class Elvis implements ValueExpression {
         if (rightValues.isEmpty()) {
             return complete(() -> result.add(reverse(leftValues)));
         }
-        return intermediate(() -> eval(result.add(leftValues.head != NOT_A_VALUE ? leftValues.head : rightValues.head), leftValues.tail, rightValues.tail));
+        return intermediate(() -> eval(result.add(leftValues.head.equals(NOT_A_VALUE) ? rightValues.head : leftValues.head), leftValues.tail, rightValues.tail));
     }
 
     @Override

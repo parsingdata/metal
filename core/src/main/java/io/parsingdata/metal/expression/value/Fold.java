@@ -59,7 +59,7 @@ public abstract class Fold implements ValueExpression {
     @Override
     public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
         final ImmutableList<Value> initialList = initial != null ? initial.eval(parseState, encoding) : new ImmutableList<>();
-        if (initialList.size > 1 || initialList.head == NOT_A_VALUE) {
+        if (initialList.size > 1 || (!initialList.isEmpty() && initialList.head.equals(NOT_A_VALUE))) {
             return ImmutableList.create(NOT_A_VALUE);
         }
         final ImmutableList<Value> unpreparedValues = this.values.eval(parseState, encoding);
@@ -74,7 +74,7 @@ public abstract class Fold implements ValueExpression {
     }
 
     private Trampoline<Value> fold(final ParseState parseState, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Value head, final ImmutableList<Value> tail) {
-        if (head == NOT_A_VALUE) {
+        if (head.equals(NOT_A_VALUE)) {
             return complete(() -> NOT_A_VALUE);
         }
         if (tail.isEmpty()) {
@@ -91,7 +91,7 @@ public abstract class Fold implements ValueExpression {
         if (list.isEmpty()) {
             return complete(() -> false);
         }
-        if (list.head != NOT_A_VALUE) {
+        if (!list.head.equals(NOT_A_VALUE)) {
             return intermediate(() -> containsNotAValue(list.tail));
         }
         return complete(() -> true);

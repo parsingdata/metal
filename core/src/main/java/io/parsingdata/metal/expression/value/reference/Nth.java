@@ -69,7 +69,7 @@ public class Nth implements ValueExpression {
         }
         final BigInteger valueCount = BigInteger.valueOf(values.size);
         final Value index = indices.head;
-        final Value nextResult = index != NOT_A_VALUE && index.asNumeric().compareTo(valueCount) < 0 && index.asNumeric().compareTo(ZERO) >= 0
+        final Value nextResult = !index.equals(NOT_A_VALUE) && index.asNumeric().compareTo(valueCount) < 0 && index.asNumeric().compareTo(ZERO) >= 0
             ? nth(values, valueCount.subtract(index.asNumeric()).subtract(ONE)).computeResult()
             : NOT_A_VALUE;
         return intermediate(() -> eval(values, indices.tail, result.add(nextResult)));

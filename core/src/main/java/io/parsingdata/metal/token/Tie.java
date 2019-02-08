@@ -69,7 +69,7 @@ public class Tie extends Token {
         if (values.isEmpty()) {
             return complete(() -> success(new ParseState(environment.parseState.closeBranch(this).order, returnParseState.source, returnParseState.offset, returnParseState.iterations)));
         }
-        if (values.head == NOT_A_VALUE) {
+        if (values.head.equals(NOT_A_VALUE)) {
             return complete(Util::failure);
         }
         return token.parse(environment.withParseState(environment.parseState.withSource(new DataExpressionSource(dataExpression, index, environment.parseState, environment.encoding))))

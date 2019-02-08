@@ -57,7 +57,7 @@ public class Expand implements ValueExpression {
             return baseList;
         }
         final ImmutableList<Value> countList = count.eval(parseState, encoding);
-        if (countList.size != 1 || countList.head == NOT_A_VALUE) {
+        if (countList.size != 1 || countList.head.equals(NOT_A_VALUE)) {
             throw new IllegalArgumentException("Count must evaluate to a single non-empty value.");
         }
         return expand(baseList, countList.head.asNumeric().intValueExact(), new ImmutableList<>()).computeResult();

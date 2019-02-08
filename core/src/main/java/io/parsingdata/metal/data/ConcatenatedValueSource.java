@@ -61,7 +61,7 @@ public class ConcatenatedValueSource extends Source {
         if (values.isEmpty()) {
             return complete(() -> size);
         }
-        if (values.head == NOT_A_VALUE) {
+        if (values.head.equals(NOT_A_VALUE)) {
             return complete(() -> ZERO);
         }
         return intermediate(() -> calculateTotalSize(values.tail, size.add(values.head.getSlice().length)));

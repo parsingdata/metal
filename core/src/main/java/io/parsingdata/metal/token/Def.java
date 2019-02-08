@@ -60,7 +60,7 @@ public class Def extends Token {
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
         final ImmutableList<Value> sizes = size.eval(environment.parseState, environment.encoding);
-        if (sizes.size != 1 || sizes.head == NOT_A_VALUE) {
+        if (sizes.size != 1 || sizes.head.equals(NOT_A_VALUE)) {
             return failure();
         }
         return sizes.head.asNumeric().compareTo(ZERO) != 0 ? slice(environment, sizes.head.asNumeric()) : success(environment.parseState);

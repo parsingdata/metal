@@ -121,7 +121,7 @@ public class Until extends Token {
     }
 
     private boolean checkNotValidList(final ImmutableList<Value> list) {
-        return list.isEmpty() || list.head == NOT_A_VALUE;
+        return list.isEmpty() || list.head.equals(NOT_A_VALUE);
     }
 
     private BigInteger getNumeric(final ImmutableList<Value> list) {

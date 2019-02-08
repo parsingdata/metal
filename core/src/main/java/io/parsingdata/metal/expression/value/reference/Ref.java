@@ -76,7 +76,7 @@ public class Ref<T> implements ValueExpression {
         if (evaluatedLimit.size != 1) {
             throw new IllegalArgumentException("Limit must evaluate to a single non-empty value.");
         }
-        if (evaluatedLimit.head == NOT_A_VALUE) {
+        if (evaluatedLimit.head.equals(NOT_A_VALUE)) {
             return ImmutableList.create(NOT_A_VALUE);
         }
         return evalImpl(parseState, evaluatedLimit.head.asNumeric().intValueExact());
