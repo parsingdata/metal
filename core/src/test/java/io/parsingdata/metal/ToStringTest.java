@@ -68,6 +68,7 @@ import static io.parsingdata.metal.Shorthand.until;
 import static io.parsingdata.metal.Shorthand.whl;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -123,7 +124,7 @@ public class ToStringTest {
     }
 
     private ValueExpression v() {
-        return fold(foldLeft(foldRight(rev(bytes(neg(add(div(mod(mul(sub(cat(last(ref(n()))), first(nth(exp(ref(n()), con(1)), con(1)))), sub(CURRENT_ITERATION, con(1))), cat(ref(n()), ref(t()))), add(SELF, add(offset(ref(n())), add(CURRENT_OFFSET, count(ref(n())))))), elvis(ref(n()), ref(n())))))), Shorthand::add, ref(n())), Shorthand::add), Shorthand::add, ref(n()));
+        return fold(foldLeft(foldRight(rev(bytes(neg(add(div(mod(mul(sub(cat(last(ref(n()))), first(nth(exp(ref(n()), con(NOT_A_VALUE)), con(1)))), sub(CURRENT_ITERATION, con(1))), cat(ref(n()), ref(t()))), add(SELF, add(offset(ref(n())), add(CURRENT_OFFSET, count(ref(n())))))), elvis(ref(n()), ref(n())))))), Shorthand::add, ref(n())), Shorthand::add), Shorthand::add, ref(n()));
     }
 
     @Test
@@ -152,6 +153,8 @@ public class ToStringTest {
         assertEquals("CurrentOffset", CURRENT_OFFSET.toString());
         assertTrue(v().toString().contains("CurrentIteration"));
         assertEquals("CurrentIteration", CURRENT_ITERATION.toString());
+        assertTrue(v().toString().contains("NOT_A_VALUE"));
+        assertEquals("NOT_A_VALUE", NOT_A_VALUE.toString());
     }
 
     @Test
