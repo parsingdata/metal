@@ -61,14 +61,14 @@ public final class JPEG {
                 def(MARKER, con(1), eq(con(0xff))),
                 def(IDENTIFIER, con(1), or(ltNum(con(0xd8)), gtNum(con(0xda)))),
                 def(LENGTH, con(2)),
-                def(PAYLOAD, sub(last(ref(LENGTH)), con(2))));
+                def(PAYLOAD, last(sub(last(ref(LENGTH)), con(2)))));
 
     private static final Token SCAN_SEGMENT =
             seq("scan segment",
                 def(MARKER, con(1), eq(con(0xff))),
                 def(IDENTIFIER, con(1), eq(con(0xda))),
                 def(LENGTH, con(2)),
-                def(PAYLOAD, sub(last(ref(LENGTH)), con(2))),
+                def(PAYLOAD, last(sub(last(ref(LENGTH)), con(2)))),
                 rep(cho(def("scandata", con(1), not(eq(con(0xff)))),
                         def("escape", con(2), or(eq(con(0xff00)), and(gtNum(con(0xffcf)), ltNum(con(0xffd8))))))));
 
