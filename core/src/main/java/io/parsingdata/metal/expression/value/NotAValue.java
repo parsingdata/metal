@@ -24,7 +24,7 @@ import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
 
-public class NotAValue implements Value {
+public final class NotAValue implements Value {
 
     public static final Value NOT_A_VALUE = new NotAValue();
     private static final UnsupportedOperationException UNSUPPORTED = new UnsupportedOperationException("NOT_A_VALUE does not support any Value operation.");
