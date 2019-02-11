@@ -23,6 +23,7 @@ import static io.parsingdata.metal.AutoEqualityTest.DUMMY_STREAM;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.exp;
+import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
@@ -55,17 +56,17 @@ public class ExpandTest {
     }
 
     @Test
-    public void expandEmptyTimes() {
+    public void expandNotAValueTimes() {
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Count must evaluate to a single non-empty value.");
-        exp(con(1), div(con(1), con(0))).eval(EMPTY_PARSE_STATE, enc());
+        thrown.expectMessage("Count must evaluate to a non-empty countable value.");
+        exp(con(1), last(div(con(1), con(0)))).eval(EMPTY_PARSE_STATE, enc());
     }
 
     @Test
-    public void expandListTimes() {
+    public void expandEmptyTimes() {
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Count must evaluate to a single non-empty value.");
-        exp(con(1), ref("a")).eval(createFromByteStream(DUMMY_STREAM).add(PARSEVALUE_1).add(PARSEVALUE_2), enc());
+        thrown.expectMessage("Count must evaluate to a non-empty countable value.");
+        exp(con(1), last(ref("a"))).eval(EMPTY_PARSE_STATE, enc());
     }
 
     @Test

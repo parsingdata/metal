@@ -36,6 +36,7 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ImmutablePair;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Rep;
@@ -44,11 +45,11 @@ import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.token.While;
 
 /**
- * A {@link ValueExpression} that represents the 0-based current iteration in an
+ * A {@link SingleValueExpression} that represents the 0-based current iteration in an
  * iterable {@link Token} (when {@link Token#isIterable()} returns true, e.g. when
  * inside a {@link Rep}, {@link RepN}) or {@link While}).
  */
-public class CurrentIteration implements ValueExpression {
+public class CurrentIteration implements SingleValueExpression {
 
     private final ValueExpression level;
 
@@ -57,13 +58,7 @@ public class CurrentIteration implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
-        return getIteration(parseState, encoding)
-            .map(ImmutableList::create)
-            .orElseGet(ImmutableList::new);
-    }
-
-    private Optional<Value> getIteration(final ParseState parseState, final Encoding encoding) {
+    public Optional<Value> evalSingle(final ParseState parseState, final Encoding encoding) {
         final BigInteger levelValue = getLevel(parseState, encoding);
         if (parseState.iterations.size <= levelValue.longValue()) {
             return Optional.empty();

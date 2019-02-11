@@ -92,8 +92,8 @@ public final class Shorthand {
 
     public static final Token EMPTY = def(EMPTY_NAME, 0L);
     public static final ValueExpression SELF = new Self();
-    public static final ValueExpression CURRENT_OFFSET = new CurrentOffset();
-    public static final ValueExpression CURRENT_ITERATION = new CurrentIteration(con(0));
+    public static final SingleValueExpression CURRENT_OFFSET = new CurrentOffset();
+    public static final SingleValueExpression CURRENT_ITERATION = new CurrentIteration(con(0));
     public static final Expression TRUE = new True();
 
     private Shorthand() {}
@@ -187,18 +187,18 @@ public final class Shorthand {
     public static NameRef ref(final String name, final ValueExpression limit) { return new NameRef(name, limit); }
     public static DefinitionRef ref(final Token definition) { return ref(definition, null); }
     public static DefinitionRef ref(final Token definition, final ValueExpression limit) { return new DefinitionRef(definition, limit); }
-    public static ValueExpression first(final ValueExpression operand) { return new First(operand); }
+    public static SingleValueExpression first(final ValueExpression operand) { return new First(operand); }
     public static SingleValueExpression last(final ValueExpression operand) { return new Last(operand); }
     public static SingleValueExpression last(final NameRef operand) { return new Last(new NameRef(operand.reference, con(1))); }
     public static SingleValueExpression last(final DefinitionRef operand) { return new Last(new DefinitionRef(operand.reference, con(1))); }
     public static ValueExpression nth(final ValueExpression values, final ValueExpression indices) { return new Nth(values, indices); }
     public static ValueExpression offset(final ValueExpression operand) { return new Offset(operand); }
-    public static ValueExpression iteration(final int level) { return iteration(con(level)); }
-    public static ValueExpression iteration(final ValueExpression level) { return new CurrentIteration(level); }
+    public static SingleValueExpression iteration(final int level) { return iteration(con(level)); }
+    public static SingleValueExpression iteration(final ValueExpression level) { return new CurrentIteration(level); }
     public static ValueExpression cat(final ValueExpression left, final ValueExpression right) { return new Cat(left, right); }
     public static ValueExpression cat(final ValueExpression operand) { return new FoldCat(operand); }
     public static ValueExpression elvis(final ValueExpression left, final ValueExpression right) { return new Elvis(left, right); }
-    public static ValueExpression count(final ValueExpression operand) { return new Count(operand); }
+    public static SingleValueExpression count(final ValueExpression operand) { return new Count(operand); }
     public static ValueExpression foldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return new FoldLeft(values, reducer, null); }
     public static ValueExpression foldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) { return new FoldLeft(values, reducer, initial); }
     public static ValueExpression foldRight(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return new FoldRight(values, reducer, null); }
@@ -206,7 +206,7 @@ public final class Shorthand {
     public static ValueExpression fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return foldRight(values, reducer); }
     public static ValueExpression fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) { return foldRight(values, reducer, initial); }
     public static ValueExpression rev(final ValueExpression values) { return new Reverse(values); }
-    public static ValueExpression exp(final ValueExpression base, final ValueExpression count) { return new Expand(base, count); }
+    public static ValueExpression exp(final ValueExpression base, final SingleValueExpression count) { return new Expand(base, count); }
     public static BinaryValueExpression mapLeft(final BiFunction<ValueExpression, ValueExpression, BinaryValueExpression> func, final ValueExpression left, final ValueExpression rightExpand) { return func.apply(left, exp(rightExpand, count(left))); }
     public static BinaryValueExpression mapRight(final BiFunction<ValueExpression, ValueExpression, BinaryValueExpression> func, final ValueExpression leftExpand, final ValueExpression right) { return func.apply(exp(leftExpand, count(right)), right); }
     public static ValueExpression bytes(final ValueExpression operand) { return new Bytes(operand); }

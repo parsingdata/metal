@@ -22,6 +22,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
@@ -33,19 +34,20 @@ import io.parsingdata.metal.encoding.Encoding;
  * A {@link ValueExpression} that expands a result by copying and concatenating
  * it a specified amount of times.
  * <p>
- * An Expand expression has two operands: <code>bases</code> and
- * <code>count</code> (both {@link ValueExpression}s). Both operands are
- * evaluated. An <code>IllegalStateException</code> is thrown if evaluating
- * <code>count</code> yields more than a single value. Multiple copies of the
- * result of evaluating <code>bases</code> are concatenated. The amount of copies
- * equals the result of evaluating <code>count</code>.
+ * An Expand expression has two operands: <code>bases</code> (a
+ * {@link ValueExpression}) and <code>count</code> (a
+ * {@link SingleValueExpression}). Both operands are evaluated. Multiple copies
+ * of the result of evaluating <code>bases</code> are concatenated. The amount
+ * of copies equals the result of evaluating <code>count</code>. If
+ * <code>count</code> evaluated to an empty value or <code>NOT_A_VALUE</code>,
+ * an IllegalArgumentException is thrown.
  */
 public class Expand implements ValueExpression {
 
     public final ValueExpression bases;
-    public final ValueExpression count;
+    public final SingleValueExpression count;
 
-    public Expand(final ValueExpression bases, final ValueExpression count) {
+    public Expand(final ValueExpression bases, final SingleValueExpression count) {
         this.bases = checkNotNull(bases, "bases");
         this.count = checkNotNull(count, "count");
     }
@@ -56,11 +58,11 @@ public class Expand implements ValueExpression {
         if (baseList.isEmpty()) {
             return baseList;
         }
-        final ImmutableList<Value> countList = count.eval(parseState, encoding);
-        if (countList.size != 1 || countList.head.equals(NOT_A_VALUE)) {
-            throw new IllegalArgumentException("Count must evaluate to a single non-empty value.");
+        final Optional<Value> countValue = count.evalSingle(parseState, encoding);
+        if (!countValue.isPresent() || countValue.get().equals(NOT_A_VALUE)) {
+            throw new IllegalArgumentException("Count must evaluate to a non-empty countable value.");
         }
-        return expand(baseList, countList.head.asNumeric().intValueExact(), new ImmutableList<>()).computeResult();
+        return expand(baseList, countValue.get().asNumeric().intValueExact(), new ImmutableList<>()).computeResult();
     }
 
     private Trampoline<ImmutableList<Value>> expand(final ImmutableList<Value> baseList, final int countValue, final ImmutableList<Value> aggregate) {

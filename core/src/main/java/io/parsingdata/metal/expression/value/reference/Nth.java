@@ -27,7 +27,6 @@ import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.math.BigInteger;
 import java.util.Objects;
-import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
@@ -44,9 +43,9 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * <code>indices</code> (both {@link ValueExpression}s). Both operands are
  * evaluated. Next, the resulting values of evaluating <code>indices</code> is
  * used as a list of integer indices into the results of evaluating
- * <code>values</code>. For every invalid index (such as
- * {@link Optional#empty()}, a negative value or an index that is out of
- * bounds) empty is returned.
+ * <code>values</code>. For every invalid index (<code>NOT_A_VALUE</code>, a
+ * negative value or an index that is out of bounds) <code>NOT_A_VALUE</code>
+ * is returned.
  */
 public class Nth implements ValueExpression {
 

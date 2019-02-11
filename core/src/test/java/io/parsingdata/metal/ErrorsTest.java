@@ -26,23 +26,17 @@ import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.mul;
 import static io.parsingdata.metal.Shorthand.neg;
-import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.repn;
-import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.math.BigInteger;
-import java.util.Optional;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.token.Token;
 
 public class ErrorsTest {
