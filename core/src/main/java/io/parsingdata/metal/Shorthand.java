@@ -91,7 +91,7 @@ import io.parsingdata.metal.token.While;
 public final class Shorthand {
 
     public static final Token EMPTY = def(EMPTY_NAME, 0L);
-    public static final ValueExpression SELF = new Self();
+    public static final SingleValueExpression SELF = new Self();
     public static final SingleValueExpression CURRENT_OFFSET = new CurrentOffset();
     public static final SingleValueExpression CURRENT_ITERATION = new CurrentIteration(con(0));
     public static final Expression TRUE = new True();
