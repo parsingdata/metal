@@ -74,18 +74,6 @@ public class ErrorsTest {
     }
 
     @Test
-    public void multiValueInRepN() {
-        final Token dummy = any("a");
-        final Token multiRepN =
-            seq(any("b"),
-                any("b"),
-                repn(dummy, ref("b"))
-            );
-       Optional<ParseState> result = multiRepN.parse(env(stream(2, 2, 2, 2)));
-       assertFalse(result.isPresent());
-    }
-
-    @Test
     public void parseStateWithNegativeOffset() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Argument offset may not be negative.");

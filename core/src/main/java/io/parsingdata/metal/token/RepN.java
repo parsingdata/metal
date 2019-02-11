@@ -20,48 +20,42 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
-import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.Value;
+import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
  * A {@link Token} that specifies a bounded repetition of a token.
  * <p>
  * A RepN consists of a <code>token</code> (a {@link Token}) and an
- * <code>n</code> (a {@link ValueExpression}). First <code>n</code> is
- * evaluated. Parsing fails if it does not evaluate to a single value. The
- * token is then parsed for an amount of times equal to the evaluated value of
- * <code>n</code>. RepN succeeds if this succeeds.
+ * <code>n</code> (a {@link SingleValueExpression}). First <code>n</code> is
+ * evaluated. The token is then parsed for an amount of times equal to the
+ * evaluated value of <code>n</code>. RepN succeeds if this succeeds.
  *
  * @see Rep
  * @see ValueExpression
  */
 public class RepN extends IterableToken {
 
-    public final ValueExpression n;
+    public final SingleValueExpression n;
 
-    public RepN(final String name, final Token token, final ValueExpression n, final Encoding encoding) {
+    public RepN(final String name, final Token token, final SingleValueExpression n, final Encoding encoding) {
         super(name, token, encoding);
         this.n = checkNotNull(n, "n");
     }
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        final ImmutableList<Value> counts = n.eval(environment.parseState, environment.encoding);
-        if (counts.size != 1 || counts.head.equals(NOT_A_VALUE)) {
-            return failure();
-        }
-        final BigInteger count = counts.head.asNumeric();
-        return parse(environment, env -> env.parseState.iterations.head.right.compareTo(count) >= 0, env -> failure());
+        return n.evalSingle(environment.parseState, environment.encoding)
+            .filter(count -> !count.equals(NOT_A_VALUE))
+            .flatMap(count -> parse(environment, env -> env.parseState.iterations.head.right.compareTo(count.asNumeric()) >= 0, env -> failure()));
     }
-
+    
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + makeNameFragment() + token + "," + n + ")";

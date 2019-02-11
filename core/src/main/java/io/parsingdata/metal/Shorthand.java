@@ -116,10 +116,10 @@ public final class Shorthand {
     public static Token rep(final String name, final Token token) { return rep(name, token, null); }
     public static Token rep(final Token token, final Encoding encoding) { return rep(NO_NAME, token, encoding); }
     public static Token rep(final Token token) { return rep(token, null); }
-    public static Token repn(final String name, final Token token, final ValueExpression n, final Encoding encoding) { return new RepN(name, token, n, encoding); }
-    public static Token repn(final String name, final Token token, final ValueExpression n) { return repn(name, token, n, null); }
-    public static Token repn(final Token token, final ValueExpression n, final Encoding encoding) { return repn(NO_NAME, token, n, encoding); }
-    public static Token repn(final Token token, final ValueExpression n) { return repn(token, n, null); }
+    public static Token repn(final String name, final Token token, final SingleValueExpression n, final Encoding encoding) { return new RepN(name, token, n, encoding); }
+    public static Token repn(final String name, final Token token, final SingleValueExpression n) { return repn(name, token, n, null); }
+    public static Token repn(final Token token, final SingleValueExpression n, final Encoding encoding) { return repn(NO_NAME, token, n, encoding); }
+    public static Token repn(final Token token, final SingleValueExpression n) { return repn(token, n, null); }
     public static Token seq(final String name, final Encoding encoding, final Token token1, final Token token2, final Token... tokens) { return new Seq(name, encoding, token1, token2, tokens); }
     public static Token seq(final String name, final Token token1, final Token token2, final Token... tokens) { return seq(name, null, token1, token2, tokens); }
     public static Token seq(final Encoding encoding, final Token token1, final Token token2, final Token... tokens) { return seq(NO_NAME, encoding, token1, token2, tokens); }

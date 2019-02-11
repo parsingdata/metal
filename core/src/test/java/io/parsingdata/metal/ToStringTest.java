@@ -107,7 +107,7 @@ public class ToStringTest {
     @Test
     public void validateToStringImplementation() {
         final Expression e = not(and(eq(v(), v()), or(eqNum(v()), and(eqStr(v()), or(gtEqNum(v()), or(gtNum(v()), or(ltEqNum(v()), ltNum(v()))))))));
-        final Token t = until("untilName", v(), v(), v(), post(repn(sub(opt(pre(rep(cho(token("refName"), any(n()), seq(nod(10), tie(def(n(), last(v())), v()), whl(def(n(), con(1), e), e), tie(t(), con(1))))), e)), v()), v()), e));
+        final Token t = until("untilName", v(), v(), v(), post(repn(sub(opt(pre(rep(cho(token("refName"), any(n()), seq(nod(10), tie(def(n(), last(v())), v()), whl(def(n(), con(1), e), e), tie(t(), con(1))))), e)), v()), last(v())), e));
         final String output = t.toString();
         for (int i = 0; i < count; i++) {
             assertTrue(output.contains(prefix + i));
