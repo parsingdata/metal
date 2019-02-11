@@ -22,6 +22,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BinaryOperator;
 
 import io.parsingdata.metal.Trampoline;
@@ -36,8 +37,8 @@ import io.parsingdata.metal.encoding.Encoding;
  * <p>
  * Fold has three operands: <code>values</code> (a {@link ValueExpression}),
  * <code>reducer</code> (a {@link BinaryOperator}) and <code>initial</code> (a
- * {@link ValueExpression}). First <code>initial</code> is evaluated. If it
- * does not return a single value, the final result is an empty list. Next,
+ * {@link SingleValueExpression}). First <code>initial</code> is evaluated. If it
+ * does not return a valid value, the final result is an empty list. Next,
  * <code>values</code> is evaluated and its result is passed to the abstract
  * {@link #prepareValues(ImmutableList)} method. The returned list is prefixed
  * by the value returned by evaluating <code>initial</code>. On this list, the
@@ -48,9 +49,9 @@ public abstract class Fold implements ValueExpression {
 
     public final ValueExpression values;
     public final BinaryOperator<ValueExpression> reducer;
-    public final ValueExpression initial;
+    public final SingleValueExpression initial;
 
-    public Fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) {
+    public Fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final SingleValueExpression initial) {
         this.values = checkNotNull(values, "values");
         this.reducer = checkNotNull(reducer, "reducer");
         this.initial = initial;
@@ -58,18 +59,18 @@ public abstract class Fold implements ValueExpression {
 
     @Override
     public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Value> initialList = initial != null ? initial.eval(parseState, encoding) : new ImmutableList<>();
-        if (initialList.size > 1 || (!initialList.isEmpty() && initialList.head.equals(NOT_A_VALUE))) {
+        final Optional<Value> initialValue = initial != null ? initial.evalSingle(parseState, encoding) : Optional.empty();
+        if (initialValue.isPresent() && initialValue.get().equals(NOT_A_VALUE)) {
             return ImmutableList.create(NOT_A_VALUE);
         }
         final ImmutableList<Value> unpreparedValues = this.values.eval(parseState, encoding);
         if (unpreparedValues.isEmpty()) {
-            return initialList;
+            return initialValue.map(ImmutableList::create).orElseGet(ImmutableList::new);
         }
         if (containsNotAValue(unpreparedValues).computeResult()) {
             return ImmutableList.create(NOT_A_VALUE);
         }
-        final ImmutableList<Value> valueList = prepareValues(unpreparedValues).add(initialList);
+        final ImmutableList<Value> valueList = initialValue.map(value -> prepareValues(unpreparedValues).add(value)).orElseGet(() -> prepareValues(unpreparedValues));
         return ImmutableList.create(fold(parseState, encoding, reducer, valueList.head, valueList.tail).computeResult());
     }
 

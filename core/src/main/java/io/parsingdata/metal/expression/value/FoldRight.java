@@ -32,7 +32,7 @@ import io.parsingdata.metal.data.ImmutableList;
  */
 public class FoldRight extends Fold {
 
-    public FoldRight(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) {
+    public FoldRight(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final SingleValueExpression initial) {
         super(values, reducer, initial);
     }
 

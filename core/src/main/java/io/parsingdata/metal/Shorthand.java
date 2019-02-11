@@ -200,11 +200,11 @@ public final class Shorthand {
     public static ValueExpression elvis(final ValueExpression left, final ValueExpression right) { return new Elvis(left, right); }
     public static SingleValueExpression count(final ValueExpression operand) { return new Count(operand); }
     public static ValueExpression foldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return new FoldLeft(values, reducer, null); }
-    public static ValueExpression foldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) { return new FoldLeft(values, reducer, initial); }
+    public static ValueExpression foldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final SingleValueExpression initial) { return new FoldLeft(values, reducer, initial); }
     public static ValueExpression foldRight(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return new FoldRight(values, reducer, null); }
-    public static ValueExpression foldRight(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) { return new FoldRight(values, reducer, initial); }
+    public static ValueExpression foldRight(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final SingleValueExpression initial) { return new FoldRight(values, reducer, initial); }
     public static ValueExpression fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return foldRight(values, reducer); }
-    public static ValueExpression fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) { return foldRight(values, reducer, initial); }
+    public static ValueExpression fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final SingleValueExpression initial) { return foldRight(values, reducer, initial); }
     public static ValueExpression rev(final ValueExpression values) { return new Reverse(values); }
     public static ValueExpression exp(final ValueExpression base, final SingleValueExpression count) { return new Expand(base, count); }
     public static BinaryValueExpression mapLeft(final BiFunction<ValueExpression, ValueExpression, BinaryValueExpression> func, final ValueExpression left, final ValueExpression rightExpand) { return func.apply(left, exp(rightExpand, count(left))); }

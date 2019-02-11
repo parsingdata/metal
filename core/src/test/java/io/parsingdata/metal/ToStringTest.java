@@ -124,7 +124,7 @@ public class ToStringTest {
     }
 
     private ValueExpression v() {
-        return fold(foldLeft(foldRight(rev(bytes(neg(add(div(mod(mul(sub(cat(last(ref(n()))), first(nth(exp(ref(n()), con(NOT_A_VALUE)), con(1)))), sub(CURRENT_ITERATION, con(1))), cat(ref(n()), ref(t()))), add(SELF, add(offset(ref(n())), add(CURRENT_OFFSET, count(ref(n())))))), elvis(ref(n()), ref(n())))))), Shorthand::add, ref(n())), Shorthand::add), Shorthand::add, ref(n()));
+        return fold(foldLeft(foldRight(rev(bytes(neg(add(div(mod(mul(sub(cat(last(ref(n()))), first(nth(exp(ref(n()), con(NOT_A_VALUE)), con(1)))), sub(CURRENT_ITERATION, con(1))), cat(ref(n()), ref(t()))), add(SELF, add(offset(ref(n())), add(CURRENT_OFFSET, count(ref(n())))))), elvis(ref(n()), ref(n())))))), Shorthand::add, last(ref(n()))), Shorthand::add), Shorthand::add, last(ref(n())));
     }
 
     @Test

@@ -84,29 +84,6 @@ public class FoldEdgeCaseTest {
     }
 
     @Test
-    public void multipleInits() {
-        final Optional<ParseState> parseResult =
-            seq(
-                def("init", 1),
-                def("init", 1),
-                def("toFold", 1),
-                def("toFold", 1),
-                cho(
-                    def("folded", 1, eq(foldLeft(ref("toFold"), Shorthand::add, ref("init")))),
-                    def("folded", 1, eq(foldRight(ref("toFold"), Shorthand::add, ref("init"))))
-                )
-            ).parse(env(stream(1, 2, 1, 2, 3)));
-        assertFalse(parseResult.isPresent());
-    }
-
-    @Test
-    public void twoInits() {
-        final ImmutableList<Value> result = fold(exp(con(1), con(2)), Shorthand::add, exp(con(1), con(2))).eval(EMPTY_PARSE_STATE, DEFAULT_ENCODING);
-        assertEquals(1, result.size);
-        assertEquals(NOT_A_VALUE, result.head);
-    }
-
-    @Test
     public void notAValueInit() {
         final ImmutableList<Value> result = fold(exp(con(1), con(2)), Shorthand::add, con(NOT_A_VALUE)).eval(EMPTY_PARSE_STATE, DEFAULT_ENCODING);
         assertEquals(1, result.size);
