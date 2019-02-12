@@ -56,8 +56,8 @@ public class Def extends Token {
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
         return size.evalSingle(environment.parseState, environment.encoding)
-            .filter(size -> !size.equals(NOT_A_VALUE))
-            .flatMap(size -> size.asNumeric().compareTo(ZERO) != 0 ? slice(environment, size.asNumeric()) : success(environment.parseState));
+            .filter(sizeValue -> !sizeValue.equals(NOT_A_VALUE))
+            .flatMap(sizeValue -> sizeValue.asNumeric().compareTo(ZERO) != 0 ? slice(environment, sizeValue.asNumeric()) : success(environment.parseState));
     }
 
     private Optional<ParseState> slice(final Environment environment, final BigInteger dataSize) {
