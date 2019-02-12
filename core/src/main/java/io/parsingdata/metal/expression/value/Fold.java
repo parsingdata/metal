@@ -32,7 +32,7 @@ import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
- * Base class for {@link ValueExpression} implementations of the Fold
+ * Base class for {@link SingleValueExpression} implementations of the Fold
  * operation.
  * <p>
  * Fold has three operands: <code>values</code> (a {@link ValueExpression}),
@@ -45,7 +45,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * <code>reducer</code> is applied to the first two values until a single
  * value remains, which is then returned.
  */
-public abstract class Fold implements ValueExpression {
+public abstract class Fold implements SingleValueExpression {
 
     public final ValueExpression values;
     public final BinaryOperator<ValueExpression> reducer;
@@ -58,20 +58,20 @@ public abstract class Fold implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
+    public Optional<Value> evalSingle(final ParseState parseState, final Encoding encoding) {
         final Optional<Value> initialValue = initial != null ? initial.evalSingle(parseState, encoding) : Optional.empty();
         if (initialValue.isPresent() && initialValue.get().equals(NOT_A_VALUE)) {
-            return ImmutableList.create(NOT_A_VALUE);
+            return initialValue;
         }
         final ImmutableList<Value> unpreparedValues = this.values.eval(parseState, encoding);
         if (unpreparedValues.isEmpty()) {
-            return initialValue.map(ImmutableList::create).orElseGet(ImmutableList::new);
+            return initialValue;
         }
         if (containsNotAValue(unpreparedValues).computeResult()) {
-            return ImmutableList.create(NOT_A_VALUE);
+            return Optional.of(NOT_A_VALUE);
         }
         final ImmutableList<Value> valueList = initialValue.map(value -> prepareValues(unpreparedValues).add(value)).orElseGet(() -> prepareValues(unpreparedValues));
-        return ImmutableList.create(fold(parseState, encoding, reducer, valueList.head, valueList.tail).computeResult());
+        return Optional.of(fold(parseState, encoding, reducer, valueList.head, valueList.tail).computeResult());
     }
 
     private Trampoline<Value> fold(final ParseState parseState, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Value head, final ImmutableList<Value> tail) {
