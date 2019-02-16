@@ -27,17 +27,20 @@ import io.parsingdata.metal.encoding.Encoding;
 public final class NotAValue implements Value {
 
     public static final Value NOT_A_VALUE = new NotAValue();
-    private static final UnsupportedOperationException UNSUPPORTED = new UnsupportedOperationException("NOT_A_VALUE does not support any Value operation.");
 
     private NotAValue() {}
 
-    @Override public Slice getSlice() { throw UNSUPPORTED; }
-    @Override public Encoding getEncoding() { throw UNSUPPORTED; }
-    @Override public byte[] getValue() { throw UNSUPPORTED; }
-    @Override public BigInteger getLength() { throw UNSUPPORTED; }
-    @Override public BigInteger asNumeric() { throw UNSUPPORTED; }
-    @Override public String asString() { throw UNSUPPORTED; }
-    @Override public BitSet asBitSet() { throw UNSUPPORTED; }
+    @Override public Slice getSlice() { throw unsupported(); }
+    @Override public Encoding getEncoding() { throw unsupported(); }
+    @Override public byte[] getValue() { throw unsupported(); }
+    @Override public BigInteger getLength() { throw unsupported(); }
+    @Override public BigInteger asNumeric() { throw unsupported(); }
+    @Override public String asString() { throw unsupported(); }
+    @Override public BitSet asBitSet() { throw unsupported(); }
+
+    private UnsupportedOperationException unsupported() {
+        return new UnsupportedOperationException("NOT_A_VALUE does not support any Value operation.");
+    }
 
     @Override
     public String toString() {
