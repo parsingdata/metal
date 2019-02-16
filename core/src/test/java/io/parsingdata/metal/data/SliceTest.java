@@ -73,9 +73,9 @@ public class SliceTest {
         final ReadTrackingByteStream stream = new ReadTrackingByteStream(new InMemoryByteStream(toByteArray(1, 2, 3, 0, 0, 0, 4, 1)));
         final Optional<ParseState> result =
             seq(def("a", con(3)),
-                post(def("b", len(last(ref("a")))), eq(con(0, 0, 0))),
+                post(def("b", last(len(last(ref("a"))))), eq(con(0, 0, 0))),
                 def("c", con(1)),
-                post(def("d", len(last(ref("c")))), eq(con(1)))).parse(env(createFromByteStream(stream), enc()));
+                post(def("d", last(len(last(ref("c"))))), eq(con(1)))).parse(env(createFromByteStream(stream), enc()));
         assertTrue(result.isPresent());
         assertTrue(stream.containsAll(3, 4, 5, 7));
         assertTrue(stream.containsNone(0, 1, 2, 6));

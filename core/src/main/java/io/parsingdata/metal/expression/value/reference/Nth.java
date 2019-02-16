@@ -27,13 +27,13 @@ import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.math.BigInteger;
 import java.util.Objects;
-import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.NotAValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
@@ -44,9 +44,9 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * <code>indices</code> (both {@link ValueExpression}s). Both operands are
  * evaluated. Next, the resulting values of evaluating <code>indices</code> is
  * used as a list of integer indices into the results of evaluating
- * <code>values</code>. For every invalid index (such as
- * {@link Optional#empty()}, a negative value or an index that is out of
- * bounds) empty is returned.
+ * <code>values</code>. For every invalid index ({@link NotAValue#NOT_A_VALUE}, a
+ * negative value or an index that is out of bounds) {@link NotAValue#NOT_A_VALUE}
+ * is returned.
  */
 public class Nth implements ValueExpression {
 

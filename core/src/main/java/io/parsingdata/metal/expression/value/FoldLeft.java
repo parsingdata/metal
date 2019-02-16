@@ -24,7 +24,7 @@ import java.util.function.BinaryOperator;
 import io.parsingdata.metal.data.ImmutableList;
 
 /**
- * A {@link ValueExpression} implementation of the FoldLeft operation.
+ * A {@link SingleValueExpression} implementation of the FoldLeft operation.
  * <p>
  * FoldLeft differs from {@link FoldRight} in that the reduce operation is
  * applied from left to right (i.e., starting at the top).
@@ -33,7 +33,7 @@ import io.parsingdata.metal.data.ImmutableList;
  */
 public class FoldLeft extends Fold {
 
-    public FoldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) {
+    public FoldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final SingleValueExpression initial) {
         super(values, reducer, initial);
     }
 

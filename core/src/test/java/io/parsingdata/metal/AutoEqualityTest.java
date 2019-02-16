@@ -26,6 +26,7 @@ import static org.junit.Assert.assertNotEquals;
 
 import static io.parsingdata.metal.Shorthand.TRUE;
 import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.exp;
 import static io.parsingdata.metal.Shorthand.not;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.data.ByteStreamSourceTest.DUMMY_BYTE_STREAM_SOURCE;
@@ -87,6 +88,7 @@ import io.parsingdata.metal.expression.value.FoldCat;
 import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
 import io.parsingdata.metal.expression.value.Reverse;
+import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.expression.value.arithmetic.Add;
@@ -147,7 +149,8 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> ENCODINGS = Arrays.asList(EncodingFactory::enc, EncodingFactory::signed, EncodingFactory::le, () -> new Encoding(Charset.forName("UTF-8")));
     private static final List<Supplier<Object>> TOKENS = Arrays.asList(() -> any("a"), () -> any("b"));
     private static final List<Supplier<Object>> TOKEN_ARRAYS = Arrays.asList(() -> new Token[] { any("a"), any("b")}, () -> new Token[] { any("b"), any("c") }, () -> new Token[] { any("a"), any("b"), any("c") });
-    private static final List<Supplier<Object>> VALUE_EXPRESSIONS = Arrays.asList(() -> con(1), () -> con(2));
+    private static final List<Supplier<Object>> SINGLE_VALUE_EXPRESSIONS = Arrays.asList(() -> con(1), () -> con(2));
+    private static final List<Supplier<Object>> VALUE_EXPRESSIONS = Arrays.asList(() -> con(1), () -> exp(con(1), con(2)));
     private static final List<Supplier<Object>> EXPRESSIONS = Arrays.asList(() -> TRUE, () -> not(TRUE));
     private static final List<Supplier<Object>> VALUES = Arrays.asList(() -> ConstantFactory.createFromString("a", enc()), () -> ConstantFactory.createFromString("b", enc()), () -> ConstantFactory.createFromNumeric(1L, signed()), () -> NOT_A_VALUE);
     private static final List<Supplier<Object>> REDUCERS = Arrays.asList(() -> (BinaryOperator<ValueExpression>) Shorthand::cat, () -> (BinaryOperator<ValueExpression>) Shorthand::div);
@@ -170,6 +173,7 @@ public class AutoEqualityTest {
         result.put(Encoding.class, ENCODINGS);
         result.put(Token.class, TOKENS);
         result.put(Token[].class, TOKEN_ARRAYS);
+        result.put(SingleValueExpression.class, SINGLE_VALUE_EXPRESSIONS);
         result.put(ValueExpression.class, VALUE_EXPRESSIONS);
         result.put(Expression.class, EXPRESSIONS);
         result.put(Value.class, VALUES);

@@ -18,7 +18,6 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.bytesToHexString;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.encoding.Encoding.DEFAULT_ENCODING;
 
 import java.math.BigInteger;
 import java.util.BitSet;
