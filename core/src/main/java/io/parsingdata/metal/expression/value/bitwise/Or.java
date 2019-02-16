@@ -39,7 +39,7 @@ public class Or extends BinaryValueExpression {
     public Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {
         final BitSet leftBits = leftValue.asBitSet();
         leftBits.or(rightValue.asBitSet());
-        final int minSize = Math.max(leftValue.getValue().length, rightValue.getValue().length);
+        final int minSize = Math.max(leftValue.value().length, rightValue.value().length);
         return Optional.of(ConstantFactory.createFromBitSet(leftBits, minSize, encoding));
     }
 

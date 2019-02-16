@@ -20,57 +20,50 @@ import static java.math.BigInteger.ZERO;
 
 import static io.parsingdata.metal.Util.checkNotEmpty;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
-import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
-import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.Value;
-import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.expression.value.SingleValueExpression;
 
 /**
  * A {@link Token} that specifies a value to parse in the input.
  * <p>
- * A Def consists of a <code>size</code> (a {@link ValueExpression}.
+ * A Def consists of a <code>size</code> (a {@link SingleValueExpression}.
  * <p>
- * Parsing will succeed if <code>size</code> evaluates to a single value and if
+ * Parsing will succeed if <code>size</code> evaluates to a value and if
  * that many bytes are available in the input. This means that a size of zero
  * will lead to a successful parse, but will not produce a value.
  *
- * @see ValueExpression
+ * @see SingleValueExpression
  */
 public class Def extends Token {
 
-    public final ValueExpression size;
+    public final SingleValueExpression size;
 
-    public Def(final String name, final ValueExpression size, final Encoding encoding) {
+    public Def(final String name, final SingleValueExpression size, final Encoding encoding) {
         super(checkNotEmpty(name, "name"), encoding);
         this.size = checkNotNull(size, "size");
     }
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        final ImmutableList<Value> sizes = size.eval(environment.parseState, environment.encoding);
-        if (sizes.size != 1 || sizes.head == NOT_A_VALUE) {
-            return failure();
-        }
-        return sizes.head.asNumeric().compareTo(ZERO) != 0 ? slice(environment, sizes.head.asNumeric()) : success(environment.parseState);
+        return size.evalSingle(environment.parseState, environment.encoding)
+            .filter(sizeValue -> !sizeValue.equals(NOT_A_VALUE))
+            .flatMap(sizeValue -> sizeValue.asNumeric().compareTo(ZERO) != 0 ? slice(environment, sizeValue.asNumeric()) : success(environment.parseState));
     }
 
     private Optional<ParseState> slice(final Environment environment, final BigInteger dataSize) {
         return environment.parseState
             .slice(dataSize)
-            .map(slice -> environment.parseState.add(new ParseValue(environment.scope, this, slice, environment.encoding)).seek(dataSize.add(environment.parseState.offset)))
-            .orElseGet(Util::failure);
+            .flatMap(slice -> environment.parseState.add(new ParseValue(environment.scope, this, slice, environment.encoding)).seek(dataSize.add(environment.parseState.offset)));
     }
 
     @Override

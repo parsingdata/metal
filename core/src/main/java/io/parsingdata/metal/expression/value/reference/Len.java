@@ -39,7 +39,7 @@ public class Len extends UnaryValueExpression {
 
     @Override
     public Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding) {
-        return Optional.of(fromNumeric(value.getLength()));
+        return Optional.of(fromNumeric(value.length()));
     }
 
     private static Value fromNumeric(final BigInteger length) {

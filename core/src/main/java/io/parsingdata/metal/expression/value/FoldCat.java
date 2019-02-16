@@ -21,21 +21,21 @@ import static java.math.BigInteger.ZERO;
 import static io.parsingdata.metal.data.Slice.createFromSource;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ConcatenatedValueSource;
-import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
- * A {@link ValueExpression} that represents an optimized version of a
+ * A {@link SingleValueExpression} that represents an optimized version of a
  * {@link FoldLeft} operation with a {@link Cat} ValueExpression as reducer.
  *
  * @see FoldLeft
  * @see Cat
  */
-public class FoldCat implements ValueExpression {
+public class FoldCat implements SingleValueExpression {
 
     public final ValueExpression operand;
 
@@ -44,11 +44,10 @@ public class FoldCat implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
+    public Optional<Value> evalSingle(final ParseState parseState, final Encoding encoding) {
         return ConcatenatedValueSource.create(operand.eval(parseState, encoding))
             .flatMap(source -> createFromSource(source, ZERO, source.length))
-            .map(slice -> ImmutableList.create(new Value(slice, encoding)))
-            .orElseGet(ImmutableList::new);
+            .map(slice -> new CoreValue(slice, encoding));
     }
 
     @Override

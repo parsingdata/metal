@@ -21,7 +21,7 @@ import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.success;
 import static io.parsingdata.metal.data.Selection.hasRootAtOffset;
-import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -72,7 +72,7 @@ public class Sub extends Token {
         if (offsetList.isEmpty()) {
             return complete(() -> success(environment.parseState.closeBranch(this)));
         }
-        if (offsetList.head == NOT_A_VALUE) {
+        if (offsetList.head.equals(NOT_A_VALUE)) {
             return complete(Util::failure);
         }
         return parse(environment, offsetList.head.asNumeric())

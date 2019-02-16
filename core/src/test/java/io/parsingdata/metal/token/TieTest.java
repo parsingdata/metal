@@ -90,7 +90,7 @@ public class TieTest {
     @Test
     public void checkContainerSource() {
         final Optional<ParseState> result = parseContainer();
-        checkFullParse(INC_PREV_MOD_100, fold(ref("value"), Shorthand::cat).eval(result.get(), enc()).head.getValue());
+        checkFullParse(INC_PREV_MOD_100, fold(ref("value"), Shorthand::cat).eval(result.get(), enc()).head.value());
     }
 
     private Optional<ParseState> checkFullParse(Token token, byte[] data) {

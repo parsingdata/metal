@@ -20,7 +20,7 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Selection.reverse;
-import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -65,7 +65,7 @@ public class Elvis implements ValueExpression {
         if (rightValues.isEmpty()) {
             return complete(() -> result.add(reverse(leftValues)));
         }
-        return intermediate(() -> eval(result.add(leftValues.head != NOT_A_VALUE ? leftValues.head : rightValues.head), leftValues.tail, rightValues.tail));
+        return intermediate(() -> eval(result.add(leftValues.head.equals(NOT_A_VALUE) ? rightValues.head : leftValues.head), leftValues.tail, rightValues.tail));
     }
 
     @Override

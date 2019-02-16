@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.success;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -68,7 +69,7 @@ public class Tie extends Token {
         if (values.isEmpty()) {
             return complete(() -> success(new ParseState(environment.parseState.closeBranch(this).order, returnParseState.source, returnParseState.offset, returnParseState.iterations)));
         }
-        if (values.head == Value.NOT_A_VALUE) {
+        if (values.head.equals(NOT_A_VALUE)) {
             return complete(Util::failure);
         }
         return token.parse(environment.withParseState(environment.parseState.withSource(new DataExpressionSource(dataExpression, index, environment.parseState, environment.encoding))))

@@ -24,7 +24,7 @@ import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotEmpty;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.success;
-import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -121,7 +121,7 @@ public class Until extends Token {
     }
 
     private boolean checkNotValidList(final ImmutableList<Value> list) {
-        return list.isEmpty() || list.head == NOT_A_VALUE;
+        return list.isEmpty() || list.head.equals(NOT_A_VALUE);
     }
 
     private BigInteger getNumeric(final ImmutableList<Value> list) {

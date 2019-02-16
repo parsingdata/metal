@@ -21,11 +21,12 @@ import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.div;
+import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.nth;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
@@ -47,11 +48,11 @@ public class NthExpressionTest {
             any("valueCount"),
             repn(
                  any("value"),
-                 ref("valueCount")),
+                 last(ref("valueCount"))),
             any("indexCount"),
             repn(
                  any("index"),
-                 ref("indexCount")));
+                 last(ref("indexCount"))));
 
     private final ValueExpression nth = nth(ref("value"), ref("index"));
 

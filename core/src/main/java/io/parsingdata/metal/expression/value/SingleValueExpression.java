@@ -16,31 +16,31 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static java.math.BigInteger.ZERO;
-
-import static io.parsingdata.metal.data.Slice.createFromSource;
-
 import java.util.Optional;
 
-import io.parsingdata.metal.data.ConcatenatedValueSource;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
- * A {@link BinaryValueExpression} that concatenates values at the byte-level.
+ * Interface for all SingleValueExpression implementations.
+ * <p>
+ * A SingleValueExpression is an expression that is evaluated by executing its
+ * {@link #evalSingle(ParseState, Encoding)} method. It yields an {@link Optional}
+ * {@link Value} object.
+ * <p>
+ * As context, it receives the current <code>ParseState</code> object as
+ * well as the current <code>Encoding</code> object.
  */
-public class Cat extends BinaryValueExpression {
+@SuppressWarnings("FunctionalInterfaceMethodChanged") // What we do is in line with error-prone's advice
+@FunctionalInterface
+public interface SingleValueExpression extends ValueExpression {
 
-    public Cat(final ValueExpression left, final ValueExpression right) {
-        super(left, right);
-    }
+    Optional<Value> evalSingle(ParseState parseState, Encoding encoding);
 
     @Override
-    public Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {
-        return ConcatenatedValueSource.create(ImmutableList.create(leftValue).add(rightValue))
-            .flatMap(source -> createFromSource(source, ZERO, leftValue.length().add(rightValue.length())))
-            .map(source -> new CoreValue(source, encoding));
+    default ImmutableList<Value> eval(ParseState parseState, Encoding encoding) {
+        return evalSingle(parseState, encoding).map(ImmutableList::create).orElseGet(ImmutableList::new);
     }
 
 }

@@ -20,7 +20,7 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Selection.reverse;
-import static io.parsingdata.metal.expression.value.Value.NOT_A_VALUE;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -69,7 +69,7 @@ public abstract class UnaryValueExpression implements ValueExpression {
     public abstract Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding);
 
     private Value checkEval(final Value value, final ParseState parseState, final Encoding encoding) {
-        if (value == NOT_A_VALUE) {
+        if (value.equals(NOT_A_VALUE)) {
             return NOT_A_VALUE;
         }
         return eval(value, parseState, encoding).orElse(NOT_A_VALUE);

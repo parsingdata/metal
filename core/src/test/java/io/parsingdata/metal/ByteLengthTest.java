@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.len;
 import static io.parsingdata.metal.Shorthand.ltNum;
 import static io.parsingdata.metal.Shorthand.ref;
@@ -53,8 +54,8 @@ public class ByteLengthTest {
     // but Len will become useful when Let is implemented
     private static final Token STRING = seq(
         def("length", 1),
-        def("text1", ref("length")),
-        def("text2", len(ref("text1"))));
+        def("text1", last(ref("length"))),
+        def("text2", last(len(ref("text1")))));
     //  let("hasText", con(true), ltNum(len(ref("text1")), con(0))));
 
     private static final Token NAME =

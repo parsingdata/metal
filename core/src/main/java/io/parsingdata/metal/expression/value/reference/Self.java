@@ -16,23 +16,25 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
+import static java.util.function.Function.identity;
+
+import java.util.Optional;
+
 import io.parsingdata.metal.Util;
-import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.Value;
-import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * A {@link ValueExpression} that represents the
- * {@link io.parsingdata.metal.expression.value.Value} most recently added to
- * the parse state.
+ * A {@link SingleValueExpression} that represents the {@link Value} most recently
+ * added to the parse state.
  */
-public class Self implements ValueExpression {
+public class Self implements SingleValueExpression {
 
     @Override
-    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
-        return parseState.order.current().map(ImmutableList::<Value>create).orElseGet(ImmutableList::new);
+    public Optional<Value> evalSingle(final ParseState parseState, final Encoding encoding) {
+        return parseState.order.current().map(identity());
     }
 
     @Override
