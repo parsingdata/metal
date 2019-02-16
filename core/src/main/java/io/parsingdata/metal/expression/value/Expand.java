@@ -22,7 +22,6 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
@@ -40,7 +39,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * of the result of evaluating <code>bases</code> are concatenated. The amount
  * of copies equals the result of evaluating <code>count</code>. If
  * <code>count</code> evaluated to an empty value or <code>NOT_A_VALUE</code>,
- * an IllegalArgumentException is thrown.
+ * an {@link IllegalArgumentException} is thrown.
  */
 public class Expand implements ValueExpression {
 
@@ -58,11 +57,10 @@ public class Expand implements ValueExpression {
         if (baseList.isEmpty()) {
             return baseList;
         }
-        final Optional<Value> countValue = count.evalSingle(parseState, encoding);
-        if (!countValue.isPresent() || countValue.get().equals(NOT_A_VALUE)) {
-            throw new IllegalArgumentException("Count must evaluate to a non-empty countable value.");
-        }
-        return expand(baseList, countValue.get().asNumeric().intValueExact(), new ImmutableList<>()).computeResult();
+        return count.evalSingle(parseState, encoding)
+            .filter(countValue -> !countValue.equals(NOT_A_VALUE))
+            .map(countValue -> expand(baseList, countValue.asNumeric().intValueExact(), new ImmutableList<>()).computeResult())
+            .orElseThrow(() -> new IllegalArgumentException("Count must evaluate to a non-empty countable value."));
     }
 
     private Trampoline<ImmutableList<Value>> expand(final ImmutableList<Value> baseList, final int countValue, final ImmutableList<Value> aggregate) {

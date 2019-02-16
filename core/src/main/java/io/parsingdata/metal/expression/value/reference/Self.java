@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
+import static java.util.function.Function.identity;
+
 import java.util.Optional;
 
 import io.parsingdata.metal.Util;
@@ -32,7 +34,7 @@ public class Self implements SingleValueExpression {
 
     @Override
     public Optional<Value> evalSingle(final ParseState parseState, final Encoding encoding) {
-        return parseState.order.current().flatMap(Optional::of);
+        return parseState.order.current().map(identity());
     }
 
     @Override

@@ -26,7 +26,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * Interface for all SingleValueExpression implementations.
  * <p>
  * A SingleValueExpression is an expression that is evaluated by executing its
- * {@link #eval(ParseState, Encoding)} method. It yields an {@link Optional}
+ * {@link #evalSingle(ParseState, Encoding)} method. It yields an {@link Optional}
  * {@link Value} object.
  * <p>
  * As context, it receives the current <code>ParseState</code> object as

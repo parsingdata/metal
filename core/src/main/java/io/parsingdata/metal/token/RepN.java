@@ -55,7 +55,7 @@ public class RepN extends IterableToken {
             .filter(count -> !count.equals(NOT_A_VALUE))
             .flatMap(count -> parse(environment, env -> env.parseState.iterations.head.right.compareTo(count.asNumeric()) >= 0, env -> failure()));
     }
-    
+
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + makeNameFragment() + token + "," + n + ")";
