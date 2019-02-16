@@ -95,7 +95,7 @@ public final class Util {
             @Override
             public Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding) {
                 final Inflater inf = new Inflater(true);
-                inf.setInput(value.getValue());
+                inf.setInput(value.value());
                 final byte[] dataReceiver = new byte[512];
                 final ByteArrayOutputStream out = new ByteArrayOutputStream();
                 while(!inf.finished()) {

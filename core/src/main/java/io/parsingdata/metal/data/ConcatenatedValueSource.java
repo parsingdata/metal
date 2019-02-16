@@ -64,7 +64,7 @@ public class ConcatenatedValueSource extends Source {
         if (values.head.equals(NOT_A_VALUE)) {
             return complete(() -> ZERO);
         }
-        return intermediate(() -> calculateTotalSize(values.tail, size.add(values.head.getSlice().length)));
+        return intermediate(() -> calculateTotalSize(values.tail, size.add(values.head.slice().length)));
     }
 
     @Override
@@ -79,13 +79,13 @@ public class ConcatenatedValueSource extends Source {
         if (length.compareTo(ZERO) <= 0) {
             return complete(() -> output);
         }
-        if (currentOffset.add(values.head.getSlice().length).compareTo(offset) <= 0) {
-            return intermediate(() -> getData(values.tail, currentOffset.add(values.head.getSlice().length), currentDest, offset, length, output));
+        if (currentOffset.add(values.head.slice().length).compareTo(offset) <= 0) {
+            return intermediate(() -> getData(values.tail, currentOffset.add(values.head.slice().length), currentDest, offset, length, output));
         }
         final BigInteger localOffset = offset.subtract(currentOffset).compareTo(ZERO) < 0 ? ZERO : offset.subtract(currentOffset);
-        final BigInteger toCopy = length.compareTo(values.head.getSlice().length.subtract(localOffset)) > 0 ? values.head.getSlice().length.subtract(localOffset) : length;
-        System.arraycopy(values.head.getSlice().getData(), localOffset.intValueExact(), output, currentDest.intValueExact(), toCopy.intValueExact());
-        return intermediate(() -> getData(values.tail, currentOffset.add(values.head.getSlice().length), currentDest.add(toCopy), offset, length.subtract(toCopy), output));
+        final BigInteger toCopy = length.compareTo(values.head.slice().length.subtract(localOffset)) > 0 ? values.head.slice().length.subtract(localOffset) : length;
+        System.arraycopy(values.head.slice().getData(), localOffset.intValueExact(), output, currentDest.intValueExact(), toCopy.intValueExact());
+        return intermediate(() -> getData(values.tail, currentOffset.add(values.head.slice().length), currentDest.add(toCopy), offset, length.subtract(toCopy), output));
     }
 
     @Override

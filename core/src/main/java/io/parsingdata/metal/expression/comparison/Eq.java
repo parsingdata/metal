@@ -40,8 +40,8 @@ public class Eq extends ComparisonExpression {
 
     @Override
     public boolean compare(final Value left, final Value right) {
-        return left.getSlice().length.compareTo(right.getSlice().length) == 0
-            && Arrays.equals(left.getValue(), right.getValue());
+        return left.slice().length.compareTo(right.slice().length) == 0
+            && Arrays.equals(left.value(), right.value());
     }
 
 }

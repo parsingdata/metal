@@ -95,7 +95,7 @@ public class SubStructTableTest {
         assertTrue(graph.head.isGraph());
         assertEquals(84, graph.head.asGraph().head.asValue().asNumeric().intValueExact());
         assertEquals(42, graph.tail.head.asGraph().head.asValue().asNumeric().intValueExact());
-        assertEquals(offsetHeader, graph.tail.head.asGraph().head.asValue().getSlice().offset.intValueExact());
+        assertEquals(offsetHeader, graph.tail.head.asGraph().head.asValue().slice().offset.intValueExact());
     }
 
 }

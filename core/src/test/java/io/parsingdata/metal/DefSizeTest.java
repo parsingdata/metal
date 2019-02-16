@@ -62,7 +62,7 @@ public class DefSizeTest {
         assertTrue(result.isPresent());
         assertArrayEquals(
             new byte[]{0x04, 0x08},
-            getValue(result.get().order, "data").getValue()
+            getValue(result.get().order, "data").value()
         );
     }
 

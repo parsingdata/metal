@@ -40,7 +40,7 @@ public class Offset extends UnaryValueExpression {
 
     @Override
     public Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding) {
-        return Optional.of(ConstantFactory.createFromNumeric(value.getSlice().offset, value.getEncoding()));
+        return Optional.of(ConstantFactory.createFromNumeric(value.slice().offset, value.encoding()));
     }
 
 }

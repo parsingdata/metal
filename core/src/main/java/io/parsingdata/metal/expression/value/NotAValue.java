@@ -30,12 +30,18 @@ public final class NotAValue implements Value {
 
     private NotAValue() {}
 
-    @Override public Slice getSlice() { throw unsupported(); }
-    @Override public Encoding getEncoding() { throw unsupported(); }
-    @Override public byte[] getValue() { throw unsupported(); }
-    @Override public BigInteger getLength() { throw unsupported(); }
+    @Override public Slice slice() { throw unsupported(); }
+
+    @Override public Encoding encoding() { throw unsupported(); }
+
+    @Override public byte[] value() { throw unsupported(); }
+
+    @Override public BigInteger length() { throw unsupported(); }
+
     @Override public BigInteger asNumeric() { throw unsupported(); }
+
     @Override public String asString() { throw unsupported(); }
+
     @Override public BitSet asBitSet() { throw unsupported(); }
 
     private UnsupportedOperationException unsupported() {

@@ -36,7 +36,7 @@ public class CallbackTest {
     public void crc32Good() {
         final ImmutableList<Value> result = crc32(con(0x01020304)).eval(stream(), enc());
         assertEquals(1, result.size);
-        assertArrayEquals(new byte[] { -74, 60, -5, -51 }, result.head.getValue());
+        assertArrayEquals(new byte[] { -74, 60, -5, -51 }, result.head.value());
     }
 
     @Test

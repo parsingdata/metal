@@ -21,11 +21,17 @@ import io.parsingdata.metal.token.Token;
 public interface ParseItem {
 
     default boolean isValue() { return false; }
+
     default boolean isGraph() { return false; }
+
     default boolean isReference() { return false; }
+
     default ParseValue asValue() { throw new UnsupportedOperationException("Cannot convert to ParseValue."); }
+
     default ParseReference asReference() { throw new UnsupportedOperationException("Cannot convert to ParseReference."); }
+
     default ParseGraph asGraph() { throw new UnsupportedOperationException("Cannot convert to ParseGraph."); }
+
     Token getDefinition();
 
 }

@@ -31,28 +31,28 @@ public class NotAValueTest {
     public void getSlice() {
         thrown.expect(UnsupportedOperationException.class);
         thrown.expectMessage("NOT_A_VALUE does not support any Value operation.");
-        NOT_A_VALUE.getSlice();
+        NOT_A_VALUE.slice();
     }
 
     @Test
     public void getEncoding() {
         thrown.expect(UnsupportedOperationException.class);
         thrown.expectMessage("NOT_A_VALUE does not support any Value operation.");
-        NOT_A_VALUE.getEncoding();
+        NOT_A_VALUE.encoding();
     }
 
     @Test
     public void getValue() {
         thrown.expect(UnsupportedOperationException.class);
         thrown.expectMessage("NOT_A_VALUE does not support any Value operation.");
-        NOT_A_VALUE.getValue();
+        NOT_A_VALUE.value();
     }
 
     @Test
     public void getLength() {
         thrown.expect(UnsupportedOperationException.class);
         thrown.expectMessage("NOT_A_VALUE does not support any Value operation.");
-        NOT_A_VALUE.getLength();
+        NOT_A_VALUE.length();
     }
 
     @Test

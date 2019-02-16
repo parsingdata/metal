@@ -71,10 +71,10 @@ public class Bytes implements ValueExpression {
     }
 
     private Trampoline<ImmutableList<Value>> extractByteValues(final ImmutableList<Value> output, final Value value, final int i, final Encoding encoding) {
-        if (value.equals(NOT_A_VALUE) || BigInteger.valueOf(i).compareTo(value.getLength()) >= 0) {
+        if (value.equals(NOT_A_VALUE) || BigInteger.valueOf(i).compareTo(value.length()) >= 0) {
             return complete(() -> output);
         }
-        return intermediate(() -> extractByteValues(output.add(new CoreValue(createFromSource(value.getSlice().source, value.getSlice().offset.add(BigInteger.valueOf(i)), ONE).get(), encoding)), value, i + 1, encoding));
+        return intermediate(() -> extractByteValues(output.add(new CoreValue(createFromSource(value.slice().source, value.slice().offset.add(BigInteger.valueOf(i)), ONE).get(), encoding)), value, i + 1, encoding));
     }
 
     @Override

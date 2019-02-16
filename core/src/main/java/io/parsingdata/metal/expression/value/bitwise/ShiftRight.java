@@ -40,7 +40,7 @@ public class ShiftRight extends BinaryValueExpression {
     public Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {
         final BitSet leftBits = leftValue.asBitSet();
         final int shift = rightValue.asNumeric().intValueExact();
-        return Optional.of(ConstantFactory.createFromBitSet(leftBits.get(shift, Math.max(shift, leftBits.length())), leftValue.getValue().length, encoding));
+        return Optional.of(ConstantFactory.createFromBitSet(leftBits.get(shift, Math.max(shift, leftBits.length())), leftValue.value().length, encoding));
     }
 
 }

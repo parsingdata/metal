@@ -24,12 +24,18 @@ import io.parsingdata.metal.encoding.Encoding;
 
 public interface Value {
 
-    Slice getSlice();
-    Encoding getEncoding();
-    byte[] getValue();
-    BigInteger getLength();
+    Slice slice();
+
+    Encoding encoding();
+
+    byte[] value();
+
+    BigInteger length();
+
     BigInteger asNumeric();
+
     String asString();
+
     BitSet asBitSet();
 
 }

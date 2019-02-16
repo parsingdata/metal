@@ -42,44 +42,44 @@ public class CoreValue implements Value {
     }
 
     @Override
-    public Slice getSlice() {
+    public Slice slice() {
         return slice;
     }
 
     @Override
-    public Encoding getEncoding() {
+    public Encoding encoding() {
         return encoding;
     }
 
     @Override
-    public byte[] getValue() {
+    public byte[] value() {
         return slice.getData();
     }
 
     @Override
-    public BigInteger getLength() {
+    public BigInteger length() {
         return slice.length;
     }
 
     @Override
     public BigInteger asNumeric() {
-        return encoding.sign == Sign.SIGNED ? new BigInteger(encoding.byteOrder.apply(getValue()))
-                                            : new BigInteger(1, encoding.byteOrder.apply(getValue()));
+        return encoding.sign == Sign.SIGNED ? new BigInteger(encoding.byteOrder.apply(value()))
+                                            : new BigInteger(1, encoding.byteOrder.apply(value()));
     }
 
     @Override
     public String asString() {
-        return new String(getValue(), encoding.charset);
+        return new String(value(), encoding.charset);
     }
 
     @Override
     public BitSet asBitSet() {
-        return BitSet.valueOf(encoding.byteOrder == ByteOrder.BIG_ENDIAN ? ByteOrder.LITTLE_ENDIAN.apply(getValue()) : getValue());
+        return BitSet.valueOf(encoding.byteOrder == ByteOrder.BIG_ENDIAN ? ByteOrder.LITTLE_ENDIAN.apply(value()) : value());
     }
 
     @Override
     public String toString() {
-        return "0x" + bytesToHexString(slice.getData(TO_STRING_BYTE_COUNT)) + (getLength().compareTo(TO_STRING_BYTE_COUNT) > 0 ? "..." : "");
+        return "0x" + bytesToHexString(slice.getData(TO_STRING_BYTE_COUNT)) + (length().compareTo(TO_STRING_BYTE_COUNT) > 0 ? "..." : "");
     }
 
     @Override

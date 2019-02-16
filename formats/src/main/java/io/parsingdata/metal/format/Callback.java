@@ -37,7 +37,7 @@ public final class Callback {
             @Override
             public Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding) {
                 final CRC32 crc = new CRC32();
-                crc.update(value.getValue());
+                crc.update(value.value());
                 final long crcValue = crc.getValue();
                 return Optional.of(new CoreValue(createFromBytes(encoding.byteOrder.apply(new byte[] {
                     (byte)((crcValue & 0xff000000) >> 24),

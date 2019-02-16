@@ -38,8 +38,8 @@ public class Not extends UnaryValueExpression {
     @Override
     public Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding) {
         final BitSet bits = value.asBitSet();
-        bits.flip(0, value.getValue().length * 8);
-        return Optional.of(ConstantFactory.createFromBitSet(bits, value.getValue().length, encoding));
+        bits.flip(0, value.value().length * 8);
+        return Optional.of(ConstantFactory.createFromBitSet(bits, value.value().length, encoding));
     }
 
 }
