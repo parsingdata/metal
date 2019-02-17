@@ -73,7 +73,7 @@ public class DataExpressionSource extends Source {
             }
             final Value cacheValue = getValueAtIndex(results, index, 0).computeResult();
             if (cacheValue.equals(NOT_A_VALUE)) {
-                throw new IllegalStateException(format("ValueExpression dataExpression yields empty Value at index %d.", index));
+                throw new IllegalStateException(format("ValueExpression dataExpression yields NOT_A_VALUE at index %d.", index));
             }
             cache = cacheValue.value();
         }

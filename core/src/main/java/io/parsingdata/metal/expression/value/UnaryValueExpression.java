@@ -63,12 +63,12 @@ public abstract class UnaryValueExpression implements ValueExpression {
         if (values.isEmpty()) {
             return complete(() -> result);
         }
-        return intermediate(() -> eval(values.tail, parseState, encoding, result.add(checkEval(values.head, parseState, encoding))));
+        return intermediate(() -> eval(values.tail, parseState, encoding, result.add(safeEval(values.head, parseState, encoding))));
     }
 
     public abstract Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding);
 
-    private Value checkEval(final Value value, final ParseState parseState, final Encoding encoding) {
+    private Value safeEval(final Value value, final ParseState parseState, final Encoding encoding) {
         if (value.equals(NOT_A_VALUE)) {
             return NOT_A_VALUE;
         }

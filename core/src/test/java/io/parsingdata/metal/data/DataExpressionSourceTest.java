@@ -77,9 +77,9 @@ public class DataExpressionSourceTest {
     }
 
     @Test
-    public void emptyValue() {
+    public void notAValue() {
         thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("ValueExpression dataExpression yields empty Value at index 0.");
+        thrown.expectMessage("ValueExpression dataExpression yields NOT_A_VALUE at index 0.");
         new DataExpressionSource(div(con(1), con(0)), 0, EMPTY_PARSE_STATE, enc()).isAvailable(ZERO, ZERO);
     }
 
