@@ -16,11 +16,14 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static org.junit.Assert.assertEquals;
+
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.exp;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
@@ -31,6 +34,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 
 public class RefEdgeCaseTest {
@@ -56,7 +60,14 @@ public class RefEdgeCaseTest {
     public void emptyLimit() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Limit must evaluate to a single non-empty value.");
-        ref("a", div(con(1), con(0))).eval(parseState, enc());
+        ref("a", ref("b")).eval(parseState, enc());
+    }
+
+    @Test
+    public void nanLimit() {
+        final ImmutableList<Value> result = ref("a", div(con(1), con(0))).eval(parseState, enc());
+        assertEquals(1, result.size);
+        assertEquals(NOT_A_VALUE, result.head);
     }
 
 }

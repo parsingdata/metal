@@ -166,15 +166,15 @@ public class ShorthandsTest {
     }
 
     private void checkNameAndValue(final String name, final int value, final ParseState parseState) {
-        ImmutableList<Optional<Value>> values = ref(name).eval(parseState, enc());
-        assertFalse(values.isEmpty());
-        assertEquals(1, values.size);
-        assertEquals(value, values.head.get().asNumeric().intValueExact());
+        ImmutableList<Value> optionalValues = ref(name).eval(parseState, enc());
+        assertEquals(1, optionalValues.size);
+        assertEquals(value, optionalValues.head.asNumeric().intValueExact());
 
+        ImmutableList<Value> values = optionalValues;
         while (!values.isEmpty()) {
-            final Value current = values.head.get();
+            final Value current = values.head;
             assertThat(current, is(instanceOf(ParseValue.class)));
-            assertEquals(name, ((ParseValue)values.head.get()).name);
+            assertEquals(name, ((ParseValue)values.head).name);
             values = values.tail;
         }
     }
@@ -207,22 +207,20 @@ public class ShorthandsTest {
 
     @Test
     public void mapLeftWithSub() {
-        ImmutableList<Optional<Value>> result = mapLeft(Shorthand::sub, ref("a"), con(2)).eval(PARSE_STATE, enc());
+        ImmutableList<Value> result = mapLeft(Shorthand::sub, ref("a"), con(2)).eval(PARSE_STATE, enc());
         assertEquals(3, result.size);
         for (int i = 0; i < 3; i++) {
-            assertTrue(result.head.isPresent());
-            assertEquals((i * 42) + 40, result.head.get().asNumeric().intValueExact());
+            assertEquals((i * 42) + 40, result.head.asNumeric().intValueExact());
             result = result.tail;
         }
     }
 
     @Test
     public void mapRightWithSub() {
-        ImmutableList<Optional<Value>> result = mapRight(Shorthand::sub, con(126), ref("a")).eval(PARSE_STATE, enc());
+        ImmutableList<Value> result = mapRight(Shorthand::sub, con(126), ref("a")).eval(PARSE_STATE, enc());
         assertEquals(3, result.size);
         for (int i = 0; i < 3; i++) {
-            assertTrue(result.head.isPresent());
-            assertEquals(((3 - i) * 42) - 42, result.head.get().asNumeric().intValueExact());
+            assertEquals(((3 - i) * 42) - 42, result.head.asNumeric().intValueExact());
             result = result.tail;
         }
     }
@@ -232,7 +230,7 @@ public class ShorthandsTest {
         Optional<ParseState> result = when(def("name", con(1), eq(con(1))), TRUE).parse(env(stream(1)));
         assertTrue(result.isPresent());
         assertEquals(1, result.get().offset.intValueExact());
-        assertEquals(1, Selection.getAllValues(result.get().order, parseValue -> parseValue.matches("name") && parseValue.getValue().length == 1 && parseValue.getValue()[0] == 1).size);
+        assertEquals(1, Selection.getAllValues(result.get().order, parseValue -> parseValue.matches("name") && parseValue.value().length == 1 && parseValue.value()[0] == 1).size);
     }
 
     @Test
@@ -243,7 +241,7 @@ public class ShorthandsTest {
                 def("name2", con(1), eq(con(2)))).parse(env(stream(2)));
         assertTrue(result.isPresent());
         assertEquals(1, result.get().offset.intValueExact());
-        assertEquals(1, Selection.getAllValues(result.get().order, parseValue -> parseValue.matches("name2") && parseValue.getValue().length == 1 && parseValue.getValue()[0] == 2).size);
+        assertEquals(1, Selection.getAllValues(result.get().order, parseValue -> parseValue.matches("name2") && parseValue.value().length == 1 && parseValue.value()[0] == 2).size);
     }
 
 }

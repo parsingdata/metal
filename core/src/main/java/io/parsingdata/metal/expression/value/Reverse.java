@@ -19,7 +19,6 @@ package io.parsingdata.metal.expression.value;
 import static io.parsingdata.metal.data.Selection.reverse;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
@@ -42,7 +41,7 @@ public class Reverse implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
         return reverse(values.eval(parseState, encoding));
     }
 

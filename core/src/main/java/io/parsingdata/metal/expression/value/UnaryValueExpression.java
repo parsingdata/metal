@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Selection.reverse;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -54,18 +55,26 @@ public abstract class UnaryValueExpression implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
         return reverse(eval(operand.eval(parseState, encoding), parseState, encoding, new ImmutableList<>()).computeResult());
     }
 
-    private Trampoline<ImmutableList<Optional<Value>>> eval(final ImmutableList<Optional<Value>> values, final ParseState parseState, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
+    private Trampoline<ImmutableList<Value>> eval(final ImmutableList<Value> values, final ParseState parseState, final Encoding encoding, final ImmutableList<Value> result) {
         if (values.isEmpty()) {
             return complete(() -> result);
         }
-        return intermediate(() -> eval(values.tail, parseState, encoding, result.add(values.head.flatMap(value -> eval(value, parseState, encoding)))));
+        return intermediate(() -> eval(values.tail, parseState, encoding, result.add(safeEval(values.head, parseState, encoding))));
     }
 
     public abstract Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding);
+
+    private Value safeEval(final Value value, final ParseState parseState, final Encoding encoding) {
+        if (value.equals(NOT_A_VALUE)) {
+            return NOT_A_VALUE;
+        }
+        return eval(value, parseState, encoding)
+            .orElse(NOT_A_VALUE);
+    }
 
     @Override
     public String toString() {

@@ -24,6 +24,7 @@ import static io.parsingdata.metal.Shorthand.EMPTY;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
@@ -32,8 +33,7 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
-import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_VE;
-import static io.parsingdata.metal.util.TokenDefinitions.any;
+import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_SVE;
 
 import java.util.Optional;
 
@@ -48,7 +48,7 @@ public class DefSizeTest {
     public static final Token FORMAT =
         seq(
             def("length", con(4)),
-            def("data", ref("length"))
+            def("data", last(ref("length")))
         );
 
     @Test
@@ -62,7 +62,7 @@ public class DefSizeTest {
         assertTrue(result.isPresent());
         assertArrayEquals(
             new byte[]{0x04, 0x08},
-            getValue(result.get().order, "data").getValue()
+            getValue(result.get().order, "data").value()
         );
     }
 
@@ -78,10 +78,8 @@ public class DefSizeTest {
     }
 
     @Test
-    public void testEmptyLengthInList() {
-        assertFalse(def("a", EMPTY_VE).parse(env(stream(1, 2, 3, 4))).isPresent());
-        final Token aList = seq(any("a"), any("a"));
-        assertFalse(seq(aList, def("b", ref("a"))).parse(env(stream(1, 2, 3, 4))).isPresent());
+    public void testLengthNotAValue() {
+        assertFalse(def("a", EMPTY_SVE).parse(env(stream(1, 2, 3, 4))).isPresent());
     }
 
     @Test

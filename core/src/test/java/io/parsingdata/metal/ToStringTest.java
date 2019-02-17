@@ -68,6 +68,7 @@ import static io.parsingdata.metal.Shorthand.until;
 import static io.parsingdata.metal.Shorthand.whl;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -88,6 +89,7 @@ import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.Expression;
+import io.parsingdata.metal.expression.value.CoreValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
@@ -105,7 +107,7 @@ public class ToStringTest {
     @Test
     public void validateToStringImplementation() {
         final Expression e = not(and(eq(v(), v()), or(eqNum(v()), and(eqStr(v()), or(gtEqNum(v()), or(gtNum(v()), or(ltEqNum(v()), ltNum(v()))))))));
-        final Token t = until("untilName", v(), v(), v(), post(repn(sub(opt(pre(rep(cho(token("refName"), any(n()), seq(nod(10), tie(def(n(), v()), v()), whl(def(n(), con(1), e), e), tie(t(), con(1))))), e)), v()), v()), e));
+        final Token t = until("untilName", v(), v(), v(), post(repn(sub(opt(pre(rep(cho(token("refName"), any(n()), seq(nod(10), tie(def(n(), last(v())), v()), whl(def(n(), con(1), e), e), tie(t(), con(1))))), e)), v()), last(v())), e));
         final String output = t.toString();
         for (int i = 0; i < count; i++) {
             assertTrue(output.contains(prefix + i));
@@ -122,7 +124,7 @@ public class ToStringTest {
     }
 
     private ValueExpression v() {
-        return fold(foldLeft(foldRight(rev(bytes(neg(add(div(mod(mul(sub(cat(last(ref(n()))), first(nth(exp(ref(n()), con(1)), con(1)))), sub(CURRENT_ITERATION, con(1))), cat(ref(n()), ref(t()))), add(SELF, add(offset(ref(n())), add(CURRENT_OFFSET, count(ref(n())))))), elvis(ref(n()), ref(n())))))), Shorthand::add, ref(n())), Shorthand::add), Shorthand::add, ref(n()));
+        return fold(foldLeft(foldRight(rev(bytes(neg(add(div(mod(mul(sub(cat(last(ref(n()))), first(nth(exp(ref(n()), con(NOT_A_VALUE)), con(1)))), sub(CURRENT_ITERATION, con(1))), cat(ref(n()), ref(t()))), add(SELF, add(offset(ref(n())), add(CURRENT_OFFSET, count(ref(n())))))), elvis(ref(n()), ref(n())))))), Shorthand::add, last(ref(n()))), Shorthand::add), Shorthand::add, last(ref(n())));
     }
 
     @Test
@@ -151,6 +153,8 @@ public class ToStringTest {
         assertEquals("CurrentOffset", CURRENT_OFFSET.toString());
         assertTrue(v().toString().contains("CurrentIteration"));
         assertEquals("CurrentIteration", CURRENT_ITERATION.toString());
+        assertTrue(v().toString().contains("NOT_A_VALUE"));
+        assertEquals("NOT_A_VALUE", NOT_A_VALUE.toString());
     }
 
     @Test
@@ -174,7 +178,7 @@ public class ToStringTest {
         final ParseValue pv1 = new ParseValue("name", NONE, createFromBytes(new byte[]{1, 2}), enc());
         final String pv1String = "pval(name:0x0102)";
         final Optional<Value> ov1 = Optional.of(pv1);
-        final Optional<Value> ov2 = Optional.of(new Value(createFromBytes(new byte[]{3}), enc()));
+        final Optional<Value> ov2 = Optional.of(new CoreValue(createFromBytes(new byte[]{3}), enc()));
         assertEquals(">Optional[0x03]>Optional[" + pv1String + "]", ImmutableList.create(ov1).add(ov2).toString());
         final ParseValue pv2 = new ParseValue("two", NONE, createFromBytes(new byte[]{3, 4}), enc());
         final String pv2String = "pval(two:0x0304)";

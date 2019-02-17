@@ -30,7 +30,6 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Optional;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,6 +39,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
+import io.parsingdata.metal.expression.value.CoreValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
@@ -58,7 +58,7 @@ public class SourceAndSliceTest {
             { new ConstantSource(DATA) },
             { new DataExpressionSource(con(DATA), 0, EMPTY_PARSE_STATE, enc()) },
             { new ByteStreamSource(new InMemoryByteStream(DATA)) },
-            { ConcatenatedValueSource.create(ImmutableList.create(Optional.of(new Value(createFromSource(new ConstantSource(DATA), ZERO, BigInteger.valueOf(2)).get(), enc()))).add(Optional.of(new Value(createFromSource(new ConstantSource(DATA), BigInteger.valueOf(2), BigInteger.valueOf(2)).get(), enc())))).get() }
+            { ConcatenatedValueSource.create(ImmutableList.<Value>create(new CoreValue(createFromSource(new ConstantSource(DATA), ZERO, BigInteger.valueOf(2)).get(), enc())).add(new CoreValue(createFromSource(new ConstantSource(DATA), BigInteger.valueOf(2), BigInteger.valueOf(2)).get(), enc()))).get() }
         });
     }
 

@@ -22,19 +22,19 @@ import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.Util;
-import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 import io.parsingdata.metal.expression.value.ConstantFactory;
+import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * A {@link ValueExpression} that represents the amount of {@link Value}s
+ * A {@link SingleValueExpression} that represents the amount of {@link Value}s
  * returned by evaluating its <code>operand</code>.
  */
-public class Count implements ValueExpression {
+public class Count implements SingleValueExpression {
 
     public final ValueExpression operand;
 
@@ -43,9 +43,8 @@ public class Count implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> values = operand.eval(parseState, encoding);
-        return ImmutableList.create(Optional.of(fromNumeric(values.size)));
+    public Optional<Value> evalSingle(final ParseState parseState, final Encoding encoding) {
+        return Optional.of(fromNumeric(operand.eval(parseState, encoding).size));
     }
 
     private static Value fromNumeric(final long length) {

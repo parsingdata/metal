@@ -18,13 +18,12 @@ package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Shorthand.con;
 
-import java.util.Optional;
 import java.util.function.BinaryOperator;
 
 import io.parsingdata.metal.data.ImmutableList;
 
 /**
- * A {@link ValueExpression} implementation of the FoldRight operation.
+ * A {@link SingleValueExpression} implementation of the FoldRight operation.
  * <p>
  * FoldRight differs from {@link FoldLeft} in that the reduce operation is
  * applied from right to left (i.e., starting at the bottom).
@@ -33,12 +32,12 @@ import io.parsingdata.metal.data.ImmutableList;
  */
 public class FoldRight extends Fold {
 
-    public FoldRight(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) {
+    public FoldRight(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final SingleValueExpression initial) {
         super(values, reducer, initial);
     }
 
     @Override
-    protected ImmutableList<Optional<Value>> prepareValues(final ImmutableList<Optional<Value>> valueList) {
+    protected ImmutableList<Value> prepareValues(final ImmutableList<Value> valueList) {
         return valueList;
     }
 

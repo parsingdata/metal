@@ -192,7 +192,7 @@ public class ByTokenTest {
 
         assertThat(items.size, is(equalTo(2L)));
         assertThat(items.head.getDefinition(), is(equalTo(TWO_BYTES)));
-        assertThat(items.head.asValue().getValue(), is(equalTo(new byte[]{2, 3})));
+        assertThat(items.head.asValue().value(), is(equalTo(new byte[]{2, 3})));
     }
 
     @Test
@@ -255,7 +255,7 @@ public class ByTokenTest {
         assertEquals(SMALL_SEQ, seqItems.head.getDefinition());
         final ParseValue c = seqItems.head.asGraph().head.asValue();
         assertEquals(3, c.asNumeric().intValueExact());
-        assertEquals(2, c.slice.offset.intValueExact());
+        assertEquals(2, c.slice().offset.intValueExact());
     }
 
     @Test

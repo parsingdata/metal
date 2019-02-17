@@ -16,20 +16,25 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.exp;
+import static io.parsingdata.metal.Shorthand.fold;
 import static io.parsingdata.metal.Shorthand.foldLeft;
 import static io.parsingdata.metal.Shorthand.foldRight;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
+import static io.parsingdata.metal.encoding.Encoding.DEFAULT_ENCODING;
+import static io.parsingdata.metal.expression.value.BytesTest.EMPTY_PARSE_STATE;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
@@ -58,37 +63,31 @@ public class FoldEdgeCaseTest {
 
     @Test
     public void valuesContainsEmpty() {
-        assertTrue(foldLeft(div(con(1), con(0)), Shorthand::add).eval(stream(0), enc()).isEmpty());
-        assertTrue(foldRight(div(con(1), con(0)), Shorthand::add).eval(stream(0), enc()).isEmpty());
+        assertEquals(NOT_A_VALUE, foldLeft(div(con(1), con(0)), Shorthand::add).eval(stream(0), enc()).head);
+        assertEquals(NOT_A_VALUE, foldRight(div(con(1), con(0)), Shorthand::add).eval(stream(0), enc()).head);
     }
 
     @Test
     public void foldToEmpty() {
         final ParseState parseState = rep(any("value")).parse(env(stream(1, 0))).get();
-        assertFalse(foldLeft(ref("value"), Shorthand::div).eval(parseState, enc()).head.isPresent());
-        assertFalse(foldRight(ref("value"), Shorthand::div).eval(parseState, enc()).head.isPresent());
+        final ImmutableList<Value> foldLeftNan = foldLeft(ref("value"), Shorthand::div).eval(parseState, enc());
+        assertEquals(1, foldLeftNan.size);
+        assertEquals(NOT_A_VALUE, foldLeftNan.head);
+        final ImmutableList<Value> foldRightNan = foldRight(ref("value"), Shorthand::div).eval(parseState, enc());
+        assertEquals(1, foldRightNan.size);
+        assertEquals(NOT_A_VALUE, foldRightNan.head);
     }
 
     @Test
     public void inputContainsEmptyInTail() {
-        assertTrue(foldRight((parseState, encoding) -> ImmutableList.create(Optional.<Value>empty()).add(Optional.of(new Value(createFromBytes(new byte[] { 1, 2 }), enc()))), Shorthand::add).eval(stream(0), enc()).isEmpty());
+        assertEquals(NOT_A_VALUE, foldRight((parseState, encoding) -> ImmutableList.create(NOT_A_VALUE).add(new CoreValue(createFromBytes(new byte[] { 1, 2 }), enc())), Shorthand::add).eval(stream(0), enc()).head);
     }
 
     @Test
-    public void multipleInits() {
-        final Optional<ParseState> parseResult =
-            seq(
-                def("init", 1),
-                def("init", 1),
-                def("toFold", 1),
-                def("toFold", 1),
-                cho(
-                    def("folded", 1, eq(foldLeft(ref("toFold"), Shorthand::add, ref("init")))),
-                    def("folded", 1, eq(foldRight(ref("toFold"), Shorthand::add, ref("init"))))
-                )
-            ).parse(env(stream(1, 2, 1, 2, 3)));
-
-        assertFalse(parseResult.isPresent());
+    public void notAValueInit() {
+        final ImmutableList<Value> result = fold(exp(con(1), con(2)), Shorthand::add, con(NOT_A_VALUE)).eval(EMPTY_PARSE_STATE, DEFAULT_ENCODING);
+        assertEquals(1, result.size);
+        assertEquals(NOT_A_VALUE, result.head);
     }
 
     @Test

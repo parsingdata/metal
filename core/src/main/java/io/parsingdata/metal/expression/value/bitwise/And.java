@@ -39,7 +39,7 @@ public class And extends BinaryValueExpression {
     public Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {
         final BitSet leftBits = leftValue.asBitSet();
         leftBits.and(rightValue.asBitSet());
-        return Optional.of(ConstantFactory.createFromBitSet(leftBits, leftValue.getValue().length, encoding));
+        return Optional.of(ConstantFactory.createFromBitSet(leftBits, leftValue.value().length, encoding));
     }
 
 }

@@ -45,12 +45,14 @@ import io.parsingdata.metal.expression.value.Bytes;
 import io.parsingdata.metal.expression.value.Cat;
 import io.parsingdata.metal.expression.value.Const;
 import io.parsingdata.metal.expression.value.ConstantFactory;
+import io.parsingdata.metal.expression.value.CoreValue;
 import io.parsingdata.metal.expression.value.Elvis;
 import io.parsingdata.metal.expression.value.Expand;
 import io.parsingdata.metal.expression.value.FoldCat;
 import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
 import io.parsingdata.metal.expression.value.Reverse;
+import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -89,22 +91,22 @@ import io.parsingdata.metal.token.While;
 public final class Shorthand {
 
     public static final Token EMPTY = def(EMPTY_NAME, 0L);
-    public static final ValueExpression SELF = new Self();
-    public static final ValueExpression CURRENT_OFFSET = new CurrentOffset();
-    public static final ValueExpression CURRENT_ITERATION = new CurrentIteration(con(0));
+    public static final SingleValueExpression SELF = new Self();
+    public static final SingleValueExpression CURRENT_OFFSET = new CurrentOffset();
+    public static final SingleValueExpression CURRENT_ITERATION = new CurrentIteration(con(0));
     public static final Expression TRUE = new True();
 
     private Shorthand() {}
 
-    public static Token def(final String name, final ValueExpression size, final Expression predicate, final Encoding encoding) { return post(def(name, size, encoding), predicate); }
-    public static Token def(final String name, final ValueExpression size, final Expression predicate) { return def(name, size, predicate, null); }
-    public static Token def(final String name, final ValueExpression size, final Encoding encoding) { return new Def(name, size, encoding); }
-    public static Token def(final String name, final ValueExpression size) { return def(name, size, (Encoding)null); }
+    public static Token def(final String name, final SingleValueExpression size, final Expression predicate, final Encoding encoding) { return post(def(name, size, encoding), predicate); }
+    public static Token def(final String name, final SingleValueExpression size, final Expression predicate) { return def(name, size, predicate, null); }
+    public static Token def(final String name, final SingleValueExpression size, final Encoding encoding) { return new Def(name, size, encoding); }
+    public static Token def(final String name, final SingleValueExpression size) { return def(name, size, (Encoding)null); }
     public static Token def(final String name, final long size, final Expression predicate, final Encoding encoding) { return def(name, con(size), predicate, encoding); }
     public static Token def(final String name, final long size, final Expression predicate) { return def(name, size, predicate, null); }
     public static Token def(final String name, final long size, final Encoding encoding) { return def(name, con(size), encoding); }
     public static Token def(final String name, final long size) { return def(name, size, (Encoding)null); }
-    public static Token nod(final ValueExpression size) { return def(EMPTY_NAME, size); }
+    public static Token nod(final SingleValueExpression size) { return def(EMPTY_NAME, size); }
     public static Token nod(final long size) { return nod(con(size)); }
     public static Token cho(final String name, final Encoding encoding, final Token token1, final Token token2, final Token... tokens) { return new Cho(name, encoding, token1, token2, tokens); }
     public static Token cho(final String name, final Token token1, final Token token2, final Token... tokens) { return cho(name, null, token1, token2, tokens); }
@@ -114,10 +116,10 @@ public final class Shorthand {
     public static Token rep(final String name, final Token token) { return rep(name, token, null); }
     public static Token rep(final Token token, final Encoding encoding) { return rep(NO_NAME, token, encoding); }
     public static Token rep(final Token token) { return rep(token, null); }
-    public static Token repn(final String name, final Token token, final ValueExpression n, final Encoding encoding) { return new RepN(name, token, n, encoding); }
-    public static Token repn(final String name, final Token token, final ValueExpression n) { return repn(name, token, n, null); }
-    public static Token repn(final Token token, final ValueExpression n, final Encoding encoding) { return repn(NO_NAME, token, n, encoding); }
-    public static Token repn(final Token token, final ValueExpression n) { return repn(token, n, null); }
+    public static Token repn(final String name, final Token token, final SingleValueExpression n, final Encoding encoding) { return new RepN(name, token, n, encoding); }
+    public static Token repn(final String name, final Token token, final SingleValueExpression n) { return repn(name, token, n, null); }
+    public static Token repn(final Token token, final SingleValueExpression n, final Encoding encoding) { return repn(NO_NAME, token, n, encoding); }
+    public static Token repn(final Token token, final SingleValueExpression n) { return repn(token, n, null); }
     public static Token seq(final String name, final Encoding encoding, final Token token1, final Token token2, final Token... tokens) { return new Seq(name, encoding, token1, token2, tokens); }
     public static Token seq(final String name, final Token token1, final Token token2, final Token... tokens) { return seq(name, null, token1, token2, tokens); }
     public static Token seq(final Encoding encoding, final Token token1, final Token token2, final Token... tokens) { return seq(NO_NAME, encoding, token1, token2, tokens); }
@@ -171,40 +173,40 @@ public final class Shorthand {
     public static UnaryValueExpression not(final ValueExpression operand) { return new io.parsingdata.metal.expression.value.bitwise.Not(operand); }
     public static BinaryValueExpression shl(final ValueExpression left, final ValueExpression right) { return new ShiftLeft(left, right); }
     public static BinaryValueExpression shr(final ValueExpression left, final ValueExpression right) { return new ShiftRight(left, right); }
-    public static ValueExpression con(final long value) { return con(value, DEFAULT_ENCODING); }
-    public static ValueExpression con(final long value, final Encoding encoding) { return con(ConstantFactory.createFromNumeric(value, encoding)); }
-    public static ValueExpression con(final String value) { return con(value, DEFAULT_ENCODING); }
-    public static ValueExpression con(final String value, final Encoding encoding) { return con(ConstantFactory.createFromString(value, encoding)); }
-    public static ValueExpression con(final Value value) { return new Const(value); }
-    public static ValueExpression con(final Encoding encoding, final int... values) { return new Const(new Value(createFromBytes(toByteArray(values)), encoding)); }
-    public static ValueExpression con(final int... values) { return con(DEFAULT_ENCODING, values); }
-    public static ValueExpression con(final byte[] value) { return con(value, DEFAULT_ENCODING); }
-    public static ValueExpression con(final byte[] value, final Encoding encoding) { return con(ConstantFactory.createFromBytes(value, encoding)); }
+    public static SingleValueExpression con(final long value) { return con(value, DEFAULT_ENCODING); }
+    public static SingleValueExpression con(final long value, final Encoding encoding) { return con(ConstantFactory.createFromNumeric(value, encoding)); }
+    public static SingleValueExpression con(final String value) { return con(value, DEFAULT_ENCODING); }
+    public static SingleValueExpression con(final String value, final Encoding encoding) { return con(ConstantFactory.createFromString(value, encoding)); }
+    public static SingleValueExpression con(final Value value) { return new Const(value); }
+    public static SingleValueExpression con(final Encoding encoding, final int... values) { return new Const(new CoreValue(createFromBytes(toByteArray(values)), encoding)); }
+    public static SingleValueExpression con(final int... values) { return con(DEFAULT_ENCODING, values); }
+    public static SingleValueExpression con(final byte[] value) { return con(value, DEFAULT_ENCODING); }
+    public static SingleValueExpression con(final byte[] value, final Encoding encoding) { return con(ConstantFactory.createFromBytes(value, encoding)); }
     public static ValueExpression len(final ValueExpression operand) { return new Len(operand); }
     public static NameRef ref(final String name) { return ref(name, null); }
     public static NameRef ref(final String name, final ValueExpression limit) { return new NameRef(name, limit); }
     public static DefinitionRef ref(final Token definition) { return ref(definition, null); }
     public static DefinitionRef ref(final Token definition, final ValueExpression limit) { return new DefinitionRef(definition, limit); }
-    public static ValueExpression first(final ValueExpression operand) { return new First(operand); }
-    public static ValueExpression last(final ValueExpression operand) { return new Last(operand); }
-    public static ValueExpression last(final NameRef operand) { return new Last(new NameRef(operand.reference, con(1))); }
-    public static ValueExpression last(final DefinitionRef operand) { return new Last(new DefinitionRef(operand.reference, con(1))); }
+    public static SingleValueExpression first(final ValueExpression operand) { return new First(operand); }
+    public static SingleValueExpression last(final ValueExpression operand) { return new Last(operand); }
+    public static SingleValueExpression last(final NameRef operand) { return new Last(new NameRef(operand.reference, con(1))); }
+    public static SingleValueExpression last(final DefinitionRef operand) { return new Last(new DefinitionRef(operand.reference, con(1))); }
     public static ValueExpression nth(final ValueExpression values, final ValueExpression indices) { return new Nth(values, indices); }
     public static ValueExpression offset(final ValueExpression operand) { return new Offset(operand); }
-    public static ValueExpression iteration(final int level) { return iteration(con(level)); }
-    public static ValueExpression iteration(final ValueExpression level) { return new CurrentIteration(level); }
+    public static SingleValueExpression iteration(final int level) { return iteration(con(level)); }
+    public static SingleValueExpression iteration(final SingleValueExpression level) { return new CurrentIteration(level); }
     public static ValueExpression cat(final ValueExpression left, final ValueExpression right) { return new Cat(left, right); }
-    public static ValueExpression cat(final ValueExpression operand) { return new FoldCat(operand); }
+    public static SingleValueExpression cat(final ValueExpression operand) { return new FoldCat(operand); }
     public static ValueExpression elvis(final ValueExpression left, final ValueExpression right) { return new Elvis(left, right); }
-    public static ValueExpression count(final ValueExpression operand) { return new Count(operand); }
-    public static ValueExpression foldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return new FoldLeft(values, reducer, null); }
-    public static ValueExpression foldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) { return new FoldLeft(values, reducer, initial); }
-    public static ValueExpression foldRight(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return new FoldRight(values, reducer, null); }
-    public static ValueExpression foldRight(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) { return new FoldRight(values, reducer, initial); }
-    public static ValueExpression fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return foldRight(values, reducer); }
-    public static ValueExpression fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final ValueExpression initial) { return foldRight(values, reducer, initial); }
+    public static SingleValueExpression count(final ValueExpression operand) { return new Count(operand); }
+    public static SingleValueExpression foldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return new FoldLeft(values, reducer, null); }
+    public static SingleValueExpression foldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final SingleValueExpression initial) { return new FoldLeft(values, reducer, initial); }
+    public static SingleValueExpression foldRight(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return new FoldRight(values, reducer, null); }
+    public static SingleValueExpression foldRight(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final SingleValueExpression initial) { return new FoldRight(values, reducer, initial); }
+    public static SingleValueExpression fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return foldRight(values, reducer); }
+    public static SingleValueExpression fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final SingleValueExpression initial) { return foldRight(values, reducer, initial); }
     public static ValueExpression rev(final ValueExpression values) { return new Reverse(values); }
-    public static ValueExpression exp(final ValueExpression base, final ValueExpression count) { return new Expand(base, count); }
+    public static ValueExpression exp(final ValueExpression base, final SingleValueExpression count) { return new Expand(base, count); }
     public static BinaryValueExpression mapLeft(final BiFunction<ValueExpression, ValueExpression, BinaryValueExpression> func, final ValueExpression left, final ValueExpression rightExpand) { return func.apply(left, exp(rightExpand, count(left))); }
     public static BinaryValueExpression mapRight(final BiFunction<ValueExpression, ValueExpression, BinaryValueExpression> func, final ValueExpression leftExpand, final ValueExpression right) { return func.apply(exp(leftExpand, count(right)), right); }
     public static ValueExpression bytes(final ValueExpression operand) { return new Bytes(operand); }

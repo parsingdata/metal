@@ -24,6 +24,7 @@ import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.encoding.Encoding.DEFAULT_ENCODING;
 import static io.parsingdata.metal.expression.value.ConstantFactory.createFromNumeric;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -35,45 +36,41 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ImmutablePair;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.Value;
-import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Rep;
 import io.parsingdata.metal.token.RepN;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.token.While;
 
 /**
- * A {@link ValueExpression} that represents the 0-based current iteration in an
+ * A {@link SingleValueExpression} that represents the 0-based current iteration in an
  * iterable {@link Token} (when {@link Token#isIterable()} returns true, e.g. when
  * inside a {@link Rep}, {@link RepN}) or {@link While}).
+ *
+ * The <code>level</code> (a {@link SingleValueExpression} operand can be used
+ * to specify the relative nesting level of the iteration count that is required.
+ * <code>0</code> denotes the current (deepest) nesting level, <code>1</code> the
+ * level above it, and so on.
  */
-public class CurrentIteration implements ValueExpression {
+public class CurrentIteration implements SingleValueExpression {
 
-    private final ValueExpression level;
+    private final SingleValueExpression level;
 
-    public CurrentIteration(final ValueExpression level) {
+    public CurrentIteration(final SingleValueExpression level) {
         this.level = checkNotNull(level, "level");
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return ImmutableList.create(getIteration(parseState, encoding));
-    }
-
-    private Optional<Value> getIteration(final ParseState parseState, final Encoding encoding) {
-        final BigInteger levelValue = getLevel(parseState, encoding);
-        if (parseState.iterations.size <= levelValue.longValue()) {
+    public Optional<Value> evalSingle(final ParseState parseState, final Encoding encoding) {
+        final Optional<Value> levelValue = level.evalSingle(parseState, encoding);
+        if (!levelValue.isPresent() || levelValue.get().equals(NOT_A_VALUE) || levelValue.get().asNumeric().compareTo(ZERO) < 0) {
+            return Optional.of(NOT_A_VALUE);
+        }
+        if (parseState.iterations.size <= levelValue.get().asNumeric().longValueExact()) {
             return Optional.empty();
         }
-        return getIterationRecursive(parseState.iterations, levelValue).computeResult();
-    }
-
-    private BigInteger getLevel(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> levelList = level.eval(parseState, encoding);
-        if (levelList.size != 1 || !levelList.head.isPresent()) {
-            throw new IllegalArgumentException("Level must evaluate to a single non-empty value.");
-        }
-        return levelList.head.get().asNumeric();
+        return getIterationRecursive(parseState.iterations, levelValue.get().asNumeric()).computeResult();
     }
 
     private Trampoline<Optional<Value>> getIterationRecursive(final ImmutableList<ImmutablePair<Token, BigInteger>> iterations, final BigInteger levelValue) {

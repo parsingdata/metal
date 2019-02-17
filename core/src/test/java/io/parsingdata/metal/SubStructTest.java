@@ -148,12 +148,16 @@ public class SubStructTest {
     private void checkValue(final ParseItem item, final int value, final int offset) {
         assertTrue(item.isValue());
         assertEquals(value, item.asValue().asNumeric().intValueExact());
-        assertEquals(offset, item.asValue().slice.offset.intValueExact());
+        assertEquals(offset, item.asValue().slice().offset.intValueExact());
     }
 
     @Test
     public void errorEmptyAddressList() {
-        assertFalse(sub(any("a"), ref("b")).parse(env(stream(1, 2, 3, 4))).isPresent());
+        final Optional<ParseState> result = sub(any("a"), ref("b")).parse(env(stream(1, 2, 3, 4)));
+        assertTrue(result.isPresent());
+        assertEquals(0, result.get().offset.intValueExact());
+        assertTrue(result.get().order.head.asGraph().isEmpty());
+        assertTrue(result.get().order.tail.asGraph().isEmpty());
     }
 
     @Test

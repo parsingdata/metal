@@ -24,6 +24,7 @@ import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotEmpty;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.success;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.math.BigInteger;
 import java.util.Objects;
@@ -89,7 +90,7 @@ public class Until extends Token {
         return handleInterval(environment, initialSize.eval(environment.parseState, environment.encoding), stepSize.eval(environment.parseState, environment.encoding), maxSize.eval(environment.parseState, environment.encoding)).computeResult();
     }
 
-    private Trampoline<Optional<ParseState>> handleInterval(final Environment environment, final ImmutableList<Optional<Value>> initialSizes, final ImmutableList<Optional<Value>> stepSizes, final ImmutableList<Optional<Value>> maxSizes) {
+    private Trampoline<Optional<ParseState>> handleInterval(final Environment environment, final ImmutableList<Value> initialSizes, final ImmutableList<Value> stepSizes, final ImmutableList<Value> maxSizes) {
         if (checkNotValidList(initialSizes) || checkNotValidList(stepSizes) || checkNotValidList(maxSizes)) {
             return complete(Util::failure);
         }
@@ -119,12 +120,12 @@ public class Until extends Token {
             .orElseGet(() -> intermediate(() -> iterate(environment, currentSize.add(stepSize), stepSize, maxSize)));
     }
 
-    private boolean checkNotValidList(final ImmutableList<Optional<Value>> list) {
-        return list.isEmpty() || !list.head.isPresent();
+    private boolean checkNotValidList(final ImmutableList<Value> list) {
+        return list.isEmpty() || list.head.equals(NOT_A_VALUE);
     }
 
-    private BigInteger getNumeric(final ImmutableList<Optional<Value>> list) {
-        return list.head.get().asNumeric();
+    private BigInteger getNumeric(final ImmutableList<Value> list) {
+        return list.head.asNumeric();
     }
 
     @Override

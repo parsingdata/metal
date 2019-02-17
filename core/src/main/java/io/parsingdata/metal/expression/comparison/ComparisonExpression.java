@@ -16,14 +16,12 @@
 
 package io.parsingdata.metal.expression.comparison;
 
-import static java.util.function.Function.identity;
-
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
@@ -58,22 +56,26 @@ public abstract class ComparisonExpression implements Expression {
 
     @Override
     public boolean eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> values = value == null ? ImmutableList.create(parseState.order.current().map(identity())) : value.eval(parseState, encoding);
+        final ImmutableList<Value> values = value == null
+            ? parseState.order.current()
+                .map(ImmutableList::<Value>create)
+                .orElseGet(ImmutableList::new)
+            : value.eval(parseState, encoding);
         if (values.isEmpty()) {
             return false;
         }
-        final ImmutableList<Optional<Value>> predicates = predicate.eval(parseState, encoding);
+        final ImmutableList<Value> predicates = predicate.eval(parseState, encoding);
         if (values.size != predicates.size) {
             return false;
         }
         return compare(values, predicates).computeResult();
     }
 
-    private Trampoline<Boolean> compare(final ImmutableList<Optional<Value>> currents, final ImmutableList<Optional<Value>> predicates) {
-        if (!currents.head.isPresent() || !predicates.head.isPresent()) {
+    private Trampoline<Boolean> compare(final ImmutableList<Value> currents, final ImmutableList<Value> predicates) {
+        if (currents.head.equals(NOT_A_VALUE) || predicates.head.equals(NOT_A_VALUE)) {
             return complete(() -> false);
         }
-        final boolean headResult = compare(currents.head.get(), predicates.head.get());
+        final boolean headResult = compare(currents.head, predicates.head);
         if (!headResult || currents.tail.isEmpty()) {
             return complete(() -> headResult);
         }

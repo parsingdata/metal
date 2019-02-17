@@ -20,17 +20,16 @@ import java.util.Objects;
 import java.util.Optional;
 
 import io.parsingdata.metal.Util;
-import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
- * A {@link ValueExpression} representing a constant value.
+ * A {@link SingleValueExpression} representing a constant value.
  * <p>
  * Const has a single operand <code>value</code> (a {@link Value}). When
  * evaluated, this value is returned.
  */
-public class Const implements ValueExpression {
+public class Const implements SingleValueExpression {
 
     public final Value value;
 
@@ -39,8 +38,8 @@ public class Const implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return ImmutableList.create(Optional.of(value));
+    public Optional<Value> evalSingle(final ParseState parseState, final Encoding encoding) {
+        return Optional.of(value);
     }
 
     @Override

@@ -19,8 +19,8 @@ package io.parsingdata.metal.token;
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.Util.failure;
 import static io.parsingdata.metal.Util.success;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -62,23 +62,19 @@ public class Tie extends Token {
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        final ImmutableList<Optional<Value>> dataResult = dataExpression.eval(environment.parseState, environment.encoding);
-        if (dataResult.isEmpty()) {
-            return failure();
-        }
-        return iterate(environment.addBranch(this), dataResult, 0, environment.parseState).computeResult();
+        return iterate(environment.addBranch(this), dataExpression.eval(environment.parseState, environment.encoding), 0, environment.parseState).computeResult();
     }
 
-    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Optional<Value>> values, final int index, final ParseState returnParseState) {
+    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Value> values, final int index, final ParseState returnParseState) {
         if (values.isEmpty()) {
             return complete(() -> success(new ParseState(environment.parseState.closeBranch(this).order, returnParseState.source, returnParseState.offset, returnParseState.iterations)));
         }
-        return values.head
-            .map(value -> token
-                .parse(environment.withParseState(environment.parseState.withSource(new DataExpressionSource(dataExpression, index, environment.parseState, environment.encoding))))
+        if (values.head.equals(NOT_A_VALUE)) {
+            return complete(Util::failure);
+        }
+        return token.parse(environment.withParseState(environment.parseState.withSource(new DataExpressionSource(dataExpression, index, environment.parseState, environment.encoding))))
                 .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState), values.tail, index + 1, returnParseState)))
-                .orElseGet(() -> complete(Util::failure)))
-            .orElseGet(() -> complete(Util::failure));
+                .orElseGet(() -> complete(Util::failure));
     }
 
     @Override

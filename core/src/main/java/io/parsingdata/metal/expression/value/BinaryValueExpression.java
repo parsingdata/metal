@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Selection.reverse;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -41,8 +42,8 @@ import io.parsingdata.metal.encoding.Encoding;
  * <p>
  * For lists, values with the same index are evaluated in this manner. If
  * lists are of unequal length, the result is a list with evaluated values the
- * same size as the shortest list, appended with empty values to match the
- * size of the longest list.
+ * same size as the shortest list, appended with instances of NOT_A_VALUE to
+ * match the size of the longest list.
  * <p>
  * To implement a BinaryValueExpression, only the
  * {@link #eval(Value, Value, ParseState, Encoding)} must be implemented,
@@ -64,26 +65,34 @@ public abstract class BinaryValueExpression implements ValueExpression {
     public abstract Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding);
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
+    public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
         return evalLists(left.eval(parseState, encoding), right.eval(parseState, encoding), parseState, encoding);
     }
 
-    private ImmutableList<Optional<Value>> evalLists(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues, final ParseState parseState, final Encoding encoding) {
+    private ImmutableList<Value> evalLists(final ImmutableList<Value> leftValues, final ImmutableList<Value> rightValues, final ParseState parseState, final Encoding encoding) {
         return reverse(padList(evalLists(leftValues, rightValues, parseState, encoding, new ImmutableList<>()).computeResult(), Math.abs(leftValues.size - rightValues.size)).computeResult());
     }
 
-    private Trampoline<ImmutableList<Optional<Value>>> evalLists(final ImmutableList<Optional<Value>> leftValues, final ImmutableList<Optional<Value>> rightValues, final ParseState parseState, final Encoding encoding, final ImmutableList<Optional<Value>> result) {
+    private Trampoline<ImmutableList<Value>> evalLists(final ImmutableList<Value> leftValues, final ImmutableList<Value> rightValues, final ParseState parseState, final Encoding encoding, final ImmutableList<Value> result) {
         if (leftValues.isEmpty() || rightValues.isEmpty()) {
             return complete(() -> result);
         }
-        return intermediate(() -> evalLists(leftValues.tail, rightValues.tail, parseState, encoding, result.add(leftValues.head.flatMap(leftValue -> rightValues.head.flatMap(rightValue -> eval(leftValue, rightValue, parseState, encoding))))));
+        return intermediate(() -> evalLists(leftValues.tail, rightValues.tail, parseState, encoding, result.add(safeEval(leftValues.head, rightValues.head, parseState, encoding))));
     }
 
-    private Trampoline<ImmutableList<Optional<Value>>> padList(final ImmutableList<Optional<Value>> list, final long size) {
+    private Trampoline<ImmutableList<Value>> padList(final ImmutableList<Value> list, final long size) {
         if (size <= 0) {
             return complete(() -> list);
         }
-        return intermediate(() -> padList(list.add(Optional.empty()), size - 1));
+        return intermediate(() -> padList(list.add(NOT_A_VALUE), size - 1));
+    }
+
+    private Value safeEval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {
+        if (leftValue.equals(NOT_A_VALUE) || rightValue.equals(NOT_A_VALUE)) {
+            return NOT_A_VALUE;
+        }
+        return eval(leftValue, rightValue, parseState, encoding)
+            .orElse(NOT_A_VALUE);
     }
 
     @Override

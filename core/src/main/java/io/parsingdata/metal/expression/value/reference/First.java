@@ -28,14 +28,15 @@ import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * A {@link ValueExpression} that represents the first {@link Value} returned
+ * A {@link SingleValueExpression} that represents the first {@link Value} returned
  * by evaluating its <code>operand</code>.
  */
-public class First implements ValueExpression {
+public class First implements SingleValueExpression {
 
     public final ValueExpression operand;
 
@@ -44,12 +45,12 @@ public class First implements ValueExpression {
     }
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Optional<Value>> list = operand.eval(parseState, encoding);
-        return list.isEmpty() ? list : ImmutableList.create(getFirst(list).computeResult());
+    public Optional<Value> evalSingle(final ParseState parseState, final Encoding encoding) {
+        final ImmutableList<Value> values = operand.eval(parseState, encoding);
+        return values.isEmpty() ? Optional.empty() : Optional.of(getFirst(values).computeResult());
     }
 
-    private Trampoline<Optional<Value>> getFirst(final ImmutableList<Optional<Value>> values) {
+    private Trampoline<Value> getFirst(final ImmutableList<Value> values) {
         return values.tail.isEmpty() ? complete(() -> values.head) : intermediate(() -> getFirst(values.tail));
     }
 

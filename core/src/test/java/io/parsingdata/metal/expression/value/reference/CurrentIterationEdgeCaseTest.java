@@ -15,9 +15,8 @@
  */
 package io.parsingdata.metal.expression.value.reference;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.div;
@@ -25,7 +24,9 @@ import static io.parsingdata.metal.Shorthand.iteration;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
+import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -54,29 +55,23 @@ public class CurrentIterationEdgeCaseTest {
     }
 
     @Test
-    public void multiLevel() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Level must evaluate to a single non-empty value.");
-        iteration(ref("a")).eval(parseState, enc());
-    }
-
-    @Test
     public void emptyLevel() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Level must evaluate to a single non-empty value.");
-        iteration(last(ref("b"))).eval(parseState, enc());
+        Optional<Value> result = iteration(last(ref("b"))).evalSingle(parseState, enc());
+        assertTrue(result.isPresent());
+        assertEquals(NOT_A_VALUE, result.get());
     }
 
     @Test
-    public void emptyLevelHead() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Level must evaluate to a single non-empty value.");
-        iteration(div(con(1), con(0))).eval(parseState, enc());
+    public void notAValueLevel() {
+        Optional<Value> result = iteration(last(div(con(1), con(0)))).evalSingle(parseState, enc());
+        assertTrue(result.isPresent());
+        assertEquals(NOT_A_VALUE, result.get());
     }
 
     @Test
     public void negativeLevel() {
-        ImmutableList<Optional<Value>> value = iteration(con(-1)).eval(parseState, enc());
-        assertThat(value.head.isPresent(), is(equalTo(false)));
+        Optional<Value> result = iteration(con(-1, signed())).evalSingle(parseState, enc());
+        assertTrue(result.isPresent());
+        assertEquals(NOT_A_VALUE, result.get());
     }
 }

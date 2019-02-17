@@ -42,30 +42,30 @@ public class FoldCatTest {
 
     @Test
     public void foldCatRegular() {
-        assertEquals("abc", foldString("any").get().asString());
+        final ImmutableList<Value> string = foldString("any");
+        assertEquals(1, string.size);
+        assertEquals("abc", string.head.asString());
     }
 
     @Test
     public void foldCatEmpty() {
-        assertEquals(Optional.empty(), foldString("other"));
+        final ImmutableList<Value> noString = foldString("other");
+        assertTrue(noString.isEmpty());
     }
 
-    private Optional<Value> foldString(final String name) {
+    private ImmutableList<Value> foldString(final String name) {
         final Optional<ParseState> result =
             seq(any("any"),
                 any("any"),
                 any("any")).parse(new Environment(stream("abc", StandardCharsets.US_ASCII), enc()));
         assertTrue(result.isPresent());
-        ImmutableList<Optional<Value>> values = cat(ref(name)).eval(result.get(), enc());
-        assertEquals(1, values.size);
-        return values.head;
+        return cat(ref(name)).eval(result.get(), enc());
     }
 
     @Test
     public void foldCatEmptyResult() {
-        ImmutableList<Optional<Value>> values = cat(div(con(1), con(0))).eval(EMPTY_PARSE_STATE, enc());
-        assertEquals(1, values.size);
-        assertEquals(Optional.empty(), values.head);
+        ImmutableList<Value> values = cat(div(con(1), con(0))).eval(EMPTY_PARSE_STATE, enc());
+        assertTrue(values.isEmpty());
     }
 
 }

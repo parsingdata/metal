@@ -73,9 +73,9 @@ public class SliceTest {
         final ReadTrackingByteStream stream = new ReadTrackingByteStream(new InMemoryByteStream(toByteArray(1, 2, 3, 0, 0, 0, 4, 1)));
         final Optional<ParseState> result =
             seq(def("a", con(3)),
-                post(def("b", len(last(ref("a")))), eq(con(0, 0, 0))),
+                post(def("b", last(len(last(ref("a"))))), eq(con(0, 0, 0))),
                 def("c", con(1)),
-                post(def("d", len(last(ref("c")))), eq(con(1)))).parse(env(createFromByteStream(stream), enc()));
+                post(def("d", last(len(last(ref("c"))))), eq(con(1)))).parse(env(createFromByteStream(stream), enc()));
         assertTrue(result.isPresent());
         assertTrue(stream.containsAll(3, 4, 5, 7));
         assertTrue(stream.containsNone(0, 1, 2, 6));
@@ -98,10 +98,10 @@ public class SliceTest {
     @Test
     public void sliceToString() {
         final ParseValue pv1 = new ParseValue("name", NONE, createFromBytes(new byte[]{1, 2}), enc());
-        assertEquals("Slice(ConstantSource(0x0102)@0:2)", pv1.slice.toString());
+        assertEquals("Slice(ConstantSource(0x0102)@0:2)", pv1.slice().toString());
         final ParseState oneValueParseState = stream().add(pv1);
         final ParseState twoValueParseState = oneValueParseState.add(new ParseValue("name2", NONE, Slice.createFromSource(new DataExpressionSource(ref("name"), 0, oneValueParseState, enc()), ZERO, BigInteger.valueOf(2)).get(), enc()));
-        final String dataExpressionSliceString = getValue(twoValueParseState.order, "name2").slice.toString();
+        final String dataExpressionSliceString = getValue(twoValueParseState.order, "name2").slice().toString();
         assertTrue(dataExpressionSliceString.startsWith("Slice(DataExpressionSource(NameRef(name)[0]("));
         assertTrue(dataExpressionSliceString.endsWith(")@0:2)"));
     }

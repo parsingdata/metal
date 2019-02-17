@@ -44,12 +44,13 @@ public class BytesTest {
 
     @Test
     public void bytesEmpty() {
-        assertEquals(0, bytes(ref("random")).eval(EMPTY_PARSE_STATE, enc()).size);
+        assertTrue(bytes(ref("random")).eval(EMPTY_PARSE_STATE, enc()).isEmpty());
     }
 
     @Test
     public void bytesListContainsOnlyEmpty() {
-        assertEquals(0, bytes(div(con(1), con(0))).eval(EMPTY_PARSE_STATE, enc()).size);
+        final ImmutableList<Value> result = bytes(div(con(1), con(0))).eval(EMPTY_PARSE_STATE, enc());
+        assertEquals(0, result.size);
     }
 
     @Test
@@ -62,12 +63,12 @@ public class BytesTest {
                 def("divider", con(1)),
                 def("divider", con(1))).parse(env(stream(1, 0, 127, 127, 127, 0, 255, 0, 1)));
         assertTrue(result.isPresent());
-        final ImmutableList<Optional<Value>> bytesAfterDivision = bytes(div(ref("value"), ref("divider"))).eval(result.get(), enc());
+        final ImmutableList<Value> bytesAfterDivision = bytes(div(ref("value"), ref("divider"))).eval(result.get(), enc());
         assertEquals(3, bytesAfterDivision.size); // 1 of the first division, 0 of the second, 2 of the third
-        assertEquals(1, bytesAfterDivision.head.get().asNumeric().intValueExact()); // first value (0x0100) / first divider (0xFF)
+        assertEquals(1, bytesAfterDivision.head.asNumeric().intValueExact()); // first value (0x0100) / first divider (0xFF)
         // second division result is missing because of division by zero
-        assertEquals(0, bytesAfterDivision.tail.head.get().asNumeric().intValueExact()); // third value (0x7F00) / third divider (0x01), right byte
-        assertEquals(127, bytesAfterDivision.tail.tail.head.get().asNumeric().intValueExact()); // left byte
+        assertEquals(0, bytesAfterDivision.tail.head.asNumeric().intValueExact()); // third value (0x7F00) / third divider (0x01), right byte
+        assertEquals(127, bytesAfterDivision.tail.tail.head.asNumeric().intValueExact()); // left byte
     }
 
 }

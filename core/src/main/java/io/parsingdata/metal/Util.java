@@ -28,6 +28,7 @@ import java.util.zip.Inflater;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.CoreValue;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -94,7 +95,7 @@ public final class Util {
             @Override
             public Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding) {
                 final Inflater inf = new Inflater(true);
-                inf.setInput(value.getValue());
+                inf.setInput(value.value());
                 final byte[] dataReceiver = new byte[512];
                 final ByteArrayOutputStream out = new ByteArrayOutputStream();
                 while(!inf.finished()) {
@@ -105,7 +106,7 @@ public final class Util {
                         return Optional.empty();
                     }
                 }
-                return Optional.of(new Value(Slice.createFromBytes(out.toByteArray()), encoding));
+                return Optional.of(new CoreValue(Slice.createFromBytes(out.toByteArray()), encoding));
             }
         };
     }

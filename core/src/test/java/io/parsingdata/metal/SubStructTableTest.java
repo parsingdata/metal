@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
@@ -46,7 +47,7 @@ public class SubStructTableTest {
 
     private final Token table =
         seq(def("tableSize", con(1)),
-            repn(def("pointer", con(1)), ref("tableSize")),
+            repn(def("pointer", con(1)), last(ref("tableSize"))),
             sub(struct, ref("pointer")));
 
     @Test
@@ -94,7 +95,7 @@ public class SubStructTableTest {
         assertTrue(graph.head.isGraph());
         assertEquals(84, graph.head.asGraph().head.asValue().asNumeric().intValueExact());
         assertEquals(42, graph.tail.head.asGraph().head.asValue().asNumeric().intValueExact());
-        assertEquals(offsetHeader, graph.tail.head.asGraph().head.asValue().slice.offset.intValueExact());
+        assertEquals(offsetHeader, graph.tail.head.asGraph().head.asValue().slice().offset.intValueExact());
     }
 
 }

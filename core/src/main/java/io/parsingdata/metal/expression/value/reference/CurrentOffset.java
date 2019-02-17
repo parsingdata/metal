@@ -22,21 +22,20 @@ import static io.parsingdata.metal.expression.value.ConstantFactory.createFromNu
 import java.util.Optional;
 
 import io.parsingdata.metal.Util;
-import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.Value;
-import io.parsingdata.metal.expression.value.ValueExpression;
 
 /**
- * A {@link ValueExpression} that represents the current offset in the
+ * A {@link SingleValueExpression} that represents the current offset in the
  * {@link ParseState}.
  */
-public class CurrentOffset implements ValueExpression {
+public class CurrentOffset implements SingleValueExpression {
 
     @Override
-    public ImmutableList<Optional<Value>> eval(final ParseState parseState, final Encoding encoding) {
-        return ImmutableList.create(Optional.of(createFromNumeric(parseState.offset, DEFAULT_ENCODING)));
+    public Optional<Value> evalSingle(final ParseState parseState, final Encoding encoding) {
+        return Optional.of(createFromNumeric(parseState.offset, DEFAULT_ENCODING));
     }
 
     @Override

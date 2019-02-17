@@ -21,10 +21,10 @@ import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.format;
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.math.BigInteger;
 import java.util.Objects;
-import java.util.Optional;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
@@ -67,19 +67,20 @@ public class DataExpressionSource extends Source {
 
     private synchronized byte[] getValue() {
         if (cache == null) {
-            final ImmutableList<Optional<Value>> results = dataExpression.eval(parseState, encoding);
+            final ImmutableList<Value> results = dataExpression.eval(parseState, encoding);
             if (results.size <= index) {
                 throw new IllegalStateException(format("ValueExpression dataExpression yields %d result(s) (expected at least %d).", results.size, index+1));
             }
-            cache = getValueAtIndex(results, index, 0)
-                .computeResult()
-                .map(Value::getValue)
-                .orElseThrow(() -> new IllegalStateException(format("ValueExpression dataExpression yields empty Value at index %d.", index)));
+            final Value cacheValue = getValueAtIndex(results, index, 0).computeResult();
+            if (cacheValue.equals(NOT_A_VALUE)) {
+                throw new IllegalStateException(format("ValueExpression dataExpression yields NOT_A_VALUE at index %d.", index));
+            }
+            cache = cacheValue.value();
         }
         return cache;
     }
 
-    private Trampoline<Optional<Value>> getValueAtIndex(final ImmutableList<Optional<Value>> results, final int index, final int current) {
+    private Trampoline<Value> getValueAtIndex(final ImmutableList<Value> results, final int index, final int current) {
         if (index == current) {
             return complete(() -> results.head);
         }

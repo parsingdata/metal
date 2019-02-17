@@ -18,6 +18,8 @@ package io.parsingdata.metal.expression.value.arithmetic;
 
 import static java.math.BigInteger.ZERO;
 
+import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
+
 import java.util.Optional;
 
 import io.parsingdata.metal.data.ParseState;
@@ -42,7 +44,7 @@ public class Div extends BinaryValueExpression {
     @Override
     public Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {
         if (rightValue.asNumeric().equals(ZERO)) {
-            return Optional.empty();
+            return Optional.of(NOT_A_VALUE);
         }
         return Optional.of(ConstantFactory.createFromNumeric(leftValue.asNumeric().divide(rightValue.asNumeric()), encoding));
     }
