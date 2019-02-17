@@ -56,7 +56,11 @@ public abstract class ComparisonExpression implements Expression {
 
     @Override
     public boolean eval(final ParseState parseState, final Encoding encoding) {
-        final ImmutableList<Value> values = value == null ? parseState.order.current().map(ImmutableList::<Value>create).orElseGet(ImmutableList::new) : value.eval(parseState, encoding);
+        final ImmutableList<Value> values = value == null
+            ? parseState.order.current()
+                .map(ImmutableList::<Value>create)
+                .orElseGet(ImmutableList::new)
+            : value.eval(parseState, encoding);
         if (values.isEmpty()) {
             return false;
         }

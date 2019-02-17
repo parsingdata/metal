@@ -72,7 +72,8 @@ public abstract class UnaryValueExpression implements ValueExpression {
         if (value.equals(NOT_A_VALUE)) {
             return NOT_A_VALUE;
         }
-        return eval(value, parseState, encoding).orElse(NOT_A_VALUE);
+        return eval(value, parseState, encoding)
+            .orElse(NOT_A_VALUE);
     }
 
     @Override

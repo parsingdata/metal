@@ -70,7 +70,8 @@ public abstract class Fold implements SingleValueExpression {
         if (containsNotAValue(unpreparedValues).computeResult()) {
             return Optional.of(NOT_A_VALUE);
         }
-        final ImmutableList<Value> valueList = initialValue.map(value -> prepareValues(unpreparedValues).add(value)).orElseGet(() -> prepareValues(unpreparedValues));
+        final ImmutableList<Value> valueList = initialValue.map(value -> prepareValues(unpreparedValues).add(value))
+            .orElseGet(() -> prepareValues(unpreparedValues));
         return Optional.of(fold(parseState, encoding, reducer, valueList.head, valueList.tail).computeResult());
     }
 

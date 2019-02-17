@@ -40,7 +40,9 @@ public interface SingleValueExpression extends ValueExpression {
 
     @Override
     default ImmutableList<Value> eval(ParseState parseState, Encoding encoding) {
-        return evalSingle(parseState, encoding).map(ImmutableList::create).orElseGet(ImmutableList::new);
+        return evalSingle(parseState, encoding)
+            .map(ImmutableList::create)
+            .orElseGet(ImmutableList::new);
     }
 
 }
