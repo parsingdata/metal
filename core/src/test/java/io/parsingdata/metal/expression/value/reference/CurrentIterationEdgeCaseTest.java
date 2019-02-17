@@ -62,7 +62,7 @@ public class CurrentIterationEdgeCaseTest {
     }
 
     @Test
-    public void NotAValueLevel() {
+    public void notAValueLevel() {
         Optional<Value> result = iteration(last(div(con(1), con(0)))).evalSingle(parseState, enc());
         assertTrue(result.isPresent());
         assertEquals(NOT_A_VALUE, result.get());
