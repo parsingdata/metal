@@ -194,7 +194,7 @@ public final class Shorthand {
     public static ValueExpression nth(final ValueExpression values, final ValueExpression indices) { return new Nth(values, indices); }
     public static ValueExpression offset(final ValueExpression operand) { return new Offset(operand); }
     public static SingleValueExpression iteration(final int level) { return iteration(con(level)); }
-    public static SingleValueExpression iteration(final ValueExpression level) { return new CurrentIteration(level); }
+    public static SingleValueExpression iteration(final SingleValueExpression level) { return new CurrentIteration(level); }
     public static ValueExpression cat(final ValueExpression left, final ValueExpression right) { return new Cat(left, right); }
     public static SingleValueExpression cat(final ValueExpression operand) { return new FoldCat(operand); }
     public static ValueExpression elvis(final ValueExpression left, final ValueExpression right) { return new Elvis(left, right); }
