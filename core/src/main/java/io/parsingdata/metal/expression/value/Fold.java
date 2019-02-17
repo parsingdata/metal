@@ -93,10 +93,10 @@ public abstract class Fold implements SingleValueExpression {
         if (list.isEmpty()) {
             return complete(() -> false);
         }
-        if (!list.head.equals(NOT_A_VALUE)) {
-            return intermediate(() -> containsNotAValue(list.tail));
+        if (list.head.equals(NOT_A_VALUE)) {
+            return complete(() -> true);
         }
-        return complete(() -> true);
+        return intermediate(() -> containsNotAValue(list.tail));
     }
 
     protected abstract ImmutableList<Value> prepareValues(ImmutableList<Value> valueList);

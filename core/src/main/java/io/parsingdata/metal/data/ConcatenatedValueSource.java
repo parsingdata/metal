@@ -44,8 +44,8 @@ public class ConcatenatedValueSource extends Source {
         this.length = checkNotNegative(length, "length");
     }
 
-    public static Optional<ConcatenatedValueSource> create(final ImmutableList<Value> optionalValues) {
-        final ImmutableList<Value> values = reverse(optionalValues);
+    public static Optional<ConcatenatedValueSource> create(final ImmutableList<Value> inputValues) {
+        final ImmutableList<Value> values = reverse(inputValues);
         final BigInteger length = calculateTotalSize(values);
         if (length.compareTo(ZERO) == 0) {
             return Optional.empty();

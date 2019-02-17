@@ -27,8 +27,8 @@ import io.parsingdata.metal.encoding.Encoding;
  * {@link #eval(ParseState, Encoding)} method. It yields a list of
  * {@link Value} objects.
  * <p>
- * As context, it receives the current <code>ParseState</code> object as
- * well as the current <code>Encoding</code> object.
+ * As context, it receives the current {@link ParseState} object as
+ * well as the current {@link Encoding} object.
  */
 @FunctionalInterface
 public interface ValueExpression {
