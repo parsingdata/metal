@@ -65,7 +65,7 @@ public class Scope implements ValueExpression {
 
     private Trampoline<ParseGraph> findScope(final ImmutableList<ParseGraph> scopeList, final int size) {
         if (size == 0) { return complete(() -> scopeList.head); }
-        return intermediate(() -> findScope(scopeList, size - 1));
+        return intermediate(() -> findScope(scopeList.tail, size - 1));
     }
 
     @Override
