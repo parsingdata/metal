@@ -31,7 +31,24 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.token.Token;
 
+/**
+ * A {@link ValueExpression} that prunes the {@link ParseState#order} field to
+ * let a nested {@link ValueExpression} have only a scoped view.
+ * <p>
+ * A Scope expression has two operands: <code>scopedValueExpression</code> (a
+ * {@link ValueExpression} and <code>scopeSize</code> (a
+ * {@link SingleValueExpression}). The <code>scopeSize</code> operand is first
+ * evaluated, if it evaluates to <code>NOT_A_VALUE</code> or a negative value
+ * an {@link IllegalArgumentException} is thrown. Otherwise the
+ * <code>order</code> field of the <code>parseState</code> argument is pruned.
+ * This is done by removing all enclosing scopes above the amount specified by
+ * <code>scopeSize</code>. An enclosing scope is defined as an unclosed branch
+ * in the {@link ParseGraph} that has a scope delimiting {@link Token} as its
+ * <code>definition</code>. Next, the <code>scopedValueExpression</code> is
+ * evaluated with this pruned {@link ParseGraph} in the {@link ParseState}.
+ */
 public class Scope implements ValueExpression {
 
     public final ValueExpression scopedValueExpression;
