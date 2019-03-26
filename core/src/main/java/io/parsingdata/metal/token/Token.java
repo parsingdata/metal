@@ -75,6 +75,10 @@ public abstract class Token {
 
     protected abstract Optional<ParseState> parseImpl(final Environment environment);
 
+    public boolean isScopeDelimiter() {
+        return false;
+    }
+
     public boolean isLocal() {
         return true;
     }

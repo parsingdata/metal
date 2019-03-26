@@ -63,6 +63,11 @@ public abstract class IterableToken extends Token {
     }
 
     @Override
+    public boolean isScopeDelimiter() {
+        return true;
+    }
+
+    @Override
     public boolean isIterable() {
         return true;
     }
