@@ -60,6 +60,7 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.rev;
+import static io.parsingdata.metal.Shorthand.scope;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.tie;
@@ -124,7 +125,7 @@ public class ToStringTest {
     }
 
     private ValueExpression v() {
-        return fold(foldLeft(foldRight(rev(bytes(neg(add(div(mod(mul(sub(cat(last(ref(n()))), first(nth(exp(ref(n()), con(NOT_A_VALUE)), con(1)))), sub(CURRENT_ITERATION, con(1))), cat(ref(n()), ref(t()))), add(SELF, add(offset(ref(n())), add(CURRENT_OFFSET, count(ref(n())))))), elvis(ref(n()), ref(n())))))), Shorthand::add, last(ref(n()))), Shorthand::add), Shorthand::add, last(ref(n())));
+        return fold(foldLeft(foldRight(rev(bytes(neg(add(div(mod(mul(sub(cat(scope(last(ref(n())), con(0))), first(nth(exp(ref(n()), con(NOT_A_VALUE)), con(1)))), sub(CURRENT_ITERATION, con(1))), cat(ref(n()), ref(t()))), add(SELF, add(offset(ref(n())), add(CURRENT_OFFSET, count(ref(n())))))), elvis(ref(n()), ref(n())))))), Shorthand::add, last(ref(n()))), Shorthand::add), Shorthand::add, last(ref(n())));
     }
 
     @Test
