@@ -49,14 +49,14 @@ public class ScopeTest {
     public final ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void NotAValueScopeSize() {
+    public void notAValueScopeSize() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Argument scopeSize must evaluate to a positive, non-empty countable value.");
         new Scope(con(0), EMPTY_SVE).eval(EMPTY_PARSE_STATE, enc());
     }
 
     @Test
-    public void NegativeScopeSize() {
+    public void negativeScopeSize() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Argument scopeSize must evaluate to a positive, non-empty countable value.");
         new Scope(con(0), con(-1, signed())).eval(EMPTY_PARSE_STATE, enc());
