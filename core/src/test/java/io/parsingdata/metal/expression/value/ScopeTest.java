@@ -23,7 +23,7 @@ import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.first;
 import static io.parsingdata.metal.Shorthand.ref;
-import static io.parsingdata.metal.Shorthand.rep;
+import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.scope;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.expression.value.BytesTest.EMPTY_PARSE_STATE;
@@ -66,7 +66,7 @@ public class ScopeTest {
     public void scopeSizes() {
         final Token scopesToken =
             seq(any("value"),
-                rep(seq(any("value"),
+                repn(seq(any("value"),
                         seq(any("value"),
                             def("deepestValue", con(1), eq(first(scope(ref("value"), con(0))))),
                             def("middleValue", con(1), eq(first(scope(ref("value"), con(1))))),
@@ -74,7 +74,7 @@ public class ScopeTest {
                             def("topValue", con(1), eq(first(scope(ref("value"), con(3))))),
                             def("hugeScope", con(1), eq(first(scope(ref("value"), con(100)))))
                         )
-                    )
+                    ), con(1)
                 )
             );
         final Optional<ParseState> result = scopesToken.parse(env(stream(0, 1, 2, 2, 1, 1, 0, 0), enc()));
