@@ -64,7 +64,7 @@ public class Scope implements ValueExpression {
         return scopeSize.evalSingle(parseState, encoding)
             .filter(sizeValue -> !sizeValue.equals(NOT_A_VALUE) && sizeValue.asNumeric().compareTo(ZERO) >= 0)
             .map(sizeValue -> scopedValueExpression.eval(parseState.withOrder(calculateScope(parseState.order, sizeValue.asNumeric().intValueExact())), encoding))
-            .orElseThrow(() -> new IllegalArgumentException("Argument scopeSize must evaluate to a positive, non-empty countable value."));
+            .orElseThrow(() -> new IllegalArgumentException("Argument scopeSize must evaluate to a positive, countable value."));
 
     }
 
