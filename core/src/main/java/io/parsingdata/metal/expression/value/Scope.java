@@ -76,7 +76,7 @@ public class Scope implements ValueExpression {
 
     private Trampoline<ImmutableList<ParseGraph>> createScopeList(final ParseGraph order, final ImmutableList<ParseGraph> list) {
         final ImmutableList<ParseGraph> newList = order.getDefinition().isScopeDelimiter() ? list.add(order) : list;
-        if (!order.head.isGraph()) { return complete(() -> list); }
+        if (order.isEmpty() || !order.head.isGraph()) { return complete(() -> list); }
         return intermediate(() -> createScopeList(order.head.asGraph(), newList));
     }
 
