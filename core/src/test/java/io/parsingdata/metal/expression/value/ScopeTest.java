@@ -16,8 +16,12 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static java.math.BigInteger.ZERO;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import static io.parsingdata.metal.Shorthand.EMPTY;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
@@ -26,6 +30,7 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.scope;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.tie;
 import static io.parsingdata.metal.expression.value.BytesTest.EMPTY_PARSE_STATE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
@@ -84,6 +89,28 @@ public class ScopeTest {
             );
         final Optional<ParseState> result = scopesToken.parse(env(stream(0, 1, 2, 2, 1, 1, 0, 0), enc()));
         assertTrue(result.isPresent());
+    }
+
+    @Test
+    public void parseGraphWithEmptyBranch() {
+        final Token A =
+            seq("A",
+                repn("data", def("data", con(1)), first(con(5))),
+                EMPTY);
+        final Token S2 =
+            seq("S",
+                seq("a",
+                    A,
+                    EMPTY),
+                tie("dx", def("dx_", con(1)), scope(ref("S.a.A.data.data"), con(0))));
+        final Optional<ParseState> result = S2.parse(env(stream(0, 0, 0, 0, 0), enc()));
+        assertEquals(5L, ref("dx_").eval(result.get(), enc()).size);
+    }
+
+    @Test
+    public void parseGraphWithEmptyBranchSimplified() {
+        final Optional<ParseState> result = def("a", first(scope(con(1), con(0)))).parse(env(stream(0)));
+        assertEquals(ZERO, ref("a").eval(result.get(), enc()).head.asNumeric());
     }
 
 }
