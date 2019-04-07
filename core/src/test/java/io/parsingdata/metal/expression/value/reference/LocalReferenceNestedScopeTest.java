@@ -26,8 +26,10 @@ import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.count;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.first;
 import static io.parsingdata.metal.Shorthand.nth;
 import static io.parsingdata.metal.Shorthand.ref;
+import static io.parsingdata.metal.Shorthand.scope;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.token;
@@ -77,9 +79,9 @@ public class LocalReferenceNestedScopeTest {
         nestedScopes(eq(nth(ref("left"), sub(count(ref("left")), count(ref("right"))))));
     }
 
-//    @Test
-//    public void testNestedScopesLocalReferenced() {
-//        nestedScopes(eq(last(lref("left"))));
-//    }
+    @Test
+    public void testNestedScopesLocalReferenced() {
+        nestedScopes(eq(first(scope(ref("left"), con(0)))));
+    }
 
 }

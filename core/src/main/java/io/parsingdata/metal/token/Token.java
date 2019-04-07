@@ -25,8 +25,11 @@ import java.util.Optional;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
+import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.Scope;
+import io.parsingdata.metal.expression.value.reference.CurrentIteration;
 
 /**
  * Base class for all Token implementations.
@@ -75,14 +78,44 @@ public abstract class Token {
 
     protected abstract Optional<ParseState> parseImpl(final Environment environment);
 
+    /**
+     * The {@link Scope} ValueExpression uses this property to determine which
+     * part of the {@link ParseState}'s <code>order</code> (the {@link
+     * ParseGraph}) field is considered to be in scope. The Tokens considered
+     * to be scope delimiters are {@link Seq} and subclasses of {@link
+     * IterableToken}.
+     * @return a boolean that specifies whether this Token is a scope delimiter
+     */
+    public boolean isScopeDelimiter() {
+        return false;
+    }
+
+    /**
+     * The {@link Sub} Token uses this property as part of its cycle detection
+     * algorithm. The only non-local Token is {@link Sub} itself, since it
+     * parses not at the current but at a calculated location.
+     * @return a boolean that specifies whether this Token is local
+     */
     public boolean isLocal() {
         return true;
     }
 
+    /**
+     * The {@link CurrentIteration} ValueExpression uses this property to
+     * determine which iteration is requested in its operand. Iterable Tokens
+     * are all subclasses of {@link IterableToken}.
+     * @return a boolean that specifies whether this Token is iterable
+     */
     public boolean isIterable() {
         return false;
     }
 
+    /**
+     * Returns the Token it represents. In the case of {@link TokenRef}, this
+     * means the Token it refers to instead of the TokenRef itself.
+     * @param parseState the current {@link ParseState}
+     * @return the Token represented by this Token
+     */
     public Token getCanonical(final ParseState parseState) {
         return this;
     }

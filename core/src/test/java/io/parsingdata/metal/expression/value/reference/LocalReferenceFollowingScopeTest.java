@@ -28,6 +28,7 @@ import static io.parsingdata.metal.Shorthand.fold;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
+import static io.parsingdata.metal.Shorthand.scope;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
@@ -74,9 +75,9 @@ public class LocalReferenceFollowingScopeTest {
         followingScopes(eqNum(sub(count(ref("ten")), sub(fold(ref("tenCount"), Shorthand::add), last(ref("tenCount"))))));
     }
 
-//    @Test
-//    public void testFollowingScopesLocalReferenced() {
-//        followingScopes(eqNum(count(lref("ten"))));
-//    }
+    @Test
+    public void testFollowingScopesLocalReferenced() {
+        followingScopes(eqNum(count(scope(ref("ten"), con(0)))));
+    }
 
 }

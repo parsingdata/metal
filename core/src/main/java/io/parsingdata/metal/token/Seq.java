@@ -67,6 +67,11 @@ public class Seq extends Token {
     }
 
     @Override
+    public boolean isScopeDelimiter() {
+        return true;
+    }
+
+    @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + makeNameFragment() + tokens + ")";
     }

@@ -52,6 +52,7 @@ import io.parsingdata.metal.expression.value.FoldCat;
 import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
 import io.parsingdata.metal.expression.value.Reverse;
+import io.parsingdata.metal.expression.value.Scope;
 import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
@@ -210,6 +211,7 @@ public final class Shorthand {
     public static BinaryValueExpression mapLeft(final BiFunction<ValueExpression, ValueExpression, BinaryValueExpression> func, final ValueExpression left, final ValueExpression rightExpand) { return func.apply(left, exp(rightExpand, count(left))); }
     public static BinaryValueExpression mapRight(final BiFunction<ValueExpression, ValueExpression, BinaryValueExpression> func, final ValueExpression leftExpand, final ValueExpression right) { return func.apply(exp(leftExpand, count(right)), right); }
     public static ValueExpression bytes(final ValueExpression operand) { return new Bytes(operand); }
+    public static ValueExpression scope(final ValueExpression scopedValueExpression, final SingleValueExpression scopeSize) { return new Scope(scopedValueExpression, scopeSize); }
 
     public static BinaryLogicalExpression and(final Expression left, final Expression right) { return new And(left, right); }
     public static BinaryLogicalExpression or(final Expression left, final Expression right) { return new Or(left, right); }

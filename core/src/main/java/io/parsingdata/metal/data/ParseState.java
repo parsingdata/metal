@@ -80,6 +80,10 @@ public class ParseState {
         return newOffset.compareTo(ZERO) >= 0 ? Optional.of(new ParseState(order, source, newOffset, iterations)) : Optional.empty();
     }
 
+    public ParseState withOrder(final ParseGraph order) {
+        return new ParseState(order, source, offset, iterations);
+    }
+
     public ParseState withSource(final Source source) {
         return new ParseState(order, source, ZERO, iterations);
     }
