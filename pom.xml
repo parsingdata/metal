@@ -56,7 +56,7 @@
 
     <junit.version>4.12</junit.version>
 
-    <jacoco-plugin.version>0.8.3</jacoco-plugin.version>
+    <jacoco-plugin.version>0.8.4</jacoco-plugin.version>
     <reports-plugin.version>3.0.0</reports-plugin.version>
     <findbugs-plugin.version>3.0.5</findbugs-plugin.version>
     <pmd-plugin.version>3.12.0</pmd-plugin.version>
