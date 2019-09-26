@@ -51,14 +51,11 @@
 
   <properties>
     <encoding>UTF-8</encoding>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
 
     <junit.version>4.12</junit.version>
 
     <jacoco-plugin.version>0.8.4</jacoco-plugin.version>
     <reports-plugin.version>3.0.0</reports-plugin.version>
-    <findbugs-plugin.version>3.0.5</findbugs-plugin.version>
     <pmd-plugin.version>3.12.0</pmd-plugin.version>
     <jxr-plugin.version>3.0.0</jxr-plugin.version>
     <javadoc-plugin.version>3.1.1</javadoc-plugin.version>
@@ -69,6 +66,7 @@
     <maven-jar-plugin.version>3.1.2</maven-jar-plugin.version>
     <maven-site-plugin.version>3.8.2</maven-site-plugin.version>
     <maven-project-info-reports.version>3.0.0</maven-project-info-reports.version>
+    <maven-compiler.version>3.8.1</maven-compiler.version>
   </properties>
 
   <profiles>
@@ -100,6 +98,14 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <release>11</release>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -184,16 +190,6 @@
 
   <reporting>
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>findbugs-maven-plugin</artifactId>
-        <version>${findbugs-plugin.version}</version>
-        <configuration>
-          <effort>Max</effort>
-          <threshold>Low</threshold>
-          <omitVisitors>DumbMethods</omitVisitors>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
