@@ -174,7 +174,7 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
+<!--      <plugin>
         <groupId>org.pitest</groupId>
         <artifactId>pitest-maven</artifactId>
         <version>${pitest-maven.version}</version>
@@ -194,7 +194,7 @@
             <param>io.parsingdata.metal.*</param>
           </targetTests>
         </configuration>
-      </plugin>
+      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>

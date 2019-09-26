@@ -31,7 +31,7 @@
     </dependency>
   </dependencies>
 
-  <reporting>
+<!--  <reporting>
     <plugins>
       <plugin>
         <groupId>org.pitest</groupId>
@@ -46,5 +46,5 @@
         </reportSets>
       </plugin>
     </plugins>
-  </reporting>
+  </reporting>-->
 </project>
