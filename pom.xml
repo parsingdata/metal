@@ -52,21 +52,20 @@
   <properties>
     <encoding>UTF-8</encoding>
 
-    <junit.version>4.12</junit.version>
+    <junit.version>4.13</junit.version>
 
-    <jacoco-plugin.version>0.8.4</jacoco-plugin.version>
-    <reports-plugin.version>3.0.0</reports-plugin.version>
-    <pmd-plugin.version>3.12.0</pmd-plugin.version>
+    <jacoco-plugin.version>0.8.5</jacoco-plugin.version>
+    <reports-plugin.version>3.1.0</reports-plugin.version>
+    <pmd-plugin.version>3.13.0</pmd-plugin.version>
     <jxr-plugin.version>3.0.0</jxr-plugin.version>
-    <javadoc-plugin.version>3.1.1</javadoc-plugin.version>
+    <javadoc-plugin.version>3.2.0</javadoc-plugin.version>
     <nexus-staging-plugin.version>1.6.8</nexus-staging-plugin.version>
     <gpg-plugin.version>1.6</gpg-plugin.version>
-    <source-plugin.version>3.1.0</source-plugin.version>
-    <pitest-maven.version>1.4.10</pitest-maven.version>
-    <maven-jar-plugin.version>3.1.2</maven-jar-plugin.version>
-    <maven-site-plugin.version>3.8.2</maven-site-plugin.version>
-    <maven-project-info-reports.version>3.0.0</maven-project-info-reports.version>
-    <maven-compiler.version>3.8.1</maven-compiler.version>
+    <source-plugin.version>3.2.1</source-plugin.version>
+    <pitest-maven.version>1.5.2</pitest-maven.version>
+    <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+    <maven-site-plugin.version>3.9.1</maven-site-plugin.version>
+    <maven-project-info-reports.version>3.1.0</maven-project-info-reports.version>
   </properties>
 
   <profiles>
