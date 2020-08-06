@@ -64,7 +64,7 @@ public class CurrentIteration implements SingleValueExpression {
     @Override
     public Optional<Value> evalSingle(final ParseState parseState, final Encoding encoding) {
         final Optional<Value> levelValue = level.evalSingle(parseState, encoding);
-        if (!levelValue.isPresent() || levelValue.get().equals(NOT_A_VALUE) || levelValue.get().asNumeric().compareTo(ZERO) < 0) {
+        if (levelValue.isEmpty() || levelValue.get().equals(NOT_A_VALUE) || levelValue.get().asNumeric().compareTo(ZERO) < 0) {
             return Optional.of(NOT_A_VALUE);
         }
         if (parseState.iterations.size <= levelValue.get().asNumeric().longValueExact()) {

@@ -38,7 +38,7 @@ public final class ByType {
             return new ImmutableList<>();
         }
         final ParseItem head = graph.head;
-        if (head.isReference() && !head.asReference().resolve(root).isPresent()) { throw new IllegalStateException("A ParseReference must point to an existing graph."); }
+        if (head.isReference() && head.asReference().resolve(root).isEmpty()) { throw new IllegalStateException("A ParseReference must point to an existing graph."); }
         return getReferences(graph.tail, root).add(head.isGraph() ? getReferences(head.asGraph(), root) : (head.isReference() ? ImmutableList.create(head.asReference().resolve(root)) : new ImmutableList<>()));
     }
 
