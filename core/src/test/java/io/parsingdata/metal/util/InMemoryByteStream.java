@@ -42,7 +42,7 @@ public class InMemoryByteStream implements ByteStream {
 
     @Override
     public boolean isAvailable(final BigInteger offset, final BigInteger length) {
-        return offset.intValueExact() + length.intValueExact() <= data.length;
+        return offset.add(length).compareTo(BigInteger.valueOf(data.length)) <= 0;
     }
 
     @Override
