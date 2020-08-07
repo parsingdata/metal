@@ -61,7 +61,7 @@ public class ReadTrackingByteStream implements ByteStream {
     }
 
     @Override
-    public boolean isAvailable(final BigInteger offset, final int length) {
+    public boolean isAvailable(final BigInteger offset, final BigInteger length) {
         return byteStream.isAvailable(offset, length);
     }
 

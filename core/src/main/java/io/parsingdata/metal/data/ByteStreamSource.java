@@ -49,7 +49,7 @@ public class ByteStreamSource extends Source {
 
     @Override
     protected boolean isAvailable(final BigInteger offset, final BigInteger length) {
-        return input.isAvailable(checkNotNegative(offset, "offset"), checkNotNegative(length, "length").intValueExact());
+        return input.isAvailable(checkNotNegative(offset, "offset"), checkNotNegative(length, "length"));
     }
 
     @Override
