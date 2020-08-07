@@ -32,14 +32,15 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.math.BigInteger;
 
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.Selection;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class DefTest {
 
@@ -69,10 +70,17 @@ public class DefTest {
     }
 
     @Test
-    public void longSize() {
+    public void hugeSize() {
         final Token def = def("data", Long.MAX_VALUE);
-        final ByteStream stream = new InfiniteZeroByteStream();
-        final ParseState state = ParseState.createFromByteStream(stream, BigInteger.ONE);
+        final ByteStream infiniteZeroStream = new ByteStream() {
+            @Override public byte[] read(final BigInteger offset, final int length) {
+                return new byte[length];
+            }
+            @Override public boolean isAvailable(final BigInteger offset, final BigInteger length) {
+                return true;
+            }
+        };
+        final ParseState state = ParseState.createFromByteStream(infiniteZeroStream, BigInteger.ONE);
         final Environment environment = new Environment(state, enc());
 
         final ParseState result = def.parse(environment).get();
@@ -80,19 +88,6 @@ public class DefTest {
 
         assertThat(data.slice().offset, is(equalTo(BigInteger.ONE)));
         assertThat(data.slice().length, is(equalTo(BigInteger.valueOf(Long.MAX_VALUE))));
-    }
-
-    private static final class InfiniteZeroByteStream implements ByteStream {
-
-        @Override
-        public byte[] read(final BigInteger offset, final int length) {
-            return new byte[length];
-        }
-
-        @Override
-        public boolean isAvailable(final BigInteger offset, final BigInteger length) {
-            return true;
-        }
     }
 
 }
