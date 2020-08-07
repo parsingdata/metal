@@ -23,6 +23,6 @@ public interface ByteStream {
 
     byte[] read(BigInteger offset, int length) throws IOException;
 
-    boolean isAvailable(BigInteger offset, int length);
+    boolean isAvailable(BigInteger offset, BigInteger length);
 
 }

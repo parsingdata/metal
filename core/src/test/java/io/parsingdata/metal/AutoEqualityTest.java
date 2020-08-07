@@ -138,7 +138,7 @@ public class AutoEqualityTest {
 
     public static final ByteStream DUMMY_STREAM = new ByteStream() {
         @Override public byte[] read(BigInteger offset, int length) { return new byte[0]; }
-        @Override public boolean isAvailable(BigInteger offset, int length) { return false; }
+        @Override public boolean isAvailable(BigInteger offset, BigInteger length) { return false; }
     };
 
     private static final ParseValue PARSE_VALUE = new ParseValue("a", any("a"), createFromBytes(new byte[]{1, 2}), enc());
