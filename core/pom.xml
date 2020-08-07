@@ -3,7 +3,7 @@
   <parent>
     <groupId>io.parsingdata</groupId>
     <artifactId>metal</artifactId>
-    <version>8.0.0</version>
+    <version>9.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>metal-core</artifactId>
   <name>${project.groupId}:${project.artifactId}</name>
@@ -36,21 +36,4 @@
       </plugin>
     </plugins>
   </build>
-  
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.pitest</groupId>
-        <artifactId>pitest-maven</artifactId>
-        <version>${pitest-maven.version}</version>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>report</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-    </plugins>
-  </reporting>
 </project>

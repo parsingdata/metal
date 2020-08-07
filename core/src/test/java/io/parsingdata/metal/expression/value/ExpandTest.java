@@ -77,8 +77,7 @@ public class ExpandTest {
 
     @Test
     public void expandValue() {
-        ImmutableList<Value> optionalResult = exp(con(VALUE_1), con(SIZE)).eval(EMPTY_PARSE_STATE, enc());
-        ImmutableList<Value> result = optionalResult;
+        ImmutableList<Value> result = exp(con(VALUE_1), con(SIZE)).eval(EMPTY_PARSE_STATE, enc());
         assertEquals(SIZE, result.size);
         for (int i = 0; i < SIZE; i++) {
             assertEquals(VALUE_1, result.head.asNumeric().intValueExact());
@@ -88,8 +87,7 @@ public class ExpandTest {
 
     @Test
     public void expandList() {
-        ImmutableList<Value> optionalResult = exp(ref("a"), con(SIZE)).eval(createFromByteStream(DUMMY_STREAM).add(PARSEVALUE_2).add(PARSEVALUE_1), enc());
-        ImmutableList<Value> result = optionalResult;
+        ImmutableList<Value> result = exp(ref("a"), con(SIZE)).eval(createFromByteStream(DUMMY_STREAM).add(PARSEVALUE_2).add(PARSEVALUE_1), enc());
         assertEquals(2 * SIZE, result.size);
         for (int i = 0; i < SIZE; i++) {
             assertEquals(VALUE_1, result.head.asNumeric().intValueExact());
