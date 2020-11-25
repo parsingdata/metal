@@ -40,7 +40,7 @@ import io.parsingdata.metal.expression.Expression;
  *
  * @see Expression
  */
-public class Post extends Token {
+public class Post extends NonTerminal {
 
     public final Token token;
     public final Expression predicate;

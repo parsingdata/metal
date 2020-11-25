@@ -33,10 +33,6 @@ public final class Selection {
 
     private Selection() {}
 
-    public static boolean hasRootAtOffset(final ParseGraph graph, final Token definition, final BigInteger offset, final Source source) {
-        return findItemAtOffset(getAllRoots(graph, definition), offset, source).computeResult().isPresent();
-    }
-
     public static Trampoline<Optional<ParseItem>> findItemAtOffset(final ImmutableList<ParseItem> items, final BigInteger offset, final Source source) {
         checkNotNull(items, "items");
         checkNotNull(source, "source");
