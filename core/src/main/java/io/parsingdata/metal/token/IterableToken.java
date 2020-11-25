@@ -31,7 +31,7 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 
-public abstract class IterableToken extends Token {
+public abstract class IterableToken extends NonTerminal {
 
     public final Token token;
 

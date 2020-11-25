@@ -231,19 +231,19 @@ public class ByTokenTest {
         return def.parse(env(parseState, enc())).get().order;
     }
 
-    @Test
-    public void getSubRef() {
-        final Token smallSub = sub(DEF2, last(ref("value1")));
-        final Token extraSub = sub(any("x"), last(ref("value1")));
-        final Token composition = seq(DEF1, smallSub, extraSub, smallSub, extraSub);
-        final Optional<ParseState> result = composition.parse(env(stream(0)));
-        assertTrue(result.isPresent());
-        final ImmutableList<ParseItem> items = getAll(result.get().order, DEF2);
-        // should return the ParseGraph created by the Sub and the ParseReference that refers to the existing ParseItem
-        assertEquals(2, items.size);
-        assertTrue(items.head.isReference());
-        assertTrue(items.tail.head.isValue());
-    }
+//    @Test
+//    public void getSubRef() {
+//        final Token smallSub = sub(DEF2, last(ref("value1")));
+//        final Token extraSub = sub(any("x"), last(ref("value1")));
+//        final Token composition = seq(DEF1, smallSub, extraSub, smallSub, extraSub);
+//        final Optional<ParseState> result = composition.parse(env(stream(0)));
+//        assertTrue(result.isPresent());
+//        final ImmutableList<ParseItem> items = getAll(result.get().order, DEF2);
+//        // should return the ParseGraph created by the Sub and the ParseReference that refers to the existing ParseItem
+//        assertEquals(2, items.size);
+//        assertTrue(items.head.isReference());
+//        assertTrue(items.tail.head.isValue());
+//    }
 
     @Test
     public void getAllRootsSingle() {

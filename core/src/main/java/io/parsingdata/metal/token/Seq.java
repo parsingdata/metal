@@ -40,7 +40,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * doesn't succeed, the Seq fails. If all of the tokens succeed, the Seq will
  * succeed. Order is from left to right.
  */
-public class Seq extends Token {
+public class Seq extends NonTerminal {
 
     public final ImmutableList<Token> tokens;
 
