@@ -50,7 +50,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  *
  * @see ValueExpression
  */
-public class Sub extends NonTerminal {
+public class Sub extends CycleToken {
 
     public final Token token;
     public final ValueExpression offsets;

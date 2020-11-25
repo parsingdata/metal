@@ -90,7 +90,7 @@ public class ParseState {
         return new ParseState(order, source, ZERO, iterations, references);
     }
 
-    public ParseState withTargets(final ImmutableList<ParseReference> references) {
+    public ParseState withReferences(final ImmutableList<ParseReference> references) {
         return new ParseState(order, source, offset, iterations, references);
     }
 
