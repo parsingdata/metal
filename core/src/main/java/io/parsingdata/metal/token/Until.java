@@ -66,7 +66,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  *
  * @see ValueExpression
  */
-public class Until extends NonTerminal {
+public class Until extends Token {
 
     public static final ValueExpression DEFAULT_INITIAL = con(0);
     public static final ValueExpression DEFAULT_STEP = con(1);
