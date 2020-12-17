@@ -104,7 +104,7 @@ public class ImmutableList<T> implements Iterable<T> {
 
     @Override
     public Iterator<T> iterator() {
-        final AtomicReference<ImmutableList<T>> next = new AtomicReference<>(reverse(this));
+        final AtomicReference<ImmutableList<T>> next = new AtomicReference<>(this);
         return new Iterator<T>() {
 
             @Override
@@ -125,5 +125,4 @@ public class ImmutableList<T> implements Iterable<T> {
             }
         };
     }
-
 }

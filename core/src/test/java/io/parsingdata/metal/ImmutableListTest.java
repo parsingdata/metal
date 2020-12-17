@@ -152,7 +152,7 @@ public class ImmutableListTest {
         for(final ParseValue value : l5) {
             builder.append(value.name);
         }
-        assertEquals("abade", builder.toString());
+        assertEquals("edaba", builder.toString());
     }
 
     private ParseValue val(final char c) {
