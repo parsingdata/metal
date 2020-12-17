@@ -146,6 +146,15 @@ public class ImmutableListTest {
         assertEquals(0, new ImmutableList<ParseValue>().size);
     }
 
+    @Test
+    public void iterable() {
+        final StringBuilder builder = new StringBuilder();
+        for(final ParseValue value : l5) {
+            builder.append(value.name);
+        }
+        assertEquals("abade", builder.toString());
+    }
+
     private ParseValue val(final char c) {
         return new ParseValue(Character.toString(c), def(Character.toString(c), 0L), createFromBytes(new byte[] { (byte) c }), enc());
     }

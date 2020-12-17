@@ -21,12 +21,14 @@ import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Selection.reverse;
 
+import java.util.Iterator;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 
-public class ImmutableList<T> {
+public class ImmutableList<T> implements Iterable<T> {
 
     public final T head;
     public final ImmutableList<T> tail;
@@ -98,6 +100,31 @@ public class ImmutableList<T> {
     @Override
     public int hashCode() {
         return Objects.hash(getClass(), head, tail);
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        final AtomicReference<ImmutableList<T>> next = new AtomicReference<>(reverse(this));
+        return new Iterator<T>() {
+
+            @Override
+            public boolean hasNext() {
+                final ImmutableList<T> list = next.get();
+                return !list.isEmpty();
+            }
+
+            @Override
+            public T next() {
+                final ImmutableList<T> list = next.get();
+                if (list.isEmpty()) {
+                    return null;
+                }
+                final T head = list.head;
+                next.set(list.tail);
+
+                return head;
+            }
+        };
     }
 
 }
