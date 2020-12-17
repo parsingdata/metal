@@ -109,8 +109,7 @@ public class ImmutableList<T> implements Iterable<T> {
 
             @Override
             public boolean hasNext() {
-                final ImmutableList<T> list = next.get();
-                return !list.isEmpty();
+                return !next.get().isEmpty();
             }
 
             @Override
