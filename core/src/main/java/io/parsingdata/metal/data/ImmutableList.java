@@ -118,9 +118,9 @@ public class ImmutableList<T> implements Iterable<T> {
                 if (list.isEmpty()) {
                     return null;
                 }
+
                 final T head = list.head;
                 next.set(list.tail);
-
                 return head;
             }
         };
