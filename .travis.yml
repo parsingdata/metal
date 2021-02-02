@@ -10,8 +10,6 @@ jdk:
   - oraclejdk11
   - openjdk11
 
-before_install: pip install --user codecov
-
 script: mvn clean verify sonar:sonar -Dsonar.projectKey=parsingdata_metal
 
-after_success: codecov
+after_success: bash <(curl -s https://codecov.io/bash)
