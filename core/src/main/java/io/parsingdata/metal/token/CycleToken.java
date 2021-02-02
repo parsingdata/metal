@@ -21,11 +21,16 @@ import java.util.Optional;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.ParseState;
+import io.parsingdata.metal.data.Source;
 import io.parsingdata.metal.encoding.Encoding;
 
 /**
- * Base class for {@link Token} implementations that can potentially
- * cause a cycle if used in conjunction with {@link Sub}.
+ * Base class for {@link Token} implementations that can potentially cause a cycle if used in combination
+ * with {@link Sub}. All {@link Token}s of this type can encapsulate a {@link Sub} which may lead to a cycle.
+ * In general, all non-terminal {@link Token}s are of this type except {@link TokenRef} (which is substituted
+ * by a {@link Token} it references and so cycle detection happens on its referenced {@link Token} instead) and
+ * {@link Tie} (which is a non-terminal {@link Token} but since it uses a different {@link Source} it cannot
+ * directly create a cycle).
  */
 public abstract class CycleToken extends Token {
 
@@ -42,6 +47,10 @@ public abstract class CycleToken extends Token {
      */
     @Override
     public Optional<ParseState> parse(Environment environment) {
-        return super.parse(environment.withParseState(environment.parseState.withReferences(environment.parseState.references.add(new ParseReference(environment.parseState.offset, environment.parseState.source, this.getCanonical(environment.parseState))))));
+        return super.parse(
+            environment.withParseState(
+                environment.parseState.withReferences(
+                    environment.parseState.references.add(
+                        new ParseReference(environment.parseState.offset, environment.parseState.source, this.getCanonical(environment.parseState))))));
     }
 }

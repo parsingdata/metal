@@ -100,9 +100,9 @@ public class ParseState {
 
     @Override
     public String toString() {
-        final String iterationString = iterations.isEmpty() ? "" : ";iterations:" + iterations.toString();
-        final String targetsString = references.isEmpty() ? "" : ";references:" + references.toString();
-        return getClass().getSimpleName() + "(source:" + source + ";offset:" + offset + ";order:" + order + iterationString + targetsString + ")";
+        final String iterationsString = iterations.isEmpty() ? "" : ";iterations:" + iterations.toString();
+        final String referencesString = references.isEmpty() ? "" : ";references:" + references.toString();
+        return getClass().getSimpleName() + "(source:" + source + ";offset:" + offset + ";order:" + order + iterationsString + referencesString + ")";
     }
 
     @Override

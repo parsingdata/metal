@@ -37,15 +37,15 @@ import org.junit.Test;
 
 public class SelectionTest {
 
-    private final Source source = new Source() {
-        @Override protected byte[] getData(BigInteger offset, BigInteger length) { return new byte[0]; }
-        @Override protected boolean isAvailable(BigInteger offset, BigInteger length) { return true; }
-    };
+    private Source createSource() {
+        return new Source() {
+            @Override protected byte[] getData(BigInteger offset, BigInteger length) { return new byte[0]; }
+            @Override protected boolean isAvailable(BigInteger offset, BigInteger length) { return true; }
+        };
+    }
 
-    private final Source otherSource = new Source() {
-        @Override protected byte[] getData(BigInteger offset, BigInteger length) { return new byte[0]; }
-        @Override protected boolean isAvailable(BigInteger offset, BigInteger length) { return true; }
-    };
+    private final Source source = createSource();
+    private final Source otherSource = createSource();
 
     @Test
     public void findItemAtOffsetTest() {
