@@ -216,7 +216,7 @@ public class ToStringTest {
         final ParseState parseStateWithIteration = new ParseState(parseState.order, parseState.source, parseState.offset, iterationsList, new ImmutableList<>());
         assertTrue(parseStateWithIteration.toString().contains(";iterations:" + iterationsList.toString()));
         final ImmutableList<ParseReference> referencesList = ImmutableList.create(new ParseReference(BigInteger.ZERO, parseState.source, t()));
-        final ParseState parseStateWithReference = new ParseState(parseState.order, parseState.source, parseState.offset, new ImmutableList<>(),referencesList);
+        final ParseState parseStateWithReference = new ParseState(parseState.order, parseState.source, parseState.offset, new ImmutableList<>(), referencesList);
         assertTrue(parseStateWithReference.toString().contains(";references:" + referencesList.toString()));
     }
 
