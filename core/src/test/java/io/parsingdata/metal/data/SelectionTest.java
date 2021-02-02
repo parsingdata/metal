@@ -48,6 +48,10 @@ public class SelectionTest {
             findItemAtOffset(ImmutableList.create(ParseGraph.EMPTY.add(new ParseValue("two", any("a"), Slice.createFromSource(source, BigInteger.valueOf(2), BigInteger.valueOf(2)).get(), enc()))
                                                                   .add(new ParseValue("zero", any("a"), Slice.createFromSource(source, ZERO, BigInteger.valueOf(2)).get(), enc()))
                                                                   .add(new ParseValue("the_one", any("a"), Slice.createFromSource(source, ONE, BigInteger.valueOf(2)).get(), enc()))), ZERO, source).computeResult().get().asGraph().head.asValue().name);
+        assertEquals("zero",
+            findItemAtOffset(ImmutableList.<ParseItem>create(new ParseValue("two", any("a"), Slice.createFromSource(source, BigInteger.valueOf(2), BigInteger.valueOf(2)).get(), enc()))
+                                                        .add(new ParseValue("zero", any("a"), Slice.createFromSource(source, ZERO, BigInteger.valueOf(2)).get(), enc()))
+                                                        .add(new ParseValue("the_one", any("a"), Slice.createFromSource(source, ONE, BigInteger.valueOf(2)).get(), enc())), ZERO, source).computeResult().get().asValue().name);
     }
 
     @Test
