@@ -142,7 +142,7 @@ public class AutoEqualityTest {
     };
 
     private static final ParseValue PARSE_VALUE = new ParseValue("a", any("a"), createFromBytes(new byte[]{1, 2}), enc());
-    private static final ParseGraph GRAPH_WITH_REFERENCE = createFromByteStream(DUMMY_STREAM).add(new ParseReference(ZERO, new ConstantSource(new byte[]{1, 2}), any("a"))).order;
+    private static final ParseGraph GRAPH_WITH_REFERENCE = createFromByteStream(DUMMY_STREAM).createCycle(new ParseReference(ZERO, new ConstantSource(new byte[]{1, 2}), any("a"))).order;
     private static final ParseGraph BRANCHED_GRAPH = createFromByteStream(DUMMY_STREAM).addBranch(any("a")).order;
     private static final ParseGraph CLOSED_BRANCHED_GRAPH = createFromByteStream(DUMMY_STREAM).addBranch(any("a")).closeBranch(any("a")).order;
 
@@ -164,7 +164,7 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> PARSE_ITEMS = Arrays.asList(() -> CLOSED_BRANCHED_GRAPH, () -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE, () -> createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE).order, () -> createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE).add(PARSE_VALUE).order, () -> BRANCHED_GRAPH);
     private static final List<Supplier<Object>> BYTE_STREAMS = Arrays.asList(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> DUMMY_STREAM);
     private static final List<Supplier<Object>> BIG_INTEGERS = Arrays.asList(() -> ONE, () -> BigInteger.valueOf(3));
-    private static final List<Supplier<Object>> PARSE_STATES = Arrays.asList(() -> createFromByteStream(DUMMY_STREAM), () -> createFromByteStream(DUMMY_STREAM, ONE), () -> new ParseState(GRAPH_WITH_REFERENCE, DUMMY_BYTE_STREAM_SOURCE, TEN, new ImmutableList<>()));
+    private static final List<Supplier<Object>> PARSE_STATES = Arrays.asList(() -> createFromByteStream(DUMMY_STREAM), () -> createFromByteStream(DUMMY_STREAM, ONE), () -> new ParseState(GRAPH_WITH_REFERENCE, DUMMY_BYTE_STREAM_SOURCE, TEN, new ImmutableList<>(), new ImmutableList<>()));
     private static final List<Supplier<Object>> IMMUTABLE_LISTS = Arrays.asList(ImmutableList::new, () -> ImmutableList.create("TEST"), () -> ImmutableList.create(1), () -> ImmutableList.create(1).add(2));
     private static final Map<Class, List<Supplier<Object>>> mapping = buildMap();
 

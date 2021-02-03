@@ -37,10 +37,15 @@ import org.junit.Test;
 
 public class SelectionTest {
 
-    private final Source source = new Source() {
-        @Override protected byte[] getData(BigInteger offset, BigInteger length) { return new byte[0]; }
-        @Override protected boolean isAvailable(BigInteger offset, BigInteger length) { return true; }
-    };
+    private Source createSource() {
+        return new Source() {
+            @Override protected byte[] getData(BigInteger offset, BigInteger length) { return new byte[0]; }
+            @Override protected boolean isAvailable(BigInteger offset, BigInteger length) { return true; }
+        };
+    }
+
+    private final Source source = createSource();
+    private final Source otherSource = createSource();
 
     @Test
     public void findItemAtOffsetTest() {
@@ -48,6 +53,10 @@ public class SelectionTest {
             findItemAtOffset(ImmutableList.create(ParseGraph.EMPTY.add(new ParseValue("two", any("a"), Slice.createFromSource(source, BigInteger.valueOf(2), BigInteger.valueOf(2)).get(), enc()))
                                                                   .add(new ParseValue("zero", any("a"), Slice.createFromSource(source, ZERO, BigInteger.valueOf(2)).get(), enc()))
                                                                   .add(new ParseValue("the_one", any("a"), Slice.createFromSource(source, ONE, BigInteger.valueOf(2)).get(), enc()))), ZERO, source).computeResult().get().asGraph().head.asValue().name);
+        assertEquals("zero",
+            findItemAtOffset(ImmutableList.<ParseItem>create(new ParseValue("zero", any("a"), Slice.createFromSource(source, ZERO, BigInteger.valueOf(2)).get(), enc()))
+                                                        .add(new ParseValue("offsetMatchOtherSource", any("a"), Slice.createFromSource(otherSource, ZERO, BigInteger.valueOf(2)).get(), enc()))
+                                                        .add(new ParseValue("otherOffsetMatchSource", any("a"), Slice.createFromSource(source, ONE, BigInteger.valueOf(2)).get(), enc())), ZERO, source).computeResult().get().asValue().name);
     }
 
     @Test

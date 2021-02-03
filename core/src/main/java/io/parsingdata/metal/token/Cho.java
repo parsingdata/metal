@@ -40,7 +40,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * succeed, the Cho fails. If any token succeeds, the Cho succeeds. Precedence
  * is from left to right.
  */
-public class Cho extends Token {
+public class Cho extends CycleToken {
 
     public final ImmutableList<Token> tokens;
 

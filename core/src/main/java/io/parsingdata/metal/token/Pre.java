@@ -41,7 +41,7 @@ import io.parsingdata.metal.expression.Expression;
  *
  * @see Expression
  */
-public class Pre extends Token {
+public class Pre extends CycleToken {
 
     public final Token token;
     public final Expression predicate;

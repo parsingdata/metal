@@ -17,6 +17,7 @@
 package io.parsingdata.metal;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.CURRENT_ITERATION;
@@ -74,6 +75,7 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
@@ -82,6 +84,8 @@ import org.junit.Test;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ImmutablePair;
+import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.callback.Callback;
@@ -201,6 +205,19 @@ public class ToStringTest {
         final String tokenCallback2Name = ">b->second";
         final String twoName = tokenPrefix + tokenCallback2Name + tokenCallback1Name;
         assertEquals(twoName, doubleCallbacks.toString());
+    }
+
+    @Test
+    public void toStringOnParseStateCollections() {
+        final ParseState parseState = stream(1, 2);
+        assertFalse(parseState.toString().contains(";iterations:"));
+        assertFalse(parseState.toString().contains(";references:"));
+        final ImmutableList<ImmutablePair<Token, BigInteger>> iterationsList = ImmutableList.create(new ImmutablePair<>(t(), BigInteger.ZERO));
+        final ParseState parseStateWithIteration = new ParseState(parseState.order, parseState.source, parseState.offset, iterationsList, new ImmutableList<>());
+        assertTrue(parseStateWithIteration.toString().contains(";iterations:" + iterationsList.toString()));
+        final ImmutableList<ParseReference> referencesList = ImmutableList.create(new ParseReference(BigInteger.ZERO, parseState.source, t()));
+        final ParseState parseStateWithReference = new ParseState(parseState.order, parseState.source, parseState.offset, new ImmutableList<>(), referencesList);
+        assertTrue(parseStateWithReference.toString().contains(";references:" + referencesList.toString()));
     }
 
     private Token makeToken(final String name) {

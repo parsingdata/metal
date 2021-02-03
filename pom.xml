@@ -52,7 +52,7 @@
   <properties>
     <encoding>UTF-8</encoding>
 
-    <junit.version>4.13</junit.version>
+    <junit.version>4.13.1</junit.version>
 
     <jacoco-plugin.version>0.8.5</jacoco-plugin.version>
     <pmd-plugin.version>3.13.0</pmd-plugin.version>

@@ -20,7 +20,6 @@ import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.success;
-import static io.parsingdata.metal.data.Selection.hasRootAtOffset;
 import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.math.BigInteger;
@@ -51,7 +50,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  *
  * @see ValueExpression
  */
-public class Sub extends Token {
+public class Sub extends CycleToken {
 
     public final Token token;
     public final ValueExpression offsets;
@@ -81,8 +80,9 @@ public class Sub extends Token {
     }
 
     private Optional<ParseState> parse(final Environment environment, final BigInteger offsetValue) {
-        if (hasRootAtOffset(environment.parseState.order, token.getCanonical(environment.parseState), offsetValue, environment.parseState.source)) {
-            return success(environment.parseState.add(new ParseReference(offsetValue, environment.parseState.source, token.getCanonical(environment.parseState))));
+        final ParseReference parseReference = new ParseReference(offsetValue, environment.parseState.source, token.getCanonical(environment.parseState));
+        if (environment.parseState.references.contains(parseReference)) {
+            return success(environment.parseState.createCycle(parseReference));
         }
         return environment.parseState
             .seek(offsetValue)

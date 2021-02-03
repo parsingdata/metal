@@ -82,6 +82,14 @@ public class ImmutableList<T> {
         return size == 0;
     }
 
+    public boolean contains(final T value) { return containsRecursive(value).computeResult(); }
+
+    private Trampoline<Boolean> containsRecursive(final T value) {
+        if (isEmpty()) { return complete(() -> false); }
+        if (head.equals(value)) { return complete(() -> true); }
+        return intermediate(() -> tail.containsRecursive(value));
+    }
+
     @Override
     public String toString() {
         return isEmpty() ? "" : ">" + head + tail;

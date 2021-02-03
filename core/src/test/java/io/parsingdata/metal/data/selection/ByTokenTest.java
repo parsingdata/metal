@@ -239,9 +239,9 @@ public class ByTokenTest {
         final Optional<ParseState> result = composition.parse(env(stream(0)));
         assertTrue(result.isPresent());
         final ImmutableList<ParseItem> items = getAll(result.get().order, DEF2);
-        // should return the ParseGraph created by the Sub and the ParseReference that refers to the existing ParseItem
+        // should return two values created by the Sub, no ParseReference because a Def cannot create a cycle
         assertEquals(2, items.size);
-        assertTrue(items.head.isReference());
+        assertTrue(items.head.isValue());
         assertTrue(items.tail.head.isValue());
     }
 

@@ -37,16 +37,18 @@ public class ParseState {
     public final BigInteger offset;
     public final Source source;
     public final ImmutableList<ImmutablePair<Token, BigInteger>> iterations;
+    public final ImmutableList<ParseReference> references;
 
-    public ParseState(final ParseGraph order, final Source source, final BigInteger offset, final ImmutableList<ImmutablePair<Token, BigInteger>> iterations) {
+    public ParseState(final ParseGraph order, final Source source, final BigInteger offset, final ImmutableList<ImmutablePair<Token, BigInteger>> iterations, final ImmutableList<ParseReference> references) {
         this.order = checkNotNull(order, "order");
         this.source = checkNotNull(source, "source");
         this.offset = checkNotNegative(offset, "offset");
         this.iterations = checkNotNull(iterations, "iterations");
+        this.references = checkNotNull(references, "references");
     }
 
     public static ParseState createFromByteStream(final ByteStream input, final BigInteger offset) {
-        return new ParseState(ParseGraph.EMPTY, new ByteStreamSource(input), offset, new ImmutableList<>());
+        return new ParseState(ParseGraph.EMPTY, new ByteStreamSource(input), offset, new ImmutableList<>(), new ImmutableList<>());
     }
 
     public static ParseState createFromByteStream(final ByteStream input) {
@@ -54,38 +56,42 @@ public class ParseState {
     }
 
     public ParseState addBranch(final Token token) {
-        return new ParseState(order.addBranch(token), source, offset, token.isIterable() ? iterations.add(new ImmutablePair<>(token, ZERO)) : iterations);
+        return new ParseState(order.addBranch(token), source, offset, token.isIterable() ? iterations.add(new ImmutablePair<>(token, ZERO)) : iterations, references);
     }
 
     public ParseState closeBranch(final Token token) {
         if (token.isIterable() && !iterations.head.left.equals(token)) {
             throw new IllegalStateException(format("Cannot close branch for iterable token %s. Current iteration state is for token %s.", token.name, iterations.head.left.name));
         }
-        return new ParseState(order.closeBranch(), source, offset, token.isIterable() ? iterations.tail : iterations);
-    }
-
-    public ParseState add(final ParseValue parseValue) {
-        return new ParseState(order.add(parseValue), source, offset, iterations);
+        return new ParseState(order.closeBranch(), source, offset, token.isIterable() ? iterations.tail : iterations, references);
     }
 
     public ParseState add(final ParseReference parseReference) {
-        return new ParseState(order.add(parseReference), source, offset, iterations);
+        return new ParseState(order, source, offset, iterations, references.add(parseReference));
+    }
+
+    public ParseState add(final ParseValue parseValue) {
+        return new ParseState(order.add(parseValue), source, offset, iterations, references);
+    }
+
+    public ParseState createCycle(final ParseReference parseReference) {
+        return new ParseState(order.add(parseReference), source, offset, iterations, references);
     }
 
     public ParseState iterate() {
-        return new ParseState(order, source, offset, iterations.tail.add(new ImmutablePair<>(iterations.head.left, iterations.head.right.add(ONE))));
+        return new ParseState(order, source, offset, iterations.tail.add(new ImmutablePair<>(iterations.head.left, iterations.head.right.add(ONE))), references);
     }
 
     public Optional<ParseState> seek(final BigInteger newOffset) {
-        return newOffset.compareTo(ZERO) >= 0 ? Optional.of(new ParseState(order, source, newOffset, iterations)) : Optional.empty();
+        return newOffset.compareTo(ZERO) >= 0 ? Optional.of(new ParseState(order, source, newOffset, iterations, references)) : Optional.empty();
     }
 
     public ParseState withOrder(final ParseGraph order) {
-        return new ParseState(order, source, offset, iterations);
+        return new ParseState(order, source, offset, iterations, references);
     }
 
     public ParseState withSource(final Source source) {
-        return new ParseState(order, source, ZERO, iterations);
+        return new ParseState(order, source, ZERO, iterations, references);
     }
 
     public Optional<Slice> slice(final BigInteger length) {
@@ -94,8 +100,9 @@ public class ParseState {
 
     @Override
     public String toString() {
-        final String iterationString = iterations.isEmpty() ? "" : ";iterations:" + iterations.toString();
-        return getClass().getSimpleName() + "(source:" + source + ";offset:" + offset + ";order:" + order + iterationString + ")";
+        final String iterationsString = iterations.isEmpty() ? "" : ";iterations:" + iterations.toString();
+        final String referencesString = references.isEmpty() ? "" : ";references:" + references.toString();
+        return getClass().getSimpleName() + "(source:" + source + ";offset:" + offset + ";order:" + order + iterationsString + referencesString + ")";
     }
 
     @Override
@@ -104,12 +111,13 @@ public class ParseState {
             && Objects.equals(order, ((ParseState)obj).order)
             && Objects.equals(offset, ((ParseState)obj).offset)
             && Objects.equals(source, ((ParseState)obj).source)
-            && Objects.equals(iterations, ((ParseState)obj).iterations);
+            && Objects.equals(iterations, ((ParseState)obj).iterations)
+            && Objects.equals(references, ((ParseState)obj).references);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass(), order, offset, source, iterations);
+        return Objects.hash(getClass(), order, offset, source, iterations, references);
     }
 
 }

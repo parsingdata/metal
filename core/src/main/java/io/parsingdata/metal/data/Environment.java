@@ -62,6 +62,10 @@ public class Environment {
         return withParseState(parseState.addBranch(token));
     }
 
+    public Environment addCycleReference(final ParseReference parseReference) {
+        return withParseState(parseState.add(parseReference));
+    }
+
     public Environment extendScope(final String name) {
         return new Environment(scope + (scope.isEmpty() || name.isEmpty() ? NO_NAME : SEPARATOR) + name, parseState, callbacks, encoding);
     }
