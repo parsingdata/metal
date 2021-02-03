@@ -48,9 +48,7 @@ public abstract class CycleToken extends Token {
     @Override
     public Optional<ParseState> parse(Environment environment) {
         return super.parse(
-            environment.withParseState(
-                environment.parseState.withReferences(
-                    environment.parseState.references.add(
-                        new ParseReference(environment.parseState.offset, environment.parseState.source, this.getCanonical(environment.parseState))))));
+            environment.addCycleReference(
+                    new ParseReference(environment.parseState.offset, environment.parseState.source, this.getCanonical(environment.parseState))));
     }
 }
