@@ -66,7 +66,7 @@ public class ParseState {
         return new ParseState(order.closeBranch(), source, offset, token.isIterable() ? iterations.tail : iterations, references);
     }
 
-    public ParseState addCycleReference(final ParseReference parseReference) {
+    public ParseState add(final ParseReference parseReference) {
         return new ParseState(order, source, offset, iterations, references.add(parseReference));
     }
 
@@ -74,7 +74,7 @@ public class ParseState {
         return new ParseState(order.add(parseValue), source, offset, iterations, references);
     }
 
-    public ParseState add(final ParseReference parseReference) {
+    public ParseState createCycle(final ParseReference parseReference) {
         return new ParseState(order.add(parseReference), source, offset, iterations, references);
     }
 

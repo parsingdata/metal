@@ -82,7 +82,7 @@ public class Sub extends CycleToken {
     private Optional<ParseState> parse(final Environment environment, final BigInteger offsetValue) {
         final ParseReference parseReference = new ParseReference(offsetValue, environment.parseState.source, token.getCanonical(environment.parseState));
         if (environment.parseState.references.contains(parseReference)) {
-            return success(environment.parseState.add(parseReference));
+            return success(environment.parseState.createCycle(parseReference));
         }
         return environment.parseState
             .seek(offsetValue)

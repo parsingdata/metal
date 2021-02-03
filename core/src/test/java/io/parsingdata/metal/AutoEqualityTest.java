@@ -142,7 +142,7 @@ public class AutoEqualityTest {
     };
 
     private static final ParseValue PARSE_VALUE = new ParseValue("a", any("a"), createFromBytes(new byte[]{1, 2}), enc());
-    private static final ParseGraph GRAPH_WITH_REFERENCE = createFromByteStream(DUMMY_STREAM).add(new ParseReference(ZERO, new ConstantSource(new byte[]{1, 2}), any("a"))).order;
+    private static final ParseGraph GRAPH_WITH_REFERENCE = createFromByteStream(DUMMY_STREAM).createCycle(new ParseReference(ZERO, new ConstantSource(new byte[]{1, 2}), any("a"))).order;
     private static final ParseGraph BRANCHED_GRAPH = createFromByteStream(DUMMY_STREAM).addBranch(any("a")).order;
     private static final ParseGraph CLOSED_BRANCHED_GRAPH = createFromByteStream(DUMMY_STREAM).addBranch(any("a")).closeBranch(any("a")).order;
 
