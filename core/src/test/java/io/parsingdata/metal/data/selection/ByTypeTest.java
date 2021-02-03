@@ -46,7 +46,7 @@ public class ByTypeTest {
     public void unresolvableRef() {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("A ParseReference must point to an existing graph.");
-        getReferences(createFromByteStream(DUMMY_STREAM).add(new ParseReference(ZERO, EMPTY_SOURCE, NONE)).order);
+        getReferences(createFromByteStream(DUMMY_STREAM).createCycle(new ParseReference(ZERO, EMPTY_SOURCE, NONE)).order);
     }
 
 }

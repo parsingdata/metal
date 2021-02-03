@@ -63,7 +63,7 @@ public class Environment {
     }
 
     public Environment addCycleReference(final ParseReference parseReference) {
-        return withParseState(parseState.addCycleReference(parseReference));
+        return withParseState(parseState.add(parseReference));
     }
 
     public Environment extendScope(final String name) {
