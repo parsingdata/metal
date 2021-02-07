@@ -24,7 +24,6 @@ import static io.parsingdata.metal.data.Selection.getAllValues;
 import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 import io.parsingdata.metal.Trampoline;
