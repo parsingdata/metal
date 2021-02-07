@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.div;
 import static io.parsingdata.metal.Shorthand.exp;
+import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
@@ -50,22 +51,15 @@ public class RefEdgeCaseTest {
     }
 
     @Test
-    public void multiLimit() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Limit must evaluate to a single non-empty value.");
-        ref("a", exp(con(1), con(3))).eval(parseState, enc());
-    }
-
-    @Test
     public void emptyLimit() {
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Limit must evaluate to a single non-empty value.");
-        ref("a", ref("b")).eval(parseState, enc());
+        thrown.expectMessage("Limit must evaluate to a non-empty value.");
+        ref("a", last(ref("b"))).eval(parseState, enc());
     }
 
     @Test
     public void nanLimit() {
-        final ImmutableList<Value> result = ref("a", div(con(1), con(0))).eval(parseState, enc());
+        final ImmutableList<Value> result = ref("a", last(div(con(1), con(0)))).eval(parseState, enc());
         assertEquals(1, result.size);
         assertEquals(NOT_A_VALUE, result.head);
     }
