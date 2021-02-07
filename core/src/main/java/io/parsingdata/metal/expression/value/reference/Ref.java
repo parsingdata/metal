@@ -24,6 +24,7 @@ import static io.parsingdata.metal.data.Selection.getAllValues;
 import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import io.parsingdata.metal.Trampoline;
@@ -32,6 +33,7 @@ import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.encoding.Encoding;
+import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
@@ -49,9 +51,9 @@ public class Ref<T> implements ValueExpression {
 
     public final T reference;
     public final Predicate<ParseValue> predicate;
-    public final ValueExpression limit;
+    public final SingleValueExpression limit;
 
-    private Ref(final T reference, final Predicate<ParseValue> predicate, final ValueExpression limit) {
+    private Ref(final T reference, final Predicate<ParseValue> predicate, final SingleValueExpression limit) {
         this.reference = checkNotNull(reference, "reference");
         this.predicate = checkNotNull(predicate, "predicate");
         this.limit = limit;
@@ -59,12 +61,12 @@ public class Ref<T> implements ValueExpression {
 
     public static class NameRef extends Ref<String> {
         public NameRef(final String reference) { this(reference, null); }
-        public NameRef(final String reference, final ValueExpression limit) { super(reference, value -> value.matches(reference), limit); }
+        public NameRef(final String reference, final SingleValueExpression limit) { super(reference, value -> value.matches(reference), limit); }
     }
 
     public static class DefinitionRef extends Ref<Token> {
         public DefinitionRef(final Token reference) { this(reference, null); }
-        public DefinitionRef(final Token reference, final ValueExpression limit) { super(reference, value -> value.definition.equals(reference), limit); }
+        public DefinitionRef(final Token reference, final SingleValueExpression limit) { super(reference, value -> value.definition.equals(reference), limit); }
     }
 
     @Override
@@ -72,14 +74,9 @@ public class Ref<T> implements ValueExpression {
         if (limit == null) {
             return evalImpl(parseState, NO_LIMIT);
         }
-        final ImmutableList<Value> evaluatedLimit = limit.eval(parseState, encoding);
-        if (evaluatedLimit.size != 1) {
-            throw new IllegalArgumentException("Limit must evaluate to a single non-empty value.");
-        }
-        if (evaluatedLimit.head.equals(NOT_A_VALUE)) {
-            return ImmutableList.create(NOT_A_VALUE);
-        }
-        return evalImpl(parseState, evaluatedLimit.head.asNumeric().intValueExact());
+        return limit.evalSingle(parseState, encoding)
+            .map(limitValue -> limitValue.equals(NOT_A_VALUE) ? ImmutableList.create(NOT_A_VALUE) : evalImpl(parseState, limitValue.asNumeric().intValueExact()))
+            .orElseThrow(() -> new IllegalArgumentException("Limit must evaluate to a non-empty value."));
     }
 
     private ImmutableList<Value> evalImpl(final ParseState parseState, final int limit) {

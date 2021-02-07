@@ -185,9 +185,9 @@ public final class Shorthand {
     public static SingleValueExpression con(final byte[] value, final Encoding encoding) { return con(ConstantFactory.createFromBytes(value, encoding)); }
     public static ValueExpression len(final ValueExpression operand) { return new Len(operand); }
     public static NameRef ref(final String name) { return ref(name, null); }
-    public static NameRef ref(final String name, final ValueExpression limit) { return new NameRef(name, limit); }
+    public static NameRef ref(final String name, final SingleValueExpression limit) { return new NameRef(name, limit); }
     public static DefinitionRef ref(final Token definition) { return ref(definition, null); }
-    public static DefinitionRef ref(final Token definition, final ValueExpression limit) { return new DefinitionRef(definition, limit); }
+    public static DefinitionRef ref(final Token definition, final SingleValueExpression limit) { return new DefinitionRef(definition, limit); }
     public static SingleValueExpression first(final ValueExpression operand) { return new First(operand); }
     public static SingleValueExpression last(final ValueExpression operand) { return new Last(operand); }
     public static SingleValueExpression last(final NameRef operand) { return new Last(new NameRef(operand.reference, con(1))); }
