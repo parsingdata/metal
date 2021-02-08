@@ -164,16 +164,27 @@ public final class Shorthand {
     public static Token when(final Token token, final Expression predicate) { return when(token, predicate, null); }
 
     public static BinaryValueExpression add(final ValueExpression left, final ValueExpression right) { return new Add(left, right); }
+    public static SingleValueExpression add(final SingleValueExpression left, final SingleValueExpression right) { return last(new Add(left, right)); }
     public static BinaryValueExpression div(final ValueExpression left, final ValueExpression right) { return new Div(left, right); }
+    public static SingleValueExpression div(final SingleValueExpression left, final SingleValueExpression right) { return last(new Div(left, right)); }
     public static BinaryValueExpression mul(final ValueExpression left, final ValueExpression right) { return new Mul(left, right); }
+    public static SingleValueExpression mul(final SingleValueExpression left, final SingleValueExpression right) { return last(new Mul(left, right)); }
     public static BinaryValueExpression sub(final ValueExpression left, final ValueExpression right) { return new Sub(left, right); }
+    public static SingleValueExpression sub(final SingleValueExpression left, final SingleValueExpression right) { return last(new Sub(left, right)); }
     public static BinaryValueExpression mod(final ValueExpression left, final ValueExpression right) { return new Mod(left, right); }
+    public static SingleValueExpression mod(final SingleValueExpression left, final SingleValueExpression right) { return last(new Mod(left, right)); }
     public static UnaryValueExpression neg(final ValueExpression operand) { return new Neg(operand); }
+    public static SingleValueExpression neg(final SingleValueExpression operand) { return last(new Neg(operand)); }
     public static BinaryValueExpression and(final ValueExpression left, final ValueExpression right) { return new io.parsingdata.metal.expression.value.bitwise.And(left, right); }
+    public static SingleValueExpression and(final SingleValueExpression left, final SingleValueExpression right) { return last(new io.parsingdata.metal.expression.value.bitwise.And(left, right)); }
     public static BinaryValueExpression or(final ValueExpression left, final ValueExpression right) { return new io.parsingdata.metal.expression.value.bitwise.Or(left, right); }
+    public static SingleValueExpression or(final SingleValueExpression left, final SingleValueExpression right) { return last(new io.parsingdata.metal.expression.value.bitwise.Or(left, right)); }
     public static UnaryValueExpression not(final ValueExpression operand) { return new io.parsingdata.metal.expression.value.bitwise.Not(operand); }
+    public static SingleValueExpression not(final SingleValueExpression operand) { return last(new io.parsingdata.metal.expression.value.bitwise.Not(operand)); }
     public static BinaryValueExpression shl(final ValueExpression left, final ValueExpression right) { return new ShiftLeft(left, right); }
+    public static SingleValueExpression shl(final SingleValueExpression left, final SingleValueExpression right) { return last(new ShiftLeft(left, right)); }
     public static BinaryValueExpression shr(final ValueExpression left, final ValueExpression right) { return new ShiftRight(left, right); }
+    public static SingleValueExpression shr(final SingleValueExpression left, final SingleValueExpression right) { return last(new ShiftRight(left, right)); }
     public static SingleValueExpression con(final long value) { return con(value, DEFAULT_ENCODING); }
     public static SingleValueExpression con(final long value, final Encoding encoding) { return con(ConstantFactory.createFromNumeric(value, encoding)); }
     public static SingleValueExpression con(final String value) { return con(value, DEFAULT_ENCODING); }
@@ -184,6 +195,7 @@ public final class Shorthand {
     public static SingleValueExpression con(final byte[] value) { return con(value, DEFAULT_ENCODING); }
     public static SingleValueExpression con(final byte[] value, final Encoding encoding) { return con(ConstantFactory.createFromBytes(value, encoding)); }
     public static ValueExpression len(final ValueExpression operand) { return new Len(operand); }
+    public static SingleValueExpression len(final SingleValueExpression operand) { return last(new Len(operand)); }
     public static NameRef ref(final String name) { return ref(name, null); }
     public static NameRef ref(final String name, final SingleValueExpression limit) { return new NameRef(name, limit); }
     public static DefinitionRef ref(final Token definition) { return ref(definition, null); }
@@ -193,12 +205,16 @@ public final class Shorthand {
     public static SingleValueExpression last(final NameRef operand) { return new Last(new NameRef(operand.reference, con(1))); }
     public static SingleValueExpression last(final DefinitionRef operand) { return new Last(new DefinitionRef(operand.reference, con(1))); }
     public static ValueExpression nth(final ValueExpression values, final ValueExpression indices) { return new Nth(values, indices); }
+    public static SingleValueExpression nth(final ValueExpression values, final SingleValueExpression index) { return last(new Nth(values, index)); }
     public static ValueExpression offset(final ValueExpression operand) { return new Offset(operand); }
+    public static SingleValueExpression offset(final SingleValueExpression operand) { return last(new Offset(operand)); }
     public static SingleValueExpression iteration(final int level) { return iteration(con(level)); }
     public static SingleValueExpression iteration(final SingleValueExpression level) { return new CurrentIteration(level); }
     public static ValueExpression cat(final ValueExpression left, final ValueExpression right) { return new Cat(left, right); }
+    public static SingleValueExpression cat(final SingleValueExpression left, final SingleValueExpression right) { return last(new Cat(left, right)); }
     public static SingleValueExpression cat(final ValueExpression operand) { return new FoldCat(operand); }
     public static ValueExpression elvis(final ValueExpression left, final ValueExpression right) { return new Elvis(left, right); }
+    public static SingleValueExpression elvis(final SingleValueExpression left, final SingleValueExpression right) { return last(new Elvis(left, right)); }
     public static SingleValueExpression count(final ValueExpression operand) { return new Count(operand); }
     public static SingleValueExpression foldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer) { return new FoldLeft(values, reducer, null); }
     public static SingleValueExpression foldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final SingleValueExpression initial) { return new FoldLeft(values, reducer, initial); }
