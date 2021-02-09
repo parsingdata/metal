@@ -59,7 +59,7 @@ public class RefEdgeCaseTest {
 
     @Test
     public void nanLimit() {
-        final ImmutableList<Value> result = ref("a", last(div(con(1), con(0)))).eval(parseState, enc());
+        final ImmutableList<Value> result = ref("a", div(con(1), con(0))).eval(parseState, enc());
         assertEquals(1, result.size);
         assertEquals(NOT_A_VALUE, result.head);
     }
