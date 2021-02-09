@@ -39,7 +39,7 @@ import io.parsingdata.metal.token.Token;
 @RunWith(Parameterized.class)
 public class ParameterizedParse {
 
-    @Parameter public String description;
+    @Parameter(0) public String description;
     @Parameter(1) public Token token;
     @Parameter(2) public ParseState parseState;
     @Parameter(3) public Encoding encoding;

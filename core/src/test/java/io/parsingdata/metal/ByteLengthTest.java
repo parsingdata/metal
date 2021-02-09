@@ -55,7 +55,7 @@ public class ByteLengthTest {
     private static final Token STRING = seq(
         def("length", 1),
         def("text1", last(ref("length"))),
-        def("text2", last(len(ref("text1")))));
+        def("text2", len(last(ref("text1")))));
     //  let("hasText", con(true), ltNum(len(ref("text1")), con(0))));
 
     private static final Token NAME =

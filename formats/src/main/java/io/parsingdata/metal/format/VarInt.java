@@ -42,7 +42,7 @@ public final class VarInt {
         return until(name, con(1), post(EMPTY, eq(and(last(bytes(last(ref(name)))), con(128)), con(0))));
     }
 
-    public static ValueExpression decodeVarInt(final ValueExpression expression) {
+    public static SingleValueExpression decodeVarInt(final ValueExpression expression) {
         return foldLeft(rev(bytes(expression)), VarInt::varIntReducer);
     }
 

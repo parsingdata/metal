@@ -45,6 +45,7 @@ import java.util.Collection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
 
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.ParseState;
@@ -58,9 +59,9 @@ public class ShorthandOverloadsTest {
         @Override public boolean isAvailable(BigInteger offset, BigInteger length) { return false; }
     });
 
-    @Parameterized.Parameter public String description;
-    @Parameterized.Parameter(1) public SingleValueExpression toExecute;
-    @Parameterized.Parameter(2) public SingleValueExpression expectedResult;
+    @Parameter(0) public String description;
+    @Parameter(1) public SingleValueExpression toExecute;
+    @Parameter(2) public SingleValueExpression expectedResult;
 
     @Parameterized.Parameters(name="SingleValueExpression {0}")
     public static Collection<Object[]> data() {
