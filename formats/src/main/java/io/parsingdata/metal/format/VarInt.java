@@ -30,6 +30,7 @@ import static io.parsingdata.metal.Shorthand.rev;
 import static io.parsingdata.metal.Shorthand.shl;
 import static io.parsingdata.metal.Shorthand.until;
 
+import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
 
@@ -38,18 +39,15 @@ public final class VarInt {
     private VarInt() {}
 
     public static Token varInt(final String name) {
-        return
-        until(name, con(1), post(EMPTY, eq(and(last(bytes(last(ref(name)))), con(128)), con(0))));
+        return until(name, con(1), post(EMPTY, eq(and(last(bytes(last(ref(name)))), con(128)), con(0))));
     }
 
     public static ValueExpression decodeVarInt(final ValueExpression expression) {
-        return
-        foldLeft(rev(bytes(expression)), VarInt::varIntReducer);
+        return foldLeft(rev(bytes(expression)), VarInt::varIntReducer);
     }
 
-    private static ValueExpression varIntReducer(final ValueExpression left, final ValueExpression right) {
-        return
-        or(shl(left, con(7)), and(right, con(127)));
+    private static SingleValueExpression varIntReducer(final SingleValueExpression left, final SingleValueExpression right) {
+        return or(shl(left, con(7)), and(right, con(127)));
     }
 
 }
