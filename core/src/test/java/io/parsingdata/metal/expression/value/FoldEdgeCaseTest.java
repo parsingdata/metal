@@ -56,7 +56,7 @@ import io.parsingdata.metal.data.ParseState;
  */
 public class FoldEdgeCaseTest {
 
-    private static final BinaryOperator<ValueExpression> MULTIPLE_VALUE_REDUCER = (left, right) -> ref("value");
+    private static final BinaryOperator<SingleValueExpression> EMPTY_VALUE_REDUCER = (left, right) -> (parseState, encoding) -> Optional.empty();
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
@@ -103,7 +103,7 @@ public class FoldEdgeCaseTest {
 
     private void faultyReducer(final ValueExpression expression) {
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Reducer must evaluate to a single value.");
+        thrown.expectMessage("Reducer must evaluate to a value.");
 
         seq(
             def("value", 1), // the reducer returns a Ref to these two values
@@ -116,12 +116,12 @@ public class FoldEdgeCaseTest {
 
     @Test
     public void faultyReducerFoldLeft() {
-        faultyReducer(foldLeft(ref("toFold"), MULTIPLE_VALUE_REDUCER));
+        faultyReducer(foldLeft(ref("toFold"), EMPTY_VALUE_REDUCER));
     }
 
     @Test
     public void faultyReducerFoldRight() {
-        faultyReducer(foldRight(ref("toFold"), MULTIPLE_VALUE_REDUCER));
+        faultyReducer(foldRight(ref("toFold"), EMPTY_VALUE_REDUCER));
     }
 
 }

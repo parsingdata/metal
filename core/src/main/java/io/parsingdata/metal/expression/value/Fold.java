@@ -48,10 +48,10 @@ import io.parsingdata.metal.encoding.Encoding;
 public abstract class Fold implements SingleValueExpression {
 
     public final ValueExpression values;
-    public final BinaryOperator<ValueExpression> reducer;
+    public final BinaryOperator<SingleValueExpression> reducer;
     public final SingleValueExpression initial;
 
-    public Fold(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final SingleValueExpression initial) {
+    public Fold(final ValueExpression values, final BinaryOperator<SingleValueExpression> reducer, final SingleValueExpression initial) {
         this.values = checkNotNull(values, "values");
         this.reducer = checkNotNull(reducer, "reducer");
         this.initial = initial;
@@ -75,18 +75,16 @@ public abstract class Fold implements SingleValueExpression {
         return Optional.of(fold(parseState, encoding, reducer, valueList.head, valueList.tail).computeResult());
     }
 
-    private Trampoline<Value> fold(final ParseState parseState, final Encoding encoding, final BinaryOperator<ValueExpression> reducer, final Value head, final ImmutableList<Value> tail) {
+    private Trampoline<Value> fold(final ParseState parseState, final Encoding encoding, final BinaryOperator<SingleValueExpression> reducer, final Value head, final ImmutableList<Value> tail) {
         if (head.equals(NOT_A_VALUE)) {
             return complete(() -> NOT_A_VALUE);
         }
         if (tail.isEmpty()) {
             return complete(() -> head);
         }
-        final ImmutableList<Value> reducedValue = reduce(reducer, head, tail.head).eval(parseState, encoding);
-        if (reducedValue.size != 1) {
-            throw new IllegalArgumentException("Reducer must evaluate to a single value.");
-        }
-        return intermediate(() -> fold(parseState, encoding, reducer, reducedValue.head, tail.tail));
+        return reduce(reducer, head, tail.head).evalSingle(parseState, encoding)
+            .map(reducedValue -> intermediate(() -> fold(parseState, encoding, reducer, reducedValue, tail.tail)))
+            .orElseThrow(() -> new IllegalArgumentException("Reducer must evaluate to a value."));
     }
 
     private Trampoline<Boolean> containsNotAValue(final ImmutableList<Value> list) {
@@ -101,7 +99,7 @@ public abstract class Fold implements SingleValueExpression {
 
     protected abstract ImmutableList<Value> prepareValues(ImmutableList<Value> valueList);
 
-    protected abstract ValueExpression reduce(BinaryOperator<ValueExpression> reducer, Value head, Value tail);
+    protected abstract SingleValueExpression reduce(BinaryOperator<SingleValueExpression> reducer, Value head, Value tail);
 
     @Override
     public String toString() {

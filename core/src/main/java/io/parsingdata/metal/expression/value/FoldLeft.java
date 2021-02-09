@@ -33,7 +33,7 @@ import io.parsingdata.metal.data.ImmutableList;
  */
 public class FoldLeft extends Fold {
 
-    public FoldLeft(final ValueExpression values, final BinaryOperator<ValueExpression> reducer, final SingleValueExpression initial) {
+    public FoldLeft(final ValueExpression values, final BinaryOperator<SingleValueExpression> reducer, final SingleValueExpression initial) {
         super(values, reducer, initial);
     }
 
@@ -43,7 +43,7 @@ public class FoldLeft extends Fold {
     }
 
     @Override
-    protected ValueExpression reduce(final BinaryOperator<ValueExpression> reducer, final Value head, final Value tail) {
+    protected SingleValueExpression reduce(final BinaryOperator<SingleValueExpression> reducer, final Value head, final Value tail) {
         return reducer.apply(con(head), con(tail));
     }
 
