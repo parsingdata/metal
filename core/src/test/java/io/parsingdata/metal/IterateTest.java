@@ -46,7 +46,7 @@ public class IterateTest extends ParameterizedParse {
             def("f", con(1), eq(con(42))));
 
     private static final Token repBrokenNToken =
-        seq(repn(any("x"), last(div(con(1), con(0)))),
+        seq(repn(any("x"), div(con(1), con(0))),
             def("f", con(1), eq(con(42))));
 
     @Parameters(name = "{0} ({4})")

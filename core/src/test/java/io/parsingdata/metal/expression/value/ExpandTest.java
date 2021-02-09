@@ -59,7 +59,7 @@ public class ExpandTest {
     public void expandNotAValueTimes() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Count must evaluate to a non-empty countable value.");
-        exp(con(1), last(div(con(1), con(0)))).eval(EMPTY_PARSE_STATE, enc());
+        exp(con(1), div(con(1), con(0))).eval(EMPTY_PARSE_STATE, enc());
     }
 
     @Test

@@ -50,7 +50,7 @@ public class VarIntTest extends ParameterizedParse {
         repn(
             seq(
                 varInt("varInt"),
-                post(def("decoded", last(len(decodeVarInt(last(ref("varInt")))))), eq(decodeVarInt(last(ref("varInt")))))
+                post(def("decoded", len(decodeVarInt(last(ref("varInt"))))), eq(decodeVarInt(last(ref("varInt")))))
             ), con(4));
 
     @Parameterized.Parameters(name = "{0} ({4})")

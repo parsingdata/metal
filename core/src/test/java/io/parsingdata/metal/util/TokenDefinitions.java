@@ -30,8 +30,8 @@ import io.parsingdata.metal.token.Token;
 
 public class TokenDefinitions {
 
-    public static final ValueExpression EMPTY_VE = div(con(1), con(0)); // division by zero to wrap empty value
-    public static final SingleValueExpression EMPTY_SVE = last(EMPTY_VE); // same for SingleValueExpression
+    public static final SingleValueExpression EMPTY_SVE = div(con(1), con(0)); // division by zero to wrap empty value
+    public static final SingleValueExpression EMPTY_VE = EMPTY_SVE; // same but typed as ValueExpression
 
     private TokenDefinitions() {}
 
