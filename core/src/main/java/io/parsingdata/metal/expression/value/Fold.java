@@ -76,10 +76,7 @@ public abstract class Fold implements SingleValueExpression {
     }
 
     private Trampoline<Value> fold(final ParseState parseState, final Encoding encoding, final BinaryOperator<SingleValueExpression> reducer, final Value head, final ImmutableList<Value> tail) {
-        if (head.equals(NOT_A_VALUE)) {
-            return complete(() -> NOT_A_VALUE);
-        }
-        if (tail.isEmpty()) {
+        if (head.equals(NOT_A_VALUE) || tail.isEmpty()) {
             return complete(() -> head);
         }
         return reduce(reducer, head, tail.head).evalSingle(parseState, encoding)
