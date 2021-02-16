@@ -100,29 +100,29 @@ public final class Shorthand {
 
     private Shorthand() {}
 
-    /** Instantiates a {@link Def} nested in a {@link Post}. */
-    public static Token def(final String name, final SingleValueExpression size, final Expression predicate, final Encoding encoding) { return post(def(name, size, encoding), predicate); }
-
-    /** Instantiates a {@link Def} with {@code encoding = null} nested in a {@link Post}. */
-    public static Token def(final String name, final SingleValueExpression size, final Expression predicate) { return def(name, size, predicate, null); }
-
-    /** Instantiates a {@link Def}. */
+    /** "DEFinition": Instantiates a {@link Def}. */
     public static Token def(final String name, final SingleValueExpression size, final Encoding encoding) { return new Def(name, size, encoding); }
 
-    /** Instantiates a {@link Def} with {@code encoding = null}. */
-    public static Token def(final String name, final SingleValueExpression size) { return def(name, size, (Encoding)null); }
-
-    /** Instantiates a {@link Def} with {@code size = con(size)}, nested in a {@link Post}. */
-    public static Token def(final String name, final long size, final Expression predicate, final Encoding encoding) { return def(name, con(size), predicate, encoding); }
-
-    /** Instantiates a {@link Def} with {@code size = con(size)} and {@code encoding = null}, nested in a {@link Post}. */
-    public static Token def(final String name, final long size, final Expression predicate) { return def(name, size, predicate, null); }
-
-    /** Instantiates a {@link Def} with {@code size = con(size)}. */
+    /** "DEFinition": Instantiates a {@link Def} with {@code size = con(size)}. */
     public static Token def(final String name, final long size, final Encoding encoding) { return def(name, con(size), encoding); }
 
-    /** Instantiates a {@link Def} with {@code size = con(size)} and {@code encoding = null}. */
+    /** "DEFinition": Instantiates a {@link Def} with {@code encoding = null}. */
+    public static Token def(final String name, final SingleValueExpression size) { return def(name, size, (Encoding)null); }
+
+    /** "DEFinition": Instantiates a {@link Def} with {@code size = con(size)} and {@code encoding = null}. */
     public static Token def(final String name, final long size) { return def(name, size, (Encoding)null); }
+
+    /** "DEFinition": Instantiates a {@link Def} nested in a {@link Post}. */
+    public static Token def(final String name, final SingleValueExpression size, final Expression predicate, final Encoding encoding) { return post(def(name, size, encoding), predicate); }
+
+    /** "DEFinition": Instantiates a {@link Def} with {@code size = con(size)}, nested in a {@link Post}. */
+    public static Token def(final String name, final long size, final Expression predicate, final Encoding encoding) { return def(name, con(size), predicate, encoding); }
+
+    /** "DEFinition": Instantiates a {@link Def} with {@code encoding = null} nested in a {@link Post}. */
+    public static Token def(final String name, final SingleValueExpression size, final Expression predicate) { return def(name, size, predicate, null); }
+
+    /** "DEFinition": Instantiates a {@link Def} with {@code size = con(size)} and {@code encoding = null}, nested in a {@link Post}. */
+    public static Token def(final String name, final long size, final Expression predicate) { return def(name, size, predicate, null); }
 
     /** "NO Data": denotes data that is not required during parsing and afterwards. Instantiates a {@link Def} with {@code name = EMPTY_NAME} and {@code encoding = null}. */
     public static Token nod(final SingleValueExpression size) { return def(EMPTY_NAME, size); }
@@ -166,11 +166,11 @@ public final class Shorthand {
     /** "OPTional": denotes an optional token that succeeds regardless of whether its nested token successfully parses. Instantiates a {@link Cho} with {@code token1 = token} and {@code token2 = EMPTY}. */
     public static Token opt(final String name, final Token token, final Encoding encoding) { return cho(name, encoding, token, EMPTY); }
 
-    /** "OPTional": denotes an optional token that succeeds regardless of whether its nested token successfully parses. Instantiates a {@link Cho} with {@code encoding = null}, {@code token1 = token} and {@code token2 = EMPTY}. */
-    public static Token opt(final String name, final Token token) { return opt(name, token, null); }
-
     /** "OPTional": denotes an optional token that succeeds regardless of whether its nested token successfully parses. Instantiates a {@link Cho} with {@code name = NO_NAME}, {@code token1 = token} and {@code token2 = EMPTY}. */
     public static Token opt(final Token token, final Encoding encoding) { return opt(NO_NAME, token, encoding); }
+
+    /** "OPTional": denotes an optional token that succeeds regardless of whether its nested token successfully parses. Instantiates a {@link Cho} with {@code encoding = null}, {@code token1 = token} and {@code token2 = EMPTY}. */
+    public static Token opt(final String name, final Token token) { return opt(name, token, null); }
 
     /** "OPTional": denotes an optional token that succeeds regardless of whether its nested token successfully parses. Instantiates a {@link Cho} with {@code name = NO_NAME}, {@code encoding = null}, {@code token1 = token} and {@code token2 = EMPTY}. */
     public static Token opt(final Token token) { return opt(token, null); }
@@ -189,16 +189,16 @@ public final class Shorthand {
     /** @see Until */ public static Token until(final String name, final Token terminator, final Encoding encoding) { return until(name, null, terminator, encoding); }
     /** @see Until */ public static Token until(final String name, final Token terminator) { return until(name, terminator, null); }
 
-    /** Denotes a logical implication, parses the {@code token} only if the {@code predicate} evaluates to {code true} and subsequently only fails if {@code token} does not successfully parse. A composition of {@link Cho} and {@link Pre}. */
+    /** "WHEN": denotes a logical implication, parses the {@code token} only if the {@code predicate} evaluates to {code true} and subsequently only fails if {@code token} does not successfully parse. A composition of {@link Cho} and {@link Pre}. */
     public static Token when(final String name, final Token token, final Expression predicate, final Encoding encoding) { return cho(name, encoding, pre(def(EMPTY_NAME, 0), not(predicate)), token); }
 
-    /** Denotes a logical implication, parses the {@code token} only if the {@code predicate} evaluates to {code true} and subsequently only fails if {@code token} does not successfully parse. A composition of {@link Cho} and {@link Pre} with {@code encoding = null}. */
-    public static Token when(final String name, final Token token, final Expression predicate) { return when(name, token, predicate, null); }
-
-    /** Denotes a logical implication, parses the {@code token} only if the {@code predicate} evaluates to {code true} and subsequently only fails if {@code token} does not successfully parse. A composition of {@link Cho} and {@link Pre} with {@code name = EMPTY_NAME}. */
+    /** "WHEN": denotes a logical implication, parses the {@code token} only if the {@code predicate} evaluates to {code true} and subsequently only fails if {@code token} does not successfully parse. A composition of {@link Cho} and {@link Pre} with {@code name = EMPTY_NAME}. */
     public static Token when(final Token token, final Expression predicate, final Encoding encoding) { return when(EMPTY_NAME, token, predicate, encoding); }
 
-    /** Denotes a logical implication, parses the {@code token} only if the {@code predicate} evaluates to {code true} and subsequently only fails if {@code token} does not successfully parse. A composition of {@link Cho} and {@link Pre} with {@code name = EMPTY_NAME} and {@code encoding = null}. */
+    /** "WHEN": denotes a logical implication, parses the {@code token} only if the {@code predicate} evaluates to {code true} and subsequently only fails if {@code token} does not successfully parse. A composition of {@link Cho} and {@link Pre} with {@code encoding = null}. */
+    public static Token when(final String name, final Token token, final Expression predicate) { return when(name, token, predicate, null); }
+
+    /** "WHEN": denotes a logical implication, parses the {@code token} only if the {@code predicate} evaluates to {code true} and subsequently only fails if {@code token} does not successfully parse. A composition of {@link Cho} and {@link Pre} with {@code name = EMPTY_NAME} and {@code encoding = null}. */
     public static Token when(final Token token, final Expression predicate) { return when(token, predicate, null); }
 
     /** @see Add */ public static BinaryValueExpression add(final ValueExpression left, final ValueExpression right) { return new Add(left, right); }
@@ -224,18 +224,6 @@ public final class Shorthand {
     /** @see ShiftRight */ public static BinaryValueExpression shr(final ValueExpression left, final ValueExpression right) { return new ShiftRight(left, right); }
     /** @see ShiftRight */ public static SingleValueExpression shr(final SingleValueExpression left, final SingleValueExpression right) { return last(new ShiftRight(left, right)); }
 
-    /** "CONstant": instantiates {@link Const} with a {@link Value} object using {@code value} and {@code DEFAULT_ENCODING}. */
-    public static SingleValueExpression con(final long value) { return con(value, DEFAULT_ENCODING); }
-
-    /** "CONstant": instantiates {@link Const} with a {@link Value} object using {@code value} the provided {@code encoding}. */
-    public static SingleValueExpression con(final long value, final Encoding encoding) { return con(ConstantFactory.createFromNumeric(value, encoding)); }
-
-    /** "CONstant": instantiates {@link Const} with a {@link Value} object using {@code value} and {@code DEFAULT_ENCODING}. */
-    public static SingleValueExpression con(final String value) { return con(value, DEFAULT_ENCODING); }
-
-    /** "CONstant": instantiates {@link Const} with a {@link Value} object using {@code value} the provided {@code encoding}. */
-    public static SingleValueExpression con(final String value, final Encoding encoding) { return con(ConstantFactory.createFromString(value, encoding)); }
-
     /** "CONstant": instantiates {@link Const} with {@code value}. */
     public static SingleValueExpression con(final Value value) { return new Const(value); }
 
@@ -250,6 +238,18 @@ public final class Shorthand {
 
     /** "CONstant": instantiates {@link Const} with a {@link Value} object using {@code DEFAULT_ENCODING} and {@code value} denoting a single value. */
     public static SingleValueExpression con(final byte[] value, final Encoding encoding) { return con(ConstantFactory.createFromBytes(value, encoding)); }
+
+    /** "CONstant": instantiates {@link Const} with a {@link Value} object using {@code value} and the provided {@code encoding}. */
+    public static SingleValueExpression con(final long value, final Encoding encoding) { return con(ConstantFactory.createFromNumeric(value, encoding)); }
+
+    /** "CONstant": instantiates {@link Const} with a {@link Value} object using {@code value} and {@code DEFAULT_ENCODING}. */
+    public static SingleValueExpression con(final long value) { return con(value, DEFAULT_ENCODING); }
+
+    /** "CONstant": instantiates {@link Const} with a {@link Value} object using {@code value} and the provided {@code encoding}. */
+    public static SingleValueExpression con(final String value, final Encoding encoding) { return con(ConstantFactory.createFromString(value, encoding)); }
+
+    /** "CONstant": instantiates {@link Const} with a {@link Value} object using {@code value} and {@code DEFAULT_ENCODING}. */
+    public static SingleValueExpression con(final String value) { return con(value, DEFAULT_ENCODING); }
 
     /** @see Len */ public static ValueExpression len(final ValueExpression operand) { return new Len(operand); }
     /** @see Len */ public static SingleValueExpression len(final SingleValueExpression operand) { return last(new Len(operand)); }
@@ -282,10 +282,10 @@ public final class Shorthand {
     /** @see Reverse */ public static ValueExpression rev(final ValueExpression values) { return new Reverse(values); }
     /** @see Expand */ public static ValueExpression exp(final ValueExpression base, final SingleValueExpression count) { return new Expand(base, count); }
 
-    /** Denotes a map operation using the provided {@code func}, applied once for each result of evaluating {@code left} and reusing the single result of evaluating {@code rightExpand}. */
+    /** "MAPLEFT": denotes a map operation using the provided {@code func}, applied once for each result of evaluating {@code left} and reusing the single result of evaluating {@code rightExpand}. */
     public static BinaryValueExpression mapLeft(final BiFunction<ValueExpression, ValueExpression, BinaryValueExpression> func, final ValueExpression left, final SingleValueExpression rightExpand) { return func.apply(left, exp(rightExpand, count(left))); }
 
-    /** Denotes a map operation using the provided {@code func}, applied once for each result of evaluating {@code right} and reusing the single result of evaluating {@code leftExpand}. */
+    /** "MAPRIGHT": denotes a map operation using the provided {@code func}, applied once for each result of evaluating {@code right} and reusing the single result of evaluating {@code leftExpand}. */
     public static BinaryValueExpression mapRight(final BiFunction<ValueExpression, ValueExpression, BinaryValueExpression> func, final SingleValueExpression leftExpand, final ValueExpression right) { return func.apply(exp(leftExpand, count(right)), right); }
 
     /** @see Bytes */ public static ValueExpression bytes(final ValueExpression operand) { return new Bytes(operand); }
