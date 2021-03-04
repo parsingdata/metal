@@ -12,7 +12,7 @@ A Java library for parsing binary data formats, using declarative descriptions.
 
 ## License
 
-Copyright 2013-2020 Netherlands Forensic Institute
+Copyright 2013-2021 Netherlands Forensic Institute
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
