@@ -65,7 +65,7 @@
     <jxr-plugin.version>3.0.0</jxr-plugin.version>
     <javadoc-plugin.version>3.2.0</javadoc-plugin.version>
     <nexus-staging-plugin.version>1.6.8</nexus-staging-plugin.version>
-    <gpg-plugin.version>1.6</gpg-plugin.version>
+    <gpg-plugin.version>3.0.1</gpg-plugin.version>
     <source-plugin.version>3.2.1</source-plugin.version>
     <pitest-maven.version>1.5.2</pitest-maven.version>
     <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
