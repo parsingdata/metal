@@ -66,6 +66,11 @@ public class ReadTrackingByteStream implements ByteStream {
     }
 
     @Override
+    public BigInteger size() {
+        return byteStream.size();
+    }
+
+    @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + byteStream + ")";
     }

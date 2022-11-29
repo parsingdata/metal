@@ -53,6 +53,11 @@ public class ByteStreamSource extends Source {
     }
 
     @Override
+    public BigInteger size() {
+        return input.size();
+    }
+
+    @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + input + ")";
     }

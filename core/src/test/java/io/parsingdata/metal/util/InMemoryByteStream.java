@@ -46,6 +46,11 @@ public class InMemoryByteStream implements ByteStream {
     }
 
     @Override
+    public BigInteger size() {
+        return BigInteger.valueOf(data.length);
+    }
+
+    @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + data.length + ")";
     }

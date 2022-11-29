@@ -65,6 +65,11 @@ public class DataExpressionSource extends Source {
         return checkNotNegative(offset, "offset").add(checkNotNegative(length, "length")).compareTo(BigInteger.valueOf(getValue().length)) <= 0;
     }
 
+    @Override
+    public BigInteger size() {
+        return BigInteger.valueOf(getValue().length);
+    }
+
     private synchronized byte[] getValue() {
         if (cache == null) {
             final ImmutableList<Value> results = dataExpression.eval(parseState, encoding);

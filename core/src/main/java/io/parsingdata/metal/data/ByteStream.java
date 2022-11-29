@@ -25,4 +25,5 @@ public interface ByteStream {
 
     boolean isAvailable(BigInteger offset, BigInteger length);
 
+    BigInteger size();
 }

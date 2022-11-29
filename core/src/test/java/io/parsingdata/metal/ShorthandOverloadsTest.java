@@ -57,6 +57,7 @@ public class ShorthandOverloadsTest {
     public static final ParseState PARSE_STATE = ParseState.createFromByteStream(new ByteStream() {
         @Override public byte[] read(BigInteger offset, int length) { return new byte[0]; }
         @Override public boolean isAvailable(BigInteger offset, BigInteger length) { return false; }
+        @Override public BigInteger size() { return BigInteger.ZERO; }
     });
 
     @Parameter(0) public String description;

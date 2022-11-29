@@ -94,6 +94,11 @@ public class ConcatenatedValueSource extends Source {
     }
 
     @Override
+    public BigInteger size() {
+        return length;
+    }
+
+    @Override
     public String toString() {
         return getClass().getSimpleName() + "(" + values + "(" + length + "))";
     }

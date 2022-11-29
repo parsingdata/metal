@@ -24,4 +24,5 @@ public abstract class Source {
 
     protected abstract boolean isAvailable(BigInteger offset, BigInteger length);
 
+    public abstract BigInteger size();
 }

@@ -79,6 +79,9 @@ public class DefTest {
             @Override public boolean isAvailable(final BigInteger offset, final BigInteger length) {
                 return true;
             }
+            @Override public BigInteger size() {
+                return BigInteger.valueOf(Long.MAX_VALUE);
+            }
         };
         final ParseState state = ParseState.createFromByteStream(infiniteZeroStream, BigInteger.ONE);
         final Environment environment = new Environment(state, enc());

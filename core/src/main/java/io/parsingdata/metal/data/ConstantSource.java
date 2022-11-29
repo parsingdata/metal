@@ -51,6 +51,11 @@ public class ConstantSource extends Source {
     }
 
     @Override
+    public BigInteger size() {
+        return BigInteger.valueOf(data.length);
+    }
+
+    @Override
     public String toString() {
         return getClass().getSimpleName() + "(0x" + bytesToHexString(data) + ")";
     }

@@ -41,6 +41,7 @@ public class SelectionTest {
         return new Source() {
             @Override protected byte[] getData(BigInteger offset, BigInteger length) { return new byte[0]; }
             @Override protected boolean isAvailable(BigInteger offset, BigInteger length) { return true; }
+            @Override public BigInteger size() { return BigInteger.ZERO; }
         };
     }
 

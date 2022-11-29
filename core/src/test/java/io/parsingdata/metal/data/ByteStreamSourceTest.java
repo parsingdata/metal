@@ -32,6 +32,7 @@ public class ByteStreamSourceTest {
     public static final ByteStreamSource DUMMY_BYTE_STREAM_SOURCE = new ByteStreamSource(new ByteStream() {
         @Override public byte[] read(BigInteger offset, int length) throws IOException { throw new IOException("Always fails."); }
         @Override public boolean isAvailable(BigInteger offset, BigInteger length) { return true; }
+        @Override public BigInteger size() { return BigInteger.ZERO; }
     });
 
     @Rule

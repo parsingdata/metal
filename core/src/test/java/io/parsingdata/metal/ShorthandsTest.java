@@ -29,6 +29,7 @@ import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.eqNum;
 import static io.parsingdata.metal.Shorthand.eqStr;
 import static io.parsingdata.metal.Shorthand.gtEqNum;
 import static io.parsingdata.metal.Shorthand.gtNum;
@@ -44,6 +45,7 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.size;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.tie;
 import static io.parsingdata.metal.Shorthand.when;
@@ -244,4 +246,16 @@ public class ShorthandsTest {
         assertEquals(1, Selection.getAllValues(result.get().order, parseValue -> parseValue.matches("name2") && parseValue.value().length == 1 && parseValue.value()[0] == 2).size);
     }
 
+    @Test
+    public void sourceSize() {
+        int size = (int)(Math.random() * 10);
+        int[] bytes = new int[size];
+        bytes[bytes.length - 1] = 0x01;
+
+        Optional<ParseState> result = sub(def("footer", con(1), eqNum(con(0x01))), sub(size(), con(1))).parse(env(stream(bytes)));
+        assertTrue(result.isPresent());
+
+        ParseValue footer = Selection.getAllValues(result.get().order, parseValue -> parseValue.matches("footer")).head;
+        assertEquals(size, footer.slice().offset.intValue() + 1);
+    }
 }
