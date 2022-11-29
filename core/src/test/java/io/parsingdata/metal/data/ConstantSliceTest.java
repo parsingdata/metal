@@ -58,6 +58,7 @@ public class ConstantSliceTest {
         final byte[] output = slice.getData();
         assertEquals(input.length, output.length);
         assertTrue(Arrays.equals(input, output));
+        assertEquals(4, slice.source.size().intValue());
     }
 
     @Test

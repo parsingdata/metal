@@ -86,6 +86,7 @@ public class ConcatenatedValueSourceTest {
 
     @Test
     public void checkData() {
+        assertEquals(25, cvs.size().intValue());
         byte[] data = cvs.getData(BigInteger.valueOf(offset), BigInteger.valueOf(length));
         assertEquals(length, data.length);
         for (int i = 0; i < length; i++) {
