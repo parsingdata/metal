@@ -86,7 +86,8 @@ public class DataExpressionSourceTest {
     @Test
     public void size() {
         final Optional<ParseState> result = setupResult();
-        assertEquals(4, result.get().source.size().intValue());
+        final DataExpressionSource source = new DataExpressionSource(ref("a"), 0, result.get(), enc());
+        assertEquals(4, source.size().intValue());
     }
 
 }

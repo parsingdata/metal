@@ -68,7 +68,7 @@ public class SizeTest {
             @Override public BigInteger size() { return size; }
         };
 
-        final ImmutableList<Value> offsetCon = size().eval(ParseState.createFromByteStream(byteStream), enc());
+        ImmutableList<Value> offsetCon = size().eval(ParseState.createFromByteStream(byteStream), enc());
         assertEquals(1, offsetCon.size);
         assertEquals(size, offsetCon.head.asNumeric());
     }
