@@ -17,7 +17,7 @@
 package io.parsingdata.metal.data;
 
 import static java.math.BigInteger.ZERO;
-
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -81,6 +81,12 @@ public class DataExpressionSourceTest {
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("ValueExpression dataExpression yields NOT_A_VALUE at index 0.");
         new DataExpressionSource(div(con(1), con(0)), 0, EMPTY_PARSE_STATE, enc()).isAvailable(ZERO, ZERO);
+    }
+
+    @Test
+    public void size() {
+        final Optional<ParseState> result = setupResult();
+        assertEquals(4, result.get().source.size().intValue());
     }
 
 }
