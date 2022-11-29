@@ -248,7 +248,7 @@ public class ShorthandsTest {
 
     @Test
     public void sourceSize() {
-        int size = (int)(Math.random() * 10);
+        int size = (int)(Math.random() * 10) + 2;
         int[] bytes = new int[size];
         bytes[bytes.length - 1] = 0x01;
 
