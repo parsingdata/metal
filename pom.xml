@@ -70,7 +70,7 @@
     <pitest-maven.version>1.5.2</pitest-maven.version>
     <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
     <maven-site-plugin.version>3.9.1</maven-site-plugin.version>
-    <maven-project-info-reports.version>3.1.1</maven-project-info-reports.version>
+    <maven-project-info-reports.version>3.4.1</maven-project-info-reports.version>
   </properties>
 
   <profiles>
