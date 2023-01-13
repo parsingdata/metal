@@ -64,7 +64,7 @@
     <pmd-plugin.version>3.14.0</pmd-plugin.version>
     <jxr-plugin.version>3.3.0</jxr-plugin.version>
     <javadoc-plugin.version>3.4.1</javadoc-plugin.version>
-    <nexus-staging-plugin.version>1.6.8</nexus-staging-plugin.version>
+    <nexus-staging-plugin.version>1.6.13</nexus-staging-plugin.version>
     <gpg-plugin.version>1.6</gpg-plugin.version>
     <source-plugin.version>3.2.1</source-plugin.version>
     <pitest-maven.version>1.5.2</pitest-maven.version>
