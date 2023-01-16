@@ -11,7 +11,7 @@ A Java library for parsing binary data formats, using declarative descriptions.
 
 ## License
 
-Copyright 2013-2023 Netherlands Forensic Institute
+Copyright 2013-2023 Netherlands Forensic Institute  
 Copyright 2021-2023 Infix Technologies B.V.
 
 Licensed under the Apache License, Version 2.0 (the "License");
