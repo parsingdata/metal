@@ -54,22 +54,28 @@ public class UntilTest {
     private static final String INPUT_2 = "Another line...";
     private static final String INPUT_3 = "Another way to scroll...";
     private static final String INPUT = INPUT_1 + "\n" + INPUT_2 + "\n" + INPUT_3 + "\n";
+    public static final Token NEWLINE = def("newline", con(1), eq(con('\n')));
 
     @Test
     public void threeNewLines() {
-        final Optional<ParseState> parseState = createToken(con(0), post(def("newline", con(1)), eq(con('\n')))).parse(env(stream(INPUT, US_ASCII)));
+        final Optional<ParseState> parseState = createToken(con(0), NEWLINE).parse(env(stream(INPUT, US_ASCII)));
         assertTrue(parseState.isPresent());
+
         ImmutableList<ParseValue> values = getAllValues(parseState.get().order, "line");
         assertEquals(3, values.size);
         assertEquals(INPUT_3, values.head.asString());
         assertEquals(INPUT_2, values.tail.head.asString());
         assertEquals(INPUT_1, values.tail.tail.head.asString());
+
+        ImmutableList<ParseValue> newLines = getAllValues(parseState.get().order, "newline");
+        assertEquals(3, newLines.size);
     }
 
     @Test
     public void untilInclusiveWithEmptyInParseGraph() {
         final Optional<ParseState> parseState = createToken(con(1), post(EMPTY, eq(mod(last(ref("line")), con(256)), con('\n')))).parse(env(stream(INPUT, US_ASCII)));
         assertTrue(parseState.isPresent());
+
         ImmutableList<ParseValue> values = getAllValues(parseState.get().order, "line");
         assertEquals(3, values.size);
         assertEquals(INPUT_3 + '\n', values.head.asString());
@@ -79,13 +85,30 @@ public class UntilTest {
 
     @Test
     public void untilInclusiveWithTerminatorInParseGraph() {
-        final Optional<ParseState> parseState = createToken(con(1), sub(post(def("newline", con(1)), eq(con('\n'))), sub(CURRENT_OFFSET, con(1)))).parse(env(stream(INPUT, US_ASCII)));
+        final Optional<ParseState> parseState = createToken(con(1), sub(NEWLINE, sub(CURRENT_OFFSET, con(1)))).parse(env(stream(INPUT, US_ASCII)));
         assertTrue(parseState.isPresent());
+
         ImmutableList<ParseValue> lines = getAllValues(parseState.get().order, "line");
         assertEquals(3, lines.size);
         assertEquals(INPUT_3 + '\n', lines.head.asString());
         assertEquals(INPUT_2 + '\n', lines.tail.head.asString());
         assertEquals(INPUT_1 + '\n', lines.tail.tail.head.asString());
+
+        ImmutableList<ParseValue> newLines = getAllValues(parseState.get().order, "newline");
+        assertEquals(3, newLines.size);
+    }
+
+    @Test
+    public void untilExclusiveWithTerminatorInParseGraph() {
+        final Optional<ParseState> parseState = createToken(con(1), sub(NEWLINE, CURRENT_OFFSET)).parse(env(stream(INPUT, US_ASCII)));
+        assertTrue(parseState.isPresent());
+
+        ImmutableList<ParseValue> lines = getAllValues(parseState.get().order, "line");
+        assertEquals(3, lines.size);
+        assertEquals("\n" + INPUT_3 , lines.head.asString());
+        assertEquals("\n" + INPUT_2, lines.tail.head.asString());
+        assertEquals(INPUT_1, lines.tail.tail.head.asString());
+
         ImmutableList<ParseValue> newLines = getAllValues(parseState.get().order, "newline");
         assertEquals(3, newLines.size);
     }
