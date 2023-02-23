@@ -16,6 +16,8 @@
 
 package io.parsingdata.metal.token;
 
+import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
+import static io.parsingdata.metal.Shorthand.sub;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
 import static org.junit.Assert.assertEquals;
@@ -65,7 +67,7 @@ public class UntilTest {
     }
 
     @Test
-    public void untilInclusive() {
+    public void untilInclusiveWithEmptyInParseGraph() {
         final Optional<ParseState> parseState = createToken(con(1), post(EMPTY, eq(mod(last(ref("line")), con(256)), con('\n')))).parse(env(stream(INPUT, US_ASCII)));
         assertTrue(parseState.isPresent());
         ImmutableList<ParseValue> values = getAllValues(parseState.get().order, "line");
@@ -73,6 +75,19 @@ public class UntilTest {
         assertEquals(INPUT_3 + '\n', values.head.asString());
         assertEquals(INPUT_2 + '\n', values.tail.head.asString());
         assertEquals(INPUT_1 + '\n', values.tail.tail.head.asString());
+    }
+
+    @Test
+    public void untilInclusiveWithTerminatorInParseGraph() {
+        final Optional<ParseState> parseState = createToken(con(1), sub(post(def("newline", con(1)), eq(con('\n'))), sub(CURRENT_OFFSET, con(1)))).parse(env(stream(INPUT, US_ASCII)));
+        assertTrue(parseState.isPresent());
+        ImmutableList<ParseValue> lines = getAllValues(parseState.get().order, "line");
+        assertEquals(3, lines.size);
+        assertEquals(INPUT_3 + '\n', lines.head.asString());
+        assertEquals(INPUT_2 + '\n', lines.tail.head.asString());
+        assertEquals(INPUT_1 + '\n', lines.tail.tail.head.asString());
+        ImmutableList<ParseValue> newLines = getAllValues(parseState.get().order, "newline");
+        assertEquals(3, newLines.size);
     }
 
     @Test
