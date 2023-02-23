@@ -180,7 +180,7 @@ public final class Shorthand {
     /** @see Tie */ public static Token tie(final String name, final Token token, final ValueExpression dataExpression) { return tie(name, token, dataExpression, null); }
     /** @see Tie */ public static Token tie(final Token token, final ValueExpression dataExpression, final Encoding encoding) { return tie(NO_NAME, token, dataExpression, encoding); }
     /** @see Tie */ public static Token tie(final Token token, final ValueExpression dataExpression) { return tie(token, dataExpression, null); }
-    /** @see Until */ public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) { return new Until(name, initialSize, stepSize, maxSize, terminator, encoding); }
+    /** @see Until */ public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) { return new Until(name, initialSize, stepSize, maxSize, terminator, true, encoding); }
     /** @see Until */ public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator) { return until(name, initialSize, stepSize, maxSize, terminator, null); }
     /** @see Until */ public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final Token terminator, final Encoding encoding) { return until(name, initialSize, stepSize, null, terminator, encoding); }
     /** @see Until */ public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final Token terminator) { return until(name, initialSize, stepSize, null, terminator, null); }
@@ -188,6 +188,15 @@ public final class Shorthand {
     /** @see Until */ public static Token until(final String name, final ValueExpression initialSize, final Token terminator) { return until(name, initialSize, null, terminator, null); }
     /** @see Until */ public static Token until(final String name, final Token terminator, final Encoding encoding) { return until(name, null, terminator, encoding); }
     /** @see Until */ public static Token until(final String name, final Token terminator) { return until(name, terminator, null); }
+
+    public static Token defU(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) { return new Until(name, initialSize, stepSize, maxSize, terminator, false, encoding); }
+    public static Token defU(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator) { return defU(name, initialSize, stepSize, maxSize, terminator, null); }
+    public static Token defU(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final Token terminator, final Encoding encoding) { return defU(name, initialSize, stepSize, null, terminator, encoding); }
+    public static Token defU(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final Token terminator) { return defU(name, initialSize, stepSize, null, terminator, null); }
+    public static Token defU(final String name, final ValueExpression initialSize, final Token terminator, final Encoding encoding) { return defU(name, initialSize, null, terminator, encoding); }
+    public static Token defU(final String name, final ValueExpression initialSize, final Token terminator) { return defU(name, initialSize, null, terminator, null); }
+    public static Token defU(final String name, final Token terminator, final Encoding encoding) { return defU(name, null, terminator, encoding); }
+    public static Token defU(final String name, final Token terminator) { return defU(name, terminator, null); }
 
     /** "WHEN": denotes a logical implication, parses the {@code token} only if the {@code predicate} evaluates to {code true} and subsequently only fails if {@code token} does not successfully parse. A composition of {@link Cho} and {@link Pre}. */
     public static Token when(final String name, final Token token, final Expression predicate, final Encoding encoding) { return cho(name, encoding, pre(def(EMPTY_NAME, 0), not(predicate)), token); }

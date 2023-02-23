@@ -17,6 +17,8 @@
 package io.parsingdata.metal.token;
 
 import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
+import static io.parsingdata.metal.Shorthand.defU;
+import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.Shorthand.sub;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
@@ -58,7 +60,7 @@ public class UntilTest {
 
     @Test
     public void threeNewLines() {
-        final Optional<ParseState> parseState = createToken(con(0), NEWLINE).parse(env(stream(INPUT, US_ASCII)));
+        final Optional<ParseState> parseState = rep(until("line", NEWLINE)).parse(env(stream(INPUT, US_ASCII)));
         assertTrue(parseState.isPresent());
 
         ImmutableList<ParseValue> values = getAllValues(parseState.get().order, "line");
@@ -73,7 +75,8 @@ public class UntilTest {
 
     @Test
     public void untilInclusiveWithEmptyInParseGraph() {
-        final Optional<ParseState> parseState = createToken(con(1), post(EMPTY, eq(mod(last(ref("line")), con(256)), con('\n')))).parse(env(stream(INPUT, US_ASCII)));
+        final Token terminator = post(EMPTY, eq(mod(last(ref("line")), con(256)), con('\n')));
+        final Optional<ParseState> parseState = rep(until("line", con(1), terminator)).parse(env(stream(INPUT, US_ASCII)));
         assertTrue(parseState.isPresent());
 
         ImmutableList<ParseValue> values = getAllValues(parseState.get().order, "line");
@@ -85,7 +88,8 @@ public class UntilTest {
 
     @Test
     public void untilInclusiveWithTerminatorInParseGraph() {
-        final Optional<ParseState> parseState = createToken(con(1), sub(NEWLINE, sub(CURRENT_OFFSET, con(1)))).parse(env(stream(INPUT, US_ASCII)));
+        final Token terminator = sub(NEWLINE, sub(CURRENT_OFFSET, con(1)));
+        final Optional<ParseState> parseState = rep(until("line", con(1), terminator)).parse(env(stream(INPUT, US_ASCII)));
         assertTrue(parseState.isPresent());
 
         ImmutableList<ParseValue> lines = getAllValues(parseState.get().order, "line");
@@ -100,7 +104,8 @@ public class UntilTest {
 
     @Test
     public void untilExclusiveWithTerminatorInParseGraph() {
-        final Optional<ParseState> parseState = createToken(con(1), sub(NEWLINE, CURRENT_OFFSET)).parse(env(stream(INPUT, US_ASCII)));
+        final Token terminator = sub(NEWLINE, CURRENT_OFFSET);
+        final Optional<ParseState> parseState = rep(until("line", con(1), terminator)).parse(env(stream(INPUT, US_ASCII)));
         assertTrue(parseState.isPresent());
 
         ImmutableList<ParseValue> lines = getAllValues(parseState.get().order, "line");
@@ -114,6 +119,21 @@ public class UntilTest {
     }
 
     @Test
+    public void defUnterminated() {
+        final Optional<ParseState> parseState = rep(defU("line", con(1), NEWLINE)).parse(env(stream(INPUT, US_ASCII)));
+        assertTrue(parseState.isPresent());
+
+        ImmutableList<ParseValue> lines = getAllValues(parseState.get().order, "line");
+        assertEquals(3, lines.size);
+        assertEquals("\n" + INPUT_3 , lines.head.asString());
+        assertEquals("\n" + INPUT_2, lines.tail.head.asString());
+        assertEquals(INPUT_1, lines.tail.tail.head.asString());
+
+        ImmutableList<ParseValue> newLines = getAllValues(parseState.get().order, "newline");
+        assertEquals(0, newLines.size);
+    }
+
+    @Test
     public void allDefaultValueExpressions() {
         assertTrue(until("value", def("terminator", 1, eq(con(0)))).parse(env(stream(1, 2, 3, 0))).isPresent());
     }
@@ -122,9 +142,4 @@ public class UntilTest {
     public void errorNegativeSize() {
         assertFalse(until("value", con(-1, signed()), def("terminator", 1, eq(con(0)))).parse(env(stream(1, 2, 3, 0))).isPresent());
     }
-
-    private Token createToken(final ValueExpression initialSize, final Token terminator) {
-        return repn(until("line", initialSize, terminator), con(3));
-    }
-
 }

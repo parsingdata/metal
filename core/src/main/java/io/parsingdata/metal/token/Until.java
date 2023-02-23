@@ -76,13 +76,15 @@ public class Until extends Token {
     public final ValueExpression stepSize;
     public final ValueExpression maxSize;
     public final Token terminator;
+    public final boolean includeTerminator;
 
-    public Until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) {
+    public Until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final boolean includeTerminator, final Encoding encoding) {
         super(checkNotEmpty(name, "name"), encoding);
         this.initialSize = initialSize == null ? DEFAULT_INITIAL : initialSize;
         this.stepSize = stepSize == null ? DEFAULT_STEP : stepSize;
         this.maxSize = maxSize == null ? DEFAULT_MAX : maxSize;
         this.terminator = checkNotNull(terminator, "terminator");
+        this.includeTerminator = includeTerminator;
     }
 
     @Override
@@ -114,10 +116,15 @@ public class Until extends Token {
 
     private Trampoline<Optional<ParseState>> parseSlice(final Environment environment, final BigInteger currentSize, final BigInteger stepSize, final BigInteger maxSize, final Slice slice) {
         return (currentSize.compareTo(ZERO) == 0 ? Optional.of(environment.parseState) : environment.parseState.add(new ParseValue(name, this, slice, environment.encoding)).seek(environment.parseState.offset.add(currentSize)))
-            .map(preparedParseState -> terminator.parse(environment.withParseState(preparedParseState)))
+            .map(preparedParseState -> parseTerminator(environment, preparedParseState))
             .orElseGet(Util::failure)
-            .map(parsedParseState -> complete(() -> success(parsedParseState)))
+            .map(parseState -> complete(() -> success(parseState)))
             .orElseGet(() -> intermediate(() -> iterate(environment, currentSize.add(stepSize), stepSize, maxSize)));
+    }
+
+    private Optional<ParseState> parseTerminator(final Environment environment, final ParseState parseStateExcludingTerminator) {
+        return terminator.parse(environment.withParseState(parseStateExcludingTerminator))
+            .map(parseStateIncludingTerminator -> includeTerminator ? parseStateIncludingTerminator : parseStateExcludingTerminator);
     }
 
     private boolean checkNotValidList(final ImmutableList<Value> list) {
