@@ -146,7 +146,8 @@ public class Until extends Token {
             && Objects.equals(initialSize, ((Until)obj).initialSize)
             && Objects.equals(stepSize, ((Until)obj).stepSize)
             && Objects.equals(maxSize, ((Until)obj).maxSize)
-            && Objects.equals(terminator, ((Until)obj).terminator);
+            && Objects.equals(terminator, ((Until)obj).terminator)
+            && Objects.equals(includeTerminator, ((Until)obj).includeTerminator);
     }
 
     @Override

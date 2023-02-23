@@ -166,6 +166,7 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> BIG_INTEGERS = Arrays.asList(() -> ONE, () -> BigInteger.valueOf(3));
     private static final List<Supplier<Object>> PARSE_STATES = Arrays.asList(() -> createFromByteStream(DUMMY_STREAM), () -> createFromByteStream(DUMMY_STREAM, ONE), () -> new ParseState(GRAPH_WITH_REFERENCE, DUMMY_BYTE_STREAM_SOURCE, TEN, new ImmutableList<>(), new ImmutableList<>()));
     private static final List<Supplier<Object>> IMMUTABLE_LISTS = Arrays.asList(ImmutableList::new, () -> ImmutableList.create("TEST"), () -> ImmutableList.create(1), () -> ImmutableList.create(1).add(2));
+    private static final List<Supplier<Object>> BOOLEANS = Arrays.asList(() -> true, () -> false);
     private static final Map<Class, List<Supplier<Object>>> mapping = buildMap();
 
     private static Map<Class, List<Supplier<Object>>> buildMap() {
@@ -190,6 +191,7 @@ public class AutoEqualityTest {
         result.put(BigInteger.class, BIG_INTEGERS);
         result.put(ParseState.class, PARSE_STATES);
         result.put(ImmutableList.class, IMMUTABLE_LISTS);
+        result.put(boolean.class, BOOLEANS);
         return result;
     }
 
