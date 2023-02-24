@@ -35,4 +35,4 @@ jobs:
 
       - name: Upload Code Coverage to Codecov
         if: matrix.distribution == 'temurin' && matrix.java-version == '11'
-        uses: codecov/codecov-actions@v3
+        uses: codecov/codecov-action@v3
