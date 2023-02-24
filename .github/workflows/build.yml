@@ -15,6 +15,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          # Fetch all history for Sonar analysis
+          fetch-depth: 0
 
       - name: Set up Cache
         uses: actions/cache@v3
@@ -31,6 +34,7 @@ jobs:
           distribution: ${{ matrix.distribution }}
 
       - name: Build with Maven and analyze with Sonar
+        # Analyze only the Temurin 11 build
         if: matrix.distribution == 'temurin' && matrix.java-version == '11'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -42,5 +46,6 @@ jobs:
         run: mvn -B --update-snapshots -Dmaven.test.failure.ignore=true package
 
       - name: Upload Code Coverage to Codecov
+        # Upload test coverage results only from the Temurin 11 build
         if: matrix.distribution == 'temurin' && matrix.java-version == '11'
         uses: codecov/codecov-action@v3
