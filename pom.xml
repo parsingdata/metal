@@ -71,6 +71,9 @@
     <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
     <maven-site-plugin.version>3.12.1</maven-site-plugin.version>
     <maven-project-info-reports.version>3.4.2</maven-project-info-reports.version>
+
+    <sonar.organization>parsingdata</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
   </properties>
 
   <profiles>
