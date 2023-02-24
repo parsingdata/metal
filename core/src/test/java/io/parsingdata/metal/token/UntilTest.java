@@ -52,7 +52,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.runners.Parameterized.Parameters;
 
-public class UntilTest {
+class UntilTest {
 
     private static final String INPUT_1 = "Hello, World!";
     private static final String INPUT_2 = "Another line...";
@@ -65,7 +65,7 @@ public class UntilTest {
     public static final Token NEXT_START_WITH_TERMINATOR = sub(NEWLINE, CURRENT_OFFSET);
 
     @Parameters(name="{0}")
-    public static Collection<Object[]> data() {
+    static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
             { "until: terminator not part of line, available in parseGraph",  until("line", NEWLINE),                                  3, 3, INPUT_1, INPUT_2, INPUT_3},
             { "until: terminator part of line, not available in parseGraph",  until("line", con(1), END_WITH_NEWLINE_POST),      3, 0, INPUT_1 + '\n', INPUT_2 + '\n', INPUT_3 + '\n'},
@@ -83,7 +83,7 @@ public class UntilTest {
 
     @ParameterizedTest
     @MethodSource("data")
-    public void repTest(final String name, final Token token, final int lineCount, final int newlineCount, final String line1, final String line2, final String line3) {
+    void repTest(final String name, final Token token, final int lineCount, final int newlineCount, final String line1, final String line2, final String line3) {
         final Optional<ParseState> parseState = rep(token).parse(env(stream(INPUT, US_ASCII)));
         assertTrue(parseState.isPresent());
 
@@ -98,7 +98,7 @@ public class UntilTest {
     }
 
     @Parameters(name="{0}")
-    public static Collection<Object[]> defUShorthands() {
+    static Collection<Object[]> defUShorthands() {
         return Arrays.asList(new Object[][] {
             { "defU",                         defU("line", NEWLINE)               },
             { "defU initial size",            defU("line", con(13), NEWLINE)},
@@ -112,7 +112,7 @@ public class UntilTest {
 
     @ParameterizedTest
     @MethodSource("defUShorthands")
-    public void shorthandTest(final String name, final Token token) {
+    void shorthandTest(final String name, final Token token) {
         final Optional<ParseState> parseState = rep(seq(token, NEWLINE)).parse(env(stream(INPUT, US_ASCII)));
         assertTrue(parseState.isPresent());
 
@@ -127,12 +127,12 @@ public class UntilTest {
     }
 
     @Test
-    public void allDefaultValueExpressions() {
+    void allDefaultValueExpressions() {
         assertTrue(until("value", def("terminator", 1, eq(con(0)))).parse(env(stream(1, 2, 3, 0))).isPresent());
     }
 
     @Test
-    public void errorNegativeSize() {
+    void errorNegativeSize() {
         assertFalse(until("value", con(-1, signed()), def("terminator", 1, eq(con(0)))).parse(env(stream(1, 2, 3, 0))).isPresent());
     }
 }
