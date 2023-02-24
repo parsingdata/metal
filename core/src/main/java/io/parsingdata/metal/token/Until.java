@@ -59,6 +59,10 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * <code>terminator</code> is made. Parsing fails if no combination of any size
  * is found where the <code>terminator</code> parses successfully.
  * <p>
+ * Whether the resulting <code>ParseState</code> includes the parsed
+ * terminator, depends on the value of the <code>includeTerminator</code>
+ * argument.
+ * <p>
  * If the <code>ValueExpressions</code> evaluate to lists, they are treated
  * as sets of values to attempt. If <code>stepSize</code> is negative,
  * <code>maxSize</code> must be smaller than <code>initialSize</code>.
