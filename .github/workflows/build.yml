@@ -37,7 +37,7 @@ jobs:
           distribution: ${{ matrix.distribution }}
 
       - name: Build and deploy with Maven and analyze with Sonar
-        # Deploy and analyze only the Temurin 11 build
+        # Deploy and analyze only the Corretto 11 build
         if: matrix.distribution == 'corretto' && matrix.java-version == '11'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -49,6 +49,6 @@ jobs:
         run: mvn -B --update-snapshots -Dmaven.test.failure.ignore=true package
 
       - name: Upload Code Coverage to Codecov
-        # Upload test coverage results only from the Temurin 11 build
+        # Upload test coverage results only from the Corretto 11 build
         if: matrix.distribution == 'corretto' && matrix.java-version == '11'
         uses: codecov/codecov-action@v3
