@@ -43,6 +43,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Function;
 
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
@@ -165,23 +166,20 @@ class UntilTest {
 
     @Test
     public void nameScopeWithUntil() {
-        final Token terminator = def("terminator", con(1), eq(con(0x00)));
-        final Token token = seq("struct", until("value", terminator), terminator);
-        final Optional<ParseState> parse = token.parse(env(stream('d', 'a', 't', 'a', 0, 0)));
-        assertTrue(parse.isPresent());
-        assertEquals(1, getAllValues(parse.get().order, "struct.terminator").size);
-        assertEquals(1, getAllValues(parse.get().order, "struct.value.value").size);
-        assertEquals(1, getAllValues(parse.get().order, "struct.value.terminator").size);
-        assertEquals("data", getAllValues(parse.get().order, "struct.value.value").head.asString());
+        assertNameScope(terminator -> until("value", terminator), 2);
     }
 
     @Test
     public void nameScopeWithDef() {
+        assertNameScope(terminator -> def("value", terminator), 1);
+    }
+
+    private static void assertNameScope(final Function<Token, Token> tokenProvider, int terminatorCount) {
         final Token terminator = def("terminator", con(1), eq(con(0x00)));
-        final Token token = seq("struct", def("value", terminator), terminator);
+        final Token token = seq("struct", tokenProvider.apply(terminator), terminator);
         final Optional<ParseState> parse = token.parse(env(stream('d', 'a', 't', 'a', 0, 0)));
         assertTrue(parse.isPresent());
-        assertEquals(1, getAllValues(parse.get().order, "struct.terminator").size);
+        assertEquals(terminatorCount, getAllValues(parse.get().order, "struct.terminator").size);
         assertEquals(1, getAllValues(parse.get().order, "struct.value").size);
         assertEquals("data", getAllValues(parse.get().order, "struct.value").head.asString());
     }

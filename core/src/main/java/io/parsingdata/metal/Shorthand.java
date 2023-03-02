@@ -215,7 +215,7 @@ public final class Shorthand {
 
 
     /** "DEFinition": Instantiates a {@link Until} and its terminator nested in a {@link Seq}. */
-    public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) { return seq(name, def(name, initialSize, stepSize, maxSize, terminator, encoding), terminator); }
+    public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) { return seq(def(name, initialSize, stepSize, maxSize, terminator, encoding), terminator); }
 
     /** "DEFinition": Instantiates a {@link Until} and its terminator nested in a {@link Seq} with {@code encoding = null}. */
     public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator) { return until(name, initialSize, stepSize, maxSize, terminator, null); }
