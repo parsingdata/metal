@@ -126,7 +126,7 @@ public final class Shorthand {
 
 
     /** "DEFinition": Instantiates a {@link Until} where the size of the def is dynamically determined. */
-    public static Token def(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) { return new Until(name, initialSize, stepSize, maxSize, terminator, false, encoding); }
+    public static Token def(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) { return new Until(name, initialSize, stepSize, maxSize, terminator, encoding); }
 
     /** "DEFinition": Instantiates a {@link Until} where the size of the def is dynamically determined with {@code encoding = null}. */
     public static Token def(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator) { return def(name, initialSize, stepSize, maxSize, terminator, null); }

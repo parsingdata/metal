@@ -153,8 +153,8 @@ public class ArgumentsTest {
             { TokenRef.class, new Object[] { null, VALID_NAME, null } },
             { TokenRef.class, new Object[] { null, null, null } },
             { TokenRef.class, new Object[] { VALID_NAME, EMPTY_NAME, null } },
-            { Until.class, new Object[] { null, VALID_VE, VALID_VE, VALID_VE, VALID_T, true, null }},
-            { Until.class, new Object[] { VALID_NAME, VALID_VE, VALID_VE, VALID_VE, null, false, null }}
+            { Until.class, new Object[] { null, VALID_VE, VALID_VE, VALID_VE, VALID_T, null }},
+            { Until.class, new Object[] { VALID_NAME, VALID_VE, VALID_VE, VALID_VE, null, null }}
         });
     }
 
