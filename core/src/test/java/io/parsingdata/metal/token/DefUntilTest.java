@@ -54,7 +54,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class UntilTest {
+class DefUntilTest {
 
     private static final String INPUT_1 = "Hello, World!";
     private static final String INPUT_2 = "Another line...";
