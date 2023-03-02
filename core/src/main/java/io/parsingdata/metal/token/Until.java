@@ -59,6 +59,10 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * <code>terminator</code> is made. Parsing fails if no combination of any size
  * is found where the <code>terminator</code> parses successfully.
  * <p>
+ * Whether the resulting <code>ParseState</code> includes the parsed
+ * terminator, depends on the value of the <code>includeTerminator</code>
+ * argument.
+ * <p>
  * If the <code>ValueExpressions</code> evaluate to lists, they are treated
  * as sets of values to attempt. If <code>stepSize</code> is negative,
  * <code>maxSize</code> must be smaller than <code>initialSize</code>.
@@ -114,9 +118,9 @@ public class Until extends Token {
 
     private Trampoline<Optional<ParseState>> parseSlice(final Environment environment, final BigInteger currentSize, final BigInteger stepSize, final BigInteger maxSize, final Slice slice) {
         return (currentSize.compareTo(ZERO) == 0 ? Optional.of(environment.parseState) : environment.parseState.add(new ParseValue(environment.scope, this, slice, environment.encoding)).seek(environment.parseState.offset.add(currentSize)))
-            .map(preparedParseState -> terminator.parse(environment.withParseState(preparedParseState)))
+            .map(preparedParseState -> terminator.parse(environment.withParseState(preparedParseState)).map(ignore -> preparedParseState))
             .orElseGet(Util::failure)
-            .map(parsedParseState -> complete(() -> success(parsedParseState)))
+            .map(parseState -> complete(() -> success(parseState)))
             .orElseGet(() -> intermediate(() -> iterate(environment, currentSize.add(stepSize), stepSize, maxSize)));
     }
 

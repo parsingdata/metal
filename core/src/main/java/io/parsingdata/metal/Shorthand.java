@@ -124,6 +124,38 @@ public final class Shorthand {
     /** "DEFinition": Instantiates a {@link Def} with {@code size = con(size)} and {@code encoding = null}, nested in a {@link Post}. */
     public static Token def(final String name, final long size, final Expression predicate) { return def(name, size, predicate, null); }
 
+
+    /** "DEFinition": Instantiates a {@link Until} where the size of the def is dynamically determined. */
+    public static Token def(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) { return new Until(name, initialSize, stepSize, maxSize, terminator, encoding); }
+
+    /** "DEFinition": Instantiates a {@link Until} where the size of the def is dynamically determined with {@code encoding = null}. */
+    public static Token def(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator) { return def(name, initialSize, stepSize, maxSize, terminator, null); }
+
+    /** "DEFinition": Instantiates a {@link Until} where the size of the def is dynamically determined with {@code maxSize = null}. */
+    public static Token def(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final Token terminator, final Encoding encoding) { return def(name, initialSize, stepSize, null, terminator, encoding); }
+
+    /** "DEFinition": Instantiates a {@link Until} where the size of the def is dynamically determined with {@code maxSize = null} and {@code encoding = null}. */
+    public static Token def(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final Token terminator) { return def(name, initialSize, stepSize, null, terminator, null); }
+
+    /** "DEFinition": Instantiates a {@link Until} where the size of the def is dynamically determined with {@code stepSize = null} and {@code maxSize = null}. */
+    public static Token def(final String name, final ValueExpression initialSize, final Token terminator, final Encoding encoding) { return def(name, initialSize, null, terminator, encoding); }
+
+    /** "DEFinition": Instantiates a {@link Until} where the size of the def is dynamically determined with {@code stepSize = null}, {@code maxSize = null} and {@code encoding = null}. */
+    public static Token def(final String name, final ValueExpression initialSize, final Token terminator) { return def(name, initialSize, null, terminator, null); }
+
+    /** "DEFinition": Instantiates a {@link Until} where the size of the def is dynamically determined with {@code initialSize = null}, {@code stepSize = null} and {@code maxSize = null}. */
+    public static Token def(final String name, final Token terminator, final Encoding encoding) { return def(name, null, terminator, encoding); }
+
+    /** "DEFinition": Instantiates a {@link Until} where the size of the def is dynamically determined with {@code initialSize = null}, {@code stepSize = null}, {@code maxSize = null} and {@code encoding = null}. */
+    public static Token def(final String name, final Token terminator) { return def(name, terminator, null); }
+
+    /** "DEFinition": Instantiates a {@link Until} with the expression nested in a {@link Post} and {@code initialSize = con(1)}. */
+    public static Token def(final String name, final Expression predicate, final Encoding encoding) { return def(name, con(1), post(EMPTY, predicate), encoding); }
+
+    /** "DEFinition": Instantiates a {@link Until} where the terminator is the expression nested in a {@link Post}, {@code initialSize = con(1)} and {@code encoding = null}. */
+    public static Token def(final String name, final Expression predicate) { return def(name, predicate, null); }
+
+
     /** "NO Data": denotes data that is not required during parsing and afterwards. Instantiates a {@link Def} with {@code name = EMPTY_NAME} and {@code encoding = null}. */
     public static Token nod(final SingleValueExpression size) { return def(EMPTY_NAME, size); }
 
@@ -180,14 +212,32 @@ public final class Shorthand {
     /** @see Tie */ public static Token tie(final String name, final Token token, final ValueExpression dataExpression) { return tie(name, token, dataExpression, null); }
     /** @see Tie */ public static Token tie(final Token token, final ValueExpression dataExpression, final Encoding encoding) { return tie(NO_NAME, token, dataExpression, encoding); }
     /** @see Tie */ public static Token tie(final Token token, final ValueExpression dataExpression) { return tie(token, dataExpression, null); }
-    /** @see Until */ public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) { return new Until(name, initialSize, stepSize, maxSize, terminator, encoding); }
-    /** @see Until */ public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator) { return until(name, initialSize, stepSize, maxSize, terminator, null); }
-    /** @see Until */ public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final Token terminator, final Encoding encoding) { return until(name, initialSize, stepSize, null, terminator, encoding); }
-    /** @see Until */ public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final Token terminator) { return until(name, initialSize, stepSize, null, terminator, null); }
-    /** @see Until */ public static Token until(final String name, final ValueExpression initialSize, final Token terminator, final Encoding encoding) { return until(name, initialSize, null, terminator, encoding); }
-    /** @see Until */ public static Token until(final String name, final ValueExpression initialSize, final Token terminator) { return until(name, initialSize, null, terminator, null); }
-    /** @see Until */ public static Token until(final String name, final Token terminator, final Encoding encoding) { return until(name, null, terminator, encoding); }
-    /** @see Until */ public static Token until(final String name, final Token terminator) { return until(name, terminator, null); }
+
+
+    /** "DEFinition": Instantiates a {@link Until} and its terminator nested in a {@link Seq}. */
+    public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) { return seq(def(name, initialSize, stepSize, maxSize, terminator, encoding), terminator); }
+
+    /** "DEFinition": Instantiates a {@link Until} and its terminator nested in a {@link Seq} with {@code encoding = null}. */
+    public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator) { return until(name, initialSize, stepSize, maxSize, terminator, null); }
+
+    /** "DEFinition": Instantiates a {@link Until} and its terminator nested in a {@link Seq} with {@code maxSize = null}. */
+    public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final Token terminator, final Encoding encoding) { return until(name, initialSize, stepSize, null, terminator, encoding); }
+
+    /** "DEFinition": Instantiates a {@link Until} and its terminator nested in a {@link Seq} with {@code maxSize = null} and {@code encoding = null}. */
+    public static Token until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final Token terminator) { return until(name, initialSize, stepSize, null, terminator, null); }
+
+    /** "DEFinition": Instantiates a {@link Until} and its terminator nested in a {@link Seq} with {@code stepSize = null} and {@code maxSize = null}. */
+    public static Token until(final String name, final ValueExpression initialSize, final Token terminator, final Encoding encoding) { return until(name, initialSize, null, terminator, encoding); }
+
+    /** "DEFinition": Instantiates a {@link Until} and its terminator nested in a {@link Seq} with {@code stepSize = null}, {@code maxSize = null} and {@code encoding = null}. */
+    public static Token until(final String name, final ValueExpression initialSize, final Token terminator) { return until(name, initialSize, null, terminator, null); }
+
+    /** "DEFinition": Instantiates a {@link Until} and its terminator nested in a {@link Seq} with {@code initialSize = null}, {@code stepSize = null} and {@code maxSize = null}. */
+    public static Token until(final String name, final Token terminator, final Encoding encoding) { return until(name, null, terminator, encoding); }
+
+    /** "DEFinition": Instantiates a {@link Until} and its terminator nested in a {@link Seq} with {@code initialSize = null}, {@code stepSize = null}, {@code maxSize = null} and {@code encoding = null}. */
+    public static Token until(final String name, final Token terminator) { return until(name, terminator, null); }
+
 
     /** "WHEN": denotes a logical implication, parses the {@code token} only if the {@code predicate} evaluates to {code true} and subsequently only fails if {@code token} does not successfully parse. A composition of {@link Cho} and {@link Pre}. */
     public static Token when(final String name, final Token token, final Expression predicate, final Encoding encoding) { return cho(name, encoding, pre(def(EMPTY_NAME, 0), not(predicate)), token); }
