@@ -70,7 +70,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  *
  * @see ValueExpression
  */
-public class Until extends Token {
+public class DefUntil extends Token {
 
     public static final ValueExpression DEFAULT_INITIAL = con(0);
     public static final ValueExpression DEFAULT_STEP = con(1);
@@ -81,7 +81,7 @@ public class Until extends Token {
     public final ValueExpression maxSize;
     public final Token terminator;
 
-    public Until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) {
+    public DefUntil(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) {
         super(checkNotEmpty(name, "name"), encoding);
         this.initialSize = initialSize == null ? DEFAULT_INITIAL : initialSize;
         this.stepSize = stepSize == null ? DEFAULT_STEP : stepSize;
@@ -140,10 +140,10 @@ public class Until extends Token {
     @Override
     public boolean equals(final Object obj) {
         return super.equals(obj)
-            && Objects.equals(initialSize, ((Until)obj).initialSize)
-            && Objects.equals(stepSize, ((Until)obj).stepSize)
-            && Objects.equals(maxSize, ((Until)obj).maxSize)
-            && Objects.equals(terminator, ((Until)obj).terminator);
+            && Objects.equals(initialSize, ((DefUntil)obj).initialSize)
+            && Objects.equals(stepSize, ((DefUntil)obj).stepSize)
+            && Objects.equals(maxSize, ((DefUntil)obj).maxSize)
+            && Objects.equals(terminator, ((DefUntil)obj).terminator);
     }
 
     @Override
