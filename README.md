@@ -33,7 +33,7 @@ In addition, snapshots are published to GitHub Packages. In order to use those, 
 </repository>
 ```
 
-Please read the [Installing a package](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry#installing-a-package) documentation of GitHub Packages to learn how to authenticate to allow Maven to use the snapshot repository.
+Please read the [Authenticating to GitHub Packages](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry#authenticating-to-github-packages) documentation to learn how give Maven access to the repository.
 
 ## License
 
