@@ -121,7 +121,7 @@ import io.parsingdata.metal.token.Sub;
 import io.parsingdata.metal.token.Tie;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.token.TokenRef;
-import io.parsingdata.metal.token.Until;
+import io.parsingdata.metal.token.DefUntil;
 import io.parsingdata.metal.token.While;
 import io.parsingdata.metal.util.EncodingFactory;
 import io.parsingdata.metal.util.InMemoryByteStream;
@@ -200,7 +200,7 @@ public class AutoEqualityTest {
         return generateObjectArrays(
             // Tokens
             Cho.class, Def.class, Pre.class, Rep.class, RepN.class, Seq.class, Sub.class, Tie.class,
-            TokenRef.class, While.class, Post.class, Until.class,
+            TokenRef.class, While.class, Post.class, DefUntil.class,
             // ValueExpressions
             Len.class, Offset.class, Neg.class, Not.class, Count.class, First.class, Last.class, Reverse.class,
             And.class, Or.class, ShiftLeft.class, ShiftRight.class, Add.class, Div.class, Mod.class, Mul.class,
