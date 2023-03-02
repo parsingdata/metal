@@ -164,14 +164,25 @@ class UntilTest {
     }
 
     @Test
-    public void nameScope() {
+    public void nameScopeWithUntil() {
         final Token terminator = def("terminator", con(1), eq(con(0x00)));
         final Token token = seq("struct", until("value", terminator), terminator);
         final Optional<ParseState> parse = token.parse(env(stream('d', 'a', 't', 'a', 0, 0)));
         assertTrue(parse.isPresent());
         assertEquals(1, getAllValues(parse.get().order, "struct.terminator").size);
-        assertEquals(1, getAllValues(parse.get().order, "struct.value").size);
+        assertEquals(1, getAllValues(parse.get().order, "struct.value.value").size);
         assertEquals(1, getAllValues(parse.get().order, "struct.value.terminator").size);
+        assertEquals("data", getAllValues(parse.get().order, "struct.value.value").head.asString());
+    }
+
+    @Test
+    public void nameScopeWithDef() {
+        final Token terminator = def("terminator", con(1), eq(con(0x00)));
+        final Token token = seq("struct", def("value", terminator), terminator);
+        final Optional<ParseState> parse = token.parse(env(stream('d', 'a', 't', 'a', 0, 0)));
+        assertTrue(parse.isPresent());
+        assertEquals(1, getAllValues(parse.get().order, "struct.terminator").size);
+        assertEquals(1, getAllValues(parse.get().order, "struct.value").size);
         assertEquals("data", getAllValues(parse.get().order, "struct.value").head.asString());
     }
 
