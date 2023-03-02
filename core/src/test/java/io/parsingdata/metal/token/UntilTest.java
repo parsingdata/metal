@@ -17,6 +17,7 @@
 package io.parsingdata.metal.token;
 
 import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
+import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.EMPTY;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
@@ -161,4 +162,17 @@ class UntilTest {
     void errorNegativeSize() {
         assertFalse(until("value", con(-1, signed()), def("terminator", 1, eq(con(0)))).parse(env(stream(1, 2, 3, 0))).isPresent());
     }
+
+    @Test
+    public void nameScope() {
+        final Token terminator = def("terminator", con(1), eq(con(0x00)));
+        final Token token = seq("struct", until("value", terminator), terminator);
+        final Optional<ParseState> parse = token.parse(env(stream('d', 'a', 't', 'a', 0, 0)));
+        assertTrue(parse.isPresent());
+        assertEquals(1, getAllValues(parse.get().order, "struct.terminator").size);
+        assertEquals(1, getAllValues(parse.get().order, "struct.value").size);
+        assertEquals(1, getAllValues(parse.get().order, "struct.value.terminator").size);
+        assertEquals("data", getAllValues(parse.get().order, "struct.value").head.asString());
+    }
+
 }

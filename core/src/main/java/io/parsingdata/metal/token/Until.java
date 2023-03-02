@@ -119,7 +119,7 @@ public class Until extends Token {
     }
 
     private Trampoline<Optional<ParseState>> parseSlice(final Environment environment, final BigInteger currentSize, final BigInteger stepSize, final BigInteger maxSize, final Slice slice) {
-        return (currentSize.compareTo(ZERO) == 0 ? Optional.of(environment.parseState) : environment.parseState.add(new ParseValue(name, this, slice, environment.encoding)).seek(environment.parseState.offset.add(currentSize)))
+        return (currentSize.compareTo(ZERO) == 0 ? Optional.of(environment.parseState) : environment.parseState.add(new ParseValue(environment.scope, this, slice, environment.encoding)).seek(environment.parseState.offset.add(currentSize)))
             .map(preparedParseState -> parseTerminator(environment, preparedParseState))
             .orElseGet(Util::failure)
             .map(parseState -> complete(() -> success(parseState)))
