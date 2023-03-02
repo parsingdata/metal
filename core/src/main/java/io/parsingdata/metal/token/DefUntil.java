@@ -70,7 +70,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  *
  * @see ValueExpression
  */
-public class Until extends Token {
+public class DefUntil extends Token {
 
     public static final ValueExpression DEFAULT_INITIAL = con(0);
     public static final ValueExpression DEFAULT_STEP = con(1);
@@ -80,15 +80,13 @@ public class Until extends Token {
     public final ValueExpression stepSize;
     public final ValueExpression maxSize;
     public final Token terminator;
-    public final boolean includeTerminator;
 
-    public Until(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final boolean includeTerminator, final Encoding encoding) {
+    public DefUntil(final String name, final ValueExpression initialSize, final ValueExpression stepSize, final ValueExpression maxSize, final Token terminator, final Encoding encoding) {
         super(checkNotEmpty(name, "name"), encoding);
         this.initialSize = initialSize == null ? DEFAULT_INITIAL : initialSize;
         this.stepSize = stepSize == null ? DEFAULT_STEP : stepSize;
         this.maxSize = maxSize == null ? DEFAULT_MAX : maxSize;
         this.terminator = checkNotNull(terminator, "terminator");
-        this.includeTerminator = includeTerminator;
     }
 
     @Override
@@ -119,16 +117,11 @@ public class Until extends Token {
     }
 
     private Trampoline<Optional<ParseState>> parseSlice(final Environment environment, final BigInteger currentSize, final BigInteger stepSize, final BigInteger maxSize, final Slice slice) {
-        return (currentSize.compareTo(ZERO) == 0 ? Optional.of(environment.parseState) : environment.parseState.add(new ParseValue(name, this, slice, environment.encoding)).seek(environment.parseState.offset.add(currentSize)))
-            .map(preparedParseState -> parseTerminator(environment, preparedParseState))
+        return (currentSize.compareTo(ZERO) == 0 ? Optional.of(environment.parseState) : environment.parseState.add(new ParseValue(environment.scope, this, slice, environment.encoding)).seek(environment.parseState.offset.add(currentSize)))
+            .map(preparedParseState -> terminator.parse(environment.withParseState(preparedParseState)).map(ignore -> preparedParseState))
             .orElseGet(Util::failure)
             .map(parseState -> complete(() -> success(parseState)))
             .orElseGet(() -> intermediate(() -> iterate(environment, currentSize.add(stepSize), stepSize, maxSize)));
-    }
-
-    private Optional<ParseState> parseTerminator(final Environment environment, final ParseState parseStateExcludingTerminator) {
-        return terminator.parse(environment.withParseState(parseStateExcludingTerminator))
-            .map(parseStateIncludingTerminator -> includeTerminator ? parseStateIncludingTerminator : parseStateExcludingTerminator);
     }
 
     private boolean checkNotValidList(final ImmutableList<Value> list) {
@@ -147,11 +140,10 @@ public class Until extends Token {
     @Override
     public boolean equals(final Object obj) {
         return super.equals(obj)
-            && Objects.equals(initialSize, ((Until)obj).initialSize)
-            && Objects.equals(stepSize, ((Until)obj).stepSize)
-            && Objects.equals(maxSize, ((Until)obj).maxSize)
-            && Objects.equals(terminator, ((Until)obj).terminator)
-            && Objects.equals(includeTerminator, ((Until)obj).includeTerminator);
+            && Objects.equals(initialSize, ((DefUntil)obj).initialSize)
+            && Objects.equals(stepSize, ((DefUntil)obj).stepSize)
+            && Objects.equals(maxSize, ((DefUntil)obj).maxSize)
+            && Objects.equals(terminator, ((DefUntil)obj).terminator);
     }
 
     @Override

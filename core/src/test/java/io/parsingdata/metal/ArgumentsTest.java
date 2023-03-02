@@ -68,7 +68,7 @@ import io.parsingdata.metal.token.Seq;
 import io.parsingdata.metal.token.Sub;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.token.TokenRef;
-import io.parsingdata.metal.token.Until;
+import io.parsingdata.metal.token.DefUntil;
 import io.parsingdata.metal.token.While;
 
 @RunWith(Parameterized.class)
@@ -153,8 +153,8 @@ public class ArgumentsTest {
             { TokenRef.class, new Object[] { null, VALID_NAME, null } },
             { TokenRef.class, new Object[] { null, null, null } },
             { TokenRef.class, new Object[] { VALID_NAME, EMPTY_NAME, null } },
-            { Until.class, new Object[] { null, VALID_VE, VALID_VE, VALID_VE, VALID_T, true, null }},
-            { Until.class, new Object[] { VALID_NAME, VALID_VE, VALID_VE, VALID_VE, null, false, null }}
+            { DefUntil.class, new Object[] { null, VALID_VE, VALID_VE, VALID_VE, VALID_T, null }},
+            { DefUntil.class, new Object[] { VALID_NAME, VALID_VE, VALID_VE, VALID_VE, null, null }}
         });
     }
 
