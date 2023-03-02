@@ -2,12 +2,38 @@
 
 A Java library for parsing binary data formats, using declarative descriptions.
 
-[![Build Status](https://travis-ci.com/parsingdata/metal.svg?branch=master)](https://travis-ci.com/parsingdata/metal)
+![GH Actions Metal build](https://github.com/parsingdata/metal/actions/workflows/build.yml/badge.svg)
 [![Build status](https://ci.appveyor.com/api/projects/status/69hk2llxjjyatuyq/branch/master?svg=true)](https://ci.appveyor.com/project/parsingdata/metal/branch/master)
 [![codecov.io](https://codecov.io/github/parsingdata/metal/coverage.svg?branch=master)](https://codecov.io/github/parsingdata/metal?branch=master)
 [![CodeFactor](https://www.codefactor.io/repository/github/parsingdata/metal/badge)](https://www.codefactor.io/repository/github/parsingdata/metal)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/58fd44c214a4425f967e27214bb3a924)](https://www.codacy.com/gh/parsingdata/metal/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=parsingdata/metal&amp;utm_campaign=Badge_Grade)
 [![SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=parsingdata_metal&metric=alert_status)](https://sonarcloud.io/dashboard?id=parsingdata_metal)
+
+## Using Metal
+
+Metal releases are available in the central Maven repository. To use the latest (9.0.0) release of Metal, include the following section in the pom.xml under dependencies:
+
+```xml
+<dependency>
+  <groupId>io.parsingdata</groupId>
+  <artifactId>metal-core</artifactId>
+  <version>9.0.0</version>
+</dependency>
+```
+
+In addition, snapshots are published to GitHub Packages. In order to use those, add the following section in the pom.xml under repositories:
+
+```xml
+<repository>
+  <id>github-metal-snapshots</id>
+  <url>https://maven.pkg.github.com/parsingdata/metal</url>
+  <snapshots>
+    <enabled>true</enabled>
+  </snapshots>
+</repository>
+```
+
+Please read the [Installing a package](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry#installing-a-package) documentation of GitHub Packages to learn how to authenticate to allow Maven to use the snapshot repository.
 
 ## License
 
