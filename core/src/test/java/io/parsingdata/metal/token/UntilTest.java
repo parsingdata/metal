@@ -17,6 +17,7 @@
 package io.parsingdata.metal.token;
 
 import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
+import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
@@ -125,6 +126,18 @@ public class UntilTest {
 
     private Token createToken(final ValueExpression initialSize, final Token terminator) {
         return repn(until("line", initialSize, terminator), con(3));
+    }
+
+    @Test
+    public void nameScope() {
+        final Token terminator = def("terminator", con(1), eq(con(0x00)));
+        final Token token = seq("struct", until("value", terminator), terminator);
+        final Optional<ParseState> parse = token.parse(env(stream('d', 'a', 't', 'a', 0, 0)));
+        assertTrue(parse.isPresent());
+        assertEquals(1, getAllValues(parse.get().order, "struct.terminator").size);
+        assertEquals(1, getAllValues(parse.get().order, "struct.value").size);
+        assertEquals(1, getAllValues(parse.get().order, "struct.value.terminator").size);
+        assertEquals("data", getAllValues(parse.get().order, "struct.value").head.asString());
     }
 
 }
