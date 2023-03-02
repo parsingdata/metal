@@ -65,25 +65,27 @@ class UntilTest {
     public static final Token END_WITH_NEWLINE_SUB = sub(NEWLINE, sub(CURRENT_OFFSET, con(1)));
     public static final Token NEXT_START_WITH_TERMINATOR = sub(NEWLINE, CURRENT_OFFSET);
 
-    static Collection<Object[]> data() {
+    static Collection<Object[]> repTest() {
         return Arrays.asList(new Object[][] {
-            { "until: terminator not part of line, available in parseGraph",  until("line", NEWLINE),                                  3, 3, INPUT_1, INPUT_2, INPUT_3},
+            { "until: terminator not part of line, available in parseGraph",  until("line", NEWLINE),                            3, 3, INPUT_1, INPUT_2, INPUT_3},
             { "until: terminator part of line, not available in parseGraph",  until("line", con(1), END_WITH_NEWLINE_POST),      3, 0, INPUT_1 + '\n', INPUT_2 + '\n', INPUT_3 + '\n'},
             { "until: terminator part of line, available in parseGraph",      until("line", con(1), END_WITH_NEWLINE_SUB),       3, 3, INPUT_1 + '\n', INPUT_2 + '\n', INPUT_3 + '\n'},
             { "until: terminator part of next line, available in parseGraph", until("line", con(1), NEXT_START_WITH_TERMINATOR), 3, 3, INPUT_1, '\n' + INPUT_2, '\n' + INPUT_3},
 
-            { "def: terminator not part of line, available in parseGraph",  seq(def("line", NEWLINE), NEWLINE),                        3, 3, INPUT_1, INPUT_2, INPUT_3},
             { "def: terminator part of line, not available in parseGraph",      def("line", con(1), END_WITH_NEWLINE_POST),      3, 0, INPUT_1 + '\n', INPUT_2 + '\n', INPUT_3 + '\n'},
             { "def: terminator part of line, not available in parseGraph",      def("line", con(1), END_WITH_NEWLINE_SUB),       3, 0, INPUT_1 + '\n', INPUT_2 + '\n', INPUT_3 + '\n'},
-            { "def: terminator part of line, not available in parseGraph",      def("line", ENDS_WITH_NEWLINE),                        3, 0, INPUT_1 + '\n', INPUT_2 + '\n', INPUT_3 + '\n'},
+            { "def: terminator part of line, not available in parseGraph",      def("line", ENDS_WITH_NEWLINE),                  3, 0, INPUT_1 + '\n', INPUT_2 + '\n', INPUT_3 + '\n'},
             { "def: terminator part of next line, not available in parseGraph", def("line", con(1), NEWLINE),                    3, 0, INPUT_1, '\n' + INPUT_2, '\n' + INPUT_3},
             { "def: terminator part of next line, not available in parseGraph", def("line", con(1), NEXT_START_WITH_TERMINATOR), 3, 0, INPUT_1, '\n' + INPUT_2, '\n' + INPUT_3},
-            // "def: terminator part of line, available in parseGraph" is not possible with def, only with until.
+
+            { "def: terminator not part of line, available in parseGraph",  seq(def("line", NEWLINE), NEWLINE),                                               3, 3, INPUT_1, INPUT_2, INPUT_3},
+            { "def: terminator part of line, available in parseGraph",      seq(def("line", con(1), END_WITH_NEWLINE_SUB), END_WITH_NEWLINE_SUB),             3, 3, INPUT_1 + '\n', INPUT_2 + '\n', INPUT_3 + '\n'},
+            { "def: terminator part of next line, available in parseGraph", seq(def("line", con(1), NEXT_START_WITH_TERMINATOR), NEXT_START_WITH_TERMINATOR), 3, 3, INPUT_1, '\n' + INPUT_2, '\n' + INPUT_3}
         });
     }
 
     @ParameterizedTest(name="{0}")
-    @MethodSource("data")
+    @MethodSource
     void repTest(final String name, final Token token, final int lineCount, final int newlineCount, final String line1, final String line2, final String line3) {
         final Optional<ParseState> parseState = rep(token).parse(env(stream(INPUT, US_ASCII)));
         assertTrue(parseState.isPresent());
