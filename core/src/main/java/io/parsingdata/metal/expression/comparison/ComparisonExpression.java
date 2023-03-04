@@ -49,7 +49,7 @@ public abstract class ComparisonExpression implements Expression {
     public final ValueExpression value;
     public final ValueExpression predicate;
 
-    public ComparisonExpression(final ValueExpression value, final ValueExpression predicate) {
+    protected ComparisonExpression(final ValueExpression value, final ValueExpression predicate) {
         this.value = value;
         this.predicate = checkNotNull(predicate, "predicate");
     }

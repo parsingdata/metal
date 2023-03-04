@@ -165,12 +165,12 @@ class DefUntilTest {
     }
 
     @Test
-    public void nameScopeWithUntil() {
+    void nameScopeWithUntil() {
         assertNameScope(terminator -> until("value", terminator), 2);
     }
 
     @Test
-    public void nameScopeWithDef() {
+    void nameScopeWithDef() {
         assertNameScope(terminator -> def("value", terminator), 1);
     }
 

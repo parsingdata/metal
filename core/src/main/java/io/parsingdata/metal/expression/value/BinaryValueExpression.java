@@ -57,7 +57,7 @@ public abstract class BinaryValueExpression implements ValueExpression {
     public final ValueExpression left;
     public final ValueExpression right;
 
-    public BinaryValueExpression(final ValueExpression left, final ValueExpression right) {
+    protected BinaryValueExpression(final ValueExpression left, final ValueExpression right) {
         this.left = checkNotNull(left, "left");
         this.right = checkNotNull(right, "right");
     }

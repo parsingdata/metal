@@ -36,7 +36,7 @@ public abstract class BinaryLogicalExpression implements LogicalExpression {
     public final Expression left;
     public final Expression right;
 
-    public BinaryLogicalExpression(final Expression left, final Expression right) {
+    protected BinaryLogicalExpression(final Expression left, final Expression right) {
         this.left = checkNotNull(left, "left");
         this.right = checkNotNull(right, "right");
     }

@@ -85,7 +85,7 @@ public class SliceTest {
     public void retrieveDataFromSliceWithNegativeLimit() {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Argument limit may not be negative.");
-        assertArrayEquals(new byte[] {}, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), ZERO, BigInteger.valueOf(4)).get().getData(BigInteger.valueOf(-1)));
+        Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), ZERO, BigInteger.valueOf(4)).get().getData(BigInteger.valueOf(-1));
     }
 
 
