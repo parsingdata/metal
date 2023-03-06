@@ -79,6 +79,7 @@ import io.parsingdata.metal.expression.value.reference.Ref.NameRef;
 import io.parsingdata.metal.expression.value.reference.Self;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Def;
+import io.parsingdata.metal.token.DefUntil;
 import io.parsingdata.metal.token.Post;
 import io.parsingdata.metal.token.Pre;
 import io.parsingdata.metal.token.Rep;
@@ -87,7 +88,6 @@ import io.parsingdata.metal.token.Seq;
 import io.parsingdata.metal.token.Tie;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.token.TokenRef;
-import io.parsingdata.metal.token.DefUntil;
 import io.parsingdata.metal.token.While;
 
 public final class Shorthand {

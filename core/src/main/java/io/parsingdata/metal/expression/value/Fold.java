@@ -51,7 +51,7 @@ public abstract class Fold implements SingleValueExpression {
     public final BinaryOperator<SingleValueExpression> reducer;
     public final SingleValueExpression initial;
 
-    public Fold(final ValueExpression values, final BinaryOperator<SingleValueExpression> reducer, final SingleValueExpression initial) {
+    protected Fold(final ValueExpression values, final BinaryOperator<SingleValueExpression> reducer, final SingleValueExpression initial) {
         this.values = checkNotNull(values, "values");
         this.reducer = checkNotNull(reducer, "reducer");
         this.initial = initial;

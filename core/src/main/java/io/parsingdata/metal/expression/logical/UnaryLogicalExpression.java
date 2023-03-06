@@ -35,7 +35,7 @@ public abstract class UnaryLogicalExpression implements LogicalExpression {
 
     public final Expression operand;
 
-    public UnaryLogicalExpression(final Expression operand) {
+    protected UnaryLogicalExpression(final Expression operand) {
         this.operand = checkNotNull(operand, "operand");
     }
 
