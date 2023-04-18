@@ -75,7 +75,7 @@
     <pitest-maven.version>1.5.2</pitest-maven.version>
     <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
     <maven-site-plugin.version>3.12.1</maven-site-plugin.version>
-    <maven-project-info-reports.version>3.4.2</maven-project-info-reports.version>
+    <maven-project-info-reports.version>3.4.3</maven-project-info-reports.version>
     <maven-surefire-plugin.version>3.0.0</maven-surefire-plugin.version>
 
     <sonar.organization>parsingdata</sonar.organization>
