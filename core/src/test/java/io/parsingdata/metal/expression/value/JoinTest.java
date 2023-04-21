@@ -1,29 +1,29 @@
 package io.parsingdata.metal.expression.value;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+
 import static io.parsingdata.metal.AutoEqualityTest.DUMMY_STREAM;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.div;
-import static io.parsingdata.metal.Shorthand.exp;
 import static io.parsingdata.metal.Shorthand.join;
-import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.expression.value.BytesTest.EMPTY_PARSE_STATE;
 import static io.parsingdata.metal.expression.value.ExpandTest.createParseValue;
 import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.stream.Stream;
 
-import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseState;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import io.parsingdata.metal.data.ImmutableList;
+import io.parsingdata.metal.data.ParseState;
 
 /**
  * value expression

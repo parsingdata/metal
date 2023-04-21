@@ -1,7 +1,6 @@
 package io.parsingdata.metal.expression.value;
 
 import static io.parsingdata.metal.Util.checkContainsNoNulls;
-import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Arrays;
 
