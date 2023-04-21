@@ -83,7 +83,8 @@ public class JoinTest {
         assertResult(expected, result);
     }
 
-    private static void assertResult(final int[] expected, ImmutableList<Value> result) {
+    private static void assertResult(final int[] expected, final ImmutableList<Value> actual) {
+        ImmutableList<Value> result = actual;
         for (final int value : expected) {
             if (value == -1) {
                 assertEquals(NOT_A_VALUE, result.head);
