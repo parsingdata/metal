@@ -44,7 +44,6 @@ public class Join implements ValueExpression {
     public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
         return Arrays.stream(expressions)
             .map(e -> e.eval(parseState, encoding))
-            .peek(System.out::println)
             .reduce(new ImmutableList<>(), ImmutableList::add, ImmutableList::add);
     }
 }
