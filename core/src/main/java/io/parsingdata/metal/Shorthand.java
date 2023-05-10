@@ -51,6 +51,7 @@ import io.parsingdata.metal.expression.value.Expand;
 import io.parsingdata.metal.expression.value.FoldCat;
 import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
+import io.parsingdata.metal.expression.value.Join;
 import io.parsingdata.metal.expression.value.Reverse;
 import io.parsingdata.metal.expression.value.Scope;
 import io.parsingdata.metal.expression.value.SingleValueExpression;
@@ -331,6 +332,7 @@ public final class Shorthand {
     /** @see FoldRight */public static SingleValueExpression fold(final ValueExpression values, final BinaryOperator<SingleValueExpression> reducer, final SingleValueExpression initial) { return foldRight(values, reducer, initial); }
     /** @see Reverse */ public static ValueExpression rev(final ValueExpression values) { return new Reverse(values); }
     /** @see Expand */ public static ValueExpression exp(final ValueExpression base, final SingleValueExpression count) { return new Expand(base, count); }
+    /** @see Join */ public static ValueExpression join(final ValueExpression... expressions) { return new Join(expressions); }
 
     /** "MAPLEFT": denotes a map operation using the provided {@code func}, applied once for each result of evaluating {@code left} and reusing the single result of evaluating {@code rightExpand}. */
     public static BinaryValueExpression mapLeft(final BiFunction<ValueExpression, ValueExpression, BinaryValueExpression> func, final ValueExpression left, final SingleValueExpression rightExpand) { return func.apply(left, exp(rightExpand, count(left))); }
