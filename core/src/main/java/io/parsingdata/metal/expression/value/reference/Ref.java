@@ -79,7 +79,7 @@ public class Ref<T> implements ValueExpression {
     }
 
     private ImmutableList<Value> evalImpl(final ParseState parseState, final int limit) {
-        return wrap(getAllValues(parseState.order, predicate, limit), new ImmutableList<Value>()).computeResult();
+        return wrap(getAllValues(parseState.order, predicate, limit, Integer.MAX_VALUE, parseState.scopeDepth), new ImmutableList<Value>()).computeResult();
     }
 
     private static <T, U extends T> Trampoline<ImmutableList<T>> wrap(final ImmutableList<U> input, final ImmutableList<T> output) {
