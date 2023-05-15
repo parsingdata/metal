@@ -22,6 +22,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.data.Selection.NO_LIMIT;
 import static io.parsingdata.metal.data.Selection.getAllValues;
 import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
+import static java.math.BigInteger.ZERO;
 
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -50,31 +51,31 @@ public class Ref<T> implements ValueExpression {
 
     public final T reference;
     public final Predicate<ParseValue> predicate;
-    public final SingleValueExpression limit;
     public final SingleValueExpression scope;
+    public final SingleValueExpression limit;
 
-    private Ref(final T reference, final Predicate<ParseValue> predicate, final SingleValueExpression limit, final SingleValueExpression scope) {
+    private Ref(final T reference, final Predicate<ParseValue> predicate, final SingleValueExpression scope, final SingleValueExpression limit) {
         this.reference = checkNotNull(reference, "reference");
         this.predicate = checkNotNull(predicate, "predicate");
-        this.limit = limit;
         this.scope = scope;
+        this.limit = limit;
     }
 
     public static class NameRef extends Ref<String> {
         public NameRef(final String reference) { this(reference, null); }
-        public NameRef(final String reference, final SingleValueExpression limit) { super(reference, value -> value.matches(reference), limit, null); }
-        public NameRef(final String reference, final SingleValueExpression limit, final SingleValueExpression scope) { super(reference, value -> value.matches(reference), limit, scope); }
+        public NameRef(final String reference, final SingleValueExpression limit) { super(reference, value -> value.matches(reference), null, limit); }
+        public NameRef(final String reference, final SingleValueExpression limit, final SingleValueExpression scope) { super(reference, value -> value.matches(reference), scope, limit); }
     }
 
     public static class DefinitionRef extends Ref<Token> {
         public DefinitionRef(final Token reference) { this(reference, null); }
-        public DefinitionRef(final Token reference, final SingleValueExpression limit) { super(reference, value -> value.definition.equals(reference), limit, null); }
-        public DefinitionRef(final Token reference, final SingleValueExpression limit, final SingleValueExpression scope) { super(reference, value -> value.definition.equals(reference), limit, scope); }
+        public DefinitionRef(final Token reference, final SingleValueExpression limit) { super(reference, value -> value.definition.equals(reference), null, limit); }
+        public DefinitionRef(final Token reference, final SingleValueExpression limit, final SingleValueExpression scope) { super(reference, value -> value.definition.equals(reference), scope, limit); }
     }
 
     @Override
     public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
-        final int requestedScope = scope == null ? parseState.scopeDepth : scope.evalSingle(parseState, encoding).orElseThrow(() -> new IllegalArgumentException("Scope must evaluate to a non-empty value.")).asNumeric().intValueExact();
+        final int requestedScope = scope == null ? parseState.scopeDepth : scope.evalSingle(parseState, encoding).filter(sizeValue -> !sizeValue.equals(NOT_A_VALUE) && sizeValue.asNumeric().compareTo(ZERO) >= 0).orElseThrow(() -> new IllegalArgumentException("Argument scopeSize must evaluate to a positive, countable value.")).asNumeric().intValueExact();
         if (limit == null) {
             return evalImpl(parseState, NO_LIMIT, requestedScope);
         }
