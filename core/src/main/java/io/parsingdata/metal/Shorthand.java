@@ -342,6 +342,10 @@ public final class Shorthand {
 
     /** @see Bytes */ public static ValueExpression bytes(final ValueExpression operand) { return new Bytes(operand); }
     /** @see Scope */ public static ValueExpression scope(final ValueExpression scopedValueExpression, final SingleValueExpression scopeSize) { return new Scope(scopedValueExpression, scopeSize); }
+    /** @see Ref */ public static ValueExpression scope(final NameRef operand, final SingleValueExpression scopeSize) { return new NameRef(operand.reference, null, scopeSize); }
+    /** @see Ref */ public static ValueExpression scope(final NameRef operand, final SingleValueExpression limit, final SingleValueExpression scopeSize) { return new NameRef(operand.reference, limit, scopeSize); }
+    /** @see Ref */ public static ValueExpression scope(final DefinitionRef operand, final SingleValueExpression scopeSize) { return new DefinitionRef(operand.reference, null, scopeSize); }
+    /** @see Ref */ public static ValueExpression scope(final DefinitionRef operand, final SingleValueExpression limit, SingleValueExpression scopeSize) { return new DefinitionRef(operand.reference, limit, scopeSize); }
 
     /** @see And */ public static BinaryLogicalExpression and(final Expression left, final Expression right) { return new And(left, right); }
     /** @see Or */ public static BinaryLogicalExpression or(final Expression left, final Expression right) { return new Or(left, right); }

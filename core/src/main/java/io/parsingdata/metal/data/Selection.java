@@ -89,8 +89,11 @@ public final class Selection {
     }
 
     public static ImmutableList<ParseValue> getAllValues(final ParseGraph graph, final Predicate<ParseValue> predicate, final int limit, final int requestedScope, final int currentScope) {
-        if (graph.isEmpty()) {
+        if (graph.isEmpty() || limit == 0) {
             return new ImmutableList<>();
+        }
+        if (requestedScope == currentScope) {
+            return getAllValues(graph, predicate, limit);
         }
         ImmutableList<ParseValue> foundValues = new ImmutableList<>();
         if (graph.head.isGraph()) {

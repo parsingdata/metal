@@ -51,35 +51,40 @@ public class Ref<T> implements ValueExpression {
     public final T reference;
     public final Predicate<ParseValue> predicate;
     public final SingleValueExpression limit;
+    public final SingleValueExpression scope;
 
-    private Ref(final T reference, final Predicate<ParseValue> predicate, final SingleValueExpression limit) {
+    private Ref(final T reference, final Predicate<ParseValue> predicate, final SingleValueExpression limit, final SingleValueExpression scope) {
         this.reference = checkNotNull(reference, "reference");
         this.predicate = checkNotNull(predicate, "predicate");
         this.limit = limit;
+        this.scope = scope;
     }
 
     public static class NameRef extends Ref<String> {
         public NameRef(final String reference) { this(reference, null); }
-        public NameRef(final String reference, final SingleValueExpression limit) { super(reference, value -> value.matches(reference), limit); }
+        public NameRef(final String reference, final SingleValueExpression limit) { super(reference, value -> value.matches(reference), limit, null); }
+        public NameRef(final String reference, final SingleValueExpression limit, final SingleValueExpression scope) { super(reference, value -> value.matches(reference), limit, scope); }
     }
 
     public static class DefinitionRef extends Ref<Token> {
         public DefinitionRef(final Token reference) { this(reference, null); }
-        public DefinitionRef(final Token reference, final SingleValueExpression limit) { super(reference, value -> value.definition.equals(reference), limit); }
+        public DefinitionRef(final Token reference, final SingleValueExpression limit) { super(reference, value -> value.definition.equals(reference), limit, null); }
+        public DefinitionRef(final Token reference, final SingleValueExpression limit, final SingleValueExpression scope) { super(reference, value -> value.definition.equals(reference), limit, scope); }
     }
 
     @Override
     public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
+        final int requestedScope = scope == null ? parseState.scopeDepth : scope.evalSingle(parseState, encoding).orElseThrow(() -> new IllegalArgumentException("Scope must evaluate to a non-empty value.")).asNumeric().intValueExact();
         if (limit == null) {
-            return evalImpl(parseState, NO_LIMIT);
+            return evalImpl(parseState, NO_LIMIT, requestedScope);
         }
         return limit.evalSingle(parseState, encoding)
-            .map(limitValue -> limitValue.equals(NOT_A_VALUE) ? ImmutableList.create(NOT_A_VALUE) : evalImpl(parseState, limitValue.asNumeric().intValueExact()))
+            .map(limitValue -> limitValue.equals(NOT_A_VALUE) ? ImmutableList.create(NOT_A_VALUE) : evalImpl(parseState, limitValue.asNumeric().intValueExact(), requestedScope))
             .orElseThrow(() -> new IllegalArgumentException("Limit must evaluate to a non-empty value."));
     }
 
-    private ImmutableList<Value> evalImpl(final ParseState parseState, final int limit) {
-        return wrap(getAllValues(parseState.order, predicate, limit, Integer.MAX_VALUE, parseState.scopeDepth), new ImmutableList<Value>()).computeResult();
+    private ImmutableList<Value> evalImpl(final ParseState parseState, final int limit, final int requestedScope) {
+        return wrap(getAllValues(parseState.order, predicate, limit, requestedScope, parseState.scopeDepth), new ImmutableList<Value>()).computeResult();
     }
 
     private static <T, U extends T> Trampoline<ImmutableList<T>> wrap(final ImmutableList<U> input, final ImmutableList<T> output) {
@@ -98,12 +103,13 @@ public class Ref<T> implements ValueExpression {
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
             && Objects.equals(reference, ((Ref)obj).reference)
-            && Objects.equals(limit, ((Ref)obj).limit);
+            && Objects.equals(limit, ((Ref)obj).limit)
+            && Objects.equals(scope, ((Ref)obj).scope);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass(), reference, limit);
+        return Objects.hash(getClass(), reference, limit, scope);
     }
 
 }

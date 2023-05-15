@@ -69,20 +69,21 @@ public class Scope implements ValueExpression {
     }
 
     private ParseGraph calculateScope(final ParseGraph order, final int size) {
-        final ImmutableList<ParseGraph> scopeList = createScopeList(order, new ImmutableList<>()).computeResult();
-        if (size >= scopeList.size) { return order; }
-        return findScope(scopeList, size).computeResult();
-    }
-
-    private Trampoline<ImmutableList<ParseGraph>> createScopeList(final ParseGraph order, final ImmutableList<ParseGraph> list) {
-        final ImmutableList<ParseGraph> newList = order.getDefinition().isScopeDelimiter() ? list.add(order) : list;
-        if (order.isEmpty() || !order.head.isGraph()) { return complete(() -> list); }
-        return intermediate(() -> createScopeList(order.head.asGraph(), newList));
-    }
-
-    private Trampoline<ParseGraph> findScope(final ImmutableList<ParseGraph> scopeList, final int size) {
-        if (size == 0) { return complete(() -> scopeList.head); }
-        return intermediate(() -> findScope(scopeList.tail, size - 1));
+        return order;
+//        final ImmutableList<ParseGraph> scopeList = createScopeList(order, new ImmutableList<>()).computeResult();
+//        if (size >= scopeList.size) { return order; }
+//        return findScope(scopeList, size).computeResult();
+//    }
+//
+//    private Trampoline<ImmutableList<ParseGraph>> createScopeList(final ParseGraph order, final ImmutableList<ParseGraph> list) {
+//        final ImmutableList<ParseGraph> newList = order.getDefinition().isScopeDelimiter() ? list.add(order) : list;
+//        if (order.isEmpty() || !order.head.isGraph()) { return complete(() -> list); }
+//        return intermediate(() -> createScopeList(order.head.asGraph(), newList));
+//    }
+//
+//    private Trampoline<ParseGraph> findScope(final ImmutableList<ParseGraph> scopeList, final int size) {
+//        if (size == 0) { return complete(() -> scopeList.head); }
+//        return intermediate(() -> findScope(scopeList.tail, size - 1));
     }
 
     @Override
