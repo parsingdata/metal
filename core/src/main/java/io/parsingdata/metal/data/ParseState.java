@@ -88,10 +88,6 @@ public class ParseState {
         return newOffset.compareTo(ZERO) >= 0 ? Optional.of(new ParseState(order, source, newOffset, iterations, references, scopeDepth)) : Optional.empty();
     }
 
-    public ParseState withOrder(final ParseGraph order) { // TODO: Remove this method when Scope is removed.
-        return new ParseState(order, source, offset, iterations, references, scopeDepth);
-    }
-
     public ParseState withSource(final Source source) {
         return new ParseState(order, source, ZERO, iterations, references, scopeDepth);
     }

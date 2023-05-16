@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal;
 
+import static io.parsingdata.metal.data.Selection.NO_LIMIT;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
@@ -197,24 +198,26 @@ public class EqualityTest {
 
     @Test
     public void stringRef() {
-        final Ref object = new NameRef("name");
+        final Ref<String> object = new NameRef("name");
         assertFalse(object.equals(null));
         assertNotEquals("name", object);
         assertEquals(object, new NameRef("name"));
         assertNotEquals(object, new NameRef("otherName"));
         assertNotEquals(object, new DefinitionRef(any("name")));
         assertNotEquals(object, new NameRef("name", con(1)));
+        assertNotEquals(object, new NameRef("name", null, con(1)));
     }
 
     @Test
     public void definitionRef() {
-        final Ref object = new DefinitionRef(any("name"));
+        final Ref<Token> object = new DefinitionRef(any("name"));
         assertFalse(object.equals(null));
         assertNotEquals("name", object);
         assertEquals(object, new DefinitionRef(any("name")));
         assertNotEquals(object, new DefinitionRef(any("otherName")));
         assertNotEquals(object, new NameRef("name"));
         assertNotEquals(object, new DefinitionRef(any("name"), con(1)));
+        assertNotEquals(object, new DefinitionRef(any("name"), null, con(1)));
     }
 
     @Test
