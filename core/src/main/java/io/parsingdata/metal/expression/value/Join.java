@@ -20,7 +20,9 @@ package io.parsingdata.metal.expression.value;
 import static io.parsingdata.metal.Util.checkContainsNoNulls;
 
 import java.util.Arrays;
+import java.util.Objects;
 
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
@@ -45,5 +47,21 @@ public class Join implements ValueExpression {
         return Arrays.stream(expressions)
             .map(e -> e.eval(parseState, encoding))
             .reduce(new ImmutableList<>(), ImmutableList::add, ImmutableList::add);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + Arrays.toString(expressions) + ")";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Arrays.equals(expressions, ((Join)obj).expressions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getClass(), Arrays.hashCode(expressions));
     }
 }
