@@ -165,13 +165,16 @@ public class AutoEqualityTest {
         io.parsingdata.metal.expression.value.arithmetic.Sub.class, Cat.class, Nth.class, Elvis.class,
         FoldLeft.class, FoldRight.class, Const.class, Expand.class, Bytes.class, CurrentOffset.class,
         FoldCat.class, CurrentIteration.class, Scope.class,
+        Join.class, Self.class, Ref.NameRef.class, Ref.DefinitionRef.class,
         // Expressions
         Eq.class, EqNum.class, EqStr.class, GtEqNum.class, GtNum.class, LtEqNum.class, LtNum.class,
         io.parsingdata.metal.expression.logical.And.class, io.parsingdata.metal.expression.logical.Or.class,
         io.parsingdata.metal.expression.logical.Not.class,
         // Data structures
         CoreValue.class, ParseValue.class, ParseReference.class, ParseState.class,
+        NotAValue.class, ParseGraph.class, ImmutableList.class,
         // Inputs
+        Slice.class,
         ConstantSource.class, DataExpressionSource.class, ByteStreamSource.class, ConcatenatedValueSource.class
     );
 
@@ -204,6 +207,7 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> TOKEN_ARRAYS = Arrays.asList(() -> new Token[] { any("a"), any("b")}, () -> new Token[] { any("b"), any("c") }, () -> new Token[] { any("a"), any("b"), any("c") });
     private static final List<Supplier<Object>> SINGLE_VALUE_EXPRESSIONS = Arrays.asList(() -> con(1), () -> con(2));
     private static final List<Supplier<Object>> VALUE_EXPRESSIONS = Arrays.asList(() -> con(1), () -> exp(con(1), con(2)));
+    private static final List<Supplier<Object>> VALUE_EXPRESSION_ARRAY = Arrays.asList(() -> new ValueExpression[] { con(1), exp(con(1), con(2))}, () -> new ValueExpression[] { exp(con(1), con(2)), con(1)}, () -> new ValueExpression[] { exp(con(1), con(2)), exp(con(1), con(3))});
     private static final List<Supplier<Object>> EXPRESSIONS = Arrays.asList(() -> TRUE, () -> not(TRUE));
     private static final List<Supplier<Object>> VALUES = Arrays.asList(() -> ConstantFactory.createFromString("a", enc()), () -> ConstantFactory.createFromString("b", enc()), () -> ConstantFactory.createFromNumeric(1L, signed()), () -> NOT_A_VALUE);
     private static final List<Supplier<Object>> REDUCERS = Arrays.asList(() -> (BinaryOperator<ValueExpression>) Shorthand::cat, () -> (BinaryOperator<ValueExpression>) Shorthand::div);
@@ -229,6 +233,7 @@ public class AutoEqualityTest {
         result.put(Token[].class, TOKEN_ARRAYS);
         result.put(SingleValueExpression.class, SINGLE_VALUE_EXPRESSIONS);
         result.put(ValueExpression.class, VALUE_EXPRESSIONS);
+        result.put(ValueExpression[].class, VALUE_EXPRESSION_ARRAY);
         result.put(Expression.class, EXPRESSIONS);
         result.put(Value.class, VALUES);
         result.put(BinaryOperator.class, REDUCERS);
@@ -251,7 +256,7 @@ public class AutoEqualityTest {
     public static Collection<Object[]> data() throws IllegalAccessException, InvocationTargetException, InstantiationException {
         final Set<Class> classes = findClasses().filter(not(CLASSES_TO_IGNORE::contains)).collect(Collectors.toSet());
         classes.removeAll(CLASSES_TO_TEST);
-        assertEquals("Please add missing class to the CLASSES_TO_TEST constant or filter it here if it has its own equality test.", Collections.emptySet(), classes);
+        assertEquals("Please add missing class to the CLASSES_TO_TEST or CLASSES_TO_IGNORE constant.", Collections.emptySet(), classes);
         return generateObjectArrays(CLASSES_TO_TEST);
     }
 
