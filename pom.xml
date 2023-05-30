@@ -66,7 +66,7 @@
     <junit.version>4.13.2</junit.version>
 
     <jacoco-plugin.version>0.8.10</jacoco-plugin.version>
-    <pmd-plugin.version>3.20.0</pmd-plugin.version>
+    <pmd-plugin.version>3.21.0</pmd-plugin.version>
     <jxr-plugin.version>3.3.0</jxr-plugin.version>
     <javadoc-plugin.version>3.5.0</javadoc-plugin.version>
     <nexus-staging-plugin.version>1.6.13</nexus-staging-plugin.version>
