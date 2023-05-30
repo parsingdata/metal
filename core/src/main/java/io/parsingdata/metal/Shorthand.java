@@ -53,7 +53,6 @@ import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
 import io.parsingdata.metal.expression.value.Join;
 import io.parsingdata.metal.expression.value.Reverse;
-import io.parsingdata.metal.expression.value.Scope;
 import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
@@ -341,7 +340,10 @@ public final class Shorthand {
     public static BinaryValueExpression mapRight(final BiFunction<ValueExpression, ValueExpression, BinaryValueExpression> func, final SingleValueExpression leftExpand, final ValueExpression right) { return func.apply(exp(leftExpand, count(right)), right); }
 
     /** @see Bytes */ public static ValueExpression bytes(final ValueExpression operand) { return new Bytes(operand); }
-    /** @see Scope */ public static ValueExpression scope(final ValueExpression scopedValueExpression, final SingleValueExpression scopeSize) { return new Scope(scopedValueExpression, scopeSize); }
+    /** @see Ref */ public static ValueExpression scope(final NameRef operand, final SingleValueExpression scopeSize) { return new NameRef(operand.reference, null, scopeSize); }
+    /** @see Ref */ public static ValueExpression scope(final NameRef operand, final SingleValueExpression scopeSize, final SingleValueExpression limit) { return new NameRef(operand.reference, scopeSize, limit); }
+    /** @see Ref */ public static ValueExpression scope(final DefinitionRef operand, final SingleValueExpression scopeSize) { return new DefinitionRef(operand.reference, null, scopeSize); }
+    /** @see Ref */ public static ValueExpression scope(final DefinitionRef operand, SingleValueExpression scopeSize, final SingleValueExpression limit) { return new DefinitionRef(operand.reference, scopeSize, limit); }
 
     /** @see And */ public static BinaryLogicalExpression and(final Expression left, final Expression right) { return new And(left, right); }
     /** @see Or */ public static BinaryLogicalExpression or(final Expression left, final Expression right) { return new Or(left, right); }

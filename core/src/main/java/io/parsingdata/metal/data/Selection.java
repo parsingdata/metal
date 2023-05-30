@@ -88,6 +88,20 @@ public final class Selection {
         return getAllValues(graph, predicate, NO_LIMIT);
     }
 
+    public static ImmutableList<ParseValue> getAllValues(final ParseGraph graph, final Predicate<ParseValue> predicate, final int limit, final int requestedScope, final int currentScope) {
+        return getAllScopedValues(graph, predicate, limit, requestedScope, currentScope).computeResult();
+    }
+
+    private static Trampoline<ImmutableList<ParseValue>> getAllScopedValues(final ParseGraph graph, final Predicate<ParseValue> predicate, final int limit, final int requestedScope, final int currentScope) {
+        if (graph.isEmpty() || limit == 0) {
+            return complete(ImmutableList::new);
+        }
+        if (requestedScope >= currentScope) {
+            return complete(() -> getAllValues(graph, predicate, limit));
+        }
+        return intermediate(() -> getAllScopedValues(graph.head.asGraph(), predicate, limit, requestedScope, graph.head.getDefinition().isScopeDelimiter() ? currentScope - 1 : currentScope));
+    }
+
     private static Trampoline<ImmutableList<ParseValue>> getAllValues(final ImmutableList<ParseGraph> graphList, final ImmutableList<ParseValue> valueList, final Predicate<ParseValue> predicate, final int limit) {
         if (graphList.isEmpty() || valueList.size == limit) {
             return complete(() -> valueList);
