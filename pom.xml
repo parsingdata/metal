@@ -51,7 +51,7 @@
   <distributionManagement>
     <snapshotRepository>
       <id>github</id>
-      <url>https://maven.pkg.github.com/parsingdata/metal</url>
+      <url>https://maven.pkg.github.com/infix-tech/metal</url>
     </snapshotRepository>
     <repository>
       <id>ossrh</id>
