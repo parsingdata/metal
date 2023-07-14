@@ -39,7 +39,7 @@ public class DataExpressionSource extends Source {
     public final ParseState parseState;
     public final Encoding encoding;
 
-    protected byte[] cache = null;
+    public byte[] cache = null;
 
     public DataExpressionSource(final ValueExpression dataExpression, final int index, final ParseState parseState, final Encoding encoding) {
         this.dataExpression = checkNotNull(dataExpression, "dataExpression");
