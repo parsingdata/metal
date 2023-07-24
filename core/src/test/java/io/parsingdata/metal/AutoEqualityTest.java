@@ -42,6 +42,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
@@ -282,7 +283,7 @@ public class AutoEqualityTest {
                 .filter(u -> u.getPath().contains("/classes/")) // ignore test classes
                 .flatMap(url -> getClasses(packageName, url));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 
@@ -294,7 +295,7 @@ public class AutoEqualityTest {
                 .map(AutoEqualityTest::getClass)
                 .collect(Collectors.toList()).stream();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 
@@ -302,7 +303,7 @@ public class AutoEqualityTest {
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Unable to find class for name " + className, e);
+            throw new IllegalStateException("Unable to find class for name " + className, e);
         }
     }
 
