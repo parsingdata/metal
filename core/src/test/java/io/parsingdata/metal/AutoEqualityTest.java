@@ -275,7 +275,7 @@ public class AutoEqualityTest {
             .filter(c -> !Modifier.isAbstract(c.getModifiers()));
     }
 
-    public static Stream<Class<?>> findAllClassesUsingClassLoader(String packageName) {
+    public static Stream<Class<?>> findAllClassesUsingClassLoader(final String packageName) {
         try {
             final Iterator<URL> iterator = ClassLoader.getSystemClassLoader()
                 .getResources(packageName.replaceAll("[.]", "/")).asIterator();
@@ -299,7 +299,7 @@ public class AutoEqualityTest {
         }
     }
 
-    private static Class<?> getClass(String className) {
+    private static Class<?> getClass(final String className) {
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {
@@ -307,7 +307,7 @@ public class AutoEqualityTest {
         }
     }
 
-    private static Collection<Object[]> generateObjectArrays(Set<Class<?>> classes) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    private static Collection<Object[]> generateObjectArrays(final Set<Class<?>> classes) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         Collection<Object[]> results = new ArrayList<>();
         for (Class<?> c : classes) {
             results.add(generateObjectArrays(c));
@@ -315,7 +315,7 @@ public class AutoEqualityTest {
         return results;
     }
 
-    private static Object[] generateObjectArrays(Class<?> c) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    private static Object[] generateObjectArrays(final Class<?> c) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         Constructor<?> cons = c.getDeclaredConstructors()[0];
         cons.setAccessible(true);
         List<List<Supplier<Object>>> args = new ArrayList<>();
@@ -334,7 +334,7 @@ public class AutoEqualityTest {
         };
     }
 
-    private static List<List<Supplier<Object>>> generateCombinations(int index, List<List<Supplier<Object>>> args) {
+    private static List<List<Supplier<Object>>> generateCombinations(final int index, final List<List<Supplier<Object>>> args) {
         List<List<Supplier<Object>>> result = new ArrayList<>();
         if (index == args.size()) {
             result.add(new ArrayList<>());
