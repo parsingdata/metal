@@ -62,7 +62,7 @@
   <properties>
     <encoding>UTF-8</encoding>
 
-    <junit-jupiter.version>5.9.3</junit-jupiter.version>
+    <junit-jupiter.version>5.10.0</junit-jupiter.version>
     <junit.version>4.13.2</junit.version>
 
     <jacoco-plugin.version>0.8.10</jacoco-plugin.version>
