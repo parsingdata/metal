@@ -156,7 +156,7 @@ public class AutoEqualityTest {
     @Parameter(1) public Object same;
     @Parameter(2) public Object[] other;
 
-    private static final Set<Class> CLASSES_TO_TEST = Set.of(
+    private static final Set<Class<?>> CLASSES_TO_TEST = Set.of(
         // Tokens
         Cho.class, Def.class, Pre.class, Rep.class, RepN.class, Seq.class, Sub.class, Tie.class,
         TokenRef.class, While.class, Post.class, DefUntil.class,
@@ -224,10 +224,10 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> PARSE_STATES = Arrays.asList(() -> createFromByteStream(DUMMY_STREAM), () -> createFromByteStream(DUMMY_STREAM, ONE), () -> new ParseState(GRAPH_WITH_REFERENCE, DUMMY_BYTE_STREAM_SOURCE, TEN, new ImmutableList<>(), new ImmutableList<>()));
     private static final List<Supplier<Object>> IMMUTABLE_LISTS = Arrays.asList(ImmutableList::new, () -> ImmutableList.create("TEST"), () -> ImmutableList.create(1), () -> ImmutableList.create(1).add(2));
     private static final List<Supplier<Object>> BOOLEANS = Arrays.asList(() -> true, () -> false);
-    private static final Map<Class, List<Supplier<Object>>> mapping = buildMap();
+    private static final Map<Class<?>, List<Supplier<Object>>> mapping = buildMap();
 
-    private static Map<Class, List<Supplier<Object>>> buildMap() {
-        final Map<Class, List<Supplier<Object>>> result = new HashMap<>();
+    private static Map<Class<?>, List<Supplier<Object>>> buildMap() {
+        final Map<Class<?>, List<Supplier<Object>>> result = new HashMap<>();
         result.put(String.class, STRINGS);
         result.put(Encoding.class, ENCODINGS);
         result.put(Token.class, TOKENS);
@@ -255,13 +255,13 @@ public class AutoEqualityTest {
 
     @Parameterized.Parameters(name="{0}")
     public static Collection<Object[]> data() throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        final Set<Class> classes = findClasses().filter(not(CLASSES_TO_IGNORE::contains)).collect(Collectors.toSet());
+        final Set<Class<?>> classes = findClasses().filter(not(CLASSES_TO_IGNORE::contains)).collect(Collectors.toSet());
         classes.removeAll(CLASSES_TO_TEST);
         assertEquals("Please add missing class to the CLASSES_TO_TEST or CLASSES_TO_IGNORE constant.", Collections.emptySet(), classes);
         return generateObjectArrays(CLASSES_TO_TEST);
     }
 
-    private static Stream<Class> findClasses() {
+    private static Stream<Class<?>> findClasses() {
         return Stream.of("io.parsingdata.metal.data",
                 "io.parsingdata.metal.expression.comparison",
                 "io.parsingdata.metal.expression.logical",
@@ -275,7 +275,7 @@ public class AutoEqualityTest {
             .filter(c -> !Modifier.isAbstract(c.getModifiers()));
     }
 
-    public static Stream<Class> findAllClassesUsingClassLoader(String packageName) {
+    public static Stream<Class<?>> findAllClassesUsingClassLoader(String packageName) {
         try {
             final Iterator<URL> iterator = ClassLoader.getSystemClassLoader()
                 .getResources(packageName.replaceAll("[.]", "/")).asIterator();
@@ -287,7 +287,7 @@ public class AutoEqualityTest {
         }
     }
 
-    private static Stream<Class> getClasses(final String packageName, final URL url) {
+    private static Stream<? extends Class<?>> getClasses(final String packageName, final URL url) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
             return reader.lines()
                 .filter(line -> line.endsWith(".class"))
@@ -299,7 +299,7 @@ public class AutoEqualityTest {
         }
     }
 
-    private static Class getClass(String className) {
+    private static Class<?> getClass(String className) {
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {
@@ -307,19 +307,19 @@ public class AutoEqualityTest {
         }
     }
 
-    private static Collection<Object[]> generateObjectArrays(Set<Class> classes) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    private static Collection<Object[]> generateObjectArrays(Set<Class<?>> classes) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         Collection<Object[]> results = new ArrayList<>();
-        for (Class c : classes) {
+        for (Class<?> c : classes) {
             results.add(generateObjectArrays(c));
         }
         return results;
     }
 
-    private static Object[] generateObjectArrays(Class c) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        Constructor cons = c.getDeclaredConstructors()[0];
+    private static Object[] generateObjectArrays(Class<?> c) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        Constructor<?> cons = c.getDeclaredConstructors()[0];
         cons.setAccessible(true);
         List<List<Supplier<Object>>> args = new ArrayList<>();
-        for (Class cl : cons.getParameterTypes()) {
+        for (Class<?> cl : cons.getParameterTypes()) {
             args.add(mapping.get(cl));
         }
         List<List<Supplier<Object>>> argLists = generateCombinations(0, args);
