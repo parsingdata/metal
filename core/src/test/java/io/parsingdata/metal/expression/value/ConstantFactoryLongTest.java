@@ -24,6 +24,7 @@ import static io.parsingdata.metal.util.EncodingFactory.signed;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +44,7 @@ public class ConstantFactoryLongTest {
 
     @Parameters(name = "{0}")
     public static Collection<Object[]> arguments() {
-        return Arrays.asList(new Object[][] {
+        return List.of(new Object[][] {
             { 0L },
             { -128L }, { 127L },
             { -32768L }, { 32767L },

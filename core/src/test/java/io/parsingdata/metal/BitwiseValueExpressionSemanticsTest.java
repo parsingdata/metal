@@ -29,8 +29,8 @@ import static io.parsingdata.metal.Shorthand.shr;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.runners.Parameterized.Parameters;
 
@@ -41,7 +41,7 @@ public class BitwiseValueExpressionSemanticsTest extends ParameterizedParse {
 
     @Parameters(name = "{0} ({4})")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+        return List.of(new Object[][] {
             { "[170, 85] a, not(a)", simpleNot(1), stream(170, 85), enc(), true },
             { "[0, 255] a not(a)", simpleNot(1), stream(0, 255), enc(), true },
             { "[255, 0] a not(a)", simpleNot(1), stream(255, 0), enc(), true },

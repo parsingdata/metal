@@ -33,6 +33,7 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.runners.Parameterized;
 
@@ -55,7 +56,7 @@ public class VarIntTest extends ParameterizedParse {
 
     @Parameterized.Parameters(name = "{0} ({4})")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+        return List.of(new Object[][] {
             { "[63, 63] 63 (varint) == 63", varIntAndValue(1), stream(63, 63), enc(), true },
             { "[127, 127] 127 (varint) == 127", varIntAndValue(1), stream(127, 127), enc(), true },
             { "[185, 10, 5, 57] (varint) == 1337", varIntAndValue(2), stream(185, 10, 5, 57), enc(), true },

@@ -30,6 +30,7 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -54,7 +55,7 @@ public class SourceAndSliceTest {
 
     @Parameters(name = "{0}")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+        return List.of(new Object[][] {
             { new ConstantSource(DATA) },
             { new DataExpressionSource(con(DATA), 0, EMPTY_PARSE_STATE, enc()) },
             { new ByteStreamSource(new InMemoryByteStream(DATA)) },
