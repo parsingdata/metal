@@ -21,6 +21,8 @@ import static java.math.BigInteger.TEN;
 import static java.math.BigInteger.ZERO;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -52,7 +54,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -61,7 +62,6 @@ import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -255,9 +255,9 @@ public class AutoEqualityTest {
 
     @Parameterized.Parameters(name="{0}")
     public static Collection<Object[]> data() throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        final Set<Class<?>> classes = findClasses().filter(not(CLASSES_TO_IGNORE::contains)).collect(Collectors.toSet());
+        final Set<Class<?>> classes = findClasses().filter(not(CLASSES_TO_IGNORE::contains)).collect(toSet());
         classes.removeAll(CLASSES_TO_TEST);
-        assertEquals("Please add missing class to the CLASSES_TO_TEST or CLASSES_TO_IGNORE constant.", Collections.emptySet(), classes);
+        assertEquals("Please add missing class to the CLASSES_TO_TEST or CLASSES_TO_IGNORE constant.", Set.of(), classes);
         return generateObjectArrays(CLASSES_TO_TEST);
     }
 
@@ -293,7 +293,7 @@ public class AutoEqualityTest {
                 .filter(line -> line.endsWith(".class"))
                 .map(className -> packageName + "." + className.substring(0, className.lastIndexOf('.')))
                 .map(AutoEqualityTest::getClass)
-                .collect(Collectors.toList()).stream();
+                .collect(toList()).stream();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
