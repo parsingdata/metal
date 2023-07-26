@@ -20,7 +20,6 @@ import static org.junit.Assert.assertEquals;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.div;
-import static io.parsingdata.metal.Shorthand.exp;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
