@@ -310,8 +310,8 @@ public final class Shorthand {
     /** @see Ref */ public static DefinitionRef ref(final Token definition, final SingleValueExpression limit) { return new DefinitionRef(definition, limit); }
     /** @see First */ public static SingleValueExpression first(final ValueExpression operand) { return new First(operand); }
     /** @see Last */ public static SingleValueExpression last(final ValueExpression operand) { return new Last(operand); }
-    /** @see Last */ public static SingleValueExpression last(final NameRef operand) { return new Last(new NameRef(operand.reference, con(1))); }
-    /** @see Last */ public static SingleValueExpression last(final DefinitionRef operand) { return new Last(new DefinitionRef(operand.reference, con(1))); }
+    /** @see Last */ public static SingleValueExpression last(final NameRef operand) { return new Last(new NameRef(con(1), operand.references)); }
+    /** @see Last */ public static SingleValueExpression last(final DefinitionRef operand) { return new Last(new DefinitionRef(con(1), operand.references)); }
     /** @see Nth */ public static ValueExpression nth(final ValueExpression values, final ValueExpression indices) { return new Nth(values, indices); }
     /** @see Nth */ public static SingleValueExpression nth(final ValueExpression values, final SingleValueExpression index) { return last(new Nth(values, index)); }
     /** @see Offset */ public static ValueExpression offset(final ValueExpression operand) { return new Offset(operand); }

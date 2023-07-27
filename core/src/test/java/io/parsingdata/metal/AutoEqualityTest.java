@@ -203,6 +203,7 @@ public class AutoEqualityTest {
     private static final ParseGraph CLOSED_BRANCHED_GRAPH = createFromByteStream(DUMMY_STREAM).addBranch(any("a")).closeBranch(any("a")).order;
 
     private static final List<Supplier<Object>> STRINGS = Arrays.asList(() -> "a", () -> "b");
+    private static final List<Supplier<Object>> STRING_ARRAYS = Arrays.asList(() -> new String[] {"a"}, () -> new String[] {"b"}, () -> new String[] {"a", "b"}, () -> new String[] {"b", "c"}, () -> new String[] {"a", "b", "c"});
     private static final List<Supplier<Object>> ENCODINGS = Arrays.asList(EncodingFactory::enc, EncodingFactory::signed, EncodingFactory::le, () -> new Encoding(Charset.forName("UTF-8")));
     private static final List<Supplier<Object>> TOKENS = Arrays.asList(() -> any("a"), () -> any("b"));
     private static final List<Supplier<Object>> TOKEN_ARRAYS = Arrays.asList(() -> new Token[] { any("a"), any("b")}, () -> new Token[] { any("b"), any("c") }, () -> new Token[] { any("a"), any("b"), any("c") });
@@ -229,6 +230,7 @@ public class AutoEqualityTest {
     private static Map<Class<?>, List<Supplier<Object>>> buildMap() {
         final Map<Class<?>, List<Supplier<Object>>> result = new HashMap<>();
         result.put(String.class, STRINGS);
+        result.put(String[].class, STRING_ARRAYS);
         result.put(Encoding.class, ENCODINGS);
         result.put(Token.class, TOKENS);
         result.put(Token[].class, TOKEN_ARRAYS);

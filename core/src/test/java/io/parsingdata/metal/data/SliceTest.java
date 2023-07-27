@@ -102,7 +102,7 @@ public class SliceTest {
         final ParseState oneValueParseState = stream().add(pv1);
         final ParseState twoValueParseState = oneValueParseState.add(new ParseValue("name2", NONE, Slice.createFromSource(new DataExpressionSource(ref("name"), 0, oneValueParseState, enc()), ZERO, BigInteger.valueOf(2)).get(), enc()));
         final String dataExpressionSliceString = getValue(twoValueParseState.order, "name2").slice().toString();
-        assertTrue(dataExpressionSliceString.startsWith("Slice(DataExpressionSource(NameRef(name)[0]("));
+        assertTrue(dataExpressionSliceString.startsWith("Slice(DataExpressionSource(NameRef(>name)[0]("));
         assertTrue(dataExpressionSliceString.endsWith(")@0:2)"));
     }
 

@@ -16,15 +16,21 @@
 
 package io.parsingdata.metal.expression.value.reference;
 
+import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
+import static io.parsingdata.metal.Util.checkContainsNoNulls;
 import static io.parsingdata.metal.Util.checkNotNull;
+import static io.parsingdata.metal.data.ImmutableList.create;
 import static io.parsingdata.metal.data.Selection.NO_LIMIT;
 import static io.parsingdata.metal.data.Selection.getAllValues;
 import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.function.Predicate;
+import java.util.function.BiPredicate;
 
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
@@ -48,24 +54,30 @@ import io.parsingdata.metal.token.Token;
  */
 public class Ref<T> implements ValueExpression {
 
-    public final T reference;
-    public final Predicate<ParseValue> predicate;
+    public final ImmutableList<T> references;
+    public final BiPredicate<ParseValue, T> predicate;
     public final SingleValueExpression limit;
 
-    private Ref(final T reference, final Predicate<ParseValue> predicate, final SingleValueExpression limit) {
-        this.reference = checkNotNull(reference, "reference");
+    @SafeVarargs
+    private Ref(final BiPredicate<ParseValue, T> predicate, final SingleValueExpression limit, final T reference,  final T... references) {
         this.predicate = checkNotNull(predicate, "predicate");
         this.limit = limit;
+        this.references = create(checkContainsNoNulls(references, "references"))
+            .add(checkNotNull(reference, "reference"));
     }
 
     public static class NameRef extends Ref<String> {
-        public NameRef(final String reference) { this(reference, null); }
-        public NameRef(final String reference, final SingleValueExpression limit) { super(reference, value -> value.matches(reference), limit); }
+        public NameRef(final SingleValueExpression limit, final ImmutableList<String> references) { this(limit, references.head, Ref.toList(references.tail).toArray(new String[0])); }
+        public NameRef(final String reference, final String... references) { this(null, reference, references); }
+        public NameRef(final String reference, final SingleValueExpression limit) { this(limit, reference); }
+        public NameRef(final SingleValueExpression limit, final String reference, final String... references) { super(ParseValue::matches, limit, reference, references); }
     }
 
     public static class DefinitionRef extends Ref<Token> {
-        public DefinitionRef(final Token reference) { this(reference, null); }
-        public DefinitionRef(final Token reference, final SingleValueExpression limit) { super(reference, value -> value.definition.equals(reference), limit); }
+        public DefinitionRef(final SingleValueExpression limit, final ImmutableList<Token> references) { this(limit, references.head, Ref.toList(references.tail).toArray(new Token[0])); }
+        public DefinitionRef(final Token reference, final Token... references) { this(null, reference, references); }
+        public DefinitionRef(final Token reference, final SingleValueExpression limit) { this(limit, reference); }
+        public DefinitionRef(final SingleValueExpression limit, final Token reference, final Token... references) { super((value, ref) -> value.definition.equals(ref), limit, reference, references); }
     }
 
     @Override
@@ -79,7 +91,17 @@ public class Ref<T> implements ValueExpression {
     }
 
     private ImmutableList<Value> evalImpl(final ParseState parseState, final int limit) {
-        return wrap(getAllValues(parseState.order, predicate, limit), new ImmutableList<Value>()).computeResult();
+        return wrap(getAllValues(parseState.order, parseValue -> toList(references).stream().anyMatch(ref -> predicate.test(parseValue, ref)), limit), new ImmutableList<Value>()).computeResult();
+    }
+
+    private static <T> List<T> toList(final ImmutableList<T> allValues) {
+        final List<T> flatten = new ArrayList<>();
+        ImmutableList<T> tail = allValues;
+        while (!tail.isEmpty()) {
+            flatten.add(tail.head);
+            tail = tail.tail;
+        }
+        return flatten;
     }
 
     private static <T, U extends T> Trampoline<ImmutableList<T>> wrap(final ImmutableList<U> input, final ImmutableList<T> output) {
@@ -91,19 +113,19 @@ public class Ref<T> implements ValueExpression {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "(" + reference + (limit == null ? "" : "," + limit) + ")";
+        return getClass().getSimpleName() + "(" + references + (limit == null ? "" : "," + limit) + ")";
     }
 
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(reference, ((Ref)obj).reference)
+            && Objects.equals(references, ((Ref)obj).references)
             && Objects.equals(limit, ((Ref)obj).limit);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getClass(), reference, limit);
+        return Objects.hash(getClass(), references, limit);
     }
 
 }
