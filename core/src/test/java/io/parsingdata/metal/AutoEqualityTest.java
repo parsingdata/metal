@@ -322,6 +322,9 @@ public class AutoEqualityTest {
         cons.setAccessible(true);
         List<List<Supplier<Object>>> args = new ArrayList<>();
         for (Class<?> cl : cons.getParameterTypes()) {
+            if (!mapping.containsKey(cl)) {
+                throw new AssertionError("Please add a mapping for type " + cl.getSimpleName());
+            }
             args.add(mapping.get(cl));
         }
         List<List<Supplier<Object>>> argLists = generateCombinations(0, args);
