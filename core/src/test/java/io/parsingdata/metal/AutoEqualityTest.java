@@ -202,7 +202,7 @@ public class AutoEqualityTest {
     private static final ParseGraph CLOSED_BRANCHED_GRAPH = createFromByteStream(DUMMY_STREAM).addBranch(any("a")).closeBranch(any("a")).order;
 
     private static final List<Supplier<Object>> STRINGS = List.of(() -> "a", () -> "b");
-    private static final List<Supplier<Object>> STRING_ARRAYS = Arrays.asList(() -> new String[] {"a"}, () -> new String[] {"b"}, () -> new String[] {"a", "b"}, () -> new String[] {"b", "c"}, () -> new String[] {"a", "b", "c"});
+    private static final List<Supplier<Object>> STRING_ARRAYS = List.of(() -> new String[] {"a"}, () -> new String[] {"b"}, () -> new String[] {"a", "b"}, () -> new String[] {"b", "c"}, () -> new String[] {"a", "b", "c"});
     private static final List<Supplier<Object>> ENCODINGS = List.of(EncodingFactory::enc, EncodingFactory::signed, EncodingFactory::le, () -> new Encoding(Charset.forName("UTF-8")));
     private static final List<Supplier<Object>> TOKENS = List.of(() -> any("a"), () -> any("b"));
     private static final List<Supplier<Object>> TOKEN_ARRAYS = List.of(() -> new Token[] { any("a"), any("b")}, () -> new Token[] { any("b"), any("c") }, () -> new Token[] { any("a"), any("b"), any("c") });
