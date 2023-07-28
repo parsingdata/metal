@@ -34,8 +34,8 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.runners.Parameterized.Parameters;
 
@@ -54,7 +54,7 @@ public class ConditionalTokenTest extends ParameterizedParse {
 
     @Parameters(name = "{0} ({4})")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+        return List.of(new Object[][] {
             { "[1, 2, 3] a b c", preToken, stream(1, 2, 3), enc(), true },
             { "[2, 3] a c", preToken, stream(2, 3), enc(), true },
             { "[1, 2, 2] a b c(error)", preToken, stream(1, 2, 2), enc(), false },

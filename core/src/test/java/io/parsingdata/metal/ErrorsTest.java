@@ -23,7 +23,6 @@ import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.div;
-import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.mul;
 import static io.parsingdata.metal.Shorthand.neg;
 import static io.parsingdata.metal.Shorthand.sub;

@@ -30,8 +30,8 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.runners.Parameterized.Parameters;
 
@@ -53,7 +53,7 @@ public class LogicalExpressionSemanticsTest extends ParameterizedParse {
 
     @Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+        return List.of(new Object[][] {
             { "2 == 2 && 2 > 1", andEqGt, stream(2, 1, 2), enc(), true },
             { "3 == 2 && 3 > 1", andEqGt, stream(2, 1, 3), enc(), false },
             { "2 == 2 && 2 > 3", andEqGt, stream(2, 3, 2), enc(), false },

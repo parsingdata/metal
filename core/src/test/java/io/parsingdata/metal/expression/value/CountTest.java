@@ -26,8 +26,8 @@ import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.runners.Parameterized.Parameters;
 
@@ -43,7 +43,7 @@ public class CountTest extends ParameterizedParse {
 
     @Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
+        return List.of(new Object[][]{
             {"[] = count(0)", COUNT, stream(0), enc(), true},
             {"[3] = count(1)", COUNT, stream(3, 1), enc(), true},
             {"[3,3] = count(2)", COUNT, stream(3, 3, 2), enc(), true},

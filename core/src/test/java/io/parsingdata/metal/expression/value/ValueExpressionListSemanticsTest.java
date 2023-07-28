@@ -32,8 +32,8 @@ import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.runners.Parameterized;
 
@@ -45,7 +45,7 @@ public class ValueExpressionListSemanticsTest extends ParameterizedParse {
 
     @Parameterized.Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+        return List.of(new Object[][] {
             { "a, a, b, b, last(a+b)", pred2(eq(last(add(ref("a"), ref("b"))))), stream(1, 2, 3, 4, 6), enc(), true },
             { "a, a, b, b, first(a+b)", pred2(eq(first(add(ref("a"), ref("b"))))), stream(1, 2, 3, 4, 4), enc(), true },
             { "a, a, a, b, b, last(a+b)", pred3(eq(last(add(ref("a"), ref("b"))))), stream(1, 2, 3, 4, 5, 8), enc(), true },

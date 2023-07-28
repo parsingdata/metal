@@ -23,8 +23,8 @@ import static io.parsingdata.metal.expression.value.ConstantFactory.createFromBy
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,7 +55,7 @@ public class ConcatenatedValueSourceTest {
 
     @Parameterized.Parameters(name="{0}")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+        return List.of(new Object[][] {
             { "full", 0, 25 },                // [XXXXX][XXXXX][XXXXX][XXXXX][XXXXX]
             { "none", 0, 0 },                 // [.....][.....][.....][.....][.....]
             { "full(0)", 0, 5 },              // [XXXXX][.....][.....][.....][.....]

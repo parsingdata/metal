@@ -39,8 +39,8 @@ import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.encoding.Encoding.DEFAULT_ENCODING;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -65,7 +65,7 @@ public class ShorthandOverloadsTest {
 
     @Parameterized.Parameters(name="SingleValueExpression {0}")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+        return List.of(new Object[][] {
             { "add", add(con(1), con(1)), con(2) },
             { "div", div(con(12), con(4)), con(3) },
             { "mul", mul(con(3), con(4)), con(12) },

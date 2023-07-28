@@ -33,8 +33,8 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static io.parsingdata.metal.util.TokenDefinitions.eqRef;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.runners.Parameterized.Parameters;
 
@@ -75,7 +75,7 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
 
     @Parameters(name="{0} ({4})")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+        return List.of(new Object[][] {
             { "[2, 2] b == a", sequenceMatch2, stream(2, 2), enc(), true },
             { "[2, 1] b == a", sequenceMatch2, stream(2, 1), enc(), false },
             { "[2, 2] b == a, c == a", sequenceMatch3, stream(2, 2, 2), enc(), true },
