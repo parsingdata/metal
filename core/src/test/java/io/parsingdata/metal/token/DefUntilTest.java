@@ -21,14 +21,12 @@ import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.EMPTY;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
-import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.mod;
 import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.rep;
-import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.until;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
@@ -40,8 +38,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -68,7 +66,7 @@ class DefUntilTest {
     public static final Token NEXT_START_WITH_TERMINATOR = sub(NEWLINE, CURRENT_OFFSET);
 
     static Collection<Object[]> repTest() {
-        return Arrays.asList(new Object[][] {
+        return List.of(new Object[][] {
             { "until: terminator not part of line, available in parseGraph",  until("line", NEWLINE),                            3, 3, INPUT_1, INPUT_2, INPUT_3},
             { "until: terminator part of line, not available in parseGraph",  until("line", con(1), END_WITH_NEWLINE_POST),      3, 0, INPUT_1 + '\n', INPUT_2 + '\n', INPUT_3 + '\n'},
             { "until: terminator part of line, available in parseGraph",      until("line", con(1), END_WITH_NEWLINE_SUB),       3, 3, INPUT_1 + '\n', INPUT_2 + '\n', INPUT_3 + '\n'},
@@ -103,7 +101,7 @@ class DefUntilTest {
     }
 
     static Collection<Object[]> shorthandTokenTest() {
-        return Arrays.asList(new Object[][] {
+        return List.of(new Object[][] {
             { "def",                         def("line", NEWLINE)               },
             { "def initial size",            def("line", con(13), NEWLINE)},
             { "def initial size + encoding", def("line", con(13), NEWLINE, Encoding.DEFAULT_ENCODING)},
@@ -131,7 +129,7 @@ class DefUntilTest {
     }
 
     static Collection<Object[]> shorthandExpressionTest() {
-        return Arrays.asList(new Object[][] {
+        return List.of(new Object[][] {
             { "def token",                   def("line", con(1), END_WITH_NEWLINE_POST)},
             { "def expression",              def("line", ENDS_WITH_NEWLINE)},
             { "def expression + encoding",   def("line", ENDS_WITH_NEWLINE, Encoding.DEFAULT_ENCODING)},

@@ -48,7 +48,6 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.math.BigInteger;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -134,7 +133,7 @@ public class EqualityTest {
     public void multiConstructorTypes() {
         final Encoding object = enc();
         final Encoding same = new Encoding(Encoding.DEFAULT_SIGN, Encoding.DEFAULT_CHARSET, Encoding.DEFAULT_BYTE_ORDER);
-        final List<Encoding> other = Arrays.asList(signed(), le(), new Encoding(Charset.forName("UTF-8")));
+        final List<Encoding> other = List.of(signed(), le(), new Encoding(Charset.forName("UTF-8")));
         assertFalse(object.equals(null));
         assertFalse(same.equals(null));
         assertEquals(object, same);

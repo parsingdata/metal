@@ -24,8 +24,8 @@ import static io.parsingdata.metal.Shorthand.con;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 
@@ -90,7 +90,7 @@ public class ArgumentsTest {
 
     @Parameters(name = "{index}-{0}")
     public static Collection<Object[]> arguments() {
-        return Arrays.asList(new Object[][] {
+        return List.of(new Object[][] {
             // Derived directly from ValueExpression
             { FoldLeft.class, new Object[] { VALID_VE, null, VALID_VE } },
             { FoldLeft.class, new Object[] { null, VALID_REDUCER, VALID_VE } },
