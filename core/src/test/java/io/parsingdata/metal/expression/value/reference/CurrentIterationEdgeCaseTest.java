@@ -15,8 +15,8 @@
  */
 package io.parsingdata.metal.expression.value.reference;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.div;
@@ -33,22 +33,17 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.expression.value.Value;
 
 public class CurrentIterationEdgeCaseTest {
 
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
-
     private ParseState parseState;
 
-    @Before
+    @BeforeEach
     public void before() {
         parseState = rep(any("a")).parse(env(stream(1, 2, 3))).get();
     }

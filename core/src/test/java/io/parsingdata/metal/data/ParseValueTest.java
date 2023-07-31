@@ -19,31 +19,27 @@ package io.parsingdata.metal.data;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
-import static junit.framework.TestCase.assertFalse;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.token.Token;
 
 public class ParseValueTest {
 
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
-
     private Token definition;
     private ParseValue value;
     private ParseValue largerValue;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         definition = def("value", 1);
         value = new ParseValue("value", definition, createFromBytes(new byte[] { 1 }), enc());
@@ -62,8 +58,8 @@ public class ParseValueTest {
     public void matching() {
         assertTrue(value.matches("value"));
 
-        assertFalse(value.matches("lue"));
-        assertFalse(value.matches(".value"));
+        Assertions.assertFalse(value.matches("lue"));
+        Assertions.assertFalse(value.matches(".value"));
     }
 
     @Test
@@ -84,28 +80,22 @@ public class ParseValueTest {
 
     @Test
     public void valueIsNotARef() {
-        assertFalse(value.isReference());
-
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Cannot convert to ParseReference");
-        value.asReference();
+        Assertions.assertFalse(value.isReference());
+        final Exception e = Assertions.assertThrows(UnsupportedOperationException.class, value::asReference);
+        assertEquals("Cannot convert to ParseReference.", e.getMessage());
     }
 
     @Test
     public void valueIsNotAGraph() {
-        assertFalse(value.isGraph());
-
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Cannot convert to ParseGraph");
-        value.asGraph();
+        Assertions.assertFalse(value.isGraph());
+        final Exception e = Assertions.assertThrows(UnsupportedOperationException.class, value::asGraph);
+        assertEquals("Cannot convert to ParseGraph.", e.getMessage());
     }
 
     @Test
     public void emptyName() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Argument name may not be empty.");
-
-        new ParseValue("", definition, createFromBytes(new byte[] { 1 }), enc());
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> new ParseValue("", definition, createFromBytes(new byte[] { 1 }), enc()));
+        assertEquals("Argument name may not be empty.", e.getMessage());
     }
 
 }

@@ -19,7 +19,8 @@ package io.parsingdata.metal.data;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.data.Selection.findItemAtOffset;
@@ -32,8 +33,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SelectionTest {
 
@@ -62,7 +62,7 @@ public class SelectionTest {
     @Test
     public void limit() {
         Optional<ParseState> parseState = rep(any("a")).parse(env(stream(1, 2, 3, 4, 5)));
-        Assert.assertTrue(parseState.isPresent());
+        assertTrue(parseState.isPresent());
         for (int i = 0; i < 7; i++) {
             assertEquals(Math.min(5, i), getAllValues(parseState.get().order, (value) -> value.matches("a"), i).size);
         }

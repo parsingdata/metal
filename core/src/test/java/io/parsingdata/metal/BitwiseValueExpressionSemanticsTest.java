@@ -32,15 +32,13 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.runners.Parameterized.Parameters;
-
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
 
 public class BitwiseValueExpressionSemanticsTest extends ParameterizedParse {
 
-    @Parameters(name = "{0} ({4})")
-    public static Collection<Object[]> data() {
+    @Override
+    public Collection<Object[]> data() {
         return List.of(new Object[][] {
             { "[170, 85] a, not(a)", simpleNot(1), stream(170, 85), enc(), true },
             { "[0, 255] a not(a)", simpleNot(1), stream(0, 255), enc(), true },

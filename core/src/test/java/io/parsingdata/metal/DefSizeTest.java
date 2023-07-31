@@ -16,9 +16,9 @@
 
 package io.parsingdata.metal;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.EMPTY;
 import static io.parsingdata.metal.Shorthand.con;
@@ -37,7 +37,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.EMPTY_SVE;
 
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.ParseState;

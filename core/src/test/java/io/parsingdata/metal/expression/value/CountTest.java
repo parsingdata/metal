@@ -29,8 +29,6 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.runners.Parameterized.Parameters;
-
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
 
@@ -41,8 +39,8 @@ public class CountTest extends ParameterizedParse {
         def("count", 1, eq(count(ref("a"))))
     );
 
-    @Parameters(name="{0} ({4})")
-    public static Collection<Object[]> data() {
+    @Override
+    public Collection<Object[]> data() {
         return List.of(new Object[][]{
             {"[] = count(0)", COUNT, stream(0), enc(), true},
             {"[3] = count(1)", COUNT, stream(3, 1), enc(), true},

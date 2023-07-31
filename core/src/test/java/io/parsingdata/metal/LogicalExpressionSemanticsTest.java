@@ -33,8 +33,6 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.runners.Parameterized.Parameters;
-
 import io.parsingdata.metal.expression.logical.LogicalExpression;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
@@ -51,8 +49,8 @@ public class LogicalExpressionSemanticsTest extends ParameterizedParse {
             def("c", con(1), le));
     }
 
-    @Parameters(name="{0} ({4})")
-    public static Collection<Object[]> data() {
+    @Override
+    public Collection<Object[]> data() {
         return List.of(new Object[][] {
             { "2 == 2 && 2 > 1", andEqGt, stream(2, 1, 2), enc(), true },
             { "3 == 2 && 3 > 1", andEqGt, stream(2, 1, 3), enc(), false },

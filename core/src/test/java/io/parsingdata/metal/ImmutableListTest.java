@@ -16,9 +16,9 @@
 
 package io.parsingdata.metal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.data.Selection.reverse;
@@ -27,7 +27,7 @@ import static io.parsingdata.metal.data.selection.ByName.get;
 import static io.parsingdata.metal.data.selection.ByName.getAll;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
@@ -145,6 +145,12 @@ public class ImmutableListTest {
     public void sizeEmpty() {
         assertEquals(0, new ImmutableList<ParseValue>().size);
     }
+
+//    @Test
+//    public void arrayListTest() {
+//        assertEquals(List.of(v5, v4, v3, v2, v1), new ArrayList<>(l5));
+//    }
+
 
     private ParseValue val(final char c) {
         return new ParseValue(Character.toString(c), def(Character.toString(c), 0L), createFromBytes(new byte[] { (byte) c }), enc());

@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.and;
@@ -42,16 +42,13 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.expression.value.SingleValueExpression;
 
-@RunWith(Parameterized.class)
 public class ShorthandOverloadsTest {
 
     public static final ParseState PARSE_STATE = ParseState.createFromByteStream(new ByteStream() {
@@ -59,11 +56,6 @@ public class ShorthandOverloadsTest {
         @Override public boolean isAvailable(BigInteger offset, BigInteger length) { return false; }
     });
 
-    @Parameter(0) public String description;
-    @Parameter(1) public SingleValueExpression toExecute;
-    @Parameter(2) public SingleValueExpression expectedResult;
-
-    @Parameterized.Parameters(name="SingleValueExpression {0}")
     public static Collection<Object[]> data() {
         return List.of(new Object[][] {
             { "add", add(con(1), con(1)), con(2) },
@@ -85,8 +77,9 @@ public class ShorthandOverloadsTest {
         });
     }
 
-    @Test
-    public void test() {
+    @ParameterizedTest(name="SingleValueExpression {0}")
+    @MethodSource("data")
+    public void test(final String description, final SingleValueExpression toExecute, final SingleValueExpression expectedResult) {
         assertTrue(eq(toExecute, expectedResult).eval(PARSE_STATE, DEFAULT_ENCODING));
     }
 

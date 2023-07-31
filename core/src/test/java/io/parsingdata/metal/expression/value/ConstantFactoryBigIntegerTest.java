@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
@@ -25,21 +25,11 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-@RunWith(Parameterized.class)
 public class ConstantFactoryBigIntegerTest {
 
-    private final BigInteger value;
-
-    public ConstantFactoryBigIntegerTest(String value) {
-        this.value = new BigInteger(value);
-    }
-
-    @Parameters(name = "{0}")
     public static Collection<Object[]> arguments() {
         return List.of(new Object[][] {
             { "0" },
@@ -49,8 +39,9 @@ public class ConstantFactoryBigIntegerTest {
         });
     }
 
-    @Test
-    public void checkBigInteger() {
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("arguments")
+    public void checkBigInteger(final BigInteger value) {
         assertEquals(0, value.compareTo(ConstantFactory.createFromNumeric(value, signed()).asNumeric()));
         assertEquals(0, new BigInteger(1, value.toByteArray()).compareTo(ConstantFactory.createFromNumeric(value, enc()).asNumeric()));
     }

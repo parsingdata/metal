@@ -19,37 +19,31 @@ package io.parsingdata.metal;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
 
 import java.math.BigInteger;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.Trampoline.CompletedTrampoline;
 import io.parsingdata.metal.Trampoline.IntermediateTrampoline;
 
 public class TrampolineTest {
 
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void resultOnIntermediateTrampoline() {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("An IntermediateTrampoline does not have a result.");
-        ((IntermediateTrampoline<Integer>) () -> null).result();
+        final Exception e = Assertions.assertThrows(UnsupportedOperationException.class, () -> ((IntermediateTrampoline<Integer>) () -> null).result());
+        assertEquals("An IntermediateTrampoline does not have a result.", e.getMessage());
     }
 
     @Test
     public void nextOnFinalTrampoline() {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("A CompletedTrampoline does not have a next computation.");
-        ((CompletedTrampoline<Integer>) () -> 42).next();
+        final Exception e = Assertions.assertThrows(UnsupportedOperationException.class, () -> ((CompletedTrampoline<Integer>) () -> 42).next());
+        assertEquals("A CompletedTrampoline does not have a next computation.", e.getMessage());
     }
 
     @Test

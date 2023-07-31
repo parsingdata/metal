@@ -18,9 +18,10 @@ package io.parsingdata.metal;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.AutoEqualityTest.DUMMY_STREAM;
 import static io.parsingdata.metal.Shorthand.TRUE;
@@ -53,13 +54,10 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
-import static junit.framework.TestCase.assertFalse;
 
 import java.util.Optional;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
@@ -178,9 +176,6 @@ public class ShorthandsTest {
             values = values.tail;
         }
     }
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
 
     public static final Token DEF_A = any("a");
     public static final Token DEF_B = any("b");

@@ -18,6 +18,8 @@ package io.parsingdata.metal.data.selection;
 
 import static java.math.BigInteger.ZERO;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import static io.parsingdata.metal.AutoEqualityTest.DUMMY_STREAM;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
@@ -25,9 +27,8 @@ import static io.parsingdata.metal.data.selection.ByType.getReferences;
 
 import java.math.BigInteger;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.Source;
@@ -39,14 +40,12 @@ public class ByTypeTest {
         @Override protected boolean isAvailable(BigInteger offset, BigInteger length) { return false; }
     };
 
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void unresolvableRef() {
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("A ParseReference must point to an existing graph.");
-        getReferences(createFromByteStream(DUMMY_STREAM).createCycle(new ParseReference(ZERO, EMPTY_SOURCE, NONE)).order);
+        final Exception e = Assertions.assertThrows(IllegalStateException.class, () ->
+            getReferences(createFromByteStream(DUMMY_STREAM).createCycle(new ParseReference(ZERO, EMPTY_SOURCE, NONE)).order)
+        );
+        assertEquals("A ParseReference must point to an existing graph.", e.getMessage());
     }
 
 }

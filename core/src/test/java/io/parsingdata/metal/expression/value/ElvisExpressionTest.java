@@ -18,10 +18,10 @@ package io.parsingdata.metal.expression.value;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
@@ -39,7 +39,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;

@@ -36,8 +36,6 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.runners.Parameterized.Parameters;
-
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.token.Token;
@@ -72,8 +70,8 @@ public class ReducersTest extends ParameterizedParse {
         return token(size, pred, enc(), enc());
     }
 
-    @Parameters(name="{0} ({4})")
-    public static Collection<Object[]> data() {
+    @Override
+    public Collection<Object[]> data() {
         return List.of(new Object[][] {
             { "[1, 2, 3, 6] a, a, a, addAll(a)", reduceAddA, stream(1, 2, 3, 6), enc(), true },
             { "[1, 2, 3, 3] a, a, a, addAllOffset(a)", reduceAddOffsetA, stream(1, 2, 3, 3), enc(), true },

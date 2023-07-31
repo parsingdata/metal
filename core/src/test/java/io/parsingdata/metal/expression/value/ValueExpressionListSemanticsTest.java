@@ -35,16 +35,14 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.runners.Parameterized;
-
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
 
 public class ValueExpressionListSemanticsTest extends ParameterizedParse {
 
-    @Parameterized.Parameters(name="{0} ({4})")
-    public static Collection<Object[]> data() {
+    @Override
+    public Collection<Object[]> data() {
         return List.of(new Object[][] {
             { "a, a, b, b, last(a+b)", pred2(eq(last(add(ref("a"), ref("b"))))), stream(1, 2, 3, 4, 6), enc(), true },
             { "a, a, b, b, first(a+b)", pred2(eq(first(add(ref("a"), ref("b"))))), stream(1, 2, 3, 4, 4), enc(), true },

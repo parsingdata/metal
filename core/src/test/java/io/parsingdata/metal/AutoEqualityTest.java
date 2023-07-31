@@ -24,9 +24,9 @@ import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import static io.parsingdata.metal.Shorthand.TRUE;
 import static io.parsingdata.metal.Shorthand.con;
@@ -64,10 +64,10 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.ByteStreamSource;
@@ -148,12 +148,7 @@ import io.parsingdata.metal.util.EncodingFactory;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
 @SuppressWarnings("PMD.EqualsNull") // Suppressed because this class explicitly checks for correct equals(null) behaviour.
-@RunWith(Parameterized.class)
 public class AutoEqualityTest {
-
-    @Parameter public Object object;
-    @Parameter(1) public Object same;
-    @Parameter(2) public Object[] other;
 
     private static final Set<Class<?>> CLASSES_TO_TEST = Set.of(
         // Tokens
@@ -254,12 +249,11 @@ public class AutoEqualityTest {
         return result;
     }
 
-    @Parameterized.Parameters(name="{0}")
-    public static Collection<Object[]> data() throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    public static Stream<Arguments> data() throws IllegalAccessException, InvocationTargetException, InstantiationException {
         final Set<Class<?>> classes = findClasses().filter(not(CLASSES_TO_IGNORE::contains)).collect(toSet());
         classes.removeAll(CLASSES_TO_TEST);
-        assertEquals("Please add missing class to the CLASSES_TO_TEST or CLASSES_TO_IGNORE constant.", Set.of(), classes);
-        return generateObjectArrays(CLASSES_TO_TEST);
+        Assertions.assertEquals(Set.of(), classes, "Please add missing class to the CLASSES_TO_TEST or CLASSES_TO_IGNORE constant.");
+        return generateObjectArrays(CLASSES_TO_TEST).stream();
     }
 
     private static Stream<Class<?>> findClasses() {
@@ -308,15 +302,15 @@ public class AutoEqualityTest {
         }
     }
 
-    private static Collection<Object[]> generateObjectArrays(final Set<Class<?>> classes) throws IllegalAccessException, InstantiationException, InvocationTargetException {
-        Collection<Object[]> results = new ArrayList<>();
+    private static Collection<Arguments> generateObjectArrays(final Set<Class<?>> classes) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+        Collection<Arguments> results = new ArrayList<>();
         for (Class<?> c : classes) {
             results.add(generateObjectArrays(c));
         }
         return results;
     }
 
-    private static Object[] generateObjectArrays(final Class<?> c) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    private static Arguments generateObjectArrays(final Class<?> c) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         Constructor<?> cons = c.getDeclaredConstructors()[0];
         cons.setAccessible(true);
         List<List<Supplier<Object>>> args = new ArrayList<>();
@@ -331,11 +325,11 @@ public class AutoEqualityTest {
         for (List<Supplier<Object>> argList : argLists.subList(1, argLists.size())) {
             otherInstances.add(cons.newInstance(instantiate(argList).toArray()));
         }
-        return new Object[]{
+        return Arguments.arguments(
             cons.newInstance(instantiate(argLists.get(0)).toArray()),
             cons.newInstance(instantiate(argLists.get(0)).toArray()),
             otherInstances.toArray()
-        };
+        );
     }
 
     private static List<List<Supplier<Object>>> generateCombinations(final int index, final List<List<Supplier<Object>>> args) {
@@ -361,8 +355,9 @@ public class AutoEqualityTest {
         return output;
     }
 
-    @Test
-    public void notEqualsNull() {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void notEqualsNull(final Object object, final Object same, final Object[] other) {
         assertFalse(object.equals(null));
         assertFalse(other.equals(null));
         for (Object o : other) {
@@ -370,8 +365,9 @@ public class AutoEqualityTest {
         }
     }
 
-    @Test
-    public void equalsItselfIdentity() {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void equalsItselfIdentity(final Object object, final Object same, final Object[] other) {
         assertEquals(object, object);
         assertEquals(same, same);
         for (Object o : other) {
@@ -379,14 +375,16 @@ public class AutoEqualityTest {
         }
     }
 
-    @Test
-    public void equalsItself() {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void equalsItself(final Object object, final Object same, final Object[] other) {
         assertEquals(object, same);
         assertEquals(same, object);
     }
 
-    @Test
-    public void notEquals() {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void notEquals(final Object object, final Object same, final Object[] other) {
         for (Object o : other) {
             assertNotEquals(o, object);
             assertNotEquals(object, o);
@@ -395,8 +393,9 @@ public class AutoEqualityTest {
         }
     }
 
-    @Test
-    public void notEqualsType() {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void notEqualsType(final Object object, final Object same, final Object[] other) {
         assertNotEquals(object, OTHER_TYPE);
         assertNotEquals(OTHER_TYPE, object);
         assertNotEquals(other, OTHER_TYPE);
@@ -407,8 +406,9 @@ public class AutoEqualityTest {
         }
     }
 
-    @Test
-    public void basicNoHashCollisions() {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void basicNoHashCollisions(final Object object, final Object same, final Object[] other) {
         assertEquals(object.hashCode(), object.hashCode());
         assertEquals(same.hashCode(), same.hashCode());
         assertEquals(object.hashCode(), same.hashCode());

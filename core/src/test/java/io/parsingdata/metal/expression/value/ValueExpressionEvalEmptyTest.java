@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.div;
@@ -26,7 +26,7 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.ImmutableList;
 

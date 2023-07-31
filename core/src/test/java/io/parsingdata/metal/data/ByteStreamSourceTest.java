@@ -19,13 +19,13 @@ package io.parsingdata.metal.data;
 import static java.math.BigInteger.TEN;
 import static java.math.BigInteger.ZERO;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.math.BigInteger;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 public class ByteStreamSourceTest {
 
@@ -34,13 +34,9 @@ public class ByteStreamSourceTest {
         @Override public boolean isAvailable(BigInteger offset, BigInteger length) { return true; }
     });
 
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void brokenByteStream() {
-        thrown.expect(UncheckedIOException.class);
-        Slice.createFromSource(DUMMY_BYTE_STREAM_SOURCE, ZERO, TEN).get().getData();
+        assertThrows(UncheckedIOException.class, () -> Slice.createFromSource(DUMMY_BYTE_STREAM_SOURCE, ZERO, TEN).get().getData());
     }
 
 }

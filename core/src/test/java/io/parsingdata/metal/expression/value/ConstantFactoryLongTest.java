@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
@@ -25,23 +25,13 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-@RunWith(Parameterized.class)
 public class ConstantFactoryLongTest {
 
     public static final BigInteger TWOS_DIFF = BigInteger.valueOf(2).add(BigInteger.valueOf(Long.MAX_VALUE)).add(BigInteger.valueOf(Long.MAX_VALUE));
 
-    private final long value;
-
-    public ConstantFactoryLongTest(long value) {
-        this.value = value;
-    }
-
-    @Parameters(name = "{0}")
     public static Collection<Object[]> arguments() {
         return List.of(new Object[][] {
             { 0L },
@@ -56,8 +46,9 @@ public class ConstantFactoryLongTest {
         });
     }
 
-    @Test
-    public void checkLong() {
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("arguments")
+    public void checkLong(final long value) {
         assertEquals(value, ConstantFactory.createFromNumeric(value, signed()).asNumeric().longValueExact());
         if (value >= 0) {
             assertEquals(value, ConstantFactory.createFromNumeric(value, enc()).asNumeric().longValueExact());
