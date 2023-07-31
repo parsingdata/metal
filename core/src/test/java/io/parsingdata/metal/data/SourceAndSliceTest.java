@@ -68,15 +68,15 @@ public class SourceAndSliceTest {
     @ParameterizedTest
     @MethodSource("data")
     public void validSlice(final Source source) {
-        checkSlice(ZERO, 2, source);
-        checkSlice(ZERO, 4, source);
-        checkSlice(ONE, 3, source);
-        checkSlice(BigInteger.valueOf(2), 1, source);
-        checkSlice(BigInteger.valueOf(2), 2, source);
-        checkSlice(BigInteger.valueOf(4), 0, source);
+        assertSlice(ZERO, 2, source);
+        assertSlice(ZERO, 4, source);
+        assertSlice(ONE, 3, source);
+        assertSlice(BigInteger.valueOf(2), 1, source);
+        assertSlice(BigInteger.valueOf(2), 2, source);
+        assertSlice(BigInteger.valueOf(4), 0, source);
     }
 
-    private void checkSlice(final BigInteger offset, final int length, final Source source) {
+    private void assertSlice(final BigInteger offset, final int length, final Source source) {
         assertTrue(compareDataSlices(createFromSource(source, offset, BigInteger.valueOf(length)).get().getData(), offset.intValueExact()));
     }
 

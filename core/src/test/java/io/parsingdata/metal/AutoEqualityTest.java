@@ -252,7 +252,7 @@ public class AutoEqualityTest {
     public static Stream<Arguments> data() throws IllegalAccessException, InvocationTargetException, InstantiationException {
         final Set<Class<?>> classes = findClasses().filter(not(CLASSES_TO_IGNORE::contains)).collect(toSet());
         classes.removeAll(CLASSES_TO_TEST);
-        Assertions.assertEquals(Set.of(), classes, "Please add missing class to the CLASSES_TO_TEST or CLASSES_TO_IGNORE constant.");
+        assertEquals(Set.of(), classes, "Please add missing class to the CLASSES_TO_TEST or CLASSES_TO_IGNORE constant.");
         return generateObjectArrays(CLASSES_TO_TEST).stream();
     }
 

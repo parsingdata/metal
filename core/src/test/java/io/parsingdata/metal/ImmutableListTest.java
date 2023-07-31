@@ -146,11 +146,6 @@ public class ImmutableListTest {
         assertEquals(0, new ImmutableList<ParseValue>().size);
     }
 
-//    @Test
-//    public void arrayListTest() {
-//        assertEquals(List.of(v5, v4, v3, v2, v1), new ArrayList<>(l5));
-//    }
-
 
     private ParseValue val(final char c) {
         return new ParseValue(Character.toString(c), def(Character.toString(c), 0L), createFromBytes(new byte[] { (byte) c }), enc());
