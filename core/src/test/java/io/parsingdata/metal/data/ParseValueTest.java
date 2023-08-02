@@ -21,6 +21,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.def;
@@ -61,8 +62,8 @@ public class ParseValueTest {
         assertTrue(value.matches(def("value", 1)));
 
         assertFalse(value.matches(def("value", 2)));
-        Assertions.assertFalse(value.matches("lue"));
-        Assertions.assertFalse(value.matches(".value"));
+        assertFalse(value.matches("lue"));
+        assertFalse(value.matches(".value"));
     }
 
     @Test
@@ -83,14 +84,14 @@ public class ParseValueTest {
 
     @Test
     public void valueIsNotARef() {
-        Assertions.assertFalse(value.isReference());
+        assertFalse(value.isReference());
         final Exception e = Assertions.assertThrows(UnsupportedOperationException.class, value::asReference);
         assertEquals("Cannot convert to ParseReference.", e.getMessage());
     }
 
     @Test
     public void valueIsNotAGraph() {
-        Assertions.assertFalse(value.isGraph());
+        assertFalse(value.isGraph());
         final Exception e = Assertions.assertThrows(UnsupportedOperationException.class, value::asGraph);
         assertEquals("Cannot convert to ParseGraph.", e.getMessage());
     }
