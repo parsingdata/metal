@@ -203,7 +203,7 @@ public class EqualityTest {
         assertNotEquals(object, new NameRef("name", "otherName"));
         assertNotEquals(object, new NameRef("otherName"));
         assertNotEquals(object, new DefinitionRef(any("name")));
-        assertNotEquals(object, new NameRef( con(1), "name"));
+        assertNotEquals(object, new NameRef(con(1), "name"));
     }
 
     @Test

@@ -57,7 +57,10 @@ public class ParseValueTest {
     @Test
     public void matching() {
         assertTrue(value.matches("value"));
+        assertTrue(value.matches(definition));
+        assertTrue(value.matches(def("value", 1)));
 
+        assertFalse(value.matches(def("value", 2)));
         Assertions.assertFalse(value.matches("lue"));
         Assertions.assertFalse(value.matches(".value"));
     }

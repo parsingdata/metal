@@ -40,6 +40,10 @@ public class ParseValue extends CoreValue implements ParseItem {
         return this.name.equals(name) || this.name.endsWith(Token.SEPARATOR + name);
     }
 
+    public boolean matches(final Token definition) {
+        return this.definition.equals(definition);
+    }
+
     @Override public boolean isValue() { return true; }
     @Override public ParseValue asValue() { return this; }
     @Override public Token getDefinition() { return definition; }
