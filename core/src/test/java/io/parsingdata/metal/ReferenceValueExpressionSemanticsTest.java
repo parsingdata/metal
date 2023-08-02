@@ -40,6 +40,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.expression.value.reference.Ref;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
 
@@ -66,11 +67,11 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
                 def("b", con(1), pred));
     }
 
-    private static Token limitedSum(final int limit) {
+    private static <T> Token limitedSum(final Ref<T> ref) {
         return
             seq(rep(def("a", con(1), not(eq(con(0))))),
                 def("zero", con(1), eq(con(0))),
-                def("sum", con(1), eq(fold(ref("a", con(limit)), Shorthand::add))));
+                def("sum", con(1), eq(fold(ref, Shorthand::add))));
     }
 
     @Parameters(name="{0} ({4})")
@@ -107,10 +108,22 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
             { "[1, 2, 3, 1] a, a, a, first(ref(a.definition))", refMatch(eq(first(ref(refAny)))), stream(1, 2, 3, 1), enc(), true },
             { "[1, 2, 3, 6] a, a, a, first(fold(ref(a.definition), add))", refMatch(eq(first(fold(ref(refAny), Shorthand::add)))), stream(1, 2, 3, 6), enc(), true },
             { "[1, 2, 3, 2] a, a, a, last(ref(a.definition))", refMatch(eq(last(ref(refAny)))), stream(1, 2, 3, 2), enc(), false },
-            { "[1, 2, 3, 0, 3] a, a, a, 0, sum(ref(a, 1))", limitedSum(1), stream(1, 2, 3, 0, 3), enc(), true },
-            { "[1, 2, 3, 0, 5] a, a, a, 0, sum(ref(a, 2))", limitedSum(2), stream(1, 2, 3, 0, 5), enc(), true },
-            { "[1, 2, 3, 0, 6] a, a, a, 0, sum(ref(a, 3))", limitedSum(3), stream(1, 2, 3, 0, 6), enc(), true },
-            { "[1, 2, 3, 0, 7] a, a, a, 0, sum(ref(a, 4))", limitedSum(4), stream(1, 2, 3, 0, 6), enc(), true }
+            { "[1, 2, 3, 0, 3] a, a, a, 0, sum(ref(a, 1))", limitedSum(ref("a", con(1))), stream(1, 2, 3, 0, 3), enc(), true },
+            { "[1, 2, 3, 0, 5] a, a, a, 0, sum(ref(a, 2))", limitedSum(ref("a", con(2))), stream(1, 2, 3, 0, 5), enc(), true },
+            { "[1, 2, 3, 0, 6] a, a, a, 0, sum(ref(a, 3))", limitedSum(ref("a", con(3))), stream(1, 2, 3, 0, 6), enc(), true },
+            { "[1, 2, 3, 0, 7] a, a, a, 0, sum(ref(a, 4))", limitedSum(ref("a", con(4))), stream(1, 2, 3, 0, 6), enc(), true },
+            { "[1, 2, 3, 0, 3] a, a, a, 0, sum(ref(1, a))", limitedSum(ref(con(1), "a")), stream(1, 2, 3, 0, 3), enc(), true },
+            { "[1, 2, 3, 0, 5] a, a, a, 0, sum(ref(2, a))", limitedSum(ref(con(2), "a")), stream(1, 2, 3, 0, 5), enc(), true },
+            { "[1, 2, 3, 0, 6] a, a, a, 0, sum(ref(3, a))", limitedSum(ref(con(3), "a")), stream(1, 2, 3, 0, 6), enc(), true },
+            { "[1, 2, 3, 0, 7] a, a, a, 0, sum(ref(4, a))", limitedSum(ref(con(4), "a")), stream(1, 2, 3, 0, 6), enc(), true },
+            { "[1, 2, 3, 0, 3] a, a, a, 0, sum(ref(1, a.definition))", limitedSum(ref(con(1), any("a"))), stream(1, 2, 3, 0, 3), enc(), true },
+            { "[1, 2, 3, 0, 5] a, a, a, 0, sum(ref(2, a.definition))", limitedSum(ref(con(2), any("a"))), stream(1, 2, 3, 0, 5), enc(), true },
+            { "[1, 2, 3, 0, 6] a, a, a, 0, sum(ref(3, a.definition))", limitedSum(ref(con(3), any("a"))), stream(1, 2, 3, 0, 6), enc(), true },
+            { "[1, 2, 3, 0, 7] a, a, a, 0, sum(ref(4, a.definition))", limitedSum(ref(con(4), any("a"))), stream(1, 2, 3, 0, 6), enc(), true },
+            { "[1, 2, 3, 0, 3] a, a, a, 0, sum(ref(a.definition, 1))", limitedSum(ref(any("a"), con(1))), stream(1, 2, 3, 0, 3), enc(), true },
+            { "[1, 2, 3, 0, 5] a, a, a, 0, sum(ref(a.definition, 2))", limitedSum(ref(any("a"), con(2))), stream(1, 2, 3, 0, 5), enc(), true },
+            { "[1, 2, 3, 0, 6] a, a, a, 0, sum(ref(a.definition, 3))", limitedSum(ref(any("a"), con(3))), stream(1, 2, 3, 0, 6), enc(), true },
+            { "[1, 2, 3, 0, 7] a, a, a, 0, sum(ref(a.definition, 4))", limitedSum(ref(any("a"), con(4))), stream(1, 2, 3, 0, 6), enc(), true }
         });
     }
 

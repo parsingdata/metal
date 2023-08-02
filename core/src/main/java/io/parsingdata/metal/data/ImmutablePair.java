@@ -40,8 +40,8 @@ public class ImmutablePair<L, R> {
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(left, ((ImmutablePair)obj).left)
-            && Objects.equals(right, ((ImmutablePair)obj).right);
+            && Objects.equals(left, ((ImmutablePair<?, ?>)obj).left)
+            && Objects.equals(right, ((ImmutablePair<?, ?>)obj).right);
     }
 
     @Override

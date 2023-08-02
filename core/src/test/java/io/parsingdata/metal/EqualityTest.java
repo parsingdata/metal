@@ -196,24 +196,28 @@ public class EqualityTest {
 
     @Test
     public void stringRef() {
-        final Ref object = new NameRef("name");
-        assertFalse(object.equals(null));
+        final Ref<String> object = new NameRef("name");
+        assertNotEquals(null, object);
         assertNotEquals("name", object);
         assertEquals(object, new NameRef("name"));
+        assertNotEquals(object, new NameRef("name", "name"));
+        assertNotEquals(object, new NameRef("name", "otherName"));
         assertNotEquals(object, new NameRef("otherName"));
         assertNotEquals(object, new DefinitionRef(any("name")));
-        assertNotEquals(object, new NameRef("name", con(1)));
+        assertNotEquals(object, new NameRef(con(1), "name"));
     }
 
     @Test
     public void definitionRef() {
-        final Ref object = new DefinitionRef(any("name"));
-        assertFalse(object.equals(null));
+        final Ref<Token> object = new DefinitionRef(any("name"));
+        assertNotEquals(null, object);
         assertNotEquals("name", object);
         assertEquals(object, new DefinitionRef(any("name")));
+        assertNotEquals(object, new DefinitionRef(any("name"), any("name")));
+        assertNotEquals(object, new DefinitionRef(any("name"), any("otherName")));
         assertNotEquals(object, new DefinitionRef(any("otherName")));
         assertNotEquals(object, new NameRef("name"));
-        assertNotEquals(object, new DefinitionRef(any("name"), con(1)));
+        assertNotEquals(object, new DefinitionRef(con(1), any("name")));
     }
 
     @Test
