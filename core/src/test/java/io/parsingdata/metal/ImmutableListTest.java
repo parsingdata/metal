@@ -146,7 +146,6 @@ public class ImmutableListTest {
         assertEquals(0, new ImmutableList<ParseValue>().size);
     }
 
-
     private ParseValue val(final char c) {
         return new ParseValue(Character.toString(c), def(Character.toString(c), 0L), createFromBytes(new byte[] { (byte) c }), enc());
     }
