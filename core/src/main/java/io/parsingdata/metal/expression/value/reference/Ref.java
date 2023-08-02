@@ -77,7 +77,7 @@ public class Ref<T> implements ValueExpression {
 
     public static class DefinitionRef extends Ref<Token> {
         public DefinitionRef(final Token reference, final Token... references) { this(null, reference, references); }
-        public DefinitionRef(final SingleValueExpression limit, final Token reference, final Token... references) { super((value, ref) -> value.definition.equals(ref), limit, reference, references); }
+        public DefinitionRef(final SingleValueExpression limit, final Token reference, final Token... references) { super(ParseValue::matches, limit, reference, references); }
     }
 
     public Ref<T> withLimit(final SingleValueExpression limit) {
@@ -123,8 +123,8 @@ public class Ref<T> implements ValueExpression {
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(references, ((Ref)obj).references)
-            && Objects.equals(limit, ((Ref)obj).limit);
+            && Objects.equals(references, ((Ref<?>)obj).references)
+            && Objects.equals(limit, ((Ref<?>)obj).limit);
     }
 
     @Override

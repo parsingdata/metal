@@ -98,8 +98,8 @@ public class ImmutableList<T> {
     @Override
     public boolean equals(final Object obj) {
         return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(head, ((ImmutableList)obj).head)
-            && Objects.equals(tail, ((ImmutableList)obj).tail);
+            && Objects.equals(head, ((ImmutableList<?>)obj).head)
+            && Objects.equals(tail, ((ImmutableList<?>)obj).tail);
         // The size field is excluded from equals() and hashCode() because it is cached data.
     }
 
