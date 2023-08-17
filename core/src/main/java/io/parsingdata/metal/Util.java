@@ -17,9 +17,16 @@
 package io.parsingdata.metal;
 
 import static java.math.BigInteger.ZERO;
+import static java.math.BigInteger.valueOf;
+import static java.security.MessageDigest.getInstance;
+
+import static io.parsingdata.metal.data.Slice.createFromBytes;
+import static io.parsingdata.metal.data.Slice.createFromSource;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.zip.DataFormatException;
@@ -81,7 +88,7 @@ public final class Util {
 
     public static String bytesToHexString(final byte[] bytes) {
         checkNotNull(bytes, "bytes");
-        char[] hexChars = new char[bytes.length * 2];
+        final char[] hexChars = new char[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
             final int v = bytes[j] & 0xFF;
             hexChars[j * 2] = HEX_ARRAY[v >>> 4];
@@ -107,6 +114,33 @@ public final class Util {
                     }
                 }
                 return Optional.of(new CoreValue(Slice.createFromBytes(out.toByteArray()), encoding));
+            }
+        };
+    }
+
+    public static ValueExpression digest(final String algorithm, final ValueExpression target) {
+        return new UnaryValueExpression(target) {
+            @Override
+            public Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding) {
+                try {
+                    final Slice slice = value.slice();
+                    final BigInteger bufferSize = valueOf(512);
+                    final MessageDigest digester = getInstance(algorithm);
+
+                    for (BigInteger i = ZERO; i.compareTo(slice.length) < 0; i = i.add(bufferSize)) {
+                        final BigInteger length = bufferSize.min(slice.length.subtract(i));
+                        final Optional<Slice> subslice = createFromSource(slice.source, slice.offset.add(i), length);
+                        if (subslice.isEmpty()) {
+                            return Optional.empty();
+                        }
+                        digester.update(subslice.get().getData());
+                    }
+
+                    return Optional.of(new CoreValue(createFromBytes(encoding.byteOrder.apply(digester.digest())), encoding));
+                }
+                catch (final NoSuchAlgorithmException e) {
+                    return Optional.empty();
+                }
             }
         };
     }
