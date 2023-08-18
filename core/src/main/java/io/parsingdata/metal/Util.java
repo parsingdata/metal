@@ -139,7 +139,7 @@ public final class Util {
                     return Optional.of(new CoreValue(createFromBytes(encoding.byteOrder.apply(digester.digest())), encoding));
                 }
                 catch (final NoSuchAlgorithmException e) {
-                    return Optional.empty();
+                    throw new IllegalArgumentException(e);
                 }
             }
         };

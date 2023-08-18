@@ -21,6 +21,7 @@ import static java.security.MessageDigest.getInstance;
 
 import static org.junit.Assert.assertTrue;
 
+import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.last;
@@ -28,14 +29,18 @@ import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Util.digest;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
+import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.List;
 
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
@@ -44,32 +49,50 @@ import org.junit.runners.Parameterized.Parameters;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
-@RunWith(Parameterized.class)
+@RunWith(Enclosed.class)
 public class UtilDigestTest {
 
-    @Parameter
-    public int length;
+    @RunWith(Parameterized.class)
+    public static class LengthTest {
 
-    @Parameters(name = "{0}")
-    public static Collection<Object[]> data() {
-        return List.of(new Object[][]{{11}, {512}, {512 + 1}, {1024}, {2048 + 1}});
+        @Parameter
+        public int length;
+
+        @Parameters(name = "{0}")
+        public static Collection<Object[]> data() {
+            return List.of(new Object[][]{{11}, {512}, {512 + 1}, {1024}, {2048 + 1}});
+        }
+
+        @Test
+        public void testLargeDigest() throws Exception {
+            final byte[] content = new byte[length];
+            new SecureRandom().nextBytes(content);
+
+            final MessageDigest digester = getInstance("SHA-256");
+
+            final byte[] data = new byte[length + 32];
+            arraycopy(content, 0, data, 0, length);
+            arraycopy(digester.digest(content), 0, data, length, 32);
+
+            final Token token = seq("data",
+                def("content", length),
+                def("digest", 32, eq(digest("SHA-256", last(ref("content"))))));
+
+            assertTrue(token.parse(env(createFromByteStream(new InMemoryByteStream(data)))).isPresent());
+        }
     }
 
-    @Test
-    public void testLargeDigest() throws Exception {
-        final byte[] content = new byte[length];
-        new SecureRandom().nextBytes(content);
+    public static class ArgumentsTest {
 
-        final MessageDigest digester = getInstance("SHA-256");
-
-        final byte[] data = new byte[length + 32];
-        arraycopy(content, 0, data, 0, length);
-        arraycopy(digester.digest(content), 0, data, length, 32);
-
-        final Token token = seq("data",
-            def("content", length),
-            def("digest", 32, eq(digest("SHA-256", last(ref("content"))))));
-
-        assertTrue(token.parse(env(createFromByteStream(new InMemoryByteStream(data)))).isPresent());
+        @Test
+        public void testInvalidAlgorithm() {
+            try {
+                digest("foo", con(0)).eval(stream(1), enc());
+            }
+            catch (final IllegalArgumentException e) {
+                assertTrue("Expected NoSuchAlgorithmException but was " + e.getCause(), e.getCause() instanceof NoSuchAlgorithmException);
+            }
+        }
     }
+
 }
