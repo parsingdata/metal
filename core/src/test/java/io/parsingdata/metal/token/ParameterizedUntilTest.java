@@ -37,8 +37,6 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.runners.Parameterized.Parameters;
-
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.util.ParameterizedParse;
 
@@ -46,8 +44,8 @@ public class ParameterizedUntilTest extends ParameterizedParse {
 
     private static final Token ABC = def("abc", 3, eq(con("abc")));
 
-    @Parameters(name = "{0} ({4})")
-    public static Collection<Object[]> data() {
+    @Override
+    public Collection<Object[]> data() {
         return List.of(new Object[][] {
             { "[a,b,c,a,b,c] i=0,s=1,m=6 ab",      untilToken(0, 1, 6, con('c'), con("ab"), ABC), stream("abcabc", US_ASCII), enc(), true },
             { "[a,b,c,a,b,c] i=3,s=1,m=6 abcab",   untilToken(3, 1, 6, con('c'), con("abcab")),   stream("abcabc", US_ASCII), enc(), true },

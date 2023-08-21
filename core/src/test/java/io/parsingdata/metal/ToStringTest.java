@@ -16,9 +16,9 @@
 
 package io.parsingdata.metal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.CURRENT_ITERATION;
 import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
@@ -79,8 +79,8 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
@@ -104,7 +104,7 @@ public class ToStringTest {
     private static final String prefix = "prefix";
     private int count;
 
-    @Before
+    @BeforeEach
     public void before() {
         count = 0;
     }

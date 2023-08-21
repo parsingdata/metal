@@ -36,8 +36,6 @@ import static io.parsingdata.metal.util.TokenDefinitions.eqRef;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.runners.Parameterized.Parameters;
-
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.expression.value.reference.Ref;
@@ -74,8 +72,8 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
                 def("sum", con(1), eq(fold(ref, Shorthand::add))));
     }
 
-    @Parameters(name="{0} ({4})")
-    public static Collection<Object[]> data() {
+    @Override
+    public Collection<Object[]> data() {
         return List.of(new Object[][] {
             { "[2, 2] b == a", sequenceMatch2, stream(2, 2), enc(), true },
             { "[2, 1] b == a", sequenceMatch2, stream(2, 1), enc(), false },

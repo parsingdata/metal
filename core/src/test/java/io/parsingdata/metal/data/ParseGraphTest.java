@@ -19,10 +19,11 @@ package io.parsingdata.metal.data;
 import static java.math.BigInteger.ZERO;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.ParseGraph.EMPTY;
@@ -35,16 +36,11 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.util.Optional;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.token.Token;
 
 public class ParseGraphTest {
-
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
 
     private final Token t = any("t");
 
@@ -210,30 +206,26 @@ public class ParseGraphTest {
     @Test
     public void testNone() {
         assertEquals("None", NONE.toString());
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("This placeholder may not be invoked.");
-        NONE.parse(env(stream()));
+        final Exception e = assertThrows(IllegalStateException.class, () -> NONE.parse(env(stream())));
+        assertEquals("This placeholder may not be invoked.", e.getMessage());
     }
 
     @Test
     public void testCloseNotBranched() {
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("Cannot close branch that is not open.");
-        EMPTY.closeBranch();
+        final Exception e = assertThrows(IllegalStateException.class, EMPTY::closeBranch);
+        assertEquals("Cannot close branch that is not open.", e.getMessage());
     }
 
     @Test
     public void testAsValue() {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Cannot convert to ParseValue.");
-        EMPTY.asValue();
+        final Exception e = assertThrows(UnsupportedOperationException.class, EMPTY::asValue);
+        assertEquals("Cannot convert to ParseValue.", e.getMessage());
     }
 
     @Test
     public void testAsRef() {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Cannot convert to ParseReference.");
-        EMPTY.asReference();
+        final Exception e = assertThrows(UnsupportedOperationException.class, EMPTY::asReference);
+        assertEquals("Cannot convert to ParseReference.", e.getMessage());
     }
 
     @Test

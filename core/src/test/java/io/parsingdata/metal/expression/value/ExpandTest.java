@@ -16,8 +16,8 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.AutoEqualityTest.DUMMY_STREAM;
 import static io.parsingdata.metal.Shorthand.con;
@@ -31,9 +31,8 @@ import static io.parsingdata.metal.expression.value.BytesTest.EMPTY_PARSE_STATE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
@@ -44,8 +43,6 @@ public class ExpandTest {
     public static final int VALUE_1 = 42;
     public static final int VALUE_2 = 84;
 
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
     public static final ParseValue PARSEVALUE_1 = createParseValue("a", VALUE_1);
     public static final ParseValue PARSEVALUE_2 = createParseValue("a", VALUE_2);
 
@@ -57,16 +54,14 @@ public class ExpandTest {
 
     @Test
     public void expandNotAValueTimes() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Count must evaluate to a non-empty countable value.");
-        exp(con(1), div(con(1), con(0))).eval(EMPTY_PARSE_STATE, enc());
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> exp(con(1), div(con(1), con(0))).eval(EMPTY_PARSE_STATE, enc()));
+        assertEquals("Count must evaluate to a non-empty countable value.", e.getMessage());
     }
 
     @Test
     public void expandEmptyTimes() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Count must evaluate to a non-empty countable value.");
-        exp(con(1), last(ref("a"))).eval(EMPTY_PARSE_STATE, enc());
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> exp(con(1), last(ref("a"))).eval(EMPTY_PARSE_STATE, enc()));
+        assertEquals("Count must evaluate to a non-empty countable value.", e.getMessage());
     }
 
     @Test

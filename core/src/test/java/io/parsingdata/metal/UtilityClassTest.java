@@ -16,11 +16,11 @@
 
 package io.parsingdata.metal;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static io.parsingdata.metal.util.ClassDefinition.checkUtilityClass;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.Selection;
 import io.parsingdata.metal.data.selection.ByName;

@@ -34,8 +34,6 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.runners.Parameterized;
-
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
 
@@ -53,8 +51,8 @@ public class VarIntTest extends ParameterizedParse {
                 post(def("decoded", len(decodeVarInt(last(ref("varInt"))))), eq(decodeVarInt(last(ref("varInt")))))
             ), con(4));
 
-    @Parameterized.Parameters(name = "{0} ({4})")
-    public static Collection<Object[]> data() {
+    @Override
+    public Collection<Object[]> data() {
         return List.of(new Object[][] {
             { "[63, 63] 63 (varint) == 63", varIntAndValue(1), stream(63, 63), enc(), true },
             { "[127, 127] 127 (varint) == 127", varIntAndValue(1), stream(127, 127), enc(), true },

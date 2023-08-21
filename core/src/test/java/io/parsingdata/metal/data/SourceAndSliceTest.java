@@ -19,8 +19,9 @@ package io.parsingdata.metal.data;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.data.Slice.createFromSource;
@@ -31,28 +32,17 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import io.parsingdata.metal.expression.value.CoreValue;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
-@RunWith(Parameterized.class)
 public class SourceAndSliceTest {
-
-    @Rule public final ExpectedException thrown = ExpectedException.none();
-
-    @Parameter public Source source;
 
     private static final byte[] DATA = { 0, 1, 2, 3 };
 
-    @Parameters(name = "{0}")
     public static Collection<Object[]> data() {
         return List.of(new Object[][] {
             { new ConstantSource(DATA) },
@@ -62,8 +52,9 @@ public class SourceAndSliceTest {
         });
     }
 
-    @Test
-    public void validSource() {
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("data")
+    public void validSource(final Source source) {
         assertTrue(source.isAvailable(ZERO, BigInteger.valueOf(4)));
         assertTrue(source.isAvailable(ONE, BigInteger.valueOf(3)));
         assertTrue(source.isAvailable(BigInteger.valueOf(2), ONE));
@@ -74,17 +65,18 @@ public class SourceAndSliceTest {
         assertFalse(source.isAvailable(BigInteger.valueOf(5), ZERO));
     }
 
-    @Test
-    public void validSlice() {
-        checkSlice(ZERO, 2);
-        checkSlice(ZERO, 4);
-        checkSlice(ONE, 3);
-        checkSlice(BigInteger.valueOf(2), 1);
-        checkSlice(BigInteger.valueOf(2), 2);
-        checkSlice(BigInteger.valueOf(4), 0);
+    @ParameterizedTest
+    @MethodSource("data")
+    public void validSlice(final Source source) {
+        assertSlice(ZERO, 2, source);
+        assertSlice(ZERO, 4, source);
+        assertSlice(ONE, 3, source);
+        assertSlice(BigInteger.valueOf(2), 1, source);
+        assertSlice(BigInteger.valueOf(2), 2, source);
+        assertSlice(BigInteger.valueOf(4), 0, source);
     }
 
-    private void checkSlice(final BigInteger offset, final int length) {
+    private void assertSlice(final BigInteger offset, final int length, final Source source) {
         assertTrue(compareDataSlices(createFromSource(source, offset, BigInteger.valueOf(length)).get().getData(), offset.intValueExact()));
     }
 
@@ -97,36 +89,39 @@ public class SourceAndSliceTest {
         return true;
     }
 
-    @Test
-    public void readBeyondEndOfSource() {
-        thrown.expect(IllegalStateException.class);
-        source.getData(ONE, BigInteger.valueOf(4));
+    @ParameterizedTest
+    @MethodSource("data")
+    public void readBeyondEndOfSource(final Source source) {
+        assertThrows(IllegalStateException.class, () -> source.getData(ONE, BigInteger.valueOf(4)));
     }
 
-    @Test
-    public void readBeyondEndOfSlice() {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void readBeyondEndOfSlice(final Source source) {
         assertFalse(createFromSource(source, ONE, BigInteger.valueOf(4)).isPresent());
     }
 
-    @Test
-    public void startReadBeyondEndOfSource() {
-        thrown.expect(IllegalStateException.class);
-        source.getData(BigInteger.valueOf(5), ZERO);
+    @ParameterizedTest
+    @MethodSource("data")
+    public void startReadBeyondEndOfSource(final Source source) {
+        assertThrows(IllegalStateException.class, () -> source.getData(BigInteger.valueOf(5), ZERO));
     }
 
-    @Test
-    public void startReadBeyondEndOfSlice() {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void startReadBeyondEndOfSlice(final Source source) {
         assertFalse(createFromSource(source, BigInteger.valueOf(5), ZERO).isPresent());
     }
 
-    @Test
-    public void startReadAtNegativeOffsetSource() {
-        thrown.expect(IllegalArgumentException.class);
-        source.getData(BigInteger.valueOf(-1L), ONE);
+    @ParameterizedTest
+    @MethodSource("data")
+    public void startReadAtNegativeOffsetSource(final Source source) {
+        assertThrows(IllegalArgumentException.class, () -> source.getData(BigInteger.valueOf(-1L), ONE));
     }
 
-    @Test
-    public void startReadAtNegativeOffsetSlice() {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void startReadAtNegativeOffsetSlice(final Source source) {
         assertFalse(createFromSource(source, BigInteger.valueOf(-1L), ONE).isPresent());
     }
 
