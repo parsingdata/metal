@@ -91,6 +91,10 @@ public class Ref<T> implements ValueExpression {
         return new Ref<>(predicate, scope, limit, references);
     }
 
+    public Ref<T> withScope(final SingleValueExpression scope) {
+        return new Ref<>(predicate, scope, limit, references);
+    }
+
     @Override
     public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
         final int requestedScope = scope == null ? parseState.scopeDepth : scope.evalSingle(parseState, encoding).filter(sizeValue -> !sizeValue.equals(NOT_A_VALUE) && sizeValue.asNumeric().compareTo(ZERO) >= 0).orElseThrow(() -> new IllegalArgumentException("Argument scopeSize must evaluate to a positive, countable value.")).asNumeric().intValueExact();

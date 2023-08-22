@@ -52,13 +52,13 @@ public class ScopeTest {
 
     @Test
     public void notAValueScopeSize() {
-        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> new Scope(con(0), EMPTY_SVE).eval(EMPTY_PARSE_STATE, enc()));
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> scope(ref("a"), EMPTY_SVE).eval(EMPTY_PARSE_STATE, enc()));
         assertEquals("Argument scopeSize must evaluate to a positive, countable value.", e.getMessage());
     }
 
     @Test
     public void negativeScopeSize() {
-        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> new Scope(con(0), con(-1, signed())).eval(EMPTY_PARSE_STATE, enc()));
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> scope(ref("a"), con(-1, signed())).eval(EMPTY_PARSE_STATE, enc()));
         assertEquals("Argument scopeSize must evaluate to a positive, countable value.", e.getMessage());
     }
 
@@ -104,8 +104,8 @@ public class ScopeTest {
 
     @Test
     public void parseGraphWithEmptyBranchSimplified() {
-        final Optional<ParseState> result = def("a", first(scope(con(1), con(0)))).parse(env(stream(0)));
-        assertEquals(ZERO, ref("a").eval(result.get(), enc()).head.asNumeric());
+        final Optional<ParseState> result = post(def("a", con(1)), eqNum(con(0), scope(ref("a"), con(0)))).parse(env(stream(0)));
+        assertTrue(result.isPresent());
     }
 
     @Test
