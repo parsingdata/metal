@@ -36,10 +36,8 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
-import java.util.Arrays;
 import java.util.Collection;
-
-import org.junit.runners.Parameterized.Parameters;
+import java.util.List;
 
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
@@ -49,9 +47,9 @@ import io.parsingdata.metal.util.ParameterizedParse;
 
 public class ComparisonExpressionSemanticsTest extends ParameterizedParse {
 
-    @Parameters(name="{0} ({4})")
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+    @Override
+    public Collection<Object[]> data() {
+        return List.of(new Object[][] {
             { "1 == 1(eqNum)", numericCompare(1, eqNum(ref("a"))), stream(1, 1), enc(), true },
             { "2 == 1(eqNum)", numericCompare(1, eqNum(ref("a"))), stream(1, 2), enc(), false },
             { "1 >= 1", numericCompare(1, gtEqNum(ref("a"))), stream(1, 1), enc(), true },

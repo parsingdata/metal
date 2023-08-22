@@ -30,10 +30,8 @@ import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
-import java.util.Arrays;
 import java.util.Collection;
-
-import org.junit.runners.Parameterized.Parameters;
+import java.util.List;
 
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
@@ -49,9 +47,9 @@ public class IterateTest extends ParameterizedParse {
         seq(repn(any("x"), div(con(1), con(0))),
             def("f", con(1), eq(con(42))));
 
-    @Parameters(name = "{0} ({4})")
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+    @Override
+    public Collection<Object[]> data() {
+        return List.of(new Object[][] {
             { "[3, 2, 3, 4, 42] n, repN(x>1, n), f", repNToken, stream(3, 2, 3, 4, 42), enc(), true },
             { "[3, 2, 3, 4, 41] n, repN(x>1, n), f", repNToken, stream(3, 2, 3, 4, 41), enc(), false },
             { "[3, 2, 3, 1, 42] n, repN(x>1, n), f", repNToken, stream(3, 2, 3, 1, 42), enc(), false },

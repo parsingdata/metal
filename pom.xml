@@ -63,7 +63,7 @@
     <encoding>UTF-8</encoding>
 
     <junit-jupiter.version>5.9.3</junit-jupiter.version>
-    <junit.version>4.13.2</junit.version>
+    <hamcrest-library.version>2.2</hamcrest-library.version>
 
     <jacoco-plugin.version>0.8.10</jacoco-plugin.version>
     <pmd-plugin.version>3.21.0</pmd-plugin.version>
@@ -102,12 +102,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
       <version>${junit-jupiter.version}</version>
@@ -120,9 +114,10 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-      <version>${junit-jupiter.version}</version>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-library</artifactId>
+      <version>${hamcrest-library.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

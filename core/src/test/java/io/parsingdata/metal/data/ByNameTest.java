@@ -16,11 +16,11 @@
 
 package io.parsingdata.metal.data;
 
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import static io.parsingdata.metal.data.selection.ByName.getValue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ByNameTest {
 

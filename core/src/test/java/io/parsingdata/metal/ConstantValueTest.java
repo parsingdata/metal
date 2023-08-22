@@ -25,10 +25,8 @@ import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
-import java.util.Arrays;
 import java.util.Collection;
-
-import org.junit.runners.Parameterized.Parameters;
+import java.util.List;
 
 import io.parsingdata.metal.expression.Expression;
 import io.parsingdata.metal.token.Token;
@@ -36,9 +34,9 @@ import io.parsingdata.metal.util.ParameterizedParse;
 
 public class ConstantValueTest extends ParameterizedParse {
 
-    @Parameters(name="{0} ({4})")
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+    @Override
+    public Collection<Object[]> data() {
+        return List.of(new Object[][] {
             { "1 byte, Eq(0), Signed", single(1, eq(con(0))), stream(0), signed(), true },
             { "1 byte, Eq(0), Unsigned", single(1, eq(con(0))), stream(0), enc(), true },
             { "1 byte, Eq(-1), Signed", single(1, eq(con(-1))), stream(-1), signed(), true },

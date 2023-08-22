@@ -16,8 +16,8 @@
 
 package io.parsingdata.metal.format;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Util.inflate;
@@ -25,7 +25,7 @@ import static io.parsingdata.metal.format.Callback.crc32;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.expression.value.Value;

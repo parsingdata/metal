@@ -16,24 +16,22 @@
 
 package io.parsingdata.metal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import static io.parsingdata.metal.Shorthand.con;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 
-import io.parsingdata.metal.expression.value.reference.Ref;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import com.sun.source.tree.Scope;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseState;
@@ -61,6 +59,7 @@ import io.parsingdata.metal.expression.value.reference.Nth;
 import io.parsingdata.metal.expression.value.reference.Offset;
 import io.parsingdata.metal.token.Cho;
 import io.parsingdata.metal.token.Def;
+import io.parsingdata.metal.token.DefUntil;
 import io.parsingdata.metal.token.Pre;
 import io.parsingdata.metal.token.Rep;
 import io.parsingdata.metal.token.RepN;
@@ -68,10 +67,8 @@ import io.parsingdata.metal.token.Seq;
 import io.parsingdata.metal.token.Sub;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.token.TokenRef;
-import io.parsingdata.metal.token.DefUntil;
 import io.parsingdata.metal.token.While;
 
-@RunWith(Parameterized.class)
 public class ArgumentsTest {
 
     final private static String VALID_NAME = "name";
@@ -85,12 +82,8 @@ public class ArgumentsTest {
         }
     };
 
-    private final Class<?> _class;
-    private final Object[] _arguments;
-
-    @Parameters(name = "{index}-{0}")
     public static Collection<Object[]> arguments() {
-        return Arrays.asList(new Object[][] {
+        return List.of(new Object[][] {
             // Derived directly from ValueExpression
             { FoldLeft.class, new Object[] { VALID_VE, null, VALID_VE } },
             { FoldLeft.class, new Object[] { null, VALID_REDUCER, VALID_VE } },
@@ -156,17 +149,13 @@ public class ArgumentsTest {
         });
     }
 
-    public ArgumentsTest(final Class<?> argumentsClass, final Object[] arguments) {
-        _class = argumentsClass;
-        _arguments = arguments;
-    }
-
-    @Test
-    public void runConstructor() throws Throwable {
-        final Constructor<?>[] constructors = _class.getConstructors();
+    @ParameterizedTest(name = "{index}-{0}")
+    @MethodSource("arguments")
+    public void runConstructor(final Class<?> clazz, final Object[] arguments) throws Throwable {
+        final Constructor<?>[] constructors = clazz.getConstructors();
         assertEquals(1, constructors.length);
         try {
-            constructors[0].newInstance(_arguments);
+            constructors[0].newInstance(arguments);
             fail("Should have thrown an IllegalArgumentException.");
         }
         catch (final InvocationTargetException e) {

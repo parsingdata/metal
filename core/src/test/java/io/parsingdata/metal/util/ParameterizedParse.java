@@ -18,41 +18,48 @@ package io.parsingdata.metal.util;
 
 import static java.math.BigInteger.ONE;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 
+import java.util.Collection;
 import java.util.Optional;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 
-@Ignore
-@RunWith(Parameterized.class)
-public class ParameterizedParse {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public abstract class ParameterizedParse {
 
-    @Parameter(0) public String description;
-    @Parameter(1) public Token token;
-    @Parameter(2) public ParseState parseState;
-    @Parameter(3) public Encoding encoding;
-    @Parameter(4) public boolean result;
+    /**
+     * Each item in the collection should contain exactly 5 values of the following type:
+     * <ul>
+     *     <li>String: description of the test</li>
+     *     <li>Token: token under test</li>
+     *     <li>ParseState: the parse state to test the token against</li>
+     *     <li>Encoding: the encoding of the token</li>
+     *     <li>boolean: true if token should parse, false otherwise</li>
+     * </ul>
+     *
+     * @return a collection of test arguments.
+     */
+    public abstract Collection<Object[]> data();
 
-    @Test
-    public void test() {
+    @ParameterizedTest(name="{0} ({4})")
+    @MethodSource("data")
+    public void test(final String description, final Token token, final ParseState parseState, final Encoding encoding, final boolean result) {
         Optional<ParseState> endState = token.parse(env(parseState, encoding));
         assertEquals(result, endState.isPresent());
 
         endState.ifPresent(state -> {
             // In case parsing succeeded we expect to have parsed the whole stream and we shouldn't be able to slice 1 byte.
-            assertFalse("The test has not parsed the whole stream. It ended at offset " + state.offset + ".", state.slice(ONE).isPresent());
+            assertFalse(state.slice(ONE).isPresent(), "The test has not parsed the whole stream. It ended at offset " + state.offset + ".");
         });
     }
 

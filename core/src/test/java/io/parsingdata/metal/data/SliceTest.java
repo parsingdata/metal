@@ -20,9 +20,9 @@ import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.TEN;
 import static java.math.BigInteger.ZERO;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
@@ -44,16 +44,13 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.util.InMemoryByteStream;
 import io.parsingdata.metal.util.ReadTrackingByteStream;
 
 public class SliceTest {
-
-    @Rule public final ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void lazyRead() {
@@ -83,9 +80,10 @@ public class SliceTest {
 
     @Test
     public void retrieveDataFromSliceWithNegativeLimit() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Argument limit may not be negative.");
-        Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), ZERO, BigInteger.valueOf(4)).get().getData(BigInteger.valueOf(-1));
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () ->
+            Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), ZERO, BigInteger.valueOf(4)).get().getData(BigInteger.valueOf(-1))
+        );
+        assertEquals("Argument limit may not be negative.", e.getMessage());
     }
 
 
@@ -102,7 +100,7 @@ public class SliceTest {
         final ParseState oneValueParseState = stream().add(pv1);
         final ParseState twoValueParseState = oneValueParseState.add(new ParseValue("name2", NONE, Slice.createFromSource(new DataExpressionSource(ref("name"), 0, oneValueParseState, enc()), ZERO, BigInteger.valueOf(2)).get(), enc()));
         final String dataExpressionSliceString = getValue(twoValueParseState.order, "name2").slice().toString();
-        assertTrue(dataExpressionSliceString.startsWith("Slice(DataExpressionSource(NameRef(name)[0]("));
+        assertTrue(dataExpressionSliceString.startsWith("Slice(DataExpressionSource(NameRef(>name)[0]("));
         assertTrue(dataExpressionSliceString.endsWith(")@0:2)"));
     }
 

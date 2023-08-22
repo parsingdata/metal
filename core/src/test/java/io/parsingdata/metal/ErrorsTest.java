@@ -16,14 +16,14 @@
 
 package io.parsingdata.metal;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import static io.parsingdata.metal.AutoEqualityTest.DUMMY_STREAM;
 import static io.parsingdata.metal.Shorthand.add;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.div;
-import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.mul;
 import static io.parsingdata.metal.Shorthand.neg;
 import static io.parsingdata.metal.Shorthand.sub;
@@ -33,20 +33,15 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.math.BigInteger;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.token.Token;
 
 public class ErrorsTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void noValueForSize() {
-        thrown = ExpectedException.none();
         // Basic division by zero.
         final Token nanSize = def("a", div(con(1), con(0)));
         assertFalse(nanSize.parse(env(stream(1))).isPresent());
@@ -69,9 +64,8 @@ public class ErrorsTest {
 
     @Test
     public void parseStateWithNegativeOffset() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Argument offset may not be negative.");
-        createFromByteStream(DUMMY_STREAM, BigInteger.valueOf(-1));
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> createFromByteStream(DUMMY_STREAM, BigInteger.valueOf(-1)));
+        assertEquals("Argument offset may not be negative.", e.getMessage());
     }
 
 }

@@ -18,8 +18,9 @@ package io.parsingdata.metal.data;
 
 import static java.math.BigInteger.ZERO;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
@@ -36,16 +37,12 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.token.Token;
 
 public class DataExpressionSourceTest {
-
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
 
     public ParseValue setupValue() {
         final Optional<ParseState> result = setupResult();
@@ -69,18 +66,17 @@ public class DataExpressionSourceTest {
 
     @Test
     public void indexOutOfBounds() {
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("ValueExpression dataExpression yields 1 result(s) (expected at least 2).");
         final Optional<ParseState> result = setupResult();
         final DataExpressionSource source = new DataExpressionSource(ref("a"), 1, result.get(), enc());
-        source.getData(ZERO, BigInteger.valueOf(4));
+
+        final Exception e = Assertions.assertThrows(IllegalStateException.class, () -> source.getData(ZERO, BigInteger.valueOf(4)));
+        assertEquals("ValueExpression dataExpression yields 1 result(s) (expected at least 2).", e.getMessage());
     }
 
     @Test
     public void notAValue() {
-        thrown.expect(IllegalStateException.class);
-        thrown.expectMessage("ValueExpression dataExpression yields NOT_A_VALUE at index 0.");
-        new DataExpressionSource(div(con(1), con(0)), 0, EMPTY_PARSE_STATE, enc()).isAvailable(ZERO, ZERO);
+        final Exception e = Assertions.assertThrows(IllegalStateException.class, () -> new DataExpressionSource(div(con(1), con(0)), 0, EMPTY_PARSE_STATE, enc()).isAvailable(ZERO, ZERO));
+        assertEquals("ValueExpression dataExpression yields NOT_A_VALUE at index 0.", e.getMessage());
     }
 
 }
