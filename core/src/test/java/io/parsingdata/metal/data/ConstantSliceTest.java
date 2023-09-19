@@ -19,36 +19,30 @@ package io.parsingdata.metal.data;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.data.Slice.createFromBytes;
 
 import java.math.BigInteger;
 import java.util.Arrays;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 public class ConstantSliceTest {
 
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void nullInput() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Argument data may not be null.");
-        createFromBytes(null);
+        final Exception e = assertThrows(IllegalArgumentException.class, () -> createFromBytes(null));
+        assertEquals("Argument data may not be null.", e.getMessage());
     }
 
     @Test
     public void readBeyondSourceSize() {
         final byte[] input = { 1, 2, 3, 4 };
         final Slice slice = createFromBytes(input);
-        thrown.expect(IllegalStateException.class);
-        slice.source.getData(BigInteger.valueOf(4), ONE);
+        assertThrows(IllegalStateException.class, () -> slice.source.getData(BigInteger.valueOf(4), ONE));
     }
 
     @Test

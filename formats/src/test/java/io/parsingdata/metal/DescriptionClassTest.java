@@ -18,7 +18,7 @@ package io.parsingdata.metal;
 
 import static io.parsingdata.metal.util.ClassDefinition.checkUtilityClass;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.format.Callback;
 import io.parsingdata.metal.format.JPEG;

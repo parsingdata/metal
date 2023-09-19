@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.SELF;
 import static io.parsingdata.metal.Shorthand.and;
@@ -28,7 +28,7 @@ import static io.parsingdata.metal.util.EncodingFactory.le;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.token.Token;
 

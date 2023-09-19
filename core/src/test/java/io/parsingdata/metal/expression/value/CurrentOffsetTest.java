@@ -16,7 +16,7 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
 import static io.parsingdata.metal.Shorthand.con;
@@ -34,7 +34,7 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.token.Token;

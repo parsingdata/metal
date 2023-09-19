@@ -37,8 +37,6 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.runners.Parameterized;
-
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
 
@@ -50,8 +48,8 @@ public class CurrentIterationTest extends ParameterizedParse {
     public static final Token VALUE_EQ_ITERATION_GRANDPARENT = def("value", con(1), eq(iteration(2)));
     public static final Token VALUE_EQ_255 = def("value", con(1), eq(con(255)));
 
-    @Parameterized.Parameters(name="{0} ({4})")
-    public static Collection<Object[]> data() {
+    @Override
+    public Collection<Object[]> data() {
         return List.of(new Object[][] {
             { "[0, 1, 2, 3, 255] rep(CURRENT_ITERATION), def(255)", seq(rep(VALUE_EQ_ITERATION), VALUE_EQ_255), stream(0, 1, 2, 3, 255), enc(), true },
             { "[0, 1, 2, 3] repn=4(CURRENT_ITERATION)", repn(VALUE_EQ_ITERATION, con(4)), stream(0, 1, 2, 3), enc(), true },

@@ -36,8 +36,6 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.runners.Parameterized.Parameters;
-
 import io.parsingdata.metal.expression.value.BinaryValueExpression;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -68,8 +66,8 @@ public class ArithmeticValueExpressionSemanticsTest extends ParameterizedParse {
         return singleToken("a", "b", 1, unaryValueExpression);
     }
 
-    @Parameters(name="{0} ({4})")
-    public static Collection<Object[]> data() {
+    @Override
+    public Collection<Object[]> data() {
         return List.of(new Object[][] {
             { "[signed] 1 + 2 == 3", add, stream(1, 2, 3), signed(), true },
             { "[signed] -10 + 3 == -7", add, stream(-10, 3, -7), signed(), true },

@@ -20,9 +20,10 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
 import static io.parsingdata.metal.Shorthand.con;
@@ -48,9 +49,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
@@ -92,15 +91,10 @@ public class ByTokenTest {
             repn(
                  token("selfRec"), last(ref("childCount"))));
 
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void nullCheck() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Argument definition may not be null");
-
-        get(parseResultGraph(stream(0, 1, 2), SIMPLE_SEQ), null);
+        final Exception e = assertThrows(IllegalArgumentException.class, () -> get(parseResultGraph(stream(0, 1, 2), SIMPLE_SEQ), null));
+        assertEquals("Argument definition may not be null.", e.getMessage());
     }
 
     @Test
@@ -129,10 +123,8 @@ public class ByTokenTest {
 
     @Test
     public void getAllNullCheck() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Argument definition may not be null");
-
-        getAll(parseResultGraph(stream(0, 1, 2), SIMPLE_SEQ), null);
+        final Exception e = assertThrows(IllegalArgumentException.class, () -> getAll(parseResultGraph(stream(0, 1, 2), SIMPLE_SEQ), null));
+        assertEquals("Argument definition may not be null.", e.getMessage());
     }
 
     @Test

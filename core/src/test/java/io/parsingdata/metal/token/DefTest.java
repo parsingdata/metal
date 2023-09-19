@@ -19,8 +19,9 @@ package io.parsingdata.metal.token;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
@@ -32,9 +33,7 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.math.BigInteger;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.ByteStream;
 import io.parsingdata.metal.data.Environment;
@@ -43,9 +42,6 @@ import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.Selection;
 
 public class DefTest {
-
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void scopeWithoutEncoding() {
@@ -59,9 +55,8 @@ public class DefTest {
 
     @Test
     public void errorEmptyName() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Argument name may not be empty.");
-        def("", 1);
+        final Exception e = assertThrows(IllegalArgumentException.class, () -> def("", 1));
+        assertEquals("Argument name may not be empty.", e.getMessage());
     }
 
     @Test

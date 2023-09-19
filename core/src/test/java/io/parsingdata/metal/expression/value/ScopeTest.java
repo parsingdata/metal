@@ -18,8 +18,8 @@ package io.parsingdata.metal.expression.value;
 
 import static java.math.BigInteger.ZERO;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.EMPTY;
 import static io.parsingdata.metal.Shorthand.con;
@@ -41,30 +41,24 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.util.Optional;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.token.Token;
 
 public class ScopeTest {
 
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void notAValueScopeSize() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Argument scopeSize must evaluate to a positive, countable value.");
-        new Scope(con(0), EMPTY_SVE).eval(EMPTY_PARSE_STATE, enc());
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> new Scope(con(0), EMPTY_SVE).eval(EMPTY_PARSE_STATE, enc()));
+        assertEquals("Argument scopeSize must evaluate to a positive, countable value.", e.getMessage());
     }
 
     @Test
     public void negativeScopeSize() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Argument scopeSize must evaluate to a positive, countable value.");
-        new Scope(con(0), con(-1, signed())).eval(EMPTY_PARSE_STATE, enc());
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> new Scope(con(0), con(-1, signed())).eval(EMPTY_PARSE_STATE, enc()));
+        assertEquals("Argument scopeSize must evaluate to a positive, countable value.", e.getMessage());
     }
 
     @Test
