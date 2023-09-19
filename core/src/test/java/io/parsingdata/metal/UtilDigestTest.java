@@ -19,7 +19,7 @@ package io.parsingdata.metal;
 import static java.lang.System.arraycopy;
 import static java.security.MessageDigest.getInstance;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
@@ -36,63 +36,42 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Collection;
-import java.util.List;
 
-import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
-@RunWith(Enclosed.class)
-public class UtilDigestTest {
+class UtilDigestTest {
 
-    @RunWith(Parameterized.class)
-    public static class LengthTest {
+    @ParameterizedTest
+    @ValueSource(ints = {11, 512, 512 + 1, 1024, 2048 + 1})
+    public void testLargeDigest(final int length) throws Exception {
+        final byte[] content = new byte[length];
+        new SecureRandom().nextBytes(content);
 
-        @Parameter
-        public int length;
+        final MessageDigest digester = getInstance("SHA-256");
 
-        @Parameters(name = "{0}")
-        public static Collection<Object[]> data() {
-            return List.of(new Object[][]{{11}, {512}, {512 + 1}, {1024}, {2048 + 1}});
-        }
+        final byte[] data = new byte[length + 32];
+        arraycopy(content, 0, data, 0, length);
+        arraycopy(digester.digest(content), 0, data, length, 32);
 
-        @Test
-        public void testLargeDigest() throws Exception {
-            final byte[] content = new byte[length];
-            new SecureRandom().nextBytes(content);
+        final Token token = seq("data",
+            def("content", length),
+            def("digest", 32, eq(digest("SHA-256", last(ref("content"))))));
 
-            final MessageDigest digester = getInstance("SHA-256");
-
-            final byte[] data = new byte[length + 32];
-            arraycopy(content, 0, data, 0, length);
-            arraycopy(digester.digest(content), 0, data, length, 32);
-
-            final Token token = seq("data",
-                def("content", length),
-                def("digest", 32, eq(digest("SHA-256", last(ref("content"))))));
-
-            assertTrue(token.parse(env(createFromByteStream(new InMemoryByteStream(data)))).isPresent());
-        }
+        assertTrue(token.parse(env(createFromByteStream(new InMemoryByteStream(data)))).isPresent());
     }
 
-    public static class ArgumentsTest {
-
-        @Test
-        public void testInvalidAlgorithm() {
-            try {
-                digest("foo", con(0)).eval(stream(1), enc());
-            }
-            catch (final IllegalArgumentException e) {
-                assertTrue("Expected NoSuchAlgorithmException but was " + e.getCause(), e.getCause() instanceof NoSuchAlgorithmException);
-            }
+    @Test
+    public void testInvalidAlgorithm() {
+        try {
+            digest("foo", con(0)).eval(stream(1), enc());
+        }
+        catch (final IllegalArgumentException e) {
+            assertTrue(e.getCause() instanceof NoSuchAlgorithmException, "Expected NoSuchAlgorithmException but was " + e.getCause());
         }
     }
-
 }
