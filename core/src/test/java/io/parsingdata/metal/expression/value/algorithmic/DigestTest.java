@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal;
+package io.parsingdata.metal.expression.value.algorithmic;
 
 import static java.lang.System.arraycopy;
 import static java.security.MessageDigest.getInstance;
@@ -23,11 +23,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
+import static io.parsingdata.metal.Shorthand.digest;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.seq;
-import static io.parsingdata.metal.Util.digest;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
@@ -44,7 +44,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
 
-class UtilDigestTest {
+class DigestTest {
 
     @ParameterizedTest
     @ValueSource(ints = {11, 512, 512 + 1, 1024, 2048 + 1})

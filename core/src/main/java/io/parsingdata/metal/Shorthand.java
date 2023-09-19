@@ -58,6 +58,7 @@ import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
+import io.parsingdata.metal.expression.value.algorithmic.Digest;
 import io.parsingdata.metal.expression.value.arithmetic.Add;
 import io.parsingdata.metal.expression.value.arithmetic.Div;
 import io.parsingdata.metal.expression.value.arithmetic.Mod;
@@ -369,6 +370,8 @@ public final class Shorthand {
     /** @see LtNum */ public static ComparisonExpression ltNum(final ValueExpression predicate) { return new LtNum(null, predicate); }
     /** @see LtNum */ public static ComparisonExpression ltNum(final ValueExpression value, final ValueExpression predicate) { return new LtNum(value, predicate); }
 
+    /** @see Digest */ public static UnaryValueExpression digest(final String algorithm, final ValueExpression operand) { return new Digest(algorithm, operand); }
+    
     public static byte[] toByteArray(final int... bytes) {
         final byte[] outBytes = new byte[bytes.length];
         for (int i = 0; i < bytes.length; i++) {
