@@ -22,6 +22,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.success;
 import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
+import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -67,7 +68,7 @@ public class Tie extends Token {
 
     private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Value> values, final int index, final ParseState returnParseState) {
         if (values.isEmpty()) {
-            return complete(() -> success(new ParseState(environment.parseState.closeBranch(this).order, returnParseState.cache, returnParseState.source, returnParseState.offset, returnParseState.iterations, returnParseState.references)));
+            return complete(() -> success(new ParseState(environment.parseState.closeBranch(this).order, environment.parseState.cache, returnParseState.source, returnParseState.offset, returnParseState.iterations, returnParseState.references)));
         }
         if (values.head.equals(NOT_A_VALUE)) {
             return complete(Util::failure);
