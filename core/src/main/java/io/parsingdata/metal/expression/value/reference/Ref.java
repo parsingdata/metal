@@ -73,6 +73,14 @@ public class Ref<T> implements ValueExpression {
     public static class NameRef extends Ref<String> {
         public NameRef(final String reference, final String... references) { this(null, reference, references); }
         public NameRef(final SingleValueExpression limit, final String reference, final String... references) { super(ParseValue::matches, limit, reference, references); }
+
+        @Override
+        ImmutableList<Value> evalImpl(final ParseState parseState, final int limit) {
+            if (references.size == 1) {
+                return parseState.cache.find(references.head);
+            }
+            return wrap(getAllValues(parseState.order, parseValue -> toList(references).stream().anyMatch(ref -> predicate.test(parseValue, ref)), limit), new ImmutableList<Value>()).computeResult();
+        }
     }
 
     public static class DefinitionRef extends Ref<Token> {
@@ -94,7 +102,7 @@ public class Ref<T> implements ValueExpression {
             .orElseThrow(() -> new IllegalArgumentException("Limit must evaluate to a non-empty value."));
     }
 
-    private ImmutableList<Value> evalImpl(final ParseState parseState, final int limit) {
+    ImmutableList<Value> evalImpl(final ParseState parseState, final int limit) {
         return wrap(getAllValues(parseState.order, parseValue -> toList(references).stream().anyMatch(ref -> predicate.test(parseValue, ref)), limit), new ImmutableList<Value>()).computeResult();
     }
 

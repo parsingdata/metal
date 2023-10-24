@@ -213,10 +213,10 @@ public class ToStringTest {
         assertFalse(parseState.toString().contains(";iterations:"));
         assertFalse(parseState.toString().contains(";references:"));
         final ImmutableList<ImmutablePair<Token, BigInteger>> iterationsList = ImmutableList.create(new ImmutablePair<>(t(), BigInteger.ZERO));
-        final ParseState parseStateWithIteration = new ParseState(parseState.order, parseState.source, parseState.offset, iterationsList, new ImmutableList<>());
+        final ParseState parseStateWithIteration = new ParseState(parseState.order, parseState.cache, parseState.source, parseState.offset, iterationsList, new ImmutableList<>());
         assertTrue(parseStateWithIteration.toString().contains(";iterations:" + iterationsList.toString()));
         final ImmutableList<ParseReference> referencesList = ImmutableList.create(new ParseReference(BigInteger.ZERO, parseState.source, t()));
-        final ParseState parseStateWithReference = new ParseState(parseState.order, parseState.source, parseState.offset, new ImmutableList<>(), referencesList);
+        final ParseState parseStateWithReference = new ParseState(parseState.order, parseState.cache, parseState.source, parseState.offset, new ImmutableList<>(), referencesList);
         assertTrue(parseStateWithReference.toString().contains(";references:" + referencesList.toString()));
     }
 
