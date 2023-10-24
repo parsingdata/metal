@@ -42,7 +42,7 @@ public class ParseState {
 
     public ParseState(final ParseGraph order, final ParseValueCache cache, final Source source, final BigInteger offset, final ImmutableList<ImmutablePair<Token, BigInteger>> iterations, final ImmutableList<ParseReference> references) {
         this.order = checkNotNull(order, "order");
-        this.cache = cache;
+        this.cache = checkNotNull(cache, "cache");
         this.source = checkNotNull(source, "source");
         this.offset = checkNotNegative(offset, "offset");
         this.iterations = checkNotNull(iterations, "iterations");

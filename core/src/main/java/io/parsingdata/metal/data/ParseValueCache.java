@@ -1,10 +1,12 @@
 package io.parsingdata.metal.data;
 
+import static io.parsingdata.metal.data.Selection.NO_LIMIT;
 import static io.parsingdata.metal.data.Selection.reverse;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.expression.value.Value;
@@ -22,18 +24,18 @@ public class ParseValueCache {
         this.cache = cache;
     }
 
-    public ImmutableList<Value> find(final String scopeName) {
+    public Optional<ImmutableList<Value>> find(final String scopeName, int limit) {
         final String s = shortName(scopeName);
         ImmutableList<ParseValue> valueImmutableList = cache.getOrDefault(s, new ImmutableList<>());
         ImmutableList<Value> result = new ImmutableList<>();
-        while (valueImmutableList != null) {
+        while (valueImmutableList != null && (limit == NO_LIMIT || result.size < limit)) {
             final ParseValue head = valueImmutableList.head;
             if (head != null && head.matches(scopeName)) {
                 result = result.add(head);
             }
             valueImmutableList = valueImmutableList.tail;
         }
-        return reverse(result);
+        return Optional.of(reverse(result));
     }
 
     public ParseValueCache add(final ParseValue value) {

@@ -28,6 +28,7 @@ import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiPredicate;
 
 import io.parsingdata.metal.Trampoline;
@@ -76,10 +77,10 @@ public class Ref<T> implements ValueExpression {
 
         @Override
         ImmutableList<Value> evalImpl(final ParseState parseState, final int limit) {
-            if (references.size == 1) {
-                return parseState.cache.find(references.head);
-            }
-            return wrap(getAllValues(parseState.order, parseValue -> toList(references).stream().anyMatch(ref -> predicate.test(parseValue, ref)), limit), new ImmutableList<Value>()).computeResult();
+            return Optional.of(parseState.cache)
+                .filter(p -> references.size == 1)
+                .flatMap(p -> p.find(references.head, limit))
+                .orElseGet(() -> wrap(getAllValues(parseState.order, parseValue -> toList(references).stream().anyMatch(ref -> predicate.test(parseValue, ref)), limit), new ImmutableList<Value>()).computeResult());
         }
     }
 
