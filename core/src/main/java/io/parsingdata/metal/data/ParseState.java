@@ -22,6 +22,7 @@ import static java.math.BigInteger.ZERO;
 import static io.parsingdata.metal.Util.checkNotNegative;
 import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.format;
+import static io.parsingdata.metal.data.ParseValueCache.NO_CACHE;
 import static io.parsingdata.metal.data.Slice.createFromSource;
 
 import java.math.BigInteger;
@@ -89,7 +90,7 @@ public class ParseState {
     }
 
     public ParseState withOrder(final ParseGraph order) {
-        return new ParseState(order, null, source, offset, iterations, references);
+        return new ParseState(order, NO_CACHE, source, offset, iterations, references);
     }
 
     public ParseState withSource(final Source source) {
