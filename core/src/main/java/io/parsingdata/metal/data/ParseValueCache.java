@@ -1,5 +1,7 @@
 package io.parsingdata.metal.data;
 
+import static io.parsingdata.metal.data.Selection.reverse;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -31,7 +33,7 @@ public class ParseValueCache {
             }
             valueImmutableList = valueImmutableList.tail;
         }
-        return result;
+        return reverse(result);
     }
 
     public ParseValueCache add(final ParseValue value) {
