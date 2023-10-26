@@ -74,7 +74,7 @@ public abstract class Ref<T> implements ValueExpression {
     public static class NameRef extends Ref<String> {
         public NameRef(final String reference, final String... references) { this(null, reference, references); }
         public NameRef(final SingleValueExpression limit, final String reference, final String... references) { super(ParseValue::matches, limit, reference, references); }
-        public NameRef(final BiPredicate<ParseValue, String> predicate, final SingleValueExpression limit, final ImmutableList<String> references) { super(predicate, limit, references); }
+        private NameRef(final BiPredicate<ParseValue, String> predicate, final SingleValueExpression limit, final ImmutableList<String> references) { super(predicate, limit, references); }
 
         @Override
         ImmutableList<Value> evalImpl(final ParseState parseState, final int limit) {
@@ -84,6 +84,7 @@ public abstract class Ref<T> implements ValueExpression {
                 .orElseGet(() -> wrap(getAllValues(parseState.order, parseValue -> toList(references).stream().anyMatch(ref -> predicate.test(parseValue, ref)), limit), new ImmutableList<Value>()).computeResult());
         }
 
+        @Override
         public NameRef withLimit(final SingleValueExpression limit) {
             return new NameRef(predicate, limit, references);
         }
@@ -92,8 +93,9 @@ public abstract class Ref<T> implements ValueExpression {
     public static class DefinitionRef extends Ref<Token> {
         public DefinitionRef(final Token reference, final Token... references) { this(null, reference, references); }
         public DefinitionRef(final SingleValueExpression limit, final Token reference, final Token... references) { super(ParseValue::matches, limit, reference, references); }
-        public DefinitionRef(final BiPredicate<ParseValue, Token> predicate, final SingleValueExpression limit, final ImmutableList<Token> references) { super(predicate, limit, references); }
+        private DefinitionRef(final BiPredicate<ParseValue, Token> predicate, final SingleValueExpression limit, final ImmutableList<Token> references) { super(predicate, limit, references); }
 
+        @Override
         public DefinitionRef withLimit(final SingleValueExpression limit) {
             return new DefinitionRef(predicate, limit, references);
         }
