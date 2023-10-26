@@ -60,6 +60,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Spliterator;
+import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -222,6 +223,7 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> PARSE_VALUE_CACHES = List.of(() -> NO_CACHE, () -> new ParseValueCache(), () -> new ParseValueCache().add(PARSE_VALUE), () -> new ParseValueCache().add(PARSE_VALUE).add(PARSE_VALUE));
     private static final List<Supplier<Object>> IMMUTABLE_LISTS = List.of(ImmutableList::new, () -> ImmutableList.create("TEST"), () -> ImmutableList.create(1), () -> ImmutableList.create(1).add(2));
     private static final List<Supplier<Object>> BOOLEANS = List.of(() -> true, () -> false);
+    private static final List<Supplier<Object>> BIPREDICATES = List.of(() -> (BiPredicate<Object, Object>) (o, o2) -> false);
     private static final Map<Class<?>, List<Supplier<Object>>> mapping = buildMap();
 
     private static Map<Class<?>, List<Supplier<Object>>> buildMap() {
@@ -250,6 +252,7 @@ public class AutoEqualityTest {
         result.put(ParseValueCache.class, PARSE_VALUE_CACHES);
         result.put(ImmutableList.class, IMMUTABLE_LISTS);
         result.put(boolean.class, BOOLEANS);
+        result.put(BiPredicate.class, BIPREDICATES);
         return result;
     }
 
