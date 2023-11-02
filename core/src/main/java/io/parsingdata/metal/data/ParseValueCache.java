@@ -69,7 +69,7 @@ public class ParseValueCache {
         if (this == NO_CACHE) {
             return "no-cache";
         }
-        return "size=" + cache.size();
+        return "cache:size=" + cache.size();
     }
 
     @Override
