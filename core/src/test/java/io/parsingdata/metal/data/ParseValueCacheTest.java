@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-import static io.parsingdata.metal.Shorthand.nod;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
 import static io.parsingdata.metal.data.ParseValueCache.NO_CACHE;
 import static io.parsingdata.metal.data.Selection.NO_LIMIT;
@@ -15,7 +14,6 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -23,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import io.parsingdata.metal.expression.value.Value;
 
@@ -72,17 +71,16 @@ class ParseValueCacheTest {
         });
     }
 
-    @Test
-    public void limitTest() {
-        IntStream.range(0, 5).forEach(limit -> {
-            final Optional<ImmutableList<Value>> nameValues = parseValueCache.find("name", limit);
-            assertTrue(nameValues.isPresent());
-            nameValues.ifPresent(result -> {
-                assertEquals(Math.min(limit, 3), result.size);
-                if (limit > 0) assertEquals(pv3, result.head);
-                if (limit > 1) assertEquals(pv2, result.tail.head);
-                if (limit > 2) assertEquals(pv1, result.tail.tail.head);
-            });
+    @ParameterizedTest
+    @ValueSource(ints={0, 1, 2, 3, 4})
+    public void limitTest(final int limit) {
+        final Optional<ImmutableList<Value>> nameValues = parseValueCache.find("name", limit);
+        assertTrue(nameValues.isPresent());
+        nameValues.ifPresent(result -> {
+            assertEquals(Math.min(limit, 3), result.size);
+            if (limit > 0) assertEquals(pv3, result.head);
+            if (limit > 1) assertEquals(pv2, result.tail.head);
+            if (limit > 2) assertEquals(pv1, result.tail.tail.head);
         });
     }
 

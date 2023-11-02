@@ -85,7 +85,6 @@ import org.junit.jupiter.api.Test;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ImmutablePair;
-import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;

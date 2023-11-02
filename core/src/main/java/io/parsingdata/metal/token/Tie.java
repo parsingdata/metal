@@ -22,7 +22,6 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import static io.parsingdata.metal.Util.success;
 import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
-import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
