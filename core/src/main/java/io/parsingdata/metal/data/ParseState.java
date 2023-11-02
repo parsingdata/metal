@@ -105,8 +105,7 @@ public class ParseState {
     public String toString() {
         final String iterationsString = iterations.isEmpty() ? "" : ";iterations:" + iterations;
         final String referencesString = references.isEmpty() ? "" : ";references:" + references;
-        final String cacheString = cache == null ? "" : ";" + cache;
-        return getClass().getSimpleName() + "(source:" + source + ";offset:" + offset + ";order:" + order + iterationsString + referencesString + cacheString + ")";
+        return getClass().getSimpleName() + "(source:" + source + ";offset:" + offset + ";order:" + order + iterationsString + referencesString + ";" + cache + ")";
     }
 
     @Override
