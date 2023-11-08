@@ -6,14 +6,15 @@ package io.parsingdata.metal;
  * <p>
  * This is a lazy implementation, instead of calculating the hash once within the constructor, to avoid
  * performance decrease during parsing. In most implementations the hash is not actually used/needed.
- * <p>
- * In addition, we may consider adding the equality methods here aas well, to make it mandatory to implement them.
  */
 public abstract class ImmutableObject {
 
     private Integer hash;
 
     abstract public int cachingHashCode();
+
+    @Override
+    abstract public boolean equals(final Object obj);
 
     @Override
     public int hashCode() {
