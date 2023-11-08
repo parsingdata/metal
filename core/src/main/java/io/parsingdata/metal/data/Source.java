@@ -18,7 +18,9 @@ package io.parsingdata.metal.data;
 
 import java.math.BigInteger;
 
-public abstract class Source {
+import io.parsingdata.metal.ImmutableObject;
+
+public abstract class Source extends ImmutableObject {
 
     protected abstract byte[] getData(BigInteger offset, BigInteger length);
 

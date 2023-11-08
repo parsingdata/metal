@@ -23,6 +23,7 @@ import static io.parsingdata.metal.data.Slice.createFromSource;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ConcatenatedValueSource;
 import io.parsingdata.metal.data.ParseState;
@@ -35,7 +36,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * @see FoldLeft
  * @see Cat
  */
-public class FoldCat implements SingleValueExpression {
+public class FoldCat extends ImmutableObject implements SingleValueExpression {
 
     public final ValueExpression operand;
 
@@ -62,7 +63,7 @@ public class FoldCat implements SingleValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int cachingHashCode() {
         return Objects.hash(getClass(), operand);
     }
 

@@ -20,9 +20,10 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 
-public class ImmutablePair<L, R> {
+public class ImmutablePair<L, R> extends ImmutableObject {
 
     public final L left;
     public final R right;
@@ -45,7 +46,7 @@ public class ImmutablePair<L, R> {
     }
 
     @Override
-    public int hashCode() {
+    public int cachingHashCode() {
         return Objects.hash(getClass(), left, right);
     }
 

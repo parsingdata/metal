@@ -61,8 +61,8 @@ public class ParseValue extends CoreValue implements ParseItem {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), name, definition);
+    public int cachingHashCode() {
+        return Objects.hash(super.cachingHashCode(), name, definition);
     }
 
 }

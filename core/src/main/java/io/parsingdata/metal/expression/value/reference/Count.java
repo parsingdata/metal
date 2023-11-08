@@ -21,6 +21,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
@@ -34,7 +35,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * A {@link SingleValueExpression} that represents the amount of {@link Value}s
  * returned by evaluating its <code>operand</code>.
  */
-public class Count implements SingleValueExpression {
+public class Count extends ImmutableObject implements SingleValueExpression {
 
     public final ValueExpression operand;
 
@@ -63,7 +64,7 @@ public class Count implements SingleValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int cachingHashCode() {
         return Objects.hash(getClass(), operand);
     }
 

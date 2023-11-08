@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.expression.Expression;
 
@@ -31,7 +32,7 @@ import io.parsingdata.metal.expression.Expression;
  * their results combined using the operator the concrete expression
  * implements and then returned.
  */
-public abstract class BinaryLogicalExpression implements LogicalExpression {
+public abstract class BinaryLogicalExpression extends ImmutableObject implements LogicalExpression {
 
     public final Expression left;
     public final Expression right;
@@ -54,7 +55,7 @@ public abstract class BinaryLogicalExpression implements LogicalExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int cachingHashCode() {
         return Objects.hash(getClass(), left, right);
     }
 

@@ -72,8 +72,8 @@ public class Post extends CycleToken {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), token, predicate);
+    public int cachingHashCode() {
+        return Objects.hash(super.cachingHashCode(), token, predicate);
     }
 
 }

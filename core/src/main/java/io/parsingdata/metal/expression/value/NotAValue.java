@@ -20,11 +20,12 @@ import java.math.BigInteger;
 import java.util.BitSet;
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
 
-public final class NotAValue implements Value {
+public final class NotAValue extends ImmutableObject implements Value {
 
     public static final Value NOT_A_VALUE = new NotAValue();
 
@@ -59,7 +60,7 @@ public final class NotAValue implements Value {
     }
 
     @Override
-    public int hashCode() {
+    public int cachingHashCode() {
         return Objects.hash(getClass());
     }
 

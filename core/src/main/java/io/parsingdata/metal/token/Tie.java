@@ -90,8 +90,8 @@ public class Tie extends Token {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), token, dataExpression);
+    public int cachingHashCode() {
+        return Objects.hash(super.cachingHashCode(), token, dataExpression);
     }
 
 }

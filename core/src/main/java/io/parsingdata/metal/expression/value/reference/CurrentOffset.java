@@ -21,6 +21,7 @@ import static io.parsingdata.metal.expression.value.ConstantFactory.createFromNu
 
 import java.util.Optional;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
@@ -31,7 +32,7 @@ import io.parsingdata.metal.expression.value.Value;
  * A {@link SingleValueExpression} that represents the current offset in the
  * {@link ParseState}.
  */
-public class CurrentOffset implements SingleValueExpression {
+public class CurrentOffset extends ImmutableObject implements SingleValueExpression {
 
     @Override
     public Optional<Value> evalSingle(final ParseState parseState, final Encoding encoding) {
@@ -49,7 +50,7 @@ public class CurrentOffset implements SingleValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int cachingHashCode() {
         return getClass().hashCode();
     }
 

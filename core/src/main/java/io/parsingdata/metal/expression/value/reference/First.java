@@ -23,6 +23,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
@@ -36,7 +37,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * A {@link SingleValueExpression} that represents the first {@link Value} returned
  * by evaluating its <code>operand</code>.
  */
-public class First implements SingleValueExpression {
+public class First extends ImmutableObject implements SingleValueExpression {
 
     public final ValueExpression operand;
 
@@ -66,7 +67,7 @@ public class First implements SingleValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int cachingHashCode() {
         return Objects.hash(getClass(), operand);
     }
 

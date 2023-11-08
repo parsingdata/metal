@@ -25,9 +25,10 @@ import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 
-public class Slice {
+public class Slice extends ImmutableObject {
 
     public final Source source;
     public final BigInteger offset;
@@ -75,7 +76,7 @@ public class Slice {
     }
 
     @Override
-    public int hashCode() {
+    public int cachingHashCode() {
         return Objects.hash(getClass(), source, offset, length);
     }
 

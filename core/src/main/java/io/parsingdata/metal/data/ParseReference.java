@@ -24,10 +24,11 @@ import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.token.Token;
 
-public class ParseReference implements ParseItem {
+public class ParseReference extends ImmutableObject implements ParseItem {
 
     public final BigInteger location;
     public final Source source;
@@ -61,7 +62,7 @@ public class ParseReference implements ParseItem {
     }
 
     @Override
-    public int hashCode() {
+    public int cachingHashCode() {
         return Objects.hash(getClass(), location, source, definition);
     }
 

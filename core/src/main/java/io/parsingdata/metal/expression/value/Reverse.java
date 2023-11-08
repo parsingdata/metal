@@ -20,6 +20,7 @@ import static io.parsingdata.metal.data.Selection.reverse;
 
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
@@ -32,7 +33,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * {@link ValueExpression}). When evaluated, it evaluates <code>values</code>
  * and then reverses and returns the result.
  */
-public class Reverse implements ValueExpression {
+public class Reverse extends ImmutableObject implements ValueExpression {
 
     public final ValueExpression values;
 
@@ -57,7 +58,7 @@ public class Reverse implements ValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int cachingHashCode() {
         return Objects.hash(getClass(), values);
     }
 

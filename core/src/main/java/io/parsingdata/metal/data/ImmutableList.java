@@ -23,10 +23,11 @@ import static io.parsingdata.metal.data.Selection.reverse;
 
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 
-public class ImmutableList<T> {
+public class ImmutableList<T> extends ImmutableObject {
 
     public final T head;
     public final ImmutableList<T> tail;
@@ -104,7 +105,7 @@ public class ImmutableList<T> {
     }
 
     @Override
-    public int hashCode() {
+    public int cachingHashCode() {
         return Objects.hash(getClass(), head, tail);
     }
 

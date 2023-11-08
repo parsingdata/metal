@@ -19,6 +19,7 @@ package io.parsingdata.metal.expression.value;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
@@ -29,7 +30,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * Const has a single operand <code>value</code> (a {@link Value}). When
  * evaluated, this value is returned.
  */
-public class Const implements SingleValueExpression {
+public class Const extends ImmutableObject implements SingleValueExpression {
 
     public final Value value;
 
@@ -54,7 +55,7 @@ public class Const implements SingleValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int cachingHashCode() {
         return Objects.hash(getClass(), value);
     }
 

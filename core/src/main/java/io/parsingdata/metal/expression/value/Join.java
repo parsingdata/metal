@@ -22,6 +22,7 @@ import static io.parsingdata.metal.Util.checkContainsNoNulls;
 import java.util.Arrays;
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
@@ -34,7 +35,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * A Join expression can have zero or more expressions. If none is provided, this will return an empty list.
  * Else, each expression is evaluated and concatenated to a single list.
  */
-public class Join implements ValueExpression {
+public class Join extends ImmutableObject implements ValueExpression {
 
     private final ValueExpression[] expressions;
 
@@ -61,7 +62,7 @@ public class Join implements ValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int cachingHashCode() {
         return Objects.hash(getClass(), Arrays.hashCode(expressions));
     }
 }

@@ -62,7 +62,7 @@ public class ConstantSource extends Source {
     }
 
     @Override
-    public int hashCode() {
+    public int cachingHashCode() {
         return Objects.hash(getClass(), Arrays.hashCode(data));
     }
 

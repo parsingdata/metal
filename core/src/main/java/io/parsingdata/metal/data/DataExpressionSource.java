@@ -102,7 +102,7 @@ public class DataExpressionSource extends Source {
     }
 
     @Override
-    public int hashCode() {
+    public int cachingHashCode() {
         return Objects.hash(getClass(), dataExpression, index, parseState, encoding);
     }
 

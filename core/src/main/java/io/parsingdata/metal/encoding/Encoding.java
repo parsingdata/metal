@@ -22,9 +22,10 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 
-public class Encoding {
+public class Encoding extends ImmutableObject {
 
     public static final Sign DEFAULT_SIGN = Sign.UNSIGNED;
     public static final Charset DEFAULT_CHARSET = StandardCharsets.US_ASCII;
@@ -68,7 +69,7 @@ public class Encoding {
     }
 
     @Override
-    public int hashCode() {
+    public int cachingHashCode() {
         return Objects.hash(getClass(), sign, charset, byteOrder);
     }
 
