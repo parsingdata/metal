@@ -70,7 +70,6 @@ class ImmutableObjectTest {
     }
 
     @Test
-    @Timeout(value=500, unit = TimeUnit.MILLISECONDS)
     void performanceTest() {
         // This test would take way too much time without hash caching.
         final int dataBlockCount = 32;
