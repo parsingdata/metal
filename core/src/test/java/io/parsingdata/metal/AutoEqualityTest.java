@@ -35,6 +35,7 @@ import static io.parsingdata.metal.Shorthand.not;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.data.ByteStreamSourceTest.DUMMY_BYTE_STREAM_SOURCE;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
+import static io.parsingdata.metal.data.ParseValueCache.NO_CACHE;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
@@ -59,6 +60,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Spliterator;
+import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -81,6 +83,7 @@ import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.ParseValueCache;
 import io.parsingdata.metal.data.Selection;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.data.Source;
@@ -167,6 +170,7 @@ public class AutoEqualityTest {
         // Data structures
         CoreValue.class, ParseValue.class, ParseReference.class, ParseState.class,
         NotAValue.class, ParseGraph.class, ImmutableList.class,
+        ParseValueCache.class,
         // Inputs
         Slice.class,
         ConstantSource.class, DataExpressionSource.class, ByteStreamSource.class, ConcatenatedValueSource.class
@@ -215,9 +219,11 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> PARSE_ITEMS = List.of(() -> CLOSED_BRANCHED_GRAPH, () -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE, () -> createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE).order, () -> createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE).add(PARSE_VALUE).order, () -> BRANCHED_GRAPH);
     private static final List<Supplier<Object>> BYTE_STREAMS = List.of(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> DUMMY_STREAM);
     private static final List<Supplier<Object>> BIG_INTEGERS = List.of(() -> ONE, () -> BigInteger.valueOf(3));
-    private static final List<Supplier<Object>> PARSE_STATES = List.of(() -> createFromByteStream(DUMMY_STREAM), () -> createFromByteStream(DUMMY_STREAM, ONE), () -> new ParseState(GRAPH_WITH_REFERENCE, DUMMY_BYTE_STREAM_SOURCE, TEN, new ImmutableList<>(), new ImmutableList<>()));
+    private static final List<Supplier<Object>> PARSE_STATES = List.of(() -> createFromByteStream(DUMMY_STREAM), () -> createFromByteStream(DUMMY_STREAM, ONE), () -> new ParseState(GRAPH_WITH_REFERENCE, NO_CACHE, DUMMY_BYTE_STREAM_SOURCE, TEN, new ImmutableList<>(), new ImmutableList<>()));
+    private static final List<Supplier<Object>> PARSE_VALUE_CACHES = List.of(() -> NO_CACHE, () -> new ParseValueCache(), () -> new ParseValueCache().add(PARSE_VALUE), () -> new ParseValueCache().add(PARSE_VALUE).add(PARSE_VALUE));
     private static final List<Supplier<Object>> IMMUTABLE_LISTS = List.of(ImmutableList::new, () -> ImmutableList.create("TEST"), () -> ImmutableList.create(1), () -> ImmutableList.create(1).add(2));
     private static final List<Supplier<Object>> BOOLEANS = List.of(() -> true, () -> false);
+    private static final List<Supplier<Object>> BIPREDICATES = List.of(() -> (BiPredicate<Object, Object>) (o, o2) -> false);
     private static final Map<Class<?>, List<Supplier<Object>>> mapping = buildMap();
 
     private static Map<Class<?>, List<Supplier<Object>>> buildMap() {
@@ -243,8 +249,10 @@ public class AutoEqualityTest {
         result.put(ByteStream.class, BYTE_STREAMS);
         result.put(BigInteger.class, BIG_INTEGERS);
         result.put(ParseState.class, PARSE_STATES);
+        result.put(ParseValueCache.class, PARSE_VALUE_CACHES);
         result.put(ImmutableList.class, IMMUTABLE_LISTS);
         result.put(boolean.class, BOOLEANS);
+        result.put(BiPredicate.class, BIPREDICATES);
         return result;
     }
 

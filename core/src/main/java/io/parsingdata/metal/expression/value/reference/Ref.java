@@ -28,6 +28,7 @@ import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiPredicate;
 
 import io.parsingdata.metal.ImmutableObject;
@@ -51,7 +52,7 @@ import io.parsingdata.metal.token.Token;
  * the amount of returned results.
  * @param <T> The type of reference to match on.
  */
-public class Ref<T> extends ImmutableObject implements ValueExpression {
+public abstract class Ref<T> extends ImmutableObject implements ValueExpression {
 
     public final ImmutableList<T> references;
     public final BiPredicate<ParseValue, T> predicate;
@@ -74,16 +75,34 @@ public class Ref<T> extends ImmutableObject implements ValueExpression {
     public static class NameRef extends Ref<String> {
         public NameRef(final String reference, final String... references) { this(null, reference, references); }
         public NameRef(final SingleValueExpression limit, final String reference, final String... references) { super(ParseValue::matches, limit, reference, references); }
+        private NameRef(final BiPredicate<ParseValue, String> predicate, final SingleValueExpression limit, final ImmutableList<String> references) { super(predicate, limit, references); }
+
+        @Override
+        ImmutableList<Value> evalImpl(final ParseState parseState, final int limit) {
+            return Optional.of(parseState.cache)
+                .filter(p -> references.size == 1)
+                .flatMap(p -> p.find(references.head, limit))
+                .orElseGet(() -> wrap(getAllValues(parseState.order, parseValue -> toList(references).stream().anyMatch(ref -> predicate.test(parseValue, ref)), limit), new ImmutableList<Value>()).computeResult());
+        }
+
+        @Override
+        public NameRef withLimit(final SingleValueExpression limit) {
+            return new NameRef(predicate, limit, references);
+        }
     }
 
     public static class DefinitionRef extends Ref<Token> {
         public DefinitionRef(final Token reference, final Token... references) { this(null, reference, references); }
         public DefinitionRef(final SingleValueExpression limit, final Token reference, final Token... references) { super(ParseValue::matches, limit, reference, references); }
+        private DefinitionRef(final BiPredicate<ParseValue, Token> predicate, final SingleValueExpression limit, final ImmutableList<Token> references) { super(predicate, limit, references); }
+
+        @Override
+        public DefinitionRef withLimit(final SingleValueExpression limit) {
+            return new DefinitionRef(predicate, limit, references);
+        }
     }
 
-    public Ref<T> withLimit(final SingleValueExpression limit) {
-        return new Ref<>(predicate, limit, references);
-    }
+    public abstract Ref<T> withLimit(final SingleValueExpression limit);
 
     @Override
     public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
@@ -95,7 +114,7 @@ public class Ref<T> extends ImmutableObject implements ValueExpression {
             .orElseThrow(() -> new IllegalArgumentException("Limit must evaluate to a non-empty value."));
     }
 
-    private ImmutableList<Value> evalImpl(final ParseState parseState, final int limit) {
+    ImmutableList<Value> evalImpl(final ParseState parseState, final int limit) {
         return wrap(getAllValues(parseState.order, parseValue -> toList(references).stream().anyMatch(ref -> predicate.test(parseValue, ref)), limit), new ImmutableList<Value>()).computeResult();
     }
 
