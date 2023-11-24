@@ -133,7 +133,7 @@ public abstract class Token extends ImmutableObject {
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), name, encoding);
     }
 

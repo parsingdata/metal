@@ -42,7 +42,7 @@ class ImmutableObjectTest {
             @Override
             public boolean equals(Object obj) {return false;}
             @Override
-            public int cachingHashCode() {return 25;}
+            public int immutableHashCode() {return 25;}
         };
         assertEquals(25, immutableObject.hashCode());
     }
@@ -56,7 +56,7 @@ class ImmutableObjectTest {
             @Override
             public boolean equals(Object obj) {return false;}
             @Override
-            public int cachingHashCode() {
+            public int immutableHashCode() {
                 counter.incrementAndGet();
                 return 15;
             }

@@ -106,7 +106,7 @@ public class ConcatenatedValueSource extends Source {
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), values, length);
     }
 

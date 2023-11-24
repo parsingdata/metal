@@ -109,7 +109,7 @@ public abstract class BinaryValueExpression extends ImmutableObject implements V
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), left, right);
     }
 

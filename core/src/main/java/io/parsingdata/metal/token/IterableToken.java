@@ -79,8 +79,8 @@ public abstract class IterableToken extends CycleToken {
     }
 
     @Override
-    public int cachingHashCode() {
-        return Objects.hash(super.cachingHashCode(), token);
+    public int immutableHashCode() {
+        return Objects.hash(super.immutableHashCode(), token);
     }
 
 }

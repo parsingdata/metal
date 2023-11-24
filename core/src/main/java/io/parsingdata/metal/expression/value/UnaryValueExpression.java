@@ -89,7 +89,7 @@ public abstract class UnaryValueExpression extends ImmutableObject implements Va
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), operand);
     }
 

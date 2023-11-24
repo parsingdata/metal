@@ -11,7 +11,7 @@ public abstract class ImmutableObject {
 
     private Integer hash;
 
-    public abstract int cachingHashCode();
+    public abstract int immutableHashCode();
 
     @Override
     public abstract boolean equals(final Object obj);
@@ -19,7 +19,7 @@ public abstract class ImmutableObject {
     @Override
     public int hashCode() {
         if (hash == null) {
-            hash = cachingHashCode();
+            hash = immutableHashCode();
         }
         return hash;
     }

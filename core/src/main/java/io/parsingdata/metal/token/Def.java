@@ -78,8 +78,8 @@ public class Def extends Token {
     }
 
     @Override
-    public int cachingHashCode() {
-        return Objects.hash(super.cachingHashCode(), size);
+    public int immutableHashCode() {
+        return Objects.hash(super.immutableHashCode(), size);
     }
 
 }

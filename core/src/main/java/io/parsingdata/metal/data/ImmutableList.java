@@ -105,7 +105,7 @@ public class ImmutableList<T> extends ImmutableObject {
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), head, tail);
     }
 

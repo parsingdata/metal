@@ -117,7 +117,7 @@ public class ParseState extends ImmutableObject {
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), order, offset, source, iterations, references);
     }
 

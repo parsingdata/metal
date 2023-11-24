@@ -52,7 +52,7 @@ public abstract class UnaryLogicalExpression extends ImmutableObject implements 
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), operand);
     }
 

@@ -78,8 +78,8 @@ public class Cho extends CycleToken {
     }
 
     @Override
-    public int cachingHashCode() {
-        return Objects.hash(super.cachingHashCode(), tokens);
+    public int immutableHashCode() {
+        return Objects.hash(super.immutableHashCode(), tokens);
     }
 
 }

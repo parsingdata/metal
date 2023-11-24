@@ -43,7 +43,7 @@ public class True extends ImmutableObject implements Expression {
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return getClass().hashCode();
     }
 

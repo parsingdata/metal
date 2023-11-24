@@ -63,7 +63,7 @@ public class FoldCat extends ImmutableObject implements SingleValueExpression {
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), operand);
     }
 

@@ -69,7 +69,7 @@ public class Encoding extends ImmutableObject {
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), sign, charset, byteOrder);
     }
 

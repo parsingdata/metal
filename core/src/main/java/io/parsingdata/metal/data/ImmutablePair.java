@@ -46,7 +46,7 @@ public class ImmutablePair<L, R> extends ImmutableObject {
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), left, right);
     }
 

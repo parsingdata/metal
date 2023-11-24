@@ -91,7 +91,7 @@ public class CoreValue extends ImmutableObject implements Value {
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), slice, encoding);
     }
 

@@ -84,7 +84,7 @@ public class Expand extends ImmutableObject implements ValueExpression {
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), bases, count);
     }
 

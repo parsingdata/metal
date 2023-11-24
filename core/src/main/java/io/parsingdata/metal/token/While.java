@@ -66,8 +66,8 @@ public class While extends IterableToken {
     }
 
     @Override
-    public int cachingHashCode() {
-        return Objects.hash(super.cachingHashCode(), predicate);
+    public int immutableHashCode() {
+        return Objects.hash(super.immutableHashCode(), predicate);
     }
 
 }

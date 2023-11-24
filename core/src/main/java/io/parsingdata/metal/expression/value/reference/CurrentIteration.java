@@ -93,7 +93,7 @@ public class CurrentIteration extends ImmutableObject implements SingleValueExpr
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), level);
     }
 

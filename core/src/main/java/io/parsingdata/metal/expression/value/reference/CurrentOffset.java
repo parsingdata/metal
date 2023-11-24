@@ -50,7 +50,7 @@ public class CurrentOffset extends ImmutableObject implements SingleValueExpress
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return getClass().hashCode();
     }
 

@@ -144,7 +144,7 @@ public class ParseGraph extends ImmutableObject implements ParseItem {
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), head, tail, branched, definition);
     }
 

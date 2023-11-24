@@ -55,7 +55,7 @@ public abstract class BinaryLogicalExpression extends ImmutableObject implements
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), left, right);
     }
 

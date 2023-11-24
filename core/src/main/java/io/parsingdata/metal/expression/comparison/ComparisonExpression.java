@@ -98,7 +98,7 @@ public abstract class ComparisonExpression extends ImmutableObject implements Ex
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), value, predicate);
     }
 

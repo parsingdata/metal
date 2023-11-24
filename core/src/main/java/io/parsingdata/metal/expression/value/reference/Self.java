@@ -49,7 +49,7 @@ public class Self extends ImmutableObject implements SingleValueExpression {
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return getClass().hashCode();
     }
 

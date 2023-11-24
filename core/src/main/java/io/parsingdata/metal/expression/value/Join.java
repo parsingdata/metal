@@ -62,7 +62,7 @@ public class Join extends ImmutableObject implements ValueExpression {
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), Arrays.hashCode(expressions));
     }
 }

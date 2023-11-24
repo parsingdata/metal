@@ -129,7 +129,7 @@ public class Ref<T> extends ImmutableObject implements ValueExpression {
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), references, limit);
     }
 

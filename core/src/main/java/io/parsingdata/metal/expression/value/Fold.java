@@ -113,7 +113,7 @@ public abstract class Fold extends ImmutableObject implements SingleValueExpress
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), values, reducer, initial);
     }
 

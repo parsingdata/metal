@@ -62,7 +62,7 @@ public class ParseReference extends ImmutableObject implements ParseItem {
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), location, source, definition);
     }
 

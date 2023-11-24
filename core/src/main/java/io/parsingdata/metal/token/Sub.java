@@ -108,8 +108,8 @@ public class Sub extends CycleToken {
     }
 
     @Override
-    public int cachingHashCode() {
-        return Objects.hash(super.cachingHashCode(), token, offsets);
+    public int immutableHashCode() {
+        return Objects.hash(super.immutableHashCode(), token, offsets);
     }
 
 }

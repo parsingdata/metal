@@ -76,7 +76,7 @@ public class Slice extends ImmutableObject {
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), source, offset, length);
     }
 

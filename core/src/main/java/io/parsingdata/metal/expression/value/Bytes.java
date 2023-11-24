@@ -90,7 +90,7 @@ public class Bytes extends ImmutableObject implements ValueExpression {
     }
 
     @Override
-    public int cachingHashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), operand);
     }
 

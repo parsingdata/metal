@@ -76,8 +76,8 @@ public class Pre extends CycleToken {
     }
 
     @Override
-    public int cachingHashCode() {
-        return Objects.hash(super.cachingHashCode(), token, predicate);
+    public int immutableHashCode() {
+        return Objects.hash(super.immutableHashCode(), token, predicate);
     }
 
 }
