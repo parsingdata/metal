@@ -48,7 +48,7 @@ public class ParseValueCache {
             return complete(() -> result);
         }
         final ParseValue head = searchList.head;
-        if (head != null && head.matches(scopeName)) {
+        if (head.matches(scopeName)) {
             return intermediate(() -> find(searchList.tail, scopeName, limit, result.add(head)));
         }
         return intermediate(() -> find(searchList.tail, scopeName, limit, result));
