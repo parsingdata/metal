@@ -64,7 +64,7 @@ public class ByteStreamSource extends Source {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), input);
     }
 

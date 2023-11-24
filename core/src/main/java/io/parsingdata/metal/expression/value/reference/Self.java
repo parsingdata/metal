@@ -20,6 +20,7 @@ import static java.util.function.Function.identity;
 
 import java.util.Optional;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
@@ -30,7 +31,7 @@ import io.parsingdata.metal.expression.value.Value;
  * A {@link SingleValueExpression} that represents the {@link Value} most recently
  * added to the parse state.
  */
-public class Self implements SingleValueExpression {
+public class Self extends ImmutableObject implements SingleValueExpression {
 
     @Override
     public Optional<Value> evalSingle(final ParseState parseState, final Encoding encoding) {
@@ -48,7 +49,7 @@ public class Self implements SingleValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return getClass().hashCode();
     }
 

@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
@@ -45,7 +46,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * <code>reducer</code> is applied to the first two values until a single
  * value remains, which is then returned.
  */
-public abstract class Fold implements SingleValueExpression {
+public abstract class Fold extends ImmutableObject implements SingleValueExpression {
 
     public final ValueExpression values;
     public final BinaryOperator<SingleValueExpression> reducer;
@@ -112,7 +113,7 @@ public abstract class Fold implements SingleValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), values, reducer, initial);
     }
 

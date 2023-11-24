@@ -97,8 +97,8 @@ public class TokenRef extends Token {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), referenceName);
+    public int immutableHashCode() {
+        return Objects.hash(super.immutableHashCode(), referenceName);
     }
 
 }

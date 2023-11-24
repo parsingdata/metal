@@ -38,6 +38,9 @@ public class ByTypeTest {
     public static final Source EMPTY_SOURCE = new Source() {
         @Override protected byte[] getData(BigInteger offset, BigInteger length) { throw new IllegalStateException(); }
         @Override protected boolean isAvailable(BigInteger offset, BigInteger length) { return false; }
+        @Override public int immutableHashCode() { return -1; }
+        @Override
+        public boolean equals(Object obj) { return obj == this; }
     };
 
     @Test

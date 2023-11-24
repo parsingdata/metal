@@ -29,10 +29,11 @@ import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.token.Token;
 
-public class ParseState {
+public class ParseState extends ImmutableObject {
 
     public final ParseGraph order;
     public final ParseValueCache cache;
@@ -120,7 +121,7 @@ public class ParseState {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), order, cache, offset, source, iterations, references);
     }
 

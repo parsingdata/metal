@@ -147,8 +147,8 @@ public class DefUntil extends Token {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), initialSize, stepSize, maxSize, terminator);
+    public int immutableHashCode() {
+        return Objects.hash(super.immutableHashCode(), initialSize, stepSize, maxSize, terminator);
     }
 
 }

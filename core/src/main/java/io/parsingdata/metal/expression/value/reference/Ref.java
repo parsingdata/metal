@@ -31,6 +31,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
@@ -51,7 +52,7 @@ import io.parsingdata.metal.token.Token;
  * the amount of returned results.
  * @param <T> The type of reference to match on.
  */
-public abstract class Ref<T> implements ValueExpression {
+public abstract class Ref<T> extends ImmutableObject implements ValueExpression {
 
     public final ImmutableList<T> references;
     public final BiPredicate<ParseValue, T> predicate;
@@ -147,7 +148,7 @@ public abstract class Ref<T> implements ValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), references, limit);
     }
 

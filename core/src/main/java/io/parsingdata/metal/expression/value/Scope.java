@@ -25,6 +25,7 @@ import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
@@ -49,7 +50,7 @@ import io.parsingdata.metal.token.Token;
  * <code>definition</code>. Next, the <code>scopedValueExpression</code> is
  * evaluated with this pruned {@link ParseGraph} in the {@link ParseState}.
  */
-public class Scope implements ValueExpression {
+public class Scope extends ImmutableObject implements ValueExpression {
 
     public final ValueExpression scopedValueExpression;
     public final SingleValueExpression scopeSize;
@@ -98,7 +99,7 @@ public class Scope implements ValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), scopedValueExpression, scopeSize);
     }
 

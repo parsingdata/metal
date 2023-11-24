@@ -23,6 +23,7 @@ import static io.parsingdata.metal.data.callback.Callbacks.success;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
@@ -53,7 +54,7 @@ import io.parsingdata.metal.expression.value.reference.CurrentIteration;
  * instead. As such it can itself be overridden by explicit specifications in
  * nested tokens.
  */
-public abstract class Token {
+public abstract class Token extends ImmutableObject {
 
     public static final String NO_NAME = "";
     public static final String SEPARATOR = ".";
@@ -132,7 +133,7 @@ public abstract class Token {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), name, encoding);
     }
 
