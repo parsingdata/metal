@@ -43,7 +43,7 @@ public class SelectionTest {
             @Override protected boolean isAvailable(BigInteger offset, BigInteger length) { return true; }
             @Override public int immutableHashCode() { return 0; }
             @Override
-            public boolean equals(Object obj) {return obj == this;}
+            public boolean equals(Object obj) { return obj == this; }
         };
     }
 

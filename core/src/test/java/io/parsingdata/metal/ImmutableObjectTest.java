@@ -20,9 +20,11 @@ import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
@@ -67,11 +69,21 @@ class ImmutableObjectTest {
         assertEquals(1, counter.get());
     }
 
+    // Note: This timeout does not stop the test after 1 second.
+    // The test will run until it finishes and then validate the duration.
+    @Timeout(value = 2)
     @Test
     void performanceTest() {
         // This test would take way too much time without hash caching.
-        final int dataBlockCount = 32;
-        final int dataSize = 64;
+        // The following graph shows the average duration for dataBlockCount of 6:
+        //
+        // dataSize |  4  |  5  |  6  |  7  |  8  |  9  |  10  |  11  |
+        // ---------|-----|-----|-----|-----|-----|-----|------|------|
+        // duration | 0.4 | 0.7 | 1.5 |  3  |  5  |  10 |  18  |  32  | in seconds
+        //
+        // Using hash cashing, these are all finished within less then 100 ms.
+        final int dataBlockCount = 6;
+        final int dataSize = 10;
         final byte[] input = new byte[dataBlockCount*dataSize];
         // This token contains recursive tokens to create large ParseGraphs.
         final Token deep = repn(
@@ -91,14 +103,14 @@ class ImmutableObjectTest {
         assertTrue(result.isPresent());
 
         ImmutableList<ParseValue> allValues = Selection.getAllValues(result.get().order, x -> true);
-        assertThat(allValues.size, equalTo(2080L));
+        assertThat(allValues.size, equalTo(66L));
 
         final Map<ParseValue, Value> values = new HashMap<>();
         while (allValues != null && allValues.head != null) {
             values.put(allValues.head, allValues.head);
             allValues = allValues.tail;
         }
-        assertThat(values.size(), equalTo(2080));
+        assertThat(values.size(), equalTo(66));
     }
 
 }
