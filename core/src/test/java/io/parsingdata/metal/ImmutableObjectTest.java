@@ -81,7 +81,7 @@ class ImmutableObjectTest {
         // ---------|-----|-----|-----|-----|-----|-----|------|------|
         // duration | 0.4 | 0.7 | 1.5 |  3  |  5  |  10 |  18  |  32  | in seconds
         //
-        // Using hash cashing, these are all finished within less then 100 ms.
+        // Using hash cashing, these are all finished within less than 100 ms.
         final int dataBlockCount = 6;
         final int dataSize = 10;
         final byte[] input = new byte[dataBlockCount*dataSize];
