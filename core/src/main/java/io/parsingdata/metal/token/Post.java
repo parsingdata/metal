@@ -30,7 +30,7 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 
 /**
- * A {@link Token} that specifies a postcondition for parsing a nested token.
+ * A {@link Token} that specifies a post condition for parsing a nested token.
  * <p>
  * A Post consists of a <code>predicate</code> (an {@link Expression}) and a
  * <code>token</code> (a {@link Token}). First the token is parsed. If parsing
