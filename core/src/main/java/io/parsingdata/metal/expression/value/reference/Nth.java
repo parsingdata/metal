@@ -28,6 +28,7 @@ import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 import java.math.BigInteger;
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
@@ -48,7 +49,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * negative value or an index that is out of bounds) {@link NotAValue#NOT_A_VALUE}
  * is returned.
  */
-public class Nth implements ValueExpression {
+public class Nth extends ImmutableObject implements ValueExpression {
 
     public final ValueExpression values;
     public final ValueExpression indices;
@@ -95,7 +96,7 @@ public class Nth implements ValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), values, indices);
     }
 

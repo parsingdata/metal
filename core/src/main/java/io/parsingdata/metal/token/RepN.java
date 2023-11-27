@@ -68,8 +68,8 @@ public class RepN extends IterableToken {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), n);
+    public int immutableHashCode() {
+        return Objects.hash(super.immutableHashCode(), n);
     }
 
 }

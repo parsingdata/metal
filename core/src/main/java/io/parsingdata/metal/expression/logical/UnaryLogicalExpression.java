@@ -20,6 +20,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.expression.Expression;
 
@@ -31,7 +32,7 @@ import io.parsingdata.metal.expression.Expression;
  * {@link Expression}). The <code>operand</code> is evaluated, the concrete
  * implementation's operator is applied to the result and returned.
  */
-public abstract class UnaryLogicalExpression implements LogicalExpression {
+public abstract class UnaryLogicalExpression extends ImmutableObject implements LogicalExpression {
 
     public final Expression operand;
 
@@ -51,7 +52,7 @@ public abstract class UnaryLogicalExpression implements LogicalExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), operand);
     }
 

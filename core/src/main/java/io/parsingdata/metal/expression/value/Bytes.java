@@ -27,6 +27,7 @@ import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 import java.math.BigInteger;
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
@@ -47,7 +48,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * 2 and 3 bytes respectively, the Bytes expression turns this into a list of
  * 5 values, representing the individual bytes of the original results.
  */
-public class Bytes implements ValueExpression {
+public class Bytes extends ImmutableObject implements ValueExpression {
 
     public final ValueExpression operand;
 
@@ -89,7 +90,7 @@ public class Bytes implements ValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), operand);
     }
 

@@ -41,6 +41,9 @@ public class SelectionTest {
         return new Source() {
             @Override protected byte[] getData(BigInteger offset, BigInteger length) { return new byte[0]; }
             @Override protected boolean isAvailable(BigInteger offset, BigInteger length) { return true; }
+            @Override public int immutableHashCode() { return 0; }
+            @Override
+            public boolean equals(Object obj) { return obj == this; }
         };
     }
 

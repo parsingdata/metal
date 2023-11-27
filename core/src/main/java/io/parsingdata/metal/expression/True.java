@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.expression;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
@@ -24,7 +25,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * An {@link Expression} that always evaluates to <code>true</code>. Generally
  * used as default on undefined predicates.
  */
-public class True implements Expression {
+public class True extends ImmutableObject implements Expression {
 
     @Override
     public boolean eval(final ParseState parseState, final Encoding encoding) {
@@ -42,7 +43,7 @@ public class True implements Expression {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return getClass().hashCode();
     }
 

@@ -33,11 +33,10 @@ jobs:
           java-version: ${{ matrix.java-version }}
           distribution: ${{ matrix.distribution }}
 
-      - name: Deploy with Maven
-        # Deploy only the Corretto 11 build
-        if: matrix.distribution == 'corretto' && matrix.java-version == '11'
+      - name: Build and deploy with Maven
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: matrix.distribution == 'corretto' && matrix.java-version == '11'
         run: mvn -B --update-snapshots -Dmaven.test.failure.ignore=true deploy
 
       - name: Build with Maven

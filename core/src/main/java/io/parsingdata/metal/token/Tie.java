@@ -67,7 +67,7 @@ public class Tie extends Token {
 
     private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Value> values, final int index, final ParseState returnParseState) {
         if (values.isEmpty()) {
-            return complete(() -> success(new ParseState(environment.parseState.closeBranch(this).order, returnParseState.source, returnParseState.offset, returnParseState.iterations, returnParseState.references, returnParseState.scopeDepth)));
+            return complete(() -> success(new ParseState(environment.parseState.closeBranch(this).order, environment.parseState.cache, returnParseState.source, returnParseState.offset, returnParseState.iterations, returnParseState.references, returnParseState.scopeDepth)));
         }
         if (values.head.equals(NOT_A_VALUE)) {
             return complete(Util::failure);
@@ -90,8 +90,8 @@ public class Tie extends Token {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), token, dataExpression);
+    public int immutableHashCode() {
+        return Objects.hash(super.immutableHashCode(), token, dataExpression);
     }
 
 }
