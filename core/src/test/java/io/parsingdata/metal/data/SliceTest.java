@@ -18,6 +18,7 @@ package io.parsingdata.metal.data;
 
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.TEN;
+import static java.math.BigInteger.TWO;
 import static java.math.BigInteger.ZERO;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -45,12 +46,20 @@ import java.math.BigInteger;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.util.InMemoryByteStream;
 import io.parsingdata.metal.util.ReadTrackingByteStream;
 
 public class SliceTest {
+
+    private static Slice slice;
+
+    @BeforeEach
+    public void setup() {
+        slice = Slice.createFromSource(new ConstantSource(new byte[]{0, 1, 2, 3}), ZERO, BigInteger.valueOf(4)).get();
+    }
 
     @Test
     public void lazyRead() {
@@ -81,16 +90,44 @@ public class SliceTest {
     @Test
     public void retrieveDataFromSliceWithNegativeLimit() {
         final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () ->
-            Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), ZERO, BigInteger.valueOf(4)).get().getData(BigInteger.valueOf(-1))
+            slice.getData(BigInteger.valueOf(-1))
         );
         assertEquals("Argument limit may not be negative.", e.getMessage());
     }
 
+    @Test
+    public void retrieveDataFromSliceWithNegativeOffset() {
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () ->
+            slice.getData(BigInteger.valueOf(-1), ONE)
+        );
+        assertEquals("Argument offset may not be negative.", e.getMessage());
+    }
+
+    @Test
+    public void retrieveDataFromSliceWithNegativeLimitAndOffset() {
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () ->
+            slice.getData(BigInteger.valueOf(-1), BigInteger.valueOf(-1))
+        );
+        assertEquals("Argument offset may not be negative.", e.getMessage());
+    }
+
+    @Test
+    public void retrieveDataFromSliceWithOffsetTooLarge() {
+        final Exception e = Assertions.assertThrows(IllegalStateException.class, () ->
+            slice.getData(slice.length.add(ONE), ONE)
+        );
+        assertEquals("Data to read is not available ([offset=5;length=0;source=ConstantSource(0x00010203)).", e.getMessage());
+    }
 
     @Test
     public void retrievePartialDataFromSlice() {
-        assertArrayEquals(new byte[] { 0 }, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), ZERO, BigInteger.valueOf(4)).get().getData(ONE));
-        assertArrayEquals(new byte[] { 0, 1, 2, 3 }, Slice.createFromSource(new ConstantSource(new byte[] { 0, 1, 2, 3 }), ZERO, BigInteger.valueOf(4)).get().getData(TEN));
+        // Limit within range
+        assertArrayEquals(new byte[] { 0 }, slice.getData(ONE));
+        assertArrayEquals(new byte[] { 1, 2 }, slice.getData(ONE, TWO));
+
+        // Limit outside range
+        assertArrayEquals(new byte[] { 0, 1, 2, 3 }, slice.getData(TEN));
+        assertArrayEquals(new byte[] { 1, 2, 3 }, slice.getData(ONE, TEN));
     }
 
     @Test
