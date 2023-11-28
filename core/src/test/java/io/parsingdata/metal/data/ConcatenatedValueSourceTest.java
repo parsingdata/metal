@@ -113,22 +113,22 @@ public class ConcatenatedValueSourceTest {
             values = values.add(new CoreValue(Slice.createFromBytes(Arrays.copyOfRange(bytes, (arraySize / parts) * part, (arraySize / parts) * (part + 1))), Encoding.DEFAULT_ENCODING));
         }
 
-        // Create a value that has a ConcatenatedValueSource as source.
+        // Create a ConcatenatedValueSource to read from.
         final ConcatenatedValueSource source = ConcatenatedValueSource.create(values).get();
 
         // Read from the source in small parts.
         final int readSize = 512;
-        final byte[] valueBytes = new byte[arraySize];
+        final byte[] bytesRead = new byte[arraySize];
         final long start = System.currentTimeMillis();
         for (int part = 0; part < arraySize / readSize; part++) {
             final byte[] data = source.getData(valueOf(readSize * part), valueOf(readSize));
-            System.arraycopy(data, 0, valueBytes, readSize * part, data.length);
+            System.arraycopy(data, 0, bytesRead, readSize * part, data.length);
         }
         final long end = System.currentTimeMillis();
-        System.out.printf("Value read: %ss%n", (end - start) / 1000.0);
+        System.out.printf("Source read: %ss%n", (end - start) / 1000.0);
 
         // Make sure we read the data correctly.
-        assertArrayEquals(bytes, valueBytes);
+        assertArrayEquals(bytes, bytesRead);
     }
 
 }
