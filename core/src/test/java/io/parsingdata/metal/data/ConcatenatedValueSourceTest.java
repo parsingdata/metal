@@ -26,7 +26,6 @@ import static io.parsingdata.metal.data.Slice.createFromSource;
 import static io.parsingdata.metal.expression.value.ConstantFactory.createFromBytes;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
@@ -121,16 +120,14 @@ public class ConcatenatedValueSourceTest {
             .map(slice -> new CoreValue(slice, Encoding.DEFAULT_ENCODING)).get();
 
         // Read from the big value.
-        long start, end;
         final int readSize = 512;
-
         final byte[] valueBytes = new byte[arraySize];
-        start = System.currentTimeMillis();
+        final long start = System.currentTimeMillis();
         for (int part = 0; part < arraySize / readSize; part++) {
             final byte[] data = bigValue.slice().source.getData(bigValue.slice().offset.add(valueOf(readSize * part)), valueOf(readSize));
             System.arraycopy(data, 0, valueBytes, readSize * part, data.length);
         }
-        end = System.currentTimeMillis();
+        final long end = System.currentTimeMillis();
         System.out.printf("Value read: %ss%n", (end - start) / 1000.0);
 
         // Make sure we read the data correctly.
