@@ -16,7 +16,6 @@
 
 package io.parsingdata.metal.data;
 
-import static java.math.BigInteger.ZERO;
 import static java.math.BigInteger.valueOf;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -115,16 +114,14 @@ public class ConcatenatedValueSourceTest {
         }
 
         // Create a value that has a ConcatenatedValueSource as source.
-        final Value bigValue = ConcatenatedValueSource.create(values)
-            .flatMap(source -> createFromSource(source, ZERO, valueOf(arraySize)))
-            .map(slice -> new CoreValue(slice, Encoding.DEFAULT_ENCODING)).get();
+        final ConcatenatedValueSource source = ConcatenatedValueSource.create(values).get();
 
-        // Read from the big value.
+        // Read from the source in small parts.
         final int readSize = 512;
         final byte[] valueBytes = new byte[arraySize];
         final long start = System.currentTimeMillis();
         for (int part = 0; part < arraySize / readSize; part++) {
-            final byte[] data = bigValue.slice().source.getData(bigValue.slice().offset.add(valueOf(readSize * part)), valueOf(readSize));
+            final byte[] data = source.getData(valueOf(readSize * part), valueOf(readSize));
             System.arraycopy(data, 0, valueBytes, readSize * part, data.length);
         }
         final long end = System.currentTimeMillis();
