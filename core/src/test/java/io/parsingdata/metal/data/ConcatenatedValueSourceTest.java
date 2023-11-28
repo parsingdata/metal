@@ -16,20 +16,30 @@
 
 package io.parsingdata.metal.data;
 
+import static java.math.BigInteger.ZERO;
+import static java.math.BigInteger.valueOf;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static io.parsingdata.metal.data.Slice.createFromSource;
 import static io.parsingdata.metal.expression.value.ConstantFactory.createFromBytes;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
+import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.CoreValue;
 import io.parsingdata.metal.expression.value.Value;
 
@@ -88,6 +98,43 @@ public class ConcatenatedValueSourceTest {
         for (int i = 0; i < length; i++) {
             assertEquals(offset+i, data[i]);
         }
+    }
+
+    @Test
+    @Timeout(value=1)
+    public void concatenatedValueSourceRead() {
+        // Create a large array with random data
+        final int arraySize = 5_120_000;
+        final byte[] bytes = new byte[arraySize];
+        new Random().nextBytes(bytes);
+
+        // Split the data in separate CoreValues.
+        int parts = 4;
+        ImmutableList<Value> values = new ImmutableList<>();
+        for (int part = 0; part < parts; part++) {
+            values = values.add(new CoreValue(Slice.createFromBytes(Arrays.copyOfRange(bytes, (arraySize / parts) * part, (arraySize / parts) * (part + 1))), Encoding.DEFAULT_ENCODING));
+        }
+
+        // Create a value that has a ConcatenatedValueSource as source.
+        final Value bigValue = ConcatenatedValueSource.create(values)
+            .flatMap(source -> createFromSource(source, ZERO, valueOf(arraySize)))
+            .map(slice -> new CoreValue(slice, Encoding.DEFAULT_ENCODING)).get();
+
+        // Read from the big value.
+        long start, end;
+        final int readSize = 512;
+
+        final byte[] valueBytes = new byte[arraySize];
+        start = System.currentTimeMillis();
+        for (int part = 0; part < arraySize / readSize; part++) {
+            final byte[] data = bigValue.slice().source.getData(bigValue.slice().offset.add(valueOf(readSize * part)), valueOf(readSize));
+            System.arraycopy(data, 0, valueBytes, readSize * part, data.length);
+        }
+        end = System.currentTimeMillis();
+        System.out.printf("Value read: %ss%n", (end - start) / 1000.0);
+
+        // Make sure we read the data correctly.
+        assertArrayEquals(bytes, valueBytes);
     }
 
 }
