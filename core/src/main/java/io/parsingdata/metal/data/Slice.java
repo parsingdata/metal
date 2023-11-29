@@ -64,7 +64,7 @@ public class Slice extends ImmutableObject {
     /**
      * Return a part of the data specified by the offset and limit.
      * @param offset the offset to start reading the slice from
-     * @param limit the maximum number of bytes returned. Less bytes are returned if the end of slice is reached.
+     * @param limit the maximum number of bytes returned. Fewer bytes are returned if the end of slice is reached.
      * @return a byte array representing the data.
      */
     public byte[] getData(final BigInteger offset, final BigInteger limit) {
