@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
@@ -45,7 +46,8 @@ public class Count extends ImmutableObject implements SingleValueExpression {
 
     @Override
     public Optional<Value> evalSingle(final ParseState parseState, final Encoding encoding) {
-        return Optional.of(fromNumeric(operand.eval(parseState, encoding).size));
+        ImmutableList<Value> values = operand.eval(parseState, encoding);
+        return Optional.of(fromNumeric(values.size()));
     }
 
     private static Value fromNumeric(final long length) {

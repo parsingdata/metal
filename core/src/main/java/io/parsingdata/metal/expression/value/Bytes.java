@@ -59,15 +59,15 @@ public class Bytes extends ImmutableObject implements ValueExpression {
     @Override
     public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
         final ImmutableList<Value> values = operand.eval(parseState, encoding);
-        return values.isEmpty() ? values : toByteValues(new ImmutableList<>(), values.head, values.tail, encoding).computeResult();
+        return values.isEmpty() ? values : toByteValues(new ImmutableList<>(), values.head(), values.tail(), encoding).computeResult();
     }
 
     private Trampoline<ImmutableList<Value>> toByteValues(final ImmutableList<Value> output, final Value head, final ImmutableList<Value> tail, final Encoding encoding) {
-        final ImmutableList<Value> result = output.add(extractByteValues(new ImmutableList<>(), head, 0, encoding).computeResult());
+        final ImmutableList<Value> result = output.addList(extractByteValues(new ImmutableList<>(), head, 0, encoding).computeResult());
         if (tail.isEmpty()) {
             return complete(() -> result);
         } else {
-            return intermediate(() -> toByteValues(result, tail.head, tail.tail, encoding));
+            return intermediate(() -> toByteValues(result, tail.head(), tail.tail(), encoding));
         }
     }
 
@@ -75,7 +75,7 @@ public class Bytes extends ImmutableObject implements ValueExpression {
         if (value.equals(NOT_A_VALUE) || BigInteger.valueOf(i).compareTo(value.length()) >= 0) {
             return complete(() -> output);
         }
-        return intermediate(() -> extractByteValues(output.add(new CoreValue(createFromSource(value.slice().source, value.slice().offset.add(BigInteger.valueOf(i)), ONE).get(), encoding)), value, i + 1, encoding));
+        return intermediate(() -> extractByteValues(output.addHead(new CoreValue(createFromSource(value.slice().source, value.slice().offset.add(BigInteger.valueOf(i)), ONE).get(), encoding)), value, i + 1, encoding));
     }
 
     @Override

@@ -64,7 +64,7 @@ public abstract class UnaryValueExpression extends ImmutableObject implements Va
         if (values.isEmpty()) {
             return complete(() -> result);
         }
-        return intermediate(() -> eval(values.tail, parseState, encoding, result.add(safeEval(values.head, parseState, encoding))));
+        return intermediate(() -> eval(values.tail(), parseState, encoding, result.addHead(safeEval(values.head(), parseState, encoding))));
     }
 
     public abstract Optional<Value> eval(final Value value, final ParseState parseState, final Encoding encoding);

@@ -49,8 +49,8 @@ public class ValueExpressionEvalEmptyTest {
 
     private void parse(final ValueExpression expression) {
         final ImmutableList<Value> result = expression.eval(stream(0), enc());
-        assertEquals(1, result.size);
-        assertEquals(NOT_A_VALUE, result.head);
+        assertEquals(1, (long) result.size());
+        assertEquals(NOT_A_VALUE, result.head());
     }
 
 }

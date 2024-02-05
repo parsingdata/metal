@@ -70,14 +70,14 @@ public class TokenRef extends Token {
         if (items.isEmpty()) {
             return complete(() -> LOOKUP_FAILED);
         }
-        final ParseItem item = items.head;
+        final ParseItem item = items.head();
         if (item.getDefinition().name.equals(referenceName)) {
             return complete(item::getDefinition);
         }
         if (item.isGraph() && !item.asGraph().isEmpty()) {
-            return intermediate(() -> lookup(items.tail.add(item.asGraph().tail).add(item.asGraph().head), referenceName));
+            return intermediate(() -> lookup(items.tail().addHead(item.asGraph().tail).addHead(item.asGraph().head), referenceName));
         }
-        return intermediate(() -> lookup(items.tail, referenceName));
+        return intermediate(() -> lookup(items.tail(), referenceName));
     }
 
     @Override

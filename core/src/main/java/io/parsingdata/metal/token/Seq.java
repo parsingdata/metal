@@ -47,8 +47,8 @@ public class Seq extends CycleToken {
     public Seq(final String name, final Encoding encoding, final Token token1, final Token token2, final Token... additionalTokens) {
         super(name, encoding);
         this.tokens = create(checkContainsNoNulls(additionalTokens, "additionalTokens"))
-            .add(checkNotNull(token2, "token2"))
-            .add(checkNotNull(token1, "token1"));
+            .addHead(checkNotNull(token2, "token2"))
+            .addHead(checkNotNull(token1, "token1"));
     }
 
     @Override
@@ -60,9 +60,9 @@ public class Seq extends CycleToken {
         if (list.isEmpty()) {
             return complete(() -> success(environment.parseState.closeBranch(this)));
         }
-        return list.head
+        return list.head()
             .parse(environment)
-            .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState), list.tail)))
+            .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState), list.tail())))
             .orElseGet(() -> complete(Util::failure));
     }
 

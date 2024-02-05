@@ -53,7 +53,7 @@ public class RepN extends IterableToken {
     protected Optional<ParseState> parseImpl(final Environment environment) {
         return n.evalSingle(environment.parseState, environment.encoding)
             .filter(count -> !count.equals(NOT_A_VALUE))
-            .flatMap(count -> parse(environment, env -> env.parseState.iterations.head.right.compareTo(count.asNumeric()) >= 0, env -> failure()));
+            .flatMap(count -> parse(environment, env -> env.parseState.iterations.head().right.compareTo(count.asNumeric()) >= 0, env -> failure()));
     }
 
     @Override

@@ -60,18 +60,18 @@ public class ParseState extends ImmutableObject {
     }
 
     public ParseState addBranch(final Token token) {
-        return new ParseState(order.addBranch(token), cache, source, offset, token.isIterable() ? iterations.add(new ImmutablePair<>(token, ZERO)) : iterations, references);
+        return new ParseState(order.addBranch(token), cache, source, offset, token.isIterable() ? iterations.addHead(new ImmutablePair<>(token, ZERO)) : iterations, references);
     }
 
     public ParseState closeBranch(final Token token) {
-        if (token.isIterable() && !iterations.head.left.equals(token)) {
-            throw new IllegalStateException(format("Cannot close branch for iterable token %s. Current iteration state is for token %s.", token.name, iterations.head.left.name));
+        if (token.isIterable() && !iterations.head().left.equals(token)) {
+            throw new IllegalStateException(format("Cannot close branch for iterable token %s. Current iteration state is for token %s.", token.name, iterations.head().left.name));
         }
-        return new ParseState(order.closeBranch(), cache, source, offset, token.isIterable() ? iterations.tail : iterations, references);
+        return new ParseState(order.closeBranch(), cache, source, offset, token.isIterable() ? iterations.tail() : iterations, references);
     }
 
     public ParseState add(final ParseReference parseReference) {
-        return new ParseState(order, cache, source, offset, iterations, references.add(parseReference));
+        return new ParseState(order, cache, source, offset, iterations, references.addHead(parseReference));
     }
 
     public ParseState add(final ParseValue parseValue) {
@@ -83,7 +83,7 @@ public class ParseState extends ImmutableObject {
     }
 
     public ParseState iterate() {
-        return new ParseState(order, cache, source, offset, iterations.tail.add(new ImmutablePair<>(iterations.head.left, iterations.head.right.add(ONE))), references);
+        return new ParseState(order, cache, source, offset, iterations.tail().addHead(new ImmutablePair<>(iterations.head().left, iterations.head().right.add(ONE))), references);
     }
 
     public Optional<ParseState> seek(final BigInteger newOffset) {

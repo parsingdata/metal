@@ -57,6 +57,7 @@ import io.parsingdata.metal.data.ConstantSource;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ImmutablePair;
 import io.parsingdata.metal.data.ParseGraph;
+import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.Slice;
@@ -99,16 +100,20 @@ public class EqualityTest {
     public void cycleWithIdenticalTokens() {
         final Optional<ParseState> result = LINKED_LIST_COMPOSED_IDENTICAL.parse(env(stream(0, 0, 1)));
         assertTrue(result.isPresent());
-        assertEquals(1, getAllValues(result.get().order, "header").size);
-        assertEquals(2, getReferences(result.get().order).size);
+        ImmutableList<ParseValue> parseValues = getAllValues(result.get().order, "header");
+        assertEquals(1, (long) parseValues.size());
+        ImmutableList<Optional<ParseItem>> optionals = getReferences(result.get().order);
+        assertEquals(2, (long) optionals.size());
     }
 
     @Test
     public void cycleWithEqualTokens() {
         final Optional<ParseState> result = LINKED_LIST_COMPOSED_EQUAL.parse(env(stream(0, 0, 1)));
         assertTrue(result.isPresent());
-        assertEquals(1, getAllValues(result.get().order, "header").size);
-        assertEquals(2, getReferences(result.get().order).size);
+        ImmutableList<ParseValue> parseValues = getAllValues(result.get().order, "header");
+        assertEquals(1, (long) parseValues.size());
+        ImmutableList<Optional<ParseItem>> optionals = getReferences(result.get().order);
+        assertEquals(2, (long) optionals.size());
     }
 
     @Test
@@ -159,12 +164,12 @@ public class EqualityTest {
         final ImmutableList<Object> object = ImmutableList.create("a");
         assertFalse(object.equals(null));
         assertEquals(object, ImmutableList.create("a"));
-        assertEquals(object, new ImmutableList<>().add("a"));
+        assertEquals(object, new ImmutableList<>().addHead("a"));
         assertNotEquals("a", object);
-        assertEquals(object.add("b"), ImmutableList.create("a").add("b"));
-        assertEquals(object.add("b").add("c"), ImmutableList.create("a").add("b").add("c"));
-        assertNotEquals(object.add("b"), ImmutableList.create("a").add("c"));
-        assertNotEquals(object.add("b").add("c"), ImmutableList.create("a").add("c").add("c"));
+        assertEquals(object.addHead("b"), ImmutableList.create("a").addHead("b"));
+        assertEquals(object.addHead("b").addHead("c"), ImmutableList.create("a").addHead("b").addHead("c"));
+        assertNotEquals(object.addHead("b"), ImmutableList.create("a").addHead("c"));
+        assertNotEquals(object.addHead("b").addHead("c"), ImmutableList.create("a").addHead("c").addHead("c"));
     }
 
     @Test

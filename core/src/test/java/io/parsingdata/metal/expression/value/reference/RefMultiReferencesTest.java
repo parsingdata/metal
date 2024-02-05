@@ -100,13 +100,13 @@ class RefMultiReferencesTest {
     }
 
     private void assertLists(final String expected, final ImmutableList<Value> result) {
-        assertEquals(expected.length(), result.size);
+        assertEquals(expected.length(), (long) result.size());
         ImmutableList<Value> tail = reverse(result);
         for (int i = 0; i < expected.length(); i++) {
             assertNotNull(tail);
-            assertNotNull(tail.head);
-            assertEquals(expected.charAt(i), tail.head.value()[0]);
-            tail = tail.tail;
+            assertNotNull(tail.head());
+            assertEquals(expected.charAt(i), tail.head().value()[0]);
+            tail = tail.tail();
         }
     }
 

@@ -16,97 +16,59 @@
 
 package io.parsingdata.metal.data;
 
-import static io.parsingdata.metal.Trampoline.complete;
-import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.data.Selection.reverse;
 
-import java.util.Objects;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.stream.Collectors;
 
-import io.parsingdata.metal.ImmutableObject;
-import io.parsingdata.metal.Trampoline;
-import io.parsingdata.metal.Util;
-
-public class ImmutableList<T> extends ImmutableObject {
-
-    public final T head;
-    public final ImmutableList<T> tail;
-    public final long size;
+public class ImmutableList<T> extends LinkedList<T> {
 
     public ImmutableList() {
-        head = null;
-        tail = null;
-        size = 0;
+        super();
     }
 
-    private ImmutableList(final T head, final ImmutableList<T> tail) {
-        this.head = checkNotNull(head, "head");
-        this.tail = checkNotNull(tail, "tail");
-        size = tail.size + 1;
+    public ImmutableList(final LinkedList<T> ts) {
+        super(ts);
     }
 
     public static <T> ImmutableList<T> create(final T head) {
-        return new ImmutableList<T>().add(checkNotNull(head, "head"));
+        return new ImmutableList<T>().addHead(checkNotNull(head, "head"));
     }
 
     public static <T> ImmutableList<T> create(final T[] array) {
-        return createFromArray(new ImmutableList<>(), checkNotNull(array, "array"), array.length - 1).computeResult();
+        return new ImmutableList<>(new LinkedList<>(Arrays.stream(array).collect(Collectors.toList())));
     }
 
-    private static <T> Trampoline<ImmutableList<T>> createFromArray(final ImmutableList<T> list, final T[] array, final int index) {
-        if (index < 0) {
-            return complete(() -> list);
-        }
-        return intermediate(() -> createFromArray(list.add(array[index]), array, index - 1));
+    public ImmutableList<T> addHead(final T head) {
+        final LinkedList<T> ts = new LinkedList<>(this);
+        ts.addFirst(head);
+        return new ImmutableList<>(ts);
     }
 
-    public ImmutableList<T> add(final T head) {
-        return new ImmutableList<>(checkNotNull(head, "head"), this);
+    public ImmutableList<T> addList(final ImmutableList<T> list) {
+        final LinkedList<T> ts = new LinkedList<>(list);
+        ts.addAll(this);
+        return new ImmutableList<>(ts);
     }
 
-    public ImmutableList<T> add(final ImmutableList<T> list) {
-        checkNotNull(list, "list");
+    public T head() {
         if (isEmpty()) {
-            return list;
+            return null;
         }
-        return addRecursive(reverse(list)).computeResult();
+        return this.getFirst();
     }
 
-    private Trampoline<ImmutableList<T>> addRecursive(final ImmutableList<T> list) {
-        if (list.isEmpty()) {
-            return complete(() -> this);
-        }
-        return intermediate(() -> add(list.head).addRecursive(list.tail));
-    }
-
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    public boolean contains(final T value) { return containsRecursive(value).computeResult(); }
-
-    private Trampoline<Boolean> containsRecursive(final T value) {
-        if (isEmpty()) { return complete(() -> false); }
-        if (head.equals(value)) { return complete(() -> true); }
-        return intermediate(() -> tail.containsRecursive(value));
+    public ImmutableList<T> tail() {
+        final LinkedList<T> ts = new LinkedList<>(this.subList(1, size()));
+        return new ImmutableList<>(ts);
     }
 
     @Override
     public String toString() {
-        return isEmpty() ? "" : ">" + head + tail;
+        return isEmpty() ? "" : ">" + head() + tail();
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        return Util.notNullAndSameClass(this, obj)
-            && Objects.equals(head, ((ImmutableList<?>)obj).head)
-            && Objects.equals(tail, ((ImmutableList<?>)obj).tail);
-        // The size field is excluded from equals() and hashCode() because it is cached data.
-    }
-
-    @Override
-    public int immutableHashCode() {
-        return Objects.hash(getClass(), head, tail);
-    }
+    // TODO cache the hashcode like in ImmutableObject.
 
 }

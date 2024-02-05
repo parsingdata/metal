@@ -68,7 +68,7 @@ public class CurrentIteration extends ImmutableObject implements SingleValueExpr
         if (levelValue.isEmpty() || levelValue.get().equals(NOT_A_VALUE) || levelValue.get().asNumeric().compareTo(ZERO) < 0) {
             return Optional.of(NOT_A_VALUE);
         }
-        if (parseState.iterations.size <= levelValue.get().asNumeric().longValueExact()) {
+        if ((long) parseState.iterations.size() <= levelValue.get().asNumeric().longValueExact()) {
             return Optional.empty();
         }
         return getIterationRecursive(parseState.iterations, levelValue.get().asNumeric()).computeResult();
@@ -76,9 +76,9 @@ public class CurrentIteration extends ImmutableObject implements SingleValueExpr
 
     private Trampoline<Optional<Value>> getIterationRecursive(final ImmutableList<ImmutablePair<Token, BigInteger>> iterations, final BigInteger levelValue) {
         if (levelValue.compareTo(ZERO) == 0) {
-            return complete(() -> Optional.of(createFromNumeric(iterations.head.right, DEFAULT_ENCODING)));
+            return complete(() -> Optional.of(createFromNumeric(iterations.head().right, DEFAULT_ENCODING)));
         }
-        return intermediate(() -> getIterationRecursive(iterations.tail, levelValue.subtract(ONE)));
+        return intermediate(() -> getIterationRecursive(iterations.tail(), levelValue.subtract(ONE)));
     }
 
     @Override

@@ -150,11 +150,11 @@ public class TreeTest {
         if (nrs.isEmpty()) {
             return false;
         }
-        if (nrs.head.asNumeric().intValueExact() == i) {
+        if (nrs.head().asNumeric().intValueExact() == i) {
             return true;
         }
-        if (nrs.tail != null) {
-            return contains(nrs.tail, i);
+        if (nrs.tail() != null) {
+            return contains(nrs.tail(), i);
         }
         return false;
     }

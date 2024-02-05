@@ -50,10 +50,10 @@ public class ConcatenatedValueSourceTest {
         final byte[] twoSliceSource = new byte[] { -1, -1, 5, 6, 7, 8, 9, -1, -1, 10, 11, 12, 13, 14, -1, -1 };
         final ImmutableList<Value> list = ImmutableList
             .create(createFromBytes(new byte[]{0, 1, 2, 3, 4}, enc()))
-            .add(new CoreValue(createFromSource(new ConstantSource(twoSliceSource), BigInteger.valueOf(2), BigInteger.valueOf(5)).get(), enc()))
-            .add(new CoreValue(createFromSource(new ConstantSource(twoSliceSource), BigInteger.valueOf(9), BigInteger.valueOf(5)).get(), enc()))
-            .add(createFromBytes(new byte[]{15, 16, 17, 18, 19}, enc()))
-            .add(createFromBytes(new byte[]{20, 21, 22, 23, 24}, enc()));
+            .addHead(new CoreValue(createFromSource(new ConstantSource(twoSliceSource), BigInteger.valueOf(2), BigInteger.valueOf(5)).get(), enc()))
+            .addHead(new CoreValue(createFromSource(new ConstantSource(twoSliceSource), BigInteger.valueOf(9), BigInteger.valueOf(5)).get(), enc()))
+            .addHead(createFromBytes(new byte[]{15, 16, 17, 18, 19}, enc()))
+            .addHead(createFromBytes(new byte[]{20, 21, 22, 23, 24}, enc()));
 
         cvs = ConcatenatedValueSource.create(list).orElseThrow();
     }
@@ -110,7 +110,7 @@ public class ConcatenatedValueSourceTest {
         int parts = 4;
         ImmutableList<Value> values = new ImmutableList<>();
         for (int part = 0; part < parts; part++) {
-            values = values.add(new CoreValue(Slice.createFromBytes(Arrays.copyOfRange(bytes, (arraySize / parts) * part, (arraySize / parts) * (part + 1))), Encoding.DEFAULT_ENCODING));
+            values = values.addHead(new CoreValue(Slice.createFromBytes(Arrays.copyOfRange(bytes, (arraySize / parts) * part, (arraySize / parts) * (part + 1))), Encoding.DEFAULT_ENCODING));
         }
 
         // Create a ConcatenatedValueSource to read from.

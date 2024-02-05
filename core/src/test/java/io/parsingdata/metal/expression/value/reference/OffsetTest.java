@@ -33,8 +33,8 @@ public class OffsetTest {
     @Test
     public void definedValueOffset() {
         final ImmutableList<Value> offsetCon = offset(con(1)).eval(stream(), enc());
-        assertEquals(1, offsetCon.size);
-        assertEquals(0, offsetCon.head.asNumeric().intValueExact());
+        assertEquals(1, (long) offsetCon.size());
+        assertEquals(0, offsetCon.head().asNumeric().intValueExact());
     }
 
 }

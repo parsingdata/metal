@@ -68,19 +68,19 @@ public class Nth extends ImmutableObject implements ValueExpression {
         if (indices.isEmpty()) {
             return complete(() -> result);
         }
-        final BigInteger valueCount = BigInteger.valueOf(values.size);
-        final Value index = indices.head;
+        final BigInteger valueCount = BigInteger.valueOf(values.size());
+        final Value index = indices.head();
         final Value nextResult = !index.equals(NOT_A_VALUE) && index.asNumeric().compareTo(valueCount) < 0 && index.asNumeric().compareTo(ZERO) >= 0
             ? nth(values, valueCount.subtract(index.asNumeric()).subtract(ONE)).computeResult()
             : NOT_A_VALUE;
-        return intermediate(() -> eval(values, indices.tail, result.add(nextResult)));
+        return intermediate(() -> eval(values, indices.tail(), result.addHead(nextResult)));
     }
 
     private Trampoline<Value> nth(final ImmutableList<Value> values, final BigInteger index) {
         if (index.equals(ZERO)) {
-            return complete(() -> values.head);
+            return complete(() -> values.head());
         }
-        return intermediate(() -> nth(values.tail, index.subtract(ONE)));
+        return intermediate(() -> nth(values.tail(), index.subtract(ONE)));
     }
 
     @Override

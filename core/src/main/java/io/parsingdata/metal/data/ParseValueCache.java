@@ -44,14 +44,14 @@ public class ParseValueCache {
     }
 
     private Trampoline<ImmutableList<Value>> find(final ImmutableList<ParseValue> searchList, final String scopeName, final int limit, final ImmutableList<Value> result) {
-        if (searchList.isEmpty() || (limit != NO_LIMIT && result.size == limit)) {
+        if (searchList.isEmpty() || (limit != NO_LIMIT && (long) result.size() == limit)) {
             return complete(() -> result);
         }
-        final ParseValue head = searchList.head;
+        final ParseValue head = searchList.head();
         if (head.matches(scopeName)) {
-            return intermediate(() -> find(searchList.tail, scopeName, limit, result.add(head)));
+            return intermediate(() -> find(searchList.tail(), scopeName, limit, result.addHead(head)));
         }
-        return intermediate(() -> find(searchList.tail, scopeName, limit, result));
+        return intermediate(() -> find(searchList.tail(), scopeName, limit, result));
     }
 
     public ParseValueCache add(final ParseValue value) {
@@ -61,7 +61,7 @@ public class ParseValueCache {
         final String name = shortName(value.name);
         final Map<String, ImmutableList<ParseValue>> stringImmutableListHashMap = new HashMap<>(cache);
         stringImmutableListHashMap.computeIfAbsent(name, pattern -> new ImmutableList<>());
-        stringImmutableListHashMap.computeIfPresent(name, (pattern, valueImmutableList) -> valueImmutableList.add(value));
+        stringImmutableListHashMap.computeIfPresent(name, (pattern, valueImmutableList) -> valueImmutableList.addHead(value));
         return new ParseValueCache(stringImmutableListHashMap);
     }
 

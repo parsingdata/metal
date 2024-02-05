@@ -71,21 +71,21 @@ public abstract class BinaryValueExpression extends ImmutableObject implements V
     }
 
     private ImmutableList<Value> evalLists(final ImmutableList<Value> leftValues, final ImmutableList<Value> rightValues, final ParseState parseState, final Encoding encoding) {
-        return reverse(padList(evalLists(leftValues, rightValues, parseState, encoding, new ImmutableList<>()).computeResult(), Math.abs(leftValues.size - rightValues.size)).computeResult());
+        return reverse(padList(evalLists(leftValues, rightValues, parseState, encoding, new ImmutableList<>()).computeResult(), Math.abs((long) leftValues.size() - (long) rightValues.size())).computeResult());
     }
 
     private Trampoline<ImmutableList<Value>> evalLists(final ImmutableList<Value> leftValues, final ImmutableList<Value> rightValues, final ParseState parseState, final Encoding encoding, final ImmutableList<Value> result) {
         if (leftValues.isEmpty() || rightValues.isEmpty()) {
             return complete(() -> result);
         }
-        return intermediate(() -> evalLists(leftValues.tail, rightValues.tail, parseState, encoding, result.add(safeEval(leftValues.head, rightValues.head, parseState, encoding))));
+        return intermediate(() -> evalLists(leftValues.tail(), rightValues.tail(), parseState, encoding, result.addHead(safeEval(leftValues.head(), rightValues.head(), parseState, encoding))));
     }
 
     private Trampoline<ImmutableList<Value>> padList(final ImmutableList<Value> list, final long size) {
         if (size <= 0) {
             return complete(() -> list);
         }
-        return intermediate(() -> padList(list.add(NOT_A_VALUE), size - 1));
+        return intermediate(() -> padList(list.addHead(NOT_A_VALUE), size - 1));
     }
 
     private Value safeEval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {

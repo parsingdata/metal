@@ -38,7 +38,7 @@ public class Cat extends BinaryValueExpression {
 
     @Override
     public Optional<Value> eval(final Value leftValue, final Value rightValue, final ParseState parseState, final Encoding encoding) {
-        return ConcatenatedValueSource.create(ImmutableList.create(leftValue).add(rightValue))
+        return ConcatenatedValueSource.create(ImmutableList.create(leftValue).addHead(rightValue))
             .flatMap(source -> createFromSource(source, ZERO, leftValue.length().add(rightValue.length())))
             .map(source -> new CoreValue(source, encoding));
     }

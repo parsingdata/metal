@@ -96,7 +96,7 @@ public class JoinTest {
     @MethodSource("joinExpressions")
     public void joinWithParseState(final ValueExpression expression, final int[] expected) {
         ImmutableList<Value> result = expression.eval(PARSE_STATE, enc());
-        assertEquals(expected.length, result.size);
+        assertEquals(expected.length, (long) result.size());
         assertResult(expected, result);
     }
 
@@ -104,12 +104,12 @@ public class JoinTest {
         ImmutableList<Value> result = actual;
         for (final int value : expected) {
             if (value == -1) {
-                assertEquals(NOT_A_VALUE, result.head);
+                assertEquals(NOT_A_VALUE, result.head());
             }
             else {
-                assertEquals(value, result.head.asNumeric().intValueExact());
+                assertEquals(value, result.head().asNumeric().intValueExact());
             }
-            result = result.tail;
+            result = result.tail();
         }
     }
 

@@ -58,8 +58,8 @@ public class SelectionTest {
                                                                   .add(new ParseValue("the_one", any("a"), Slice.createFromSource(source, ONE, BigInteger.valueOf(2)).get(), enc()))), ZERO, source).computeResult().get().asGraph().head.asValue().name);
         assertEquals("zero",
             findItemAtOffset(ImmutableList.<ParseItem>create(new ParseValue("zero", any("a"), Slice.createFromSource(source, ZERO, BigInteger.valueOf(2)).get(), enc()))
-                                                        .add(new ParseValue("offsetMatchOtherSource", any("a"), Slice.createFromSource(otherSource, ZERO, BigInteger.valueOf(2)).get(), enc()))
-                                                        .add(new ParseValue("otherOffsetMatchSource", any("a"), Slice.createFromSource(source, ONE, BigInteger.valueOf(2)).get(), enc())), ZERO, source).computeResult().get().asValue().name);
+                                                        .addHead(new ParseValue("offsetMatchOtherSource", any("a"), Slice.createFromSource(otherSource, ZERO, BigInteger.valueOf(2)).get(), enc()))
+                                                        .addHead(new ParseValue("otherOffsetMatchSource", any("a"), Slice.createFromSource(source, ONE, BigInteger.valueOf(2)).get(), enc())), ZERO, source).computeResult().get().asValue().name);
     }
 
     @Test
@@ -67,7 +67,8 @@ public class SelectionTest {
         Optional<ParseState> parseState = rep(any("a")).parse(env(stream(1, 2, 3, 4, 5)));
         assertTrue(parseState.isPresent());
         for (int i = 0; i < 7; i++) {
-            assertEquals(Math.min(5, i), getAllValues(parseState.get().order, (value) -> value.matches("a"), i).size);
+            ImmutableList<ParseValue> parseValues = getAllValues(parseState.get().order, (value) -> value.matches("a"), i);
+            assertEquals(Math.min(5, i), (long) parseValues.size());
         }
     }
 

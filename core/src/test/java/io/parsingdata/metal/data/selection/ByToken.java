@@ -60,16 +60,16 @@ public final class ByToken {
             return new ImmutableList<>();
         }
         final ImmutableList<ParseItem> tailResults = getAllRecursive(graph.tail, definition);
-        final ImmutableList<ParseItem> results = graph.definition.equals(definition) ? tailResults.add(graph) : tailResults;
+        final ImmutableList<ParseItem> results = graph.definition.equals(definition) ? tailResults.addHead(graph) : tailResults;
         final ParseItem head = graph.head;
         if (head.isValue() && head.asValue().definition.equals(definition)) {
-            return results.add(head);
+            return results.addHead(head);
         }
         if (head.isReference() && head.asReference().definition.equals(definition)) {
-            return results.add(head);
+            return results.addHead(head);
         }
         if (head.isGraph()) {
-            return results.add(getAllRecursive(head.asGraph(), definition));
+            return results.addList(getAllRecursive(head.asGraph(), definition));
         }
         return results;
     }

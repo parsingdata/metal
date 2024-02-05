@@ -62,10 +62,10 @@ public class ConcatenatedValueSource extends Source {
         if (values.isEmpty()) {
             return complete(() -> size);
         }
-        if (values.head.equals(NOT_A_VALUE)) {
+        if (values.head().equals(NOT_A_VALUE)) {
             return complete(() -> ZERO);
         }
-        return intermediate(() -> calculateTotalSize(values.tail, size.add(values.head.slice().length)));
+        return intermediate(() -> calculateTotalSize(values.tail(), size.add(values.head().slice().length)));
     }
 
     @Override
@@ -80,15 +80,15 @@ public class ConcatenatedValueSource extends Source {
         if (length.compareTo(ZERO) <= 0) {
             return complete(() -> output);
         }
-        final BigInteger nextOffset = currentOffset.add(values.head.slice().length);
+        final BigInteger nextOffset = currentOffset.add(values.head().slice().length);
         if (nextOffset.compareTo(offset) <= 0) {
-            return intermediate(() -> getData(values.tail, nextOffset, currentDest, offset, length, output));
+            return intermediate(() -> getData(values.tail(), nextOffset, currentDest, offset, length, output));
         }
         final BigInteger localOffset = offset.subtract(currentOffset).compareTo(ZERO) < 0 ? ZERO : offset.subtract(currentOffset);
         // The second argument in getData in Slice is a limit. It will return less if the end of slice is reached.
-        final byte[] data = values.head.slice().getData(localOffset, length);
+        final byte[] data = values.head().slice().getData(localOffset, length);
         System.arraycopy(data, 0, output, currentDest.intValueExact(), data.length);
-        return intermediate(() -> getData(values.tail, nextOffset, currentDest.add(valueOf(data.length)), offset, length.subtract(valueOf(data.length)), output));
+        return intermediate(() -> getData(values.tail(), nextOffset, currentDest.add(valueOf(data.length)), offset, length.subtract(valueOf(data.length)), output));
     }
 
     @Override

@@ -46,8 +46,10 @@ public class Join extends ImmutableObject implements ValueExpression {
     @Override
     public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
         return Arrays.stream(expressions)
-            .map(e -> e.eval(parseState, encoding))
-            .reduce(new ImmutableList<>(), ImmutableList::add, ImmutableList::add);
+            .map(e -> {
+                return e.eval(parseState, encoding);
+            })
+            .reduce(new ImmutableList<>(), ImmutableList::addList, ImmutableList::addList);
     }
 
     @Override

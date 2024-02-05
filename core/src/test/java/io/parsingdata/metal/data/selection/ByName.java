@@ -34,7 +34,7 @@ public final class ByName {
      * @return The first value (bottom-up) with the provided name in the provided graph
      */
     public static ParseValue getValue(final ParseGraph graph, final String name) {
-        return Selection.getAllValues(graph, (value) -> value.matches(name), 1).head;
+        return Selection.getAllValues(graph, (value) -> value.matches(name), 1).head();
     }
 
     /**
@@ -52,11 +52,11 @@ public final class ByName {
         if (list.isEmpty()) {
             return null;
         }
-        if (list.head.matches(name)) {
-            return list.head;
+        if (list.head().matches(name)) {
+            return list.head();
         }
         else {
-            return get(list.tail, name);
+            return get(list.tail(), name);
         }
     }
 
@@ -64,9 +64,9 @@ public final class ByName {
         if (list.isEmpty()) {
             return list;
         }
-        final ImmutableList<ParseValue> tailList = getAll(list.tail, name);
-        if (list.head.matches(name)) {
-            return tailList.add(list.head);
+        final ImmutableList<ParseValue> tailList = getAll(list.tail(), name);
+        if (list.head().matches(name)) {
+            return tailList.addHead(list.head());
         } else {
             return tailList;
         }

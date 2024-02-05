@@ -47,8 +47,8 @@ public class Cho extends CycleToken {
     public Cho(final String name, final Encoding encoding, final Token token1, final Token token2, final Token... additionalTokens) {
         super(name, encoding);
         this.tokens = create(checkContainsNoNulls(additionalTokens, "additionalTokens"))
-            .add(checkNotNull(token2, "token2"))
-            .add(checkNotNull(token1, "token1"));
+            .addHead(checkNotNull(token2, "token2"))
+            .addHead(checkNotNull(token1, "token1"));
     }
 
     @Override
@@ -60,10 +60,10 @@ public class Cho extends CycleToken {
         if (list.isEmpty()) {
             return complete(Util::failure);
         }
-        return list.head
+        return list.head()
             .parse(environment)
             .map(result -> complete(() -> success(result.closeBranch(this))))
-            .orElseGet(() -> intermediate(() -> iterate(environment, list.tail)));
+            .orElseGet(() -> intermediate(() -> iterate(environment, list.tail())));
     }
 
     @Override

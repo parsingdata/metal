@@ -68,7 +68,7 @@ public class Expand extends ImmutableObject implements ValueExpression {
         if (countValue < 1) {
             return complete(() -> aggregate);
         }
-        return intermediate(() -> expand(baseList, countValue - 1, aggregate.add(baseList)));
+        return intermediate(() -> expand(baseList, countValue - 1, aggregate.addList(baseList)));
     }
 
     @Override

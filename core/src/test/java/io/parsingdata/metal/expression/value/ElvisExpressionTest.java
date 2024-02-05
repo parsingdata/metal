@@ -60,8 +60,8 @@ public class ElvisExpressionTest {
         final ImmutableList<Value> eval = elvisExpression.eval(result.get(), enc());
 
         assertNotNull(eval);
-        assertEquals(1, eval.size);
-        assertThat(eval.head.asNumeric().intValueExact(), is(equalTo(1)));
+        assertEquals(1, (long) eval.size());
+        assertThat(eval.head().asNumeric().intValueExact(), is(equalTo(1)));
     }
 
     @Test
@@ -70,8 +70,8 @@ public class ElvisExpressionTest {
         final ImmutableList<Value> eval = elvisExpression.eval(result.get(), enc());
 
         assertNotNull(eval);
-        assertEquals(1, eval.size);
-        assertThat(eval.head.asNumeric().intValueExact(), is(equalTo(2)));
+        assertEquals(1, (long) eval.size());
+        assertThat(eval.head().asNumeric().intValueExact(), is(equalTo(2)));
     }
 
     @Test
@@ -88,9 +88,9 @@ public class ElvisExpressionTest {
         assertTrue(result.isPresent());
         final ValueExpression elvis = elvis(ref("a"), ref("b"));
         final ImmutableList<Value> eval = elvis.eval(result.get(), enc());
-        assertEquals(2, eval.size);
-        assertEquals(2, eval.head.asNumeric().intValueExact());
-        assertEquals(1, eval.tail.head.asNumeric().intValueExact());
+        assertEquals(2, (long) eval.size());
+        assertEquals(2, eval.head().asNumeric().intValueExact());
+        assertEquals(1, eval.tail().head().asNumeric().intValueExact());
     }
 
     @Test
@@ -99,9 +99,9 @@ public class ElvisExpressionTest {
         assertTrue(result.isPresent());
         final ValueExpression elvis = elvis(ref("c"), ref("b"));
         final ImmutableList<Value> eval = elvis.eval(result.get(), enc());
-        assertEquals(2, eval.size);
-        assertEquals(4, eval.head.asNumeric().intValueExact());
-        assertEquals(3, eval.tail.head.asNumeric().intValueExact());
+        assertEquals(2, (long) eval.size());
+        assertEquals(4, eval.head().asNumeric().intValueExact());
+        assertEquals(3, eval.tail().head().asNumeric().intValueExact());
     }
 
     @Test
@@ -110,18 +110,18 @@ public class ElvisExpressionTest {
         assertTrue(result.isPresent());
         final ValueExpression elvis = elvis(ref("a"), ref("b"));
         final ImmutableList<Value> eval = elvis.eval(result.get(), enc());
-        assertEquals(3, eval.size);
-        assertEquals(2, eval.head.asNumeric().intValueExact());
-        assertEquals(1, eval.tail.head.asNumeric().intValueExact());
-        assertEquals(3, eval.tail.tail.head.asNumeric().intValueExact());
+        assertEquals(3, (long) eval.size());
+        assertEquals(2, eval.head().asNumeric().intValueExact());
+        assertEquals(1, eval.tail().head().asNumeric().intValueExact());
+        assertEquals(3, eval.tail().tail().head().asNumeric().intValueExact());
     }
 
     @Test
     public void elvisLeftNone() {
         final ValueExpression elvis = elvis(div(con(1), con(0)), con(1));
         final ImmutableList<Value> eval = elvis.eval(stream(0), enc());
-        assertEquals(1, eval.size);
-        assertEquals(1, eval.head.asNumeric().intValueExact());
+        assertEquals(1, (long) eval.size());
+        assertEquals(1, eval.head().asNumeric().intValueExact());
     }
 
     @Test

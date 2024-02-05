@@ -93,7 +93,7 @@ public class CallbackTest {
             @Override
             public void handleSuccess(Token token, ParseState before, ParseState after) {
                 final ImmutableList<ParseItem> roots = getAllRoots(after.order, token);
-                assertEquals(offsets[count++], roots.head.asGraph().tail.head.asValue().slice().offset.longValueExact());
+                assertEquals(offsets[count++], roots.head().asGraph().tail.head.asValue().slice().offset.longValueExact());
             }
 
             @Override
@@ -123,15 +123,15 @@ public class CallbackTest {
                     @Override
                     public void handleSuccess(Token token, ParseState before, ParseState after) {
                         final ImmutableList<ParseItem> repRoots = getAllRoots(after.order, token);
-                        assertEquals(1, repRoots.size);
+                        assertEquals(1, (long) repRoots.size());
 
                         // verify that two Seq tokens were parsed:
                         final ImmutableList<ParseItem> seqRoots = getAllRoots(after.order, SIMPLE_SEQ);
-                        assertEquals(2, seqRoots.size);
+                        assertEquals(2, (long) seqRoots.size());
 
                         // verify order of the two Seq graphs:
-                        assertEquals(2, getValue(seqRoots.head.asGraph(), "a").slice().offset.intValueExact());
-                        assertEquals(0, getValue(seqRoots.tail.head.asGraph(), "a").slice().offset.intValueExact());
+                        assertEquals(2, getValue(seqRoots.head().asGraph(), "a").slice().offset.intValueExact());
+                        assertEquals(0, getValue(seqRoots.tail().head().asGraph(), "a").slice().offset.intValueExact());
                     }
 
                     @Override

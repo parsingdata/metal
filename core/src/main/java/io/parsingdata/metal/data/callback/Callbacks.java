@@ -49,7 +49,7 @@ public class Callbacks {
     }
 
     public Callbacks add(final Token token, final Callback callback) {
-        return new Callbacks(genericCallback, tokenCallbacks.add(new ImmutablePair<>(token, callback)));
+        return new Callbacks(genericCallback, tokenCallbacks.addHead(new ImmutablePair<>(token, callback)));
     }
 
     public static Consumer<Callback> success(final Token token, final ParseState before, final ParseState after) {
@@ -71,10 +71,10 @@ public class Callbacks {
         if (callbacks.isEmpty()) {
             return complete(() -> null);
         }
-        if (callbacks.head.left.equals(token)) {
-            handler.accept(callbacks.head.right);
+        if (callbacks.head().left.equals(token)) {
+            handler.accept(callbacks.head().right);
         }
-        return intermediate(() -> handleCallbacks(callbacks.tail, token, handler));
+        return intermediate(() -> handleCallbacks(callbacks.tail(), token, handler));
     }
 
     @Override

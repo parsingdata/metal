@@ -43,8 +43,8 @@ public class FoldCatTest {
     @Test
     public void foldCatRegular() {
         final ImmutableList<Value> string = foldString("any");
-        assertEquals(1, string.size);
-        assertEquals("abc", string.head.asString());
+        assertEquals(1, (long) string.size());
+        assertEquals("abc", string.head().asString());
     }
 
     @Test

@@ -49,43 +49,43 @@ public class ImmutableListTest {
         v1 = val('a');
         l1 = ImmutableList.create(v1);
         v2 = val('b');
-        l2 = l1.add(v2);
+        l2 = l1.addHead(v2);
         v3 = val('a');
-        l3 = l2.add(v3);
+        l3 = l2.addHead(v3);
         v4 = val('d');
-        l4 = l3.add(v4);
+        l4 = l3.addHead(v4);
         v5 = val('e');
-        l5 = l4.add(v5);
+        l5 = l4.addHead(v5);
     }
 
     @Test
     public void addList() {
-        final ImmutableList<ParseValue> l6 = l5.add(l5);
-        assertEquals(v5, l6.head);
-        assertEquals(v4, l6.tail.head);
-        assertEquals(v3, l6.tail.tail.head);
-        assertEquals(v2, l6.tail.tail.tail.head);
-        assertEquals(v1, l6.tail.tail.tail.tail.head);
-        assertEquals(v5, l6.tail.tail.tail.tail.tail.head);
-        assertEquals(v4, l6.tail.tail.tail.tail.tail.tail.head);
-        assertEquals(v3, l6.tail.tail.tail.tail.tail.tail.tail.head);
-        assertEquals(v2, l6.tail.tail.tail.tail.tail.tail.tail.tail.head);
-        assertEquals(v1, l6.tail.tail.tail.tail.tail.tail.tail.tail.tail.head);
-        assertTrue(l6.tail.tail.tail.tail.tail.tail.tail.tail.tail.tail.isEmpty());
+        final ImmutableList<ParseValue> l6 = l5.addList(l5);
+        assertEquals(v5, l6.head());
+        assertEquals(v4, l6.tail().head());
+        assertEquals(v3, l6.tail().tail().head());
+        assertEquals(v2, l6.tail().tail().tail().head());
+        assertEquals(v1, l6.tail().tail().tail().tail().head());
+        assertEquals(v5, l6.tail().tail().tail().tail().tail().head());
+        assertEquals(v4, l6.tail().tail().tail().tail().tail().tail().head());
+        assertEquals(v3, l6.tail().tail().tail().tail().tail().tail().tail().head());
+        assertEquals(v2, l6.tail().tail().tail().tail().tail().tail().tail().tail().head());
+        assertEquals(v1, l6.tail().tail().tail().tail().tail().tail().tail().tail().tail().head());
+        assertTrue(l6.tail().tail().tail().tail().tail().tail().tail().tail().tail().tail().isEmpty());
     }
 
     @Test
     public void traverse() {
-        assertEquals(l5.head, v5);
-        assertEquals(l5.tail, l4);
-        assertEquals(l4.head, v4);
-        assertEquals(l4.tail, l3);
-        assertEquals(l3.head, v3);
-        assertEquals(l3.tail, l2);
-        assertEquals(l2.head, v2);
-        assertEquals(l2.tail, l1);
-        assertEquals(l1.head, v1);
-        assertTrue(l1.tail.isEmpty());
+        assertEquals(l5.head(), v5);
+        assertEquals(l5.tail(), l4);
+        assertEquals(l4.head(), v4);
+        assertEquals(l4.tail(), l3);
+        assertEquals(l3.head(), v3);
+        assertEquals(l3.tail(), l2);
+        assertEquals(l2.head(), v2);
+        assertEquals(l2.tail(), l1);
+        assertEquals(l1.head(), v1);
+        assertTrue(l1.tail().isEmpty());
     }
 
     @Test
@@ -101,16 +101,16 @@ public class ImmutableListTest {
     @Test
     public void getMultiMultiMatch() {
         final ImmutableList<ParseValue> res = getAll(l5, "a");
-        assertEquals(res.head, v3);
-        assertEquals(res.tail.head, v1);
-        assertTrue(res.tail.tail.isEmpty());
+        assertEquals(res.head(), v3);
+        assertEquals(res.tail().head(), v1);
+        assertTrue(res.tail().tail().isEmpty());
     }
 
     @Test
     public void getMultiSingleMatch() {
         final ImmutableList<ParseValue> res = getAll(l5, "d");
-        assertEquals(res.head, v4);
-        assertTrue(res.tail.isEmpty());
+        assertEquals(res.head(), v4);
+        assertTrue(res.tail().isEmpty());
     }
 
     @Test
@@ -122,12 +122,12 @@ public class ImmutableListTest {
     @Test
     public void reverseRegular() {
         final ImmutableList<ParseValue> rev = reverse(l5);
-        assertEquals(rev.head, v1);
-        assertEquals(rev.tail.head, v2);
-        assertEquals(rev.tail.tail.head, v3);
-        assertEquals(rev.tail.tail.tail.head, v4);
-        assertEquals(rev.tail.tail.tail.tail.head, v5);
-        assertTrue(rev.tail.tail.tail.tail.tail.isEmpty());
+        assertEquals(rev.head(), v1);
+        assertEquals(rev.tail().head(), v2);
+        assertEquals(rev.tail().tail().head(), v3);
+        assertEquals(rev.tail().tail().tail().head(), v4);
+        assertEquals(rev.tail().tail().tail().tail().head(), v5);
+        assertTrue(rev.tail().tail().tail().tail().tail().isEmpty());
     }
 
     @Test
@@ -137,13 +137,14 @@ public class ImmutableListTest {
 
     @Test
     public void size() {
-        assertEquals(1, l1.size);
-        assertEquals(5, l5.size);
+        assertEquals(1, (long) l1.size());
+        assertEquals(5, (long) l5.size());
     }
 
     @Test
     public void sizeEmpty() {
-        assertEquals(0, new ImmutableList<ParseValue>().size);
+        ImmutableList<ParseValue> parseValues = new ImmutableList<ParseValue>();
+        assertEquals(0, (long) parseValues.size());
     }
 
     private ParseValue val(final char c) {

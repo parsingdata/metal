@@ -66,21 +66,21 @@ public abstract class ComparisonExpression extends ImmutableObject implements Ex
             return false;
         }
         final ImmutableList<Value> predicates = predicate.eval(parseState, encoding);
-        if (values.size != predicates.size) {
+        if ((long) values.size() != (long) predicates.size()) {
             return false;
         }
         return compare(values, predicates).computeResult();
     }
 
     private Trampoline<Boolean> compare(final ImmutableList<Value> currents, final ImmutableList<Value> predicates) {
-        if (currents.head.equals(NOT_A_VALUE) || predicates.head.equals(NOT_A_VALUE)) {
+        if (currents.head().equals(NOT_A_VALUE) || predicates.head().equals(NOT_A_VALUE)) {
             return complete(() -> false);
         }
-        final boolean headResult = compare(currents.head, predicates.head);
-        if (!headResult || currents.tail.isEmpty()) {
+        final boolean headResult = compare(currents.head(), predicates.head());
+        if (!headResult || currents.tail().isEmpty()) {
             return complete(() -> headResult);
         }
-        return intermediate(() -> compare(currents.tail, predicates.tail));
+        return intermediate(() -> compare(currents.tail(), predicates.tail()));
     }
 
     public abstract boolean compare(final Value left, final Value right);

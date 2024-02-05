@@ -53,8 +53,8 @@ public class CurrentOffsetTest {
         final ImmutableList<Value> offset = CURRENT_OFFSET.eval(result.get(), enc());
 
         assertNotNull(offset);
-        assertEquals(1, offset.size);
-        assertEquals(size, offset.head.asNumeric().longValueExact());
+        assertEquals(1, (long) offset.size());
+        assertEquals(size, offset.head().asNumeric().longValueExact());
     }
 
     @Test

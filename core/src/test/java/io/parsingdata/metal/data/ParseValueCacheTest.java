@@ -73,12 +73,12 @@ class ParseValueCacheTest {
         final Optional<ImmutableList<Value>> nameValues = parseValueCache.find(scopeName, NO_LIMIT);
         assertTrue(nameValues.isPresent());
         nameValues.ifPresent(result -> {
-            assertEquals(values.size(), result.size);
+            assertEquals(values.size(), (long) result.size());
             ImmutableList<Value> tail = result;
             for (int i = 0; i < values.size(); i++) {
                 assertNotNull(tail);
-                assertEquals(values.get(i), tail.head);
-                tail = tail.tail;
+                assertEquals(values.get(i), tail.head());
+                tail = tail.tail();
             }
         });
     }
@@ -89,10 +89,10 @@ class ParseValueCacheTest {
         final Optional<ImmutableList<Value>> nameValues = parseValueCache.find("name", limit);
         assertTrue(nameValues.isPresent());
         nameValues.ifPresent(result -> {
-            assertEquals(Math.min(limit, 3), result.size);
-            if (limit > 0) assertEquals(pv3, result.head);
-            if (limit > 1) assertEquals(pv2, result.tail.head);
-            if (limit > 2) assertEquals(pv1, result.tail.tail.head);
+            assertEquals(Math.min(limit, 3), (long) result.size());
+            if (limit > 0) assertEquals(pv3, result.head());
+            if (limit > 1) assertEquals(pv2, result.tail().head());
+            if (limit > 2) assertEquals(pv1, result.tail().tail().head());
         });
     }
 
@@ -122,13 +122,13 @@ class ParseValueCacheTest {
 
         final Optional<ImmutableList<Value>> nameValues = parseValueCache.find("name", NO_LIMIT);
         assertTrue(nameValues.isPresent());
-        nameValues.ifPresent(result -> assertEquals(0, result.size));
+        nameValues.ifPresent(result -> assertEquals(0, (long) result.size()));
 
         final Optional<ImmutableList<Value>> nameValues2 = parseValueCache2.find("name", NO_LIMIT);
         assertTrue(nameValues2.isPresent());
         nameValues2.ifPresent(result -> {
-            assertEquals(1, result.size);
-            assertEquals(pv, result.head);
+            assertEquals(1, (long) result.size());
+            assertEquals(pv, result.head());
         });
     }
 

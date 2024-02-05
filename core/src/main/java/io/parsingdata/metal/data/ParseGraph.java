@@ -107,15 +107,15 @@ public class ParseGraph extends ImmutableObject implements ParseItem {
         if (items.isEmpty()) {
             return complete(Optional::empty);
         }
-        final ParseItem item = items.head;
+        final ParseItem item = items.head();
         if (item.isValue()) {
             return complete(() -> Optional.of(item.asValue()));
         }
         if (item.isGraph() && !item.asGraph().isEmpty()) {
-            return intermediate(() -> current(items.tail.add(item.asGraph().tail)
-                                                        .add(item.asGraph().head)));
+            return intermediate(() -> current(items.tail().addHead(item.asGraph().tail)
+                                                        .addHead(item.asGraph().head)));
         }
-        return intermediate(() -> current(items.tail));
+        return intermediate(() -> current(items.tail()));
     }
 
     @Override public boolean isGraph() { return true; }

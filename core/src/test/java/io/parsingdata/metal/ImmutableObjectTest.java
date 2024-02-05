@@ -102,12 +102,12 @@ class ImmutableObjectTest {
         assertTrue(result.isPresent());
 
         ImmutableList<ParseValue> allValues = Selection.getAllValues(result.get().order, x -> true);
-        assertThat(allValues.size, equalTo(66L));
+        assertThat((long) allValues.size(), equalTo(66L));
 
         final Map<ParseValue, Value> values = new HashMap<>();
-        while (allValues != null && allValues.head != null) {
-            values.put(allValues.head, allValues.head);
-            allValues = allValues.tail;
+        while (allValues != null && allValues.head() != null) {
+            values.put(allValues.head(), allValues.head());
+            allValues = allValues.tail();
         }
         assertThat(values.size(), equalTo(66));
     }

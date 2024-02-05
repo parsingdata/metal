@@ -42,6 +42,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseReference;
@@ -70,7 +71,8 @@ public class SubStructTest {
         final Optional<ParseState> result = LINKED_LIST.parse(env(parseState, enc()));
         assertTrue(result.isPresent());
         final ParseGraph graph = result.get().order;
-        assertEquals(0, getReferences(graph).size); // No cycles
+        ImmutableList<Optional<ParseItem>> optionals = getReferences(graph);
+        assertEquals(0, (long) optionals.size()); // No cycles
 
         final ParseGraph first = graph.head.asGraph();
         checkBranch(first, 0, 8);
@@ -88,7 +90,8 @@ public class SubStructTest {
         final Optional<ParseState> result = LINKED_LIST.parse(env(parseState, enc()));
         assertTrue(result.isPresent());
         final ParseGraph graph = result.get().order;
-        assertEquals(1, getReferences(graph).size);
+        ImmutableList<Optional<ParseItem>> optionals = getReferences(graph);
+        assertEquals(1, (long) optionals.size());
 
         final ParseGraph first = graph.head.asGraph();
         checkBranch(first, 0, 0);
@@ -101,7 +104,8 @@ public class SubStructTest {
         final ParseState parseState = stream(0, 4, 1, 21, 0, 0, 1).seek(BigInteger.valueOf(offset)).get();
         final Optional<ParseState> result = LINKED_LIST.parse(env(parseState, enc()));
         assertTrue(result.isPresent());
-        assertEquals(1, getReferences(result.get().order).size);
+        ImmutableList<Optional<ParseItem>> optionals = getReferences(result.get().order);
+        assertEquals(1, (long) optionals.size());
         return result.get().order;
     }
 

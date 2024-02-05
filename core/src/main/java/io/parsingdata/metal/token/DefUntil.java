@@ -101,7 +101,7 @@ public class DefUntil extends Token {
         return iterate(environment, getNumeric(initialSizes), getNumeric(stepSizes), getNumeric(maxSizes))
             .computeResult()
             .map(nextParseState -> complete(() -> success(nextParseState)))
-            .orElseGet(() -> intermediate(() -> handleInterval(environment, initialSizes.tail, stepSizes.tail, maxSizes.tail)));
+            .orElseGet(() -> intermediate(() -> handleInterval(environment, initialSizes.tail(), stepSizes.tail(), maxSizes.tail())));
     }
 
     private Trampoline<Optional<ParseState>> iterate(final Environment environment, final BigInteger currentSize, final BigInteger stepSize, final BigInteger maxSize) {
@@ -125,11 +125,11 @@ public class DefUntil extends Token {
     }
 
     private boolean checkNotValidList(final ImmutableList<Value> list) {
-        return list.isEmpty() || list.head.equals(NOT_A_VALUE);
+        return list.isEmpty() || list.head().equals(NOT_A_VALUE);
     }
 
     private BigInteger getNumeric(final ImmutableList<Value> list) {
-        return list.head.asNumeric();
+        return list.head().asNumeric();
     }
 
     @Override

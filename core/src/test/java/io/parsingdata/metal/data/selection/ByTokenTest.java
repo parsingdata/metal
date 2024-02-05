@@ -132,7 +132,7 @@ public class ByTokenTest {
         final ParseGraph graph = parseResultGraph(stream(0), SEQ_REP);
         final ImmutableList<ParseItem> items = getAll(graph, UNUSED_DEF);
 
-        assertThat(items.size, is(equalTo(0L)));
+        assertThat((long) items.size(), is(equalTo(0L)));
     }
 
     @Test
@@ -140,7 +140,7 @@ public class ByTokenTest {
         final ParseGraph graph = parseResultGraph(stream(0), SEQ_REP);
         final ImmutableList<ParseItem> items = getAll(graph, DEF2);
 
-        assertThat(items.size, is(equalTo(0L)));
+        assertThat((long) items.size(), is(equalTo(0L)));
     }
 
     @Test
@@ -148,8 +148,8 @@ public class ByTokenTest {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2, 3, 4, 5), SEQ_REP);
         final ImmutableList<ParseItem> items = getAll(graph, DEF1);
 
-        assertThat(items.size, is(equalTo(1L)));
-        assertThat(items.head.getDefinition(), is(equalTo(DEF1)));
+        assertThat((long) items.size(), is(equalTo(1L)));
+        assertThat(items.head().getDefinition(), is(equalTo(DEF1)));
     }
 
     @Test
@@ -157,8 +157,8 @@ public class ByTokenTest {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2, 3, 4, 5), SEQ_REP);
         final ImmutableList<ParseItem> items = getAll(graph, DEF2);
 
-        assertThat(items.size, is(equalTo(5L)));
-        assertThat(items.head.getDefinition(), is(equalTo(DEF2)));
+        assertThat((long) items.size(), is(equalTo(5L)));
+        assertThat(items.head().getDefinition(), is(equalTo(DEF2)));
     }
 
     @Test
@@ -167,14 +167,14 @@ public class ByTokenTest {
         final ImmutableList<ParseItem> def1Items = getAll(graph, DEF1);
         final ImmutableList<ParseItem> def2Items = getAll(graph, DEF2);
 
-        assertThat(def1Items.size, is(equalTo(3L)));
-        assertThat(def2Items.size, is(equalTo(3L)));
+        assertThat((long) def1Items.size(), is(equalTo(3L)));
+        assertThat((long) def2Items.size(), is(equalTo(3L)));
 
-        assertThat(def1Items.head.getDefinition(), is(equalTo(DEF1)));
-        assertThat(def2Items.head.getDefinition(), is(equalTo(DEF2)));
+        assertThat(def1Items.head().getDefinition(), is(equalTo(DEF1)));
+        assertThat(def2Items.head().getDefinition(), is(equalTo(DEF2)));
 
-        assertThat(def1Items.tail.head.asValue().asNumeric().intValueExact(), is(equalTo(2)));
-        assertThat(def2Items.tail.head.asValue().asNumeric().intValueExact(), is(equalTo(3)));
+        assertThat(def1Items.tail().head().asValue().asNumeric().intValueExact(), is(equalTo(2)));
+        assertThat(def2Items.tail().head().asValue().asNumeric().intValueExact(), is(equalTo(3)));
     }
 
     @Test
@@ -182,9 +182,9 @@ public class ByTokenTest {
         final ParseGraph graph = parseResultGraph(stream(4, 2, 2, 3, 4, 5), SEQ_SUB);
         final ImmutableList<ParseItem> items = getAll(graph, TWO_BYTES);
 
-        assertThat(items.size, is(equalTo(2L)));
-        assertThat(items.head.getDefinition(), is(equalTo(TWO_BYTES)));
-        assertThat(items.head.asValue().value(), is(equalTo(new byte[]{2, 3})));
+        assertThat((long) items.size(), is(equalTo(2L)));
+        assertThat(items.head().getDefinition(), is(equalTo(TWO_BYTES)));
+        assertThat(items.head().asValue().value(), is(equalTo(new byte[]{2, 3})));
     }
 
     @Test
@@ -192,16 +192,16 @@ public class ByTokenTest {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2, 3, 4, 5), MUT_REC_1);
 
         final ImmutableList<ParseItem> repItems = getAll(graph, REPN_DEF2);
-        assertThat(repItems.size, is(equalTo(4L)));
+        assertThat((long) repItems.size(), is(equalTo(4L)));
 
         final ImmutableList<ParseItem> repRootItems = getAllRoots(graph, REPN_DEF2);
-        assertThat(repRootItems.size, is(equalTo(2L)));
+        assertThat((long) repRootItems.size(), is(equalTo(2L)));
 
         final ImmutableList<ParseItem> recursiveItems = getAll(graph, MUT_REC_1);
-        assertThat(recursiveItems.size, is(equalTo(4L)));
+        assertThat((long) recursiveItems.size(), is(equalTo(4L)));
 
         final ImmutableList<ParseItem> recursiveRootItems = getAllRoots(graph, MUT_REC_1);
-        assertThat(recursiveRootItems.size, is(equalTo(2L)));
+        assertThat((long) recursiveRootItems.size(), is(equalTo(2L)));
     }
 
     @Test
@@ -211,11 +211,11 @@ public class ByTokenTest {
         ImmutableList<ParseValue> values = getAllValues(graph, "value2");
         ImmutableList<ParseItem> items = getAll(graph, DEF2);
 
-        while (values.head != null) {
-            assertThat(values.head, is(equalTo(items.head.asValue())));
+        while (values.head() != null) {
+            assertThat(values.head(), is(equalTo(items.head().asValue())));
 
-            values = values.tail;
-            items = items.tail;
+            values = values.tail();
+            items = items.tail();
         }
     }
 
@@ -232,9 +232,9 @@ public class ByTokenTest {
         assertTrue(result.isPresent());
         final ImmutableList<ParseItem> items = getAll(result.get().order, DEF2);
         // should return two values created by the Sub, no ParseReference because a Def cannot create a cycle
-        assertEquals(2, items.size);
-        assertTrue(items.head.isValue());
-        assertTrue(items.tail.head.isValue());
+        assertEquals(2, (long) items.size());
+        assertTrue(items.head().isValue());
+        assertTrue(items.tail().head().isValue());
     }
 
     @Test
@@ -243,9 +243,9 @@ public class ByTokenTest {
         final Optional<ParseState> result = topSeq.parse(env(stream(1, 2, 3)));
         assertTrue(result.isPresent());
         final ImmutableList<ParseItem> seqItems = getAllRoots(result.get().order, SMALL_SEQ);
-        assertEquals(1, seqItems.size);
-        assertEquals(SMALL_SEQ, seqItems.head.getDefinition());
-        final ParseValue c = seqItems.head.asGraph().head.asValue();
+        assertEquals(1, (long) seqItems.size());
+        assertEquals(SMALL_SEQ, seqItems.head().getDefinition());
+        final ParseValue c = seqItems.head().asGraph().head.asValue();
         assertEquals(3, c.asNumeric().intValueExact());
         assertEquals(2, c.slice().offset.intValueExact());
     }
@@ -256,20 +256,20 @@ public class ByTokenTest {
         final Optional<ParseState> result = topSeq.parse(env(stream(1, 2, 3, 2, 3)));
         assertTrue(result.isPresent());
         final ImmutableList<ParseItem> seqItems = getAllRoots(result.get().order, SMALL_SEQ);
-        assertEquals(2, seqItems.size);
-        assertEquals(SMALL_SEQ, seqItems.head.getDefinition());
-        assertEquals(SMALL_SEQ, seqItems.tail.head.getDefinition());
-        final ParseValue c1 = seqItems.head.asGraph().head.asValue();
+        assertEquals(2, (long) seqItems.size());
+        assertEquals(SMALL_SEQ, seqItems.head().getDefinition());
+        assertEquals(SMALL_SEQ, seqItems.tail().head().getDefinition());
+        final ParseValue c1 = seqItems.head().asGraph().head.asValue();
         assertEquals(3, c1.asNumeric().intValueExact());
-        final ParseValue c2 = seqItems.tail.head.asGraph().head.asValue();
+        final ParseValue c2 = seqItems.tail().head().asGraph().head.asValue();
         assertEquals(3, c2.asNumeric().intValueExact());
-        assertNotEquals(seqItems.head.asGraph().head, seqItems.tail.head.asGraph().head);
+        assertNotEquals(seqItems.head().asGraph().head, seqItems.tail().head().asGraph().head);
     }
 
     private Set<ParseItem> makeSet(final ImmutableList<ParseItem> seqs) {
         final Set<ParseItem> items = new HashSet<>();
-        for (ImmutableList<ParseItem> current = seqs; current != null && !current.isEmpty(); current = current.tail) {
-            items.add(current.head);
+        for (ImmutableList<ParseItem> current = seqs; current != null && !current.isEmpty(); current = current.tail()) {
+            items.add(current.head());
         }
         return items;
     }
@@ -282,7 +282,7 @@ public class ByTokenTest {
                                                                                            /* 3:             +--------+ */
         assertTrue(result.isPresent());
         final ImmutableList<ParseItem> seqItems = getAllRoots(result.get().order, SMALL_SEQ);
-        assertEquals(6, seqItems.size); // Three regular and three subs.
+        assertEquals(6, (long) seqItems.size()); // Three regular and three subs.
         final Set<ParseItem> items = makeSet(seqItems);
         assertEquals(4, items.size()); // Check that there are two duplicates.
         for (final ParseItem item : items) {
@@ -313,50 +313,52 @@ public class ByTokenTest {
         final Optional<ParseState> result = customToken.parse(env(stream(1, 2, 3)));
         assertTrue(result.isPresent());
         final ImmutableList<ParseItem> seqItems = getAllRoots(result.get().order, customToken.token);
-        assertEquals(3, seqItems.size);
+        assertEquals(3, (long) seqItems.size());
         final Set<ParseItem> items = makeSet(seqItems);
-        assertEquals(seqItems.size, items.size()); // Check that there are no duplicate results.
+        assertEquals((long) seqItems.size(), items.size()); // Check that there are no duplicate results.
     }
 
     @Test
     public void getAllRootsEmpty() {
-        assertEquals(0, getAllRoots(ParseGraph.EMPTY, any("a")).size);
-        assertEquals(1, getAllRoots(ParseGraph.EMPTY, ParseGraph.NONE).size);
+        ImmutableList<ParseItem> parseItems1 = getAllRoots(ParseGraph.EMPTY, any("a"));
+        assertEquals(0, (long) parseItems1.size());
+        ImmutableList<ParseItem> parseItems = getAllRoots(ParseGraph.EMPTY, ParseGraph.NONE);
+        assertEquals(1, (long) parseItems.size());
     }
 
     @Test
     public void getAllRootsOrderRepDef() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2), rep(DEF1));
         final ImmutableList<ParseItem> items = getAllRoots(graph, DEF1);
-        assertThat(items.size, is(equalTo(3L)));
-        assertThat(items.head.asValue().asNumeric().intValueExact(), is(equalTo(2)));
-        assertThat(items.tail.head.asValue().asNumeric().intValueExact(), is(equalTo(1)));
-        assertThat(items.tail.tail.head.asValue().asNumeric().intValueExact(), is(equalTo(0)));
+        assertThat((long) items.size(), is(equalTo(3L)));
+        assertThat(items.head().asValue().asNumeric().intValueExact(), is(equalTo(2)));
+        assertThat(items.tail().head().asValue().asNumeric().intValueExact(), is(equalTo(1)));
+        assertThat(items.tail().tail().head().asValue().asNumeric().intValueExact(), is(equalTo(0)));
     }
 
     @Test
     public void getAllRootsOrderSeqSub() {
         final ParseGraph graph = parseResultGraph(stream(4, 2, 2, 3, 4, 5), SEQ_SUB);
         final ImmutableList<ParseItem> items = getAllRoots(graph, TWO_BYTES);
-        assertThat(items.size, is(equalTo(2L)));
-        assertThat(items.head.asValue().asNumeric().intValueExact(), is(equalTo(0x0203)));
-        assertThat(items.tail.head.asValue().asNumeric().intValueExact(), is(equalTo(0x0405)));
+        assertThat((long) items.size(), is(equalTo(2L)));
+        assertThat(items.head().asValue().asNumeric().intValueExact(), is(equalTo(0x0203)));
+        assertThat(items.tail().head().asValue().asNumeric().intValueExact(), is(equalTo(0x0405)));
     }
 
     @Test
     public void getAllRootsOrderMutualRecursive() {
         final ParseGraph graph = parseResultGraph(stream(0, 1, 2, 3, 4, 5), MUT_REC_1);
         final ImmutableList<ParseItem> items = getAllRoots(graph, MUT_REC_1);
-        assertThat(items.size, is(equalTo(2L)));
+        assertThat((long) items.size(), is(equalTo(2L)));
 
         // item.head is the MUT_REC_1 graph containing [3, 4, 5], with '3' having the DEF1 definition
-        final ImmutableList<ParseItem> firstMutRecValues = getAll(items.head.asGraph(), DEF1);
-        assertThat(firstMutRecValues.size, is(equalTo(1L)));
+        final ImmutableList<ParseItem> firstMutRecValues = getAll(items.head().asGraph(), DEF1);
+        assertThat((long) firstMutRecValues.size(), is(equalTo(1L)));
         assertThat(lastItem(firstMutRecValues).asValue().asNumeric().intValueExact(), is(equalTo(3)));
 
         // item.tail.head is the MUT_REC_1 graph containing [0, 1, 2, 3, 4, 5], with '0' and '3' having the DEF1 definition
-        final ImmutableList<ParseItem> secondMutRecValues = getAll(items.tail.head.asGraph(), DEF1);
-        assertThat(secondMutRecValues.size, is(equalTo(2L)));
+        final ImmutableList<ParseItem> secondMutRecValues = getAll(items.tail().head().asGraph(), DEF1);
+        assertThat((long) secondMutRecValues.size(), is(equalTo(2L)));
         assertThat(lastItem(secondMutRecValues).asValue().asNumeric().intValueExact(), is(equalTo(0)));
     }
 
@@ -364,17 +366,17 @@ public class ByTokenTest {
     public void getAllRootsSelfRecursive() {
         final ParseGraph graph = parseResultGraph(stream(0xA, 3, 0xB, 2, 0xC, 0, 0xD, 0, 0xE, 0, 0xF, 0), SELF_REC);
         ImmutableList<ParseItem> items = getAllRoots(graph, SELF_REC);
-        assertThat(items.size, is(equalTo(6L)));
+        assertThat((long) items.size(), is(equalTo(6L)));
 
         for (int value = 0xF; value >= 0xA; value--) {
-            final ImmutableList<ParseItem> values = getAll(items.head.asGraph(), DEF1);
+            final ImmutableList<ParseItem> values = getAll(items.head().asGraph(), DEF1);
             assertThat(lastItem(values).asValue().asNumeric().intValueExact(), is(equalTo(value)));
-            items = items.tail;
+            items = items.tail();
         }
     }
 
     private static <T> T lastItem(final ImmutableList<T> items) {
-        return Selection.reverse(items).head;
+        return Selection.reverse(items).head();
     }
 
 }

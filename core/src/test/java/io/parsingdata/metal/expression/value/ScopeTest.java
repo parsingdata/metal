@@ -44,6 +44,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.token.Token;
 
@@ -98,13 +99,14 @@ public class ScopeTest {
                     EMPTY),
                 tie("dx", def("dx_", con(1)), scope(ref("S.a.A.data.data"), con(0))));
         final Optional<ParseState> result = S2.parse(env(stream(0, 0, 0, 0, 0), enc()));
-        assertEquals(5L, ref("dx_").eval(result.get(), enc()).size);
+        ImmutableList<Value> values = ref("dx_").eval(result.get(), enc());
+        assertEquals(5L, (long) values.size());
     }
 
     @Test
     public void parseGraphWithEmptyBranchSimplified() {
         final Optional<ParseState> result = def("a", first(scope(con(1), con(0)))).parse(env(stream(0)));
-        assertEquals(ZERO, ref("a").eval(result.get(), enc()).head.asNumeric());
+        assertEquals(ZERO, ref("a").eval(result.get(), enc()).head().asNumeric());
     }
 
 }

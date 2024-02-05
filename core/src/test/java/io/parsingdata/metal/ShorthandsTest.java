@@ -165,15 +165,15 @@ public class ShorthandsTest {
 
     private void checkNameAndValue(final String name, final int value, final ParseState parseState) {
         ImmutableList<Value> optionalValues = ref(name).eval(parseState, enc());
-        assertEquals(1, optionalValues.size);
-        assertEquals(value, optionalValues.head.asNumeric().intValueExact());
+        assertEquals(1, (long) optionalValues.size());
+        assertEquals(value, optionalValues.head().asNumeric().intValueExact());
 
         ImmutableList<Value> values = optionalValues;
         while (!values.isEmpty()) {
-            final Value current = values.head;
+            final Value current = values.head();
             assertThat(current, is(instanceOf(ParseValue.class)));
-            assertEquals(name, ((ParseValue)values.head).name);
-            values = values.tail;
+            assertEquals(name, ((ParseValue) values.head()).name);
+            values = values.tail();
         }
     }
 
@@ -184,18 +184,18 @@ public class ShorthandsTest {
     public void checkChoTokens() {
         final Token choToken = cho(DEF_A, DEF_B);
         final Cho cho = (Cho)choToken;
-        assertEquals(2, cho.tokens.size);
-        assertEquals(DEF_A, cho.tokens.head);
-        assertEquals(DEF_B, cho.tokens.tail.head);
+        assertEquals(2, (long) cho.tokens.size());
+        assertEquals(DEF_A, cho.tokens.head());
+        assertEquals(DEF_B, cho.tokens.tail().head());
     }
 
     @Test
     public void checkSeqTokens() {
         final Token seqToken = seq(DEF_A, DEF_B);
         final Seq seq = (Seq)seqToken;
-        assertEquals(2, seq.tokens.size);
-        assertEquals(DEF_A, seq.tokens.head);
-        assertEquals(DEF_B, seq.tokens.tail.head);
+        assertEquals(2, (long) seq.tokens.size());
+        assertEquals(DEF_A, seq.tokens.head());
+        assertEquals(DEF_B, seq.tokens.tail().head());
     }
 
     private final ParseState PARSE_STATE = createFromByteStream(DUMMY_STREAM).add(createParseValue("a", 126)).add(createParseValue("a", 84)).add(createParseValue("a", 42));
@@ -203,20 +203,20 @@ public class ShorthandsTest {
     @Test
     public void mapLeftWithSub() {
         ImmutableList<Value> result = mapLeft(Shorthand::sub, ref("a"), con(2)).eval(PARSE_STATE, enc());
-        assertEquals(3, result.size);
+        assertEquals(3, (long) result.size());
         for (int i = 0; i < 3; i++) {
-            assertEquals((i * 42) + 40, result.head.asNumeric().intValueExact());
-            result = result.tail;
+            assertEquals((i * 42) + 40, result.head().asNumeric().intValueExact());
+            result = result.tail();
         }
     }
 
     @Test
     public void mapRightWithSub() {
         ImmutableList<Value> result = mapRight(Shorthand::sub, con(126), ref("a")).eval(PARSE_STATE, enc());
-        assertEquals(3, result.size);
+        assertEquals(3, (long) result.size());
         for (int i = 0; i < 3; i++) {
-            assertEquals(((3 - i) * 42) - 42, result.head.asNumeric().intValueExact());
-            result = result.tail;
+            assertEquals(((3 - i) * 42) - 42, result.head().asNumeric().intValueExact());
+            result = result.tail();
         }
     }
 
@@ -225,7 +225,8 @@ public class ShorthandsTest {
         Optional<ParseState> result = when(def("name", con(1), eq(con(1))), TRUE).parse(env(stream(1)));
         assertTrue(result.isPresent());
         assertEquals(1, result.get().offset.intValueExact());
-        assertEquals(1, Selection.getAllValues(result.get().order, parseValue -> parseValue.matches("name") && parseValue.value().length == 1 && parseValue.value()[0] == 1).size);
+        ImmutableList<ParseValue> parseValues = Selection.getAllValues(result.get().order, parseValue -> parseValue.matches("name") && parseValue.value().length == 1 && parseValue.value()[0] == 1);
+        assertEquals(1, (long) parseValues.size());
     }
 
     @Test
@@ -236,7 +237,8 @@ public class ShorthandsTest {
                 def("name2", con(1), eq(con(2)))).parse(env(stream(2)));
         assertTrue(result.isPresent());
         assertEquals(1, result.get().offset.intValueExact());
-        assertEquals(1, Selection.getAllValues(result.get().order, parseValue -> parseValue.matches("name2") && parseValue.value().length == 1 && parseValue.value()[0] == 2).size);
+        ImmutableList<ParseValue> parseValues = Selection.getAllValues(result.get().order, parseValue -> parseValue.matches("name2") && parseValue.value().length == 1 && parseValue.value()[0] == 2);
+        assertEquals(1, (long) parseValues.size());
     }
 
 }

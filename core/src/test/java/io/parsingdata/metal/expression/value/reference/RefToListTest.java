@@ -19,14 +19,14 @@ class RefToListTest {
     static Stream<Arguments> toListTest() {
         return Stream.of(
             arguments(ImmutableList.create(1), List.of(1)),
-            arguments(ImmutableList.create(1).add(2), List.of(2, 1)),
-            arguments(ImmutableList.create(1).add(2).add(3), List.of(3, 2, 1)),
+            arguments(ImmutableList.create(1).addHead(2), List.of(2, 1)),
+            arguments(ImmutableList.create(1).addHead(2).addHead(3), List.of(3, 2, 1)),
             arguments(ImmutableList.create(new Integer[]{1, 2, 3}), List.of(1, 2, 3)),
             arguments(ImmutableList.create(new Integer[0]), List.of()),
 
             arguments(ImmutableList.create("1"), List.of("1")),
-            arguments(ImmutableList.create("1").add("2"), List.of("2", "1")),
-            arguments(ImmutableList.create("1").add("2").add("3"), List.of("3", "2", "1")),
+            arguments(ImmutableList.create("1").addHead("2"), List.of("2", "1")),
+            arguments(ImmutableList.create("1").addHead("2").addHead("3"), List.of("3", "2", "1")),
             arguments(ImmutableList.create(new String[]{"1", "2", "3"}), List.of("1", "2", "3")),
             arguments(ImmutableList.create(new String[0]), List.of())
         );

@@ -61,12 +61,12 @@ public class Elvis extends ImmutableObject implements ValueExpression {
 
     private Trampoline<ImmutableList<Value>> eval(final ImmutableList<Value> result, final ImmutableList<Value> leftValues, final ImmutableList<Value> rightValues) {
         if (leftValues.isEmpty()) {
-            return complete(() -> result.add(reverse(rightValues)));
+            return complete(() -> result.addList(reverse(rightValues)));
         }
         if (rightValues.isEmpty()) {
-            return complete(() -> result.add(reverse(leftValues)));
+            return complete(() -> result.addList(reverse(leftValues)));
         }
-        return intermediate(() -> eval(result.add(leftValues.head.equals(NOT_A_VALUE) ? rightValues.head : leftValues.head), leftValues.tail, rightValues.tail));
+        return intermediate(() -> eval(result.addHead(leftValues.head().equals(NOT_A_VALUE) ? rightValues.head() : leftValues.head()), leftValues.tail(), rightValues.tail()));
     }
 
     @Override

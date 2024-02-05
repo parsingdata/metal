@@ -52,7 +52,7 @@ public class First extends ImmutableObject implements SingleValueExpression {
     }
 
     private Trampoline<Value> getFirst(final ImmutableList<Value> values) {
-        return values.tail.isEmpty() ? complete(() -> values.head) : intermediate(() -> getFirst(values.tail));
+        return values.tail().isEmpty() ? complete(() -> values.head()) : intermediate(() -> getFirst(values.tail()));
     }
 
     @Override

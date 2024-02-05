@@ -34,8 +34,8 @@ public class UtilInflateTest {
     @Test
     public void inflateDataFormatError() {
         final ImmutableList<Value> result = inflate(con(0xff)).eval(stream(), enc());
-        assertEquals(1, result.size);
-        assertEquals(NOT_A_VALUE, result.head);
+        assertEquals(1, (long) result.size());
+        assertEquals(NOT_A_VALUE, result.head());
     }
 
 }

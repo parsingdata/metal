@@ -63,7 +63,7 @@ public abstract class Ref<T> extends ImmutableObject implements ValueExpression 
         this.predicate = checkNotNull(predicate, "predicate");
         this.limit = limit;
         this.references = create(checkContainsNoNulls(references, "references"))
-            .add(checkNotNull(reference, "reference"));
+            .addHead(checkNotNull(reference, "reference"));
     }
 
     private Ref(final BiPredicate<ParseValue, T> predicate, final SingleValueExpression limit, final ImmutableList<T> references) {
@@ -80,8 +80,8 @@ public abstract class Ref<T> extends ImmutableObject implements ValueExpression 
         @Override
         ImmutableList<Value> evalImpl(final ParseState parseState, final int limit) {
             return Optional.of(parseState.cache)
-                .filter(p -> references.size == 1)
-                .flatMap(p -> p.find(references.head, limit))
+                .filter(p -> (long) references.size() == 1)
+                .flatMap(p -> p.find(references.head(), limit))
                 .orElseGet(() -> wrap(getAllValues(parseState.order, parseValue -> toList(references).stream().anyMatch(ref -> predicate.test(parseValue, ref)), limit), new ImmutableList<Value>()).computeResult());
         }
 
@@ -122,8 +122,8 @@ public abstract class Ref<T> extends ImmutableObject implements ValueExpression 
         final List<T> flatten = new ArrayList<>();
         ImmutableList<T> tail = allValues;
         while (!tail.isEmpty()) {
-            flatten.add(tail.head);
-            tail = tail.tail;
+            flatten.add(tail.head());
+            tail = tail.tail();
         }
         return flatten;
     }
@@ -132,7 +132,7 @@ public abstract class Ref<T> extends ImmutableObject implements ValueExpression 
         if (input.isEmpty()) {
             return complete(() -> output);
         }
-        return intermediate(() -> wrap(input.tail, output.add(input.head)));
+        return intermediate(() -> wrap(input.tail(), output.addHead(input.head())));
     }
 
     @Override

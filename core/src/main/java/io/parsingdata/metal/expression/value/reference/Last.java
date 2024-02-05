@@ -45,7 +45,7 @@ public class Last extends ImmutableObject implements SingleValueExpression {
     @Override
     public Optional<Value> evalSingle(final ParseState parseState, final Encoding encoding) {
         final ImmutableList<Value> values = operand.eval(parseState, encoding);
-        return values.isEmpty() ? Optional.empty() : Optional.of(values.head);
+        return values.isEmpty() ? Optional.empty() : Optional.of(values.head());
     }
 
     @Override
