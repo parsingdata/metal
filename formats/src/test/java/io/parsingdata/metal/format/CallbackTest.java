@@ -35,15 +35,15 @@ public class CallbackTest {
     @Test
     public void crc32Good() {
         final ImmutableList<Value> result = crc32(con(0x01020304)).eval(stream(), enc());
-        assertEquals(1, result.size);
-        assertArrayEquals(new byte[] { -74, 60, -5, -51 }, result.head.value());
+        assertEquals(1, result.size());
+        assertArrayEquals(new byte[] { -74, 60, -5, -51 }, result.head().value());
     }
 
     @Test
     public void inflateGood() {
         final ImmutableList<Value> result = inflate(con(0xcb, 0x4d, 0x2d, 0x49, 0xcc, 0x01, 0x00)).eval(stream(), enc());
-        assertEquals(1, result.size);
-        assertEquals("metal", result.head.asString());
+        assertEquals(1, result.size());
+        assertEquals("metal", result.head().asString());
     }
 
 }

@@ -21,6 +21,7 @@ import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -113,14 +114,9 @@ public final class Selection {
         if (list.isEmpty()) {
             return list;
         }
-        return reverse(list.tail(), ImmutableList.create(list.head())).computeResult();
-    }
-
-    private static <T> Trampoline<ImmutableList<T>> reverse(final ImmutableList<T> oldList, final ImmutableList<T> newList) {
-        if (oldList.isEmpty()) {
-            return complete(() -> newList);
-        }
-        return intermediate(() -> reverse(oldList.tail(), newList.addHead(oldList.head())));
+        final ImmutableList<T> reversedList = new ImmutableList<>(list);
+        Collections.reverse(reversedList);
+        return reversedList;
     }
 
     public static ImmutableList<ParseItem> getAllRoots(final ParseGraph graph, final Token definition) {

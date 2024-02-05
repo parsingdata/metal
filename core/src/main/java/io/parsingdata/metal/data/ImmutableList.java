@@ -20,9 +20,12 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ImmutableList<T> extends LinkedList<T> {
+
+    private Integer hashCode;
 
     public ImmutableList() {
         super();
@@ -30,6 +33,10 @@ public class ImmutableList<T> extends LinkedList<T> {
 
     public ImmutableList(final LinkedList<T> ts) {
         super(ts);
+    }
+
+    public ImmutableList(List<T> collect) {
+        this(new LinkedList<>(collect));
     }
 
     public static <T> ImmutableList<T> create(final T head) {
@@ -41,15 +48,15 @@ public class ImmutableList<T> extends LinkedList<T> {
     }
 
     public ImmutableList<T> addHead(final T head) {
-        final LinkedList<T> ts = new LinkedList<>(this);
+        final ImmutableList<T> ts = new ImmutableList<>(this);
         ts.addFirst(head);
-        return new ImmutableList<>(ts);
+        return ts;
     }
 
     public ImmutableList<T> addList(final ImmutableList<T> list) {
-        final LinkedList<T> ts = new LinkedList<>(list);
+        final ImmutableList<T> ts = new ImmutableList<>(list);
         ts.addAll(this);
-        return new ImmutableList<>(ts);
+        return ts;
     }
 
     public T head() {
@@ -60,8 +67,7 @@ public class ImmutableList<T> extends LinkedList<T> {
     }
 
     public ImmutableList<T> tail() {
-        final LinkedList<T> ts = new LinkedList<>(this.subList(1, size()));
-        return new ImmutableList<>(ts);
+        return new ImmutableList<>(this.subList(1, size()));
     }
 
     @Override
@@ -69,6 +75,12 @@ public class ImmutableList<T> extends LinkedList<T> {
         return isEmpty() ? "" : ">" + head() + tail();
     }
 
-    // TODO cache the hashcode like in ImmutableObject.
+    @Override
+    public int hashCode() {
+        if (hashCode == null) {
+            hashCode = super.hashCode();
+        }
+        return hashCode;
+    }
 
 }

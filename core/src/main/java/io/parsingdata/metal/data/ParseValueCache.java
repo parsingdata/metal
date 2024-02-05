@@ -1,16 +1,15 @@
 package io.parsingdata.metal.data;
 
-import static io.parsingdata.metal.Trampoline.complete;
-import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.data.Selection.NO_LIMIT;
-import static io.parsingdata.metal.data.Selection.reverse;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Token;
@@ -39,19 +38,16 @@ public class ParseValueCache {
         if (this == NO_CACHE) {
             return Optional.empty();
         }
-        final ImmutableList<Value> result = find(cache.getOrDefault(shortName(scopeName), new ImmutableList<>()), scopeName, limit, new ImmutableList<>()).computeResult();
-        return Optional.of(reverse(result));
+        final ImmutableList<Value> result = find(cache.getOrDefault(shortName(scopeName), new ImmutableList<>()), scopeName, limit);
+        return Optional.of(result);
     }
 
-    private Trampoline<ImmutableList<Value>> find(final ImmutableList<ParseValue> searchList, final String scopeName, final int limit, final ImmutableList<Value> result) {
-        if (searchList.isEmpty() || (limit != NO_LIMIT && (long) result.size() == limit)) {
-            return complete(() -> result);
+    private ImmutableList<Value> find(final ImmutableList<ParseValue> searchList, final String scopeName, final int limit) {
+        Stream<ParseValue> collect = searchList.stream().filter(head -> head.matches(scopeName));
+        if (limit != NO_LIMIT) {
+            collect = collect.limit(limit);
         }
-        final ParseValue head = searchList.head();
-        if (head.matches(scopeName)) {
-            return intermediate(() -> find(searchList.tail(), scopeName, limit, result.addHead(head)));
-        }
-        return intermediate(() -> find(searchList.tail(), scopeName, limit, result));
+        return new ImmutableList<>(new LinkedList<>(collect.collect(Collectors.toList())));
     }
 
     public ParseValueCache add(final ParseValue value) {
