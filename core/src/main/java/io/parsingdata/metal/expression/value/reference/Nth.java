@@ -62,9 +62,6 @@ public class Nth extends ImmutableObject implements ValueExpression {
     }
 
     private ImmutableList<Value> eval(final ImmutableList<Value> values, final ImmutableList<Value> indices) {
-        if (indices.isEmpty()) {
-            return new ImmutableList<>();
-        }
         final List<Value> collect = indices.stream()
             .map(index -> !index.equals(NOT_A_VALUE) && index.asNumeric().compareTo(BigInteger.valueOf(values.size())) < 0 && index.asNumeric().compareTo(ZERO) >= 0
                 ? values.get(values.size() - index.asNumeric().intValue() - 1)

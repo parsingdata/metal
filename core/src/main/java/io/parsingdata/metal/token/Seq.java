@@ -16,18 +16,13 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Trampoline.complete;
-import static io.parsingdata.metal.Trampoline.intermediate;
 import static io.parsingdata.metal.Util.checkContainsNoNulls;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.Util.success;
 import static io.parsingdata.metal.data.ImmutableList.create;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.Trampoline;
-import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
@@ -53,17 +48,15 @@ public class Seq extends CycleToken {
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        return iterate(environment.addBranch(this), tokens).computeResult();
+        return iterate(environment.addBranch(this), tokens);
     }
 
-    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Token> list) {
-        if (list.isEmpty()) {
-            return complete(() -> success(environment.parseState.closeBranch(this)));
-        }
-        return list.head()
-            .parse(environment)
-            .map(nextParseState -> intermediate(() -> iterate(environment.withParseState(nextParseState), list.tail())))
-            .orElseGet(() -> complete(Util::failure));
+    private Optional<ParseState> iterate(final Environment environment, final ImmutableList<Token> list) {
+        return list.stream()
+            .reduce(Optional.of(environment.parseState),
+                (parseState, token) -> parseState.flatMap(nextParseState -> token.parse(environment.withParseState(nextParseState))),
+                (never, happens) -> never)
+            .map(ps -> ps.closeBranch(this));
     }
 
     @Override

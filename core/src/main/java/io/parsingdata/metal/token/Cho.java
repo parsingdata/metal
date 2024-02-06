@@ -16,18 +16,15 @@
 
 package io.parsingdata.metal.token;
 
-import static io.parsingdata.metal.Trampoline.complete;
-import static io.parsingdata.metal.Trampoline.intermediate;
+import static java.util.function.Function.identity;
+
 import static io.parsingdata.metal.Util.checkContainsNoNulls;
 import static io.parsingdata.metal.Util.checkNotNull;
-import static io.parsingdata.metal.Util.success;
 import static io.parsingdata.metal.data.ImmutableList.create;
 
 import java.util.Objects;
 import java.util.Optional;
 
-import io.parsingdata.metal.Trampoline;
-import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
@@ -53,17 +50,16 @@ public class Cho extends CycleToken {
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        return iterate(environment.addBranch(this), tokens).computeResult();
+        return iterate(environment.addBranch(this), tokens);
     }
 
-    private Trampoline<Optional<ParseState>> iterate(final Environment environment, final ImmutableList<Token> list) {
-        if (list.isEmpty()) {
-            return complete(Util::failure);
-        }
-        return list.head()
-            .parse(environment)
-            .map(result -> complete(() -> success(result.closeBranch(this))))
-            .orElseGet(() -> intermediate(() -> iterate(environment, list.tail())));
+    private Optional<ParseState> iterate(final Environment environment, final ImmutableList<Token> list) {
+         return list.stream()
+             .map(token -> token.parse(environment))
+             .filter(Optional::isPresent)
+             .findFirst()
+             .flatMap(identity())
+             .map(result -> result.closeBranch(this));
     }
 
     @Override

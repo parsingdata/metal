@@ -16,7 +16,9 @@
 
 package io.parsingdata.metal.data;
 
-import io.parsingdata.metal.Util;
+import static java.util.Collections.unmodifiableList;
+
+import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -28,14 +30,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-import static java.util.Collections.unmodifiableList;
+import io.parsingdata.metal.ImmutableObject;
+import io.parsingdata.metal.Util;
 
-public class ImmutableList<T> implements List<T> {
+public class ImmutableList<T> extends ImmutableObject implements List<T> {
 
     private final List<T> innerList;
-
-    private Integer hashCode;
 
     public ImmutableList() {
         innerList = unmodifiableList(new LinkedList<>());
@@ -143,17 +143,14 @@ public class ImmutableList<T> implements List<T> {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return Util.notNullAndSameClass(this, obj)
-                && Objects.equals(innerList, ((ImmutableList<?>)obj).innerList);
+    public int immutableHashCode() {
+        return innerList.hashCode();
     }
 
     @Override
-    public int hashCode() {
-        if (hashCode == null) {
-            hashCode = innerList.hashCode();
-        }
-        return hashCode;
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+                && Objects.equals(innerList, ((ImmutableList<?>)obj).innerList);
     }
 
     @Override
