@@ -41,16 +41,8 @@ public class ImmutableList<T> implements List<T> {
         innerList = unmodifiableList(new LinkedList<>());
     }
 
-    public ImmutableList(final LinkedList<T> ts) {
-        innerList = unmodifiableList(new LinkedList<>(ts));
-    }
-
-    public ImmutableList(final ImmutableList<T> ts) {
-        this(ts.innerList);
-    }
-
-    public ImmutableList(List<T> collect) {
-        this(new LinkedList<>(collect));
+    public ImmutableList(final List<T> list) {
+        innerList = unmodifiableList(new LinkedList<>(list));
     }
 
     public static <T> ImmutableList<T> create(final T head) {
