@@ -16,6 +16,7 @@
 
 package io.parsingdata.metal.data;
 
+import static java.util.Collections.reverseOrder;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 
@@ -36,14 +37,14 @@ import io.parsingdata.metal.Util;
 
 public class ImmutableList<T> extends ImmutableObject implements List<T> {
 
-    private final List<T> innerList;
+    final List<T> innerList;
 
     public ImmutableList() {
-        innerList = unmodifiableList(new LinkedList<>());
+        innerList = List.of();
     }
 
     public ImmutableList(final List<T> list) {
-        innerList = unmodifiableList(new LinkedList<>(list));
+        innerList = unmodifiableList(list);
     }
 
     public static <T> ImmutableList<T> create(final T head) {
@@ -212,4 +213,125 @@ public class ImmutableList<T> extends ImmutableObject implements List<T> {
     public ImmutableList<T> reverse() {
         return new ReversedImmutableList<>(this);
     }
+
+    /**
+     * The ReversedImmutableList returns a view of a reversed list on the specified list without coping it. This keeps memory usage low while
+     * still keeping immutability. Copying is only applied when necessary. Reverting a ReversedImmutableList also returns the original list.
+     *
+     * @param <T> the type of the values in the list.
+     */
+    public static class ReversedImmutableList<T> extends ImmutableList<T> {
+
+        /**
+         * Constructor is private because it should be created using {@link ImmutableList#reverse()} instead.
+         *
+         * @param originalList the list to reverse
+         */
+        private ReversedImmutableList(List<T> originalList) {
+            super(originalList);
+        }
+
+        @Override
+        public T get(int index) {
+            return innerList.get(size() - index - 1);
+        }
+
+        @Override
+        public Object[] toArray() {
+            return this.toArray(new Object[size()]);
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public <T> T[] toArray(T[] a) {
+            if (a.length < size())
+                a = (T[])java.lang.reflect.Array.newInstance(
+                    a.getClass().getComponentType(), size());
+
+            Object[] result = a;
+            for (int i = 0; i < size(); i++)
+                result[size() - i - 1] = innerList.get(i);
+
+            if (a.length > size())
+                a[size()] = null;
+
+            return a;
+        }
+
+        @Override
+        public ImmutableList<T> addHead(final T head) {
+            final LinkedList<T> ts2 = new LinkedList<>(innerList);
+            ts2.addLast(head);
+            return new ReversedImmutableList<>(ts2);
+        }
+
+        @Override
+        public ImmutableList<T> addList(final ImmutableList<T> list) {
+            final LinkedList<T> ts2 = new LinkedList<>(list.reverse());
+            ts2.addAll(innerList);
+            return new ReversedImmutableList<>(ts2);
+        }
+
+        @Override
+        public T head() {
+            return isEmpty() ? null : innerList.get(innerList.size() - 1);
+        }
+
+        @Override
+        public ImmutableList<T> tail() {
+            return isEmpty() ? new ImmutableList<>() : new ReversedImmutableList<>(innerList.subList(0, size() - 1));
+        }
+
+        @Override
+        public Stream<T> stream() {
+            return innerList.stream().sorted(reverseOrder());
+        }
+
+        @Override
+        public Iterator<T> iterator() {
+            return stream().iterator();
+        }
+
+        @Override
+        public ListIterator<T> listIterator() {
+            return stream().collect(toList()).listIterator();
+        }
+
+        @Override
+        public ListIterator<T> listIterator(final int index) {
+            return stream().collect(toList()).listIterator(index);
+        }
+
+        @Override
+        public int indexOf(Object o) {
+            return size() - super.lastIndexOf(o) - 1;
+        }
+
+        @Override
+        public int lastIndexOf(Object o) {
+            return size() - super.indexOf(o) - 1;
+        }
+
+        @Override
+        public ImmutableList<T> reverse() {
+            return new ImmutableList<>(innerList);
+        }
+
+        @Override
+        public String toString() {
+            return isEmpty() ? "" : ">" + head() + tail();
+        }
+
+        @Override
+        public int immutableHashCode() {
+            return stream().collect(toList()).hashCode();
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            return Util.notNullAndSameClass(this, obj)
+                && Objects.equals(innerList, ((ImmutableList<?>)obj).innerList);
+        }
+    }
+
 }
