@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 
 import static io.parsingdata.metal.Util.checkNotNull;
 import static java.util.Collections.unmodifiableList;
+import static java.util.stream.Collectors.toList;
 
 public class ImmutableList<T> implements List<T> {
 
@@ -50,7 +51,7 @@ public class ImmutableList<T> implements List<T> {
     }
 
     public static <T> ImmutableList<T> create(final T[] array) {
-        return new ImmutableList<>(new LinkedList<>(Arrays.stream(array).collect(Collectors.toList())));
+        return new ImmutableList<>(Arrays.stream(array).collect(toList()));
     }
 
     public ImmutableList<T> addHead(final T head) {
@@ -94,21 +95,6 @@ public class ImmutableList<T> implements List<T> {
 
     public T get(int index) {
         return innerList.get(index);
-    }
-
-    @Override
-    public T set(int index, T element) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void add(int index, T element) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public T remove(int index) {
-        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -167,8 +153,28 @@ public class ImmutableList<T> implements List<T> {
     }
 
     @Override
-    public <T1> T1[] toArray(T1[] a) {
+    public <T> T[] toArray(T[] a) {
         return innerList.toArray(a);
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        return innerList.containsAll(c);
+    }
+
+    @Override
+    public T set(int index, T element) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void add(int index, T element) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public T remove(int index) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -179,11 +185,6 @@ public class ImmutableList<T> implements List<T> {
     @Override
     public boolean remove(Object o) {
         throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean containsAll(Collection<?> c) {
-        return innerList.containsAll(c);
     }
 
     @Override
