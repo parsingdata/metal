@@ -16,14 +16,22 @@
 
 package io.parsingdata.metal.data;
 
-import static io.parsingdata.metal.Util.checkNotNull;
-import static java.util.Collections.unmodifiableList;
+import io.parsingdata.metal.Util;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ImmutableList<T> implements List<T> { // extends LinkedList<T> {
+import static io.parsingdata.metal.Util.checkNotNull;
+import static java.util.Collections.unmodifiableList;
+
+public class ImmutableList<T> implements List<T> {
 
     private final List<T> innerList;
 
@@ -54,26 +62,26 @@ public class ImmutableList<T> implements List<T> { // extends LinkedList<T> {
     }
 
     public ImmutableList<T> addHead(final T head) {
-        final LinkedList<T> ts = new LinkedList<>(innerList);
+        final LinkedList<T> ts = new LinkedList<>(this);
         ts.addFirst(head);
         return new ImmutableList<>(ts);
     }
 
     public ImmutableList<T> addList(final ImmutableList<T> list) {
-        final LinkedList<T> ts = new LinkedList<>(list.innerList);
-        ts.addAll(this.innerList);
+        final LinkedList<T> ts = new LinkedList<>(list);
+        ts.addAll(this);
         return new ImmutableList<>(ts);
     }
 
     public T head() {
-        if (innerList.isEmpty()) {
+        if (isEmpty()) {
             return null;
         }
-        return innerList.get(0);
+        return get(0);
     }
 
     public ImmutableList<T> tail() {
-        return new ImmutableList<>(innerList.subList(1, innerList.size()));
+        return new ImmutableList<>(subList(1, size()));
     }
 
     public boolean isEmpty() {
@@ -143,9 +151,15 @@ public class ImmutableList<T> implements List<T> { // extends LinkedList<T> {
     }
 
     @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+                && Objects.equals(innerList, ((ImmutableList<?>)obj).innerList);
+    }
+
+    @Override
     public int hashCode() {
         if (hashCode == null) {
-            hashCode = super.hashCode();
+            hashCode = innerList.hashCode();
         }
         return hashCode;
     }
@@ -203,5 +217,9 @@ public class ImmutableList<T> implements List<T> { // extends LinkedList<T> {
     @Override
     public void clear() {
         throw new UnsupportedOperationException();
+    }
+
+    public ImmutableList<T> reverse() {
+        return new ReversedImmutableList<>(this);
     }
 }
