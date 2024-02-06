@@ -17,22 +17,28 @@
 package io.parsingdata.metal.data;
 
 import static io.parsingdata.metal.Util.checkNotNull;
+import static java.util.Collections.unmodifiableList;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class ImmutableList<T> extends LinkedList<T> {
+public class ImmutableList<T> implements List<T> { // extends LinkedList<T> {
+
+    private final List<T> innerList;
 
     private Integer hashCode;
 
     public ImmutableList() {
-        super();
+        innerList = unmodifiableList(new LinkedList<>());
     }
 
     public ImmutableList(final LinkedList<T> ts) {
-        super(ts);
+        innerList = unmodifiableList(new LinkedList<>(ts));
+    }
+
+    public ImmutableList(final ImmutableList<T> ts) {
+        this(ts.innerList);
     }
 
     public ImmutableList(List<T> collect) {
@@ -48,31 +54,92 @@ public class ImmutableList<T> extends LinkedList<T> {
     }
 
     public ImmutableList<T> addHead(final T head) {
-        final ImmutableList<T> ts = new ImmutableList<>(this);
+        final LinkedList<T> ts = new LinkedList<>(innerList);
         ts.addFirst(head);
-        return ts;
+        return new ImmutableList<>(ts);
     }
 
     public ImmutableList<T> addList(final ImmutableList<T> list) {
-        final ImmutableList<T> ts = new ImmutableList<>(list);
-        ts.addAll(this);
-        return ts;
+        final LinkedList<T> ts = new LinkedList<>(list.innerList);
+        ts.addAll(this.innerList);
+        return new ImmutableList<>(ts);
     }
 
     public T head() {
-        if (isEmpty()) {
+        if (innerList.isEmpty()) {
             return null;
         }
-        return this.getFirst();
+        return innerList.get(0);
     }
 
     public ImmutableList<T> tail() {
-        return new ImmutableList<>(this.subList(1, size()));
+        return new ImmutableList<>(innerList.subList(1, innerList.size()));
+    }
+
+    public boolean isEmpty() {
+        return innerList.isEmpty();
+    }
+
+    public int size() {
+        return innerList.size();
+    }
+
+    public boolean contains(Object value) {
+        return innerList.contains(value);
+    }
+
+    public Stream<T> stream() {
+        return innerList.stream();
+    }
+
+    public T get(int index) {
+        return innerList.get(index);
+    }
+
+    @Override
+    public T set(int index, T element) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void add(int index, T element) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public T remove(int index) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        return innerList.indexOf(o);
+    }
+
+    @Override
+    public int lastIndexOf(Object o) {
+        return innerList.lastIndexOf(o);
+    }
+
+    @Override
+    public ListIterator<T> listIterator() {
+        return innerList.listIterator();
+    }
+
+    @Override
+    public ListIterator<T> listIterator(int index) {
+        return innerList.listIterator(index);
+    }
+
+    @Override
+    public List<T> subList(int fromIndex, int toIndex) {
+        // make this of type ImmutableList? wrap it?
+        return innerList.subList(fromIndex, toIndex);
     }
 
     @Override
     public String toString() {
-        return isEmpty() ? "" : ">" + head() + tail();
+        return innerList.isEmpty() ? "" : ">" + head() + tail();
     }
 
     @Override
@@ -83,4 +150,58 @@ public class ImmutableList<T> extends LinkedList<T> {
         return hashCode;
     }
 
+    @Override
+    public Iterator<T> iterator() {
+        return innerList.iterator();
+    }
+
+    @Override
+    public Object[] toArray() {
+        return innerList.toArray();
+    }
+
+    @Override
+    public <T1> T1[] toArray(T1[] a) {
+        return innerList.toArray(a);
+    }
+
+    @Override
+    public boolean add(T t) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        return innerList.containsAll(c);
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends T> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean addAll(int index, Collection<? extends T> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException();
+    }
 }
