@@ -38,8 +38,8 @@ public class ReversedImmutableList<T> extends ImmutableList<T> {
 
     @Override
     public ImmutableList<T> addList(final ImmutableList<T> list) {
-        final ImmutableList<T> ts2 = new ImmutableList<>(originalList);
-        ts2.addAll(list.reverse());
+        final LinkedList<T> ts2 = new LinkedList<>(list.reverse());
+        ts2.addAll(originalList);
         return new ReversedImmutableList<>(ts2);
     }
 
