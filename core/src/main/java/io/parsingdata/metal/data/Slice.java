@@ -58,8 +58,19 @@ public class Slice extends ImmutableObject {
     }
 
     public byte[] getData(final BigInteger limit) {
-        final BigInteger calculatedLength = checkNotNegative(limit, "limit").compareTo(length) > 0 ? length : limit;
-        return source.getData(offset, calculatedLength);
+        return getData(ZERO, limit);
+    }
+
+    /**
+     * Return a part of the data specified by the offset and limit.
+     * @param offset the offset to start reading the slice from
+     * @param limit the maximum number of bytes returned. Fewer bytes are returned if the end of slice is reached.
+     * @return a byte array representing the data.
+     */
+    public byte[] getData(final BigInteger offset, final BigInteger limit) {
+        final BigInteger calculatedOffset = checkNotNegative(offset, "offset").add(this.offset);
+        final BigInteger calculatedLength = checkNotNegative(limit, "limit").min(length.subtract(offset)).max(ZERO);
+        return source.getData(calculatedOffset, calculatedLength);
     }
 
     @Override
