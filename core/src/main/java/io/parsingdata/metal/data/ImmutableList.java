@@ -83,4 +83,8 @@ public class ImmutableList<T> extends LinkedList<T> {
         return hashCode;
     }
 
+    public ImmutableList<T> reverse() {
+        return new ReversedImmutableList<>(this);
+    }
+
 }

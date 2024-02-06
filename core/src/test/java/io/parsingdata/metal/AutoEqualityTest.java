@@ -84,6 +84,7 @@ import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.ParseValueCache;
+import io.parsingdata.metal.data.ReversedImmutableList;
 import io.parsingdata.metal.data.Selection;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.data.Source;
@@ -169,7 +170,7 @@ public class AutoEqualityTest {
         io.parsingdata.metal.expression.logical.Not.class,
         // Data structures
         CoreValue.class, ParseValue.class, ParseReference.class, ParseState.class,
-        NotAValue.class, ParseGraph.class, ImmutableList.class,
+        NotAValue.class, ParseGraph.class, ImmutableList.class, ReversedImmutableList.class,
         ParseValueCache.class,
         // Inputs
         Slice.class,

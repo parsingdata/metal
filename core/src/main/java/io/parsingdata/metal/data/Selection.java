@@ -111,12 +111,14 @@ public final class Selection {
     }
 
     public static <T> ImmutableList<T> reverse(final ImmutableList<T> list) {
-        if (list.isEmpty()) {
-            return list;
-        }
-        final ImmutableList<T> reversedList = new ImmutableList<>(list);
-        Collections.reverse(reversedList);
-        return reversedList;
+        return list.reverse();
+//
+//         (list.isEmpty()) {
+//            return list;
+//        }
+//        final ImmutableList<T> reversedList = new ImmutableList<>(list);
+//        Collections.reverse(reversedList);
+//        return reversedList;
     }
 
     public static ImmutableList<ParseItem> getAllRoots(final ParseGraph graph, final Token definition) {
