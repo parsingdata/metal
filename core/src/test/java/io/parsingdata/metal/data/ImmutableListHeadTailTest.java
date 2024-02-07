@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.parsingdata.metal;
+package io.parsingdata.metal.data;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -28,9 +28,6 @@ import static io.parsingdata.metal.data.selection.ByName.getAll;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import org.junit.jupiter.api.Test;
-
-import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseValue;
 
 public class ImmutableListHeadTailTest {
 

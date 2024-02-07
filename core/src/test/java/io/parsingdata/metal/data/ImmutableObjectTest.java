@@ -1,4 +1,4 @@
-package io.parsingdata.metal;
+package io.parsingdata.metal.data;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -25,10 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-import io.parsingdata.metal.data.ImmutableList;
-import io.parsingdata.metal.data.ParseState;
-import io.parsingdata.metal.data.ParseValue;
-import io.parsingdata.metal.data.Selection;
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.InMemoryByteStream;
