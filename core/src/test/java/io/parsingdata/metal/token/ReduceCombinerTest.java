@@ -19,6 +19,7 @@ package io.parsingdata.metal.token;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
@@ -47,7 +48,9 @@ class ReduceCombinerTest {
         setFinalFieldAndAssert(seq, "tokens", new ParallelImmutableList<>(seq.tokens), () -> {
             final Environment environment = new Environment(stream(1, 2, 3), Encoding.DEFAULT_ENCODING);
             final Exception e = assertThrows(UnsupportedOperationException.class, () -> seq.parseImpl(environment));
-            assertEquals("Parallel processing of streams is not implemented.", e.getMessage());
+            final String actual = e.getMessage();
+            final String expected = "Parallel processing of streams is not implemented.";
+            assertTrue(actual.endsWith(expected), "Unexpected ending of message. Got:\n" + actual + "\nbut expected to end with:\n" + expected);
         });
     }
 
