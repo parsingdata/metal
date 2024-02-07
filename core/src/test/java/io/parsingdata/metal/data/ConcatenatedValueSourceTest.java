@@ -107,7 +107,7 @@ public class ConcatenatedValueSourceTest {
         new Random().nextBytes(bytes);
 
         // Split the data in separate CoreValues.
-        int parts = 4;
+        final int parts = 4;
         ImmutableList<Value> values = new ImmutableList<>();
         for (int part = 0; part < parts; part++) {
             values = values.add(new CoreValue(Slice.createFromBytes(Arrays.copyOfRange(bytes, (arraySize / parts) * part, (arraySize / parts) * (part + 1))), Encoding.DEFAULT_ENCODING));
