@@ -28,6 +28,7 @@ import java.lang.reflect.Field;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 import io.parsingdata.metal.data.Environment;
@@ -42,10 +43,10 @@ import io.parsingdata.metal.encoding.Encoding;
 class ReduceCombinerTest {
 
     @Test
-    public void seqTest() throws IllegalAccessException, NoSuchFieldException {
+    public void seqTest() throws Throwable {
         final Seq seq = new Seq("test", Encoding.DEFAULT_ENCODING, any("a"), any("b"), any("c"));
 
-        setFinalFieldAndAssert(seq, "tokens", new ParallelImmutableList<>(seq.tokens), () -> {
+        injectFieldAndAssert(seq, "tokens", new ParallelImmutableList<>(seq.tokens), () -> {
             final Environment environment = new Environment(stream(1, 2, 3), Encoding.DEFAULT_ENCODING);
             final Exception e = assertThrows(UnsupportedOperationException.class, () -> seq.parseImpl(environment));
             final String actual = e.getMessage();
@@ -54,23 +55,22 @@ class ReduceCombinerTest {
         });
     }
 
-    private static void setFinalFieldAndAssert(final Seq seq, final String fieldName, final Object fieldValue, final Runnable runnable) throws NoSuchFieldException, IllegalAccessException {
-        final Field tokensField = seq.getClass().getDeclaredField(fieldName);
-        boolean isAccessible = tokensField.canAccess(seq);
+    private static void injectFieldAndAssert(final Object instance, final String fieldName, final Object fieldValue, final Executable assertions) throws Throwable {
+        final Field field = instance.getClass().getDeclaredField(fieldName);
+        boolean isAccessible = field.canAccess(instance);
         try {
-            ReflectionUtils.makeAccessible(tokensField);
-            tokensField.set(seq, fieldValue);
-
-            runnable.run();
+            ReflectionUtils.makeAccessible(field);
+            field.set(instance, fieldValue);
+            assertions.execute();
         }
         finally {
-            tokensField.setAccessible(isAccessible);
+            field.setAccessible(isAccessible);
         }
     }
 
     public static class ParallelImmutableList<T> extends ImmutableList<T> {
-        public ParallelImmutableList(final ImmutableList<T> tokens) {
-            super(tokens);
+        public ParallelImmutableList(final ImmutableList<T> list) {
+            super(list);
         }
 
         @Override
