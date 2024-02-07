@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseValue;
 
-public class ImmutableListTest {
+public class ImmutableListHeadTailTest {
 
     private final ImmutableList<ParseValue> l1;
     private final ImmutableList<ParseValue> l2;
@@ -45,7 +45,7 @@ public class ImmutableListTest {
     private final ParseValue v4;
     private final ParseValue v5;
 
-    public ImmutableListTest() {
+    public ImmutableListHeadTailTest() {
         v1 = val('a');
         l1 = ImmutableList.create(v1);
         v2 = val('b');
