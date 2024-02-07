@@ -55,7 +55,7 @@ public class Seq extends CycleToken {
         return list.stream()
             .reduce(Optional.of(environment.parseState),
                 (parseState, token) -> parseState.flatMap(nextParseState -> token.parse(environment.withParseState(nextParseState))),
-                (never, happens) -> never)
+                (never, happens) -> { throw new UnsupportedOperationException("Parallel processing of streams is not implemented."); })
             .map(ps -> ps.closeBranch(this));
     }
 
