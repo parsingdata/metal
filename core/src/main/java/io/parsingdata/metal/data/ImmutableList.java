@@ -75,6 +75,12 @@ public class ImmutableList<T> extends ImmutableObject implements List<T> {
         return get(0);
     }
 
+    /**
+     * Returns this list without the head.
+     * @return an immutable sublist
+     * @deprecated Use {@link #stream()}, {@link #get(int)} or {@link #subList(int, int)} instead. This method is kept here for backward compatibility.
+     */
+    @Deprecated(since = "11.0.0")
     public ImmutableList<T> tail() {
         return new ImmutableList<>(subList(1, size()));
     }

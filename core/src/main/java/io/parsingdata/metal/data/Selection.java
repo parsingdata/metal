@@ -110,15 +110,16 @@ public final class Selection {
         return valueList;
     }
 
+    /**
+     * Reverses an immutable list without modifying it.
+     * @param list the list to reverse
+     * @return the reverted list
+     * @param <T> the type of the values in the list
+     * @deprecated Use {@link ImmutableList#reverse()} instead.
+     */
+    @Deprecated(since = "11.0.0")
     public static <T> ImmutableList<T> reverse(final ImmutableList<T> list) {
         return list.reverse();
-//
-//         (list.isEmpty()) {
-//            return list;
-//        }
-//        final ImmutableList<T> reversedList = new ImmutableList<>(list);
-//        Collections.reverse(reversedList);
-//        return reversedList;
     }
 
     public static ImmutableList<ParseItem> getAllRoots(final ParseGraph graph, final Token definition) {
