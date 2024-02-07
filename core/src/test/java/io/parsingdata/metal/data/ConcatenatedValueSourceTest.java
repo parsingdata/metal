@@ -119,13 +119,10 @@ public class ConcatenatedValueSourceTest {
         // Read from the source in small parts.
         final int readSize = 512;
         final byte[] bytesRead = new byte[arraySize];
-        final long start = System.currentTimeMillis();
         for (int part = 0; part < arraySize / readSize; part++) {
             final byte[] data = source.getData(valueOf(readSize * part), valueOf(readSize));
             System.arraycopy(data, 0, bytesRead, readSize * part, data.length);
         }
-        final long end = System.currentTimeMillis();
-        System.out.printf("Source read: %ss%n", (end - start) / 1000.0);
 
         // Make sure we read the data correctly.
         assertArrayEquals(bytes, bytesRead);

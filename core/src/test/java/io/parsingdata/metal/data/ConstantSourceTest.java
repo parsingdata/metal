@@ -28,7 +28,6 @@ import org.junit.jupiter.api.Timeout;
 
 class ConstantSourceTest {
 
-
     @Test
     @Timeout(value=1)
     public void constantSourceRead() {
@@ -43,13 +42,10 @@ class ConstantSourceTest {
         // Read from the source in small parts.
         final int readSize = 512;
         final byte[] valueBytes = new byte[arraySize];
-        final long start = System.currentTimeMillis();
         for (int part = 0; part < arraySize / readSize; part++) {
             final byte[] data = source.getData(valueOf(readSize * part), valueOf(readSize));
             System.arraycopy(data, 0, valueBytes, readSize * part, data.length);
         }
-        final long end = System.currentTimeMillis();
-        System.out.printf("Source read: %ss%n", (end - start) / 1000.0);
 
         // Make sure we read the data correctly.
         assertArrayEquals(bytes, valueBytes);
