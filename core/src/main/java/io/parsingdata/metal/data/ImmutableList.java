@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -120,8 +121,7 @@ public class ImmutableList<T> extends ImmutableObject implements List<T> {
 
     @Override
     public List<T> subList(int fromIndex, int toIndex) {
-        // make this of type ImmutableList? wrap it?
-        return innerList.subList(fromIndex, toIndex);
+        return isEmpty() ? new ImmutableList<>() : innerList.subList(fromIndex, toIndex);
     }
 
     @Override
@@ -294,12 +294,12 @@ public class ImmutableList<T> extends ImmutableObject implements List<T> {
 
         @Override
         public ListIterator<T> listIterator() {
-            return stream().collect(toList()).listIterator();
+            return unmodifiableList(stream().collect(toList())).listIterator();
         }
 
         @Override
         public ListIterator<T> listIterator(final int index) {
-            return stream().collect(toList()).listIterator(index);
+            return unmodifiableList(stream().collect(toList())).listIterator(index);
         }
 
         @Override
