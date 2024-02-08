@@ -11,13 +11,13 @@ A Java library for parsing binary data formats, using declarative descriptions.
 
 ## Using Metal
 
-Metal releases are available in the central Maven repository. To use the latest (9.0.0) release of Metal, include the following section in the pom.xml under dependencies:
+Metal releases are available in the central Maven repository. To use the latest (10.0.0) release of Metal, include the following section in the pom.xml under dependencies:
 
 ```xml
 <dependency>
   <groupId>io.parsingdata</groupId>
   <artifactId>metal-core</artifactId>
-  <version>9.0.0</version>
+  <version>10.0.0</version>
 </dependency>
 ```
 
