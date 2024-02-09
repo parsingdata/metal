@@ -62,8 +62,7 @@ class ReduceCombinerTest {
             ReflectionUtils.makeAccessible(field);
             field.set(instance, fieldValue);
             assertions.execute();
-        }
-        finally {
+        } finally {
             field.setAccessible(isAccessible);
         }
     }

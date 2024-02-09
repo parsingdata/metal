@@ -159,8 +159,7 @@ public class ArgumentsTest {
         try {
             constructors[0].newInstance(arguments);
             fail("Should have thrown an IllegalArgumentException.");
-        }
-        catch (final InvocationTargetException e) {
+        } catch (final InvocationTargetException e) {
             assertEquals(IllegalArgumentException.class, e.getCause().getClass());
             final String message = e.getCause().getMessage();
             assertTrue(message.endsWith("may not be null.") || message.endsWith("may not be empty."));
