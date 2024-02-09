@@ -24,9 +24,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.EMPTY;
 import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.count;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.eqNum;
 import static io.parsingdata.metal.Shorthand.first;
+import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.scope;
@@ -52,13 +55,13 @@ public class ScopeTest {
 
     @Test
     public void notAValueScopeSize() {
-        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> new Scope(con(0), EMPTY_SVE).eval(EMPTY_PARSE_STATE, enc()));
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> scope(ref("a"), EMPTY_SVE).eval(EMPTY_PARSE_STATE, enc()));
         assertEquals("Argument scopeSize must evaluate to a positive, countable value.", e.getMessage());
     }
 
     @Test
     public void negativeScopeSize() {
-        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> new Scope(con(0), con(-1, signed())).eval(EMPTY_PARSE_STATE, enc()));
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> scope(ref("a"), con(-1, signed())).eval(EMPTY_PARSE_STATE, enc()));
         assertEquals("Argument scopeSize must evaluate to a positive, countable value.", e.getMessage());
     }
 
@@ -104,8 +107,56 @@ public class ScopeTest {
 
     @Test
     public void parseGraphWithEmptyBranchSimplified() {
-        final Optional<ParseState> result = def("a", first(scope(con(1), con(0)))).parse(env(stream(0)));
-        assertEquals(ZERO, ref("a").eval(result.get(), enc()).head.asNumeric());
+        final Optional<ParseState> result = post(def("a", con(1)), eqNum(con(0), scope(ref("a"), con(0)))).parse(env(stream(0)));
+        assertTrue(result.isPresent());
+    }
+
+    @Test
+    public void trivialScope() {
+        final Token trivialScope =
+            seq(
+                any("value"),
+                seq(
+                    any("value"),
+                    post(
+                        post(
+                            any("value"),
+                            eqNum(count(scope(ref("value"), con(0))), con(2))),
+                        eqNum(count(scope(ref("value"), con(1))), con(3))
+                    )
+                )
+            );
+
+        final Optional<ParseState> result = trivialScope.parse(env(stream(0, 0, 0), enc()));
+        assertTrue(result.isPresent());
+        assertEquals(3, result.get().offset.intValueExact());
+    }
+
+    @Test
+    public void orderedScope() {
+        final Token orderedScope =
+            seq(
+                any("s"),
+                any("s"),
+                repn(any("s"), con(1)),
+                seq(any("s"),
+                    any("s"),
+                    seq(any("s"),
+                        post(
+                            post(
+                                post(any("s"),
+                                    eqNum(count(ref("s")), con(7))
+                                ),
+                                eqNum(count(ref("s")), con(7))
+                            ),
+                            eqNum(count(ref("s")), con(7))
+                        )
+                    )
+                )
+            );
+        final Optional<ParseState> result = orderedScope.parse(env(stream(7, 6, 5, 4, 3, 2, 1), enc()));
+        assertTrue(result.isPresent());
+        assertEquals(7, result.get().offset.intValueExact());
     }
 
 }

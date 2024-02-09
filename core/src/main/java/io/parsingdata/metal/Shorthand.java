@@ -54,7 +54,6 @@ import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
 import io.parsingdata.metal.expression.value.Join;
 import io.parsingdata.metal.expression.value.Reverse;
-import io.parsingdata.metal.expression.value.Scope;
 import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
@@ -349,7 +348,14 @@ public final class Shorthand {
     public static BinaryValueExpression mapRight(final BiFunction<ValueExpression, ValueExpression, BinaryValueExpression> func, final SingleValueExpression leftExpand, final ValueExpression right) { return func.apply(exp(leftExpand, count(right)), right); }
 
     /** @see Bytes */ public static ValueExpression bytes(final ValueExpression operand) { return new Bytes(operand); }
-    /** @see Scope */ public static ValueExpression scope(final ValueExpression scopedValueExpression, final SingleValueExpression scopeSize) { return new Scope(scopedValueExpression, scopeSize); }
+
+    /** @deprecated Use {@link #scope(NameRef, SingleValueExpression)} instead. You probably need to switch {@code last} with {@code scope}, e.g. {@code scope(last(x), y)} to {@code last(scope(x, y))}. */
+    @Deprecated
+    public static ValueExpression scope(final SingleValueExpression scopedValueExpression, final SingleValueExpression scopeSize) { throw new UnsupportedOperationException("A deprecated shorthand for scope is used. Use one of the other alternatives instead."); }
+    /** @see Ref */ public static NameRef scope(final NameRef operand, final SingleValueExpression scopeSize) { return operand.withScope(scopeSize); }
+    /** @see Ref */ public static NameRef scope(final NameRef operand, final SingleValueExpression scopeSize, final SingleValueExpression limit) { return operand.withScope(scopeSize).withLimit(limit); }
+    /** @see Ref */ public static DefinitionRef scope(final DefinitionRef operand, final SingleValueExpression scopeSize) { return operand.withScope(scopeSize); }
+    /** @see Ref */ public static DefinitionRef scope(final DefinitionRef operand, SingleValueExpression scopeSize, final SingleValueExpression limit) { return operand.withScope(scopeSize).withLimit(limit); }
 
     /** @see And */ public static BinaryLogicalExpression and(final Expression left, final Expression right) { return new And(left, right); }
     /** @see Or */ public static BinaryLogicalExpression or(final Expression left, final Expression right) { return new Or(left, right); }
