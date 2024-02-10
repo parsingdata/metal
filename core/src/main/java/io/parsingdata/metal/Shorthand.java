@@ -349,10 +349,9 @@ public final class Shorthand {
 
     /** @see Bytes */ public static ValueExpression bytes(final ValueExpression operand) { return new Bytes(operand); }
 
-    /** @deprecated Use {@link #scope(NameRef, SingleValueExpression)} instead. You probably need to switch {@code last} with {@code scope}, e.g. {@code scope(last(x), y)} to {@code last(scope(x, y))}. */
-    @Deprecated
-    public static ValueExpression scope(final SingleValueExpression scopedValueExpression, final SingleValueExpression scopeSize) { throw new UnsupportedOperationException("A deprecated shorthand for scope is used. Use one of the other alternatives instead."); }
+    /** @see Ref */ public static NameRef scope(final NameRef operand) { return scope(operand, con(0)); }
     /** @see Ref */ public static NameRef scope(final NameRef operand, final SingleValueExpression scopeSize) { return operand.withScope(scopeSize); }
+    /** @see Ref */ public static DefinitionRef scope(final DefinitionRef operand) { return scope(operand, con(0)); }
     /** @see Ref */ public static DefinitionRef scope(final DefinitionRef operand, final SingleValueExpression scopeSize) { return operand.withScope(scopeSize); }
 
     /** @see And */ public static BinaryLogicalExpression and(final Expression left, final Expression right) { return new And(left, right); }
