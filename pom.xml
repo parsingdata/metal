@@ -46,6 +46,7 @@
     <connection>scm:git:git@github.com:parsingdata/metal.git</connection>
     <developerConnection>scm:git:git@github.com:parsingdata/metal.git</developerConnection>
     <url>https://github.com/parsingdata/metal.git</url>
+    <tag>HEAD</tag>
   </scm>
 
   <distributionManagement>

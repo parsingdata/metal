@@ -52,8 +52,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.math.BigInteger;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -201,7 +202,7 @@ public class AutoEqualityTest {
 
     private static final List<Supplier<Object>> STRINGS = List.of(() -> "a", () -> "b");
     private static final List<Supplier<Object>> STRING_ARRAYS = List.of(() -> new String[] {"a"}, () -> new String[] {"b"}, () -> new String[] {"a", "b"}, () -> new String[] {"b", "c"}, () -> new String[] {"a", "b", "c"});
-    private static final List<Supplier<Object>> ENCODINGS = List.of(EncodingFactory::enc, EncodingFactory::signed, EncodingFactory::le, () -> new Encoding(Charset.forName("UTF-8")));
+    private static final List<Supplier<Object>> ENCODINGS = List.of(EncodingFactory::enc, EncodingFactory::signed, EncodingFactory::le, () -> new Encoding(StandardCharsets.UTF_8));
     private static final List<Supplier<Object>> TOKENS = List.of(() -> any("a"), () -> any("b"));
     private static final List<Supplier<Object>> TOKEN_ARRAYS = List.of(() -> new Token[] { any("a"), any("b")}, () -> new Token[] { any("b"), any("c") }, () -> new Token[] { any("a"), any("b"), any("c") });
     private static final List<Supplier<Object>> SINGLE_VALUE_EXPRESSIONS = List.of(() -> con(1), () -> con(2));
@@ -220,10 +221,11 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> BYTE_STREAMS = List.of(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> DUMMY_STREAM);
     private static final List<Supplier<Object>> BIG_INTEGERS = List.of(() -> ONE, () -> BigInteger.valueOf(3));
     private static final List<Supplier<Object>> PARSE_STATES = List.of(() -> createFromByteStream(DUMMY_STREAM), () -> createFromByteStream(DUMMY_STREAM, ONE), () -> new ParseState(GRAPH_WITH_REFERENCE, NO_CACHE, DUMMY_BYTE_STREAM_SOURCE, TEN, new ImmutableList<>(), new ImmutableList<>(), 0));
-    private static final List<Supplier<Object>> PARSE_VALUE_CACHES = List.of(() -> NO_CACHE, () -> new ParseValueCache(), () -> new ParseValueCache().add(PARSE_VALUE), () -> new ParseValueCache().add(PARSE_VALUE).add(PARSE_VALUE));
+    private static final List<Supplier<Object>> PARSE_VALUE_CACHES = List.of(() -> NO_CACHE, ParseValueCache::new, () -> new ParseValueCache().add(PARSE_VALUE), () -> new ParseValueCache().add(PARSE_VALUE).add(PARSE_VALUE));
     private static final List<Supplier<Object>> IMMUTABLE_LISTS = List.of(ImmutableList::new, () -> ImmutableList.create("TEST"), () -> ImmutableList.create(1), () -> ImmutableList.create(1).add(2));
     private static final List<Supplier<Object>> BOOLEANS = List.of(() -> true, () -> false);
     private static final List<Supplier<Object>> BIPREDICATES = List.of(() -> (BiPredicate<Object, Object>) (o, o2) -> false);
+    private static final List<Supplier<Object>> MAPS = List.of(Map::of, () -> Map.of("1", 1, "2", 2));
     private static final Map<Class<?>, List<Supplier<Object>>> mapping = buildMap();
 
     private static Map<Class<?>, List<Supplier<Object>>> buildMap() {
@@ -253,6 +255,7 @@ public class AutoEqualityTest {
         result.put(ImmutableList.class, IMMUTABLE_LISTS);
         result.put(boolean.class, BOOLEANS);
         result.put(BiPredicate.class, BIPREDICATES);
+        result.put(Map.class, MAPS);
         return result;
     }
 
@@ -312,31 +315,38 @@ public class AutoEqualityTest {
     private static Collection<Arguments> generateObjectArrays(final Set<Class<?>> classes) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         Collection<Arguments> results = new ArrayList<>();
         for (Class<?> c : classes) {
-            results.add(generateObjectArrays(c));
+            results.addAll(generateObjectArrays(c));
         }
         return results;
     }
 
-    private static Arguments generateObjectArrays(final Class<?> c) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        Constructor<?> cons = c.getDeclaredConstructors()[0];
-        cons.setAccessible(true);
-        List<List<Supplier<Object>>> args = new ArrayList<>();
-        for (Class<?> cl : cons.getParameterTypes()) {
-            if (!mapping.containsKey(cl)) {
-                throw new AssertionError("Please add a mapping for type " + cl.getSimpleName());
+    private static List<Arguments> generateObjectArrays(final Class<?> c) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        final List<Arguments> arguments = new ArrayList<>();
+        for (Constructor<?> cons : c.getDeclaredConstructors()) {
+            final boolean containsGenericArgument = Arrays.stream(cons.getParameterTypes()).anyMatch(p -> p == Object.class);
+            if (containsGenericArgument) {
+                break;
             }
-            args.add(mapping.get(cl));
+            cons.setAccessible(true);
+            final List<List<Supplier<Object>>> args = new ArrayList<>();
+            for (Class<?> cl : cons.getParameterTypes()) {
+                if (!mapping.containsKey(cl)) {
+                    throw new AssertionError("Please add a mapping for type " + cl.getSimpleName());
+                }
+                args.add(mapping.get(cl));
+            }
+            final List<List<Supplier<Object>>> argLists = generateCombinations(0, args);
+            final List<Object> otherInstances = new ArrayList<>();
+            for (List<Supplier<Object>> argList : argLists.subList(1, argLists.size())) {
+                otherInstances.add(cons.newInstance(instantiate(argList).toArray()));
+            }
+            arguments.add(Arguments.arguments(
+                cons.newInstance(instantiate(argLists.get(0)).toArray()),
+                cons.newInstance(instantiate(argLists.get(0)).toArray()),
+                otherInstances.toArray()
+            ));
         }
-        List<List<Supplier<Object>>> argLists = generateCombinations(0, args);
-        List<Object> otherInstances = new ArrayList<>();
-        for (List<Supplier<Object>> argList : argLists.subList(1, argLists.size())) {
-            otherInstances.add(cons.newInstance(instantiate(argList).toArray()));
-        }
-        return Arguments.arguments(
-            cons.newInstance(instantiate(argLists.get(0)).toArray()),
-            cons.newInstance(instantiate(argLists.get(0)).toArray()),
-            otherInstances.toArray()
-        );
+        return arguments;
     }
 
     private static List<List<Supplier<Object>>> generateCombinations(final int index, final List<List<Supplier<Object>>> args) {
