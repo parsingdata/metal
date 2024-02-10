@@ -353,9 +353,7 @@ public final class Shorthand {
     @Deprecated
     public static ValueExpression scope(final SingleValueExpression scopedValueExpression, final SingleValueExpression scopeSize) { throw new UnsupportedOperationException("A deprecated shorthand for scope is used. Use one of the other alternatives instead."); }
     /** @see Ref */ public static NameRef scope(final NameRef operand, final SingleValueExpression scopeSize) { return operand.withScope(scopeSize); }
-    /** @see Ref */ public static NameRef scope(final NameRef operand, final SingleValueExpression scopeSize, final SingleValueExpression limit) { return operand.withScope(scopeSize).withLimit(limit); }
     /** @see Ref */ public static DefinitionRef scope(final DefinitionRef operand, final SingleValueExpression scopeSize) { return operand.withScope(scopeSize); }
-    /** @see Ref */ public static DefinitionRef scope(final DefinitionRef operand, SingleValueExpression scopeSize, final SingleValueExpression limit) { return operand.withScope(scopeSize).withLimit(limit); }
 
     /** @see And */ public static BinaryLogicalExpression and(final Expression left, final Expression right) { return new And(left, right); }
     /** @see Or */ public static BinaryLogicalExpression or(final Expression left, final Expression right) { return new Or(left, right); }
