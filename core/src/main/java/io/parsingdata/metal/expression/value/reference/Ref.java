@@ -131,7 +131,7 @@ public abstract class Ref<T> extends ImmutableObject implements ValueExpression 
             return evalImpl(parseState, NO_LIMIT, requestedScope);
         }
         return limit.evalSingle(parseState, encoding)
-            .map(limitValue -> limitValue.equals(NOT_A_VALUE) ? ImmutableList.create(NOT_A_VALUE) : evalImpl(parseState, limitValue.asNumeric().intValueExact(), requestedScope))
+            .map(limitValue -> limitValue.equals(NOT_A_VALUE) ? create(NOT_A_VALUE) : evalImpl(parseState, limitValue.asNumeric().intValueExact(), requestedScope))
             .orElseThrow(() -> new IllegalArgumentException("Limit must evaluate to a non-empty value."));
     }
 
