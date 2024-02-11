@@ -82,7 +82,7 @@ public final class Util {
 
     public static String bytesToHexString(final byte[] bytes) {
         checkNotNull(bytes, "bytes");
-        char[] hexChars = new char[bytes.length * 2];
+        final char[] hexChars = new char[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
             final int v = bytes[j] & 0xFF;
             hexChars[j * 2] = HEX_ARRAY[v >>> 4];
