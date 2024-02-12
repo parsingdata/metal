@@ -3,7 +3,7 @@
   <parent>
     <groupId>io.parsingdata</groupId>
     <artifactId>metal</artifactId>
-    <version>10.0.1-SNAPSHOT</version>
+    <version>11.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>metal-formats</artifactId>
   <name>${project.groupId}:${project.artifactId}</name>
@@ -14,6 +14,7 @@
     <connection>scm:git:git@github.com:parsingdata/metal.git</connection>
     <developerConnection>scm:git:git@github.com:parsingdata/metal.git</developerConnection>
     <url>https://github.com/parsingdata/metal.git</url>
+    <tag>HEAD</tag>
   </scm>
 
   <dependencies>

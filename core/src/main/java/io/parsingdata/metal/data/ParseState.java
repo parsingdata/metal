@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,7 +109,7 @@ public class ParseState extends ImmutableObject {
     public String toString() {
         final String iterationsString = iterations.isEmpty() ? "" : ";iterations:" + iterations;
         final String referencesString = references.isEmpty() ? "" : ";references:" + references;
-        return getClass().getSimpleName() + "(source:" + source + ";offset:" + offset + ";order:" + order + iterationsString + referencesString + "; scopeDepth: " + scopeDepth + ";" + cache + ")";
+        return getClass().getSimpleName() + "(source:" + source + ";offset:" + offset + ";order:" + order + iterationsString + referencesString + ";scopeDepth:" + scopeDepth + ";" + cache + ")";
     }
 
     @Override

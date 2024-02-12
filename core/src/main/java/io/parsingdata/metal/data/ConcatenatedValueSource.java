@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +18,7 @@
 package io.parsingdata.metal.data;
 
 import static java.math.BigInteger.ZERO;
+import static java.math.BigInteger.valueOf;
 
 import static io.parsingdata.metal.Trampoline.complete;
 import static io.parsingdata.metal.Trampoline.intermediate;
@@ -79,13 +81,15 @@ public class ConcatenatedValueSource extends Source {
         if (length.compareTo(ZERO) <= 0) {
             return complete(() -> output);
         }
-        if (currentOffset.add(values.head.slice().length).compareTo(offset) <= 0) {
-            return intermediate(() -> getData(values.tail, currentOffset.add(values.head.slice().length), currentDest, offset, length, output));
+        final BigInteger nextOffset = currentOffset.add(values.head.slice().length);
+        if (nextOffset.compareTo(offset) <= 0) {
+            return intermediate(() -> getData(values.tail, nextOffset, currentDest, offset, length, output));
         }
         final BigInteger localOffset = offset.subtract(currentOffset).compareTo(ZERO) < 0 ? ZERO : offset.subtract(currentOffset);
-        final BigInteger toCopy = length.compareTo(values.head.slice().length.subtract(localOffset)) > 0 ? values.head.slice().length.subtract(localOffset) : length;
-        System.arraycopy(values.head.slice().getData(), localOffset.intValueExact(), output, currentDest.intValueExact(), toCopy.intValueExact());
-        return intermediate(() -> getData(values.tail, currentOffset.add(values.head.slice().length), currentDest.add(toCopy), offset, length.subtract(toCopy), output));
+        // The second argument in getData in Slice is a limit. It will return less if the end of slice is reached.
+        final byte[] data = values.head.slice().getData(localOffset, length);
+        System.arraycopy(data, 0, output, currentDest.intValueExact(), data.length);
+        return intermediate(() -> getData(values.tail, nextOffset, currentDest.add(valueOf(data.length)), offset, length.subtract(valueOf(data.length)), output));
     }
 
     @Override

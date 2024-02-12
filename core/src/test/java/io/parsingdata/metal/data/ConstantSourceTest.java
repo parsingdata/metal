@@ -17,45 +17,27 @@
 
 package io.parsingdata.metal.data;
 
-import static java.math.BigInteger.TEN;
-import static java.math.BigInteger.ZERO;
 import static java.math.BigInteger.valueOf;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.math.BigInteger;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
-import io.parsingdata.metal.util.InMemoryByteStream;
-
-public class ByteStreamSourceTest {
-
-    public static final ByteStreamSource DUMMY_BYTE_STREAM_SOURCE = new ByteStreamSource(new ByteStream() {
-        @Override public byte[] read(BigInteger offset, int length) throws IOException { throw new IOException("Always fails."); }
-        @Override public boolean isAvailable(BigInteger offset, BigInteger length) { return true; }
-    });
-
-    @Test
-    public void brokenByteStream() {
-        assertThrows(UncheckedIOException.class, () -> Slice.createFromSource(DUMMY_BYTE_STREAM_SOURCE, ZERO, TEN).get().getData());
-    }
+class ConstantSourceTest {
 
     @Test
     @Timeout(value=1)
-    public void byteStreamSourceRead() {
+    public void constantSourceRead() {
         // Create a large array with random data
         final int arraySize = 5_120_000;
         final byte[] bytes = new byte[arraySize];
         new Random().nextBytes(bytes);
 
         // Create a value that has a ConcatenatedValueSource as source.
-        final ByteStreamSource source = new ByteStreamSource(new InMemoryByteStream(bytes));
+        final ConstantSource source = new ConstantSource(bytes);
 
         // Read from the source in small parts.
         final int readSize = 512;

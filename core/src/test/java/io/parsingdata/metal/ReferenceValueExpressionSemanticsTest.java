@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +22,7 @@ import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.first;
 import static io.parsingdata.metal.Shorthand.fold;
+import static io.parsingdata.metal.Shorthand.join;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.not;
 import static io.parsingdata.metal.Shorthand.offset;
@@ -69,7 +71,7 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
         return
             seq(rep(def("a", con(1), not(eq(con(0))))),
                 def("zero", con(1), eq(con(0))),
-                def("sum", con(1), eq(fold(ref, Shorthand::add))));
+                def("sum", con(1), eq(fold(join(con(0), ref), Shorthand::add))));
     }
 
     @Override
@@ -106,22 +108,26 @@ public class ReferenceValueExpressionSemanticsTest extends ParameterizedParse {
             { "[1, 2, 3, 1] a, a, a, first(ref(a.definition))", refMatch(eq(first(ref(refAny)))), stream(1, 2, 3, 1), enc(), true },
             { "[1, 2, 3, 6] a, a, a, first(fold(ref(a.definition), add))", refMatch(eq(first(fold(ref(refAny), Shorthand::add)))), stream(1, 2, 3, 6), enc(), true },
             { "[1, 2, 3, 2] a, a, a, last(ref(a.definition))", refMatch(eq(last(ref(refAny)))), stream(1, 2, 3, 2), enc(), false },
+            { "[1, 2, 3, 0, 0] a, a, a, 0, sum(ref(a, 0))", limitedSum(ref("a", con(0))), stream(1, 2, 3, 0, 0), enc(), true },
             { "[1, 2, 3, 0, 3] a, a, a, 0, sum(ref(a, 1))", limitedSum(ref("a", con(1))), stream(1, 2, 3, 0, 3), enc(), true },
             { "[1, 2, 3, 0, 5] a, a, a, 0, sum(ref(a, 2))", limitedSum(ref("a", con(2))), stream(1, 2, 3, 0, 5), enc(), true },
             { "[1, 2, 3, 0, 6] a, a, a, 0, sum(ref(a, 3))", limitedSum(ref("a", con(3))), stream(1, 2, 3, 0, 6), enc(), true },
-            { "[1, 2, 3, 0, 7] a, a, a, 0, sum(ref(a, 4))", limitedSum(ref("a", con(4))), stream(1, 2, 3, 0, 6), enc(), true },
+            { "[1, 2, 3, 0, 6] a, a, a, 0, sum(ref(a, 4))", limitedSum(ref("a", con(4))), stream(1, 2, 3, 0, 6), enc(), true },
+            { "[1, 2, 3, 0, 0] a, a, a, 0, sum(ref(0, a))", limitedSum(ref(con(0), "a")), stream(1, 2, 3, 0, 0), enc(), true },
             { "[1, 2, 3, 0, 3] a, a, a, 0, sum(ref(1, a))", limitedSum(ref(con(1), "a")), stream(1, 2, 3, 0, 3), enc(), true },
             { "[1, 2, 3, 0, 5] a, a, a, 0, sum(ref(2, a))", limitedSum(ref(con(2), "a")), stream(1, 2, 3, 0, 5), enc(), true },
             { "[1, 2, 3, 0, 6] a, a, a, 0, sum(ref(3, a))", limitedSum(ref(con(3), "a")), stream(1, 2, 3, 0, 6), enc(), true },
-            { "[1, 2, 3, 0, 7] a, a, a, 0, sum(ref(4, a))", limitedSum(ref(con(4), "a")), stream(1, 2, 3, 0, 6), enc(), true },
+            { "[1, 2, 3, 0, 6] a, a, a, 0, sum(ref(4, a))", limitedSum(ref(con(4), "a")), stream(1, 2, 3, 0, 6), enc(), true },
+            { "[1, 2, 3, 0, 0] a, a, a, 0, sum(ref(0, a.definition))", limitedSum(ref(con(0), any("a"))), stream(1, 2, 3, 0, 0), enc(), true },
             { "[1, 2, 3, 0, 3] a, a, a, 0, sum(ref(1, a.definition))", limitedSum(ref(con(1), any("a"))), stream(1, 2, 3, 0, 3), enc(), true },
             { "[1, 2, 3, 0, 5] a, a, a, 0, sum(ref(2, a.definition))", limitedSum(ref(con(2), any("a"))), stream(1, 2, 3, 0, 5), enc(), true },
             { "[1, 2, 3, 0, 6] a, a, a, 0, sum(ref(3, a.definition))", limitedSum(ref(con(3), any("a"))), stream(1, 2, 3, 0, 6), enc(), true },
-            { "[1, 2, 3, 0, 7] a, a, a, 0, sum(ref(4, a.definition))", limitedSum(ref(con(4), any("a"))), stream(1, 2, 3, 0, 6), enc(), true },
+            { "[1, 2, 3, 0, 6] a, a, a, 0, sum(ref(4, a.definition))", limitedSum(ref(con(4), any("a"))), stream(1, 2, 3, 0, 6), enc(), true },
+            { "[1, 2, 3, 0, 0] a, a, a, 0, sum(ref(a.definition, 0))", limitedSum(ref(any("a"), con(0))), stream(1, 2, 3, 0, 0), enc(), true },
             { "[1, 2, 3, 0, 3] a, a, a, 0, sum(ref(a.definition, 1))", limitedSum(ref(any("a"), con(1))), stream(1, 2, 3, 0, 3), enc(), true },
             { "[1, 2, 3, 0, 5] a, a, a, 0, sum(ref(a.definition, 2))", limitedSum(ref(any("a"), con(2))), stream(1, 2, 3, 0, 5), enc(), true },
             { "[1, 2, 3, 0, 6] a, a, a, 0, sum(ref(a.definition, 3))", limitedSum(ref(any("a"), con(3))), stream(1, 2, 3, 0, 6), enc(), true },
-            { "[1, 2, 3, 0, 7] a, a, a, 0, sum(ref(a.definition, 4))", limitedSum(ref(any("a"), con(4))), stream(1, 2, 3, 0, 6), enc(), true }
+            { "[1, 2, 3, 0, 6] a, a, a, 0, sum(ref(a.definition, 4))", limitedSum(ref(any("a"), con(4))), stream(1, 2, 3, 0, 6), enc(), true }
         });
     }
 

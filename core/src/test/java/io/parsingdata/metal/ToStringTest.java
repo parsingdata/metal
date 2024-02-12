@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -173,15 +174,15 @@ public class ToStringTest {
     @Test
     public void data() {
         final ParseState parseState = stream(1, 2);
-        final String parseStateString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(EMPTY); scopeDepth: 0;cache:size=0)";
+        final String parseStateString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(EMPTY);scopeDepth:0;cache:size=0)";
         assertEquals(parseStateString, parseState.toString());
 
         final ParseState parseStateWithIterations = parseState.addBranch(rep(def("a",1))).iterate();
-        final String parseStateWithIterationsString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(pg(terminator:Rep),pg(EMPTY),true);iterations:>Rep(Def(a,Const(0x01)))->1; scopeDepth: 1;cache:size=0)";
+        final String parseStateWithIterationsString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(pg(terminator:Rep),pg(EMPTY),true);iterations:>Rep(Def(a,Const(0x01)))->1;scopeDepth:1;cache:size=0)";
         assertEquals(parseStateWithIterationsString, parseStateWithIterations.toString());
 
         final ParseState parseStateWithoutCache = parseStateWithIterations.withOrder(parseStateWithIterations.order);
-        final String parseStateWithoutCacheString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(pg(terminator:Rep),pg(EMPTY),true);iterations:>Rep(Def(a,Const(0x01)))->1; scopeDepth: 1;no-cache)";
+        final String parseStateWithoutCacheString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(pg(terminator:Rep),pg(EMPTY),true);iterations:>Rep(Def(a,Const(0x01)))->1;scopeDepth:1;no-cache)";
         assertEquals(parseStateWithoutCacheString, parseStateWithoutCache.toString());
 
         final Optional<ParseState> result = Optional.of(parseState);

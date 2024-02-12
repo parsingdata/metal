@@ -150,6 +150,7 @@ class ParseValueCacheTest {
             arguments("multi definitionRef", ref(pv2Definition, pv3Definition), false),
             arguments("multi definitionRef with limit", ref(con(1), pv2Definition, pv3Definition), false),
 
+            // Requested scope is smaller than the scopeDepth of the ParseState.
             arguments("scoped nameRef", scope(ref("second.name"), con(1)), false),
             arguments("scoped nameRef with limit", scope(ref(con(1), "second.name"), con(1)), false),
             arguments("scoped multi nameRef", scope(ref("second.name", "first.name"), con(1)), false),
@@ -157,14 +158,24 @@ class ParseValueCacheTest {
             arguments("scoped definitionRef", scope(ref(pv2Definition), con(1)), false),
             arguments("scoped definitionRef with limit", scope(ref(con(1), pv2Definition), con(1)), false),
             arguments("scoped multi definitionRef", scope(ref(pv2Definition, pv3Definition), con(1)), false),
-            arguments("scoped multi definitionRef with limit", scope(ref(con(1), pv2Definition, pv3Definition), con(1)), false)
+            arguments("scoped multi definitionRef with limit", scope(ref(con(1), pv2Definition, pv3Definition), con(1)), false),
+
+            // Requested scope matches or exceeds the scopeDepth of the ParseState.
+            arguments("matching scoped nameRef", scope(ref("second.name"), con(2)), true),
+            arguments("matching scoped nameRef with limit", scope(ref(con(1), "second.name"), con(2)), true),
+            arguments("matching scoped multi nameRef", scope(ref("second.name", "first.name"), con(2)), false),
+            arguments("matching scoped multi nameRef with limit", scope(ref(con(1), "second.name", "first.name"), con(2)), false),
+            arguments("matching scoped definitionRef", scope(ref(pv2Definition), con(2)), false),
+            arguments("matching scoped definitionRef with limit", scope(ref(con(1), pv2Definition), con(2)), false),
+            arguments("matching scoped multi definitionRef", scope(ref(pv2Definition, pv3Definition), con(2)), false),
+            arguments("matching scoped multi definitionRef with limit", scope(ref(con(1), pv2Definition, pv3Definition), con(2)), false)
         );
     }
 
     @ParameterizedTest(name="{2} - {0}")
     @MethodSource
     public void cacheUsageTest(final String testName, final ValueExpression expression, final boolean shouldUseCache) {
-        final ParseState parseState = new ParseState(ParseGraph.EMPTY, parseValueCache, createFromBytes(new byte[0]).source, ZERO, new ImmutableList<>(), new ImmutableList<>(), 0);
+        final ParseState parseState = new ParseState(ParseGraph.EMPTY, parseValueCache, createFromBytes(new byte[0]).source, ZERO, new ImmutableList<>(), new ImmutableList<>(), 2);
         final ImmutableList<Value> eval = expression.eval(parseState, enc());
         // The parseState is empty, while the cache if filled.
         // That means, if result is not empty, the cache was used.
