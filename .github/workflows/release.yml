@@ -1,0 +1,87 @@
+# General workflow to build Metal
+
+name: Metal build
+
+on:
+  workflow_dispatch:
+    inputs:
+      doRelease:
+        description: 'Do release'
+        required: false
+        type: boolean
+      javaVersion:
+        description: 'Java version'
+        required: true
+        default: '11'
+        type: choice
+        options:
+          - '11'
+          - '17'
+      javaDistribution:
+        description: 'Java distribution'
+        required: true
+        default: 'corretto'
+        type: choice
+        options:
+          - 'corretto'
+          - 'temurin'
+
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'main' && ${{ inputs.doRelease }}
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ inputs.javaVersion }}
+          distribution: ${{ inputs.javaDistribution }}
+
+        # See more details about setting secret keys https://gist.github.com/sualeh/ae78dc16123899d7942bc38baba5203c
+      - name: Install gpg secret key
+        id: install-secret-key
+        run: |
+          # Install gpg secret key
+          cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
+          # Verify gpg secret key
+          gpg --list-secret-keys --keyid-format LONG
+
+      - name: Update License headers
+        run: |
+          mavenVersion=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout); 
+          version=${mavenVersion%%-SNAPSHOT};
+          echo Update headers here.
+          echo Update README here.
+
+      - name: Release prepare
+        run: mvn -B release:prepare release:clean
+
+      - name: Checkout to latest tag
+        run: git checkout $(git describe --tags --abbrev=0)
+
+      - name: Publish to Maven Central Repository
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+        run: |
+          mvn \
+            --no-transfer-progress \
+            --batch-mode \
+            -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} \
+            deploy -Prelease
+
