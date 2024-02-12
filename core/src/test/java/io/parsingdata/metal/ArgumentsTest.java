@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 
-import com.sun.source.tree.Scope;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
