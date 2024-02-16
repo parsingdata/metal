@@ -36,10 +36,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -47,17 +47,32 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ inputs.javaVersion }}
           distribution: ${{ inputs.javaDistribution }}
 
-      - name: Update License headers
+      - name: Update Copyright end year to current year.
         run: |
-          mavenVersion=$( mvn help:evaluate -Dexpression=project.version -q -DforceStdout); 
+          echo Update headers.
+          fd ".java|README.md" | while read -r file; do sed -E -i "s/Copyright ([0-9]{4})-[0-9]{4} (.*)/Copyright \1-$(date +%Y) \2/g" "$file"; done
+          git status
+
+      - name: Update latest release in README
+        run: |
+          mavenVersion=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout); 
           version=${mavenVersion%%-SNAPSHOT};
-          echo Update headers here.
-          echo Update README here.
+          echo Update README.
+          sed -E -i "s/To use the latest \(.*\) release of Metal/To use the latest \($version\) release of Metal/g" README.md
+          sed -E -i "s#<version>.*</version>#<version>$version</version>#g" README.md
+          git status
+
+      - name: Commit Changes
+        run: |
+          git config --global user.name 'Your Name'
+          git config --global user.email 'your-username@users.noreply.github.com'
+          git commit -am "Update license headers and README.md."
+          git push
 
       - name: Release prepare
         run: mvn -B release:prepare release:clean
@@ -67,7 +82,7 @@ jobs:
 
         # See an example here how artifacts are published : https://github.com/actions/setup-java/blob/v3.11.0/docs/advanced-usage.md#Publishing-using-Apache-Maven
       - name: Set up Apache Maven Central
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with: # running setup-java again overwrites the settings.xml
           java-version: ${{ inputs.javaVersion }}
           distribution: ${{ inputs.javaDistribution }}
