@@ -18,9 +18,12 @@
 package io.parsingdata.metal.token;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.CURRENT_OFFSET;
@@ -28,6 +31,7 @@ import static io.parsingdata.metal.Shorthand.EMPTY;
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.join;
 import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.mod;
 import static io.parsingdata.metal.Shorthand.post;
@@ -37,10 +41,12 @@ import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.Shorthand.until;
 import static io.parsingdata.metal.data.selection.ByName.getAllValues;
+import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EncodingFactory.signed;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -50,11 +56,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.callback.Callback;
+import io.parsingdata.metal.data.callback.Callbacks;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
+import io.parsingdata.metal.expression.value.ValueExpression;
 
 class DefUntilTest {
 
@@ -184,6 +194,53 @@ class DefUntilTest {
         assertEquals(terminatorCount, getAllValues(parse.get().order, "struct.terminator").size);
         assertEquals(1, getAllValues(parse.get().order, "struct.value").size);
         assertEquals("data", getAllValues(parse.get().order, "struct.value").head.asString());
+    }
+
+    @Test
+    void listsSemanticsTest() {
+        // It is ok for the lists to have different lengths. They are used simultaneously as triples, and the number of triples considered is equal to the length of the smallest list.
+        final ValueExpression initialSize = join(con(12), con(7), con(5), con(0)); // 12 is ignored
+        final ValueExpression stepSize = join(con(1), con(5), con(6));
+        final ValueExpression maxSize = join(con(105), con(21), con(18), con(15), con(13)); // 21 and 105 are ignored
+        final Token def = def("test", initialSize, stepSize, maxSize, def("terminator", 1, eq(con("X"))));
+
+        // The above DefUntil token should check the following offsets:
+        // combination 0-6-13: 0+0=0, 0+6=6, 0+12=12
+        // combination 5-5-15: 5+0=5, 5+5=10, 5+10=15
+        // combination 7-1-18: 7+0=7, 7+1=8, 7+2=9, 7+3=10, 7+4=11
+        // Total checks expected = 11.
+
+        final List<Integer> offsets = new ArrayList<>();
+        final Callbacks callbacks = Callbacks.create().add(genericCallback(offsets, "terminator"));
+
+        final Optional<ParseState> parse = def.parse(new Environment(stream("01234567890X--------", UTF_8), callbacks, enc()));
+        assertTrue(parse.isPresent());
+        assertAll(
+            () -> assertEquals(11, parse.get().offset.intValue()),
+            () -> assertEquals(11, offsets.size()),
+            () -> assertIterableEquals(List.of(0, 6, 12, 5, 10, 15, 7, 8, 9, 10, 11), offsets),
+            () -> assertEquals("01234567890", getAllValues(parse.get().order, "test").head.asString())
+        );
+    }
+
+    private static Callback genericCallback(final List<Integer> checkCount, final String tokenName) {
+        return new Callback() {
+            @Override
+            public void handleSuccess(Token token, ParseState before, ParseState after) {
+                countTerminator(token, before);
+            }
+
+            @Override
+            public void handleFailure(Token token, ParseState before) {
+                countTerminator(token, before);
+            }
+
+            private void countTerminator(Token token, ParseState before) {
+                if (token.name.equals(tokenName)) {
+                    checkCount.add(before.offset.intValue());
+                }
+            }
+        };
     }
 
 }
