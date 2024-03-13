@@ -182,7 +182,7 @@ public class ToStringTest {
         assertEquals(parseStateWithIterationsString, parseStateWithIterations.toString());
 
         final ParseState parseStateWithoutCache = parseStateWithIterations.withOrder(parseStateWithIterations.order);
-        final String parseStateWithoutCacheString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(pg(terminator:Rep),pg(EMPTY),true);iterations:>Rep(Def(a,Const(0x01)))->1;scopeDepth:1;no-cache)";
+        final String parseStateWithoutCacheString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(pg(terminator:Rep),pg(EMPTY),true);iterations:>Rep(Def(a,Const(0x01)))->1;scopeDepth:0;no-cache)";
         assertEquals(parseStateWithoutCacheString, parseStateWithoutCache.toString());
 
         final Optional<ParseState> result = Optional.of(parseState);

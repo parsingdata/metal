@@ -63,14 +63,24 @@ public class ParseState extends ImmutableObject {
     }
 
     public ParseState addBranch(final Token token) {
-        return new ParseState(order.addBranch(token), cache, source, offset, token.isIterable() ? iterations.add(new ImmutablePair<>(token, ZERO)) : iterations, references, token.isScopeDelimiter() ? scopeDepth + 1 : scopeDepth);
+        final ParseGraph order1 = order.addBranch(token);
+        final int scopeDepth1 = token.isScopeDelimiter() ? scopeDepth + 1 : scopeDepth;
+        if (order1.scopeDepth != scopeDepth1) {
+            throw new IllegalStateException("Scopedepths do not match when adding branch! " + order1.scopeDepth + " vs " + scopeDepth1);
+        }
+        return new ParseState(order1, cache, source, offset, token.isIterable() ? iterations.add(new ImmutablePair<>(token, ZERO)) : iterations, references, scopeDepth1);
     }
 
     public ParseState closeBranch(final Token token) {
         if (token.isIterable() && !iterations.head.left.equals(token)) {
             throw new IllegalStateException(format("Cannot close branch for iterable token %s. Current iteration state is for token %s.", token.name, iterations.head.left.name));
         }
-        return new ParseState(order.closeBranch(), cache, source, offset, token.isIterable() ? iterations.tail : iterations, references, token.isScopeDelimiter() ? scopeDepth - 1 : scopeDepth);
+        final ParseGraph order1 = order.closeBranch(token);
+        final int scopeDepth1 = token.isScopeDelimiter() ? scopeDepth - 1 : scopeDepth;
+        if (order1.scopeDepth != scopeDepth1) {
+            throw new IllegalStateException("Scopedepths do not match when closing branch! " + order1.scopeDepth + " vs " + scopeDepth1);
+        }
+        return new ParseState(order1, cache, source, offset, token.isIterable() ? iterations.tail : iterations, references, scopeDepth1);
     }
 
     public ParseState add(final ParseReference parseReference) {
@@ -94,7 +104,7 @@ public class ParseState extends ImmutableObject {
     }
 
     public ParseState withOrder(final ParseGraph order) {
-        return new ParseState(order, NO_CACHE, source, offset, iterations, references, scopeDepth);
+        return new ParseState(order, NO_CACHE, source, offset, iterations, references, order.scopeDepth);
     }
 
     public ParseState withSource(final Source source) {

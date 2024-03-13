@@ -94,9 +94,9 @@ public class ParseGraphTest {
             .addBranch(t)  //  |   +---+
             .add(d)        //  |   |  [d]
             .add(e)        //  |   |  [e]
-            .closeBranch() //  |   +---+
+            .closeBranch(t) //  |   +---+
             .add(f)        //  |  [f]
-            .closeBranch() //  +---+
+            .closeBranch(t) //  +---+
             .add(g)        // [g]
             .add(h);       // [h]
     }
@@ -130,7 +130,7 @@ public class ParseGraphTest {
             .addBranch(t)
             .add(b)
             .add(new ParseReference(a.slice().offset, a.slice().source, aDef))
-            .closeBranch();
+            .closeBranch(t);
     }
 
     @Test
@@ -152,18 +152,18 @@ public class ParseGraphTest {
             .addBranch(t)
             .addBranch(t)
             .add(b)
-            .closeBranch()
+            .closeBranch(t)
             .addBranch(t)
-            .closeBranch()
+            .closeBranch(t)
             .add(c)
             .addBranch(t)
             .add(d)
-            .closeBranch()
-            .closeBranch()
+            .closeBranch(t)
+            .closeBranch(t)
             .add(e)
             .addBranch(t)
             .add(f)
-            .closeBranch();
+            .closeBranch(t);
     }
 
     @Test
@@ -213,7 +213,7 @@ public class ParseGraphTest {
 
     @Test
     public void testCloseNotBranched() {
-        final Exception e = assertThrows(IllegalStateException.class, EMPTY::closeBranch);
+        final Exception e = assertThrows(IllegalStateException.class, () -> EMPTY.closeBranch(t));
         assertEquals("Cannot close branch that is not open.", e.getMessage());
     }
 
