@@ -48,8 +48,8 @@ public class ParseGraph extends ImmutableObject implements ParseItem {
     private ParseGraph(final Token definition) {
         head = null;
         tail = null;
-        branched = false;
         this.definition = checkNotNull(definition, "definition");
+        branched = false;
         scopeDepth = 0;
         size = 0;
     }
@@ -57,8 +57,8 @@ public class ParseGraph extends ImmutableObject implements ParseItem {
     private ParseGraph(final ParseItem head, final ParseGraph tail, final Token definition, final boolean branched, final int scopeDepth) {
         this.head = checkNotNull(head, "head");
         this.tail = checkNotNull(tail, "tail");
-        this.branched = branched;
         this.definition = checkNotNull(definition, "definition");
+        this.branched = branched;
         this.scopeDepth = scopeDepth;
         size = tail.size + 1;
     }
