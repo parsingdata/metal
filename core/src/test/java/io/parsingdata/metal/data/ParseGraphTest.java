@@ -95,18 +95,18 @@ public class ParseGraphTest {
     private static ParseGraph makeSimpleGraph() {
         return ParseGraph
             .EMPTY
-            .add(a)        // [a]
-            .add(b)        // [b]
-            .addBranch(t)  //  +---+
-            .add(c)        //  |  [c]
-            .addBranch(t)  //  |   +---+
-            .add(d)        //  |   |  [d]
-            .add(e)        //  |   |  [e]
+            .add(a)         // [a]
+            .add(b)         // [b]
+            .addBranch(t)   //  +---+
+            .add(c)         //  |  [c]
+            .addBranch(t)   //  |   +---+
+            .add(d)         //  |   |  [d]
+            .add(e)         //  |   |  [e]
             .closeBranch(t) //  |   +---+
-            .add(f)        //  |  [f]
+            .add(f)         //  |  [f]
             .closeBranch(t) //  +---+
-            .add(g)        // [g]
-            .add(h);       // [h]
+            .add(g)         // [g]
+            .add(h);        // [h]
     }
 
     @Test
