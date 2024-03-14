@@ -140,7 +140,7 @@ public class ParseGraph extends ImmutableObject implements ParseItem {
         if (isEmpty()) {
             return "pg(terminator:" + definition.getClass().getSimpleName() + ")";
         }
-        return "pg(" + head + "," + tail + "," + branched + ")";
+        return "pg(" + head + "," + tail + "," + branched + "," + scopeDepth + ")";
     }
 
     @Override
@@ -149,6 +149,7 @@ public class ParseGraph extends ImmutableObject implements ParseItem {
             && Objects.equals(head, ((ParseGraph)obj).head)
             && Objects.equals(tail, ((ParseGraph)obj).tail)
             && Objects.equals(branched, ((ParseGraph)obj).branched)
+            && Objects.equals(scopeDepth, ((ParseGraph)obj).scopeDepth)
             && Objects.equals(definition, ((ParseGraph)obj).definition);
             // The size field is excluded from equals() and hashCode() because it is cached data.
     }

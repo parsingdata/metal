@@ -178,11 +178,11 @@ public class ToStringTest {
         assertEquals(parseStateString, parseState.toString());
 
         final ParseState parseStateWithIterations = parseState.addBranch(rep(def("a",1))).iterate();
-        final String parseStateWithIterationsString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(pg(terminator:Rep),pg(EMPTY),true);iterations:>Rep(Def(a,Const(0x01)))->1;scopeDepth:1;cache:size=0)";
+        final String parseStateWithIterationsString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(pg(terminator:Rep),pg(EMPTY),true,1);iterations:>Rep(Def(a,Const(0x01)))->1;scopeDepth:1;cache:size=0)";
         assertEquals(parseStateWithIterationsString, parseStateWithIterations.toString());
 
         final ParseState parseStateWithoutCache = parseStateWithIterations.withOrder(parseStateWithIterations.order);
-        final String parseStateWithoutCacheString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(pg(terminator:Rep),pg(EMPTY),true);iterations:>Rep(Def(a,Const(0x01)))->1;scopeDepth:0;no-cache)";
+        final String parseStateWithoutCacheString = "ParseState(source:ByteStreamSource(InMemoryByteStream(2));offset:0;order:pg(pg(terminator:Rep),pg(EMPTY),true,1);iterations:>Rep(Def(a,Const(0x01)))->1;scopeDepth:1;no-cache)";
         assertEquals(parseStateWithoutCacheString, parseStateWithoutCache.toString());
 
         final Optional<ParseState> result = Optional.of(parseState);

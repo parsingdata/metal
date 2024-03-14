@@ -191,17 +191,17 @@ public class ParseGraphTest {
 
     @Test
     public void testSimpleToString() {
-        assertThat(pg.toString(), is("pg(pval(h:0x68),pg(pval(g:0x67),pg(pg(pval(f:0x66),pg(pg(pval(e:0x65),pg(pval(d:0x64),pg(terminator:Def),false),false),pg(pval(c:0x63),pg(terminator:Def),false),false),false),pg(pval(b:0x62),pg(pval(a:0x61),pg(EMPTY),false),false),false),false),false)"));
+        assertThat(pg.toString(), is("pg(pval(h:0x68),pg(pval(g:0x67),pg(pg(pval(f:0x66),pg(pg(pval(e:0x65),pg(pval(d:0x64),pg(terminator:Def),false,0),false,0),pg(pval(c:0x63),pg(terminator:Def),false,0),false,0),false,0),pg(pval(b:0x62),pg(pval(a:0x61),pg(EMPTY),false,0),false,0),false,0),false,0),false,0)"));
     }
 
     @Test
     public void testCycleToString() {
-        assertThat(pgc.toString(), is("pg(pg(pref(@0),pg(pval(b:0x62),pg(terminator:Def),false),false),pg(pval(a:0x61),pg(EMPTY),false),false)"));
+        assertThat(pgc.toString(), is("pg(pg(pref(@0),pg(pval(b:0x62),pg(terminator:Def),false,0),false,0),pg(pval(a:0x61),pg(EMPTY),false,0),false,0)"));
     }
 
     @Test
     public void testLongToString() {
-        assertThat(pgl.toString(), is("pg(pg(pval(f:0x66),pg(terminator:Def),false),pg(pval(e:0x65),pg(pg(pg(pval(d:0x64),pg(terminator:Def),false),pg(pval(c:0x63),pg(pg(terminator:Def),pg(pg(pval(b:0x62),pg(terminator:Def),false),pg(terminator:Def),false),false),false),false),pg(pval(a:0x61),pg(EMPTY),false),false),false),false)"));
+        assertThat(pgl.toString(), is("pg(pg(pval(f:0x66),pg(terminator:Def),false,0),pg(pval(e:0x65),pg(pg(pg(pval(d:0x64),pg(terminator:Def),false,0),pg(pval(c:0x63),pg(pg(terminator:Def),pg(pg(pval(b:0x62),pg(terminator:Def),false,0),pg(terminator:Def),false,0),false,0),false,0),false,0),pg(pval(a:0x61),pg(EMPTY),false,0),false,0),false,0),false,0)"));
     }
 
     @Test
