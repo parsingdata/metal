@@ -25,9 +25,7 @@ import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import static io.parsingdata.metal.Shorthand.TRUE;
 import static io.parsingdata.metal.Shorthand.con;
@@ -68,6 +66,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -262,7 +261,7 @@ public class AutoEqualityTest {
     public static Stream<Arguments> data() throws IllegalAccessException, InvocationTargetException, InstantiationException {
         final Set<Class<?>> classes = findClasses().filter(not(CLASSES_TO_IGNORE::contains)).collect(toSet());
         classes.removeAll(CLASSES_TO_TEST);
-        assertEquals(Set.of(), classes, "Please add missing class to the CLASSES_TO_TEST or CLASSES_TO_IGNORE constant.");
+        Assertions.assertEquals(Set.of(), classes, "Please add missing class to the CLASSES_TO_TEST or CLASSES_TO_IGNORE constant.");
         return generateObjectArrays(CLASSES_TO_TEST).stream();
     }
 
@@ -435,6 +434,13 @@ public class AutoEqualityTest {
             assertEquals(o.hashCode(), o.hashCode());
             assertNotEquals(o.hashCode(), OTHER_TYPE.hashCode());
         }
+    }
+
+    private static void assertEquals(final Object o, final Object object) {
+        Assertions.assertEquals(o, object, String.format("Objects should be equal:\n%s\n%s\n", o, object));
+    }
+    private static void assertNotEquals(final Object o, final Object object) {
+        Assertions.assertNotEquals(o, object, String.format("Objects should not be equal:\n%s\n%s\n", o, object));
     }
 
 }
