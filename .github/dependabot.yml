@@ -3,9 +3,15 @@ updates:
 - package-ecosystem: maven
   directory: "/"
   schedule:
-    interval: daily
+    interval: monthly
+  groups:
+    # This will group updates of minor or patch version in a single PR, while major updates will be in separate PR.
+    minor-updates:
+      update-types:
+        - "minor"
+        - "patch"
   open-pull-requests-limit: 10
   ignore:
-  - dependency-name: com.google.errorprone:error_prone_core
-    versions:
-    - "> 2.3.4, < 3"
+    - dependency-name: com.google.errorprone:error_prone_core
+      versions:
+      - "> 2.3.4, < 3"
