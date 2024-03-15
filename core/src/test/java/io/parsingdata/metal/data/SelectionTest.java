@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +20,8 @@ package io.parsingdata.metal.data;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.rep;
 import static io.parsingdata.metal.data.Selection.findItemAtOffset;
@@ -32,8 +34,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import java.math.BigInteger;
 import java.util.Optional;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SelectionTest {
 
@@ -41,6 +42,9 @@ public class SelectionTest {
         return new Source() {
             @Override protected byte[] getData(BigInteger offset, BigInteger length) { return new byte[0]; }
             @Override protected boolean isAvailable(BigInteger offset, BigInteger length) { return true; }
+            @Override public int immutableHashCode() { return 0; }
+            @Override
+            public boolean equals(Object obj) { return obj == this; }
         };
     }
 
@@ -62,7 +66,7 @@ public class SelectionTest {
     @Test
     public void limit() {
         Optional<ParseState> parseState = rep(any("a")).parse(env(stream(1, 2, 3, 4, 5)));
-        Assert.assertTrue(parseState.isPresent());
+        assertTrue(parseState.isPresent());
         for (int i = 0; i < 7; i++) {
             assertEquals(Math.min(5, i), getAllValues(parseState.get().order, (value) -> value.matches("a"), i).size);
         }

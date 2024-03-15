@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +17,8 @@
 
 package io.parsingdata.metal.expression.value;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
@@ -43,9 +44,8 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.Shorthand;
 import io.parsingdata.metal.data.ImmutableList;
@@ -57,9 +57,6 @@ import io.parsingdata.metal.data.ParseState;
 public class FoldEdgeCaseTest {
 
     private static final BinaryOperator<SingleValueExpression> EMPTY_VALUE_REDUCER = (left, right) -> (parseState, encoding) -> Optional.empty();
-
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void valuesContainsEmpty() {
@@ -102,16 +99,17 @@ public class FoldEdgeCaseTest {
     }
 
     private void faultyReducer(final ValueExpression expression) {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Reducer must evaluate to a value.");
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () ->
+            seq(
+                def("value", 1), // the reducer returns a Ref to these two values
+                def("value", 1),
+                def("toFold", 1),
+                def("toFold", 1),
+                def("folded", 1, eq(expression))
+            ).parse(env(stream(1, 2, 1, 2, 3)))
+        );
+        assertEquals("Reducer must evaluate to a value.", e.getMessage());
 
-        seq(
-            def("value", 1), // the reducer returns a Ref to these two values
-            def("value", 1),
-            def("toFold", 1),
-            def("toFold", 1),
-            def("folded", 1, eq(expression))
-        ).parse(env(stream(1, 2, 1, 2, 3)));
     }
 
     @Test

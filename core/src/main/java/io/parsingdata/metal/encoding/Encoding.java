@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +23,10 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 
-public class Encoding {
+public class Encoding extends ImmutableObject {
 
     public static final Sign DEFAULT_SIGN = Sign.UNSIGNED;
     public static final Charset DEFAULT_CHARSET = StandardCharsets.US_ASCII;
@@ -68,7 +70,7 @@ public class Encoding {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), sign, charset, byteOrder);
     }
 

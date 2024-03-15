@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +21,7 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.expression.Expression;
 
@@ -31,7 +33,7 @@ import io.parsingdata.metal.expression.Expression;
  * {@link Expression}). The <code>operand</code> is evaluated, the concrete
  * implementation's operator is applied to the result and returned.
  */
-public abstract class UnaryLogicalExpression implements LogicalExpression {
+public abstract class UnaryLogicalExpression extends ImmutableObject implements LogicalExpression {
 
     public final Expression operand;
 
@@ -51,7 +53,7 @@ public abstract class UnaryLogicalExpression implements LogicalExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), operand);
     }
 

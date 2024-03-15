@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +19,9 @@ package io.parsingdata.metal.data.callback;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
@@ -37,12 +38,12 @@ import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.List;
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.SubStructTest;
 import io.parsingdata.metal.data.ImmutableList;
@@ -160,10 +161,10 @@ public class CallbackTest {
 
     @Test
     public void genericCallback() {
-        final Deque<Token> expectedSuccessDefinitions = new ArrayDeque<>(Arrays.asList(DEF_ONE, POST_ONE, DEF_TWO, POST_TWO, DEF_THREE, DEF_ONE, POST_ONE, DEF_TWO, POST_TWO, DEF_FOUR, POST_FOUR, SEQ124, CHOICE));
-        final Deque<Long> expectedSuccessOffsets = new ArrayDeque<>(Arrays.asList(1L, 1L, 2L, 2L, 3L, 1L, 1L, 2L, 2L, 3L, 3L, 3L, 3L));
-        final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(Arrays.asList(POST_THREE, SEQ123));
-        final Deque<Long> expectedFailureOffsets = new ArrayDeque<>(Arrays.asList(2L, 0L));
+        final Deque<Token> expectedSuccessDefinitions = new ArrayDeque<>(List.of(DEF_ONE, POST_ONE, DEF_TWO, POST_TWO, DEF_THREE, DEF_ONE, POST_ONE, DEF_TWO, POST_TWO, DEF_FOUR, POST_FOUR, SEQ124, CHOICE));
+        final Deque<Long> expectedSuccessOffsets = new ArrayDeque<>(List.of(1L, 1L, 2L, 2L, 3L, 1L, 1L, 2L, 2L, 3L, 3L, 3L, 3L));
+        final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(List.of(POST_THREE, SEQ123));
+        final Deque<Long> expectedFailureOffsets = new ArrayDeque<>(List.of(2L, 0L));
         final OffsetDefinitionCallback genericCallback = new OffsetDefinitionCallback(
             expectedSuccessOffsets,
             expectedSuccessDefinitions,
@@ -183,8 +184,8 @@ public class CallbackTest {
 
         final Token cho = cho(POST_ONE, POST_TWO);
 
-        final Deque<Token> expectedSuccessDefinitions = new ArrayDeque<>(Arrays.asList(DEF_ONE, DEF_TWO, POST_TWO, cho));
-        final Deque<Long> expectedSuccessOffsets = new ArrayDeque<>(Arrays.asList(1L, 1L, 1L, 1L));
+        final Deque<Token> expectedSuccessDefinitions = new ArrayDeque<>(List.of(DEF_ONE, DEF_TWO, POST_TWO, cho));
+        final Deque<Long> expectedSuccessOffsets = new ArrayDeque<>(List.of(1L, 1L, 1L, 1L));
         final Deque<Token> expectedFailureDefinitions = new ArrayDeque<>(Collections.singletonList(POST_ONE));
         final Deque<Long> expectedFailureOffsets = new ArrayDeque<>(Collections.singletonList(0L));
         final OffsetDefinitionCallback genericCallback = new OffsetDefinitionCallback(

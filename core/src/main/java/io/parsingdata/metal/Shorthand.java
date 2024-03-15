@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +54,6 @@ import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
 import io.parsingdata.metal.expression.value.Join;
 import io.parsingdata.metal.expression.value.Reverse;
-import io.parsingdata.metal.expression.value.Scope;
 import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.UnaryValueExpression;
 import io.parsingdata.metal.expression.value.Value;
@@ -304,14 +304,21 @@ public final class Shorthand {
 
     /** @see Len */ public static ValueExpression len(final ValueExpression operand) { return new Len(operand); }
     /** @see Len */ public static SingleValueExpression len(final SingleValueExpression operand) { return last(new Len(operand)); }
-    /** @see Ref */ public static NameRef ref(final String name) { return ref(name, null); }
-    /** @see Ref */ public static NameRef ref(final String name, final SingleValueExpression limit) { return new NameRef(name, limit); }
-    /** @see Ref */ public static DefinitionRef ref(final Token definition) { return ref(definition, null); }
-    /** @see Ref */ public static DefinitionRef ref(final Token definition, final SingleValueExpression limit) { return new DefinitionRef(definition, limit); }
+
+    /** @deprecated Use {@link #ref(SingleValueExpression, String, String...)} or {@link #last(NameRef)} in combination with {@link #ref(String, String...)}  if limit is 1, instead. */
+    public static NameRef ref(final String name, final SingleValueExpression limit) { return new NameRef(limit, name); }
+    /** @see Ref */ public static NameRef ref(final String name, final String... names) { return new NameRef(name, names); }
+    /** @see Ref */ public static NameRef ref(final SingleValueExpression limit, final String name, final String... names) { return new NameRef(limit, name, names); }
+
+    /** @deprecated Use {@link #ref(SingleValueExpression, Token, Token...)} or {@link #last(DefinitionRef)} in combination with {@link #ref(Token, Token...)} if limit is 1, instead. */
+    public static DefinitionRef ref(final Token definition, final SingleValueExpression limit) { return new DefinitionRef(limit, definition); }
+    /** @see Ref */ public static DefinitionRef ref(final Token definition, final Token... definitions) { return new DefinitionRef(definition, definitions); }
+    /** @see Ref */ public static DefinitionRef ref(final SingleValueExpression limit, final Token definition, final Token... definitions) { return new DefinitionRef(limit, definition, definitions); }
+
     /** @see First */ public static SingleValueExpression first(final ValueExpression operand) { return new First(operand); }
     /** @see Last */ public static SingleValueExpression last(final ValueExpression operand) { return new Last(operand); }
-    /** @see Last */ public static SingleValueExpression last(final NameRef operand) { return new Last(new NameRef(operand.reference, con(1))); }
-    /** @see Last */ public static SingleValueExpression last(final DefinitionRef operand) { return new Last(new DefinitionRef(operand.reference, con(1))); }
+    /** @see Last */ public static SingleValueExpression last(final NameRef operand) { return new Last(operand.withLimit(con(1))); }
+    /** @see Last */ public static SingleValueExpression last(final DefinitionRef operand) { return new Last(operand.withLimit(con(1))); }
     /** @see Nth */ public static ValueExpression nth(final ValueExpression values, final ValueExpression indices) { return new Nth(values, indices); }
     /** @see Nth */ public static SingleValueExpression nth(final ValueExpression values, final SingleValueExpression index) { return last(new Nth(values, index)); }
     /** @see Offset */ public static ValueExpression offset(final ValueExpression operand) { return new Offset(operand); }
@@ -341,7 +348,11 @@ public final class Shorthand {
     public static BinaryValueExpression mapRight(final BiFunction<ValueExpression, ValueExpression, BinaryValueExpression> func, final SingleValueExpression leftExpand, final ValueExpression right) { return func.apply(exp(leftExpand, count(right)), right); }
 
     /** @see Bytes */ public static ValueExpression bytes(final ValueExpression operand) { return new Bytes(operand); }
-    /** @see Scope */ public static ValueExpression scope(final ValueExpression scopedValueExpression, final SingleValueExpression scopeSize) { return new Scope(scopedValueExpression, scopeSize); }
+
+    /** @see Ref */ public static NameRef scope(final NameRef operand) { return scope(operand, con(0)); }
+    /** @see Ref */ public static NameRef scope(final NameRef operand, final SingleValueExpression scopeSize) { return operand.withScope(scopeSize); }
+    /** @see Ref */ public static DefinitionRef scope(final DefinitionRef operand) { return scope(operand, con(0)); }
+    /** @see Ref */ public static DefinitionRef scope(final DefinitionRef operand, final SingleValueExpression scopeSize) { return operand.withScope(scopeSize); }
 
     /** @see And */ public static BinaryLogicalExpression and(final Expression left, final Expression right) { return new And(left, right); }
     /** @see Or */ public static BinaryLogicalExpression or(final Expression left, final Expression right) { return new Or(left, right); }

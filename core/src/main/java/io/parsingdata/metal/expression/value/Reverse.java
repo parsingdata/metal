@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +21,7 @@ import static io.parsingdata.metal.data.Selection.reverse;
 
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
@@ -32,7 +34,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * {@link ValueExpression}). When evaluated, it evaluates <code>values</code>
  * and then reverses and returns the result.
  */
-public class Reverse implements ValueExpression {
+public class Reverse extends ImmutableObject implements ValueExpression {
 
     public final ValueExpression values;
 
@@ -57,7 +59,7 @@ public class Reverse implements ValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), values);
     }
 

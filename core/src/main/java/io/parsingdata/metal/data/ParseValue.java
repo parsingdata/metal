@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,6 +41,10 @@ public class ParseValue extends CoreValue implements ParseItem {
         return this.name.equals(name) || this.name.endsWith(Token.SEPARATOR + name);
     }
 
+    public boolean matches(final Token definition) {
+        return this.definition.equals(definition);
+    }
+
     @Override public boolean isValue() { return true; }
     @Override public ParseValue asValue() { return this; }
     @Override public Token getDefinition() { return definition; }
@@ -57,8 +62,8 @@ public class ParseValue extends CoreValue implements ParseItem {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), name, definition);
+    public int immutableHashCode() {
+        return Objects.hash(super.immutableHashCode(), name, definition);
     }
 
 }

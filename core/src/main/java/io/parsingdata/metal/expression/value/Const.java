@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +20,7 @@ package io.parsingdata.metal.expression.value;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
@@ -29,7 +31,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * Const has a single operand <code>value</code> (a {@link Value}). When
  * evaluated, this value is returned.
  */
-public class Const implements SingleValueExpression {
+public class Const extends ImmutableObject implements SingleValueExpression {
 
     public final Value value;
 
@@ -54,7 +56,7 @@ public class Const implements SingleValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), value);
     }
 

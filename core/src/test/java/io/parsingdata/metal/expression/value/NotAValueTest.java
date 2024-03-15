@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,64 +17,55 @@
 
 package io.parsingdata.metal.expression.value;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class NotAValueTest {
 
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void getSlice() {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("NOT_A_VALUE does not support any Value operation.");
-        NOT_A_VALUE.slice();
+        final Exception e = Assertions.assertThrows(UnsupportedOperationException.class, NOT_A_VALUE::slice);
+        assertEquals("NOT_A_VALUE does not support any Value operation.", e.getMessage());
     }
 
     @Test
     public void getEncoding() {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("NOT_A_VALUE does not support any Value operation.");
-        NOT_A_VALUE.encoding();
+        final Exception e = Assertions.assertThrows(UnsupportedOperationException.class, NOT_A_VALUE::encoding);
+        assertEquals("NOT_A_VALUE does not support any Value operation.", e.getMessage());
     }
 
     @Test
     public void getValue() {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("NOT_A_VALUE does not support any Value operation.");
-        NOT_A_VALUE.value();
+        final Exception e = Assertions.assertThrows(UnsupportedOperationException.class, NOT_A_VALUE::value);
+        assertEquals("NOT_A_VALUE does not support any Value operation.", e.getMessage());
     }
 
     @Test
     public void getLength() {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("NOT_A_VALUE does not support any Value operation.");
-        NOT_A_VALUE.length();
+        final Exception e = Assertions.assertThrows(UnsupportedOperationException.class, NOT_A_VALUE::length);
+        assertEquals("NOT_A_VALUE does not support any Value operation.", e.getMessage());
     }
 
     @Test
     public void asNumeric() {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("NOT_A_VALUE does not support any Value operation.");
-        NOT_A_VALUE.asNumeric();
+        final Exception e = Assertions.assertThrows(UnsupportedOperationException.class, NOT_A_VALUE::asNumeric);
+        assertEquals("NOT_A_VALUE does not support any Value operation.", e.getMessage());
     }
 
     @Test
     public void asString() {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("NOT_A_VALUE does not support any Value operation.");
-        NOT_A_VALUE.asString();
+        final Exception e = Assertions.assertThrows(UnsupportedOperationException.class, NOT_A_VALUE::asString);
+        assertEquals("NOT_A_VALUE does not support any Value operation.", e.getMessage());
     }
 
     @Test
     public void asBitSet() {
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("NOT_A_VALUE does not support any Value operation.");
-        NOT_A_VALUE.asBitSet();
+        final Exception e = Assertions.assertThrows(UnsupportedOperationException.class, NOT_A_VALUE::asBitSet);
+        assertEquals("NOT_A_VALUE does not support any Value operation.", e.getMessage());
     }
 
 }
