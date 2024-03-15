@@ -88,7 +88,7 @@ public abstract class Ref<T> extends ImmutableObject implements ValueExpression 
         protected ImmutableList<Value> evalImpl(final ParseState parseState, final int limit, final int requestedScope) {
             return Optional.of(parseState.cache)
                 .filter(p -> references.size == 1)
-                .filter(p -> requestedScope >= parseState.scopeDepth)
+                .filter(p -> requestedScope >= parseState.order.scopeDepth)
                 .flatMap(p -> p.find(references.head, limit))
                 .orElseGet(() -> super.evalImpl(parseState, limit, requestedScope));
         }
@@ -124,7 +124,7 @@ public abstract class Ref<T> extends ImmutableObject implements ValueExpression 
 
     @Override
     public ImmutableList<Value> eval(final ParseState parseState, final Encoding encoding) {
-        final int requestedScope = scope == null ? parseState.scopeDepth : scope.evalSingle(parseState, encoding)
+        final int requestedScope = scope == null ? parseState.order.scopeDepth : scope.evalSingle(parseState, encoding)
             .filter(sizeValue -> !sizeValue.equals(NOT_A_VALUE) && sizeValue.asNumeric().compareTo(ZERO) >= 0)
             .orElseThrow(() -> new IllegalArgumentException("Argument scopeSize must evaluate to a positive, countable value.")).asNumeric().intValueExact();
         if (limit == null) {
@@ -136,7 +136,7 @@ public abstract class Ref<T> extends ImmutableObject implements ValueExpression 
     }
 
     protected ImmutableList<Value> evalImpl(final ParseState parseState, final int limit, final int requestedScope) {
-        return wrap(getAllValues(parseState.order, parseValue -> toList(references).stream().anyMatch(ref -> predicate.test(parseValue, ref)), limit, requestedScope, parseState.scopeDepth), new ImmutableList<Value>()).computeResult();
+        return wrap(getAllValues(parseState.order, parseValue -> toList(references).stream().anyMatch(ref -> predicate.test(parseValue, ref)), limit, requestedScope, parseState.order.scopeDepth), new ImmutableList<Value>()).computeResult();
     }
 
     static <T> List<T> toList(final ImmutableList<T> allValues) {
