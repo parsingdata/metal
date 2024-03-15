@@ -3,7 +3,7 @@
   <groupId>io.parsingdata</groupId>
   <artifactId>metal</artifactId>
   <name>${project.groupId}:${project.artifactId}</name>
-  <version>10.0.1-SNAPSHOT</version>
+  <version>11.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <url>https://github.com/parsingdata/metal</url>
   <description>A Java library for parsing binary data formats, using declarative descriptions.</description>

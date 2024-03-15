@@ -63,6 +63,7 @@ import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.True;
+import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.reference.Ref;
 import io.parsingdata.metal.expression.value.reference.Ref.DefinitionRef;
 import io.parsingdata.metal.expression.value.reference.Ref.NameRef;
@@ -205,6 +206,7 @@ public class EqualityTest {
         assertNotEquals(object, new NameRef("otherName"));
         assertNotEquals(object, new DefinitionRef(any("name")));
         assertNotEquals(object, new NameRef(con(1), "name"));
+        assertNotEquals(object, new NameRef(con(1), (SingleValueExpression) null, "name"));
     }
 
     @Test
@@ -218,6 +220,7 @@ public class EqualityTest {
         assertNotEquals(object, new DefinitionRef(any("otherName")));
         assertNotEquals(object, new NameRef("name"));
         assertNotEquals(object, new DefinitionRef(con(1), any("name")));
+        assertNotEquals(object, new DefinitionRef(con(1), (SingleValueExpression) null, any("name")));
     }
 
     @Test
