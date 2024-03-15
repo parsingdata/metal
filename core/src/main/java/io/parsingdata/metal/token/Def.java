@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -78,8 +79,8 @@ public class Def extends Token {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), size);
+    public int immutableHashCode() {
+        return Objects.hash(super.immutableHashCode(), size);
     }
 
 }

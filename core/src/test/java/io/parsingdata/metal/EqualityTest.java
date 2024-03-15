@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,6 +63,7 @@ import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.True;
+import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.reference.Ref;
 import io.parsingdata.metal.expression.value.reference.Ref.DefinitionRef;
 import io.parsingdata.metal.expression.value.reference.Ref.NameRef;
@@ -204,6 +206,7 @@ public class EqualityTest {
         assertNotEquals(object, new NameRef("otherName"));
         assertNotEquals(object, new DefinitionRef(any("name")));
         assertNotEquals(object, new NameRef(con(1), "name"));
+        assertNotEquals(object, new NameRef(con(1), (SingleValueExpression) null, "name"));
     }
 
     @Test
@@ -217,6 +220,7 @@ public class EqualityTest {
         assertNotEquals(object, new DefinitionRef(any("otherName")));
         assertNotEquals(object, new NameRef("name"));
         assertNotEquals(object, new DefinitionRef(con(1), any("name")));
+        assertNotEquals(object, new DefinitionRef(con(1), (SingleValueExpression) null, any("name")));
     }
 
     @Test

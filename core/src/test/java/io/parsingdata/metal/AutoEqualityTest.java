@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +36,7 @@ import static io.parsingdata.metal.Shorthand.not;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.data.ByteStreamSourceTest.DUMMY_BYTE_STREAM_SOURCE;
 import static io.parsingdata.metal.data.ParseState.createFromByteStream;
+import static io.parsingdata.metal.data.ParseValueCache.NO_CACHE;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
@@ -50,8 +52,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.math.BigInteger;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -59,6 +62,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Spliterator;
+import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -81,6 +85,7 @@ import io.parsingdata.metal.data.ParseItem;
 import io.parsingdata.metal.data.ParseReference;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.data.ParseValue;
+import io.parsingdata.metal.data.ParseValueCache;
 import io.parsingdata.metal.data.Selection;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.data.Source;
@@ -106,7 +111,6 @@ import io.parsingdata.metal.expression.value.FoldRight;
 import io.parsingdata.metal.expression.value.Join;
 import io.parsingdata.metal.expression.value.NotAValue;
 import io.parsingdata.metal.expression.value.Reverse;
-import io.parsingdata.metal.expression.value.Scope;
 import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
@@ -158,7 +162,7 @@ public class AutoEqualityTest {
         And.class, Or.class, ShiftLeft.class, ShiftRight.class, Add.class, Div.class, Mod.class, Mul.class,
         io.parsingdata.metal.expression.value.arithmetic.Sub.class, Cat.class, Nth.class, Elvis.class,
         FoldLeft.class, FoldRight.class, Const.class, Expand.class, Bytes.class, CurrentOffset.class,
-        FoldCat.class, CurrentIteration.class, Scope.class,
+        FoldCat.class, CurrentIteration.class,
         Join.class, Self.class, Ref.NameRef.class, Ref.DefinitionRef.class,
         // Expressions
         Eq.class, EqNum.class, EqStr.class, GtEqNum.class, GtNum.class, LtEqNum.class, LtNum.class,
@@ -167,6 +171,7 @@ public class AutoEqualityTest {
         // Data structures
         CoreValue.class, ParseValue.class, ParseReference.class, ParseState.class,
         NotAValue.class, ParseGraph.class, ImmutableList.class,
+        ParseValueCache.class,
         // Inputs
         Slice.class,
         ConstantSource.class, DataExpressionSource.class, ByteStreamSource.class, ConcatenatedValueSource.class
@@ -197,7 +202,7 @@ public class AutoEqualityTest {
 
     private static final List<Supplier<Object>> STRINGS = List.of(() -> "a", () -> "b");
     private static final List<Supplier<Object>> STRING_ARRAYS = List.of(() -> new String[] {"a"}, () -> new String[] {"b"}, () -> new String[] {"a", "b"}, () -> new String[] {"b", "c"}, () -> new String[] {"a", "b", "c"});
-    private static final List<Supplier<Object>> ENCODINGS = List.of(EncodingFactory::enc, EncodingFactory::signed, EncodingFactory::le, () -> new Encoding(Charset.forName("UTF-8")));
+    private static final List<Supplier<Object>> ENCODINGS = List.of(EncodingFactory::enc, EncodingFactory::signed, EncodingFactory::le, () -> new Encoding(StandardCharsets.UTF_8));
     private static final List<Supplier<Object>> TOKENS = List.of(() -> any("a"), () -> any("b"));
     private static final List<Supplier<Object>> TOKEN_ARRAYS = List.of(() -> new Token[] { any("a"), any("b")}, () -> new Token[] { any("b"), any("c") }, () -> new Token[] { any("a"), any("b"), any("c") });
     private static final List<Supplier<Object>> SINGLE_VALUE_EXPRESSIONS = List.of(() -> con(1), () -> con(2));
@@ -215,9 +220,12 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> PARSE_ITEMS = List.of(() -> CLOSED_BRANCHED_GRAPH, () -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE, () -> createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE).order, () -> createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE).add(PARSE_VALUE).order, () -> BRANCHED_GRAPH);
     private static final List<Supplier<Object>> BYTE_STREAMS = List.of(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> DUMMY_STREAM);
     private static final List<Supplier<Object>> BIG_INTEGERS = List.of(() -> ONE, () -> BigInteger.valueOf(3));
-    private static final List<Supplier<Object>> PARSE_STATES = List.of(() -> createFromByteStream(DUMMY_STREAM), () -> createFromByteStream(DUMMY_STREAM, ONE), () -> new ParseState(GRAPH_WITH_REFERENCE, DUMMY_BYTE_STREAM_SOURCE, TEN, new ImmutableList<>(), new ImmutableList<>()));
+    private static final List<Supplier<Object>> PARSE_STATES = List.of(() -> createFromByteStream(DUMMY_STREAM), () -> createFromByteStream(DUMMY_STREAM, ONE), () -> new ParseState(GRAPH_WITH_REFERENCE, NO_CACHE, DUMMY_BYTE_STREAM_SOURCE, TEN, new ImmutableList<>(), new ImmutableList<>(), 0));
+    private static final List<Supplier<Object>> PARSE_VALUE_CACHES = List.of(() -> NO_CACHE, ParseValueCache::new, () -> new ParseValueCache().add(PARSE_VALUE), () -> new ParseValueCache().add(PARSE_VALUE).add(PARSE_VALUE));
     private static final List<Supplier<Object>> IMMUTABLE_LISTS = List.of(ImmutableList::new, () -> ImmutableList.create("TEST"), () -> ImmutableList.create(1), () -> ImmutableList.create(1).add(2));
     private static final List<Supplier<Object>> BOOLEANS = List.of(() -> true, () -> false);
+    private static final List<Supplier<Object>> BIPREDICATES = List.of(() -> (BiPredicate<Object, Object>) (o, o2) -> false);
+    private static final List<Supplier<Object>> MAPS = List.of(Map::of, () -> Map.of("1", 1, "2", 2));
     private static final Map<Class<?>, List<Supplier<Object>>> mapping = buildMap();
 
     private static Map<Class<?>, List<Supplier<Object>>> buildMap() {
@@ -243,8 +251,11 @@ public class AutoEqualityTest {
         result.put(ByteStream.class, BYTE_STREAMS);
         result.put(BigInteger.class, BIG_INTEGERS);
         result.put(ParseState.class, PARSE_STATES);
+        result.put(ParseValueCache.class, PARSE_VALUE_CACHES);
         result.put(ImmutableList.class, IMMUTABLE_LISTS);
         result.put(boolean.class, BOOLEANS);
+        result.put(BiPredicate.class, BIPREDICATES);
+        result.put(Map.class, MAPS);
         return result;
     }
 
@@ -304,31 +315,38 @@ public class AutoEqualityTest {
     private static Collection<Arguments> generateObjectArrays(final Set<Class<?>> classes) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         Collection<Arguments> results = new ArrayList<>();
         for (Class<?> c : classes) {
-            results.add(generateObjectArrays(c));
+            results.addAll(generateObjectArrays(c));
         }
         return results;
     }
 
-    private static Arguments generateObjectArrays(final Class<?> c) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        Constructor<?> cons = c.getDeclaredConstructors()[0];
-        cons.setAccessible(true);
-        List<List<Supplier<Object>>> args = new ArrayList<>();
-        for (Class<?> cl : cons.getParameterTypes()) {
-            if (!mapping.containsKey(cl)) {
-                throw new AssertionError("Please add a mapping for type " + cl.getSimpleName());
+    private static List<Arguments> generateObjectArrays(final Class<?> c) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        final List<Arguments> arguments = new ArrayList<>();
+        for (Constructor<?> cons : c.getDeclaredConstructors()) {
+            final boolean containsGenericArgument = Arrays.stream(cons.getParameterTypes()).anyMatch(p -> p == Object.class);
+            if (containsGenericArgument) {
+                break;
             }
-            args.add(mapping.get(cl));
+            cons.setAccessible(true);
+            final List<List<Supplier<Object>>> args = new ArrayList<>();
+            for (Class<?> cl : cons.getParameterTypes()) {
+                if (!mapping.containsKey(cl)) {
+                    throw new AssertionError("Please add a mapping for type " + cl.getSimpleName());
+                }
+                args.add(mapping.get(cl));
+            }
+            final List<List<Supplier<Object>>> argLists = generateCombinations(0, args);
+            final List<Object> otherInstances = new ArrayList<>();
+            for (List<Supplier<Object>> argList : argLists.subList(1, argLists.size())) {
+                otherInstances.add(cons.newInstance(instantiate(argList).toArray()));
+            }
+            arguments.add(Arguments.arguments(
+                cons.newInstance(instantiate(argLists.get(0)).toArray()),
+                cons.newInstance(instantiate(argLists.get(0)).toArray()),
+                otherInstances.toArray()
+            ));
         }
-        List<List<Supplier<Object>>> argLists = generateCombinations(0, args);
-        List<Object> otherInstances = new ArrayList<>();
-        for (List<Supplier<Object>> argList : argLists.subList(1, argLists.size())) {
-            otherInstances.add(cons.newInstance(instantiate(argList).toArray()));
-        }
-        return Arguments.arguments(
-            cons.newInstance(instantiate(argLists.get(0)).toArray()),
-            cons.newInstance(instantiate(argLists.get(0)).toArray()),
-            otherInstances.toArray()
-        );
+        return arguments;
     }
 
     private static List<List<Supplier<Object>>> generateCombinations(final int index, final List<List<Supplier<Object>>> args) {

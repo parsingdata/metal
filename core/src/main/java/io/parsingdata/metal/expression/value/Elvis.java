@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +26,7 @@ import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
@@ -43,7 +45,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * does not exist or is {@link Optional#empty()}, in which case the value at
  * that index in the result returned by evaluating right is placed there.
  */
-public class Elvis implements ValueExpression {
+public class Elvis extends ImmutableObject implements ValueExpression {
 
     public final ValueExpression left;
     public final ValueExpression right;
@@ -81,7 +83,7 @@ public class Elvis implements ValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), left, right);
     }
 

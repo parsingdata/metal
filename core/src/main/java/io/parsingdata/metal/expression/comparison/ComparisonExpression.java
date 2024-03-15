@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +24,7 @@ import static io.parsingdata.metal.expression.value.NotAValue.NOT_A_VALUE;
 
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
@@ -44,7 +46,7 @@ import io.parsingdata.metal.expression.value.ValueExpression;
  * not evaluated and the output value is substituted with a list containing
  * only the {@link Value} most recently added to the {@link ParseState}.
  */
-public abstract class ComparisonExpression implements Expression {
+public abstract class ComparisonExpression extends ImmutableObject implements Expression {
 
     public final ValueExpression value;
     public final ValueExpression predicate;
@@ -97,7 +99,7 @@ public abstract class ComparisonExpression implements Expression {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), value, predicate);
     }
 

@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +49,6 @@ import io.parsingdata.metal.expression.value.Bytes;
 import io.parsingdata.metal.expression.value.Cat;
 import io.parsingdata.metal.expression.value.FoldLeft;
 import io.parsingdata.metal.expression.value.FoldRight;
-import io.parsingdata.metal.expression.value.Scope;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.expression.value.arithmetic.Neg;
 import io.parsingdata.metal.expression.value.reference.Count;
@@ -96,8 +96,6 @@ public class ArgumentsTest {
             { Offset.class, new Object[] { null } },
             { Count.class, new Object[] { null } },
             { Bytes.class, new Object[] { null } },
-            { Scope.class, new Object[] { VALID_VE, null } },
-            { Scope.class, new Object[] { null, VALID_VE } },
             // Derived from BinaryValueExpression
             { Cat.class, new Object[] { VALID_VE, null } },
             { Cat.class, new Object[] { null, VALID_VE } },

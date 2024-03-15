@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +21,10 @@ import static io.parsingdata.metal.Util.checkNotNull;
 
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 
-public class ImmutablePair<L, R> {
+public class ImmutablePair<L, R> extends ImmutableObject {
 
     public final L left;
     public final R right;
@@ -45,7 +47,7 @@ public class ImmutablePair<L, R> {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), left, right);
     }
 

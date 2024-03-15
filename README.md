@@ -11,13 +11,13 @@ A Java library for parsing binary data formats, using declarative descriptions.
 
 ## Using Metal
 
-Metal releases are available in the central Maven repository. To use the latest (9.0.0) release of Metal, include the following section in the pom.xml under dependencies:
+Metal releases are available in the central Maven repository. To use the latest (10.0.0) release of Metal, include the following section in the pom.xml under dependencies:
 
 ```xml
 <dependency>
   <groupId>io.parsingdata</groupId>
   <artifactId>metal-core</artifactId>
-  <version>9.0.0</version>
+  <version>10.0.0</version>
 </dependency>
 ```
 
@@ -37,8 +37,8 @@ Please read the [Authenticating to GitHub Packages](https://docs.github.com/en/p
 
 ## License
 
-Copyright 2013-2023 Netherlands Forensic Institute  
-Copyright 2021-2023 Infix Technologies B.V.
+Copyright 2013-2024 Netherlands Forensic Institute
+Copyright 2021-2024 Infix Technologies B.V.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

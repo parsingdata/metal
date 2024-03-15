@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +17,9 @@
 
 package io.parsingdata.metal.data;
 
+import static java.math.BigInteger.valueOf;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static io.parsingdata.metal.data.Slice.createFromSource;
@@ -23,13 +27,18 @@ import static io.parsingdata.metal.expression.value.ConstantFactory.createFromBy
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.CoreValue;
 import io.parsingdata.metal.expression.value.Value;
 
@@ -88,6 +97,36 @@ public class ConcatenatedValueSourceTest {
         for (int i = 0; i < length; i++) {
             assertEquals(offset+i, data[i]);
         }
+    }
+
+    @Test
+    @Timeout(value=1)
+    public void concatenatedValueSourceRead() {
+        // Create a large array with random data
+        final int arraySize = 5_120_000;
+        final byte[] bytes = new byte[arraySize];
+        new Random().nextBytes(bytes);
+
+        // Split the data in separate CoreValues.
+        final int parts = 4;
+        ImmutableList<Value> values = new ImmutableList<>();
+        for (int part = 0; part < parts; part++) {
+            values = values.add(new CoreValue(Slice.createFromBytes(Arrays.copyOfRange(bytes, (arraySize / parts) * part, (arraySize / parts) * (part + 1))), Encoding.DEFAULT_ENCODING));
+        }
+
+        // Create a ConcatenatedValueSource to read from.
+        final ConcatenatedValueSource source = ConcatenatedValueSource.create(values).get();
+
+        // Read from the source in small parts.
+        final int readSize = 512;
+        final byte[] bytesRead = new byte[arraySize];
+        for (int part = 0; part < arraySize / readSize; part++) {
+            final byte[] data = source.getData(valueOf(readSize * part), valueOf(readSize));
+            System.arraycopy(data, 0, bytesRead, readSize * part, data.length);
+        }
+
+        // Make sure we read the data correctly.
+        assertArrayEquals(bytes, bytesRead);
     }
 
 }

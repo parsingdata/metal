@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +31,7 @@ import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
@@ -53,7 +55,7 @@ import io.parsingdata.metal.token.While;
  * <code>0</code> denotes the current (deepest) nesting level, <code>1</code> the
  * level above it, and so on.
  */
-public class CurrentIteration implements SingleValueExpression {
+public class CurrentIteration extends ImmutableObject implements SingleValueExpression {
 
     private final SingleValueExpression level;
 
@@ -92,7 +94,7 @@ public class CurrentIteration implements SingleValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), level);
     }
 

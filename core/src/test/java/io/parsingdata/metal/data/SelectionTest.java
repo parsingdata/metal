@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +42,9 @@ public class SelectionTest {
         return new Source() {
             @Override protected byte[] getData(BigInteger offset, BigInteger length) { return new byte[0]; }
             @Override protected boolean isAvailable(BigInteger offset, BigInteger length) { return true; }
+            @Override public int immutableHashCode() { return 0; }
+            @Override
+            public boolean equals(Object obj) { return obj == this; }
         };
     }
 

@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +24,11 @@ import static io.parsingdata.metal.data.Selection.reverse;
 
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 
-public class ImmutableList<T> {
+public class ImmutableList<T> extends ImmutableObject {
 
     public final T head;
     public final ImmutableList<T> tail;
@@ -104,7 +106,7 @@ public class ImmutableList<T> {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), head, tail);
     }
 
