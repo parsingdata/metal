@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,31 +21,28 @@ import static java.math.BigInteger.ZERO;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.con;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.sub;
 import static io.parsingdata.metal.data.selection.ByTypeTest.EMPTY_SOURCE;
-import static junit.framework.TestCase.assertFalse;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.token.Token;
 
 public class ParseReferenceTest {
 
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
-
     private Token definition;
     private ParseReference reference;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         definition = sub(def("value", 1), con(0));
         reference = new ParseReference(ZERO, EMPTY_SOURCE, definition);
@@ -71,18 +69,16 @@ public class ParseReferenceTest {
     public void referenceIsNotAValue() {
         assertFalse(reference.isValue());
 
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Cannot convert to ParseValue");
-        reference.asValue();
+        final Exception e = assertThrows(UnsupportedOperationException.class, () -> reference.asValue());
+        assertEquals("Cannot convert to ParseValue.", e.getMessage());
     }
 
     @Test
     public void referenceIsNotAGraph() {
         assertFalse(reference.isGraph());
 
-        thrown.expect(UnsupportedOperationException.class);
-        thrown.expectMessage("Cannot convert to ParseGraph");
-        reference.asGraph();
+        final Exception e = assertThrows(UnsupportedOperationException.class, () -> reference.asGraph());
+        assertEquals("Cannot convert to ParseGraph.", e.getMessage());
     }
 
 }

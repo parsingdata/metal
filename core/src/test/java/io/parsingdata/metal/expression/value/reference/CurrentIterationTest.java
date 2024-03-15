@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +24,6 @@ import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
 import static io.parsingdata.metal.Shorthand.eqNum;
 import static io.parsingdata.metal.Shorthand.iteration;
-import static io.parsingdata.metal.Shorthand.last;
 import static io.parsingdata.metal.Shorthand.not;
 import static io.parsingdata.metal.Shorthand.nth;
 import static io.parsingdata.metal.Shorthand.ref;
@@ -35,10 +35,8 @@ import static io.parsingdata.metal.Shorthand.whl;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
-import java.util.Arrays;
 import java.util.Collection;
-
-import org.junit.runners.Parameterized;
+import java.util.List;
 
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
@@ -51,9 +49,9 @@ public class CurrentIterationTest extends ParameterizedParse {
     public static final Token VALUE_EQ_ITERATION_GRANDPARENT = def("value", con(1), eq(iteration(2)));
     public static final Token VALUE_EQ_255 = def("value", con(1), eq(con(255)));
 
-    @Parameterized.Parameters(name="{0} ({4})")
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+    @Override
+    public Collection<Object[]> data() {
+        return List.of(new Object[][] {
             { "[0, 1, 2, 3, 255] rep(CURRENT_ITERATION), def(255)", seq(rep(VALUE_EQ_ITERATION), VALUE_EQ_255), stream(0, 1, 2, 3, 255), enc(), true },
             { "[0, 1, 2, 3] repn=4(CURRENT_ITERATION)", repn(VALUE_EQ_ITERATION, con(4)), stream(0, 1, 2, 3), enc(), true },
             { "[255, 0, 1, 2, 3, 255] def(255), while!=3(CURRENT_ITERATION), def (255)", seq(VALUE_EQ_255, whl(VALUE_EQ_ITERATION, not(eq(con(3)))), VALUE_EQ_255), stream(255, 0, 1, 2, 3, 255), enc(), true },

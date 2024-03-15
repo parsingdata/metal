@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +26,10 @@ import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 
-public class Slice {
+public class Slice extends ImmutableObject {
 
     public final Source source;
     public final BigInteger offset;
@@ -57,8 +59,19 @@ public class Slice {
     }
 
     public byte[] getData(final BigInteger limit) {
-        final BigInteger calculatedLength = checkNotNegative(limit, "limit").compareTo(length) > 0 ? length : limit;
-        return source.getData(offset, calculatedLength);
+        return getData(ZERO, limit);
+    }
+
+    /**
+     * Return a part of the data specified by the offset and limit.
+     * @param offset the offset to start reading the slice from
+     * @param limit the maximum number of bytes returned. Fewer bytes are returned if the end of slice is reached.
+     * @return a byte array representing the data.
+     */
+    public byte[] getData(final BigInteger offset, final BigInteger limit) {
+        final BigInteger calculatedOffset = checkNotNegative(offset, "offset").add(this.offset);
+        final BigInteger calculatedLength = checkNotNegative(limit, "limit").min(length.subtract(offset)).max(ZERO);
+        return source.getData(calculatedOffset, calculatedLength);
     }
 
     @Override
@@ -75,7 +88,7 @@ public class Slice {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), source, offset, length);
     }
 

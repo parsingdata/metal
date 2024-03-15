@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +17,22 @@
 
 package io.parsingdata.metal.token;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.util.Optional;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseState;
 
 public class TokenTest {
 
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
     private final Token token = new Token("", null) {
         @Override
         protected Optional<ParseState> parseImpl(final Environment environment) {
@@ -42,16 +42,14 @@ public class TokenTest {
 
     @Test
     public void parseNullParseState() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Argument parseState may not be null.");
-        token.parse(env(null, enc()));
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> token.parse(env(null, enc())));
+        assertEquals("Argument parseState may not be null.", e.getMessage());
     }
 
     @Test
     public void parseNullScope() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Argument scope may not be null.");
-        token.parse(env(null, stream(), enc()));
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> token.parse(env(null, stream(), enc())));
+        assertEquals("Argument scope may not be null.", e.getMessage());
     }
 
 }

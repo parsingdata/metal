@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +31,7 @@ import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.Expression;
 
 /**
- * A {@link Token} that specifies a postcondition for parsing a nested token.
+ * A {@link Token} that specifies a post condition for parsing a nested token.
  * <p>
  * A Post consists of a <code>predicate</code> (an {@link Expression}) and a
  * <code>token</code> (a {@link Token}). First the token is parsed. If parsing
@@ -72,8 +73,8 @@ public class Post extends CycleToken {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), token, predicate);
+    public int immutableHashCode() {
+        return Objects.hash(super.immutableHashCode(), token, predicate);
     }
 
 }

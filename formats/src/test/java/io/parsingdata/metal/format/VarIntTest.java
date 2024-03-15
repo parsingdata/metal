@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,10 +32,8 @@ import static io.parsingdata.metal.format.VarInt.varInt;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
-import java.util.Arrays;
 import java.util.Collection;
-
-import org.junit.runners.Parameterized;
+import java.util.List;
 
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
@@ -53,9 +52,9 @@ public class VarIntTest extends ParameterizedParse {
                 post(def("decoded", len(decodeVarInt(last(ref("varInt"))))), eq(decodeVarInt(last(ref("varInt")))))
             ), con(4));
 
-    @Parameterized.Parameters(name = "{0} ({4})")
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+    @Override
+    public Collection<Object[]> data() {
+        return List.of(new Object[][] {
             { "[63, 63] 63 (varint) == 63", varIntAndValue(1), stream(63, 63), enc(), true },
             { "[127, 127] 127 (varint) == 127", varIntAndValue(1), stream(127, 127), enc(), true },
             { "[185, 10, 5, 57] (varint) == 1337", varIntAndValue(2), stream(185, 10, 5, 57), enc(), true },

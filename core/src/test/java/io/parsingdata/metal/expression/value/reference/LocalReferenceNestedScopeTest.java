@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +19,8 @@ package io.parsingdata.metal.expression.value.reference;
 
 import static java.math.BigInteger.ONE;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
@@ -39,7 +40,7 @@ import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.expression.Expression;
@@ -71,7 +72,7 @@ public class LocalReferenceNestedScopeTest {
     private void nestedScopes(final Expression rightExpression) {
         Optional<ParseState> parseState = topLevelNestedScopes(rightExpression).parse(env(stream(42, 1, 2, 3, 42, 3, 2, 1), enc()));
         assertTrue(parseState.isPresent());
-        assertFalse("The test has not parsed the whole stream. It ended at offset " + parseState.get().offset + ".", parseState.get().slice(ONE).isPresent());
+        assertFalse(parseState.get().slice(ONE).isPresent(), "The test has not parsed the whole stream. It ended at offset " + parseState.get().offset + ".");
     }
 
     @Test

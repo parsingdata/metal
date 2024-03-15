@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +17,10 @@
 
 package io.parsingdata.metal.data;
 
-import static org.junit.Assert.assertEquals;
+import static java.math.BigInteger.valueOf;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static io.parsingdata.metal.data.Slice.createFromSource;
 import static io.parsingdata.metal.expression.value.ConstantFactory.createFromBytes;
@@ -25,37 +29,38 @@ import static io.parsingdata.metal.util.EncodingFactory.enc;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.Random;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
+import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.value.CoreValue;
 import io.parsingdata.metal.expression.value.Value;
 
-@RunWith(Parameterized.class)
 public class ConcatenatedValueSourceTest {
 
-    @Parameter public String description;
-    @Parameter(1) public int offset;
-    @Parameter(2) public int length;
+    private static ConcatenatedValueSource cvs;
 
-    public static final ConcatenatedValueSource cvs = ConcatenatedValueSource.create(createValues()).get();
-
-    private static ImmutableList<Value> createValues() {
+    @BeforeAll
+    public static void setup() {
         final byte[] twoSliceSource = new byte[] { -1, -1, 5, 6, 7, 8, 9, -1, -1, 10, 11, 12, 13, 14, -1, -1 };
-        return ImmutableList
-            .create(createFromBytes(new byte[] { 0, 1, 2, 3, 4 }, enc()))
+        final ImmutableList<Value> list = ImmutableList
+            .create(createFromBytes(new byte[]{0, 1, 2, 3, 4}, enc()))
             .add(new CoreValue(createFromSource(new ConstantSource(twoSliceSource), BigInteger.valueOf(2), BigInteger.valueOf(5)).get(), enc()))
             .add(new CoreValue(createFromSource(new ConstantSource(twoSliceSource), BigInteger.valueOf(9), BigInteger.valueOf(5)).get(), enc()))
-            .add(createFromBytes(new byte[] { 15, 16, 17, 18, 19 }, enc()))
-            .add(createFromBytes(new byte[] { 20, 21, 22, 23, 24 }, enc()));
+            .add(createFromBytes(new byte[]{15, 16, 17, 18, 19}, enc()))
+            .add(createFromBytes(new byte[]{20, 21, 22, 23, 24}, enc()));
+
+        cvs = ConcatenatedValueSource.create(list).orElseThrow();
     }
 
-    @Parameterized.Parameters(name="{0}")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+        return List.of(new Object[][] {
             { "full", 0, 25 },                // [XXXXX][XXXXX][XXXXX][XXXXX][XXXXX]
             { "none", 0, 0 },                 // [.....][.....][.....][.....][.....]
             { "full(0)", 0, 5 },              // [XXXXX][.....][.....][.....][.....]
@@ -84,13 +89,44 @@ public class ConcatenatedValueSourceTest {
         });
     }
 
-    @Test
-    public void checkData() {
+    @ParameterizedTest(name="{0}")
+    @MethodSource("data")
+    public void checkData(final String description, final int offset, final int length) {
         byte[] data = cvs.getData(BigInteger.valueOf(offset), BigInteger.valueOf(length));
         assertEquals(length, data.length);
         for (int i = 0; i < length; i++) {
             assertEquals(offset+i, data[i]);
         }
+    }
+
+    @Test
+    @Timeout(value=1)
+    public void concatenatedValueSourceRead() {
+        // Create a large array with random data
+        final int arraySize = 5_120_000;
+        final byte[] bytes = new byte[arraySize];
+        new Random().nextBytes(bytes);
+
+        // Split the data in separate CoreValues.
+        final int parts = 4;
+        ImmutableList<Value> values = new ImmutableList<>();
+        for (int part = 0; part < parts; part++) {
+            values = values.add(new CoreValue(Slice.createFromBytes(Arrays.copyOfRange(bytes, (arraySize / parts) * part, (arraySize / parts) * (part + 1))), Encoding.DEFAULT_ENCODING));
+        }
+
+        // Create a ConcatenatedValueSource to read from.
+        final ConcatenatedValueSource source = ConcatenatedValueSource.create(values).get();
+
+        // Read from the source in small parts.
+        final int readSize = 512;
+        final byte[] bytesRead = new byte[arraySize];
+        for (int part = 0; part < arraySize / readSize; part++) {
+            final byte[] data = source.getData(valueOf(readSize * part), valueOf(readSize));
+            System.arraycopy(data, 0, bytesRead, readSize * part, data.length);
+        }
+
+        // Make sure we read the data correctly.
+        assertArrayEquals(bytes, bytesRead);
     }
 
 }

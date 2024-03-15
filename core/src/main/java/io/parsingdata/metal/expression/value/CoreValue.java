@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,13 +24,14 @@ import java.math.BigInteger;
 import java.util.BitSet;
 import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.ByteOrder;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.encoding.Sign;
 
-public class CoreValue implements Value {
+public class CoreValue extends ImmutableObject implements Value {
 
     public static final BigInteger TO_STRING_BYTE_COUNT = BigInteger.valueOf(4);
 
@@ -90,7 +92,7 @@ public class CoreValue implements Value {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), slice, encoding);
     }
 

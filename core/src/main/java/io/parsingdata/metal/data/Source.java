@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +19,9 @@ package io.parsingdata.metal.data;
 
 import java.math.BigInteger;
 
-public abstract class Source {
+import io.parsingdata.metal.ImmutableObject;
+
+public abstract class Source extends ImmutableObject {
 
     protected abstract byte[] getData(BigInteger offset, BigInteger length);
 
