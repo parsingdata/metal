@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +17,8 @@
 
 package io.parsingdata.metal.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -28,14 +29,14 @@ public class ClassDefinition {
     public static void checkUtilityClass(Class<?> utilityClass) throws ReflectiveOperationException {
         final String simpleName = utilityClass.getSimpleName();
         // class is final
-        assertTrue(simpleName + " should be final", Modifier.isFinal(utilityClass.getModifiers()));
+        assertTrue(Modifier.isFinal(utilityClass.getModifiers()), simpleName + " should be final");
 
         // has one constructor
         final Constructor<?>[] constructors = utilityClass.getDeclaredConstructors();
-        assertEquals(simpleName + " should have exactly 1 constructor", 1, constructors.length);
+        assertEquals(1, constructors.length, simpleName + " should have exactly 1 constructor");
 
         // which is private
-        assertTrue(simpleName + " should have a private constructor", Modifier.isPrivate(constructors[0].getModifiers()));
+        assertTrue(Modifier.isPrivate(constructors[0].getModifiers()), simpleName + " should have a private constructor");
 
         // call it for coverage
         constructors[0].setAccessible(true);
@@ -43,7 +44,7 @@ public class ClassDefinition {
 
         // check that all declared methods are static
         for (final Method method : utilityClass.getDeclaredMethods()) {
-            assertTrue("method '" + method.getName()  + "' in " + simpleName + " should be static", Modifier.isStatic(method.getModifiers()));
+            assertTrue(Modifier.isStatic(method.getModifiers()), "method '" + method.getName()  + "' in " + simpleName + " should be static");
         }
     }
 

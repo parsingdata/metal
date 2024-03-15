@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
@@ -45,7 +47,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * <code>reducer</code> is applied to the first two values until a single
  * value remains, which is then returned.
  */
-public abstract class Fold implements SingleValueExpression {
+public abstract class Fold extends ImmutableObject implements SingleValueExpression {
 
     public final ValueExpression values;
     public final BinaryOperator<SingleValueExpression> reducer;
@@ -112,7 +114,7 @@ public abstract class Fold implements SingleValueExpression {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), values, reducer, initial);
     }
 

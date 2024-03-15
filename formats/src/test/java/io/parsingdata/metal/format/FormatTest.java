@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,21 +20,17 @@ package io.parsingdata.metal.format;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.Collection;
-
-import org.junit.runners.Parameterized;
+import java.util.List;
 
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.util.ParameterizedParse;
 
 public class FormatTest extends ParameterizedParse {
 
-    @Parameterized.Parameters(name="{0} ({4})")
-    public static Collection<Object[]> data() throws URISyntaxException, IOException {
-        return Arrays.asList(new Object[][] {
+    @Override
+    public Collection<Object[]> data() {
+        return List.of(new Object[][] {
             { "PNG", PNG.FORMAT, parseState("/test.png"), enc(), true },
             { "ZIP", ZIP.FORMAT, parseState("/singlefile-zip30-ubuntu.zip"), enc(), true },
             { "ZIP2", ZIP.FORMAT, parseState("/multifile-zip30-ubuntu.zip"), enc(), true },
@@ -41,8 +38,12 @@ public class FormatTest extends ParameterizedParse {
         });
     }
 
-    private static ParseState parseState(final String path) throws URISyntaxException, IOException {
-        return stream(FormatTest.class.getResource(path).toURI());
+    private static ParseState parseState(final String path) {
+        try {
+            return stream(FormatTest.class.getResource(path).toURI());
+        } catch (Exception e) {
+            throw new AssertionError(e);
+        }
     }
 
 }

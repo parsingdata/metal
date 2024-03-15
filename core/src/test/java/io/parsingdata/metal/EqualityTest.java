@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +20,10 @@ package io.parsingdata.metal;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.AutoEqualityTest.DUMMY_STREAM;
 import static io.parsingdata.metal.Shorthand.con;
@@ -48,11 +49,10 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.math.BigInteger;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.ConstantSource;
 import io.parsingdata.metal.data.ImmutableList;
@@ -63,6 +63,7 @@ import io.parsingdata.metal.data.ParseValue;
 import io.parsingdata.metal.data.Slice;
 import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.expression.True;
+import io.parsingdata.metal.expression.value.SingleValueExpression;
 import io.parsingdata.metal.expression.value.reference.Ref;
 import io.parsingdata.metal.expression.value.reference.Ref.DefinitionRef;
 import io.parsingdata.metal.expression.value.reference.Ref.NameRef;
@@ -125,8 +126,7 @@ public class EqualityTest {
         assertEquals(same, same);
         assertEquals(object, same);
         assertEquals(same, object);
-        assertNotEquals(object, new Object() {
-        });
+        assertNotEquals(object, new Object() {});
         assertEquals(object.hashCode(), same.hashCode());
     }
 
@@ -134,7 +134,7 @@ public class EqualityTest {
     public void multiConstructorTypes() {
         final Encoding object = enc();
         final Encoding same = new Encoding(Encoding.DEFAULT_SIGN, Encoding.DEFAULT_CHARSET, Encoding.DEFAULT_BYTE_ORDER);
-        final List<Encoding> other = Arrays.asList(signed(), le(), new Encoding(Charset.forName("UTF-8")));
+        final List<Encoding> other = List.of(signed(), le(), new Encoding(Charset.forName("UTF-8")));
         assertFalse(object.equals(null));
         assertFalse(same.equals(null));
         assertEquals(object, same);
@@ -197,24 +197,30 @@ public class EqualityTest {
 
     @Test
     public void stringRef() {
-        final Ref object = new NameRef("name");
-        assertFalse(object.equals(null));
+        final Ref<String> object = new NameRef("name");
+        assertNotEquals(null, object);
         assertNotEquals("name", object);
         assertEquals(object, new NameRef("name"));
+        assertNotEquals(object, new NameRef("name", "name"));
+        assertNotEquals(object, new NameRef("name", "otherName"));
         assertNotEquals(object, new NameRef("otherName"));
         assertNotEquals(object, new DefinitionRef(any("name")));
-        assertNotEquals(object, new NameRef("name", con(1)));
+        assertNotEquals(object, new NameRef(con(1), "name"));
+        assertNotEquals(object, new NameRef(con(1), (SingleValueExpression) null, "name"));
     }
 
     @Test
     public void definitionRef() {
-        final Ref object = new DefinitionRef(any("name"));
-        assertFalse(object.equals(null));
+        final Ref<Token> object = new DefinitionRef(any("name"));
+        assertNotEquals(null, object);
         assertNotEquals("name", object);
         assertEquals(object, new DefinitionRef(any("name")));
+        assertNotEquals(object, new DefinitionRef(any("name"), any("name")));
+        assertNotEquals(object, new DefinitionRef(any("name"), any("otherName")));
         assertNotEquals(object, new DefinitionRef(any("otherName")));
         assertNotEquals(object, new NameRef("name"));
-        assertNotEquals(object, new DefinitionRef(any("name"), con(1)));
+        assertNotEquals(object, new DefinitionRef(con(1), any("name")));
+        assertNotEquals(object, new DefinitionRef(con(1), (SingleValueExpression) null, any("name")));
     }
 
     @Test

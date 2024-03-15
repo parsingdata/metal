@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,26 +21,16 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-@RunWith(Parameterized.class)
 public class UtilHexTest {
 
-    @Parameter
-    public byte[] input;
-
-    @Parameter(1)
-    public String output;
-
-    @Parameterized.Parameters(name = "{1}")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+        return List.of(new Object[][] {
             { new byte[] { 0x01, 0x23, 0x45, 0x67, (byte) 0x89, (byte) 0xab, (byte) 0xcd, (byte) 0xef}, "0123456789ABCDEF" },
             { new byte[] { -1 }, "FF" },
             { new byte[0], "" },
@@ -48,8 +39,9 @@ public class UtilHexTest {
         });
     }
 
-    @Test
-    public void byteToHex() {
+    @ParameterizedTest(name = "0x{1}")
+    @MethodSource("data")
+    public void byteToHex(final byte[] input, final String output) {
         assertThat(Util.bytesToHexString(input), is(equalTo(output)));
     }
 

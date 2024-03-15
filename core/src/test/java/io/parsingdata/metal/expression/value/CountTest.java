@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +27,8 @@ import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 
-import java.util.Arrays;
 import java.util.Collection;
-
-import org.junit.runners.Parameterized.Parameters;
+import java.util.List;
 
 import io.parsingdata.metal.token.Token;
 import io.parsingdata.metal.util.ParameterizedParse;
@@ -41,9 +40,9 @@ public class CountTest extends ParameterizedParse {
         def("count", 1, eq(count(ref("a"))))
     );
 
-    @Parameters(name="{0} ({4})")
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
+    @Override
+    public Collection<Object[]> data() {
+        return List.of(new Object[][]{
             {"[] = count(0)", COUNT, stream(0), enc(), true},
             {"[3] = count(1)", COUNT, stream(3, 1), enc(), true},
             {"[3,3] = count(2)", COUNT, stream(3, 3, 2), enc(), true},

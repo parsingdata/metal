@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +19,10 @@ package io.parsingdata.metal.expression.value;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.cho;
 import static io.parsingdata.metal.Shorthand.con;
@@ -39,7 +40,7 @@ import static io.parsingdata.metal.util.TokenDefinitions.any;
 
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
@@ -126,7 +127,7 @@ public class ElvisExpressionTest {
 
     @Test
     public void toStringTest() {
-        assertThat(elvisExpression.toString(), is(equalTo("Elvis(NameRef(a),NameRef(b))")));
+        assertThat(elvisExpression.toString(), is(equalTo("Elvis(NameRef(>a),NameRef(>b))")));
     }
 
 }

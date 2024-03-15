@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +25,11 @@ import java.math.BigInteger;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.token.Token;
 
-public class ParseReference implements ParseItem {
+public class ParseReference extends ImmutableObject implements ParseItem {
 
     public final BigInteger location;
     public final Source source;
@@ -61,7 +63,7 @@ public class ParseReference implements ParseItem {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), location, source, definition);
     }
 

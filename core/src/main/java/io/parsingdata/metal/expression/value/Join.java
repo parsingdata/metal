@@ -1,6 +1,6 @@
 /*
- * Copyright 2013-2023 Netherlands Forensic Institute
- * Copyright 2021-2023 Infix Technologies B.V.
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,10 @@ package io.parsingdata.metal.expression.value;
 import static io.parsingdata.metal.Util.checkContainsNoNulls;
 
 import java.util.Arrays;
+import java.util.Objects;
 
+import io.parsingdata.metal.ImmutableObject;
+import io.parsingdata.metal.Util;
 import io.parsingdata.metal.data.ImmutableList;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
@@ -32,7 +35,7 @@ import io.parsingdata.metal.encoding.Encoding;
  * A Join expression can have zero or more expressions. If none is provided, this will return an empty list.
  * Else, each expression is evaluated and concatenated to a single list.
  */
-public class Join implements ValueExpression {
+public class Join extends ImmutableObject implements ValueExpression {
 
     private final ValueExpression[] expressions;
 
@@ -45,5 +48,21 @@ public class Join implements ValueExpression {
         return Arrays.stream(expressions)
             .map(e -> e.eval(parseState, encoding))
             .reduce(new ImmutableList<>(), ImmutableList::add, ImmutableList::add);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" + Arrays.toString(expressions) + ")";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return Util.notNullAndSameClass(this, obj)
+            && Arrays.equals(expressions, ((Join)obj).expressions);
+    }
+
+    @Override
+    public int immutableHashCode() {
+        return Objects.hash(getClass(), Arrays.hashCode(expressions));
     }
 }

@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,11 +24,12 @@ import static io.parsingdata.metal.Util.checkNotNull;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.parsingdata.metal.ImmutableObject;
 import io.parsingdata.metal.Trampoline;
 import io.parsingdata.metal.Util;
 import io.parsingdata.metal.token.Token;
 
-public class ParseGraph implements ParseItem {
+public class ParseGraph extends ImmutableObject implements ParseItem {
 
     public final ParseItem head;
     public final ParseGraph tail;
@@ -143,7 +145,7 @@ public class ParseGraph implements ParseItem {
     }
 
     @Override
-    public int hashCode() {
+    public int immutableHashCode() {
         return Objects.hash(getClass(), head, tail, branched, definition);
     }
 
