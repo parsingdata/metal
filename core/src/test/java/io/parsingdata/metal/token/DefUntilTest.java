@@ -221,7 +221,7 @@ class DefUntilTest {
             () -> assertEquals(11, parse.get().offset.intValue()),
             () -> assertEquals(11, offsets.size()),
             () -> assertIterableEquals(List.of(0, 6, 12, 5, 10, 15, 7, 8, 9, 10, 11), offsets),
-            () -> assertEquals("01234567890", getAllValues(parse.get().order, "test").head.asString())
+            () -> assertEquals("01234567890", getAllValues(parse.get().order, "test").get(0).asString())
         );
     }
 
