@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +24,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import static io.parsingdata.metal.Shorthand.EMPTY;
 import static io.parsingdata.metal.Shorthand.con;
+import static io.parsingdata.metal.Shorthand.count;
 import static io.parsingdata.metal.Shorthand.def;
 import static io.parsingdata.metal.Shorthand.eq;
+import static io.parsingdata.metal.Shorthand.eqNum;
 import static io.parsingdata.metal.Shorthand.first;
+import static io.parsingdata.metal.Shorthand.post;
 import static io.parsingdata.metal.Shorthand.ref;
 import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.scope;
@@ -52,22 +56,24 @@ public class ScopeTest {
 
     @Test
     public void notAValueScopeSize() {
-        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> new Scope(con(0), EMPTY_SVE).eval(EMPTY_PARSE_STATE, enc()));
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> scope(ref("a"), EMPTY_SVE).eval(EMPTY_PARSE_STATE, enc()));
         assertEquals("Argument scopeSize must evaluate to a positive, countable value.", e.getMessage());
     }
 
     @Test
     public void negativeScopeSize() {
-        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> new Scope(con(0), con(-1, signed())).eval(EMPTY_PARSE_STATE, enc()));
+        final Exception e = Assertions.assertThrows(IllegalArgumentException.class, () -> scope(ref("a"), con(-1, signed())).eval(EMPTY_PARSE_STATE, enc()));
         assertEquals("Argument scopeSize must evaluate to a positive, countable value.", e.getMessage());
     }
 
     @Test
-    public void scopeSizes() {
+    public void scopeSizesByName() {
         final Token scopesToken =
             seq(any("value"), // 0
                 repn(seq(any("value"),  // 1
                         seq(any("value"), // 2
+                            // deepestValue=2, default scope=0, so refers to the deepest scope, which includes only the "value" in this seq
+                            def("deepestValue", con(1), eq(first(scope(ref("value"))))),
                             // deepestValue=2, scope=0, so refers to the deepest scope, which includes only the "value" in this seq
                             def("deepestValue", con(1), eq(first(scope(ref("value"), con(0))))),
                             // middleValue=1, scope=1, so includes the current seq and the one above it.
@@ -82,7 +88,35 @@ public class ScopeTest {
                     ), con(1)
                 )
             );
-        final Optional<ParseState> result = scopesToken.parse(env(stream(0, 1, 2, 2, 1, 1, 0, 0), enc()));
+        final Optional<ParseState> result = scopesToken.parse(env(stream(0, 1, 2, 2, 2, 1, 1, 0, 0), enc()));
+        assertTrue(result.isPresent());
+    }
+
+
+    @Test
+    public void scopeSizesByDefinition() {
+        final Token value = any("value");
+        final Token scopesToken =
+            seq(value, // 0
+                repn(seq(value,  // 1
+                        seq(value, // 2
+                            // deepestValue=2, default scope=0, so refers to the deepest scope, which includes only the "value" in this seq
+                            def("deepestValue", con(1), eq(first(scope(ref(value))))),
+                            // deepestValue=2, scope=0, so refers to the deepest scope, which includes only the "value" in this seq
+                            def("deepestValue", con(1), eq(first(scope(ref(value), con(0))))),
+                            // middleValue=1, scope=1, so includes the current seq and the one above it.
+                            def("middleValue", con(1), eq(first(scope(ref(value), con(1))))),
+                            // stillMiddleValue=1, scope=2, but since repn is also a scope delimiter, it does not include the top-level seq
+                            def("stillMiddleValue", con(1), eq(first(scope(ref(value), con(2))))),
+                            // topValue=0, scope=3, includes all scope delimiting tokens, to effectively global
+                            def("topValue", con(1), eq(first(scope(ref(value), con(3))))),
+                            // hugeScope=0, scope=100, everything from 3 up is global scope since there are 4 scope delimiting tokens (0-3)
+                            def("hugeScope", con(1), eq(first(scope(ref(value), con(100)))))
+                        )
+                    ), con(1)
+                )
+            );
+        final Optional<ParseState> result = scopesToken.parse(env(stream(0, 1, 2, 2, 2, 1, 1, 0, 0), enc()));
         assertTrue(result.isPresent());
     }
 
@@ -105,8 +139,56 @@ public class ScopeTest {
 
     @Test
     public void parseGraphWithEmptyBranchSimplified() {
-        final Optional<ParseState> result = def("a", first(scope(con(1), con(0)))).parse(env(stream(0)));
-        assertEquals(ZERO, ref("a").eval(result.get(), enc()).head().asNumeric());
+        final Optional<ParseState> result = post(def("a", con(1)), eqNum(con(0), scope(ref("a"), con(0)))).parse(env(stream(0)));
+        assertTrue(result.isPresent());
+    }
+
+    @Test
+    public void trivialScope() {
+        final Token trivialScope =
+            seq(
+                any("value"),
+                seq(
+                    any("value"),
+                    post(
+                        post(
+                            any("value"),
+                            eqNum(count(scope(ref("value"), con(0))), con(2))),
+                        eqNum(count(scope(ref("value"), con(1))), con(3))
+                    )
+                )
+            );
+
+        final Optional<ParseState> result = trivialScope.parse(env(stream(0, 0, 0), enc()));
+        assertTrue(result.isPresent());
+        assertEquals(3, result.get().offset.intValueExact());
+    }
+
+    @Test
+    public void orderedScope() {
+        final Token orderedScope =
+            seq(
+                any("s"),
+                any("s"),
+                repn(any("s"), con(1)),
+                seq(any("s"),
+                    any("s"),
+                    seq(any("s"),
+                        post(
+                            post(
+                                post(any("s"),
+                                    eqNum(count(ref("s")), con(7))
+                                ),
+                                eqNum(count(ref("s")), con(7))
+                            ),
+                            eqNum(count(ref("s")), con(7))
+                        )
+                    )
+                )
+            );
+        final Optional<ParseState> result = orderedScope.parse(env(stream(7, 6, 5, 4, 3, 2, 1), enc()));
+        assertTrue(result.isPresent());
+        assertEquals(7, result.get().offset.intValueExact());
     }
 
 }

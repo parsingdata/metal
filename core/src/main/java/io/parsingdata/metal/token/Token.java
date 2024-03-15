@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,8 +30,8 @@ import io.parsingdata.metal.data.Environment;
 import io.parsingdata.metal.data.ParseGraph;
 import io.parsingdata.metal.data.ParseState;
 import io.parsingdata.metal.encoding.Encoding;
-import io.parsingdata.metal.expression.value.Scope;
 import io.parsingdata.metal.expression.value.reference.CurrentIteration;
+import io.parsingdata.metal.expression.value.reference.Ref;
 
 /**
  * Base class for all Token implementations.
@@ -80,7 +81,7 @@ public abstract class Token extends ImmutableObject {
     protected abstract Optional<ParseState> parseImpl(final Environment environment);
 
     /**
-     * The {@link Scope} ValueExpression uses this property to determine which
+     * The {@link Ref} ValueExpression uses this property to determine which
      * part of the {@link ParseState}'s <code>order</code> (the {@link
      * ParseGraph}) field is considered to be in scope. The Tokens considered
      * to be scope delimiters are {@link Seq} and subclasses of {@link

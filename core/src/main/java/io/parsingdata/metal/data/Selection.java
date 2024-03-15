@@ -1,5 +1,6 @@
 /*
- * Copyright 2013-2021 Netherlands Forensic Institute
+ * Copyright 2013-2024 Netherlands Forensic Institute
+ * Copyright 2021-2024 Infix Technologies B.V.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,6 +88,20 @@ public final class Selection {
 
     public static ImmutableList<ParseValue> getAllValues(final ParseGraph graph, final Predicate<ParseValue> predicate) {
         return getAllValues(graph, predicate, NO_LIMIT);
+    }
+
+    public static ImmutableList<ParseValue> getAllValues(final ParseGraph graph, final Predicate<ParseValue> predicate, final int limit, final int requestedScope, final int currentScope) {
+        return getAllScopedValues(graph, predicate, limit, requestedScope, currentScope).computeResult();
+    }
+
+    private static Trampoline<ImmutableList<ParseValue>> getAllScopedValues(final ParseGraph graph, final Predicate<ParseValue> predicate, final int limit, final int requestedScope, final int currentScope) {
+        if (graph.isEmpty() || limit == 0) {
+            return complete(ImmutableList::new);
+        }
+        if (requestedScope >= currentScope) {
+            return complete(() -> getAllValues(graph, predicate, limit));
+        }
+        return intermediate(() -> getAllScopedValues(graph.head.asGraph(), predicate, limit, requestedScope, graph.head.getDefinition().isScopeDelimiter() ? currentScope - 1 : currentScope));
     }
 
     private static Trampoline<ImmutableList<ParseValue>> getAllValues(final ImmutableList<ParseGraph> graphList, final ImmutableList<ParseValue> valueList, final Predicate<ParseValue> predicate, final int limit) {
