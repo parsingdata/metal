@@ -85,9 +85,6 @@ public class ParseGraph extends ImmutableObject implements ParseItem {
         if (branched) {
             return new ParseGraph(head.asGraph().addBranch(definition), tail, this.definition, true, definition.isScopeDelimiter() ? scopeDepth + 1 : scopeDepth);
         }
-        if (scopeDepth != 0) {
-            throw new IllegalStateException("Cannot add branch that is closed but has a non zero scopeDepth.");
-        }
         return new ParseGraph(new ParseGraph(definition), this, this.definition, true, definition.isScopeDelimiter() ? 1 : 0);
     }
 
@@ -95,11 +92,15 @@ public class ParseGraph extends ImmutableObject implements ParseItem {
         if (!branched) {
             throw new IllegalStateException("Cannot close branch that is not open.");
         }
+        final int newScopeDepth = token.isScopeDelimiter() ? scopeDepth - 1 : scopeDepth;
         if (head.asGraph().branched) {
-            return new ParseGraph(head.asGraph().closeBranch(token), tail, definition, true, token.isScopeDelimiter() ? scopeDepth - 1 : scopeDepth);
+            return new ParseGraph(head.asGraph().closeBranch(token), tail, definition, true, newScopeDepth);
         }
         if (!head.getDefinition().equals(token)) {
             throw new IllegalStateException("Cannot close branch with token that does not match its head token.");
+        }
+        if (newScopeDepth != 0) {
+            throw new IllegalStateException("Cannot close parse graph that has a non zero scopeDepth.");
         }
         return new ParseGraph(head, tail, definition);
     }

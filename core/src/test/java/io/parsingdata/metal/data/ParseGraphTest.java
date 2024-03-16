@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import static io.parsingdata.metal.Shorthand.scope;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
@@ -42,6 +43,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -321,6 +323,7 @@ public class ParseGraphTest {
     }
 
     public static Stream<Arguments> closeBranchExceptionTest() {
+        final TestToken token = new TestToken("Test", null);
         return Stream.of(
             arguments("Cannot close branch that is not open.", EMPTY, null),
             arguments("Cannot close branch that is not open.", EMPTY.add(a), t),
@@ -332,7 +335,9 @@ public class ParseGraphTest {
             arguments("Cannot close branch with token that does not match its head token.", EMPTY.addBranch(t).addBranch(s), t),
             arguments("Cannot close branch with token that does not match its head token.", EMPTY.addBranch(s).addBranch(t), s),
             arguments("Cannot close branch with token that does not match its head token.", EMPTY.addBranch(t).addBranch(s).closeBranch(s), s),
-            arguments("Cannot close branch with token that does not match its head token.", EMPTY.addBranch(s).addBranch(t).closeBranch(t), t)
+            arguments("Cannot close branch with token that does not match its head token.", EMPTY.addBranch(s).addBranch(t).closeBranch(t), t),
+
+            arguments("Cannot close parse graph that has a non zero scopeDepth.", EMPTY.addBranch(token.setScopeDelimiter(true)), token.setScopeDelimiter(false))
         );
     }
 
@@ -341,6 +346,30 @@ public class ParseGraphTest {
     public void closeBranchExceptionTest(final String errorMessage, final ParseGraph graph, final Token token) {
         final Exception e = assertThrows(IllegalStateException.class, () -> graph.closeBranch(token));
         assertEquals(errorMessage, e.getMessage());
+    }
+
+    private static class TestToken extends Token {
+
+        private boolean isScopeDelimiter;
+
+        protected TestToken(String name, Encoding encoding) {
+            super(name, encoding);
+        }
+
+        @Override
+        protected Optional<ParseState> parseImpl(Environment environment) {
+            return Optional.empty();
+        }
+        @Override public String toString() { return "Test"; }
+
+        @Override
+        public boolean isScopeDelimiter() {
+            return isScopeDelimiter;
+        }
+        public Token setScopeDelimiter(final boolean isScopeDelimiter) {
+            this.isScopeDelimiter = isScopeDelimiter;
+            return this;
+        }
     }
 
 }
