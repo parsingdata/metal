@@ -17,13 +17,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # Fetch all history for Sonar analysis
           fetch-depth: 0
 
       - name: Set up Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -31,7 +31,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.java-version }}
           distribution: ${{ matrix.distribution }}
@@ -57,4 +57,4 @@ jobs:
       - name: Upload Code Coverage to Codecov
         # Upload test coverage results only from the Corretto 11 build
         if: matrix.distribution == 'corretto' && matrix.java-version == '11'
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
