@@ -150,9 +150,8 @@ public class ParseGraph extends ImmutableObject implements ParseItem {
             && Objects.equals(head, ((ParseGraph)obj).head)
             && Objects.equals(tail, ((ParseGraph)obj).tail)
             && Objects.equals(branched, ((ParseGraph)obj).branched)
-            && Objects.equals(scopeDepth, ((ParseGraph)obj).scopeDepth)
             && Objects.equals(definition, ((ParseGraph)obj).definition);
-            // The size field is excluded from equals() and hashCode() because it is cached data.
+            // The size and scopeDepth fields are excluded from equals() and hashCode() because it is cached data.
     }
 
     @Override

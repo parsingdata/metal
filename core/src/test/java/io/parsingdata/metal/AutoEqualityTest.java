@@ -169,7 +169,7 @@ public class AutoEqualityTest {
         io.parsingdata.metal.expression.logical.Not.class,
         // Data structures
         CoreValue.class, ParseValue.class, ParseReference.class, ParseState.class,
-        NotAValue.class, ParseGraph.class, ImmutableList.class,
+        NotAValue.class, ImmutableList.class,
         ParseValueCache.class,
         // Inputs
         Slice.class,
@@ -184,7 +184,7 @@ public class AutoEqualityTest {
         // Utility classes.
         Selection.class, ConstantFactory.class,
         // Multiple constructors
-        Environment.class
+        Environment.class, ParseGraph.class
     );
 
     public static final Object OTHER_TYPE = new Object() {};
