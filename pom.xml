@@ -66,12 +66,12 @@
     <junit-jupiter.version>5.10.2</junit-jupiter.version>
     <hamcrest-library.version>2.2</hamcrest-library.version>
 
-    <jacoco-plugin.version>0.8.10</jacoco-plugin.version>
-    <pmd-plugin.version>3.21.0</pmd-plugin.version>
-    <jxr-plugin.version>3.3.0</jxr-plugin.version>
-    <javadoc-plugin.version>3.5.0</javadoc-plugin.version>
+    <jacoco-plugin.version>0.8.11</jacoco-plugin.version>
+    <pmd-plugin.version>3.21.2</pmd-plugin.version>
+    <jxr-plugin.version>3.3.2</jxr-plugin.version>
+    <javadoc-plugin.version>3.6.3</javadoc-plugin.version>
     <nexus-staging-plugin.version>1.6.13</nexus-staging-plugin.version>
-    <gpg-plugin.version>3.1.0</gpg-plugin.version>
+    <gpg-plugin.version>3.2.0</gpg-plugin.version>
     <source-plugin.version>3.3.0</source-plugin.version>
     <pitest-maven.version>1.5.2</pitest-maven.version>
     <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
@@ -127,7 +127,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.11.0</version>
+        <version>3.12.1</version>
         <configuration>
           <release>11</release>
         </configuration>
