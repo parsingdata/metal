@@ -436,10 +436,10 @@ public class AutoEqualityTest {
         }
     }
 
-    private static void assertEquals(final Object o, final Object object) {
+    public static void assertEquals(final Object o, final Object object) {
         Assertions.assertEquals(o, object, String.format("Objects should be equal:\n%s\n%s\n", o, object));
     }
-    private static void assertNotEquals(final Object o, final Object object) {
+    public static void assertNotEquals(final Object o, final Object object) {
         Assertions.assertNotEquals(o, object, String.format("Objects should not be equal:\n%s\n%s\n", o, object));
     }
 
