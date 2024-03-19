@@ -73,8 +73,8 @@ public class DataExpressionSourceTest {
     @Test
     public void createSliceFromParseValue() {
         final ParseValue value = setupValue();
-        assertTrue(value.slice().source.isAvailable(ZERO, BigInteger.valueOf(4)));
-        assertFalse(value.slice().source.isAvailable(ZERO, BigInteger.valueOf(5)));
+        assertTrue(value.slice().source.isAvailable(ZERO, valueOf(4)));
+        assertFalse(value.slice().source.isAvailable(ZERO, valueOf(5)));
     }
 
     @Test
@@ -82,7 +82,7 @@ public class DataExpressionSourceTest {
         final Optional<ParseState> result = setupResult();
         final DataExpressionSource source = new DataExpressionSource(ref("a"), 1, result.get(), enc());
 
-        final Exception e = Assertions.assertThrows(IllegalStateException.class, () -> source.getData(ZERO, BigInteger.valueOf(4)));
+        final Exception e = Assertions.assertThrows(IllegalStateException.class, () -> source.getData(ZERO, valueOf(4)));
         assertEquals("ValueExpression dataExpression yields 1 result(s) (expected at least 2).", e.getMessage());
     }
 
