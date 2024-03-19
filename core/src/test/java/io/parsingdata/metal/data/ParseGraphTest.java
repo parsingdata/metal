@@ -61,7 +61,6 @@ public class ParseGraphTest {
     private static ParseGraph pg;
     private static ParseGraph pgc;
     private static ParseGraph pgl;
-    private static List<ParseGraph> pgs;
     private static Token aDef;
     private static ParseValue a;
     private static ParseValue b;
@@ -97,7 +96,6 @@ public class ParseGraphTest {
         pg = makeSimpleGraph();
         pgc = makeCycleGraph();
         pgl = makeLongGraph();
-        pgs = makeGraphList();
     }
 
     private static ParseGraph makeSimpleGraph() {
@@ -250,79 +248,6 @@ public class ParseGraphTest {
         assertFalse(EMPTY.current().isPresent());
         assertFalse(EMPTY.add(new ParseReference(ZERO, EMPTY_SOURCE, NONE)).current().isPresent());
         assertFalse(EMPTY.addBranch(NONE).current().isPresent());
-    }
-
-    private static List<ParseGraph> makeGraphList() {
-        return List.of(
-            EMPTY,
-            EMPTY.add(a),
-            EMPTY.add(b),
-            EMPTY.add(a).add(b),
-            EMPTY.add(b).add(a),
-
-            EMPTY.addBranch(t),
-            EMPTY.addBranch(s),
-            EMPTY.add(a).addBranch(s),
-            EMPTY.add(a).addBranch(t),
-            EMPTY.add(b).addBranch(s),
-            EMPTY.add(b).addBranch(t),
-            EMPTY.add(a).addBranch(t).addBranch(s),
-            EMPTY.add(a).addBranch(s).addBranch(t),
-            EMPTY.add(b).addBranch(s).addBranch(t),
-            EMPTY.add(b).addBranch(t).addBranch(s),
-
-            EMPTY.add(a).addBranch(t).add(a),
-            EMPTY.add(a).addBranch(t).add(b),
-            EMPTY.add(b).addBranch(s).add(a),
-            EMPTY.add(b).addBranch(t).add(b),
-            EMPTY.add(a).addBranch(t).add(a).addBranch(s),
-            EMPTY.add(a).addBranch(s).add(b).addBranch(t),
-            EMPTY.add(b).addBranch(s).add(a).addBranch(t),
-            EMPTY.add(b).addBranch(t).add(b).addBranch(s),
-
-            EMPTY.add(a).addBranch(t).add(a).addBranch(s).add(a),
-            EMPTY.add(a).addBranch(t).add(a).addBranch(s).add(b),
-            EMPTY.add(a).addBranch(s).add(b).addBranch(t).add(a),
-            EMPTY.add(a).addBranch(s).add(b).addBranch(t).add(b),
-            EMPTY.add(b).addBranch(s).add(a).addBranch(t).add(a),
-            EMPTY.add(b).addBranch(s).add(a).addBranch(t).add(b),
-            EMPTY.add(b).addBranch(t).add(b).addBranch(s).add(a),
-            EMPTY.add(b).addBranch(t).add(b).addBranch(s).add(b)
-        );
-    }
-
-    public static Stream<Arguments> nonEqualityTest() {
-        final List<Arguments> args = new ArrayList<>();
-        for (int i = 0; i < pgs.size(); i++) {
-            for (int j = 0; j < pgs.size(); j++) {
-                if (i != j) {
-                    args.add(arguments(i + "," + j, pgs.get(i), pgs.get(j)));
-                }
-            }
-        }
-        return args.stream();
-    }
-
-    @ParameterizedTest
-    @MethodSource
-    public void nonEqualityTest(final String testnr, final ParseGraph first, final ParseGraph second) {
-        AutoEqualityTest.assertNotEquals(first, second);
-        AutoEqualityTest.assertNotEquals(first.hashCode(), second.hashCode());
-    }
-
-    public static Stream<Arguments> equalityTest() {
-        final List<Arguments> args = new ArrayList<>();
-        for (int i = 0; i < pgs.size(); i++) {
-            args.add(arguments(i, pgs.get(i), pgs.get(i)));
-        }
-        return args.stream();
-    }
-
-    @ParameterizedTest
-    @MethodSource
-    public void equalityTest(final int testnr, final ParseGraph first, final ParseGraph second) {
-        AutoEqualityTest.assertEquals(first, second);
-        AutoEqualityTest.assertEquals(first.hashCode(), second.hashCode());
     }
 
     public static Stream<Arguments> scopeDepthTest() {

@@ -169,7 +169,7 @@ public class AutoEqualityTest {
         io.parsingdata.metal.expression.logical.Not.class,
         // Data structures
         CoreValue.class, ParseValue.class, ParseReference.class, ParseState.class,
-        NotAValue.class, ImmutableList.class,
+        NotAValue.class, ParseGraph.class, ImmutableList.class,
         ParseValueCache.class,
         // Inputs
         Slice.class,
@@ -184,7 +184,7 @@ public class AutoEqualityTest {
         // Utility classes.
         Selection.class, ConstantFactory.class,
         // Multiple constructors
-        Environment.class, ParseGraph.class
+        Environment.class
     );
 
     public static final Object OTHER_TYPE = new Object() {};
@@ -436,10 +436,10 @@ public class AutoEqualityTest {
         }
     }
 
-    public static void assertEquals(final Object o, final Object object) {
+    private static void assertEquals(final Object o, final Object object) {
         Assertions.assertEquals(o, object, String.format("Objects should be equal:\n%s\n%s\n", o, object));
     }
-    public static void assertNotEquals(final Object o, final Object object) {
+    private static void assertNotEquals(final Object o, final Object object) {
         Assertions.assertNotEquals(o, object, String.format("Objects should not be equal:\n%s\n%s\n", o, object));
     }
 
