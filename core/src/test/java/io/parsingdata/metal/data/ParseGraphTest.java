@@ -23,9 +23,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import static io.parsingdata.metal.Shorthand.scope;
 import static io.parsingdata.metal.Shorthand.seq;
 import static io.parsingdata.metal.data.ParseGraph.EMPTY;
 import static io.parsingdata.metal.data.ParseGraph.NONE;
@@ -34,31 +36,43 @@ import static io.parsingdata.metal.data.selection.ByTypeTest.EMPTY_SOURCE;
 import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.ParseStateFactory.stream;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import io.parsingdata.metal.AutoEqualityTest;
+import io.parsingdata.metal.encoding.Encoding;
 import io.parsingdata.metal.token.Token;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class ParseGraphTest {
 
-    private final Token t = any("t");
+    private static final Token t = any("t");
+    private static final Token s = seq("scopeDelimiter", t, t);
 
-    private final ParseGraph pg;
-    private final ParseGraph pgc;
-    private final ParseGraph pgl;
-    private final Token aDef;
-    private final ParseValue a;
-    private final ParseValue b;
-    private final ParseValue c;
-    private final ParseValue d;
-    private final ParseValue e;
-    private final ParseValue f;
-    private final ParseValue g;
-    private final ParseValue h;
+    private static ParseGraph pg;
+    private static ParseGraph pgc;
+    private static ParseGraph pgl;
+    private static Token aDef;
+    private static ParseValue a;
+    private static ParseValue b;
+    private static ParseValue c;
+    private static ParseValue d;
+    private static ParseValue e;
+    private static ParseValue f;
+    private static ParseValue g;
+    private static ParseValue h;
 
-    public ParseGraphTest() {
+    @BeforeAll
+    public static void setup() {
         aDef = any("a");
         Token token =
             seq(aDef, any("empty"),
@@ -84,21 +98,21 @@ public class ParseGraphTest {
         pgl = makeLongGraph();
     }
 
-    private ParseGraph makeSimpleGraph() {
+    private static ParseGraph makeSimpleGraph() {
         return ParseGraph
             .EMPTY
-            .add(a)        // [a]
-            .add(b)        // [b]
-            .addBranch(t)  //  +---+
-            .add(c)        //  |  [c]
-            .addBranch(t)  //  |   +---+
-            .add(d)        //  |   |  [d]
-            .add(e)        //  |   |  [e]
-            .closeBranch() //  |   +---+
-            .add(f)        //  |  [f]
-            .closeBranch() //  +---+
-            .add(g)        // [g]
-            .add(h);       // [h]
+            .add(a)         // [a]
+            .add(b)         // [b]
+            .addBranch(t)   //  +---+
+            .add(c)         //  |  [c]
+            .addBranch(t)   //  |   +---+
+            .add(d)         //  |   |  [d]
+            .add(e)         //  |   |  [e]
+            .closeBranch(t) //  |   +---+
+            .add(f)         //  |  [f]
+            .closeBranch(t) //  +---+
+            .add(g)         // [g]
+            .add(h);        // [h]
     }
 
     @Test
@@ -123,14 +137,14 @@ public class ParseGraphTest {
         assertEquals(a, pg.tail.tail.tail.tail.head);
     }
 
-    private ParseGraph makeCycleGraph() {
+    private static ParseGraph makeCycleGraph() {
         return ParseGraph
             .EMPTY
             .add(a)
             .addBranch(t)
             .add(b)
             .add(new ParseReference(a.slice().offset, a.slice().source, aDef))
-            .closeBranch();
+            .closeBranch(t);
     }
 
     @Test
@@ -145,25 +159,25 @@ public class ParseGraphTest {
         assertEquals(a, pgc.tail.head);
     }
 
-    private ParseGraph makeLongGraph() {
+    private static ParseGraph makeLongGraph() {
         return ParseGraph
             .EMPTY
             .add(a)
             .addBranch(t)
             .addBranch(t)
             .add(b)
-            .closeBranch()
+            .closeBranch(t)
             .addBranch(t)
-            .closeBranch()
+            .closeBranch(t)
             .add(c)
             .addBranch(t)
             .add(d)
-            .closeBranch()
-            .closeBranch()
+            .closeBranch(t)
+            .closeBranch(t)
             .add(e)
             .addBranch(t)
             .add(f)
-            .closeBranch();
+            .closeBranch(t);
     }
 
     @Test
@@ -191,17 +205,17 @@ public class ParseGraphTest {
 
     @Test
     public void testSimpleToString() {
-        assertThat(pg.toString(), is("pg(pval(h:0x68),pg(pval(g:0x67),pg(pg(pval(f:0x66),pg(pg(pval(e:0x65),pg(pval(d:0x64),pg(terminator:Def),false),false),pg(pval(c:0x63),pg(terminator:Def),false),false),false),pg(pval(b:0x62),pg(pval(a:0x61),pg(EMPTY),false),false),false),false),false)"));
+        assertThat(pg.toString(), is("pg(pval(h:0x68),pg(pval(g:0x67),pg(pg(pval(f:0x66),pg(pg(pval(e:0x65),pg(pval(d:0x64),pg(terminator:Def),false,0),false,0),pg(pval(c:0x63),pg(terminator:Def),false,0),false,0),false,0),pg(pval(b:0x62),pg(pval(a:0x61),pg(EMPTY),false,0),false,0),false,0),false,0),false,0)"));
     }
 
     @Test
     public void testCycleToString() {
-        assertThat(pgc.toString(), is("pg(pg(pref(@0),pg(pval(b:0x62),pg(terminator:Def),false),false),pg(pval(a:0x61),pg(EMPTY),false),false)"));
+        assertThat(pgc.toString(), is("pg(pg(pref(@0),pg(pval(b:0x62),pg(terminator:Def),false,0),false,0),pg(pval(a:0x61),pg(EMPTY),false,0),false,0)"));
     }
 
     @Test
     public void testLongToString() {
-        assertThat(pgl.toString(), is("pg(pg(pval(f:0x66),pg(terminator:Def),false),pg(pval(e:0x65),pg(pg(pg(pval(d:0x64),pg(terminator:Def),false),pg(pval(c:0x63),pg(pg(terminator:Def),pg(pg(pval(b:0x62),pg(terminator:Def),false),pg(terminator:Def),false),false),false),false),pg(pval(a:0x61),pg(EMPTY),false),false),false),false)"));
+        assertThat(pgl.toString(), is("pg(pg(pval(f:0x66),pg(terminator:Def),false,0),pg(pval(e:0x65),pg(pg(pg(pval(d:0x64),pg(terminator:Def),false,0),pg(pval(c:0x63),pg(pg(terminator:Def),pg(pg(pval(b:0x62),pg(terminator:Def),false,0),pg(terminator:Def),false,0),false,0),false,0),false,0),pg(pval(a:0x61),pg(EMPTY),false,0),false,0),false,0),false,0)"));
     }
 
     @Test
@@ -213,7 +227,7 @@ public class ParseGraphTest {
 
     @Test
     public void testCloseNotBranched() {
-        final Exception e = assertThrows(IllegalStateException.class, EMPTY::closeBranch);
+        final Exception e = assertThrows(IllegalStateException.class, () -> EMPTY.closeBranch(t));
         assertEquals("Cannot close branch that is not open.", e.getMessage());
     }
 
@@ -234,6 +248,132 @@ public class ParseGraphTest {
         assertFalse(EMPTY.current().isPresent());
         assertFalse(EMPTY.add(new ParseReference(ZERO, EMPTY_SOURCE, NONE)).current().isPresent());
         assertFalse(EMPTY.addBranch(NONE).current().isPresent());
+    }
+
+    public static Stream<Arguments> scopeDepthTest() {
+        return Stream.of(
+            // Add branches with and without scope delimited tokens.
+            arguments(0, EMPTY),
+            arguments(0, EMPTY.add(a)),
+            arguments(0, EMPTY.addBranch(t)),
+            arguments(1, EMPTY.addBranch(s)),
+            arguments(1, EMPTY.addBranch(t).addBranch(s)),
+            arguments(1, EMPTY.addBranch(s).addBranch(t)),
+            arguments(2, EMPTY.addBranch(s).addBranch(s)),
+            arguments(2, EMPTY.addBranch(s).addBranch(s).addBranch(t)),
+            arguments(2, EMPTY.addBranch(s).addBranch(t).addBranch(s)),
+            arguments(2, EMPTY.addBranch(t).addBranch(s).addBranch(s)),
+            arguments(3, EMPTY.addBranch(s).addBranch(s).addBranch(s)),
+
+            // Close branches with and without scope delimited tokens.
+            arguments(2, EMPTY.addBranch(s).addBranch(s).addBranch(t).closeBranch(t)),
+            arguments(1, EMPTY.addBranch(s).addBranch(t).addBranch(s).closeBranch(s)),
+            arguments(2, EMPTY.addBranch(s).addBranch(s).addBranch(s).closeBranch(s)),
+            arguments(0, EMPTY.addBranch(t).addBranch(s).addBranch(s).closeBranch(s).closeBranch(s)),
+            arguments(1, EMPTY.addBranch(s).addBranch(s).addBranch(s).closeBranch(s).closeBranch(s)),
+            arguments(0, EMPTY.addBranch(t).addBranch(s).addBranch(s).closeBranch(s).closeBranch(s).closeBranch(t)),
+            arguments(0, EMPTY.addBranch(s).addBranch(s).addBranch(s).closeBranch(s).closeBranch(s).closeBranch(s)),
+
+            // A previously closed branch should not interfere with the scopeDepth when adding branches.
+            arguments(0, EMPTY.addBranch(t).closeBranch(t).addBranch(t)),
+            arguments(1, EMPTY.addBranch(t).closeBranch(t).addBranch(s)),
+            arguments(1, EMPTY.addBranch(t).closeBranch(t).addBranch(t).addBranch(s)),
+            arguments(1, EMPTY.addBranch(t).closeBranch(t).addBranch(s).addBranch(t)),
+            arguments(2, EMPTY.addBranch(t).closeBranch(t).addBranch(s).addBranch(s)),
+            arguments(2, EMPTY.addBranch(t).closeBranch(t).addBranch(s).addBranch(s).addBranch(t)),
+            arguments(2, EMPTY.addBranch(t).closeBranch(t).addBranch(s).addBranch(t).addBranch(s)),
+            arguments(2, EMPTY.addBranch(t).closeBranch(t).addBranch(t).addBranch(s).addBranch(s)),
+            arguments(3, EMPTY.addBranch(t).closeBranch(t).addBranch(s).addBranch(s).addBranch(s)),
+
+            // A previously closed branch should not interfere with the scopeDepth when closing branches.
+            arguments(0, EMPTY.addBranch(t).closeBranch(t).addBranch(t)),
+            arguments(0, EMPTY.addBranch(t).closeBranch(t).addBranch(s).closeBranch(s)),
+            arguments(0, EMPTY.addBranch(t).closeBranch(t).addBranch(t).addBranch(s).closeBranch(s)),
+            arguments(1, EMPTY.addBranch(t).closeBranch(t).addBranch(s).addBranch(t).closeBranch(t)),
+            arguments(1, EMPTY.addBranch(t).closeBranch(t).addBranch(s).addBranch(s).closeBranch(s)),
+            arguments(2, EMPTY.addBranch(t).closeBranch(t).addBranch(s).addBranch(s).addBranch(t).closeBranch(t)),
+            arguments(1, EMPTY.addBranch(t).closeBranch(t).addBranch(s).addBranch(t).addBranch(s).closeBranch(s)),
+            arguments(1, EMPTY.addBranch(t).closeBranch(t).addBranch(t).addBranch(s).addBranch(s).closeBranch(s)),
+            arguments(2, EMPTY.addBranch(t).closeBranch(t).addBranch(s).addBranch(s).addBranch(s).closeBranch(s)),
+
+            // Adding values should not interfere with the scopeDepth.
+            arguments(0, EMPTY),
+            arguments(0, EMPTY.add(a)),
+            arguments(0, EMPTY.add(a).addBranch(t).add(a)),
+            arguments(1, EMPTY.add(a).addBranch(s).add(a)),
+            arguments(1, EMPTY.add(a).addBranch(t).add(a).addBranch(s).add(a)),
+            arguments(1, EMPTY.add(a).addBranch(s).add(a).addBranch(t).add(a)),
+            arguments(2, EMPTY.add(a).addBranch(s).add(a).addBranch(s).add(a)),
+            arguments(2, EMPTY.add(a).addBranch(s).add(a).addBranch(s).add(a).addBranch(t).add(a)),
+            arguments(2, EMPTY.add(a).addBranch(s).add(a).addBranch(t).add(a).addBranch(s).add(a)),
+            arguments(2, EMPTY.add(a).addBranch(t).add(a).addBranch(s).add(a).addBranch(s).add(a)),
+            arguments(3, EMPTY.add(a).addBranch(s).add(a).addBranch(s).add(a).addBranch(s).add(a)),
+            arguments(0, EMPTY.add(a).addBranch(t).add(a).closeBranch(t).add(a).addBranch(t).add(a)),
+            arguments(1, EMPTY.add(a).addBranch(t).add(a).closeBranch(t).add(a).addBranch(s).add(a)),
+            arguments(1, EMPTY.add(a).addBranch(t).add(a).closeBranch(t).add(a).addBranch(t).add(a).addBranch(s).add(a)),
+            arguments(1, EMPTY.add(a).addBranch(t).add(a).closeBranch(t).add(a).addBranch(s).add(a).addBranch(t).add(a)),
+            arguments(2, EMPTY.add(a).addBranch(t).add(a).closeBranch(t).add(a).addBranch(s).add(a).addBranch(s).add(a)),
+            arguments(2, EMPTY.add(a).addBranch(t).add(a).closeBranch(t).add(a).addBranch(s).add(a).addBranch(s).add(a).addBranch(t).add(a)),
+            arguments(2, EMPTY.add(a).addBranch(t).add(a).closeBranch(t).add(a).addBranch(s).add(a).addBranch(t).add(a).addBranch(s).add(a)),
+            arguments(2, EMPTY.add(a).addBranch(t).add(a).closeBranch(t).add(a).addBranch(t).add(a).addBranch(s).add(a).addBranch(s).add(a)),
+            arguments(3, EMPTY.add(a).addBranch(t).add(a).closeBranch(t).add(a).addBranch(s).add(a).addBranch(s).add(a).addBranch(s).add(a))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    public void scopeDepthTest(final int scopeDepth, final ParseGraph graph) {
+        assertEquals(scopeDepth, graph.scopeDepth);
+    }
+
+    public static Stream<Arguments> closeBranchExceptionTest() {
+        final TestToken token = new TestToken("Test", null);
+        return Stream.of(
+            arguments("Cannot close branch that is not open.", EMPTY, null),
+            arguments("Cannot close branch that is not open.", EMPTY.add(a), t),
+            arguments("Cannot close branch that is not open.", EMPTY.addBranch(t).closeBranch(t), t),
+            arguments("Cannot close branch that is not open.", EMPTY.addBranch(t).closeBranch(t), s),
+
+            arguments("Cannot close branch with token that does not match its head token.", EMPTY.addBranch(t), s),
+            arguments("Cannot close branch with token that does not match its head token.", EMPTY.addBranch(s), t),
+            arguments("Cannot close branch with token that does not match its head token.", EMPTY.addBranch(t).addBranch(s), t),
+            arguments("Cannot close branch with token that does not match its head token.", EMPTY.addBranch(s).addBranch(t), s),
+            arguments("Cannot close branch with token that does not match its head token.", EMPTY.addBranch(t).addBranch(s).closeBranch(s), s),
+            arguments("Cannot close branch with token that does not match its head token.", EMPTY.addBranch(s).addBranch(t).closeBranch(t), t),
+
+            arguments("Cannot close parse graph that has a non zero scopeDepth.", EMPTY.addBranch(token.setScopeDelimiter(true)), token.setScopeDelimiter(false))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    public void closeBranchExceptionTest(final String errorMessage, final ParseGraph graph, final Token token) {
+        final Exception e = assertThrows(IllegalStateException.class, () -> graph.closeBranch(token));
+        assertEquals(errorMessage, e.getMessage());
+    }
+
+    private static class TestToken extends Token {
+
+        private boolean isScopeDelimiter;
+
+        protected TestToken(String name, Encoding encoding) {
+            super(name, encoding);
+        }
+
+        @Override
+        protected Optional<ParseState> parseImpl(Environment environment) {
+            return Optional.empty();
+        }
+        @Override public String toString() { return "Test"; }
+
+        @Override
+        public boolean isScopeDelimiter() {
+            return isScopeDelimiter;
+        }
+        public Token setScopeDelimiter(final boolean isScopeDelimiter) {
+            this.isScopeDelimiter = isScopeDelimiter;
+            return this;
+        }
     }
 
 }

@@ -1,5 +1,7 @@
 package io.parsingdata.metal.data;
 
+import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static java.math.BigInteger.ZERO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,6 +44,7 @@ class ParseValueCacheTest {
     private static ParseValue pv3;
     private static Token pv2Definition;
     private static Token pv3Definition;
+    private static ParseGraph parseGraph;
 
     @BeforeAll
     public static void setup() {
@@ -54,6 +57,11 @@ class ParseValueCacheTest {
         pv3 = parseValue("second.second.name", pv3Definition);
         final ParseValue pvother3 = parseValue("other.subname");
         parseValueCache = new ParseValueCache().add(pv1).add(pvother).add(pv2).add(pvother2).add(pv3).add(pvother3);
+
+        // Build a parseGraph with a scopeDepth of 2.
+        final Token t = any("t");
+        final Token s = seq("scopeDelimiter", t, t);
+        parseGraph = ParseGraph.EMPTY.addBranch(s).addBranch(s);
     }
 
     public static Stream<Arguments> findTest() {
@@ -150,7 +158,7 @@ class ParseValueCacheTest {
             arguments("multi definitionRef", ref(pv2Definition, pv3Definition), false),
             arguments("multi definitionRef with limit", ref(con(1), pv2Definition, pv3Definition), false),
 
-            // Requested scope is smaller than the scopeDepth of the ParseState.
+            // Requested scope is smaller than the scopeDepth of the ParseGraph.
             arguments("scoped nameRef", scope(ref("second.name"), con(1)), false),
             arguments("scoped nameRef with limit", scope(ref(con(1), "second.name"), con(1)), false),
             arguments("scoped multi nameRef", scope(ref("second.name", "first.name"), con(1)), false),
@@ -160,7 +168,7 @@ class ParseValueCacheTest {
             arguments("scoped multi definitionRef", scope(ref(pv2Definition, pv3Definition), con(1)), false),
             arguments("scoped multi definitionRef with limit", scope(ref(con(1), pv2Definition, pv3Definition), con(1)), false),
 
-            // Requested scope matches or exceeds the scopeDepth of the ParseState.
+            // Requested scope matches or exceeds the scopeDepth of the ParseGraph.
             arguments("matching scoped nameRef", scope(ref("second.name"), con(2)), true),
             arguments("matching scoped nameRef with limit", scope(ref(con(1), "second.name"), con(2)), true),
             arguments("matching scoped multi nameRef", scope(ref("second.name", "first.name"), con(2)), false),
@@ -175,9 +183,9 @@ class ParseValueCacheTest {
     @ParameterizedTest(name="{2} - {0}")
     @MethodSource
     public void cacheUsageTest(final String testName, final ValueExpression expression, final boolean shouldUseCache) {
-        final ParseState parseState = new ParseState(ParseGraph.EMPTY, parseValueCache, createFromBytes(new byte[0]).source, ZERO, new ImmutableList<>(), new ImmutableList<>(), 2);
+        final ParseState parseState = new ParseState(parseGraph, parseValueCache, createFromBytes(new byte[0]).source, ZERO, new ImmutableList<>(), new ImmutableList<>());
         final ImmutableList<Value> eval = expression.eval(parseState, enc());
-        // The parseState is empty, while the cache if filled.
+        // Only the cache is filled with the values we are referring to.
         // That means, if result is not empty, the cache was used.
         assertEquals(shouldUseCache, !eval.isEmpty());
     }

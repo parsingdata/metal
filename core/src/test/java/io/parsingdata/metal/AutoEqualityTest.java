@@ -25,9 +25,7 @@ import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import static io.parsingdata.metal.Shorthand.TRUE;
 import static io.parsingdata.metal.Shorthand.con;
@@ -68,6 +66,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -220,7 +219,7 @@ public class AutoEqualityTest {
     private static final List<Supplier<Object>> PARSE_ITEMS = List.of(() -> CLOSED_BRANCHED_GRAPH, () -> ParseGraph.EMPTY, () -> GRAPH_WITH_REFERENCE, () -> createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE).order, () -> createFromByteStream(DUMMY_STREAM).add(PARSE_VALUE).add(PARSE_VALUE).order, () -> BRANCHED_GRAPH);
     private static final List<Supplier<Object>> BYTE_STREAMS = List.of(() -> new InMemoryByteStream(new byte[] { 1, 2 }), () -> DUMMY_STREAM);
     private static final List<Supplier<Object>> BIG_INTEGERS = List.of(() -> ONE, () -> BigInteger.valueOf(3));
-    private static final List<Supplier<Object>> PARSE_STATES = List.of(() -> createFromByteStream(DUMMY_STREAM), () -> createFromByteStream(DUMMY_STREAM, ONE), () -> new ParseState(GRAPH_WITH_REFERENCE, NO_CACHE, DUMMY_BYTE_STREAM_SOURCE, TEN, new ImmutableList<>(), new ImmutableList<>(), 0));
+    private static final List<Supplier<Object>> PARSE_STATES = List.of(() -> createFromByteStream(DUMMY_STREAM), () -> createFromByteStream(DUMMY_STREAM, ONE), () -> new ParseState(GRAPH_WITH_REFERENCE, NO_CACHE, DUMMY_BYTE_STREAM_SOURCE, TEN, new ImmutableList<>(), new ImmutableList<>()));
     private static final List<Supplier<Object>> PARSE_VALUE_CACHES = List.of(() -> NO_CACHE, ParseValueCache::new, () -> new ParseValueCache().add(PARSE_VALUE), () -> new ParseValueCache().add(PARSE_VALUE).add(PARSE_VALUE));
     private static final List<Supplier<Object>> IMMUTABLE_LISTS = List.of(ImmutableList::new, () -> ImmutableList.create("TEST"), () -> ImmutableList.create(1), () -> ImmutableList.create(1).add(2));
     private static final List<Supplier<Object>> BOOLEANS = List.of(() -> true, () -> false);
@@ -262,7 +261,7 @@ public class AutoEqualityTest {
     public static Stream<Arguments> data() throws IllegalAccessException, InvocationTargetException, InstantiationException {
         final Set<Class<?>> classes = findClasses().filter(not(CLASSES_TO_IGNORE::contains)).collect(toSet());
         classes.removeAll(CLASSES_TO_TEST);
-        assertEquals(Set.of(), classes, "Please add missing class to the CLASSES_TO_TEST or CLASSES_TO_IGNORE constant.");
+        Assertions.assertEquals(Set.of(), classes, "Please add missing class to the CLASSES_TO_TEST or CLASSES_TO_IGNORE constant.");
         return generateObjectArrays(CLASSES_TO_TEST).stream();
     }
 
@@ -435,6 +434,13 @@ public class AutoEqualityTest {
             assertEquals(o.hashCode(), o.hashCode());
             assertNotEquals(o.hashCode(), OTHER_TYPE.hashCode());
         }
+    }
+
+    private static void assertEquals(final Object o, final Object object) {
+        Assertions.assertEquals(o, object, String.format("Objects should be equal:\n%s\n%s\n", o, object));
+    }
+    private static void assertNotEquals(final Object o, final Object object) {
+        Assertions.assertNotEquals(o, object, String.format("Objects should not be equal:\n%s\n%s\n", o, object));
     }
 
 }

@@ -35,6 +35,7 @@ public class ParseGraph extends ImmutableObject implements ParseItem {
     public final ParseGraph tail;
     public final boolean branched;
     public final Token definition;
+    public final int scopeDepth;
     public final long size;
 
     public static final Token NONE = new Token("NONE", null) {
@@ -47,52 +48,61 @@ public class ParseGraph extends ImmutableObject implements ParseItem {
     private ParseGraph(final Token definition) {
         head = null;
         tail = null;
-        branched = false;
         this.definition = checkNotNull(definition, "definition");
+        branched = false;
+        scopeDepth = 0;
         size = 0;
     }
 
-    private ParseGraph(final ParseItem head, final ParseGraph tail, final Token definition, final boolean branched) {
+    private ParseGraph(final ParseItem head, final ParseGraph tail, final Token definition, final boolean branched, final int scopeDepth) {
         this.head = checkNotNull(head, "head");
         this.tail = checkNotNull(tail, "tail");
-        this.branched = branched;
         this.definition = checkNotNull(definition, "definition");
+        this.branched = branched;
+        this.scopeDepth = scopeDepth;
         size = tail.size + 1;
     }
 
     private ParseGraph(final ParseItem head, final ParseGraph tail, final Token definition) {
-        this(head, tail, definition, false);
+        this(head, tail, definition, false, 0);
     }
 
     protected ParseGraph add(final ParseValue head) {
         if (branched) {
-            return new ParseGraph(this.head.asGraph().add(head), tail, definition, true);
+            return new ParseGraph(this.head.asGraph().add(head), tail, definition, true, scopeDepth);
         }
         return new ParseGraph(head, this, definition);
     }
 
     protected ParseGraph add(final ParseReference parseReference) {
         if (branched) {
-            return new ParseGraph(head.asGraph().add(parseReference), tail, definition, true);
+            return new ParseGraph(head.asGraph().add(parseReference), tail, definition, true, scopeDepth);
         }
         return new ParseGraph(parseReference, this, definition);
     }
 
     protected ParseGraph addBranch(final Token definition) {
         if (branched) {
-            return new ParseGraph(head.asGraph().addBranch(definition), tail, this.definition, true);
+            return new ParseGraph(head.asGraph().addBranch(definition), tail, this.definition, true, definition.isScopeDelimiter() ? scopeDepth + 1 : scopeDepth);
         }
-        return new ParseGraph(new ParseGraph(definition), this, this.definition, true);
+        return new ParseGraph(new ParseGraph(definition), this, this.definition, true, definition.isScopeDelimiter() ? 1 : 0);
     }
 
-    protected ParseGraph closeBranch() {
+    protected ParseGraph closeBranch(final Token token) {
         if (!branched) {
             throw new IllegalStateException("Cannot close branch that is not open.");
         }
+        final int newScopeDepth = token.isScopeDelimiter() ? scopeDepth - 1 : scopeDepth;
         if (head.asGraph().branched) {
-            return new ParseGraph(head.asGraph().closeBranch(), tail, definition, true);
+            return new ParseGraph(head.asGraph().closeBranch(token), tail, definition, true, newScopeDepth);
         }
-        return new ParseGraph(head, tail, definition, false);
+        if (!head.getDefinition().equals(token)) {
+            throw new IllegalStateException("Cannot close branch with token that does not match its head token.");
+        }
+        if (newScopeDepth != 0) {
+            throw new IllegalStateException("Cannot close parse graph that has a non zero scopeDepth.");
+        }
+        return new ParseGraph(head, tail, definition);
     }
 
     public boolean isEmpty() { return size == 0; }
@@ -131,7 +141,7 @@ public class ParseGraph extends ImmutableObject implements ParseItem {
         if (isEmpty()) {
             return "pg(terminator:" + definition.getClass().getSimpleName() + ")";
         }
-        return "pg(" + head + "," + tail + "," + branched + ")";
+        return "pg(" + head + "," + tail + "," + branched + "," + scopeDepth + ")";
     }
 
     @Override
@@ -140,6 +150,7 @@ public class ParseGraph extends ImmutableObject implements ParseItem {
             && Objects.equals(head, ((ParseGraph)obj).head)
             && Objects.equals(tail, ((ParseGraph)obj).tail)
             && Objects.equals(branched, ((ParseGraph)obj).branched)
+            && Objects.equals(scopeDepth, ((ParseGraph)obj).scopeDepth)
             && Objects.equals(definition, ((ParseGraph)obj).definition);
             // The size field is excluded from equals() and hashCode() because it is cached data.
     }
