@@ -5,6 +5,10 @@ shallow_clone: true
 init:
   - git config --global core.autocrlf input
 
+# We need at least this image to run jdk17 and jdk21 (https://www.appveyor.com/docs/windows-images-software/).
+image:
+  - Visual Studio 2019
+
 environment:
   APPVEYOR_CACHE_ENTRY_ZIP_ARGS: -t7z -mx0 -mmt=0 -snl -snh
   MAVEN_OPTS: "-Dmaven.repo.local=C:/Users/appveyor/.m2"
