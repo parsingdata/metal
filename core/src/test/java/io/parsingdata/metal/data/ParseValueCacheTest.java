@@ -1,9 +1,23 @@
 package io.parsingdata.metal.data;
 
+import static io.parsingdata.metal.Shorthand.CURRENT_ITERATION;
+import static io.parsingdata.metal.Shorthand.eqNum;
+import static io.parsingdata.metal.Shorthand.last;
+import static io.parsingdata.metal.Shorthand.nod;
+import static io.parsingdata.metal.Shorthand.opt;
+import static io.parsingdata.metal.Shorthand.rep;
+import static io.parsingdata.metal.Shorthand.repn;
 import static io.parsingdata.metal.Shorthand.seq;
+import static io.parsingdata.metal.Shorthand.tie;
+import static io.parsingdata.metal.Shorthand.token;
+import static io.parsingdata.metal.Shorthand.when;
+import static io.parsingdata.metal.data.ParseState.createFromByteStream;
+import static io.parsingdata.metal.util.EnvironmentFactory.env;
 import static io.parsingdata.metal.util.TokenDefinitions.any;
 import static java.math.BigInteger.ZERO;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -20,12 +34,15 @@ import static io.parsingdata.metal.data.Selection.NO_LIMIT;
 import static io.parsingdata.metal.data.Slice.createFromBytes;
 import static io.parsingdata.metal.util.EncodingFactory.enc;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -34,6 +51,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import io.parsingdata.metal.expression.value.Value;
 import io.parsingdata.metal.expression.value.ValueExpression;
 import io.parsingdata.metal.token.Token;
+import io.parsingdata.metal.util.InMemoryByteStream;
 
 class ParseValueCacheTest {
 
@@ -188,5 +206,38 @@ class ParseValueCacheTest {
         // Only the cache is filled with the values we are referring to.
         // That means, if result is not empty, the cache was used.
         assertEquals(shouldUseCache, !eval.isEmpty());
+    }
+
+    // Note: This timeout does not stop the test after 1 second.
+    // The test will run until it finishes and then validate the duration.
+    @Timeout(value = 50)
+    @Test
+    void performanceTest() {
+        // This test would take way too much time without tokenref caching (~17sec).
+        // Using tokenref cashing, these are all finished within less than 100 ms.
+        final int dataSize = 1_000_000;
+        final byte[] input = new byte[dataSize + 2 + 3];
+        // This token contains recursive tokens to create large ParseGraphs.
+        final Token deep =
+            seq(
+                seq("tokenref",
+                    def("data1", 1),
+                    def("data2", 1)
+                ),
+                rep("token",
+                    seq("seq",
+                        seq(
+                            def("byte", 1),
+                            nod(0)
+                        ),
+                        when(token("tokenref"), eqNum(CURRENT_ITERATION, con(dataSize)))
+                    )
+                )
+            );
+        final Optional<ParseState> result = deep.parse(env(createFromByteStream(new InMemoryByteStream(input))));
+        assertTrue(result.isPresent());
+
+        ImmutableList<ParseValue> allValues = Selection.getAllValues(result.get().order, x -> true);
+        assertThat(allValues.size, equalTo(dataSize + 5L));
     }
 }

@@ -17,9 +17,10 @@ import io.parsingdata.metal.token.Token;
 
 public class ParseValueCache {
 
-    public static final ParseValueCache NO_CACHE = new ParseValueCache(null);
+    public static final ParseValueCache NO_CACHE = new ParseValueCache(null, null);
 
     private final Map<String, ImmutableList<ParseValue>> cache;
+    private final Map<String, Token> tokenCache;
 
     /**
      * Start a cache that keeps track of values added to the parse graph.
@@ -27,12 +28,13 @@ public class ParseValueCache {
      * In case no caching is desired, {@link #NO_CACHE} should be used instead.
      */
     public ParseValueCache() {
-        this(new HashMap<>());
+        this(new HashMap<>(), new HashMap<>());
     }
 
     // For internal use only. It is private to avoid setting the cache to null. The NO_CACHE constant should be used instead.
-    private ParseValueCache(final Map<String, ImmutableList<ParseValue>> cache) {
+    private ParseValueCache(final Map<String, ImmutableList<ParseValue>> cache, final Map<String, Token> tokenCache) {
         this.cache = cache;
+        this.tokenCache = tokenCache;
     }
 
     public Optional<ImmutableList<Value>> find(final String scopeName, int limit) {
@@ -59,10 +61,23 @@ public class ParseValueCache {
             return NO_CACHE;
         }
         final String name = shortName(value.name);
-        final Map<String, ImmutableList<ParseValue>> stringImmutableListHashMap = new HashMap<>(cache);
-        stringImmutableListHashMap.computeIfAbsent(name, pattern -> new ImmutableList<>());
-        stringImmutableListHashMap.computeIfPresent(name, (pattern, valueImmutableList) -> valueImmutableList.add(value));
-        return new ParseValueCache(stringImmutableListHashMap);
+        final Map<String, ImmutableList<ParseValue>> newCache = new HashMap<>(cache);
+        newCache.computeIfAbsent(name, pattern -> new ImmutableList<>());
+        newCache.computeIfPresent(name, (pattern, valueImmutableList) -> valueImmutableList.add(value));
+        return new ParseValueCache(newCache, tokenCache);
+    }
+
+    public ParseValueCache add(final Token token) {
+        if (this == NO_CACHE) {
+            return NO_CACHE;
+        }
+        final String name = token.name;
+        if (name.isEmpty()) {
+            return this;
+        }
+        final Map<String, Token> newTokenCache = new HashMap<>(tokenCache);
+        newTokenCache.put(name, token);
+        return new ParseValueCache(cache, newTokenCache);
     }
 
     private static String shortName(final String name) {
@@ -86,5 +101,10 @@ public class ParseValueCache {
     @Override
     public int hashCode() {
         return Objects.hash(cache);
+    }
+
+    public Optional<Token> findToken(String referenceName) {
+        System.out.println("ParseValueCache.findToken");
+        return Optional.ofNullable(tokenCache.get(referenceName));
     }
 }

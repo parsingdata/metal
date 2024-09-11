@@ -64,7 +64,8 @@ public class TokenRef extends Token {
 
     @Override
     protected Optional<ParseState> parseImpl(final Environment environment) {
-        return lookup(ImmutableList.create(environment.parseState.order), referenceName).computeResult().parse(environment);
+//        return lookup(ImmutableList.create(environment.parseState.order), referenceName).computeResult().parse(environment);
+        return environment.parseState.cache.findToken(referenceName).orElse(LOOKUP_FAILED).parse(environment);
     }
 
     private Trampoline<Token> lookup(final ImmutableList<ParseItem> items, final String referenceName) {

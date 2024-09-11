@@ -61,9 +61,8 @@ public class ParseState extends ImmutableObject {
     }
 
     public ParseState addBranch(final Token token) {
-        return new ParseState(order.addBranch(token), cache, source, offset, token.isIterable() ? iterations.add(new ImmutablePair<>(token, ZERO)) : iterations, references);
+        return new ParseState(order.addBranch(token), cache.add(token), source, offset, token.isIterable() ? iterations.add(new ImmutablePair<>(token, ZERO)) : iterations, references);
     }
-
     public ParseState closeBranch(final Token token) {
         if (token.isIterable() && !iterations.head.left.equals(token)) {
             throw new IllegalStateException(format("Cannot close branch for iterable token %s. Current iteration state is for token %s.", token.name, iterations.head.left.name));
