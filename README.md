@@ -6,7 +6,7 @@ A Java library for parsing binary data formats, using declarative descriptions.
 [![Build status](https://ci.appveyor.com/api/projects/status/69hk2llxjjyatuyq/branch/main?svg=true)](https://ci.appveyor.com/project/parsingdata/metal/branch/main)
 [![codecov.io](https://codecov.io/github/parsingdata/metal/coverage.svg?branch=main)](https://codecov.io/github/parsingdata/metal?branch=main)
 [![CodeFactor](https://www.codefactor.io/repository/github/parsingdata/metal/badge)](https://www.codefactor.io/repository/github/parsingdata/metal)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/58fd44c214a4425f967e27214bb3a924)](https://www.codacy.com/gh/parsingdata/metal/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=parsingdata/metal&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/58fd44c214a4425f967e27214bb3a924)](https://app.codacy.com/gh/parsingdata/metal/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=parsingdata/metal&amp;utm_campaign=Badge_Grade)
 [![SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=parsingdata_metal&metric=alert_status)](https://sonarcloud.io/dashboard?id=parsingdata_metal)
 
 ## Using Metal
