@@ -63,21 +63,21 @@
   <properties>
     <encoding>UTF-8</encoding>
 
-    <junit-jupiter.version>5.10.3</junit-jupiter.version>
+    <junit-jupiter.version>5.11.1</junit-jupiter.version>
     <hamcrest-library.version>2.2</hamcrest-library.version>
 
     <jacoco-plugin.version>0.8.12</jacoco-plugin.version>
-    <pmd-plugin.version>3.23.0</pmd-plugin.version>
-    <jxr-plugin.version>3.4.0</jxr-plugin.version>
-    <javadoc-plugin.version>3.7.0</javadoc-plugin.version>
+    <pmd-plugin.version>3.25.0</pmd-plugin.version>
+    <jxr-plugin.version>3.5.0</jxr-plugin.version>
+    <javadoc-plugin.version>3.10.1</javadoc-plugin.version>
     <nexus-staging-plugin.version>1.7.0</nexus-staging-plugin.version>
-    <gpg-plugin.version>3.2.4</gpg-plugin.version>
+    <gpg-plugin.version>3.2.7</gpg-plugin.version>
     <source-plugin.version>3.3.1</source-plugin.version>
     <pitest-maven.version>1.5.2</pitest-maven.version>
     <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
-    <maven-site-plugin.version>3.12.1</maven-site-plugin.version>
-    <maven-project-info-reports.version>3.6.1</maven-project-info-reports.version>
-    <maven-surefire-plugin.version>3.3.0</maven-surefire-plugin.version>
+    <maven-site-plugin.version>3.20.0</maven-site-plugin.version>
+    <maven-project-info-reports.version>3.7.0</maven-project-info-reports.version>
+    <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
 
     <sonar.organization>parsingdata</sonar.organization>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
