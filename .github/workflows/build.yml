@@ -57,4 +57,4 @@ jobs:
       - name: Upload Code Coverage to Codecov
         # Upload test coverage results only from the Corretto 11 build
         if: matrix.distribution == 'corretto' && matrix.java-version == '17'
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
